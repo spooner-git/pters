@@ -21,8 +21,8 @@ $(document).ready(function(){
     var user_id_flag = 1;
     var filter = "win16|win32|win64|mac|macintel";
     var platform_check;
-    var browser_check;
-    var agent = navigator.userAgent.toLowerCase();
+    // var browser_check;
+    // var agent = navigator.userAgent.toLowerCase();
     if ( navigator.platform ) {
         if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
             //mobile
@@ -34,15 +34,15 @@ $(document).ready(function(){
         }
     }
 
-    if (agent.indexOf("safari") != -1) {
-        browser_check = 'safari';
-    }
-    if (agent.indexOf("chrome") != -1) {
-        browser_check = 'chrome';
-    }
-    if (agent.indexOf("firefox") != -1) {
-        browser_check = 'firefox';
-    }
+    // if (agent.indexOf("safari") != -1) {
+    //     browser_check = 'safari';
+    // }
+    // if (agent.indexOf("chrome") != -1) {
+    //     browser_check = 'chrome';
+    // }
+    // if (agent.indexOf("firefox") != -1) {
+    //     browser_check = 'firefox';
+    // }
 
     $(".btn-group > .btn").click(function(){
         $(this).addClass("active").siblings().removeClass("active");
@@ -63,7 +63,7 @@ $(document).ready(function(){
                 $('html, body').css('overflow-y','hidden');
             }
         }
-    })
+    });
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -72,12 +72,13 @@ $(document).ready(function(){
 
     $(document).on('click','#upbutton-x-modify',function(){
         var bodywidth = window.innerWidth;
+        var selector_calendar = $('#calendar');
         $('#uptext3').text('회원 정보');
         $('#uptext-pc-modify').text('회원 정보');
         closePopup('member_info');
-        if(bodywidth<600 && $('#calendar').length != 0){
+        if(bodywidth<600 && selector_calendar.length != 0){
             //$('#calendar').css('display','block')
-            $('#calendar').css('height','100%');
+            selector_calendar.css('height','100%');
         }
     });
     $(document).on('click','#upbutton-x',function(){
@@ -157,7 +158,7 @@ $(document).ready(function(){
     $(document).on('click','.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         var bodywidth = window.innerWidth;
         var dbID = $(this).find('._id').attr('data-dbid');
-        shade_index(100)
+        shade_index(100);
         if(bodywidth < 600){
             get_indiv_member_info(dbID);
             get_indiv_repeat_info(dbID);
@@ -179,7 +180,7 @@ $(document).ready(function(){
     //PC 회원 이력 엑셀 다운로드 버튼 (회원목록에서)
     $(document).on('click','._manage img._info_download',function(e){
         e.stopPropagation();
-        var memberID = $(this).parent('td').siblings('.id').text();
+        // var memberID = $(this).parent('td').siblings('.id').text();
         var dbID = $(this).parent('td').siblings('._id').attr('data-dbid');
         if(platform_check == 'mobile'){
             alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.');
@@ -191,8 +192,9 @@ $(document).ready(function(){
 
     //PC 회원 이력 엑셀 다운로드 버튼 (회원정보창에서)
     $(document).on('click','button._info_download',function(){
-        var memberID = $('#memberInfoPopup_PC').attr('data-userid');
-        var dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        var selector_memberInfoPopup_PC = $('#memberInfoPopup_PC');
+        // var memberID = selector_memberInfoPopup_PC.attr('data-userid');
+        var dbID = selector_memberInfoPopup_PC.attr('data-dbid');
         if(platform_check == 'mobile'){
             alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.');
         }else {
@@ -277,8 +279,11 @@ $(document).ready(function(){
 
         //Mobile 버전 회원정보창 생년월입 드랍다운
         $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
-            var birth = $('#birth_year_info').val().replace(/년/gi,'')+'-'+$('#birth_month_info').val().replace(/월/gi,'')+'-'+$('#birth_date_info').val().replace(/일/gi,'')
-            if($('#birth_year_info').val().length < 1 || $('#birth_month_info').val().length < 1 || $('#birth_date_info').val().length < 1){
+            var selector_birth_year_info = $('#birth_year_info');
+            var selector_birth_month_info = $('#birth_month_info');
+            var selector_birth_date_info = $('#birth_date_info');
+            var birth = selector_birth_year_info.val().replace(/년/gi,'')+'-'+selector_birth_month_info.val().replace(/월/gi,'')+'-'+ selector_birth_date_info.val().replace(/일/gi,'');
+            if(selector_birth_year_info.val().length < 1 || selector_birth_month_info.val().length < 1 || selector_birth_date_info.val().length < 1){
                 $('#form_birth_modify').val('');
             }else{
                 $('#form_birth_modify').val(birth);
@@ -287,7 +292,7 @@ $(document).ready(function(){
 
         //PC버전 회원정보창 생년월입 드랍다운
         $('#memberBirth_Year_info_PC, #memberBirth_Month_info_PC, #memberBirth_Date_info_PC').change(function(){
-            var birth = $('#memberBirth_Year_info_PC').val().replace(/년/gi,'')+'-'+$('#memberBirth_Month_info_PC').val().replace(/월/gi,'')+'-'+$('#memberBirth_Date_info_PC').val().replace(/일/gi,'')
+            var birth = $('#memberBirth_Year_info_PC').val().replace(/년/gi,'')+'-'+$('#memberBirth_Month_info_PC').val().replace(/월/gi,'')+'-'+$('#memberBirth_Date_info_PC').val().replace(/일/gi,'');
             $('#form_birth_modify').val(birth);
 
         });
@@ -301,18 +306,17 @@ $(document).ready(function(){
         deleteTypeSelect = "memberinfodelete";
         var selectedUserId = $(this).parent('td').siblings('._id').text();
         var selectedUserName = $(this).parent('td').siblings('._tdname').text();
-        if(Options.language == "KOR"){
-            var text = "회원 삭제";
-            var text2 = "정말 ";
-            var text3 = " 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>";
-        }else if(Options.language == "JPN"){
-            var text = "メンバー削除";
-            var text2 = "<p>";
-            var text3 = "様の情報や記録を削除しますか。<br>復旧できません。</p>";
+        var text = "회원 삭제";
+        var text2 = "정말 ";
+        var text3 = " 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>";
+        if(Options.language == "JPN"){
+            text = "メンバー削除";
+            text2 = "<p>";
+            text3 = "様の情報や記録を削除しますか。<br>復旧できません。</p>";
         }else if(Options.language == "ENG"){
-            var text =　"Delete Member";
-            var text2 = "<p>Are you sure to delete ";
-            var text3 = "'s data?</p>";
+            text =　"Delete Member";
+            text2 = "<p>Are you sure to delete ";
+            text3 = "'s data?</p>";
         }
         $('#popup_delete_title').text(text);
         $('#popup_delete_question').html(text2+selectedUserName+text3);
@@ -344,20 +348,24 @@ $(document).ready(function(){
         }
 
         var dbID = $(this).attr('data-dbid');
-        var userName = $(this).attr('data-username');
+        // var userName = $(this).attr('data-username');
         var lectureID = $(this).attr('data-leid');
 
         if($(this).attr('data-type')=="view" && !$(this).hasClass('disabled_button')){
+            var myRow;
+            var myRowSelect;
+            var myNoteRow;
+            var myRowParent;
             if(bodywidth < 600){
-                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
-                var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
-                var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input');
-                var myRowParent = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div');
+                myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
+                myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
+                myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input');
+                myRowParent = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div');
             }else if(bodywidth >= 600){
-                var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
-                var myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
-                var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
-                var myRowParent = $(this).parent('div').siblings('div')
+                myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+                myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
+                myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+                myRowParent = $(this).parent('div').siblings('div')
             }
             myRow.addClass('input_available').attr('disabled',false);
             myRowSelect.addClass('input_available').attr('disabled',false);
@@ -380,8 +388,9 @@ $(document).ready(function(){
             $('#form_note').val(myNoteRow.val());
 
         }else if($(this).attr('data-type')=="modify"){
+            var selector_from_price = $('#form_price');
             $('img.regHistoryModifyBtn[data-type="view"]').removeClass('disabled_button');
-            $('#form_price').val($('#form_price').val().replace(/,/gi,''));
+            selector_from_price.val(selector_from_price.val().replace(/,/gi,''));
             send_member_modified_data(dbID);
         }else if($(this).attr('data-type')=="resend"){
 
@@ -488,8 +497,9 @@ $(document).ready(function(){
     //진행중
     $(document).on('click','div.lecConnectType_IP',function(){
         var bodywidth = window.innerWidth;
+        var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        selector_lectureStateChangeSelectPopup.fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
@@ -499,15 +509,16 @@ $(document).ready(function(){
         }else{
             $('._complete, ._refund').css('display','block');
         }
-        $('.lectureStateChangeSelectPopup').find('._explain').html('※진행완료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※진행완료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
         show_shadow_reponsively();
     });
 
     //진행완료, 환불
     $(document).on('click','div.lecConnectType_PE, div.lecConnectType_RF',function(){
         var bodywidth = window.innerWidth;
+        var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        selector_lectureStateChangeSelectPopup.fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
@@ -517,7 +528,7 @@ $(document).ready(function(){
         }else{
             $('._resume, ._delete').css('display','block');
         }
-        $('.lectureStateChangeSelectPopup').find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
         show_shadow_reponsively();
     });
 
@@ -529,10 +540,11 @@ $(document).ready(function(){
     });
 
     $('span.resend').parent('div').click(function(){
-        var lectureID = $('.resendPopup').attr('data-leid');
-        var dbID = $('.resendPopup').attr('data-dbid');
+        var selectore_resendPopup = $('.resendPopup');
+        var lectureID = selectore_resendPopup.attr('data-leid');
+        var dbID = selectore_resendPopup.attr('data-dbid');
         resend_member_reg_data_pc(lectureID, dbID);
-        $('.resendPopup').css('display','none');
+        selectore_resendPopup.css('display','none');
         $('#shade3').css('display','none');
     });
 
@@ -554,34 +566,38 @@ $(document).ready(function(){
 
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
-        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+        var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         complete_member_reg_data_pc(lectureID, dbID);
-        $('.lectureStateChangeSelectPopup').css('display','none');
+        selectore_lectureStateChangeSelectPopup.css('display','none');
     });
 
     //재개 처리 버튼
     $('.lectureStateChangeSelectPopup ._resume').click(function(){
-        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+        var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         resume_member_reg_data_pc(lectureID, dbID);
-        $('.lectureStateChangeSelectPopup').css('display','none');
+        selectore_lectureStateChangeSelectPopup.css('display','none');
     });
 
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
-        var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-        var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+        var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         delete_member_reg_data_pc(lectureID, dbID);
-        $('.lectureStateChangeSelectPopup').css('display','none');
+        selectore_lectureStateChangeSelectPopup.css('display','none');
     });
 
     //한불 입력으로 이동 버튼
     $('.lectureStateChangeSelectPopup ._refund').click(function(){
-        $('.lectureStateChangeSelectPopup').css('display','none');
-        $('.lectureRefundPopup').css('display','block').attr({'data-leid':$('.lectureStateChangeSelectPopup').attr('data-leid'),
-            'data-username':$('.lectureStateChangeSelectPopup').attr('data-username'),
-            'data-dbid':$('.lectureStateChangeSelectPopup').attr('data-dbid')
+        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        selectore_lectureStateChangeSelectPopup.css('display','none');
+        $('.lectureRefundPopup').css('display','block').attr({'data-leid':selectore_lectureStateChangeSelectPopup.attr('data-leid'),
+            'data-username':selectore_lectureStateChangeSelectPopup.attr('data-username'),
+            'data-dbid':selectore_lectureStateChangeSelectPopup.attr('data-dbid')
         });
     });
 
@@ -592,11 +608,12 @@ $(document).ready(function(){
 
 
     $('span.refund').parent('div').click(function(){
-        var lectureID = $('.lectureRefundPopup').attr('data-leid');
-        var dbID = $('.lectureRefundPopup').attr('data-dbid');
+        var selectore_lectureRefundPopup = $('.lectureRefundPopup');
+        var lectureID = selectore_lectureRefundPopup.attr('data-leid');
+        var dbID = selectore_lectureRefundPopup.attr('data-dbid');
         var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'');
         refund_member_lecture_data(lectureID, dbID, refund_price);
-        $('.lectureRefundPopup').css('display','none');
+        selectore_lectureRefundPopup.css('display','none');
     });
 
     $('.lectureRefundPopup input').keyup(function(){
@@ -612,11 +629,12 @@ $(document).ready(function(){
 
 
     $('span.connectchange').parent('div').click(function(){
+        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         var stateCode =  $(this).attr('data-stat');
-        var lectureID = $('.lectureConnectStateChangePopup').attr('data-leid');
-        var dbID =$('.lectureConnectStateChangePopup').attr('data-dbid');
+        var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+        var dbID =selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         disconnect_member_lecture_data(stateCode, lectureID, dbID);
-        $('.lectureConnectStateChangePopup').css('display','none');
+        selectore_lectureStateChangeSelectPopup.css('display','none');
     });
 
     $('span.cancel_connectchange').parent('div').click(function(){
@@ -676,15 +694,17 @@ $(document).ready(function(){
     $('#popup_delete_btn_yes').click(function(){
         var bodywidth = window.innerWidth;
         //if($('#calendar').length==0){
+        var repeat_schedule_id;
+        var group_id;
         if(deleteTypeSelect == "repeatinfodelete"){
-            var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
             var dbID = $(this).parent('#cal_popup_plandelete').attr('data-dbid');
+            repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
             send_repeat_delete_personal(repeat_schedule_id, 'callback', function(jsondata){
                 get_indiv_repeat_info(dbID);
                 get_member_lecture_list(dbID);
                 get_member_history_list(dbID);
                 enable_delete_btns_after_ajax();
-                close_info_popup('cal_popup_plandelete')
+                close_info_popup('cal_popup_plandelete');
                 deleteTypeSelect = "memberinfodelete";
                 if($('#calendar').length!=0){
                     ajaxClassTime();
@@ -700,9 +720,9 @@ $(document).ready(function(){
             closePopup('member_info_PC');
 
         }else if(deleteTypeSelect == "groupdelete"){
-            var group_id = group_delete_JSON.group_id;
             var groupmember_fullnames = group_delete_JSON.fullnames;
             var groupmember_ids = group_delete_JSON.ids;
+            group_id = group_delete_JSON.group_id;
 
             //그룹을 지운다.
             delete_group_from_list(group_delete_JSON.group_id);
@@ -716,8 +736,8 @@ $(document).ready(function(){
             close_info_popup('cal_popup_plandelete');
 
         }else if(deleteTypeSelect == "grouprepeatinfodelete"){
-            var group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid');
-            var repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
+            group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid');
+            repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
             send_repeat_delete_group(repeat_schedule_id, 'callback', function(){
                 enable_delete_btns_after_ajax();
                 close_info_popup('cal_popup_plandelete');
@@ -860,10 +880,11 @@ $(document).ready(function(){
                     $('#id_username_info').val(jsondata.idInfo);
                     console.log(jsondata.dbIdInfo);
                     $('#id_user_id').val(jsondata.dbIdInfo);
-                    $('#memberSex .selectboxopt').removeClass('selectbox_checked');
+                    var selectore_memberSex = $('#memberSex .selectboxopt');
+                    selectore_memberSex.removeClass('selectbox_checked');
                     fill_member_info_by_ID_search();
                     $('#memberSearchButton').attr('data-type','searched');
-                    $('#memberSex .selectboxopt').addClass('selectbox_disable');
+                    selectore_memberSex.addClass('selectbox_disable');
                     $('._ADD_MEMBER_NEW').show();
                 }
 
@@ -880,9 +901,12 @@ $(document).ready(function(){
     $("#datepicker_add, #datepicker2_add").datepicker({
         //minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+            var selector_datepicker_add = $("#datepicker_add");
+            var selector_datepicker2_add = $("#datepicker2_add");
+
             $(this).addClass("dropdown_selected");
-            $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val());
-            $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val());
+            selector_datepicker2_add.datepicker('option','minDate',selector_datepicker_add.val());
+            selector_datepicker_add.datepicker('option','maxDate',selector_datepicker2_add.val());
             check_dropdown_selected();
         }
     });
@@ -925,6 +949,9 @@ $(document).ready(function(){
     if(varUA.match('firefox')){
         $("#memberLastName_add, #memberFirstName_add").bind("keydown",function(e){  //이름 입력시 하단에 핑크선
             var keyCode = e.which || e.keyCode;
+            var selector_memberLastName_add = $('#memberLastName_add');
+            var selector_memberFirstName_add = $('#memberFirstName_add');
+
             if(keyCode === 13 || keyCode === 9){
                 if($(this).val().length>=1){
                     limit_char(this);
@@ -935,14 +962,16 @@ $(document).ready(function(){
                     $(this).removeClass("dropdown_selected");
                     check_dropdown_selected();
                 }
-                $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-                $('#add_member_form_first_name').val($('#memberFirstName_add').val());
-                $('#add_member_form_last_name').val($('#memberLastName_add').val());
-                $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+                $('#form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+                $('#add_member_form_first_name').val(selector_memberFirstName_add.val());
+                $('#add_member_form_last_name').val(selector_memberLastName_add.val());
+                $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
             }
         });
     }else{
         $("#memberLastName_add, #memberFirstName_add").keyup(function(){  //이름 입력시 하단에 핑크선
+            var selector_memberLastName_add = $('#memberLastName_add');
+            var selector_memberFirstName_add = $('#memberFirstName_add');
             if($(this).val().length>=1){
                 limit_char(this);
                 $(this).addClass("dropdown_selected");
@@ -952,10 +981,10 @@ $(document).ready(function(){
                 $(this).removeClass("dropdown_selected");
                 check_dropdown_selected();
             }
-            $('#form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
-            $('#add_member_form_first_name').val($('#memberFirstName_add').val());
-            $('#add_member_form_last_name').val($('#memberLastName_add').val());
-            $('#add_member_form_name').val($('#memberLastName_add').val()+$('#memberFirstName_add').val());
+            $('#form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+            $('#add_member_form_first_name').val(selector_memberFirstName_add.val());
+            $('#add_member_form_last_name').val(selector_memberLastName_add.val());
+            $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
         });
     }
 
@@ -1034,8 +1063,10 @@ $(document).ready(function(){
         $('._count div.checked').removeClass('checked ptersCheckboxInner');
         $('p, .datepicktext input').removeClass("dropdown_selected");
         $('#datepicker_fast,#lecturePrice_add,#memberDue_add_2').val("");
-        $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val());
-        $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val());
+        var selector_datepicker_add = $("#datepicker_add");
+        var selector_datepicker2_add = $("#datepicker2_add");
+        selector_datepicker2_add.datepicker('option','minDate',selector_datepicker_add.val());
+        selector_datepicker_add.datepicker('option','maxDate',selector_datepicker2_add.val());
         $('#fast_check').val('1');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
             $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val());
@@ -1060,22 +1091,26 @@ $(document).ready(function(){
         var pterscheckbox = $(this).find('div');
         $(this).find('div:nth-child(1)').addClass('checked');
         pterscheckbox.find('div').addClass('ptersCheckboxInner');
-        $('#memberCount_add_fast').val(pterscheckbox.attr('data-count'));
-        $('#memberCount_add_fast').addClass("dropdown_selected");
+        var selector_memberCount_add_fast = $('#memberCount_add_fast');
+        selector_memberCount_add_fast.val(pterscheckbox.attr('data-count'));
+        selector_memberCount_add_fast.addClass("dropdown_selected");
         check_dropdown_selected();
     });
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
         $('#form_member_groupid').val($(this).val())
-    })
+    });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
     //회원 등록 폼 작성후 완료버튼 클릭
     $("#upbutton-check, #pcBtn").click(function(e){
         e.preventDefault();
         //회원 추가, 재등록
-        if($('#page_addmember').css('display')=='block' && $('._ADD_GROUP_NEW').css('display') == "none" && $('._ADD_GROUPMEMBER_NEW').css('display') == "none"){
+        var selector_page_addmember = $('#page_addmember');
+        var selector_ADD_GROUP_NEW = $('._ADD_GROUP_NEW');
+        var selector_ADD_GROUPMEMBER_NEW = $('._ADD_GROUPMEMBER_NEW');
+        if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none"){
             var id_search_confirm = $('#id_search_confirm').val();
             if(select_all_check==true){
                 if(id_search_confirm==0){ //신규 회원을 직접 정보를 입력했을 때
@@ -1085,20 +1120,20 @@ $(document).ready(function(){
                     add_member_form_func();
                 }
             }else{
-                scrollToDom($('#page_addmember'));
+                scrollToDom(selector_page_addmember);
                 //$('#errorMessageBar').show();
                 //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
                 //입력값 확인 메시지 출력 가능
             }
 
             //그룹 추가
-        }else if($('#page_addmember').css('display')=='block' && $('._ADD_GROUP_NEW').css('display') == "block"){
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "block"){
             if(select_all_check==true){
                 add_group_form_func();
             }
 
             //그룹원 추가
-        }else if($('#page_addmember').css('display')=='block' && $('._ADD_GROUPMEMBER_NEW').css('display') == "block"){
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block"){
             if(select_all_check==true){
                 add_groupmember_form_func()
             }
@@ -1109,11 +1144,12 @@ $(document).ready(function(){
 
     //PC 회원기본 정보 수정 버튼 (회원정보창에서)
     $(document).on('click','button._info_baseedit',function(){
+        var selector_memberSex_info_PC_selectboxopt = $('#memberSex_info_PC .selectboxopt');
         if($(this).attr('data-view') == 'view'){
             $(this).attr('data-view','edit');
             $(this).find('img').attr('src','/static/user/res/btn-pt-complete.png');
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC, #memberName_info_lastName_PC, #memberName_info_firstName_PC').addClass('input_available').attr('disabled',false);
-            $('#memberSex_info_PC .selectboxopt').show();
+            selector_memberSex_info_PC_selectboxopt.show();
             $('#memberSex_info_PC .selectboxopt[value="'+$('#form_sex_modify').val()+'"]').addClass('selectbox_checked');
 
             $('#memberPhone_info_PC').attr('placeholder','숫자만 입력해주세요.');
@@ -1127,7 +1163,7 @@ $(document).ready(function(){
             $(this).attr('data-view','view');
             $(this).find('img').attr('src','/static/user/res/icon-pencil.png');
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
-            $('#memberSex_info_PC .selectboxopt').hide();
+            selector_memberSex_info_PC_selectboxopt.hide();
             $('#memberSex_info_PC .selectbox_checked').show().removeClass('selectbox_checked');
 
             $('#memberPhone_info_PC').attr('placeholder','');
@@ -1137,17 +1173,17 @@ $(document).ready(function(){
 
             send_modified_member_base_data();
         }
-    })
+    });
 
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
         var text = '회원 정보 수정';
-        var text2 = '모든 필수 정보를 입력해주세요';
+        // var text2 = '모든 필수 정보를 입력해주세요';
         if(Options.language == "JPN"){
             text = 'メンバー情報変更';
-            text2 = '全ての必修情報を入力してください。';
+            // text2 = '全ての必修情報を入力してください。';
         }else if(Options.language == "ENG"){
             text = 'Edit Member Info';
-            text2 = 'Please fill all input field';
+            // text2 = 'Please fill all input field';
         }
         if($(this).attr('data-type') == "view" ){
             $('#uptext3').text(text);
@@ -1270,12 +1306,13 @@ function send_modified_member_base_data(){
 
 function float_btn_managemember(option){
     var bodywidth = window.innerWidth;
-    var text = '신규 회원 등록'
+    var text = '신규 회원 등록';
     if(Options.language == "JPN"){
         text = '新規会員登録'
     }else if(Options.language == "ENG"){
         text = 'Register New Member'
     }
+    var selector_page_addmember = $('#page_addmember');
     if(option == 0){ //모바일 플로팅 버튼
         //$("#float_btn").animate({opacity:'1'});
         if($('#mshade').css('display')=='none'){
@@ -1291,13 +1328,13 @@ function float_btn_managemember(option){
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet();
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        $('#page_addmember').css('display','block');
-        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd')
+        selector_page_addmember.css('display','block');
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
         $('#float_btn_wrap').css('display','none');
         $('#uptext2').text(text);
 
-        scrollToDom($('#page_addmember'));
+        scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
@@ -1319,11 +1356,11 @@ function float_btn_managemember(option){
         $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
     }else if(option == "group"){
         initialize_add_member_sheet();
-        $('#page_addmember').css('display','block');
+        selector_page_addmember.css('display','block');
         $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
         $('#float_btn_wrap').css('display','none');
 
-        scrollToDom($('#page_addmember'));
+        scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
@@ -1338,11 +1375,11 @@ function float_btn_managemember(option){
 
     }else if(option == "groupmember"){
         initialize_add_member_sheet();
-        $('#page_addmember').css('display','block');
+        selector_page_addmember.css('display','block');
         $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
         $('#float_btn_wrap').css('display','none');
 
-        scrollToDom($('#page_addmember'));
+        scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
             //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
@@ -1368,6 +1405,9 @@ function pc_add_member(option){
         text2 = 'Re-Contract';
     }
     shade_index(300);
+    var selector_page_addmember = $('#page_addmember');
+    var selector_memberSearchButton = $('#memberSearchButton');
+    var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text);
@@ -1377,7 +1417,7 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         if($('._nomember').length>0){
             $('#how_to_add_member').fadeIn();
@@ -1385,8 +1425,8 @@ function pc_add_member(option){
             $('#how_to_add_member').css('display','none');
         }
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
 
@@ -1400,11 +1440,11 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
 
@@ -1417,20 +1457,20 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         if($('#memberInfoPopup_PC').css('display') == 'block'){
-            var userID = $('#memberId_info_PC').val();
+            userID = $('#memberId_info_PC').val();
             $('#memberSearch_add').val(userID);
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        $('#memberSearchButton').trigger('click');
+        selector_memberSearchButton.trigger('click');
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
 
 
@@ -1438,7 +1478,7 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         $('#uptext2').text(text2);
         if($('#memberInfoPopup').css('display') == 'block'){
-            var userID = $('#memberId').val();
+            userID = $('#memberId').val();
             $('#memberSearch_add').val(userID);
         }
         closePopup('member_info');
@@ -1447,12 +1487,11 @@ function pc_add_member(option){
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
-
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        $('#memberSearchButton').trigger('click');
+        selector_memberSearchButton.trigger('click');
 
     }else if(option == 'group'){
         initialize_add_member_sheet();
@@ -1462,8 +1501,8 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
@@ -1471,22 +1510,24 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
     }
 }
 
 
 //진행중 회원, 종료된 회원 리스트 스왑
 function shiftMemberList(type){
+    var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
+    var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN');
     switch(type){
         case "current":
             //if($('#btnCallMemberList').hasClass('list_switch_selected')){
-            get_member_ing_list()
+            get_member_ing_list();
             $('#currentMemberList, #memberNumber_current_member').css('display','block');
             $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
-            $('._GROUP_THEAD, ._groupaddbutton').hide();
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show();
+            selector_GROUP_THEAD_groupaddbutton.hide();
+            selector_MEMBER_THEAD__memberaddbutton.show();
             //}else if($('#btnCallGroupList').hasClass('list_switch_selected')){
             /*
              get_group_ing_list()
@@ -1502,8 +1543,8 @@ function shiftMemberList(type){
             get_member_end_list();
             $('#finishedMemberList, #memberNumber_finish_member').css('display','block');
             $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
-            $('._GROUP_THEAD, ._groupaddbutton').hide();
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').show();
+            selector_GROUP_THEAD_groupaddbutton.hide();
+            selector_MEMBER_THEAD__memberaddbutton.show();
             //}else if($('#btnCallGroupList').hasClass('list_switch_selected')){
             /*
              get_group_end_list()
@@ -1553,20 +1594,23 @@ function shiftMemberList(type){
 
 //간편 가격입력
 function priceInput(price, type, selector){
+    var select = '';
+    var loc = '';
     if(selector == 2){
-        var select = '_2';
-        var loc = "_fast";
+        select = '_2';
+        loc = "_fast";
     }else if(selector == 1){
-        var select = '';
-        var loc = '';
+        select = '';
+        loc = '';
     }
+    var selector_lecturPrice_add_select = $('#lecturePrice_add'+select);
     if(type == "sum"){
-        var priceInputValue = $('#lecturePrice_add'+select).val().replace(/,/g, "");
-        var priceInputValue = price + Number(priceInputValue);
-        $('#lecturePrice_add'+select).val(numberWithCommas(priceInputValue)).attr('readonly',true);
+        var priceInputValue = selector_lecturPrice_add_select.val().replace(/,/g, "");
+        priceInputValue = price + Number(priceInputValue);
+        selector_lecturPrice_add_select.val(numberWithCommas(priceInputValue)).attr('readonly',true);
         $('#lecturePrice_add_value'+loc).val(priceInputValue);
     }else if(type == "del"){
-        $('#lecturePrice_add'+select).val("").attr('readonly',false);
+        selector_lecturPrice_add_select.val("").attr('readonly',false);
         $('#lecturePrice_add_value'+loc).val(0);
     }
     check_dropdown_selected();
@@ -1628,14 +1672,15 @@ function birth_dropdown_set(){
 
     $('#birth_month, #birth_month_info').change(function(){
         var dateoption = ['<option selected disabled hidden>'+text4+'</option>'];
-        $('#birth_date, #birth_date_info').html("");
+        var selector_birth_date_birth_date_info = $('#birth_date, #birth_date_info');
+        selector_birth_date_birth_date_info.html("");
         var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
         var month = $(this).val().replace(/월|月|\\./gi,"");
         for(var i=1; i<=lastDay[month-1]; i++){
             dateoption.push('<option data-date="'+i+text4+'">'+i+text4+'</option>');
         }
         var birth_date_options = dateoption.join('');
-        $('#birth_date, #birth_date_info').html(birth_date_options);
+        selector_birth_date_birth_date_info.html(birth_date_options);
     });
 
     $('#birth_year, #birth_month, #birth_date').change(function(){
@@ -1732,10 +1777,16 @@ function DataFormattingDict(Option, jsondata){
         text2 = 'Finished : ';
         text3 = 'Person';
     }
+    var DBlength;
+    var DBendlength;
+    var i;
+    var j;
+    var selector_currentMemberNum = $('#currentMemberNum');
+    var selector_finishMemberNum = $('#finishMemberNum');
     switch(Option){
         case 'name':
-            var DBlength = jsondata.nameArray.length;
-            for(var i=0; i<DBlength;i++){
+            DBlength = jsondata.nameArray.length;
+            for(i=0; i<DBlength;i++){
                 DB[jsondata.nameArray[i]] = {'id':jsondata.idArray[i],
                     'dbId':jsondata.dIdArray[i],
                     'email':jsondata.emailArray[i],
@@ -1758,8 +1809,8 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.groupInfoArray[i]
                 };
             }
-            var DBendlength = finishnameArray.length;
-            for(var j=0; j<DBendlength;j++){
+            DBendlength = finishnameArray.length;
+            for(j=0; j<DBendlength;j++){
                 DBe[jsondata.finishnameArray[j]] = {'id':jsondata.finishIdArray[j],
                     'dbId':jsondata.finishDidArray[j],
                     'email':jsondata.finishemailArray[j],
@@ -1778,13 +1829,13 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.finishGroupInfoArray[j]
                 };
             }
-            $('#currentMemberNum').text(text+DBlength+text3);
-            $('#finishMemberNum').text(text2+DBendlength+text3);
+            selector_currentMemberNum.text(text+DBlength+text3);
+            selector_finishMemberNum.text(text2+DBendlength+text3);
             break;
 
         case 'ID':
-            var DBlength = jsondata.idArray.length;
-            for(var i=0; i<DBlength;i++){
+            DBlength = jsondata.idArray.length;
+            for(i=0; i<DBlength;i++){
                 DB[jsondata.idArray[i]] = {'id':jsondata.idArray[i],
                     'name':jsondata.nameArray[i],
                     'dbId':jsondata.dIdArray[i],
@@ -1808,8 +1859,8 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.groupInfoArray[i]
                 };
             }
-            var DBendlength = jsondata.finishIdArray.length;
-            for(var j=0; j<DBendlength;j++){
+            DBendlength = jsondata.finishIdArray.length;
+            for(j=0; j<DBendlength;j++){
                 DBe[jsondata.finishIdArray[j]] = {'id':jsondata.finishIdArray[i],
                     'name':jsondata.finishnameArray[j],
                     'dbId':jsondata.finishDidArray[j],
@@ -1829,13 +1880,13 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.finishGroupInfoArray[j]
                 };
             }
-            $('#currentMemberNum').text(text+DBlength+text3);
-            $('#finishMemberNum').text(text2+DBendlength+text3);
+            selector_currentMemberNum.text(text+DBlength+text3);
+            selector_finishMemberNum.text(text2+DBendlength+text3);
             break;
 
         case 'DBID':
-            var DBlength = jsondata.dIdArray.length;
-            for(var i=0; i<DBlength;i++){
+            DBlength = jsondata.dIdArray.length;
+            for(i=0; i<DBlength;i++){
                 DB[jsondata.dIdArray[i]] = {'id':jsondata.idArray[i],
                     'name':jsondata.nameArray[i],
                     'dbId':jsondata.dIdArray[i],
@@ -1859,8 +1910,8 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.groupInfoArray[i]
                 };
             }
-            var DBendlength = jsondata.finishDidArray.length;
-            for(var j=0; j<DBendlength;j++){
+            DBendlength = jsondata.finishDidArray.length;
+            for(j=0; j<DBendlength;j++){
                 DBe[jsondata.finishDidArray[j]] = {'id':jsondata.finishIdArray[i],
                     'name':jsondata.finishnameArray[j],
                     'dbId':jsondata.finishDidArray[j],
@@ -1880,7 +1931,7 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.finishGroupInfoArray[j]
                 };
             }
-            for(var i=0; i<DBlength;i++){
+            for(i=0; i<DBlength;i++){
                 DB_All[jsondata.dIdArray[i]] = {'id':jsondata.idArray[i],
                     'name':jsondata.nameArray[i],
                     'dbId':jsondata.dIdArray[i],
@@ -1904,8 +1955,8 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.groupInfoArray[i]
                 };
             }
-            var DBendlength = jsondata.finishDidArray.length;
-            for(var j=0; j<DBendlength;j++){
+            DBendlength = jsondata.finishDidArray.length;
+            for(j=0; j<DBendlength;j++){
                 DB_All[jsondata.finishDidArray[j]] = {'id':jsondata.finishIdArray[i],
                     'name':jsondata.finishnameArray[j],
                     'dbId':jsondata.finishDidArray[j],
@@ -1925,8 +1976,8 @@ function DataFormattingDict(Option, jsondata){
                     'groupType':jsondata.finishGroupInfoArray[j]
                 };
             }
-            $('#currentMemberNum').text(text+DBlength+text3);
-            $('#finishMemberNum').text(text2+DBendlength+text3);
+            selector_currentMemberNum.text(text+DBlength+text3);
+            selector_finishMemberNum.text(text2+DBendlength+text3);
             break;
     }
 }
@@ -1959,7 +2010,7 @@ function get_member_list(use, callback){
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'))
+                scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2121,158 +2172,188 @@ function memberListSet (type,option,Reverse, jsondata){
     var tbodyStart = '<tbody>';
     var tbodyEnd = '</tbody>';
     var tbodyToAppend = $(tbodyStart);
+    var data;
+    var countList;
+    var nameList;
+    var dateList;
+    var $table;
+    var $tabletbody;
+    var $membernum;
+    var text_membernum;
     switch(type){
         case 'current':
-            var data = DataFormatting(jsondata);
-            var countList = data["countSorted"];
-            var nameList = data["nameSorted"];
-            var dateList = data["dateSorted"];
-            var $table = $('#currentMember');
-            var $tabletbody = $('#currentMember tbody');
-            var $membernum = $('#memberNumber_current_member');
-            var text_membernum = "진행중인 회원 ";
+            data = DataFormatting(jsondata);
+            countList = data["countSorted"];
+            nameList = data["nameSorted"];
+            dateList = data["dateSorted"];
+            $table = $('#currentMember');
+            $tabletbody = $('#currentMember tbody');
+            $membernum = $('#memberNumber_current_member');
+            text_membernum = "진행중인 회원 ";
             break;
         case 'finished':
-            var data = DataFormatting(jsondata);
-            var countList = data["countSorted"];
-            var nameList = data["nameSorted"];
-            var dateList = data["dateSorted"];
-            var $table = $('#finishedMember');
-            var $tabletbody = $('#finishedMember tbody');
-            var $membernum = $('#memberNumber_finish_member');
-            var text_membernum = "종료된 회원 ";
+            data = DataFormatting(jsondata);
+            countList = data["countSorted"];
+            nameList = data["nameSorted"];
+            dateList = data["dateSorted"];
+            $table = $('#finishedMember');
+            $tabletbody = $('#finishedMember tbody');
+            $membernum = $('#memberNumber_finish_member');
+            text_membernum = "종료된 회원 ";
             break;
     }
 
+    var countLists;
+    var nameLists;
+    var dateLists;
     if(Reverse == 'yes'){
-        var countLists =countList.sort().reverse();
-        var nameLists = nameList.sort().reverse();
-        var dateLists = dateList.sort().reverse();
+        countLists =countList.sort().reverse();
+        nameLists = nameList.sort().reverse();
+        dateLists = dateList.sort().reverse();
     }else{
-        var countLists =countList.sort();
-        var nameLists = nameList.sort();
-        var dateLists = dateList.sort();
+        countLists =countList.sort();
+        nameLists = nameList.sort();
+        dateLists = dateList.sort();
     }
 
     var len = countLists.length;
     var arrayResult = [];
+    var array;
+    var email;
+    var arrayforemail;
+    var name;
+    var id;
+    var dbId;
+    var contents;
+    var count;
+    var regcount;
+    var starts;
+    var ends;
+    var phoneToEdit;
+    var npCounts;
+    var rjCounts;
+    var yetRegCounts;
+    var yetCounts;
+    var groupType;
+    var groupType2;
+
     for(var i=0; i<len; i++){
         if(option == "count"){
-            var array = countLists[i].split('/');
-            var email = array[8];
-            var name = array[2];
-            var id = array[3];
-            var dbId = array[13];
-            var contents = array[5];
-            var count = array[0];
-            var regcount = array[1];
-            var starts = array[6];
-            var ends = array[7];
-            var phoneToEdit = array[4].replace(/-| |/gi,"");
-            if(name.length105){
-                var name = array[2].substr(0,9)+'..';
+            array = countLists[i].split('/');
+            email = array[8];
+            name = array[2];
+            id = array[3];
+            dbId = array[13];
+            contents = array[5];
+            count = array[0];
+            regcount = array[1];
+            starts = array[6];
+            ends = array[7];
+            phoneToEdit = array[4].replace(/-| |/gi,"");
+            if(name.length>10){
+                name = array[2].substr(0,9)+'..';
             }
-            var npCounts = array[9];
-            var rjCounts = array[10];
-            var yetRegCounts = array[11];
-            var yetCounts = array[12];
-            var groupType = array[14];
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
             if(array[15]){
-                var groupType2 = '/'+array[15];
+                groupType2 = '/'+array[15];
             }else{
-                var groupType2 = '';
+                groupType2 = '';
             }
         }else if(option == "name"){
-            var array = nameLists[i].split('/');
-            var email = array[8];
-            var name = array[0];
-            var id = array[1];
-            var dbId = array[13];
-            var contents = array[3];
-            var count = array[4];
-            var regcount = array[5];
-            var starts = array[6];
-            var ends = array[7];
-            var phoneToEdit = array[2].replace(/-| |/gi,"");
+            array = nameLists[i].split('/');
+            email = array[8];
+            name = array[0];
+            id = array[1];
+            dbId = array[13];
+            contents = array[3];
+            count = array[4];
+            regcount = array[5];
+            starts = array[6];
+            ends = array[7];
+            phoneToEdit = array[2].replace(/-| |/gi,"");
             if(name.length>10){
-                var name = array[0].substr(0,9)+'..';
+                name = array[0].substr(0,9)+'..';
             }
-            var npCounts = array[9];
-            var rjCounts = array[10];
-            var yetRegCounts = array[11];
-            var yetCounts = array[12];
-            var groupType = array[14];
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
             if(array[15]){
-                var groupType2 = '/'+array[15];
+                groupType2 = '/'+array[15];
             }else{
-                var groupType2 = '';
+                groupType2 = '';
             }
         }else if(option == "date"){
-            var array = dateLists[i].split('/');
-            var arrayforemail = dateLists[i].split('/');
-            var email = array[8];
-            var name = array[1];
-            var id = array[2];
-            var dbId = array[13];
-            var contents = array[4];
-            var count = array[5];
-            var regcount = array[6];
-            var starts = array[0];
-            var ends = array[7];
-            var phoneToEdit = array[3].replace(/-| |/gi,"");
+            array = dateLists[i].split('/');
+            arrayforemail = dateLists[i].split('/');
+            email = array[8];
+            name = array[1];
+            id = array[2];
+            dbId = array[13];
+            contents = array[4];
+            count = array[5];
+            regcount = array[6];
+            starts = array[0];
+            ends = array[7];
+            phoneToEdit = array[3].replace(/-| |/gi,"");
             if(name.length>10){
-                var name = array[1].substr(0,9)+'..';
+                name = array[1].substr(0,9)+'..';
             }
-            var npCounts = array[9];
-            var rjCounts = array[10];
-            var yetRegCounts = array[11];
-            var yetCounts = array[12];
-            var groupType = array[14];
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
             if(array[15]){
-                var groupType2 = '/'+array[15];
+                groupType2 = '/'+array[15];
             }else{
-                var groupType2 = '';
+                groupType2 = '';
             }
         }
 
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
         if(end == "9999.12.31"){
-            var end = text;
+            end = text;
         }
 
         var newReg = "";
         if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
-            var newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
+            newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
         }
 
-
+        var phone;
         if(phoneToEdit.substr(0,2)=="02"){
-            var phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4);
+            phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4);
         }else{
-            var phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
+            phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
         }
 
         var npCountImg = "";
         if(npCounts == 0 && rjCounts == 0){
-            var npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
+            npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
         }else if(rjCounts > 0){
-            var npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
+            npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
         }
 
         var yetReg = "";
         var yet = "";
         if(yetRegCounts > 0){
-            var yetReg = '(+'+yetRegCounts+')';
+            yetReg = '(+'+yetRegCounts+')';
         }
         if(yetCounts > 0){
-            var yet = '(+'+yetCounts+')';
+            yet = '(+'+yetCounts+')';
         }
 
 
 
-        var count = remove_front_zeros(count);
-        var regcount = remove_front_zeros(regcount);
+        count = remove_front_zeros(count);
+        regcount = remove_front_zeros(regcount);
 
         var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
@@ -2296,22 +2377,23 @@ function memberListSet (type,option,Reverse, jsondata){
         var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
         var scrolltd = '<td class="forscroll"></td>';
 
-        var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
-        arrayResult[i] = td;
+        // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+        // arrayResult[i] = td;
+        arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
 
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
-        var resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
+        resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
         if(bodywidth > 600){
             $('#please_add_member_pc').fadeIn();
         }else{
             $('#please_add_member').fadeIn();
         }
     }else if(type=="finished" && len ==0){
-        var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
+        resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;
     $tabletbody.remove();
@@ -2364,42 +2446,45 @@ function check_dropdown_selected(){
     var fast = $('#fast_check').val();
 
     //회원추가, 회원재등록 창일때
-    if($('._ADD_GROUP_NEW').css('display')=="none" && $('._ADD_MEMBER_NEW').css('display')=="block"){
+    var selector_ADD_GROUP_NEW = $('._ADD_GROUP_NEW');
+    var selector_upbutton_check = $("#upbutton-check");
+    var selector_page_addmember_submitBtn_first_child = $('#page_addmember .submitBtn:first-child');
+    if(selector_ADD_GROUP_NEW.css('display')=="none" && $('._ADD_MEMBER_NEW').css('display')=="block"){
         if(fast=='1'){
             if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (countInput).hasClass("dropdown_selected")==true && (priceInput_detail).length>0 && (startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true && sexInput.length>0){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.addClass('submitBtnActivated');
                 select_all_check=true;
 
 
             }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.removeClass('submitBtnActivated');
                 select_all_check=false;
             }
         }
         else{
             if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true && sexInput.length>0){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.addClass('submitBtnActivated');
                 select_all_check=true;
 
             }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.removeClass('submitBtnActivated');
                 select_all_check=false;
             }
         }
         //그룹 추가 창일때
-    }else if($('._ADD_GROUP_NEW').css('display')=="block"){
+    }else if(selector_ADD_GROUP_NEW.css('display')=="block"){
         if(groupname.val().length > 0 && grouptype.val().length > 0 && groupcapacity.val().length > 0){
 
-            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-            $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
+            selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+            selector_page_addmember_submitBtn_first_child.addClass('submitBtnActivated');
             select_all_check=true;
         }else{
-            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-            $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
+            selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+            selector_page_addmember_submitBtn_first_child.removeClass('submitBtnActivated');
             select_all_check=false;
         }
 
@@ -2407,24 +2492,24 @@ function check_dropdown_selected(){
     }else if($('._ADD_GROUPMEMBER_NEW').css('display')=="block"){
         if(fast=='1'){ //상세 입력 방식
             if((countInput).hasClass("dropdown_selected")==true && (priceInput_detail).length>0 && (startInput).hasClass("dropdown_selected")==true&&(endInput).hasClass("dropdown_selected")==true){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.addClass('submitBtnActivated');
                 select_all_check=true;
             }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.removeClass('submitBtnActivated');
                 select_all_check=false;
             }
         }
         else{   // 빠른 입력 방식
             if((countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true){
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.addClass('submitBtnActivated');
                 select_all_check=true;
 
             }else{
-                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-                $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
+                selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+                selector_page_addmember_submitBtn_first_child.removeClass('submitBtnActivated');
                 select_all_check=false;
             }
         }
@@ -2457,37 +2542,39 @@ function autoDateInput(){
 
     if(mm>12){ //해 넘어갈때 날짜처리
         //var finishDate = finishDate + 10000 - 1200
-        var yy = Number(yy)+1;
-        var mm = Number(mm)-12;
+        yy = Number(yy)+1;
+        mm = Number(mm)-12;
     }
     if(String(mm).length<2){
-        var mm = "0"+mm;
+        mm = "0"+mm;
     }
-    var finishDate = yy +"-"+ mm +"-"+ dd;
+    finishDate = yy +"-"+ mm +"-"+ dd;
     if(dd>lastDay[Number(mm)-1]){
-        var dd = Number(dd)-lastDay[Number(mm)-1];
-        var mm = Number(mm)+1;
+        dd = Number(dd)-lastDay[Number(mm)-1];
+        mm = Number(mm)+1;
         if(String(dd).length<2){
-            var dd = "0"+dd;
+            dd = "0"+dd;
         }
         if(String(mm).length<2){
-            var mm = "0"+mm;
+            mm = "0"+mm;
         }
-        var finishDate = yy +"-"+ mm +"-"+ dd;
+        finishDate = yy +"-"+ mm +"-"+ dd;
     }
-    $('#memberDue_add_2').val(finishDate);
-    $('#memberDue_add_2_fast').val(finishDate);
+    var selector_memberDue_add_2 = $('#memberDue_add_2');
+    var selector_memberDue_add_2_fast = $('#memberDue_add_2_fast');
+    selector_memberDue_add_2.val(finishDate);
+    selector_memberDue_add_2_fast.val(finishDate);
     if(selectedD==99){
-        $('#memberDue_add_2').val(text);
-        $('#memberDue_add_2_fast').val("9999-12-31");
+        selector_memberDue_add_2.val(text);
+        selector_memberDue_add_2_fast.val("9999-12-31");
     }
 
     if(selectedD==undefined){
-        $('#memberDue_add_2').val(text2);
+        selector_memberDue_add_2.val(text2);
     }
 
-    if($('#memberDue_add_2').val()!=text2 && $('#memberDue_add_2').val()!="" ){
-        $('#memberDue_add_2').addClass("dropdown_selected");
+    if(selector_memberDue_add_2.val()!=text2 && selector_memberDue_add_2.val()!="" ){
+        selector_memberDue_add_2.addClass("dropdown_selected");
     }
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
 }
@@ -2549,18 +2636,18 @@ function get_indiv_member_info(dbID){
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
 function open_member_info_popup_pc(dbID, jsondata){
-    var text = ' ';
-    var text2 = '소진시까지';
-    var text3 = '';
-    if(Options.language == "JPN"){
-        text = ' ';
-        text2 = '残余回数終わるまで';
-        text3 = '';
-    }else if(Options.language == "ENG"){
-        text = '';
-        text2 = '';
-        text3 = '';
-    }
+    // var text = ' ';
+    // var text2 = '소진시까지';
+    // var text3 = '';
+    // if(Options.language == "JPN"){
+    //     text = ' ';
+    //     text2 = '残余回数終わるまで';
+    //     text3 = '';
+    // }else if(Options.language == "ENG"){
+    //     text = '';
+    //     text2 = '';
+    //     text3 = '';
+    // }
     var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
     var userID    = jsondata.idInfo;
     var userBirth = jsondata.birthdayInfo;
@@ -2586,9 +2673,10 @@ function open_member_info_popup_pc(dbID, jsondata){
     }
 
     function about_member_window_show2(){
-        $('#memberInfoPopup_PC').attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
+        var selector_memberInfoPopup_PC = $('#memberInfoPopup_PC');
+        selector_memberInfoPopup_PC.attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
         //$('#memberInfoPopup_PC').show()
-        $('#memberInfoPopup_PC').addClass('display_block');
+        selector_memberInfoPopup_PC.addClass('display_block');
     }
 
     $('#memberName_info_PC').val(userName);
@@ -2624,18 +2712,23 @@ function open_member_info_popup_pc(dbID, jsondata){
     });
 
     function about_set_birthdata(){
-        if(userBirth[0].length < 1){
-            var birth_year = "-";
-            var birth_month = "-";
-            var birth_date = "-";
-        }else{
-            var birth_year = Number(userBirth[0].split('-')[0]) + '년';
-            var birth_month = Number(userBirth[0].split('-')[1]) + '월';
-            var birth_date = Number(userBirth[0].split('-')[2]) + '일';
+        var birth_year = "-";
+        var birth_month = "-";
+        var birth_date = "-";
+        // if(userBirth[0].length < 1){
+        //     var birth_year = "-";
+        //     var birth_month = "-";
+        //     var birth_date = "-";
+        // }else{
+        if(userBirth[0].length >= 1){
+            birth_year = Number(userBirth[0].split('-')[0]) + '년';
+            birth_month = Number(userBirth[0].split('-')[1]) + '월';
+            birth_date = Number(userBirth[0].split('-')[2]) + '일';
         }
 
         var yearoption = ['<option selected disabled hidden>'+'연도'+'</option>'];
-        for(var i=2018; i>=1908; i--){
+        var i;
+        for(i=2018; i>=1908; i--){
             yearoption.push('<option data-year="'+i+'년'+'">'+i+'년'+'</option>');
         }
         var birth_year_options = yearoption.join('');
@@ -2643,7 +2736,7 @@ function open_member_info_popup_pc(dbID, jsondata){
 
 
         var monthoption = ['<option selected disabled hidden>'+'월'+'</option>'];
-        for(var i=1; i<=12; i++){
+        for(i=1; i<=12; i++){
             monthoption.push('<option data-month="'+i+'월'+'">'+i+'월'+'</option>');
         }
         var birth_month_options = monthoption.join('');
@@ -2651,7 +2744,7 @@ function open_member_info_popup_pc(dbID, jsondata){
 
 
         var dateoption = ['<option selected disabled hidden>'+'일'+'</option>'];
-        for(var i=1; i<=31; i++){
+        for(i=1; i<=31; i++){
             dateoption.push('<option data-date="'+i+'일'+'">'+i+'일'+'</option>');
         }
         var birth_date_options = dateoption.join('');
@@ -2725,10 +2818,12 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#page-base').css('display','none');
     $('#page-base-modifystyle').css('display','block');
     $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo');
-    $('#memberInfoPopup').attr({'data-username': userName, 'data-userid' : userID});
-    $('#memberInfoPopup').addClass('display_block');
+    var selector_memberInfoPopup = $('#memberInfoPopup');
+    selector_memberInfoPopup.attr({'data-username': userName, 'data-userid' : userID});
+    selector_memberInfoPopup.addClass('display_block');
     shade_index(100);
-    $('#memberName_info').val(userName);
+    var selector_memberName_info = $('#memberName_info');
+    selector_memberName_info.val(userName);
     $('#memberName_info_lastName, #form_lastname_modify').val(jsondata.lastnameInfo);
     $('#memberName_info_firstName, #form_firstname_modify').val(jsondata.firstnameInfo);
     $('#memberId').val(userID).attr('data-dbid', dbID);
@@ -2763,7 +2858,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     }
 
     $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
-    $('#memberName_info').css('display','block');
+    selector_memberName_info.css('display','block');
     $('#memberName_info_lastName, #memberName_info_firstName').css('display','none');
     //$('#shade3').fadeIn('fast');
     //scrollToDom($('#page_managemember'));
@@ -2781,7 +2876,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#id_phone').val('');
 }
 
-modify_member_lec_info_pc()
+modify_member_lec_info_pc();
 //회원의 수강정보(등록횟수)를 수정한다.
 function modify_member_lec_info_pc(){
     $(document).on('keyup','.lec_reg_count',function(){
@@ -2793,10 +2888,10 @@ function modify_member_lec_info_pc(){
             $(this).css('color','red');
             $('#form_lecture_reg_count').val($(this).val());
         }
-    })
+    });
     $(document).on('keyup','#regPrice',function(){
         $('#form_price').val($(this).val());
-    })
+    });
 
     $(document).on('keyup','#lectureNote',function(){
         if($(this).val()==''){
@@ -2805,7 +2900,7 @@ function modify_member_lec_info_pc(){
             $('#form_note').val($(this).val());
         }
 
-    })
+    });
 }
 
 
@@ -2830,7 +2925,7 @@ function send_member_modified_data(dbID){
 
         //통신성공시 처리
         success:function(data){
-            var jsondata = JSON.parse(data)
+            var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -2862,17 +2957,17 @@ function resend_member_reg_data_pc(lectureID, dbID){
         dataType : 'html',
 
         beforeSend:function(){
-            beforeSend()
+            beforeSend();
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
         success:function(data){
-            var jsondata = JSON.parse(data)
+            var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -2931,7 +3026,7 @@ function delete_member_reg_data_pc(lectureID, dbID){
                         memberListSet('finished','date','yes',jsondata);
                     })
                 }
-                get_member_lecture_list(dbID)
+                get_member_lecture_list(dbID);
                 console.log('success');
             }
         },
@@ -2963,7 +3058,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
 
         //통신성공시 처리
         success:function(data){
-            var jsondata = JSON.parse(data)
+            var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -3003,17 +3098,17 @@ function resume_member_reg_data_pc(lectureID, dbID){
         dataType : 'html',
 
         beforeSend:function(){
-            beforeSend()
+            beforeSend();
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
         success:function(data){
-            var jsondata = JSON.parse(data)
+            var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -3212,18 +3307,27 @@ function get_member_lecture_list(dbID, use, callback){
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
     var bodywidth = window.innerWidth;
+    var $regHistory;
     if(PCorMobile == "pc"){
-        var $regHistory = $('#memberRegHistory_info_PC');
+        $regHistory = $('#memberRegHistory_info_PC');
     }else if(PCorMobile == "mobile"){
-        var $regHistory = $('#memberRegHistory_info');
+        $regHistory = $('#memberRegHistory_info');
     }
 
+    var result_history_html = [];
+    var result_history_html2 = [];
+    //시작, 종료, 등록횟수, 남은횟수,
+    //등록금액, 회당 금액, 전행상태, 연결상태, 수정
+    var regCount_group_personal = [];
+    var remCount_group_personal = [];
+    var availCount_group_personal = [];
+    var finishCount_group_personal = [];
     if(PCorMobile == "pc"){
-        var regCount_group_personal = [];
-        var remCount_group_personal = [];
-        var availCount_group_personal = [];
-        var finishCount_group_personal = [];
-        var result_history_html = ['<div style="background:#f5f5f5"><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>'];
+        regCount_group_personal = [];
+        remCount_group_personal = [];
+        availCount_group_personal = [];
+        finishCount_group_personal = [];
+        result_history_html = ['<div style="background:#f5f5f5"><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>'];
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
             var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>';
             var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>';
@@ -3235,12 +3339,15 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>';
             var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>';
             var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>';
+
+            var regPrice;
+            var regUnitPrice;
             if(bodywidth > 600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
             }else if(bodywidth <= 600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
@@ -3251,9 +3358,9 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>';
 
 
-
+            var yourgroup;
             if(jsondata.groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata.groupNameArray[i];
+                yourgroup = '[그룹] '+jsondata.groupNameArray[i];
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push('G'+jsondata.regCountArray[i]);
                     remCount_group_personal.push('G'+jsondata.remCountArray[i]);
@@ -3262,7 +3369,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                 }
 
             }else if(jsondata.groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata.groupNameArray[i] + ' 레슨';
+                yourgroup = jsondata.groupNameArray[i] + ' 레슨';
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push(jsondata.regCountArray[i]);
                     remCount_group_personal.push(jsondata.remCountArray[i]);
@@ -3275,18 +3382,18 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
 
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
             }else if(jsondata.lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
             }else if(jsondata.lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
             }
             if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
             }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
             }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
             }
 
             var note = '<div class="pc_member_note" data-dbid="'+dbID+'" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>';
@@ -3300,14 +3407,14 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         var result_history = result_history_html.join('');
         $regHistory.html(result_history);
     }else if(PCorMobile == "mobile"){
-        var result_history_html = [];
-        var result_history_html2 = [];
+        result_history_html = [];
+        result_history_html2 = [];
         //시작, 종료, 등록횟수, 남은횟수, 
         //등록금액, 회당 금액, 전행상태, 연결상태, 수정
-        var regCount_group_personal = [];
-        var remCount_group_personal = [];
-        var availCount_group_personal = [];
-        var finishCount_group_personal = [];
+        regCount_group_personal = [];
+        remCount_group_personal = [];
+        availCount_group_personal = [];
+        finishCount_group_personal = [];
         var jsonlen = jsondata.lectureIdArray.length;
 
         var jsondata_availCountArray = jsondata.availCountArray;
@@ -3341,12 +3448,14 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>';
             var regDateTime = '<div>'+jsondata_regDateTimeArray[i]+'</div>';
             var remcount =    '<div class="lec_rem_count">'+jsondata_remCountArray[i]+'</div>';
+            var regPrice;
+            var regUnitPrice;
             if(bodywidth > 600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
             }else if(bodywidth <= 600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
@@ -3356,8 +3465,9 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" class="regHistoryModifyBtn" data-type="view" data-leid="'+jsondata_lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>';
             var howManyReg = '<div class="howManyReg">'+(jsonlen-i)+'회차 등록 '+'</div>';
 
+            var yourgroup;
             if(jsondata_groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata_groupNameArray[i];
+                yourgroup = '[그룹] '+jsondata_groupNameArray[i];
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push('G'+jsondata_regCountArray[i]);
                     remCount_group_personal.push('G'+jsondata_remCountArray[i]);
@@ -3366,7 +3476,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                 }
 
             }else if(jsondata_groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata_groupNameArray[i] + ' 레슨';
+                yourgroup = jsondata_groupNameArray[i] + ' 레슨';
                 if(jsondata_lectureStateArray[i] == "IP"){
                     regCount_group_personal.push(jsondata_regCountArray[i]);
                     remCount_group_personal.push(jsondata_remCountArray[i]);
@@ -3378,18 +3488,18 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
             //var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
             if(jsondata_lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
             }else if(jsondata_lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
             }else if(jsondata_lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
             }
             if(jsondata_memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
             }else if(jsondata_memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
             }else if(jsondata_memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
             }
 
             var note = '<div class="mobile_member_note" data-leid="'+jsondata_lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata_noteArray[i]+'" disabled></span></div>';
@@ -3524,12 +3634,12 @@ function draw_member_history_list_table(jsondata, PCorMobile){
 
         if(repeat_dur - parseInt(repeat_dur) == 0.5){
             if(parseInt(repeat_dur) != 0){
-                var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분';
+                repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분';
             }else if(parseInt(repeat_dur) == 0){
-                var repeat_dur = '30분';
+                repeat_dur = '30분';
             }
         }else{
-            var repeat_dur = repeat_dur + '시간';
+            repeat_dur = repeat_dur + '시간';
         }
 
         var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>';
@@ -3554,12 +3664,19 @@ function draw_member_history_list_table(jsondata, PCorMobile){
 //회원등록////////////////////////////////////////////////////////
 //회원추가시 아이디 검색하면 해당회원정보를 필드에 채워주기
 function fill_member_info_by_ID_search(){
+    var selector_memberLastName_add = $('#memberLastName_add');
+    var selector_memberFirstName_add = $('#memberFirstName_add');
+    var selector_memberPhone_add = $('#memberPhone_add');
+    var selector_memberEmail_add = $('#memberEmail_add');
+    var selector_birth_year = $('#birth_year');
+    var selector_birth_month = $('#birth_month');
+    var selector_birth_date = $('#birth_date');
     $('#id_search_confirm').val('1');
-    $('#memberLastName_add').val(id_search_memberLastName);
-    $('#memberFirstName_add').val(id_search_memberFirstName);
+    selector_memberLastName_add.val(id_search_memberLastName);
+    selector_memberFirstName_add.val(id_search_memberFirstName);
     $('#form_name').val(id_search_memberLastName+id_search_memberFirstName);
-    $('#memberPhone_add').val(id_search_memberPhone);
-    $('#memberEmail_add').val(id_search_memberEmail);
+    selector_memberPhone_add.val(id_search_memberPhone);
+    selector_memberEmail_add.val(id_search_memberEmail);
     // $('#id_user_id').val(id_search_memberId);
     if(id_search_memberSex != ''){
         $('.selectboxopt[value='+id_search_memberSex+']').addClass('selectbox_checked');
@@ -3584,20 +3701,20 @@ function fill_member_info_by_ID_search(){
         dropdown_date_selected.prop('selected',true);
     }
 
-    $('#memberLastName_add').prop('disabled',true);
-    $('#memberFirstName_add').prop('disabled',true);
-    $('#memberPhone_add').prop('disabled',true);
-    $('#memberEmail_add').prop('disabled',true);
-    $('#birth_year').prop('disabled',true);
-    $('#birth_month').prop('disabled',true);
-    $('#birth_date').prop('disabled',true);
-    $('#memberLastName_add').addClass("dropdown_selected");
-    $('#memberFirstName_add').addClass("dropdown_selected");
-    $('#memberPhone_add').addClass("dropdown_selected");
-    $('#memberEmail_add').addClass("dropdown_selected");
-    $('#birth_year').addClass('dropdown_selected');
-    $('#birth_month').addClass('dropdown_selected');
-    $('#birth_date').addClass('dropdown_selected');
+    selector_memberLastName_add.prop('disabled',true);
+    selector_memberFirstName_add.prop('disabled',true);
+    selector_memberPhone_add.prop('disabled',true);
+    selector_memberEmail_add.prop('disabled',true);
+    selector_birth_year.prop('disabled',true);
+    selector_birth_month.prop('disabled',true);
+    selector_birth_date.prop('disabled',true);
+    selector_memberLastName_add.addClass("dropdown_selected");
+    selector_memberFirstName_add.addClass("dropdown_selected");
+    selector_memberPhone_add.addClass("dropdown_selected");
+    selector_memberEmail_add.addClass("dropdown_selected");
+    selector_birth_year.addClass('dropdown_selected');
+    selector_birth_month.addClass('dropdown_selected');
+    selector_birth_date.addClass('dropdown_selected');
 }
 
 //새로운 회원 정보 서버로 보내 등록하기
@@ -3667,7 +3784,7 @@ function add_member_form_func(){
         error:function(){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
-        },
+        }
     })
 }
 
@@ -3880,14 +3997,16 @@ function deleteMemberAjax(){
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
 
                 $('#startR').attr('selected','selected');
+                var selector_currentMemberList = $('#currentMemberList');
+                var selector_finishedMemberList = $('#finishedMemberList');
                 switch(alignType){
                     case 'name':
-                        if($('#currentMemberList').css('display') == "block"){
+                        if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet ('current','name','no',json);
                                 $('#name').attr('selected','selected');
                             })
-                        }else if($('#finishedMemberList').css('display') == "block"){
+                        }else if($selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','name','no',json);
                                 $('#name').attr('selected','selected');
@@ -3895,12 +4014,12 @@ function deleteMemberAjax(){
                         }
                         break;
                     case 'countH':
-                        if($('#currentMemberList').css('display') == "block"){
+                        if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','yes',json);
                                 $('#countH').attr('selected','selected');
                             })
-                        }else if($('#finishedMemberList').css('display') == "block"){
+                        }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','yes',json);
                                 $('#countH').attr('selected','selected');
@@ -3908,12 +4027,12 @@ function deleteMemberAjax(){
                         }
                         break;
                     case 'countL':
-                        if($('#currentMemberList').css('display') == "block"){
+                        if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','no',json);
                                 $('#countL').attr('selected','selected');
                             })
-                        }else if($('#finishedMemberList').css('display') == "block"){
+                        }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','no',json);
                                 $('#countL').attr('selected','selected');
@@ -3921,9 +4040,9 @@ function deleteMemberAjax(){
                         }
                         break;
                     case 'startP':
-                        if($('#currentMemberList').css('display') == "block"){
+                        if($selector_currentMemberList.css('display') == "block"){
 
-                        }else if($('#finishedMemberList').css('display') == "block"){
+                        }else if(selector_finishedMemberList.css('display') == "block"){
 
                         }
                         get_member_ing_list('callback',function(json){
@@ -3936,12 +4055,12 @@ function deleteMemberAjax(){
                         })
                         break;
                     case 'startR':
-                        if($('#currentMemberList').css('display') == "block"){
+                        if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#startR').attr('selected','selected');
                             })
-                        }else if($('#finishedMemberList').css('display') == "block"){
+                        }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#startR').attr('selected','selected');
@@ -3949,12 +4068,12 @@ function deleteMemberAjax(){
                         }
                         break;
                     case 'recent':
-                        if($('#currentMemberList').css('display') == "block"){
+                        if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#recent').attr('selected','selected');
                             })
-                        }else if($('#finishedMemberList').css('display') == "block"){
+                        }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#recent').attr('selected','selected');
@@ -4008,9 +4127,9 @@ function closePopup(option){
         function base_modify_hide(){
             $('#page-base-modifystyle').css('display','none');
         }
-
-        $('#upbutton-modify').find('img').attr({'src':'/static/user/res/icon-pencil.png'});
-        $('#upbutton-modify').attr({'data-type':'view'});
+        var selector_upbutton_modify = $('#upbutton-modify');
+        selector_upbutton_modify.find('img').attr({'src':'/static/user/res/icon-pencil.png'});
+        selector_upbutton_modify.attr({'data-type':'view'});
         $('#uptext-pc-modify').text(text);
 
         function hide_this(){
@@ -4059,21 +4178,22 @@ function closePopup(option){
             shade_index(-100)
         }
     }else if(option == 'member_add'){
+        var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
             $('#float_btn_wrap').show();
-            $('#float_btn').removeClass('rotate_btn');
+            selector_float_btn_member_add.removeClass('rotate_btn');
         }
         $('#page_addmember').css('display','none');
-
-        $('#float_btn').css('display','block');
+        selector_float_btn_member_add.css('display','block');
         $('#page-base').css('display','block');
         $('#page-base-addstyle').css('display','none');
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
-        $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true);
-        $('#birth_year, #birth_month, #birth_date').css('color','#cccccc');
+        var selector_birth_year_month_date = $('#birth_year, #birth_month, #birth_date');
+        selector_birth_year_month_date.find('option:first').prop('selected', true);
+        selector_birth_year_month_date.css('color','#cccccc');
         if($('#memberInfoPopup_PC').css('display')=="block"){
             shade_index(100);
         }else if($('#mshade').css('z-index')==150){
@@ -4083,15 +4203,16 @@ function closePopup(option){
             shade_index(-100);
         }
     }else if(option == 'group_add'){
+        var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){
             //$('#page_managemember').show();
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
             $('#float_btn_wrap').show();
-            $('#float_btn').removeClass('rotate_btn');
+            selector_float_btn_group_add.removeClass('rotate_btn');
         }
         $('#page_addgroup').css('display','block');
 
-        $('#float_btn').css('display','block');
+        selector_float_btn_group_add.css('display','block');
         $('#page-base').css('display','block');
         $('#page-base-addstyle').css('display','none');
 
@@ -4106,7 +4227,7 @@ function closePopup(option){
             shade_index(-100);
         }
     }
-};
+}
 
 function initialize_add_member_sheet(){
     $('#id_search_confirm').val('0');
@@ -4126,8 +4247,9 @@ function initialize_add_member_sheet(){
     }
 
     $('.ptaddbox input,#memberDue_add_2').val("");
-    $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true);
-    $('#birth_year, #birth_month, #birth_date').css('color','#cccccc');
+    var selector_birth_year_month_date = $('#birth_year, #birth_month, #birth_date');
+    selector_birth_year_month_date.find('option:first').prop('selected', true);
+    selector_birth_year_month_date.css('color','#cccccc');
 
     $('#form_birth').val('');
     $('#id_phone').val('');
@@ -4142,7 +4264,7 @@ function initialize_add_member_sheet(){
     $('.subpopup_addGroup').hide();
     $('#addedMemberListBox div').remove();
     $('#addedMemberListBox span').text('0 명');
-    added_New_Member_Num = 0
+    added_New_Member_Num = 0;
     //그룹추가관련 입력 초기화
 }
 
@@ -4191,21 +4313,22 @@ function get_indiv_repeat_info(dbID){
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
 function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
+    var $regHistory;
     if(PCorMobile == "pc"){
-        var $regHistory =  $('#memberRepeat_info_PC');
+        $regHistory =  $('#memberRepeat_info_PC');
     }else if(PCorMobile == "mobile"){
-        var $regHistory = $('#memberRepeat_info');
+        $regHistory = $('#memberRepeat_info');
     }
-    var text = '시';
-    var text2 = '시간';
+    // var text = '시';
+    // var text2 = '시간';
     var text3 = '반복 : ';
     if(Options.language == "JPN"){
-        text = '時';
-        text2 = '時間';
+        // text = '時';
+        // text2 = '時間';
         text3 = '繰り返し : ';
     }else if(Options.language == "ENG"){
-        text = '';
-        text2 = 'h';
+        // text = '';
+        // text2 = 'h';
         text3 = 'Repeat : ';
     }
     var repeat_info_dict= { 'KOR':
@@ -4234,8 +4357,8 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i];
         var repeat_group_type = "[그룹레슨]";
         if(repeat_group_name.length == 0 ){
-            var repeat_group_name = "";
-            var repeat_group_type = "[1:1레슨]";
+            repeat_group_name = "";
+            repeat_group_type = "[1:1레슨]";
         }
         var repeat_title = repeat_group_type+' '+repeat_group_name;
 
@@ -4251,30 +4374,31 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var repeat_min = Number(repeat_time_array[i].split(':')[1]);  // 00 or 30
 
         if(repeat_min == "30"){
-            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5;
+            repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5;
         }
 
         var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i]);
         if(repeat_dur - parseInt(repeat_dur) == 0.5){
             if(parseInt(repeat_dur) != 0){
-                var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분';
+                repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분';
             }else if(parseInt(repeat_dur) == 0){
-                var repeat_dur = '30분';
+                repeat_dur = '30분';
             }
         }else{
-            var repeat_dur = repeat_dur + '시간';
+            repeat_dur = repeat_dur + '시간';
         }
         //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
         var repeat_sum = Number(repeat_time) + Number(repeat_dur);
 
         var repeat_end_time_hour = parseInt(repeat_sum);
         if(parseInt(repeat_sum)<10){
-            var repeat_end_time_hour = '0'+parseInt(repeat_sum);
+            repeat_end_time_hour = '0'+parseInt(repeat_sum);
         }
+        var repeat_end_time_min = '00';
         if((repeat_sum%parseInt(repeat_sum))*60 == 0){
-            var repeat_end_time_min = '00';
+            repeat_end_time_min = '00';
         }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
-            var repeat_end_time_min = '30';
+            repeat_end_time_min = '30';
         }
 
         var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1];
