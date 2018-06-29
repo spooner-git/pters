@@ -119,6 +119,10 @@ body{
 		height: 50px;
 		width: 37.5px;
 	}
+	#paymentSetting .settingImg{
+		height: 50px;
+		width: auto;
+	}
 
 	.settingText{
 		display: block;
