@@ -43,7 +43,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
                 except ValueError:
                     date -= 1
 
-    logger.info('func_set_billing_schedule-3..')
+    end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
     today_unix_timestamp = today.timestamp()
     unix_timestamp = end_date.timestamp()
 
@@ -53,6 +53,8 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     merchant_uid = 'pters_group_merchant_'+str(today_unix_timestamp).split('.')[0]
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
+    logger.info('func_set_billing_schedule-3..')
+
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
