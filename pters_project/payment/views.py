@@ -156,7 +156,7 @@ def billing_check_logic(request):
     logger.info('test3'+str(PaymentInfoTb.objects.filter(price=3000).count()))
     if error is None:
         h = httplib2.Http()
-        resp, content = h.request("https://api.iamport.kr/payments/${"+json_loading_data['imp_uid']+"}", method="GET",
+        resp, content = h.request("https://api.iamport.kr/payments/{"+json_loading_data['imp_uid']+"}", method="GET",
                                   headers={'Authorization': access_token})
         logger.info('test3::'+str(resp))
         logger.info('test3::'+str(content))
