@@ -59,12 +59,12 @@ def add_billing_logic(request):
         payment_type_cd = json_loading_data['payment_type_cd']
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
         merchant_uid = json_loading_data['merchant_uid']
-        customer_uid = json_loading_data['customer_uid']
         price = json_loading_data['price']
         date = int(start_date.split('-')[2])
 
     if error is None:
         if payment_type_cd == 'PERIOD':
+            customer_uid = json_loading_data['customer_uid']
             end_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
             next_month = int(end_date.strftime('%m')) % 12 + 1
             # end_date = end_date + datetime.timedelta(days=1)
@@ -86,6 +86,7 @@ def add_billing_logic(request):
                                      start_date=start_date, end_date=end_date,
                                      price=price,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+
         billing_info = BillingInfoTb(member_id=request.user.id,
                                      payment_type_cd=payment_type_cd,
                                      merchant_uid=merchant_uid,
@@ -161,10 +162,11 @@ def billing_check_logic(request):
         # print('merchant_uid:'+merchant_uid)
 
     if error is None:
-        try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
+        if payment_user_info.payment_type_cd == 'PERIOD':
+            try:
+                billing_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
+            except ObjectDoesNotExist:
+                error = '결제 정보를 불러오는데 실패했습니다.'
         # if error is None:
         #     user_id = payment_user_info.member_id
 
