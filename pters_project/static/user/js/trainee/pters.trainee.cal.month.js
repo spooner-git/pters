@@ -308,11 +308,12 @@ $(document).ready(function(){
             $('.plan_raw_add').hide()
             shade_index(100)
         }else if($(this).hasClass('available')){
-            $('#cal_popup_plancheck').fadeIn('fast');
+            $('#cal_popup_plancheck').css('display','block')
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').show()
+            $('.plan_raw_add').trigger('click')
             shade_index(100)
         }else{
             $('#cal_popup_plancheck').fadeIn('fast');
