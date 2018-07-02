@@ -119,9 +119,9 @@ def billing_check_logic(request):
 
     logger.info('test4')
     if error is None:
+        logger.info('test5')
         status = json_loading_data['status']
         logger.info(str(json_loading_data['status']))
-        logger.info('test5')
         if status == 'paid':  # 결제 완료
             if payment_user_info.payment_type_cd == 'PERIOD':
                 func_set_billing_schedule(payment_user_info.customer_uid)  # 결제 정보 저장
