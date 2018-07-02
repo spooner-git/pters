@@ -141,7 +141,6 @@ def billing_check_logic(request):
 
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
-        logger.info(str(json_loading_data['merchant_uid']))
         # print('merchant_uid:'+merchant_uid)
         try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
@@ -169,10 +168,12 @@ def billing_check_logic(request):
 
     if error is None:
         error = 'test'
+        logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크'
+                    + str(payment_user_info.member_id) + ':' + str(json_loading_data['merchant_uid']))
         return render(request, 'ajax/payment_error_info.html', error)
     else:
         logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크'
-                     + str(payment_user_info.member_id + ':' + str(error)))
+                     + str(payment_user_info.member_id) + ':' + str(error))
         return render(request, 'ajax/payment_error_info.html', error)
 
 
