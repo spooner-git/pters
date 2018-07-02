@@ -150,7 +150,8 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         function payment(){
-            console.log('payment function test')
+            console.log('payment function test');
+            alert('pters_group_merchant_'+ new Date().getTime());
             IMP.request_pay({
                 pg : 'jtnet', // version 1.1.0부터 지원.
                 pay_method : 'card',
@@ -163,7 +164,7 @@
                 buyer_tel : '',
                 buyer_addr : '서울특별시 강남구 삼성동',
                 buyer_postcode : '123-456',
-                {#                    m_redirect_url : '/trainer/billings/'#}
+                m_redirect_url : '/trainer/billings/'
             }, function(rsp) {
                 if ( rsp.success ) {
                     var msg = '결제가 완료되었습니다.';
@@ -181,7 +182,7 @@
                             payment_type_cd: 'PERIOD',
                             merchandise_type_cd: 'group',
                             merchant_uid: 'pters_group_007',
-                            customer_uid: 'pters_customer_uid_{{request.user.id}}_02', // 카드(빌링키)와 1:1로 대응하는 값
+                            customer_uid: 'pters_customer_uid_{{request.user.id}}_02' // 카드(빌링키)와 1:1로 대응하는 값
                         })
                     })
                 } else {
