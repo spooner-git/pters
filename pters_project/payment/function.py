@@ -17,7 +17,7 @@ def func_set_billing_schedule(customer_uid):
     # else:
     #     next_month_today = today + datetime.timedelta(days=30)
     # current_time = timezone.now()
-    next_month_today = today + datetime.timedelta(minute=5)
+    next_month_today = today + datetime.timedelta(seconds=60*5)
     today_unix_timestamp = today.timestamp()
     unix_timestamp = next_month_today.timestamp()
 
