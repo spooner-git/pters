@@ -25,25 +25,25 @@ nav.upperbar{
 	background:transparent;
 	z-index: 1500;
 }
-	nav.upperbar div{
-		max-width: 1900px;
-		margin: 0 auto;
-		width: 90%;
-	}
-	nav.upperbar img{
-		height: 20px;
-		margin-top:20px;
-	}
-	nav.upperbar span{
-		float: right;
-		height: 30px;
-		margin-top: 18px;
-		color: #ffffff;
-		font-weight: 100;
-	}
-		nav.upperbar span:hover{
-			color: #fe4e65;
-		}
+nav.upperbar div{
+	max-width: 1900px;
+	margin: 0 auto;
+	width: 90%;
+}
+nav.upperbar img{
+	height: 20px;
+	margin-top:20px;
+}
+nav.upperbar span{
+	float: right;
+	height: 30px;
+	margin-top: 18px;
+	color: #ffffff;
+	font-weight: 100;
+}
+nav.upperbar span:hover{
+	color: #fe4e65;
+}
 
 .paginationMobile{
 	display: table;
@@ -54,14 +54,14 @@ nav.upperbar{
 	height: 10px;
 	z-index: 1500;
 }
-	.paginationMobile_bar{
-		display: table-cell;
-		border-left:1.5px solid #ffffff;
-		width: 8px;
-	}
-		.paginationMobile_active{
-			border-left:4px solid #fe4e65;
-		}
+.paginationMobile_bar{
+	display: table-cell;
+	border-left:1.5px solid #ffffff;
+	width: 8px;
+}
+.paginationMobile_active{
+	border-left:4px solid #fe4e65;
+}
 
 .pagination{
 	display: none;
@@ -233,9 +233,9 @@ img.prev_page{
 	margin-top: 50px;
 	margin-bottom: 50px;
 }
-	.logo_label img{
-		height: 30px;
-	}
+.logo_label img{
+	height: 30px;
+}
 
 .pters_logo_text{
 	color: #fe4e65;
@@ -261,21 +261,21 @@ img.prev_page{
 	border-bottom: 1px solid #ffffff;
 	text-align: center;
 }
-	.explain_main h1{
-		margin: 0;
-		font-size:20px;
-		font-weight:500;
-	}
-	.explain_main h2{
-		margin: 0;
-		font-size: 14px;
-		font-weight: 500;
-	}
-	.explain_main p{
-		font-size: 15px;
-		margin: 0;
-		font-weight: 400;
-	}
+.explain_main h1{
+	margin: 0;
+	font-size:20px;
+	font-weight:500;
+}
+.explain_main h2{
+	margin: 0;
+	font-size: 14px;
+	font-weight: 500;
+}
+.explain_main p{
+	font-size: 15px;
+	margin: 0;
+	font-weight: 400;
+}
 .gotoSignIn_pc{
 	display: none;
 }
@@ -289,17 +289,17 @@ img.prev_page{
 	height: 70px;
 	margin-top: 45px;
 }
-	.gotoSignIn button{
-		background:#fe4e65;
-		box-shadow: 1px 1px 1px 1px #fe4e65;
-		border:0;
-		color: #ffffff;
-		height: 50px;
-		width: 100%;
-		font-size: 15px;
-		font-weight: 500;
-		cursor: pointer;
-	}
+.gotoSignIn button{
+	background:#fe4e65;
+	box-shadow: 1px 1px 1px 1px #fe4e65;
+	border:0;
+	color: #ffffff;
+	height: 50px;
+	width: 100%;
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+}
 .brower_site{
 	background:#f4f4f4 !important;
 	box-shadow: unset !important;
@@ -352,15 +352,15 @@ img.prev_page{
 		transform: translate(-50%,-50%);
 		z-index: 1500;
 	}
-		.pagination_bar{
-			width: 15px;
-			height: 15px;
-			border-top:1px solid #eaeaea;
-			margin-left: 40px;
-		}
-			.pagination_active{
-				border-top:4px solid #fe4e65;
-			}
+	.pagination_bar{
+		width: 15px;
+		height: 15px;
+		border-top:1px solid #eaeaea;
+		margin-left: 40px;
+	}
+	.pagination_active{
+		border-top:4px solid #fe4e65;
+	}
 
 	.album_wrap{
 		position: relative;
@@ -405,21 +405,21 @@ img.prev_page{
 		border-bottom: 1px solid #ffffff;
 		text-align: left;
 	}
-		.explain_main h1{
-			font-size: 32px;
-			margin: 0;
-			font-weight:500;
-		}
-		.explain_main h2{
-			font-size: 24px;
-			margin: 0;
-			font-weight: 500;
-		}
-		.explain_main p{
-			font-size: 19px;
-			margin: 0;
-			font-weight: 400;
-		}
+	.explain_main h1{
+		font-size: 32px;
+		margin: 0;
+		font-weight:500;
+	}
+	.explain_main h2{
+		font-size: 24px;
+		margin: 0;
+		font-weight: 500;
+	}
+	.explain_main p{
+		font-size: 19px;
+		margin: 0;
+		font-weight: 400;
+	}
 
 	.gotoSignIn{
 		display: none;
@@ -435,17 +435,17 @@ img.prev_page{
 		left: unset;
 		bottom: unset;
 	}
-		.gotoSignIn_pc button{
-			float: right;
-			background:#fe4e65;
-			box-shadow: 1px 1px 1px 1px #fe4e65;
-			border:0;
-			color: #ffffff;
-			height: 35px;
-			width: 100px;
-			font-size: 15px;
-			font-weight: bold;
-			cursor: pointer;
-		}
+	.gotoSignIn_pc button{
+		float: right;
+		background:#fe4e65;
+		box-shadow: 1px 1px 1px 1px #fe4e65;
+		border:0;
+		color: #ffffff;
+		height: 35px;
+		width: 100px;
+		font-size: 15px;
+		font-weight: bold;
+		cursor: pointer;
+	}
 }
 

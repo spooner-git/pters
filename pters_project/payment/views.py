@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
@@ -18,13 +19,16 @@ from payment.function import func_set_billing_schedule, func_get_payment_token, 
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 
-class PaymentView(LoginRequiredMixin, TemplateView):
+class PaymentView(LoginRequiredMixin, View):
     template_name = 'payment.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(PaymentView, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
+        context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
-        return context
+
+        return render(request, self.template_name, context)
 
 
 @csrf_exempt
@@ -38,7 +42,7 @@ def billing_logic(request):
     customer_uid = None
     start_date = None
     end_date = None
-
+    # print('billing_logic')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -53,6 +57,7 @@ def billing_logic(request):
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
         merchant_uid = json_loading_data['merchant_uid']
         customer_uid = json_loading_data['customer_uid']
+        price = json_loading_data['price']
 
     if error is None:
         payment_info = PaymentInfoTb(member_id=request.user.id, merchandise_type_cd=merchandise_type_cd,
@@ -64,6 +69,7 @@ def billing_logic(request):
                                      payment_type_cd=payment_type_cd,
                                      customer_uid=customer_uid,
                                      payment_date=datetime.date.today(),
+                                     price=price,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         payment_info.save()
         billing_info.save()
@@ -80,6 +86,7 @@ def billing_check_logic(request):
     access_token = token_result['access_token']
     error = token_result['error']
     payment_user_info = None
+    # print('billing_check_logic')
 
     try:
         json_loading_data = json.loads(json_data)
@@ -90,6 +97,7 @@ def billing_check_logic(request):
 
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
+        # print('merchant_uid:'+merchant_uid)
         try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
         except ObjectDoesNotExist:
@@ -107,9 +115,11 @@ def billing_check_logic(request):
     if error is None:
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
+            # print('paid')
             if payment_user_info.payment_type_cd == 'PERIOD':
                 func_set_billing_schedule(payment_user_info.customer_uid)  # 결제 정보 저장
         else:  # 재결제 시도
+            # print('not paid/retry')
             func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid)
 
     if error is None:

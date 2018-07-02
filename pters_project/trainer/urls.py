@@ -27,17 +27,22 @@ urlpatterns = [
     # 강사 스케쥴 조회 - Off
     url(r'^get_off_repeat_schedule/$', views.GetOffRepeatScheduleView.as_view(), name='get_off_repeat_schedule'),
     # 강사 스케쥴 조회 - Group
-    url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(), name='get_trainer_group_schedule'),
+    url(r'^get_trainer_group_schedule/$', views.GetTrainerGroupScheduleView.as_view(),
+        name='get_trainer_group_schedule'),
     # 회원 스케쥴 조회 - 1:1/Group
     url(r'^get_member_schedule/$', views.GetMemberScheduleView.as_view(), name='get_member_schedule'),
     # 회원 반복 일정 조회 - 1:1/Group
-    url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(), name='get_member_repeat_schedule'),
+    url(r'^get_member_repeat_schedule/$', views.GetMemberRepeatScheduleView.as_view(),
+        name='get_member_repeat_schedule'),
     # 그룹일정에 속하는 그룹회원 일정 조회
-    url(r'^get_group_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(), name='get_group_member_schedule_list'),
+    url(r'^get_group_member_schedule_list/$', views.GetGroupMemberScheduleListViewAjax.as_view(),
+        name='get_group_member_schedule_list'),
     # 그룹 반복 일정 조회
-    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(), name='get_group_repeat_schedule_list'),
+    url(r'^get_group_repeat_schedule_list/$', views.GetGroupRepeatScheduleListViewAjax.as_view(),
+        name='get_group_repeat_schedule_list'),
     # 그룹 반복일정과 같이 등록된 회원들의 반복일정
-    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(), name='get_group_member_repeat_schedule_list'),
+    url(r'^get_group_member_repeat_schedule_list/$', views.GetGroupMemberRepeatScheduleListViewAjax.as_view(),
+        name='get_group_member_repeat_schedule_list'),
 
     # 회원 기능 #####################################################################################################
     # 회원 정보 조회
@@ -73,7 +78,8 @@ urlpatterns = [
     # 수강정보 진행중 상태 변경
     url(r'^progress_lecture_info/$', views.progress_lecture_info_logic, name='progress_lecture_info'),
     # 수강정보 연동 상태 변경
-    url(r'^update_lecture_connection_info/$', views.update_lecture_connection_info_logic, name='update_lecture_connection_info'),
+    url(r'^update_lecture_connection_info/$', views.update_lecture_connection_info_logic,
+        name='update_lecture_connection_info'),
 
     # 그룹 기능 ##########################################################################################################
     # 그룹 추가
@@ -160,6 +166,8 @@ urlpatterns = [
     url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
     # Setting 페이지
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
+    # 이용권 구매 페이지
+    url(r'^payment_setting/$', views.PaymentSettingView.as_view(), name='payment_setting'),
     # 푸시 Setting 페이지
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     # 예약 관련 Setting 페이지

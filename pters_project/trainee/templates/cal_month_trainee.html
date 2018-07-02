@@ -3,69 +3,69 @@
 
 {% block local_css %}
 
-        <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.month.cal.css" %}>
-        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.month.cal.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
 {% endblock %}
 
 {% block content %}
-<img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
+    <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
-<form action="{% url 'trainee:delete_trainee_schedule' %}" id="pt-delete-form" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="schedule_id" id="id_schedule_id">
-    <input type="hidden" name="next_page" value = "{% url 'trainee:get_trainee_error_info' %}">
-</form>
-<form action="{% url 'trainee:add_trainee_schedule' %}" id="pt-add-form" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
-    <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
-    <input type="hidden" name="group_schedule_id" id="id_group_schedule_id">
-    <input type="hidden" name="training_date" id="id_training_date">
-    <input type="hidden" name="time_duration" id="id_time_duration">
-    <input type="hidden" name="training_time" id="id_training_time">
-    <input type="hidden" name="next_page" value="{% url 'trainee:get_trainee_error_info' %}">
-</form>
+    <form action="{% url 'trainee:delete_trainee_schedule' %}" id="pt-delete-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="schedule_id" id="id_schedule_id">
+        <input type="hidden" name="next_page" value = "{% url 'trainee:get_trainee_error_info' %}">
+    </form>
+    <form action="{% url 'trainee:add_trainee_schedule' %}" id="pt-add-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
+        <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
+        <input type="hidden" name="group_schedule_id" id="id_group_schedule_id">
+        <input type="hidden" name="training_date" id="id_training_date">
+        <input type="hidden" name="time_duration" id="id_time_duration">
+        <input type="hidden" name="training_time" id="id_training_time">
+        <input type="hidden" name="next_page" value="{% url 'trainee:get_trainee_error_info' %}">
+    </form>
 
-  <!--플로팅 버튼-->
+    <!--플로팅 버튼-->
     <div id="float_btn">
-      <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='/trainee/add_pt_logic/'"> <!--2017.10.2-->
+        <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='/trainee/add_pt_logic/'"> <!--2017.10.2-->
     </div>
 
-  <!--플로팅 버튼-->
+    <!--플로팅 버튼-->
 
-  <!--추가/삭제/조회 선택 팝업-->
-  <div id="cal_popup_mini_selector" class="popups">
-      <div id="mini_selector_add">+</div>
-      <div id="mini_selector_view">?</div>
-      <div id="mini_selector_del">-</div>
-      <div id="mini_selector_close" class="button_close_popup"><img src="/static/user/res/member/icon-x-grey.png"></div>
-  </div>
-  <!--추가/삭제/조회 선택 팝업-->
+    <!--추가/삭제/조회 선택 팝업-->
+    <div id="cal_popup_mini_selector" class="popups">
+        <div id="mini_selector_add">+</div>
+        <div id="mini_selector_view">?</div>
+        <div id="mini_selector_del">-</div>
+        <div id="mini_selector_close" class="button_close_popup"><img src="/static/user/res/member/icon-x-grey.png"></div>
+    </div>
+    <!--추가/삭제/조회 선택 팝업-->
 
-  <!--[월간전용] 일정조회(강사)팝업 -->
-        <div id="cal_popup_plancheck" class="popups">
-          <div style="position: relative;">
+    <!--[월간전용] 일정조회(강사)팝업 -->
+    <div id="cal_popup_plancheck" class="popups">
+        <div style="position: relative;">
             <div>
-              <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
-              <span id="countNum"></span>
+                <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
+                <span id="countNum"></span>
             </div>
             <img src="/static/user/res/ptadd/btn-x.png" alt="" id="btn_close5" class="btn_close_popup" onclick="close_info_popup('cal_popup_plancheck')">
             <p class="popup_ymdText"></p>
-          </div>
-            <p style="font-size: 11px;color:#fe4e65;"></p>
-          <div class="popup_inner_month" style="height: auto;"></div>
         </div>
-  <!--[월간전용] 일정조회(강사)팝업 -->
+        <p style="font-size: 11px;color:#fe4e65;"></p>
+        <div class="popup_inner_month" style="height: auto;"></div>
+    </div>
+    <!--[월간전용] 일정조회(강사)팝업 -->
 
-  <!--변경 팝업메뉴-->
+    <!--변경 팝업메뉴-->
     <div id="cal_popup">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div><div id="popup_info3_memo"></div>
-      <div id="popup_text1" class="popup_inner popup_inner_delete"><span>일정 취소</span></div>
-      <div id="popup_sign_img"><img src="" id="id_sign_img"></div>
+        <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div><div id="popup_info2"></div><div id="popup_info3_memo"></div>
+        <div id="popup_text1" class="popup_inner popup_inner_delete"><span>일정 취소</span></div>
+        <div id="popup_sign_img"><img src="" id="id_sign_img"></div>
 
     </div>
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
-  <!--변경 팝업메뉴-->
+    <!--변경 팝업메뉴-->
 
     <!--예약 팝업메뉴-
     <div id="cal_popup2">
@@ -74,103 +74,103 @@
     </div>
   예약 팝업메뉴-->
 
-  <!--삭제 확인 팝업메뉴-->
+    <!--삭제 확인 팝업메뉴-->
     <div id="cal_popup3">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div><div id="popup_info3">정말 일정을 취소하시겠습니까?</div>
-      <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="left:48%;color:#282828;">예</span></div>
-      <div id="popup_text4" class="popup_inner popup_inner_delete"><span style="left:44.5%;">아니오</span></div>
+        <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close3"></div><div id="popup_info3">정말 일정을 취소하시겠습니까?</div>
+        <div id="popup_text3" class="popup_inner popup_inner_delete"><span style="left:48%;color:#282828;">예</span></div>
+        <div id="popup_text4" class="popup_inner popup_inner_delete"><span style="left:44.5%;">아니오</span></div>
     </div>
     <!--현재 클릭한 일정의 요소 보기: pters.day.cal.js 19행 console.log 주석 참고-->
-  <!--삭제 확인 팝업메뉴-->
+    <!--삭제 확인 팝업메뉴-->
 
 
     <div id="ng_popup">
-       <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
+        <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
         <div id="ng_popup_text" style="margin-bottom: 20px;">
-          <p>일정은 오늘 날짜 기준</p><p> +{{ lt_res_05 }}일까지 설정 가능합니다.</p>
+            <p>일정은 오늘 날짜 기준</p><p> +{{ lt_res_05 }}일까지 설정 가능합니다.</p>
         </div>
     </div>
 
     <!-- 일정추가 팝업 -->
     <div id="addpopup">
         <div id="dateSelector">
-          <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close4"></div><div id="popup_info4"></div>
-          <div id="dateInfo"></div>
+            <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close4"></div><div id="popup_info4"></div>
+            <div id="dateInfo"></div>
         </div>
 
         <div class="mode_switch_button_wrap_cal" style="margin-top: 0;">
             {% if lecture_flag %}
-          <div class="mode_switch_button mode_active" data-page="personalreserve">1:1 레슨</div>
+                <div class="mode_switch_button mode_active" data-page="personalreserve">1:1 레슨</div>
             {% endif %}
             {% if group_lecture_flag %}
-          <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="groupreserve">그룹 레슨</div>
+                <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="groupreserve">그룹 레슨</div>
             {% endif %}
         </div>
 
-            {% if lecture_flag %}
-        <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph personalreserve" style="display: block;">
-          <div class="ptaddboxtext" style="margin-top: 10px;margin-bottom:4px;">예약 가능 시간 
-            <div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>
-          </div>
-          <table class="timegraphtext">
+        {% if lecture_flag %}
+            <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph personalreserve" style="display: block;">
+                <div class="ptaddboxtext" style="margin-top: 10px;margin-bottom:4px;">예약 가능 시간
+                    <div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>
+                </div>
+                <table class="timegraphtext">
 
-          </table>
-          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
-        </div>
+                </table>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+            </div>
 
-        <div id="offStartTime" class="ptaddbox_nomargin addpopupinner personalreserve" style="position:relative;">
-          <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
-          <div id="starttimesSelected" class="dropdown_trainee_popup">
-            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-            <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
+            <div id="offStartTime" class="ptaddbox_nomargin addpopupinner personalreserve" style="position:relative;">
+                <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+                <div id="starttimesSelected" class="dropdown_trainee_popup">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
 
-            </ul>
-          </div>
-        </div>
+                    </ul>
+                </div>
+            </div>
 
-        <div id="offDuration" class="ptaddbox_nomargin addpopupinner" style="margin-bottom:40px;display:none">
-          <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
-          <div id="durationsSelected" class="dropdown">
-            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-            <ul id="durations" class="dropdown-menu pters_dropdown_custom" style="max-height: 103px;">
-            </ul>
-          </div>
-        </div>
-            {% endif %}
+            <div id="offDuration" class="ptaddbox_nomargin addpopupinner" style="margin-bottom:40px;display:none">
+                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+                <div id="durationsSelected" class="dropdown">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="durations" class="dropdown-menu pters_dropdown_custom" style="max-height: 103px;">
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
 
-            {% if group_lecture_flag %}
-        <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
-          <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
-            <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
-          </div>
-          <div id="groupTimeSelect"></div>
-          <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
-        </div>
-            {% endif %}
+        {% if group_lecture_flag %}
+            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
+                <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
+                    <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+                </div>
+                <div id="groupTimeSelect"></div>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+            </div>
+        {% endif %}
 
         <div id="submitBtn" class="popup_inner popup_inner_delete" name=submit><span>일정 예약</span></div>
 
     </div>
 
 
-  <!-- 월간 달력 -->
+    <!-- 월간 달력 -->
     <div id="ymdText">
         <div class='arrowButton'>
             <a id="leftArrowButton" style="left: 4%">
-              <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;visibility: hidden;">
-              <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
-              <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;visibility: hidden;" class="_pinkarrowbefore setunVisible">Today</span>
+                <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;visibility: hidden;">
+                <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="leftArrowButtonImg">
+                <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;visibility: hidden;" class="_pinkarrowbefore setunVisible">Today</span>
             </a>
             <a id="rightArrowButton" style="right: 4%">
-              <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
-              <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;visibility: hidden;">
-              <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;visibility: hidden;" class="_pinkarrowafter setunVisible">Today</span>
+                <img src={% static_url "user/res/daycal_arrow.png" %} alt="" id="rightArrowButtonImg">
+                <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;visibility: hidden;">
+                <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;visibility: hidden;" class="_pinkarrowafter setunVisible">Today</span>
             </a>
         </div>
         <div id="ymdTextWrap">
-             <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
+            <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
                 <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;"></span><span id="countRemainDataUnit">회</span></span>
-             </div>
+            </div>
             <div id="yearText"></div>
             <div id="monthText"></div>
             <div id="menuName">월간 일정
@@ -183,34 +183,34 @@
     <div id="ymdText-pc" class="wrap">
         <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
         <div class="ymdText-pc-date">
-          <span id="ymdText-pc-year" class="ymdText-pc-year">1월</span>
-          <span id="ymdText-pc-month" class="ymdText-pc-month">17일</span>
+            <span id="ymdText-pc-year" class="ymdText-pc-year">1월</span>
+            <span id="ymdText-pc-month" class="ymdText-pc-month">17일</span>
         </div>
         <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
 
         <div class="ymdText-pc-add">
-          <div class="ymdText-pc-add-off">+ OFF 일정등록</div>
-          <div class="ymdText-pc-add-pt">+ 레슨 일정등록</div>
+            <div class="ymdText-pc-add-off">+ OFF 일정등록</div>
+            <div class="ymdText-pc-add-pt">+ 레슨 일정등록</div>
         </div>
     </div>
 
 
 
     <div id="date" class="week-style wrap"> <!--월화수목금토일-->
-            <table class="calendar-style calendar-day-style">
-                <tr>
-                    <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
-                    <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
-                    <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
-                    <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
-                    <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
-                    <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
-                    <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
-                </tr>
-            </table>
+        <table class="calendar-style calendar-day-style">
+            <tr>
+                <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
+                <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
+                <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
+                <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
+                <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
+                <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
+                <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+            </tr>
+        </table>
     </div> <!--월화수목금토일-->
 
-    <div id="calendar" class="wrap" > <!-- Calendar container-->    
+    <div id="calendar" class="wrap" > <!-- Calendar container-->
         <div class="swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" id="slide0"></div> <!--Index0-->
@@ -223,13 +223,13 @@
         <div id="cal_box" class="cal_box"></div>
     </div>
 
-<!--
-    <div id="cal_popup">
-      <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
-      <div id="popup_text1" class="popup_inner popup_inner_change"><span>일정 변경</span></div>
-      <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 취소</span></div>
-    </div>
--->
+    <!--
+        <div id="cal_popup">
+          <div id="popup_img"><img src="/static/user/res/ptadd/icon-cal.png" id="img_cal"><img src="/static/user/res/ptadd/btn-x.png" id="btn_close"></div><div id="popup_info"></div>
+          <div id="popup_text1" class="popup_inner popup_inner_change"><span>일정 변경</span></div>
+          <div id="popup_text2" class="popup_inner popup_inner_delete"><span>일정 취소</span></div>
+        </div>
+    -->
 
 
 
@@ -237,111 +237,111 @@
 {% endblock %}
 
 {% block local_js_footer %}
-        <!-- for db by hk.kim 170805-->
-        <script>
-            var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-            var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+    <!-- for db by hk.kim 170805-->
+    <script>
+        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+        var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
-            //여기를 가져다 써야함 - hkkim 171021;
-            var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        	var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        //여기를 가져다 써야함 - hkkim 171021;
+        var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
-            var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var scheduleIdxArray =  [{% for pt_schedule_idx_info in pt_schedule_idx %}'{{ pt_schedule_idx_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleNoteArray =  [{% for pt_schedule_note_info in pt_schedule_note %}'{{ pt_schedule_note_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleIdxArray =  [{% for pt_schedule_idx_info in pt_schedule_idx %}'{{ pt_schedule_idx_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
-            var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-            var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
-            var classHourArray = ['{{ class_info.class_hour }}'];
+        var classHourArray = ['{{ class_info.class_hour }}'];
 
-      var group_schedule_id = [{% for group_schedule_id_info in group_schedule_id %}"{{ group_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_group_id = [{% for group_schedule_group_id_info in group_schedule_group_id %}"{{ group_schedule_group_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_group_name = [{% for group_schedule_name_info in group_schedule_name %}"{{ group_schedule_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_max_member_num = [{% for group_schedule_max_member_num_info in group_schedule_max_member_num %}"{{ group_schedule_max_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_current_member_num = [{% for group_schedule_current_member_num_info in group_schedule_current_member_num %}"{{ group_schedule_current_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_start_datetime = [{% for group_schedule_start_datetime_info in group_schedule_start_datetime %}"{{ group_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_end_datetime = [{% for group_schedule_end_datetime_info in group_schedule_end_datetime %}"{{ group_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_finish_check = [{% for group_schedule_finish_check_info in group_schedule_finish_check %}"{{ group_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var group_schedule_note = [{% for group_schedule_note_info in group_schedule_note %}"{{ group_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_id = [{% for group_schedule_id_info in group_schedule_id %}"{{ group_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_group_id = [{% for group_schedule_group_id_info in group_schedule_group_id %}"{{ group_schedule_group_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_group_name = [{% for group_schedule_name_info in group_schedule_name %}"{{ group_schedule_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_max_member_num = [{% for group_schedule_max_member_num_info in group_schedule_max_member_num %}"{{ group_schedule_max_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_current_member_num = [{% for group_schedule_current_member_num_info in group_schedule_current_member_num %}"{{ group_schedule_current_member_num_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_start_datetime = [{% for group_schedule_start_datetime_info in group_schedule_start_datetime %}"{{ group_schedule_start_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_end_datetime = [{% for group_schedule_end_datetime_info in group_schedule_end_datetime %}"{{ group_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_finish_check = [{% for group_schedule_finish_check_info in group_schedule_finish_check %}"{{ group_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var group_schedule_note = [{% for group_schedule_note_info in group_schedule_note %}"{{ group_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
-      var lecture_avail_count = [{{ lecture_avail_count }}];
-      var lecture_reg_count = [{{ lecture_reg_count }}];
-      var lecture_finish_count = [{{ lecture_finish_count }}];
-      var group_lecture_avail_count = [{{ lgroup_ecture_avail_count }}];
-      var group_lecture_reg_count = [{{ group_lecture_reg_count }}];
-      var group_lecture_finish_count = [{{ group_lecture_finish_count }}];
-            var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
-            var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
+        var lecture_avail_count = [{{ lecture_avail_count }}];
+        var lecture_reg_count = [{{ lecture_reg_count }}];
+        var lecture_finish_count = [{{ lecture_finish_count }}];
+        var group_lecture_avail_count = [{{ lgroup_ecture_avail_count }}];
+        var group_lecture_reg_count = [{{ group_lecture_reg_count }}];
+        var group_lecture_finish_count = [{{ group_lecture_finish_count }}];
+        var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
+        var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
-            var lt_res_01 =  ['{{ lt_res_01 }}'];
-            var lt_res_02 =  ['{{ lt_res_02 }}'];
-            var lt_res_03 =  ['{{ lt_res_03 }}'];
-            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
-            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
-            var lt_res_enable = ['{{ lt_res_enable }}'];
-        </script>
+        var lt_res_01 =  ['{{ lt_res_01 }}'];
+        var lt_res_02 =  ['{{ lt_res_02 }}'];
+        var lt_res_03 =  ['{{ lt_res_03 }}'];
+        var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
+        var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
+        var lt_res_enable = ['{{ lt_res_enable }}'];
+    </script>
 
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script> <!--달력에 대한 JS-->
-        <script>
-            var myswiper = new Swiper('.swiper-container',{
-                initialSlide : 1,
-                //speed : 120,
-                preventClicks : true,
-                keyboardControl : false,
-                preventClicksPropagation : true,
-                threshold : 50,
-                resistance: 1,
-                onlyExternal: true,
-            });
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.cal.month.js" %}></script> <!--달력에 대한 JS-->
+    <script>
+        var myswiper = new Swiper('.swiper-container',{
+            initialSlide : 1,
+            //speed : 120,
+            preventClicks : true,
+            keyboardControl : false,
+            preventClicksPropagation : true,
+            threshold : 50,
+            resistance: 1,
+            onlyExternal: true,
+        });
 
-            var count = 0 
-            var count1 = 0
+        var count = 0
+        var count1 = 0
 
-            $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
-              if(count==0){
+        $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
+            if(count==0){
                 myswiper.slidePrev(300)
-                count++  
+                count++
                 setTimeout(function(){count=0},400)
-              }else if(count>0){
+            }else if(count>0){
                 console.log('wait!')
-              }
-            })
-
-            $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
-              if(count1==0){
-                myswiper.slideNext(300)  
-                count1++  
-                setTimeout(function(){count1=0},400)
-              }else if(count>0){
-                console.log('wait!')
-              }
-            })
-
-            function left_page(){
-                if(count==0){
-                    myswiper.slidePrev(300)
-                    count++
-                    setTimeout(function(){count=0},400)
-                  }else if(count>0){
-                    console.log('wait!')
-                  }
             }
-            function right_page(){
-                if(count1==0){
+        })
+
+        $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
+            if(count1==0){
                 myswiper.slideNext(300)
                 count1++
                 setTimeout(function(){count1=0},400)
-              }else if(count>0){
+            }else if(count>0){
                 console.log('wait!')
-              }
             }
+        })
+
+        function left_page(){
+            if(count==0){
+                myswiper.slidePrev(300)
+                count++
+                setTimeout(function(){count=0},400)
+            }else if(count>0){
+                console.log('wait!')
+            }
+        }
+        function right_page(){
+            if(count1==0){
+                myswiper.slideNext(300)
+                count1++
+                setTimeout(function(){count1=0},400)
+            }else if(count>0){
+                console.log('wait!')
+            }
+        }
 
 
-        </script>
+    </script>
 
 {% endblock %}

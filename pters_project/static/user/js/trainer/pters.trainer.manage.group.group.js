@@ -3,15 +3,15 @@ var user_id_flag = 1;
 
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
 $('#groupname').keyup(function(){
-	check_dropdown_selected()
+    check_dropdown_selected()
 })
 $('#grouptype').change(function(){
-	$('#form_grouptype').val($(this).val())
-	check_dropdown_selected()
+    $('#form_grouptype').val($(this).val())
+    check_dropdown_selected()
 })
 $('#groupcapacity').change(function(){
-	$('#form_groupcapacity').val($(this).val())
-	check_dropdown_selected()
+    $('#form_groupcapacity').val($(this).val())
+    check_dropdown_selected()
 })
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
 
@@ -45,53 +45,53 @@ $('button#addByNew').click(function(e){
     }
 
 
-	
+
 })
 
 //회원추가된 항목에서 x버튼을 누르면 목록에서 뺀다.
 $(document).on('click','img.substract_addedMember',function(){
-	added_New_Member_Num--
-	$('#addedMemberListBox span').text(added_New_Member_Num+' 명')
-	$(this).parent('.addByNewRaw').remove()
+    added_New_Member_Num--
+    $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
+    $(this).parent('.addByNewRaw').remove()
 
-	//목록에서 뺄때 [리스트에서 추가]로 추가된 항목은 리스트로 다시 돌려놓는다.
-	if($(this).hasClass('_addedByList')){
-		var name = $(this).parent('.addByNewRaw').attr('data-name')
-		var dbid = $(this).parent('.addByNewRaw').attr('data-dbid')
-		var id = $(this).parent('.addByNewRaw').attr('data-id')
-		var sex = $(this).parent('.addByNewRaw').attr('data-sex')
-		var phone = $(this).parent('.addByNewRaw').attr('data-phone')
+    //목록에서 뺄때 [리스트에서 추가]로 추가된 항목은 리스트로 다시 돌려놓는다.
+    if($(this).hasClass('_addedByList')){
+        var name = $(this).parent('.addByNewRaw').attr('data-name')
+        var dbid = $(this).parent('.addByNewRaw').attr('data-dbid')
+        var id = $(this).parent('.addByNewRaw').attr('data-id')
+        var sex = $(this).parent('.addByNewRaw').attr('data-sex')
+        var phone = $(this).parent('.addByNewRaw').attr('data-phone')
 
-		var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">'
-		var html = '<div class="list_addByList" data-name="'+name+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+name+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
-	
-		$('#subpopup_addByList').append(html)
-	}
+        var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">'
+        var html = '<div class="list_addByList" data-name="'+name+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+name+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+
+        $('#subpopup_addByList').append(html)
+    }
 
 })
 
 //신규로 새로 그룹원으로 추가된 행의 input값들에 대한 key,드랍다운 이벤트모음
 function addByNew_input_eventGroup(){
-	//이름 input이 자신이 속한 부모 행의 attr에 이름 정보를 입력해둔다.
-	$(document).on('keyup', '.addByNewRaw input.new_member_lastname', function(){
-		$(this).parent('.addByNewRaw').attr({'data-lastname': $(this).val()})
-	    check_dropdown_selected()
+    //이름 input이 자신이 속한 부모 행의 attr에 이름 정보를 입력해둔다.
+    $(document).on('keyup', '.addByNewRaw input.new_member_lastname', function(){
+        $(this).parent('.addByNewRaw').attr({'data-lastname': $(this).val()})
+        check_dropdown_selected()
     })
 
-	$(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
-		$(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()})
+    $(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
+        $(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()})
         check_dropdown_selected()
-	})
+    })
 
-	$(document).on('change', '.addByNewRaw select', function(){
-		$(this).parent('.addByNewRaw').attr('data-sex', $(this).val())
+    $(document).on('change', '.addByNewRaw select', function(){
+        $(this).parent('.addByNewRaw').attr('data-sex', $(this).val())
         check_dropdown_selected()
-	})
+    })
 
-	$(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
-		$(this).parent('.addByNewRaw').attr('data-phone', $(this).val())
+    $(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
+        $(this).parent('.addByNewRaw').attr('data-phone', $(this).val())
         check_dropdown_selected()
-	})
+    })
 
 }
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
@@ -100,19 +100,19 @@ function addByNew_input_eventGroup(){
 
 /////////////리스트에서 추가 버튼 누르면 회원리스트 팝업//////////////////////////////////
 $('button#addByList, button#addBySearch').click(function(e){
-	e.preventDefault()
+    e.preventDefault()
     e.stopPropagation()
-	$('#subpopup_'+$(this).attr('id')).show()
+    $('#subpopup_'+$(this).attr('id')).show()
 
-	if($(this).attr('id')=="addByList"){
-		draw_memberlist_for_addByList($('#subpopup_addByList'))
-	}else if($(this).attr('id')=="addBySearch"){
-		//
-	}
+    if($(this).attr('id')=="addByList"){
+        draw_memberlist_for_addByList($('#subpopup_addByList'))
+    }else if($(this).attr('id')=="addBySearch"){
+        //
+    }
 })
 
 $(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
-	if($('#subpopup_addByList').css('display') == "block"){
+    if($('#subpopup_addByList').css('display') == "block"){
         $('#subpopup_addByList').hide()
     }
 })
@@ -125,66 +125,66 @@ function close_addByList_popup(){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 $(document).on('click','img.add_listedMember',function(){
-	var selected_lastname = $(this).parents('div.list_addByList').attr('data-lastname')
+    var selected_lastname = $(this).parents('div.list_addByList').attr('data-lastname')
     var selected_firstname = $(this).parents('div.list_addByList').attr('data-firstname')
-	var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid')
-	var selected_id = $(this).parents('div.list_addByList').attr('data-id')
-	var selected_sex = $(this).parents('div.list_addByList').attr('data-sex')
-	
+    var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid')
+    var selected_id = $(this).parents('div.list_addByList').attr('data-id')
+    var selected_sex = $(this).parents('div.list_addByList').attr('data-sex')
+
     //주간, 월간달력 : 그룹레슨에 회원 추가할때.
     if($('#calendar').length != 0 ){
-         $('#form_add_member_group_plan_memberid').val(selected_dbid);
-         send_add_groupmember_plan('callback', function(data){
-                
+        $('#form_add_member_group_plan_memberid').val(selected_dbid);
+        send_add_groupmember_plan('callback', function(data){
 
-                var group_schedule_id = $('#cal_popup_planinfo').attr('schedule_id')
-                var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
-                var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
 
-                get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-                    console.log('여기',jsondata)
-                    if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
-                        for(var i=0; i<jsondata.scheduleIdArray.length; i++){
-                            if(jsondata.scheduleFinishArray[i] == 0){
-                                $('#id_schedule_id_finish').val(jsondata.scheduleIdArray[i])
-                                $('#id_lecture_id_finish').val(jsondata.classArray_lecture_id[i])
+            var group_schedule_id = $('#cal_popup_planinfo').attr('schedule_id')
+            var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
+            var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
 
-                                send_plan_complete('callback', function(json, senddata){
-                                    z++
-                                    send_memo()
-                                    signImageSend(senddata);
-                                    completeSend();
-                                    set_schedule_time(json);
-                                    get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
-                                    alert('지난 그룹일정 참석자 정상 등록되었습니다.')
-                                    /*
-                                    if(z==len){
-                                        completeSend();
-                                        set_schedule_time(json);
-                                        close_info_popup('cal_popup_planinfo')
-                                        ajax_block_during_complete_weekcal = true
-                                    }
-                                    */
-                                })
-                            }else{
+            get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
+                console.log('여기',jsondata)
+                if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
+                    for(var i=0; i<jsondata.scheduleIdArray.length; i++){
+                        if(jsondata.scheduleFinishArray[i] == 0){
+                            $('#id_schedule_id_finish').val(jsondata.scheduleIdArray[i])
+                            $('#id_lecture_id_finish').val(jsondata.classArray_lecture_id[i])
 
-                            }
+                            send_plan_complete('callback', function(json, senddata){
+                                z++
+                                send_memo()
+                                signImageSend(senddata);
+                                completeSend();
+                                set_schedule_time(json);
+                                get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
+                                alert('지난 그룹일정 참석자 정상 등록되었습니다.')
+                                /*
+                                 if(z==len){
+                                 completeSend();
+                                 set_schedule_time(json);
+                                 close_info_popup('cal_popup_planinfo')
+                                 ajax_block_during_complete_weekcal = true
+                                 }
+                                 */
+                            })
+                        }else{
+
                         }
-                    }else{
-                        scheduleTime('class', data)
-                        scheduleTime('off', data)
-                        scheduleTime('group', data)
-                        draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
-                        alert('그룹일정 참석자 정상 등록되었습니다.')
                     }
-                    
-                    
-                })
-         });
+                }else{
+                    scheduleTime('class', data)
+                    scheduleTime('off', data)
+                    scheduleTime('group', data)
+                    draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
+                    alert('그룹일정 참석자 정상 등록되었습니다.')
+                }
 
-         
 
-    //회원관리 : 리스트로 그룹회원 추가
+            })
+        });
+
+
+
+        //회원관리 : 리스트로 그룹회원 추가
     }else{
 
         var group_id = $('#form_member_groupid').val()
@@ -219,9 +219,9 @@ $(document).on('click','img.add_listedMember',function(){
         }
 
 
-        
-     }
-   
+
+    }
+
 })
 
 function draw_memberlist_for_addByList(targetHTML){
@@ -292,44 +292,44 @@ function draw_memberlist_for_addByList(targetHTML){
 
 /////////////PTERS에서 ID로 검색해서 그룹원 추가하기/////////////////////////////////////////
 $('button#addBySearch_search').click(function(e){
-	e.preventDefault()
-	var searchID = $('#addBySearch_input').val()
-	$.ajax({
-            url:'/trainer/get_member_info/',
-            type:'POST',
-            data: {'id':searchID, 'id_flag':user_id_flag},
-            dataType : 'html',
+    e.preventDefault()
+    var searchID = $('#addBySearch_input').val()
+    $.ajax({
+        url:'/trainer/get_member_info/',
+        type:'POST',
+        data: {'id':searchID, 'id_flag':user_id_flag},
+        dataType : 'html',
 
-            beforeSend:function(){
-                beforeSend();
-            },
+        beforeSend:function(){
+            beforeSend();
+        },
 
-            //보내기후 팝업창 닫기
-            complete:function(){
-                completeSend();
-            },
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
 
-            //통신성공시 처리
-            success:function(data){
-                var jsondata = JSON.parse(data);
-                console.log(jsondata)
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show();
-                    $('#errorMessageText').text(jsondata.messageArray);
-                }else{
-					$('#errorMessageBar').hide();
-					$('#errorMessageText').text('');
-					draw_memberlist_for_addBySearch(jsondata)
-                }
-                
-            },
-
-            //통신 실패시 처리
-            error:function(){
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log(jsondata)
+            if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
-                $('#errorMessageText').text('아이디를 입력해주세요');
-            },
-        });
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                draw_memberlist_for_addBySearch(jsondata)
+            }
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('아이디를 입력해주세요');
+        },
+    });
 })
 
 $('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(function(){
@@ -341,22 +341,22 @@ $('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(fun
 })
 
 function draw_memberlist_for_addBySearch(jsondata){
-	var lastname = jsondata.lastnameInfo;
-	var firstname = jsondata.firstnameInfo;
-	var	phone = jsondata.phoneInfo;
-	var	birth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
-	var	email = jsondata.emailInfo;
-	var	id = jsondata.idInfo;
+    var lastname = jsondata.lastnameInfo;
+    var firstname = jsondata.firstnameInfo;
+    var	phone = jsondata.phoneInfo;
+    var	birth = jsondata.birthdayInfo + ''; //형식 1999년 02월 08일
+    var	email = jsondata.emailInfo;
+    var	id = jsondata.idInfo;
     var dbid = jsondata.dbIdInfo;
-	var	sex = jsondata.sexInfo;
+    var	sex = jsondata.sexInfo;
 
 
-	var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
-	var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">'
-	var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
-	var html = table + data
+    var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
+    var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">'
+    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+    var html = table + data
 
-	$('#searchedMemberListBox').html(html)
+    $('#searchedMemberListBox').html(html)
 }
 /////////////PTERS에서 ID로 검색해서 그룹원 추가하기/////////////////////////////////////////
 
@@ -383,41 +383,41 @@ function added_member_info_to_jsonformat(){
     }
     console.log(memo)
     var dataObject = {
-                        "new_member_data":[],
-                        "old_member_data":[],
-                        "lecture_info":{
-                                            "fast_check":fast_check,
-                                            "memo": memo,
-                                            "counts": counts,
-                                            "price": price,
-                                            "search_confirm": search_confirm,
-                                            "start_date": start_date,
-                                            "end_date": end_date,
-                                            "group_id":group_id  
-                                        }
-                    }
+        "new_member_data":[],
+        "old_member_data":[],
+        "lecture_info":{
+            "fast_check":fast_check,
+            "memo": memo,
+            "counts": counts,
+            "price": price,
+            "search_confirm": search_confirm,
+            "start_date": start_date,
+            "end_date": end_date,
+            "group_id":group_id
+        }
+    }
 
-	var len = $('#addedMemberListBox .addByNewRaw').length;
-	for(var i=1; i<len+1; i++){
-		if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+    var len = $('#addedMemberListBox .addByNewRaw').length;
+    for(var i=1; i<len+1; i++){
+        if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
             var firstname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname');
             var lastname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname');
             var phone = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone');
             var sex = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex')
             console.log(firstname, lastname, phone, sex)
-			var data = {
-                       "first_name" : firstname,
-                       "last_name" : lastname,
-                       "phone" : phone,
-                       "sex" : sex,
-                       "birthday_dt" : ""
-                    }
+            var data = {
+                "first_name" : firstname,
+                "last_name" : lastname,
+                "phone" : phone,
+                "sex" : sex,
+                "birthday_dt" : ""
+            }
             dataObject["new_member_data"].push(data)
-		}else{
+        }else{
             var data = {"db_id" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid')}
-			dataObject["old_member_data"].push(data)
-		}
-	}
+            dataObject["old_member_data"].push(data)
+        }
+    }
 
     return dataObject
 }
@@ -427,26 +427,26 @@ function added_member_info_to_jsonformat(){
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click','div.groupWrap',function(e){
     e.stopPropagation()
-	var group_id = $(this).attr('data-groupid');
+    var group_id = $(this).attr('data-groupid');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap')
-	var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap')
-	if(memberlist.css('display')=='none'){
+    var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap')
+    if(memberlist.css('display')=='none'){
         $(this).addClass('groupWrap_selected')
-		memberlist.addClass('groupMembersWrap_selected').show()
+        memberlist.addClass('groupMembersWrap_selected').show()
         repeat_list.show()
         get_groupmember_list(group_id)
         get_group_repeat_info(group_id)
-	}else{
+    }else{
         $(this).removeClass('groupWrap_selected')
-		memberlist.removeClass('groupMembersWrap_selected').hide()
+        memberlist.removeClass('groupMembersWrap_selected').hide()
         repeat_list.hide()
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4)
-	}
+    }
 })
-    //그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
-    $(document).on('click','div._groupmanage',function(e){
-        e.stopPropagation()
-    })
+//그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
+$(document).on('click','div._groupmanage',function(e){
+    e.stopPropagation()
+})
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
@@ -471,7 +471,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
     }else{
         alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.')
     }
-    
+
 })
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
@@ -486,7 +486,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
         e.stopPropagation()
         var group_id = $(this).attr('data-groupid')
         var status = $(this).attr('data-edit')
-        
+
 
         switch(status){
             case 'view':
@@ -500,7 +500,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
                 $(this).siblings('img._info_download, img._info_delete').hide()
                 $('img._info_modify[data-edit="view"]').addClass('disabled_button')
                 toggle_lock_unlock_inputfield_grouplist(group_id, false)
-            break;
+                break;
             case 'edit':
                 var group_name = $(this).parent('div').siblings('._groupname').find('input').val()
                 var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val()
@@ -511,7 +511,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type)
-            break;
+                break;
         }
 
         //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
@@ -533,7 +533,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
         //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
     }
 
-    
+
 })
 
 $(document).on('click','._groupstatus_disabled_false',function(e){
@@ -625,7 +625,7 @@ function get_group_ing_list(use, callback){
                 }else{
                     groupListSet('current',jsondata)
                 }
-                
+
                 console.log('success');
             }
         },
@@ -681,7 +681,7 @@ function get_group_end_list(use, callback){
                 }else{
                     groupListSet('finished',jsondata)
                 }
-                
+
                 console.log('success');
             }
         },
@@ -704,7 +704,7 @@ function delete_group_from_list(group_id){
     }else if($('#finishedGroupList').css('display') == "block"){
         next_page = '/trainer/get_group_end_list'
     }
-	$.ajax({
+    $.ajax({
         url:'/trainer/delete_group_info/',
         type:'POST',
         data: {"group_id":group_id, "next_page":next_page},
@@ -804,7 +804,7 @@ function delete_groupmember_from_grouplist(){
 //그룹 정보 수정
 function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type){
     var bodywidth = window.innerWidth;
-	$.ajax({
+    $.ajax({
         url:'/trainer/update_group_info/',
         type:'POST',
         data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
@@ -933,13 +933,13 @@ function groupListSet(option, jsondata){ //option : current, finished
         case 'current':
             var $membernum = $('#memberNumber_current_group')
             var $targetHTML = $('#currentGroupList')
-            var text_membernum = "진행중인 그룹 " 
-        break;
+            var text_membernum = "진행중인 그룹 "
+            break;
         case 'finished':
             var $membernum = $('#memberNumber_finish_group')
             var $targetHTML = $('#finishedGroupList')
-            var text_membernum = "종료된 그룹 " 
-        break;
+            var text_membernum = "종료된 그룹 "
+            break;
     }
     console.log('groupListSet',jsondata)
     var htmlToJoin = [];
@@ -956,12 +956,12 @@ function groupListSet(option, jsondata){ //option : current, finished
         var group_capacity = jsondata.member_num[i];
         var groupstatus = jsondata.state_cd_name[i];
         var groupstatus_cd = jsondata.state_cd[i];
-        
+
         var full_group = ""
         if(group_membernum == group_capacity && group_type == "NORMAL"){
             var full_group = "red_color_text"
         }
-        
+
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
@@ -973,16 +973,16 @@ function groupListSet(option, jsondata){ //option : current, finished
         var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
 
         var main = '<div class="_groupnum">'+(i+1)+'</div>'+
-                    '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-                    '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
-                    '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
-                    '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-                    '<div class="_grouppartystatus '+full_group+'"><span>'+ group_membernum + ' /</span> ' + '<input style="width:40px;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-                    '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
-                    '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
-                    '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-                    //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
-                    '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
+            '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+            '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
+            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+            '<div class="_grouppartystatus '+full_group+'"><span>'+ group_membernum + ' /</span> ' + '<input style="width:40px;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+            '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
+            '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
+            '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
+            //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
+            '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');
@@ -1031,10 +1031,10 @@ function get_groupmember_list(group_id, use, callback){
                     groupMemberListSet(group_id, jsondata)
                     $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1)
                 }
-                
+
                 console.log('success');
 
-                
+
             }
         },
 
@@ -1051,15 +1051,15 @@ function get_groupmember_list(group_id, use, callback){
 function groupMemberListSet(group_id, jsondata){
     console.log('groupmemberlist',jsondata)
     var htmlToJoin = ['<div class="groupmemberline_thead">'+
-                    '<div class="_tdname">회원명</div>'+
-                    '<div class="_id">회원 ID</div>'+
-                    '<div class="_regcount">등록 횟수</div>'+
-                    '<div class="_remaincount">남은 횟수</div>'+
-                    '<div class="_startdate">시작일</div>'+
-                    '<div class="_finday">종료일</div>'+
-                    '<div class="_contact">연락처</div>'+
-                    '<div class="_manage">관리</div>'+
-                    '</div>']
+    '<div class="_tdname">회원명</div>'+
+    '<div class="_id">회원 ID</div>'+
+    '<div class="_regcount">등록 횟수</div>'+
+    '<div class="_remaincount">남은 횟수</div>'+
+    '<div class="_startdate">시작일</div>'+
+    '<div class="_finday">종료일</div>'+
+    '<div class="_contact">연락처</div>'+
+    '<div class="_manage">관리</div>'+
+    '</div>']
     var len = jsondata.db_id.length
     var groupcapacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
     var grouptype = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
@@ -1080,15 +1080,15 @@ function groupMemberListSet(group_id, jsondata){
         var htmlEnd = '</div>'
 
         var memberRow = htmlStart +
-                        '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
-                        '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
-                        '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
-                        '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
-                        '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
-                        '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
-                        '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-                        '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
-                        htmlEnd
+            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
+            '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+            '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
+            '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
+            '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
+            '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
+            '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
+            '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
+            htmlEnd
 
         htmlToJoin.push(memberRow)
     }
@@ -1138,37 +1138,37 @@ $(document).on('click','img.substract_groupMember',function(e){
 //서버로부터 회원의 반복일정 정보를 받아온다.
 function get_group_repeat_info(group_id){
     $.ajax({
-              url: '/trainer/get_group_repeat_schedule_list/',
-              type:'POST',
-              data: {"group_id": group_id},
-              dataType : 'html',
+        url: '/trainer/get_group_repeat_schedule_list/',
+        type:'POST',
+        data: {"group_id": group_id},
+        dataType : 'html',
 
-              beforeSend:function(){
-                  //beforeSend(); //ajax 로딩이미지 출력
-              },
+        beforeSend:function(){
+            //beforeSend(); //ajax 로딩이미지 출력
+        },
 
-              success:function(data){
-                var jsondata = JSON.parse(data);
-                console.log('get_group_repeat_info',jsondata)
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                    $('#errorMessageBar').hide()
-                    $('#errorMessageText').text('')
-                    set_group_repeat_info(jsondata, group_id)
-                }
-              },
-
-              complete:function(){
-                //completeSend(); //ajax 로딩이미지 숨기기
-              },
-
-              error:function(){
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log('get_group_repeat_info',jsondata)
+            if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
-              }
-        })
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                set_group_repeat_info(jsondata, group_id)
+            }
+        },
+
+        complete:function(){
+            //completeSend(); //ajax 로딩이미지 숨기기
+        },
+
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        }
+    })
 }
 
 //서버로부터 받아온 반복일정을 회원정보 팝업에 그린다.
@@ -1189,17 +1189,17 @@ function set_group_repeat_info(jsondata, group_id){
         var text3 = 'Repeat : '
     }
     console.log('set_group_repeat_info',jsondata)
-    
+
     var repeat_info_dict= { 'KOR':
-                              {'DD':'매일', 'WW':'매주', '2W':'격주',
-                               'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
-                              'JPN':
-                              {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-                               'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
-                              'JAP':
-                              {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-                               'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-                             }
+        {'DD':'매일', 'WW':'매주', '2W':'격주',
+            'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+        'JPN':
+            {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+        'JAP':
+            {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+    }
     var len = jsondata.repeatScheduleIdArray.length
     var repeat_schedule_id_array = jsondata.repeatScheduleIdArray
     var repeat_type_array = jsondata.repeatScheduleTypeArray
@@ -1254,20 +1254,20 @@ function set_group_repeat_info(jsondata, group_id){
 
 
         var repeat_day =  function(){
-                            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
-                            var repeat_day_info = ""
-                            if(repeat_day_info_raw.length>1){
-                                for(var j=0; j<repeat_day_info_raw.length; j++){
-                                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1)
-                                }
-                            }else if(repeat_day_info_raw.length == 1){
-                                var repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]]
-                            }
-                            if(repeat_day_info.substr(0,1) == '/'){
-                                var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
-                            }
-                              return repeat_day_info
-                          };
+            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
+            var repeat_day_info = ""
+            if(repeat_day_info_raw.length>1){
+                for(var j=0; j<repeat_day_info_raw.length; j++){
+                    var repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1)
+                }
+            }else if(repeat_day_info_raw.length == 1){
+                var repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]]
+            }
+            if(repeat_day_info.substr(0,1) == '/'){
+                var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+            }
+            return repeat_day_info
+        };
         var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur+')'+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-deletetype="grouprepeatinfo" data-groupid="'+group_id+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
@@ -1281,7 +1281,7 @@ function set_group_repeat_info(jsondata, group_id){
         var repeat_bg = 'repeat_bg'
     }
     $regHistory.html(title + schedulesHTML.join('')).addClass(repeat_bg)
-    
+
 }
 
 
@@ -1289,54 +1289,54 @@ function set_group_repeat_info(jsondata, group_id){
 function set_group_member_repeat_info(group_repeat_id, use, callback){
     console.log(group_repeat_id)
     $.ajax({
-              url: '/trainer/get_group_repeat_schedule_list/',
-              type:'POST',
-              data: {"group_repeat_id": group_repeat_id},
-              dataType : 'html',
+        url: '/trainer/get_group_repeat_schedule_list/',
+        type:'POST',
+        data: {"group_repeat_id": group_repeat_id},
+        dataType : 'html',
 
-              beforeSend:function(){
-                  //beforeSend(); //ajax 로딩이미지 출력
-              },
+        beforeSend:function(){
+            //beforeSend(); //ajax 로딩이미지 출력
+        },
 
-              success:function(data){
-                var jsondata = JSON.parse(data);
-                console.log('set_group_member_repeat_info',jsondata)
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text(jsondata.messageArray)
-                }else{
-                    $('#errorMessageBar').hide()
-                    $('#errorMessageText').text('')
-                    if(use == "callback"){
-                        callback(jsondata)
-                    }
-                }
-              },
-
-              complete:function(){
-                //completeSend(); //ajax 로딩이미지 숨기기
-              },
-
-              error:function(){
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log('set_group_member_repeat_info',jsondata)
+            if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
-              }
-        })
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if(use == "callback"){
+                    callback(jsondata)
+                }
+            }
+        },
+
+        complete:function(){
+            //completeSend(); //ajax 로딩이미지 숨기기
+        },
+
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        }
+    })
 }
 
 //어떤 그룹반복일정id에 엮인 회원들의 반복일정id들을 모두 삭제요청한다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
 function send_delete_member_repeat_infos(jsondata){
-        //var len = jsondata.{멤버 리피트 id 배열 길이};
-        for(var i=0; i<len; i++){
+    //var len = jsondata.{멤버 리피트 id 배열 길이};
+    for(var i=0; i<len; i++){
 
-        }
+    }
 }
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 
 
 
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
-	$('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable))
+    $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable))
     $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable))
 }
 
