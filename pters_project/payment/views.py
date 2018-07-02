@@ -137,7 +137,7 @@ def billing_check_logic(request):
         error = 'test'
         logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(payment_user_info.customer_uid))
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
     return render(request, 'ajax/payment_error_info.html', error)
 
 
