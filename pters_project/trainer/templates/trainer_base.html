@@ -293,9 +293,11 @@
                             <a class="sidebar_text __setting">
                             </a>
                         </div>
-                        <div class="sidebar_div_last2" onclick="sideGoPage('help_setting')">
+                        <div class="sidebar_div_last2">
+                            <a href="https://blog.naver.com/ppkyum" target="_blank">
                             <img src="{% static_url "user/res/icon-info.png" %}" alt="#" class="sidebar_icon_info sidebar_icon">
-                        </div>
+                            </a>
+                        </div> 
                     </div>
                 </div>
 
@@ -376,7 +378,7 @@
                 -->
             </div>
             <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="open_lecture_select_popup_pc(); openAlarm('pc'); ">
-                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
+                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:4px;">
                 <span class="pcwhere">{{ request.session.class_type_name }}</span>
                 <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
             </div>
@@ -438,7 +440,7 @@
         <a class="KRtext">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span style="margin-left:10px;margin-right: 10px;">|</span>
         <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
         <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext">고객센터</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext" href="https://blog.naver.com/ppkyum" target="_blank">사용법 및 FAQ</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a><span style="margin-left:10px;margin-right: 10px;">|</span>
     </div>
     <div class="bottomfooter3">
         <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
