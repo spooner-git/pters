@@ -7,9 +7,9 @@ body{
 	position: relative;
 	margin-top: 30px;
 }
-	.bottomfooter2 a{
-		color: #7d7d7d;
-	}
+.bottomfooter2 a{
+	color: #7d7d7d;
+}
 
 .pters_dropdown_setting_custom{
 	display: inline-flex;
@@ -31,7 +31,7 @@ li a{
 }
 
 .dropdown button{
-	
+
 }
 
 #memberAvailDateSetting{
@@ -204,7 +204,7 @@ li a{
 	position: absolute;
 	display: inline-block;
 	width: 53.5px;
-	height: 35px; 
+	height: 35px;
 	top: 13px;
 	right: 14.5px;
 }
@@ -214,7 +214,7 @@ li a{
 	width:53.5px;
 	height: 100%;
 	border-radius: 27px;
-	border:0.5px solid #a2a2a2; 
+	border:0.5px solid #a2a2a2;
 	background: #cbc9c4;
 }
 
@@ -222,7 +222,7 @@ li a{
 	position: absolute;
 	top: 3px;
 	width: 28px;
-	height: 28px; 
+	height: 28px;
 	border-radius: 14px;
 	border:2px solid #282828;
 }

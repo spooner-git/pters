@@ -159,21 +159,21 @@ body{
 	vertical-align: middle;
 }
 
-	.fake_for_blankpage span{
-		position: absolute;
-		width: 100%;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		font-size: 15px;
-		font-weight: bold;
-		color: #282828;
-	}
+.fake_for_blankpage span{
+	position: absolute;
+	width: 100%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 15px;
+	font-weight: bold;
+	color: #282828;
+}
 
 
 img,a,div,span,p{
- 	-webkit-user-select: none;
-   	user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 #filterPopup_mini{
@@ -212,7 +212,7 @@ img,a,div,span,p{
 #float_btn img{ /*2017.10.2*/
 	width: 100%;
 	height: 100%;
-	
+
 }
 
 .rotate_btn{
@@ -268,9 +268,9 @@ img,a,div,span,p{
 	background-color: grey;
 	opacity: 0;
 	border-radius: 50%;
-	z-index: 120;	
+	z-index: 120;
 	font-size: 13px;
-	text-align: center; 
+	text-align: center;
 }
 
 #monthText{
@@ -390,10 +390,10 @@ img,a,div,span,p{
 	color: #ffffff;
 	text-decoration: none;
 }
-	.arrowButton a:active{
-		opacity: 0.4;
-		background: #282828;
-	}
+.arrowButton a:active{
+	opacity: 0.4;
+	background: #282828;
+}
 
 .time-style{ /*week ìŠ¤íƒ€ì¼*/
 	background-color: #ffffff;
@@ -469,7 +469,7 @@ img,a,div,span,p{
 }
 
 .offTime_re{ /*반복 일정*/
-	background: black; 
+	background: black;
 }
 
 .offTime:active,.offTime:hover{
@@ -544,15 +544,15 @@ img,a,div,span,p{
 	font-size: 12.5px;
 	font-weight: 400;
 }
-	.bluetext{
-		color: blue;
-	}
-	.inlineelement{
-		display: inline;
-	}
-	.hideelement{
-		display: none;
-	}
+.bluetext{
+	color: blue;
+}
+.inlineelement{
+	display: inline;
+}
+.hideelement{
+	display: none;
+}
 
 .hourType{
 	display: none;
@@ -641,12 +641,12 @@ img,a,div,span,p{
 		z-index: 10;
 		cursor: pointer;
 	}
-		#hidetoggle img{
-			width: 7px;
-			margin-bottom: 2px;
-			margin-right: 8px;
-			margin-left: 10px;
-		}
+	#hidetoggle img{
+		width: 7px;
+		margin-bottom: 2px;
+		margin-right: 8px;
+		margin-left: 10px;
+	}
 
 	#ymdText-pc{
 		display: block;
@@ -715,9 +715,9 @@ img,a,div,span,p{
 		border-top: 1px solid #cccccc;
 		border-right: 1px solid #f7f7f7;
 	}
-		.weekNum span:first-child{
-			height: 6px;
-		}
+	.weekNum span:first-child{
+		height: 6px;
+	}
 
 	.holidayName{
 		display: inline;
@@ -761,7 +761,7 @@ img,a,div,span,p{
 	.classTime,.offTime,.classTime_checked{
 		width: 98.5%;
 	}
-	
+
 	.memberName{
 		position: absolute;
 		width: 78%;
@@ -778,13 +778,13 @@ img,a,div,span,p{
 		white-space: nowrap;
 	}
 
-	
+
 	.hourType{
 		display: block;
 		margin:0;
 		margin-bottom: -3px;
 	}
-	
+
 
 	.td00,.td30{
 		cursor: pointer;
@@ -805,7 +805,7 @@ img,a,div,span,p{
 	.arrowButton{
 		display: none;
 	}
-	
+
 	.arrowButton a{
 		width: auto;
 		top: 47%;
@@ -821,9 +821,9 @@ img,a,div,span,p{
 		left: 50%;
 		padding-top: 115px;
 		transform:translateX(-50%);
-		
+
 		border-bottom:1px solid #eaeaea;
-		
+
 	}
 
 
@@ -923,10 +923,10 @@ img,a,div,span,p{
 		border:1px solid #282828;
 		cursor: pointer;
 	}
-		.ymdText-pc-add-refresh:hover{
-			background-color: #282828;
-			color: #fe4e65;
-		}
+	.ymdText-pc-add-refresh:hover{
+		background-color: #282828;
+		color: #fe4e65;
+	}
 
 	.ymdText-pc-add{
 		display: inline;
@@ -943,10 +943,10 @@ img,a,div,span,p{
 		border:1px solid #282828;
 		cursor: pointer;
 	}
-		.ymdText-pc-add-off:hover{
-			background-color: #282828;
-			color: #fe4e65;
-		}
+	.ymdText-pc-add-off:hover{
+		background-color: #282828;
+		color: #fe4e65;
+	}
 
 	.ymdText-pc-add-pt{
 		display: inline;
@@ -957,10 +957,10 @@ img,a,div,span,p{
 		border:1px solid #fe4e65;
 		cursor: pointer;
 	}
-		.ymdText-pc-add-pt:hover{
-			background-color: #fe4e65;
-			color: #ffffff;
-		}
+	.ymdText-pc-add-pt:hover{
+		background-color: #fe4e65;
+		color: #ffffff;
+	}
 
 	#float_btn_wrap{
 		display: none !important;
@@ -990,19 +990,19 @@ img,a,div,span,p{
 .listTitle_addByList{
 	position: relative;
 }
-	#subpopup_addByList_thisgroup, #subpopup_addByList_whole{
-		max-height: 400px;
-		overflow-y: auto;
-	}
-	.list_addByList > div:nth-child(1){
-		width: 43% !important;
-	}
-	.list_addByList > div:nth-child(2){
-		width: 37% !important;
-	}
-	.list_addByList > div:nth-child(3){
-		width: 20% !important;
-	}
+#subpopup_addByList_thisgroup, #subpopup_addByList_whole{
+	max-height: 400px;
+	overflow-y: auto;
+}
+.list_addByList > div:nth-child(1){
+	width: 43% !important;
+}
+.list_addByList > div:nth-child(2){
+	width: 37% !important;
+}
+.list_addByList > div:nth-child(3){
+	width: 20% !important;
+}
 
 
 

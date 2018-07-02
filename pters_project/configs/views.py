@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def index(request):
-    # login 완료시 main page로 이동
+    # login 완료시 main page 이동
     template_name = 'index.html'
 
     if request.user.is_authenticated():
@@ -32,7 +32,7 @@ class CheckView(LoginRequiredMixin, RedirectView):
     def get(self, request, **kwargs):
         user_for_group = User.objects.get(id=request.user.id)
         group = user_for_group.groups.get(user=request.user.id)
-        self.request.session['base_html'] = group.name+'_base.html'
+        request.session['base_html'] = group.name+'_base.html'
         if group.name == 'trainee':
             self.url = '/trainee/'
         elif group.name == 'trainer':
@@ -66,6 +66,7 @@ class PrivacyView(TemplateView):
 
 
 class AccessTestMixin(UserPassesTestMixin):
+
     def test_func(self):
         test_result = False
         error = None

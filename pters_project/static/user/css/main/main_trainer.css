@@ -104,12 +104,12 @@ body{
 	color: #fe4e65;
 	font-weight: 600;
 }
-	.lower_box_num:hover{
-		color: #fe4e65;
-	}
-	.lower_box_num:focus{
-		color: #fe4e65;
-	}
+.lower_box_num:hover{
+	color: #fe4e65;
+}
+.lower_box_num:focus{
+	color: #fe4e65;
+}
 
 .center_box_text{
 	width: 91.67%;
@@ -265,7 +265,7 @@ body{
 	#main_content img{
 		position: relative;
 	}
-	
+
 	.center_box{
 		position: relative;
 		width: 460px;
@@ -281,7 +281,7 @@ body{
 		margin-top: 22px;
 		top: 0;
 	}
-	
+
 	body{
 		overflow-y: auto;
 	}
@@ -306,11 +306,11 @@ body{
 	.lower_box_child{
 		font-size: 18px;
 	}
-	
+
 	.lower_box_num{
 		font-size: 27px;
 	}
-	
+
 	#pcver{
 		background:transparent;
 	}

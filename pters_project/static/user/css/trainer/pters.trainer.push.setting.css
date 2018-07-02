@@ -109,7 +109,7 @@ li a{
 	color: #3b3d3d;
 	margin-left: 14.5px;
 	margin-top: 10px;
-	height:35px; 
+	height:35px;
 }
 
 .iconText span{
@@ -138,7 +138,7 @@ li a{
 	position: absolute;
 	display: inline-block;
 	width: 53.5px;
-	height: 35px; 
+	height: 35px;
 	top: 3px;
 	right: 14.5px;
 }
@@ -148,7 +148,7 @@ li a{
 	width:53.5px;
 	height: 100%;
 	border-radius: 27px;
-	border:0.5px solid #a2a2a2; 
+	border:0.5px solid #a2a2a2;
 	background: #cbc9c4;
 }
 
@@ -156,7 +156,7 @@ li a{
 	position: absolute;
 	top: 3px;
 	width: 28px;
-	height: 28px; 
+	height: 28px;
 	border-radius: 14px;
 	border:2px solid #282828;
 }

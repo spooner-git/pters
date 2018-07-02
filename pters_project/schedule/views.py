@@ -1,7 +1,6 @@
 import datetime
 
 import boto3
-import botocore
 import base64
 
 from botocore.exceptions import ClientError
@@ -18,6 +17,7 @@ from django.shortcuts import redirect, render
 
 # Create your views here.
 from django.utils import timezone
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
@@ -951,21 +951,37 @@ def delete_repeat_schedule_logic(request):
         return redirect(next_page)
 
 
-class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
+class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
     template_name = 'ajax/data_change_check_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CheckScheduleUpdateViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    # def get_context_data(self, **kwargs):
+    def get(self, request):
+        context = {}
+        # context = super(CheckScheduleUpdateViewAjax, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         error = None
-        user_for_group = User.objects.get(id=self.request.user.id)
-        group = user_for_group.groups.get(user=self.request.user.id)
+        class_info = None
+        user_for_group = None
+        group = None
+
+        if class_id is None or class_id == '':
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                user_for_group = User.objects.get(id=request.user.id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                group = user_for_group.groups.get(user=request.user.id)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
         # update_check 0 : data update 없음
         # update_check 1 : data update 있음
         update_check = 0
-        if class_id is None or class_id == '':
-            error = '강좌 정보를 불러오지 못했습니다.'
         if error is None:
             if group.name == 'trainer':
                 # 강사 정보 가져오기
@@ -978,7 +994,7 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
                     update_check = class_info.schedule_check
 
             if group.name == 'trainee':
-                lecture_data = MemberLectureTb.objects.filter(member=self.request.user.id, use=USE)
+                lecture_data = MemberLectureTb.objects.filter(member=request.user.id, use=USE)
 
                 if len(lecture_data) > 0:
                     for lecture_info in lecture_data:
@@ -987,10 +1003,10 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, TemplateView):
 
         context['data_changed'] = update_check
         if error is not None:
-            logger.error(self.request.user.last_name+' '+self.request.user.first_name+'['+str(self.request.user.id)+']'+error)
-            messages.error(self.request, error)
+            logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+            messages.error(request, error)
 
-        return context
+        return render(request, self.template_name, context)
 
 
 # 일정 추가

@@ -61,7 +61,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     def get(self, request, **kwargs):
 
         class_id = request.session.get('class_id', '')
-        class_auth_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd='VIEW', use=USE)
+        class_auth_data = MemberClassTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=USE)
 
         error = None
         if class_id is None or class_id == '':
@@ -70,15 +70,16 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             elif len(class_auth_data) == 1:
                 self.url = '/trainer/trainer_main/'
                 for class_info in class_auth_data:
-                    self.request.session['class_id'] = class_info.class_tb_id
+                    request.session['class_id'] = class_info.class_tb_id
                     class_type_name = ''
                     class_name = None
-                    self.request.session['class_hour'] = class_info.class_tb.class_hour
-
+                    request.session['class_hour'] = class_info.class_tb.class_hour
+                    request.session['class_type_code'] = class_info.class_tb.subject_cd
                     try:
                         class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
                     except ObjectDoesNotExist:
                         error = '강좌 과목 정보를 불러오지 못했습니다.'
+
                     if error is None:
                         if class_info.class_tb.subject_detail_nm is None or class_info.class_tb.subject_detail_nm == '':
                             class_type_name = class_name.common_cd_nm
@@ -86,15 +87,15 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                             class_type_name = class_info.class_tb.subject_detail_nm
 
                     if error is None:
-                        self.request.session['class_type_name'] = class_type_name
+                        request.session['class_type_name'] = class_type_name
                     else:
-                        self.request.session['class_type_name'] = ''
+                        request.session['class_type_name'] = ''
 
                     if error is None:
                         if class_info.class_tb.center_tb is None or class_info.class_tb.center_tb == '':
-                            self.request.session['class_center_name'] = ''
+                            request.session['class_center_name'] = ''
                         else:
-                            self.request.session['class_center_name'] = class_info.class_tb.center_tb.center_name
+                            request.session['class_center_name'] = class_info.class_tb.center_tb.center_name
 
             else:
                 self.url = '/trainer/class_select/'
@@ -102,9 +103,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             self.url = '/trainer/trainer_main/'
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + error)
+            messages.error(request, error)
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -112,13 +113,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
 
-class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'main_trainer.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(TrainerMainView, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(TrainerMainView, self).get_context_data(**kwargs)
 
-        class_id = self.request.session.get('class_id', '')
+        class_id = request.session.get('class_id', '')
         error = None
 
         today = datetime.date.today()
@@ -153,7 +155,23 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
-            self.request.session['class_hour'] = class_info.class_hour
+            request.session['class_hour'] = class_info.class_hour
+            request.session['class_type_code'] = class_info.subject_cd
+            try:
+                class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+            except ObjectDoesNotExist:
+                error = '강좌 과목 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
+                    class_type_name = class_name.common_cd_nm
+                else:
+                    class_type_name = class_info.subject_detail_nm
+
+            if error is None:
+                request.session['class_type_name'] = class_type_name
+            else:
+                request.session['class_type_name'] = ''
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
@@ -219,41 +237,42 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         context['today_schedule_num'] = today_schedule_num
 
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
-        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        self.request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        request.session['setting_language'] = context['lt_lan_01']
 
-        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         if error is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + error)
-            messages.error(self.request, error)
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + error)
+            messages.error(request, error)
         else:
-            logger.info(self.request.user.last_name + self.request.user.first_name + '['
-                        + str(self.request.user.id) + '] : login success')
+            logger.info(request.user.last_name + request.user.first_name + '['
+                        + str(request.user.id) + '] : login success')
 
-        return context
+        return render(request, self.template_name, context)
 
 
-class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class CalDayView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'cal_day.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CalDayView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(CalDayView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         class_info = None
         error = None
         try:
@@ -262,19 +281,20 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
-            self.request.session['class_hour'] = class_info.class_hour
+            request.session['class_hour'] = class_info.class_hour
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
-        return context
+        return render(request, self.template_name, context)
 
 
-class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class CalWeekView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'cal_week.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CalWeekView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(CalWeekView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         class_info = None
         error = None
         try:
@@ -283,37 +303,39 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
-            self.request.session['class_hour'] = class_info.class_hour
+            request.session['class_hour'] = class_info.class_hour
 
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
-        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        self.request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        request.session['setting_language'] = context['lt_lan_01']
 
-        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-        return context
+        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
+        return render(request, self.template_name, context)
 
 
-class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'cal_month.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CalMonthView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         class_info = None
         error = None
 
@@ -323,30 +345,30 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
-            self.request.session['class_hour'] = class_info.class_hour
+            request.session['class_hour'] = class_info.class_hour
 
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
-        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        self.request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        request.session['setting_language'] = context['lt_lan_01']
 
-        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -382,40 +404,43 @@ class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class AddClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'trainer_class_add.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(AddClassView, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(AddClassView, self).get_context_data(**kwargs)
 
         class_type_cd_data = CommonCdTb.objects.filter(common_cd='TR', use=USE).order_by('order')
+        class_type_cd_data |= CommonCdTb.objects.filter(common_cd='ETC', use=USE).order_by('order')
 
         for class_type_cd_info in class_type_cd_data:
             class_type_cd_info.subject_type_cd = CommonCdTb.objects.filter(upper_common_cd='03',
                                                                            group_cd=class_type_cd_info.common_cd,
                                                                            use=USE).order_by('order')
 
-        center_list = CenterTrainerTb.objects.filter(member_id=self.request.user.id, use=USE)
+        center_list = CenterTrainerTb.objects.filter(member_id=request.user.id, use=USE)
 
         context['center_list'] = center_list
         context['class_type_cd_data'] = class_type_cd_data
 
-        return context
+        return render(request, self.template_name, context)
 
 
-class MyPageView(AccessTestMixin, TemplateView):
+class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_mypage.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(MyPageView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(MyPageView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         error = None
         class_info = None
         now = timezone.now()
         next_schedule_start_dt = ''
         next_schedule_end_dt = ''
 
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
         today = datetime.date.today()
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
@@ -443,13 +468,14 @@ class MyPageView(AccessTestMixin, TemplateView):
         context['end_schedule_num'] = 0
         context['new_member_num'] = 0
         off_repeat_schedule_data = None
+        user_member_info = None
 
         if class_id is None or class_id == '':
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
-                user_member_info = MemberTb.objects.get(member_id=self.request.user.id)
+                user_member_info = MemberTb.objects.get(member_id=request.user.id)
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
@@ -559,7 +585,7 @@ class MyPageView(AccessTestMixin, TemplateView):
         context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
         context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class DeleteAccountView(AccessTestMixin, TemplateView):
@@ -580,42 +606,54 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class PushSettingView(AccessTestMixin, TemplateView):
+class PaymentSettingView(AccessTestMixin, TemplateView):
+    template_name = 'setting_payment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentSettingView, self).get_context_data(**kwargs)
+
+        return context
+
+
+class PushSettingView(AccessTestMixin, View):
     template_name = 'setting_push.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(PushSettingView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+    def get(self, request):
+        context = {}
+        # context = super(PushSettingView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
-        return context
+        return render(request, self.template_name, context)
 
 
-class ReserveSettingView(AccessTestMixin, TemplateView):
+class ReserveSettingView(AccessTestMixin, View):
     template_name = 'setting_reserve.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ReserveSettingView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+    # def get_context_data(self, **kwargs):
+    def get(self, request):
+        context = {}
+        # context = super(ReserveSettingView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
-        self.request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        self.request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        self.request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        self.request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        self.request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        self.request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        self.request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        self.request.session['setting_language'] = context['lt_lan_01']
+        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        request.session['setting_language'] = context['lt_lan_01']
 
-        self.request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        self.request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        self.request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        self.request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        self.request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        self.request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class SalesSettingView(AccessTestMixin, TemplateView):
@@ -717,8 +755,9 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
 class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
+    def get(self, request):
+        # context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
+        context = {}
         class_id = request.session.get('class_id', '')
         date = request.session.get('date', '')
         day = request.session.get('day', '')
@@ -734,9 +773,10 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
 
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         # start_time = timezone.now()
-        context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
+        # context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
+        context = {}
         class_id = request.session.get('class_id', '')
         date = request.POST.get('date', '')
         day = request.POST.get('day', '')
@@ -752,25 +792,27 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         return render(request, self.template_name, context)
 
 
-class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/off_schedule_data_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(GetOffRepeatScheduleView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(GetOffRepeatScheduleView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         error = func_get_trainer_off_repeat_schedule(context, class_id)
         if error is None:
             context['error'] = error
 
-        return context
+        return render(request, self.template_name, context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         date = request.session.get('date', '')
         day = request.session.get('day', '')
@@ -787,8 +829,9 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
 
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         date = request.POST.get('date', '')
         day = request.POST.get('day', '')
@@ -810,8 +853,9 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
 class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/member_schedule_ajax.html'
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
         context['error'] = None
@@ -833,8 +877,9 @@ class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
 class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/member_repeat_schedule_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         context['error'] = None
 
@@ -847,8 +892,10 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
 
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
+        # def post(self, request, *args, **kwargs):
+    def post(self, request):
+        # context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
+        context = {}
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', None)
         context['error'] = None
@@ -866,8 +913,9 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
 class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/search_member_id_ajax.html'
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetMemberInfoView, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetMemberInfoView, self).get_context_data(**kwargs)
         user_id = request.POST.get('id', '')
         member_id = request.POST.get('member_id', '')
         id_flag = request.POST.get('id_flag', 0)
@@ -952,40 +1000,46 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
         return render(request, self.template_name, context)
 
 
-class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/member_list_all_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberListView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(GetMemberListView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         # context = get_member_data(context, class_id, None, self.request.user.id)
 
-        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
-        context['member_finish_data'] = func_get_member_end_list(class_id, self.request.user.id)
-        return context
+        context['member_data'] = func_get_member_ing_list(class_id, request.user.id)
+        context['member_finish_data'] = func_get_member_end_list(class_id, request.user.id)
+        # return context
+        return render(request, self.template_name, context)
 
 
-class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/member_list_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
-        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
+    def get(self, request):
+        context = {}
+        # context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        context['member_data'] = func_get_member_ing_list(class_id, request.user.id)
 
-        return context
+        # return context
+        return render(request, self.template_name, context)
 
 
-class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/member_list_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
 
-        context['member_data'] = func_get_member_end_list(class_id, self.request.user.id)
+        context['member_data'] = func_get_member_end_list(class_id, request.user.id)
 
-        return context
+        # return context
+        return render(request, self.template_name, context)
 
 
 # 회원수정
@@ -1586,32 +1640,34 @@ def export_excel_member_info_logic(request):
 class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/lecture_list_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetLectureListView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(GetLectureListView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
         context['error'] = None
 
         context = func_get_lecture_list(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + context['error'])
+            messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetLectureListView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def post(self, request):
+        context = {}
+        # context = super(GetLectureListView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
 
         context['error'] = None
         context = func_get_lecture_list(context, class_id, member_id)
         if context['error'] is not None:
-            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
-                         + str(self.request.user.id) + ']' + context['error'])
-            messages.error(self.request, context['error'])
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + context['error'])
+            messages.error(request, context['error'])
 
         return render(request, self.template_name, context)
 
@@ -2639,12 +2695,14 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
 class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/group_member_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
         # class_id = request.session.get('class_id', '')
         group_id = request.POST.get('group_id', '')
         error = None
@@ -2854,12 +2912,14 @@ def progress_group_info_logic(request):
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
         group_schedule_id = request.POST.get('group_schedule_id', '')
         error = None
         group_schedule_data = None
@@ -2909,8 +2969,9 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
 class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_repeat_data_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.GET.get('group_id', '')
 
         group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id,
@@ -2924,8 +2985,9 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
 
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_id = request.POST.get('group_id', '')
 
         group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id,
@@ -2945,8 +3007,9 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
 class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
     template_name = 'ajax/schedule_repeat_data_ajax.html'
 
-    def get(self, request, *args, **kwargs):
-        context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
+        # context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_repeat_schedule_id = request.GET.get('group_repeat_schedule_id', '')
 
         group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id
@@ -2958,8 +3021,9 @@ class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMix
 
         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
-        context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
         group_repeat_schedule_id = request.POST.get('group_repeat_schedule_id', '')
 
         group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id
@@ -2973,17 +3037,17 @@ class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMix
         return render(request, self.template_name, context)
 
 
-class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = "ajax/trainer_class_ajax.html"
 
-    def get_context_data(self, **kwargs):
-        context = super(GetClassListViewAjax, self).get_context_data(**kwargs)
+    def get(self, request):
+        context = {}
         # class_id = self.request.session.get('class_id', '')
         error = None
         member_class_data = None
 
         if error is None:
-            member_class_data = MemberClassTb.objects.filter(member_id=self.request.user.id, auth_cd__contains='VIEW',
+            member_class_data = MemberClassTb.objects.filter(member_id=request.user.id, auth_cd__contains='VIEW',
                                                              use=USE).order_by('-reg_dt')
 
         if error is None:
@@ -3003,27 +3067,34 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
                     if len(class_lecture_list) > 0:
                         total_member_num += 1
-
-                subject_type_name_code = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-                class_info.subject_type_name = subject_type_name_code.common_cd_nm
+                try:
+                    subject_type_name_code = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
+                except ObjectDoesNotExist:
+                    subject_type_name_code = None
+                if subject_type_name_code is not None:
+                    class_info.subject_type_name = subject_type_name_code.common_cd_nm
 
                 if class_info.subject_detail_nm is not None and class_info.subject_detail_nm != '':
                     class_info.subject_type_name = class_info.subject_detail_nm
-                class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
+
+                try:
+                    class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
+                except ObjectDoesNotExist:
+                    class_info.state_cd_name = ''
                 class_info.total_member_num = total_member_num
 
         context['class_data'] = member_class_data
 
         if error is not None:
-            messages.error(self.request, error)
+            messages.error(request, error)
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         center_id = request.POST.get('center_id', '')
         subject_cd = request.POST.get('subject_cd', '')
         subject_detail_nm = request.POST.get('subject_detail_nm', '')
@@ -3097,6 +3168,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             request.session['class_id'] = class_info.class_id
             request.session['class_hour'] = class_info.class_hour
+            request.session['class_type_code'] = class_info.subject_cd
             class_type_name = ''
             class_name = None
             try:
@@ -3140,7 +3212,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         class_id = request.POST.get('class_id', '')
         class_id_session = request.session.get('class_id', '')
 
@@ -3168,6 +3240,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if class_id == class_id_session:
                 request.session['class_id'] = ''
+                request.session['class_type_code'] = ''
                 request.session['class_type_name'] = ''
                 request.session['class_center_name'] = ''
 
@@ -3192,7 +3265,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         class_id = request.POST.get('class_id', '')
         subject_cd = request.POST.get('subject_cd', '')
         subject_detail_nm = request.POST.get('subject_detail_nm', '')
@@ -3279,6 +3352,7 @@ def select_class_processing_logic(request):
         class_name = None
 
         request.session['class_hour'] = class_info.class_hour
+        request.session['class_type_code'] = class_info.subject_cd
 
         try:
             class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
@@ -3310,19 +3384,20 @@ def select_class_processing_logic(request):
     return redirect(next_page)
 
 
-class GetTrainerInfoView(AccessTestMixin, TemplateView):
+class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_info_ajax.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id', '')
+    def get(self, request):
+        context = {}
+        # context = super(GetTrainerInfoView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
         error = None
         class_info = None
         now = timezone.now()
         next_schedule_start_dt = ''
         next_schedule_end_dt = ''
 
-        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
         today = datetime.date.today()
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
@@ -3357,7 +3432,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
 
         if error is None:
             try:
-                user_member_info = MemberTb.objects.get(member_id=self.request.user.id)
+                user_member_info = MemberTb.objects.get(member_id=request.user.id)
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
@@ -3473,7 +3548,7 @@ class GetTrainerInfoView(AccessTestMixin, TemplateView):
         context['off_repeat_schedule_end_time_data'] = off_repeat_schedule_end_time
         context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
 
-        return context
+        return render(request, self.template_name, context)
 
 
 # 회원수정 api

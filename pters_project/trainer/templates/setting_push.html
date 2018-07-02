@@ -2,8 +2,8 @@
 {% load static_url %}
 
 {% block local_css %}
-        <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.push.setting.css" %}>
-        <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.push.setting.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
 {% endblock %}
 
 
@@ -11,171 +11,171 @@
 {% block content %}
 
 
-  <form action="{% url 'trainer:update_setting_push' %}" id="update-setting-push-form" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="setting_trainee_schedule_confirm1" id="id_setting_trainee_schedule_confirm1" value="09:00"> <!--min 00:00 max 23:59  -->
-    <input type="hidden" name="setting_trainee_schedule_confirm2" id="id_setting_trainee_schedule_confirm2" value="16:00"> <!--min 00:00 max 23:59  -->
-    <input type="hidden" name="setting_trainee_no_schedule_confirm"   id="id_setting_trainee_no_schedule_confirm" value="7"> <!--시간 숫자-->
-    <input type="hidden" name="setting_trainer_schedule_confirm"   id="id_setting_trainer_schedule_confirm" value="08:00-22:00"> <!--min 00:00 max 23:59  -->
-    <input type="hidden" name="setting_trainer_no_schedule_confirm1"   id="id_setting_trainer_no_schedule_confirm1" value="08:00-22:00"> <!--min 00:00 max 23:59  -->
-    <input type="hidden" name="setting_trainer_no_schedule_confirm2"   id="id_setting_trainer_no_schedule_confirm2" value="5"> <!--시간 숫자-->
+    <form action="{% url 'trainer:update_setting_push' %}" id="update-setting-push-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="setting_trainee_schedule_confirm1" id="id_setting_trainee_schedule_confirm1" value="09:00"> <!--min 00:00 max 23:59  -->
+        <input type="hidden" name="setting_trainee_schedule_confirm2" id="id_setting_trainee_schedule_confirm2" value="16:00"> <!--min 00:00 max 23:59  -->
+        <input type="hidden" name="setting_trainee_no_schedule_confirm"   id="id_setting_trainee_no_schedule_confirm" value="7"> <!--시간 숫자-->
+        <input type="hidden" name="setting_trainer_schedule_confirm"   id="id_setting_trainer_schedule_confirm" value="08:00-22:00"> <!--min 00:00 max 23:59  -->
+        <input type="hidden" name="setting_trainer_no_schedule_confirm1"   id="id_setting_trainer_no_schedule_confirm1" value="08:00-22:00"> <!--min 00:00 max 23:59  -->
+        <input type="hidden" name="setting_trainer_no_schedule_confirm2"   id="id_setting_trainer_no_schedule_confirm2" value="5"> <!--시간 숫자-->
 
-    <input type="hidden" name="next_page" value = '{% url 'trainer:push_setting' %}'>
-  </form>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:push_setting' %}'>
+    </form>
 
-  <div id="memberPushSettingText" class="settingMenu wrap800">
-    <span class="settingText">회원 푸시 알림</span>
-  </div>
-  <div id="memberPushSetting" class="settingBox wrap800">
-    <div class="iconText">
-      <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> 레슨 일정 확인 안내</span><div id="switch1" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+    <div id="memberPushSettingText" class="settingMenu wrap800">
+        <span class="settingText">회원 푸시 알림</span>
     </div>
-    <div id="pushTimeSet">
-      <div id="time1">
-         <div id="prevset" class="dropdown pters_dropdown_setting_custom">
-            <div><span>전날 </span><span>오전 11시</span></div>
-         </div>
-         <div id="morningdaySelect" class="dropdown pters_dropdown_setting_custom">
-            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-            <ul id="ulMorningDay" class="dropdown-menu pters_dropdown_custom">
-              <li><a data-type="morning">오전</a></li>
-              <li><a data-type="day">오후</a></li>
-            </ul>
-         </div>
-         <div id="hourSelect" class="dropdown pters_dropdown_setting_custom">
-            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-            <ul id="ulTimes" class="dropdown-menu pters_dropdown_custom ulTimes">
-              <li><a data-dur="1">1시</a></li>
-              <li><a data-dur="2">2시</a></li>
-              <li><a data-dur="2">3시</a></li>
-              <li><a data-dur="2">4시</a></li>
-              <li><a data-dur="2">5시</a></li>
-              <li><a data-dur="2">6시</a></li>
-              <li><a data-dur="2">7시</a></li>
-              <li><a data-dur="2">8시</a></li>
-              <li><a data-dur="2">9시</a></li>
-              <li><a data-dur="2">10시</a></li>
-              <li><a data-dur="2">11시</a></li>
-              <li><a data-dur="2">12시</a></li>
-            </ul>
-         </div>
-      </div>
+    <div id="memberPushSetting" class="settingBox wrap800">
+        <div class="iconText">
+            <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> 레슨 일정 확인 안내</span><div id="switch1" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+        </div>
+        <div id="pushTimeSet">
+            <div id="time1">
+                <div id="prevset" class="dropdown pters_dropdown_setting_custom">
+                    <div><span>전날 </span><span>오전 11시</span></div>
+                </div>
+                <div id="morningdaySelect" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulMorningDay" class="dropdown-menu pters_dropdown_custom">
+                        <li><a data-type="morning">오전</a></li>
+                        <li><a data-type="day">오후</a></li>
+                    </ul>
+                </div>
+                <div id="hourSelect" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulTimes" class="dropdown-menu pters_dropdown_custom ulTimes">
+                        <li><a data-dur="1">1시</a></li>
+                        <li><a data-dur="2">2시</a></li>
+                        <li><a data-dur="2">3시</a></li>
+                        <li><a data-dur="2">4시</a></li>
+                        <li><a data-dur="2">5시</a></li>
+                        <li><a data-dur="2">6시</a></li>
+                        <li><a data-dur="2">7시</a></li>
+                        <li><a data-dur="2">8시</a></li>
+                        <li><a data-dur="2">9시</a></li>
+                        <li><a data-dur="2">10시</a></li>
+                        <li><a data-dur="2">11시</a></li>
+                        <li><a data-dur="2">12시</a></li>
+                    </ul>
+                </div>
+            </div>
 
-      <div id="time2">
-         <div id="prevset" class="dropdown pters_dropdown_setting_custom">
-            <div class=""><span>당일 </span><span>오전 11시</span></div>
-         </div>
-         <div id="morningdaySelect2" class="dropdown pters_dropdown_setting_custom">
-            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-            <ul id="ulMorningDay2" class="dropdown-menu pters_dropdown_custom">
-              <li><a data-type="morning">오전</a></li>
-              <li><a data-type="day">오후</a></li>
-            </ul>
-         </div>
-         <div id="hourSelect2" class="dropdown pters_dropdown_setting_custom">
-            <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-            <ul id="ulTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
-              <li><a data-dur="1">1시</a></li>
-              <li><a data-dur="2">2시</a></li>
-              <li><a data-dur="2">3시</a></li>
-              <li><a data-dur="2">4시</a></li>
-              <li><a data-dur="2">5시</a></li>
-              <li><a data-dur="2">6시</a></li>
-              <li><a data-dur="2">7시</a></li>
-              <li><a data-dur="2">8시</a></li>
-              <li><a data-dur="2">9시</a></li>
-              <li><a data-dur="2">10시</a></li>
-              <li><a data-dur="2">11시</a></li>
-              <li><a data-dur="2">12시</a></li>
-            </ul>
-         </div>
-      </div> 
-    </div>
+            <div id="time2">
+                <div id="prevset" class="dropdown pters_dropdown_setting_custom">
+                    <div class=""><span>당일 </span><span>오전 11시</span></div>
+                </div>
+                <div id="morningdaySelect2" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulMorningDay2" class="dropdown-menu pters_dropdown_custom">
+                        <li><a data-type="morning">오전</a></li>
+                        <li><a data-type="day">오후</a></li>
+                    </ul>
+                </div>
+                <div id="hourSelect2" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulTimes2" class="dropdown-menu pters_dropdown_custom ulTimes">
+                        <li><a data-dur="1">1시</a></li>
+                        <li><a data-dur="2">2시</a></li>
+                        <li><a data-dur="2">3시</a></li>
+                        <li><a data-dur="2">4시</a></li>
+                        <li><a data-dur="2">5시</a></li>
+                        <li><a data-dur="2">6시</a></li>
+                        <li><a data-dur="2">7시</a></li>
+                        <li><a data-dur="2">8시</a></li>
+                        <li><a data-dur="2">9시</a></li>
+                        <li><a data-dur="2">10시</a></li>
+                        <li><a data-dur="2">11시</a></li>
+                        <li><a data-dur="2">12시</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
 
-      <div class="iconText">
+        <div class="iconText">
             <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> 레슨 일정 미등록 회원 안내</span><div id="switch2" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
-      </div>
-      <div id="noRegMemberAlarmSet">
-          <div id="noRegMemberAlarm">
-             <div id="prevset" class="dropdown pters_dropdown_setting_custom">
-                <div><span>7</span><span>일내 미등록</span></div>
-             </div>
-             <div id="noRegMemberAlarmSelect" class="dropdown pters_dropdown_setting_custom">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-                <ul id="ulnoRegMember" class="dropdown-menu pters_dropdown_custom">
-                  <li><a data-type="1">1일</a></li>
-                  <li><a data-type="2">2일</a></li>
-                  <li><a data-type="3">3일</a></li>
-                  <li><a data-type="4">4일</a></li>
-                  <li><a data-type="5">5일</a></li>
-                  <li><a data-type="6">6일</a></li>
-                  <li><a data-type="7">7일</a></li>
-                </ul>
-             </div>
-          </div>
-      </div> 
-  </div>
-  <div id="trainerPushSettingText" class="settingMenu wrap800">
+        </div>
+        <div id="noRegMemberAlarmSet">
+            <div id="noRegMemberAlarm">
+                <div id="prevset" class="dropdown pters_dropdown_setting_custom">
+                    <div><span>7</span><span>일내 미등록</span></div>
+                </div>
+                <div id="noRegMemberAlarmSelect" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulnoRegMember" class="dropdown-menu pters_dropdown_custom">
+                        <li><a data-type="1">1일</a></li>
+                        <li><a data-type="2">2일</a></li>
+                        <li><a data-type="3">3일</a></li>
+                        <li><a data-type="4">4일</a></li>
+                        <li><a data-type="5">5일</a></li>
+                        <li><a data-type="6">6일</a></li>
+                        <li><a data-type="7">7일</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="trainerPushSettingText" class="settingMenu wrap800">
         <span class="settingText">강사 푸시 알림</span>
-  </div>
-  <div id="trainerPushSetting" class="wrap800">
-      
-      <div class="iconText">
+    </div>
+    <div id="trainerPushSetting" class="wrap800">
+
+        <div class="iconText">
             <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> 회원이 일정 등록/취소시 알림</span><div id="switch3" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
-      </div>
-      <div id="changedPlanAlarmSet">
-          <div id="changedPlanAlarm">
-             <div id="changedPlanAlarmSelect" class="dropdown pters_dropdown_setting_custom">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-                <ul id="ulchangedPlan" class="dropdown-menu pters_dropdown_custom">
-                  <li><a data-type="set">오전 8시 - 오후 10시 사이에만 알림</a></li>
-                  <li><a data-type="anytime">일정 업데이트 즉시 알림</a></li>
-                </ul>
-             </div>
-          </div>
-      </div>
+        </div>
+        <div id="changedPlanAlarmSet">
+            <div id="changedPlanAlarm">
+                <div id="changedPlanAlarmSelect" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulchangedPlan" class="dropdown-menu pters_dropdown_custom">
+                        <li><a data-type="set">오전 8시 - 오후 10시 사이에만 알림</a></li>
+                        <li><a data-type="anytime">일정 업데이트 즉시 알림</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
 
-      <div class="iconText">
+        <div class="iconText">
             <img src="/static/user/res/icon-calendar-week.png" alt="" class="icons"><span> 레슨 일정 미등록 회원 안내</span><div id="switch4" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
-      </div>
-      <div id="urgentAlarmSet">
-          <div id="urgentMemberAlarm">
-             <div id="urgentMemberAlarmSelect" class="dropdown pters_dropdown_setting_custom">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-                <ul id="ulurgentDay" class="dropdown-menu pters_dropdown_custom">
-                  <li><a data-type="set">오전 8시 - 오후 10시 사이에만 알림</a></li>
-                  <li><a data-type="anytime">일정 업데이트 즉시 알림</a></li>
-                </ul>
-             </div>
-          </div>
-          <div id="urgentMemberWhenAlarm">
-             <div id="prevset" class="dropdown pters_dropdown_setting_custom">
-                <div><span>2</span><span>회 이하</span></div>
-             </div>
-             <div id="urgentMemberAlarmWhenSelect" class="dropup pters_dropdown_setting_custom">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-                <ul id="ulurgentMember" class="dropdown-menu pters_dropdown_custom">
-                  <li><a data-type="1">1회 이하</a></li>
-                  <li><a data-type="2">2회 이하</a></li>
-                  <li><a data-type="3">3회 이하</a></li>
-                  <li><a data-type="4">4회 이하</a></li>
-                  <li><a data-type="5">5회 이하</a></li>
-                  <li><a data-type="6">6회 이하</a></li>
-                  <li><a data-type="7">7회 이하</a></li>
-                </ul>
-             </div>
-          </div>
+        </div>
+        <div id="urgentAlarmSet">
+            <div id="urgentMemberAlarm">
+                <div id="urgentMemberAlarmSelect" class="dropdown pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulurgentDay" class="dropdown-menu pters_dropdown_custom">
+                        <li><a data-type="set">오전 8시 - 오후 10시 사이에만 알림</a></li>
+                        <li><a data-type="anytime">일정 업데이트 즉시 알림</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="urgentMemberWhenAlarm">
+                <div id="prevset" class="dropdown pters_dropdown_setting_custom">
+                    <div><span>2</span><span>회 이하</span></div>
+                </div>
+                <div id="urgentMemberAlarmWhenSelect" class="dropup pters_dropdown_setting_custom">
+                    <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
+                    <ul id="ulurgentMember" class="dropdown-menu pters_dropdown_custom">
+                        <li><a data-type="1">1회 이하</a></li>
+                        <li><a data-type="2">2회 이하</a></li>
+                        <li><a data-type="3">3회 이하</a></li>
+                        <li><a data-type="4">4회 이하</a></li>
+                        <li><a data-type="5">5회 이하</a></li>
+                        <li><a data-type="6">6회 이하</a></li>
+                        <li><a data-type="7">7회 이하</a></li>
+                    </ul>
+                </div>
+            </div>
 
 
-      </div>
-  </div>
+        </div>
+    </div>
 
-  <div class="popupBtn_mini">
-    <button class="submitBtn _button_Prev">이전</button>
-    <button class="submitBtn _button_Next">등록</button>
-  </div>
+    <div class="popupBtn_mini">
+        <button class="submitBtn _button_Prev">이전</button>
+        <button class="submitBtn _button_Next">등록</button>
+    </div>
 
 
 
@@ -187,137 +187,137 @@
 {% block local_js_footer %}
     <!-- Bootstrap core JavaScript
         ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script>
-          $('a.__setting').css('color','#fe4e65;')
-          $('#page-base-addstyle').css('display','block')
-          $('#uptext2').text("푸시 알림 설정")
-          $('#switch1').click(function(){
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+        $('a.__setting').css('color','#fe4e65;')
+        $('#page-base-addstyle').css('display','block')
+        $('#uptext2').text("푸시 알림 설정")
+        $('#switch1').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-              $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-              $(this).find('.switchback').addClass('switchon-back')
-              $('#pushTimeSet').show(110,"swing")
+                $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
+                $(this).find('.switchback').addClass('switchon-back')
+                $('#pushTimeSet').show(110,"swing")
 
             }else{
-              $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-              $(this).find('.switchback').removeClass('switchon-back')
-              $('#pushTimeSet').hide(150,"swing")
+                $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
+                $(this).find('.switchback').removeClass('switchon-back')
+                $('#pushTimeSet').hide(150,"swing")
             }
-          })
+        })
 
-          $('#switch2').click(function(){
+        $('#switch2').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-              $(this).find('.switchball').removeClass('switchoff').addClass('switchon');
-              $(this).find('.switchback').addClass('switchon-back');
-              $('#noRegMemberAlarm').show(110,"swing");
+                $(this).find('.switchball').removeClass('switchoff').addClass('switchon');
+                $(this).find('.switchback').addClass('switchon-back');
+                $('#noRegMemberAlarm').show(110,"swing");
 
             }else{
-              $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-              $(this).find('.switchback').removeClass('switchon-back')
-              $('#noRegMemberAlarm').hide(150,"swing")
+                $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
+                $(this).find('.switchback').removeClass('switchon-back')
+                $('#noRegMemberAlarm').hide(150,"swing")
             }
-          })
+        })
 
-          $('#switch3').click(function(){
+        $('#switch3').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-              $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-              $(this).find('.switchback').addClass('switchon-back')
-              $('#changedPlanAlarmSet').show(110,"swing")
+                $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
+                $(this).find('.switchback').addClass('switchon-back')
+                $('#changedPlanAlarmSet').show(110,"swing")
 
             }else{
-              $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-              $(this).find('.switchback').removeClass('switchon-back')
-              $('#changedPlanAlarmSet').hide(150,"swing")
+                $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
+                $(this).find('.switchback').removeClass('switchon-back')
+                $('#changedPlanAlarmSet').hide(150,"swing")
             }
-          })
+        })
 
-          $('#switch4').click(function(){
+        $('#switch4').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-              $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-              $(this).find('.switchback').addClass('switchon-back')
-              $('#urgentAlarmSet').show(110,"swing")
+                $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
+                $(this).find('.switchback').addClass('switchon-back')
+                $('#urgentAlarmSet').show(110,"swing")
 
             }else{
-              $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-              $(this).find('.switchback').removeClass('switchon-back')
-              $('#urgentAlarmSet').hide(150,"swing")
+                $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
+                $(this).find('.switchback').removeClass('switchon-back')
+                $('#urgentAlarmSet').hide(150,"swing")
             }
-          })
+        })
 
-          var select_all_check = false;
-
-
-          $("#ulMorningDay li a").click(function(){
-                $("#morningdaySelect button").addClass("dropdown_selected");
-                $("#morningdaySelect .btn:first-child").text($(this).text());
-                $("#morningdaySelect .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        var select_all_check = false;
 
 
-          $("#ulMorningDay2 li a").click(function(){
-                $("#morningdaySelect2 button").addClass("dropdown_selected");
-                $("#morningdaySelect2 .btn:first-child").text($(this).text());
-                $("#morningdaySelect2 .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        $("#ulMorningDay li a").click(function(){
+            $("#morningdaySelect button").addClass("dropdown_selected");
+            $("#morningdaySelect .btn:first-child").text($(this).text());
+            $("#morningdaySelect .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-          $("#ulTimes li a").click(function(){
-                $("#hourSelect button").addClass("dropdown_selected");
-                $("#hourSelect .btn:first-child").text($(this).text());
-                $("#hourSelect .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
 
-          $("#ulTimes2 li a").click(function(){
-                $("#hourSelect2 button").addClass("dropdown_selected");
-                $("#hourSelect2 .btn:first-child").text($(this).text());
-                $("#hourSelect2 .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        $("#ulMorningDay2 li a").click(function(){
+            $("#morningdaySelect2 button").addClass("dropdown_selected");
+            $("#morningdaySelect2 .btn:first-child").text($(this).text());
+            $("#morningdaySelect2 .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-          $("#ulnoRegMember li a").click(function(){
-                $("#noRegMemberAlarmSelect button").addClass("dropdown_selected");
-                $("#noRegMemberAlarmSelect .btn:first-child").text($(this).text());
-                $("#noRegMemberAlarmSelect .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        $("#ulTimes li a").click(function(){
+            $("#hourSelect button").addClass("dropdown_selected");
+            $("#hourSelect .btn:first-child").text($(this).text());
+            $("#hourSelect .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-          $("#ulchangedPlan li a").click(function(){
-                $("#changedPlanAlarmSelect button").addClass("dropdown_selected");
-                $("#changedPlanAlarmSelect .btn:first-child").text($(this).text());
-                $("#changedPlanAlarmSelect .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        $("#ulTimes2 li a").click(function(){
+            $("#hourSelect2 button").addClass("dropdown_selected");
+            $("#hourSelect2 .btn:first-child").text($(this).text());
+            $("#hourSelect2 .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-          $("#ulurgentDay li a").click(function(){
-                $("#urgentMemberAlarmSelect button").addClass("dropdown_selected");
-                $("#urgentMemberAlarmSelect .btn:first-child").text($(this).text());
-                $("#urgentMemberAlarmSelect .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        $("#ulnoRegMember li a").click(function(){
+            $("#noRegMemberAlarmSelect button").addClass("dropdown_selected");
+            $("#noRegMemberAlarmSelect .btn:first-child").text($(this).text());
+            $("#noRegMemberAlarmSelect .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-          $("#ulurgentMember li a").click(function(){
-                $("#urgentMemberAlarmWhenSelect button").addClass("dropdown_selected");
-                $("#urgentMemberAlarmWhenSelect .btn:first-child").text($(this).text());
-                $("#urgentMemberAlarmWhenSelect .btn:first-child").val($(this).text());
-                check_dropdown_selected();
-          });
+        $("#ulchangedPlan li a").click(function(){
+            $("#changedPlanAlarmSelect button").addClass("dropdown_selected");
+            $("#changedPlanAlarmSelect .btn:first-child").text($(this).text());
+            $("#changedPlanAlarmSelect .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-           $("#upbutton-check, ._button_Next").click(function(){
-             //if(select_all_check==true){
-                 document.getElementById('update-setting-push-form').submit();
-             //}else{
+        $("#ulurgentDay li a").click(function(){
+            $("#urgentMemberAlarmSelect button").addClass("dropdown_selected");
+            $("#urgentMemberAlarmSelect .btn:first-child").text($(this).text());
+            $("#urgentMemberAlarmSelect .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-                //입력값 확인 메시지 출력 가능
-             //}
-         })
+        $("#ulurgentMember li a").click(function(){
+            $("#urgentMemberAlarmWhenSelect button").addClass("dropdown_selected");
+            $("#urgentMemberAlarmWhenSelect .btn:first-child").text($(this).text());
+            $("#urgentMemberAlarmWhenSelect .btn:first-child").val($(this).text());
+            check_dropdown_selected();
+        });
 
-           $('#upbutton-x, ._button_Prev').click(function(){
-              location.href="/trainer/trainer_setting/"
-            })
+        $("#upbutton-check, ._button_Next").click(function(){
+            //if(select_all_check==true){
+            document.getElementById('update-setting-push-form').submit();
+            //}else{
 
-          function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
+            //입력값 확인 메시지 출력 가능
+            //}
+        })
+
+        $('#upbutton-x, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_setting/"
+        })
+
+        function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
             var ulMorningDay = $("#morningdaySelect button");
             var ulMorningDay2 = $("#morningdaySelect2 button");
             var ulTimes = $("#hourSelect button");
@@ -333,16 +333,16 @@
             }else{
                 select_all_check=false;
             }
-         }
-        </script>
-        <script>
-              var lt_pus_01 =  ['{{ lt_pus_01 }}'];
-              var lt_pus_02 =  ['{{ lt_pus_02 }}'];
-              var lt_pus_03 =  ['{{ lt_pus_03 }}'];
-              var lt_pus_04 =  ['{{ lt_pus_04 }}'];
-              var lt_pus_05 =  ['{{ lt_pus_05 }}'];
-              var lt_pus_06 =  ['{{ lt_pus_06 }}'];
-        </script>
-        <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.setting.push.js" %}></script>
-        
+        }
+    </script>
+    <script>
+        var lt_pus_01 =  ['{{ lt_pus_01 }}'];
+        var lt_pus_02 =  ['{{ lt_pus_02 }}'];
+        var lt_pus_03 =  ['{{ lt_pus_03 }}'];
+        var lt_pus_04 =  ['{{ lt_pus_04 }}'];
+        var lt_pus_05 =  ['{{ lt_pus_05 }}'];
+        var lt_pus_06 =  ['{{ lt_pus_06 }}'];
+    </script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.setting.push.js" %}></script>
+
 {% endblock %}

@@ -75,16 +75,16 @@ a:focus, a:hover{
     font-size: 15px;
     font-weight: bold;
     z-index: 1500;
-}   
-    #errorMessageBar span{
-        line-height: 35px;
-    }
-    #errorMessageBar span:nth-child(2){
-        position: absolute;
-        right: 0;
-        margin-right: 7px;
-        cursor: pointer;
-    }
+}
+#errorMessageBar span{
+    line-height: 35px;
+}
+#errorMessageBar span:nth-child(2){
+    position: absolute;
+    right: 0;
+    margin-right: 7px;
+    cursor: pointer;
+}
 
 
 .wrap{
@@ -140,9 +140,9 @@ a:focus, a:hover{
 }
 .sidebar_upper img{
     width: 50px;
-   
+
     margin: auto;
-} 
+}
 
 .sidebar_upper div{
     width: 100%;
@@ -193,19 +193,19 @@ a:focus, a:hover{
     background-color: #ffffff;
     cursor: pointer;
 }
-    .sidebar_div:hover, .sidebar_div:active, .sidebar_div:focus, .sidebar_div_last1:hover, .sidebar_div_last2:hover,.sidebar_div_last1:active, .sidebar_div_last2:active{
-        color: #fe4e65 !important;
-        background: #eaeaea !important;
-    }
+.sidebar_div:hover, .sidebar_div:active, .sidebar_div:focus, .sidebar_div_last1:hover, .sidebar_div_last2:hover,.sidebar_div_last1:active, .sidebar_div_last2:active{
+    color: #fe4e65 !important;
+    background: #eaeaea !important;
+}
 
 
 .sidebar_div_last{
-   position: absolute;
-   display: table;
-   bottom: 0%;
-   width: 100%;
-   border-top: 0px;
-   background: #ffffff;
+    position: absolute;
+    display: table;
+    bottom: 0%;
+    width: 100%;
+    border-top: 0px;
+    background: #ffffff;
 }
 
 .sidebar_div_last1{
@@ -252,8 +252,8 @@ a:focus, a:hover{
 }
 
 .sidenav-size{
-        width: 80%;
-    }
+    width: 80%;
+}
 
 .sidenav a {
     padding: 16px 8px 18px 57px;
@@ -298,8 +298,8 @@ a:focus, a:hover{
 }
 
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
 }
 
 
@@ -324,9 +324,9 @@ a:focus, a:hover{
     width: 40px;
     cursor: pointer;
 }
-    #upbutton-x:active, #upbutton-x-modify:active{
-        background: #cccccc;
-    }
+#upbutton-x:active, #upbutton-x-modify:active{
+    background: #cccccc;
+}
 
 
 #upbutton-right, #upbutton-alarm, #upbutton-check , #upbutton-modify{
@@ -365,7 +365,7 @@ a:focus, a:hover{
 }
 
 
-/* Bootstrap css direct access & editing 부트스트랩 css 직접 수정*/ 
+/* Bootstrap css direct access & editing 부트스트랩 css 직접 수정*/
 .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
     background-color: transparent;
 }
@@ -384,7 +384,7 @@ a:focus, a:hover{
 
 
 
-/* Bootstrap css direct access & editing 부트스트랩 css 직접 수정(화면이 커져도 Navbar collapse 되지 않도록)*/ 
+/* Bootstrap css direct access & editing 부트스트랩 css 직접 수정(화면이 커져도 Navbar collapse 되지 않도록)*/
 .navbar-header {
     float: none;
 }
@@ -530,7 +530,7 @@ a:focus, a:hover{
     height: 100%;
     width: 100%;
     max-width: 1080px;
-    margin:0 auto;   
+    margin:0 auto;
 }
 
 .centermenu_box{
@@ -574,9 +574,9 @@ a:focus, a:hover{
     line-height: 62px;
     cursor: pointer;
 }
-    .pcwho:hover{
-        color: #fe4e65;
-    }
+.pcwho:hover{
+    color: #fe4e65;
+}
 
 .pcwhere{
     color: #282828;
@@ -590,22 +590,37 @@ a:focus, a:hover{
 .bg_ymdText_weight{
     background-image: url("/static/user/res/pt.png");
     background-size:cover;
-    background-position-x:center; 
+    background-position-x:center;
 }
 .bg_ymdText_ballet{
     background-image: url("/static/user/res/ballet.png");
     background-size:cover;
-    background-position-x:center; 
+    background-position-x:center;
 }
 .bg_ymdText_pilates{
     background-image: url("/static/user/res/pilates.png");
     background-size:cover;
-    background-position-x:center; 
+    background-position-x:center;
 }
 .bg_ymdText_golf{
     background-image: url("/static/user/res/golf.png");
     background-size:cover;
-    background-position-x:center; 
+    background-position-x:center;
+}
+.bg_ymdText_yoga{
+    background-image: url("/static/user/res/yoga.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_billiard{
+    background-image: url("/static/user/res/billiards.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_brick{
+    background-image: url("/static/user/res/brick.png");
+    background-size:cover;
+    background-position-x:center;
 }
 
 
@@ -631,16 +646,16 @@ a:focus, a:hover{
         font-size: 15px;
         font-weight: bold;
         z-index: 1500;
-    }   
-        #errorMessageBar span{
-            line-height: 35px;
-        }
-        #errorMessageBar span:nth-child(2){
-            position: absolute;
-            right: 0;
-            margin-right: 85px;
-            cursor: pointer;
-        }
+    }
+    #errorMessageBar span{
+        line-height: 35px;
+    }
+    #errorMessageBar span:nth-child(2){
+        position: absolute;
+        right: 0;
+        margin-right: 85px;
+        cursor: pointer;
+    }
 
 
     #page-base, #page-base-addstyle, #page-base-modifystyle{
@@ -650,7 +665,7 @@ a:focus, a:hover{
     #mobilever{
         display: none;
     }
-    
+
     #pcver{
         display: block;
         background: #ffffff;
@@ -680,9 +695,9 @@ a:focus, a:hover{
     .language_set{
         cursor: pointer;
     }
-        .language_set:hover{
-            color: #fe4e65;
-        }
+    .language_set:hover{
+        color: #fe4e65;
+    }
 }
 
 @media(min-width: 760px){
@@ -726,7 +741,7 @@ a:focus, a:hover{
     display: none;
     top: 215px;
     right: 0;
-    
+
     width: 160px;
     height:600px;
 }
@@ -738,9 +753,9 @@ a:focus, a:hover{
 }
 
 
-    @media(min-width:1470px){
-        .ads_cal_side{
-            display: block;
-            right: 1%;
-        }
+@media(min-width:1470px){
+    .ads_cal_side{
+        display: block;
+        right: 1%;
     }
+}

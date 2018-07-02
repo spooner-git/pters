@@ -84,7 +84,7 @@ class MemberLectureTbAdmin(admin.ModelAdmin):
 
 @admin.register(GroupTb)
 class GroupTbAdmin(admin.ModelAdmin):
-    list_display = ('group_id', 'group_type_cd', 'member_num', 'name',
+    list_display = ('group_id','class_tb', 'group_type_cd', 'member_num', 'name',
                     'note', 'reg_dt', 'mod_dt', 'use')
 
 
