@@ -167,7 +167,7 @@
                     customer_uid: customer_uid_data,
 {#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
                 })
-            });
+            })
             IMP.request_pay({
                 pg : 'jtnet', // version 1.1.0부터 지원.
                 pay_method : 'card',
@@ -215,8 +215,8 @@
                         data: JSON.stringify({
                             merchant_uid: merchant_uid_data,
                             customer_uid: customer_uid_data
-                        });
-                    });
+                        })
+                    })
                 }
                 alert(msg);
             });
