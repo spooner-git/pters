@@ -18,7 +18,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     end_date = start_date
     end_date_day = int(end_date.strftime('%d'))
 
-    logger.info('func_set_billing_schedule-1..')
     if payment_type_cd == 'PERIOD':
         next_month = int(end_date.strftime('%m')) % 12 + 1
         # end_date = end_date + datetime.timedelta(days=1)
@@ -32,7 +31,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
 
         end_date_day = int(end_date.strftime('%d'))
 
-    logger.info('func_set_billing_schedule-2..')
     if payment_type_cd == 'PERIOD':
         if end_date_day != date:
             test = True
@@ -53,7 +51,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     merchant_uid = 'pters_group_merchant_'+str(today_unix_timestamp).split('.')[0]
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
-    logger.info('func_set_billing_schedule-3..')
 
     if error is None and access_token is not None:
         data = {
