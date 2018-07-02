@@ -109,7 +109,7 @@ def billing_check_logic(request):
         # if error is None:
         #     user_id = payment_user_info.member_id
 
-    logger.info('test3'+str(PaymentInfoTb.objects.filter(member_id=request.user.id).count()))
+    logger.info('test3'+str(PaymentInfoTb.objects.filter(price=3000).count()))
     if error is None:
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/${"+json_loading_data['imp_uid']+"}", method="GET",
@@ -135,9 +135,10 @@ def billing_check_logic(request):
 
     if error is None:
         error = 'test'
-        logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(payment_user_info.customer_uid))
+        # logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(payment_user_info.customer_uid))
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
+        logger.error(str(error))
+        # logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
     return render(request, 'ajax/payment_error_info.html', error)
 
 
