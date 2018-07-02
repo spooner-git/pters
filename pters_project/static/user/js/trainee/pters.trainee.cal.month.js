@@ -308,7 +308,7 @@ $(document).ready(function(){
             $('.plan_raw_add').hide()
             shade_index(100)
         }else if($(this).hasClass('available')){
-            $('#cal_popup_plancheck').fadeIn('fast');
+            $('#cal_popup_plancheck').css('display','block')
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
@@ -321,7 +321,6 @@ $(document).ready(function(){
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
-            console.log('여기')
         }/*else{
          shade_index(100)
          $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
@@ -408,7 +407,6 @@ $(document).ready(function(){
 
 
     $(document).on('click','.plan_raw_add',function(){
-        console.log('뭐지')
         $('#addpopup').fadeIn('fast')
         $('#shade2').css({'display':'block'});
         var info3 = $(this).attr('data-date').split('_')
