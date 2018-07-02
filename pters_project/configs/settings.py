@@ -241,6 +241,14 @@ LOGGING = {
             'maxBytes': 1024*1024*10,
             'backupCount': 5,
         },
+        'payment_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'filename': LOG_FILE_SCHEDULE,
+            'maxBytes': 1024*1024*10,
+            'backupCount': 5,
+        },
     },
     'loggers': {
         '': {
@@ -272,6 +280,10 @@ LOGGING = {
         },
         'schedule': {
             'handlers': ['schedule_file'],
+            'level': 'DEBUG',
+        },
+        'payment': {
+            'handlers': ['payment_file'],
             'level': 'DEBUG',
         },
     }
