@@ -97,8 +97,10 @@ def billing_check_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     logger.info('test2')
+    logger.info(str(json_loading_data))
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
+        logger.info(str(json_loading_data['merchant_uid']))
         # print('merchant_uid:'+merchant_uid)
         try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
@@ -112,13 +114,16 @@ def billing_check_logic(request):
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/${"+json_loading_data['imp_uid']+"}", method="GET",
                                   headers={'Authorization': access_token})
+        logger.info('test3::'+str(resp))
+        logger.info('test3::'+str(content))
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
-    logger.info('test4')
+    logger.info('test4::'+str(error))
     if error is None:
-        status = json_loading_data['status']
         logger.info('test5')
+        status = json_loading_data['status']
+        logger.info(str(json_loading_data['status']))
         if status == 'paid':  # 결제 완료
             if payment_user_info.payment_type_cd == 'PERIOD':
                 func_set_billing_schedule(payment_user_info.customer_uid)  # 결제 정보 저장
@@ -132,7 +137,7 @@ def billing_check_logic(request):
         error = 'test'
         logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(payment_user_info.customer_uid))
     else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
     return render(request, 'ajax/payment_error_info.html', error)
 
 
