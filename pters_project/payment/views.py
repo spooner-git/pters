@@ -140,7 +140,7 @@ def billing_check_logic(request):
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
-    logger.info('test1')
+    logger.info('test1 merchant_uid::' + json_loading_data['merchant_uid'])
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
         # print('merchant_uid:'+merchant_uid)
