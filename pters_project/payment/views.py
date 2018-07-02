@@ -109,7 +109,7 @@ def billing_check_logic(request):
         # if error is None:
         #     user_id = payment_user_info.member_id
 
-    logger.info('test3')
+    logger.info('test3'+str(PaymentInfoTb.objects.filter(merchant_uid=str(merchant_uid)).count()))
     if error is None:
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/${"+json_loading_data['imp_uid']+"}", method="GET",
