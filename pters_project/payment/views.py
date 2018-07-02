@@ -132,6 +132,7 @@ def billing_check_logic(request):
     error = token_result['error']
     payment_user_info = None
 
+    logger.info('test0')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -139,8 +140,7 @@ def billing_check_logic(request):
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
-    logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크0'
-                + str(payment_user_info.member_id) + ':' + str(error))
+    logger.info('test1')
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
         # print('merchant_uid:'+merchant_uid)
