@@ -114,25 +114,25 @@
         $('#pay_group_function_monthly').click(function(e){
 {#            alert('그룹 정기 결제');#}
             e.preventDefault();
-            payment();
+            payment('PTERS - 그룹기능 정기 결제', 'PERIOD', 'GROUP', 9000);
             //그룹 레슨 정기결제 버튼
         })
         $('#pay_group_function_instant').click(function(e){
 {#            alert('그룹 1개월 이용권 결제');#}
             e.preventDefault();
-            payment();
+            payment('PTERS - 그룹기능 1개월 이용권', 'SINGLE', 'GROUP', 12000);
             //그룹 레슨 1개월 결제 버튼
         })
         $('#pay_ads_remove_monthly').click(function(e){
 {#            alert('광고 제거 정기 결제');#}
             e.preventDefault();
-            payment();
+            payment('PTERS - 광고제거 정기 결제', 'PERIOD', 'ADVERTISE', 1000);
             //광고 제거 정기 결제 버튼
         })
         $('#pay_ads_remove_instant').click(function(e){
 {#            alert('광고 제거 1개월 결제');#}
             e.preventDefault();
-            payment();
+            payment('PTERS - 광고제거 1개월 이용권', 'SINGLE', 'ADVERTISE', 2000);
             //광고 제거 1개월 결제 버튼
         })
 
@@ -149,77 +149,99 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(){
-            console.log('payment function test');
-            var merchant_uid_data = 'pters_group_merchant_'+ new Date().getTime();
-            var customer_uid_data = 'pters_group_customer_'+ new Date().getTime();
-            jQuery.ajax({
+        function payment(name, payment_type_cd, merchandise_type_cd, price){
+            var success = false;
+            var date = new Date();
+            var merchant_uid_data = 'pters_group_merchant_'+ date.getTime();
+            var customer_uid_data = 'pters_group_customer_'+ date.getTime();
+            var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+
+            $.ajax({
                 url: "/payment/add_billing/", // 서비스 웹서버
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
-                    start_date: '2018-06-26',
-                    end_date: '2018-07-26',
-                    payment_type_cd: 'PERIOD',
-                    merchandise_type_cd: 'group',
+                    start_date:  '2018-01-31',
+                    payment_type_cd: payment_type_cd,
+                    merchandise_type_cd: merchandise_type_cd,
                     merchant_uid: merchant_uid_data,
-                    price : 3000,
+                    price : price,
                     customer_uid: customer_uid_data,
 {#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
-                })
-            })
-            IMP.request_pay({
-                pg : 'jtnet', // version 1.1.0부터 지원.
-                pay_method : 'card',
-                merchant_uid : merchant_uid_data,
-                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
-                name : 'PTERS 그룹 기능',
-                amount : 3300,
-                buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
-                buyer_tel : '',
-                buyer_addr : '서울특별시 강남구 삼성동',
-                buyer_postcode : '123-456',
-                m_redirect_url : '/payment/add_billing/'
-            }, function(rsp) {
-                var msg;
-                if ( rsp.success ) {
-                    console.log(rsp);
-                    msg = '결제가 완료되었습니다.';
-                    msg += '고유ID : ' + rsp.imp_uid;
-                    msg += '상점 거래ID : ' + rsp.merchant_uid;
-                    msg += '결제 금액 : ' + rsp.paid_amount;
-                    msg += '카드 승인번호 : ' + rsp.apply_num;
-{#                    jQuery.ajax({#}
-{#                        url: "/payment/billings/", // 서비스 웹서버#}
-{#                        method: "POST",#}
-{#                        headers: { "Content-Type": "application/json" },#}
-{#                        data: JSON.stringify({#}
-{#                            start_date: '2018-06-26',#}
-{#                            end_date: '2018-07-26',#}
-{#                            payment_type_cd: 'PERIOD',#}
-{#                            merchandise_type_cd: 'group',#}
-{#                            merchant_uid: rsp.merchant_uid,#}
-{#                            price : 3000,#}
-{#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033',#}
-{#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
-{#                        })#}
-{#                    })#}
-                } else {
-                    msg = '결제에 실패하였습니다.';
-                    msg += '에러내용 : ' + rsp.error_msg;
-                    jQuery.ajax({
-                        url: "/payment/delete_billing/", // 서비스 웹서버
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        data: JSON.stringify({
-                            merchant_uid: merchant_uid_data,
-                            customer_uid: customer_uid_data
-                        })
-                    })
+                }),
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    initialJSON = jsondata;
+                    console.log(initialJSON);
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else {
+                        console.log('success???');
+                        success = true;
+                        payment_open_pg(name, merchant_uid_data, customer_uid_data, price);
+                    }
+
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
                 }
-                alert(msg);
             });
+
+            if ( success == true){
+                console.log('success');
+
+            }
+        }
+
+        function payment_open_pg(name, merchant_uid_data, customer_uid_data, price, start_date, end_date) {
+                IMP.request_pay({
+                    pg : 'jtnet', // version 1.1.0부터 지원.
+                    pay_method : 'card',
+                    merchant_uid : merchant_uid_data,
+                    customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                    name : name,
+                    amount : price,
+                    buyer_email : '{{ request.user.email }}',
+                    buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                    buyer_tel : '',
+                    buyer_addr : '서울특별시 강남구 삼성동',
+                    buyer_postcode : '123-456',
+                    m_redirect_url : '/payment/add_billing/'
+                }, function(rsp) {
+                    var msg;
+                    if ( rsp.success ) {
+                        console.log(rsp);
+                        msg = '결제가 완료되었습니다.';
+                        msg += '고유ID : ' + rsp.imp_uid;
+                        msg += '상점 거래ID : ' + rsp.merchant_uid;
+                        msg += '결제 금액 : ' + rsp.paid_amount;
+                        msg += '카드 승인번호 : ' + rsp.apply_num;
+                    } else {
+                        msg = '결제에 실패하였습니다.';
+                        msg += '에러내용 : ' + rsp.error_msg;
+                        jQuery.ajax({
+                            url: "/payment/delete_billing/", // 서비스 웹서버
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            data: JSON.stringify({
+                                merchant_uid: merchant_uid_data,
+                                customer_uid: customer_uid_data
+                            })
+                        })
+                    }
+                    alert(msg);
+                });
         }
     </script>
 
