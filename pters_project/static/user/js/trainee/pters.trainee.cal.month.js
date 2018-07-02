@@ -11,7 +11,7 @@
 $(document).ready(function(){
     var reg_check = 0;
     var click_check = 0;
-    get_trainee_reg_history()
+    //get_trainee_reg_history()
 
     $(document).keyup(function(e){
         if(e.keyCode == 27){
