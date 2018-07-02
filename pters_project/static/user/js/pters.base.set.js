@@ -945,6 +945,7 @@ function TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER){
 
 
 var bodywidth = selector_body.width();
+/*
 if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
     $('#upperImg, #ymdText').addClass('bg_ymdText_ballet');
 }else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
@@ -958,5 +959,22 @@ if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match
 }else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
     $('#upperImg, #ymdText').addClass('bg_ymdText_golf');
 }else{
+    $('#upperImg, #ymdText').addClass('bg_ymdText_brick');
+}
+*/
+
+if(class_code.match(/BL/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_ballet');
+}else if(class_code.match(/YG/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_yoga');
+}else if(class_code.match(/WT/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight');
+}else if(class_code.match(/PI/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_pilates');
+}else if(class_code.match(/BILLIARD/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_billiard');
+}else if(class_code.match(/GOLF/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_golf');
+}else if(class_code.match(/ETC/)){
     $('#upperImg, #ymdText').addClass('bg_ymdText_brick');
 }

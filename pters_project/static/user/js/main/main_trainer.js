@@ -52,69 +52,38 @@ $(document).ready(function(){
     $('.bottomfooter3').find('img').attr('src','/static/user/res/spooner.png')
 
     var bodywidth = $('body').width()
+    /*
     if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
         $('body').addClass('bg_ballet')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-ballet-mobile.jpg")')
-		 }
-		 */
     }else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
         $('body').addClass('bg_yoga')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-yoga-mobile.jpg")')
-		 }
-		 */
     }else if(class_name.match(/웨이트/)|| class_name.match(/PT/) || class_name.match(/피티/) ){
         $('body').addClass('bg_weight')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image.jpg")')
-		 }
-		 */
     }else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
         $('body').addClass('bg_pilates')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-pilates-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-pilates-mobile.jpg")')
-		 }
-		 */
     }else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
         $('body').addClass('bg_billiard')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-billiards-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-billiards-mobile.jpg")')
-		 }
-		 */
     }else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
         $('body').addClass('bg_golf')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-golf-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-golf-mobile.jpg")')
-		 }
-		 */
     }else{
         $('body').addClass('bg_brick')
-		/*
-		 if(bodywidth>600){
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-pc.jpg")')
-		 }else{
-		 $('body').css('background-image', 'url("/static/user/res/main/bg-image-brick-mobile.jpg")')
-		 }
-		 */
+    }
+    */
+
+    if(class_code.match(/BL/)){
+        $('body').addClass('bg_ballet')
+    }else if(class_code.match(/YG/)){
+        $('body').addClass('bg_yoga')
+    }else if(class_code.match(/WT/)){
+        $('body').addClass('bg_weight')
+    }else if(class_code.match(/PI/)){
+        $('body').addClass('bg_pilates')
+    }else if(class_code.match(/BILLIARD/)){
+        $('body').addClass('bg_billiard')
+    }else if(class_code.match(/GOLF/)){
+        $('body').addClass('bg_golf')
+    }else{
+        $('body').addClass('bg_brick')
     }
 
 });
