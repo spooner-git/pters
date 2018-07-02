@@ -313,7 +313,6 @@ $(document).ready(function(){
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').show()
-            $('.plan_raw_add').trigger('click')
             shade_index(100)
         }else{
             $('#cal_popup_plancheck').fadeIn('fast');
