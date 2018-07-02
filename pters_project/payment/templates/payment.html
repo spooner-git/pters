@@ -154,7 +154,7 @@
             alert('pters_group_merchant_'+ new Date().getTime());
             var merchant_uid_data = 'pters_group_merchant_'+ new Date().getTime();
             jQuery.ajax({
-                url: "/payment/add_billings/", // 서비스 웹서버
+                url: "/payment/add_billing/", // 서비스 웹서버
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
@@ -180,7 +180,7 @@
                 buyer_tel : '',
                 buyer_addr : '서울특별시 강남구 삼성동',
                 buyer_postcode : '123-456',
-                m_redirect_url : '/payment/add_billings/'
+                m_redirect_url : '/payment/add_billing/'
             }, function(rsp) {
                 if ( rsp.success ) {
                     console.log(rsp);
@@ -208,7 +208,7 @@
                     var msg = '결제에 실패하였습니다.';
                     msg += '에러내용 : ' + rsp.error_msg;
                     jQuery.ajax({
-                        url: "/payment/delete_billings/", // 서비스 웹서버
+                        url: "/payment/delete_billing/", // 서비스 웹서버
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({
