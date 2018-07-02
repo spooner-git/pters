@@ -1,10 +1,13 @@
 import datetime
 import json
 import httplib2
+import logging
 from django.utils import timezone
 
 from configs.const import USE
 from payment.models import PaymentInfoTb
+
+logger = logging.getLogger(__name__)
 
 
 def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
@@ -15,6 +18,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     end_date = start_date
     end_date_day = int(end_date.strftime('%d'))
 
+    logger.info('func_set_billing_schedule-1..')
     if payment_type_cd == 'PERIOD':
         next_month = int(end_date.strftime('%m')) % 12 + 1
         # end_date = end_date + datetime.timedelta(days=1)
@@ -28,6 +32,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
 
         end_date_day = int(end_date.strftime('%d'))
 
+    logger.info('func_set_billing_schedule-2..')
     if payment_type_cd == 'PERIOD':
         if end_date_day != date:
             test = True
@@ -38,6 +43,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
                 except ValueError:
                     date -= 1
 
+    logger.info('func_set_billing_schedule-3..')
     today_unix_timestamp = today.timestamp()
     unix_timestamp = end_date.timestamp()
 
