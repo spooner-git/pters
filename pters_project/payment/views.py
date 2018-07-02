@@ -114,10 +114,12 @@ def billing_check_logic(request):
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/${"+json_loading_data['imp_uid']+"}", method="GET",
                                   headers={'Authorization': access_token})
+        logger.info('test3::'+str(resp))
+        logger.info('test3::'+str(content))
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
-    logger.info('test4')
+    logger.info('test4::'+str(error))
     if error is None:
         logger.info('test5')
         status = json_loading_data['status']
