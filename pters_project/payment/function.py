@@ -6,7 +6,7 @@ from django.utils import timezone
 
 def func_set_billing_schedule(customer_uid):
     today = timezone.now()
-    today = today.replace(hour=14, minute=0)
+    # today = today.replace(hour=14, minute=0)
     # next_year = int(month_first_day.strftime('%Y')) + 1
     this_month = int(today.strftime('%m'))
     # if this_month == 2:
