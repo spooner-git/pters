@@ -97,7 +97,7 @@ def func_resend_payment_info(customer_uid, merchant_uid):
                     {
                         'customer_uid': customer_uid,  # 주문 번호
                         'merchant_uid': merchant_uid,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
-                        'amount': 8900,
+                        'amount': 3300,
                         'name': 'PTERS - 월간 이용권 정기결제',
                     }
                 ]

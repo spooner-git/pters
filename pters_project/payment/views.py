@@ -2,6 +2,7 @@ import datetime
 import json
 
 import httplib2
+import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
@@ -17,6 +18,8 @@ from configs import settings
 from configs.const import USE
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info
 from payment.models import PaymentInfoTb, BillingInfoTb
+
+logger = logging.getLogger(__name__)
 
 
 class PaymentView(LoginRequiredMixin, View):
@@ -119,6 +122,8 @@ def billing_check_logic(request):
 
     if error is None:
         error = 'test'
+    else:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
     return render(request, 'ajax/payment_error_info.html', error)
 
 
