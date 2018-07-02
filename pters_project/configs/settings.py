@@ -188,6 +188,7 @@ LOG_FILE_LOGIN = os.path.join(os.path.dirname(__file__), '..', 'logs/login_log.l
 LOG_FILE_SCHEDULE = os.path.join(os.path.dirname(__file__), '..', 'logs/schedule_log.log')
 LOG_FILE_TRAINEE = os.path.join(os.path.dirname(__file__), '..', 'logs/trainee_log.log')
 LOG_FILE_TRAINER = os.path.join(os.path.dirname(__file__), '..', 'logs/trainer_log.log')
+LOG_FILE_PAYMENT = os.path.join(os.path.dirname(__file__), '..', 'logs/payment_log.log')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -245,7 +246,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
-            'filename': LOG_FILE_SCHEDULE,
+            'filename': LOG_FILE_PAYMENT,
             'maxBytes': 1024*1024*10,
             'backupCount': 5,
         },
