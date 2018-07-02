@@ -321,13 +321,14 @@ $(document).ready(function(){
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
+            console.log('여기')
         }/*else{
          shade_index(100)
          $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
          $('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
          //$(this).fadeOut(2800)
          })
-         }*/
+        }*/
     })
 
     $(document).on('click','.plan_raw',function(){
@@ -407,6 +408,7 @@ $(document).ready(function(){
 
 
     $(document).on('click','.plan_raw_add',function(){
+        console.log('뭐지')
         $('#addpopup').fadeIn('fast')
         $('#shade2').css({'display':'block'});
         var info3 = $(this).attr('data-date').split('_')
@@ -771,6 +773,7 @@ $(document).ready(function(){
             $("#addpopup").css({'display':'none'})
             $('#shade2').css({'display':'none'});
         }
+        /*
         if(reg_check==0) {
             if ($('#pshade').css('z-index') == 150 || $('#mshade').css('z-index') == 150) {
                 shade_index(100)
@@ -778,6 +781,7 @@ $(document).ready(function(){
                 shade_index(-100)
             }
         }
+        */
     }
 
     $('#ng_popup').click(function(){
@@ -1246,11 +1250,12 @@ $(document).ready(function(){
         $('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
         var countNumber = $('.popup_inner_month .plan_raw').length
         $('#countNum').text(countNumber)
+        console.log(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) ,date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate))
         if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate)){
             // if(dateplans.length==0 && click_check == 0) {
             if(dateplans.length==0 && click_check == 0) {
-                close_info_popup('cal_popup_plancheck');
-                $('.plan_raw_add').trigger('click');
+                //close_info_popup('cal_popup_plancheck');
+                //$('.plan_raw_add').trigger('click');
             }
         }
 
