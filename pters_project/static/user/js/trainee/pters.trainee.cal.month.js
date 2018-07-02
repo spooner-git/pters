@@ -11,6 +11,7 @@
 $(document).ready(function(){
     var reg_check = 0;
     var click_check = 0;
+    get_trainee_reg_history()
 
     $(document).keyup(function(e){
         if(e.keyCode == 27){
@@ -407,6 +408,7 @@ $(document).ready(function(){
 
 
     $(document).on('click','.plan_raw_add',function(){
+        clear_pt_add_logic_form()
         $('#addpopup').fadeIn('fast')
         $('#shade2').css({'display':'block'});
         var info3 = $(this).attr('data-date').split('_')
@@ -485,6 +487,14 @@ $(document).ready(function(){
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
         }
     })
+
+    function clear_pt_add_logic_form(){
+        $('#timeGraph td').removeClass('graphindicator_leftborder')
+        $("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
+        $('#id_group_schedule_id').val('')
+        $('#id_time_duration').val('')
+        $('#id_training_time').val('')
+    }
 
     function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
         var durSelect = $("#durationsSelected button");
@@ -1013,7 +1023,7 @@ $(document).ready(function(){
         var htmlTojoin = []
         for(var i=0; i<len; i++){
             if(date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0],'_') == dateinfo){
-                if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+                //if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
                     var planYear    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0])
                     var planMonth   = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1])
                     var planDate    = Number(jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2])
@@ -1074,6 +1084,13 @@ $(document).ready(function(){
                         var disable = "disabled_button"
                     }
 
+                    if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+                        var fulled = ""
+                    }else if(jsondata.group_schedule_current_member_num[i] == jsondata.group_schedule_max_member_num[i]){
+                        var disable = "disabled_button"
+                        var fulled = "(마감)"
+                    }
+
 
                     htmlTojoin.push('<div><div class="ptersCheckbox '+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
                         '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
@@ -1083,8 +1100,8 @@ $(document).ready(function(){
                         jsondata.group_schedule_group_name[i]+'] ('+
                         jsondata.group_schedule_current_member_num[i]+'/'+
                         jsondata.group_schedule_max_member_num[i]+
-                        ')</div>')
-                }
+                        ')'+fulled+'</div>')
+                //}
             }
         }
         if(htmlTojoin.length == 0){
@@ -1999,6 +2016,69 @@ function classInfoProcessed(jsondata){ //일정 갯수 세기
     }
 
     return {"countResult":countResult, "dateResult":summaryArrayResult}
+}
+
+function get_trainee_reg_history(use, callback){
+    $.ajax({
+        url: '/trainee/get_trainee_lecture_list/',
+        data:{"class_id":class_id[0], "auth_cd":'VIEW'},
+        dataType : 'html',
+        type:'POST',
+
+        beforeSend:function(){
+            //AjaxBeforeSend();
+        },
+
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show()
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                //draw_trainee_reg_history(jsondata,$('#myRegHistory'))
+                if(use == "callback"){
+                    callback(jsondata)
+                }
+                hide_if_dont_have_class_type(jsondata)
+            }
+
+        },
+
+        complete:function(){
+
+        },
+
+        error:function(){
+            console.log('server error')
+        }
+    })
+}
+
+function hide_if_dont_have_class_type(jsondata){
+    var len = jsondata.groupTypeCdArray.length;
+    var groupCount = 0;
+    var personalCount = 0;
+    for(var i=0; i<len; i++){
+        if((jsondata.groupTypeCdArray[i] == "EMPTY" || jsondata.groupTypeCdArray[i] == "NORMAL") && jsondata.lectureStateArray[i] == "IP"){
+            groupCount++
+        }else if(jsondata.groupTypeCdArray[i] == "" && jsondata.lectureStateArray[i] == "IP"){
+            personalCount++
+        }
+    }
+
+    if(groupCount > 0 && personalCount == 0){
+        $('.groupreserve').show()
+        $('.personalreserve').hide()
+        $('div.mode_switch_button[data-page="groupreserve"]').show().addClass('mode_active')
+        $('div.mode_switch_button[data-page="personalreserve"]').hide()
+    }else if(groupCount == 0 && personalCount > 0){
+        $('.groupreserve').hide()
+        $('.personalreserve').show()
+        $('div.mode_switch_button[data-page="groupreserve"]').hide()
+        $('div.mode_switch_button[data-page="personalreserve"]').show().addClass('mode_active')
+    }else if(groupCount > 0 && personalCount > 0){
+
+    }
 }
 
 
