@@ -9,14 +9,15 @@ def func_set_billing_schedule(customer_uid):
     today = today.replace(hour=14, minute=0)
     # next_year = int(month_first_day.strftime('%Y')) + 1
     this_month = int(today.strftime('%m'))
-    if this_month == 2:
-        next_month_today = today + datetime.timedelta(days=28)
-    elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7\
-            or this_month == 8 or this_month == 10 or this_month == 12:
-        next_month_today = today + datetime.timedelta(days=31)
-    else:
-        next_month_today = today + datetime.timedelta(days=30)
+    # if this_month == 2:
+    #     next_month_today = today + datetime.timedelta(days=28)
+    # elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7\
+    #         or this_month == 8 or this_month == 10 or this_month == 12:
+    #     next_month_today = today + datetime.timedelta(days=31)
+    # else:
+    #     next_month_today = today + datetime.timedelta(days=30)
     # current_time = timezone.now()
+    next_month_today = today + datetime.timedelta(minute=5)
     today_unix_timestamp = today.timestamp()
     unix_timestamp = next_month_today.timestamp()
 

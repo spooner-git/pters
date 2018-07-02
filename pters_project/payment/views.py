@@ -132,7 +132,6 @@ def billing_check_logic(request):
     error = token_result['error']
     payment_user_info = None
 
-    logger.info('test1')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -140,8 +139,6 @@ def billing_check_logic(request):
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
-    logger.info('test2')
-    logger.info(str(json_loading_data))
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
         logger.info(str(json_loading_data['merchant_uid']))
@@ -153,37 +150,30 @@ def billing_check_logic(request):
         # if error is None:
         #     user_id = payment_user_info.member_id
 
-    logger.info('test3'+str(PaymentInfoTb.objects.filter(price=3000).count()))
     if error is None:
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/"+json_loading_data['imp_uid'], method="GET",
                                   headers={'Authorization': access_token})
-        logger.info('test3::'+str(resp))
-        logger.info('test3::'+str(content))
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
-    logger.info('test4::'+str(error))
     if error is None:
-        logger.info('test5')
         status = json_loading_data['status']
-        logger.info(str(json_loading_data['status']))
         if status == 'paid':  # 결제 완료
             if payment_user_info.payment_type_cd == 'PERIOD':
                 func_set_billing_schedule(payment_user_info.customer_uid)  # 결제 정보 저장
         elif status == 'ready':
-            logger.info('test6')
+            logger.info('ready Test 상태입니다..')
         else:  # 재결제 시도
-            logger.info('test7')
             func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid)
 
     if error is None:
         error = 'test'
-        # logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(payment_user_info.customer_uid))
+        return render(request, 'ajax/payment_error_info.html', error)
     else:
-        logger.error(str(error))
-        # logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
-    return render(request, 'ajax/payment_error_info.html', error)
+        logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크'
+                     + str(payment_user_info.member_id + ':' + str(error)))
+        return render(request, 'ajax/payment_error_info.html', error)
 
 
 class PaymentCompleteView(LoginRequiredMixin, TemplateView):

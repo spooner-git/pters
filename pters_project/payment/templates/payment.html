@@ -151,8 +151,8 @@
 
         function payment(){
             console.log('payment function test');
-            alert('pters_group_merchant_'+ new Date().getTime());
             var merchant_uid_data = 'pters_group_merchant_'+ new Date().getTime();
+            var customer_uid_data = 'pters_group_customer_'+ new Date().getTime();
             jQuery.ajax({
                 url: "/payment/add_billing/", // 서비스 웹서버
                 method: "POST",
@@ -164,7 +164,7 @@
                     merchandise_type_cd: 'group',
                     merchant_uid: merchant_uid_data,
                     price : 3000,
-                    customer_uid: 'pters_customer_uid_{{request.user.id}}_033',
+                    customer_uid: customer_uid_data,
 {#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
                 })
             });
@@ -172,7 +172,7 @@
                 pg : 'jtnet', // version 1.1.0부터 지원.
                 pay_method : 'card',
                 merchant_uid : merchant_uid_data,
-                customer_uid: 'pters_customer_uid_{{request.user.id}}_033', // 카드(빌링키)와 1:1로 대응하는 값
+                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
                 name : 'PTERS 그룹 기능',
                 amount : 3300,
                 buyer_email : '{{ request.user.email }}',
@@ -182,9 +182,10 @@
                 buyer_postcode : '123-456',
                 m_redirect_url : '/payment/add_billing/'
             }, function(rsp) {
+                var msg;
                 if ( rsp.success ) {
                     console.log(rsp);
-                    var msg = '결제가 완료되었습니다.';
+                    msg = '결제가 완료되었습니다.';
                     msg += '고유ID : ' + rsp.imp_uid;
                     msg += '상점 거래ID : ' + rsp.merchant_uid;
                     msg += '결제 금액 : ' + rsp.paid_amount;
@@ -205,7 +206,7 @@
 {#                        })#}
 {#                    })#}
                 } else {
-                    var msg = '결제에 실패하였습니다.';
+                    msg = '결제에 실패하였습니다.';
                     msg += '에러내용 : ' + rsp.error_msg;
                     jQuery.ajax({
                         url: "/payment/delete_billing/", // 서비스 웹서버
@@ -213,8 +214,8 @@
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({
                             merchant_uid: merchant_uid_data,
-                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033',
-                        })
+                            customer_uid: customer_uid_data
+                        });
                     });
                 }
                 alert(msg);
