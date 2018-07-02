@@ -3,36 +3,44 @@ import json
 import httplib2
 from django.utils import timezone
 
+from configs.const import USE
+from payment.models import PaymentInfoTb
 
-def func_set_billing_schedule(customer_uid):
+
+def func_set_billing_schedule(customer_uid, payment_user_info):
     today = timezone.now()
     # today = today.replace(hour=14, minute=0)
     # next_year = int(month_first_day.strftime('%Y')) + 1
     this_month = int(today.strftime('%m'))
-    # if this_month == 2:
-    #     next_month_today = today + datetime.timedelta(days=28)
-    # elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7\
-    #         or this_month == 8 or this_month == 10 or this_month == 12:
-    #     next_month_today = today + datetime.timedelta(days=31)
-    # else:
-    #     next_month_today = today + datetime.timedelta(days=30)
+    if this_month == 2:
+        next_month_today = today + datetime.timedelta(days=28)
+    elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7\
+            or this_month == 8 or this_month == 10 or this_month == 12:
+        next_month_today = today + datetime.timedelta(days=31)
+    else:
+        next_month_today = today + datetime.timedelta(days=30)
     # current_time = timezone.now()
-    next_month_today = today + datetime.timedelta(seconds=60*5)
+    next_day = today + datetime.timedelta(seconds=60*5)
     today_unix_timestamp = today.timestamp()
-    unix_timestamp = next_month_today.timestamp()
+    unix_timestamp = next_day.timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
     error = token_result['error']
-
+    merchant_uid = 'pters_group_merchant_'+str(today_unix_timestamp).split('.')[0]
+    merchandise_type_cd = payment_user_info.merchandise_type_cd
+    start_date = payment_user_info.end_date
+    end_date = next_month_today
+    payment_type_cd = payment_user_info.payment_type_cd
+    price = 3000
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
                 'schedules': [
                     {
-                        'merchant_uid': today_unix_timestamp,  # 주문 번호
+                        'merchant_uid': merchant_uid,  # 주문 번호
                         'schedule_at': unix_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
-                        'amount': 3000,
+                        'amount': price,
                         'name': 'PTERS - 월간 이용권 정기결제',
                         'buyer_name': '김현기',
                         'buyer_tel': '01011112222',
@@ -48,6 +56,17 @@ def func_set_billing_schedule(customer_uid):
                                            'Authorization': access_token})
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
+
+    if error is None:
+
+        payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
+                                     merchandise_type_cd=merchandise_type_cd,
+                                     payment_type_cd=payment_type_cd,
+                                     merchant_uid=merchant_uid, customer_uid=customer_uid,
+                                     start_date=start_date, end_date=end_date,
+                                     price=price,
+                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+        payment_info.save()
 
     return error
 

@@ -166,7 +166,7 @@ def billing_check_logic(request):
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
             if payment_user_info.payment_type_cd == 'PERIOD':
-                func_set_billing_schedule(payment_user_info.customer_uid)  # 결제 정보 저장
+                func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info)  # 결제 정보 저장
         elif status == 'ready':
             logger.info('ready Test 상태입니다..')
         else:  # 재결제 시도
