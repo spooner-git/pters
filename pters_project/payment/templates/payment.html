@@ -150,29 +150,31 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         function payment(){
-            console.log('payment function test')
+            console.log('payment function test');
+            alert('pters_group_merchant_'+ new Date().getTime());
             IMP.request_pay({
                 pg : 'jtnet', // version 1.1.0부터 지원.
                 pay_method : 'card',
                 merchant_uid : 'pters_group_merchant_'+ new Date().getTime(),
-                customer_uid: 'pters_customer_uid_{{request.user.id}}_02', // 카드(빌링키)와 1:1로 대응하는 값
+                customer_uid: 'pters_customer_uid_{{request.user.id}}_033', // 카드(빌링키)와 1:1로 대응하는 값
                 name : 'PTERS 그룹 기능',
-                amount : 3000,
+                amount : 3300,
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
                 buyer_tel : '',
                 buyer_addr : '서울특별시 강남구 삼성동',
                 buyer_postcode : '123-456',
-                {#                    m_redirect_url : '/trainer/billings/'#}
+                m_redirect_url : '/payment/billings/'
             }, function(rsp) {
                 if ( rsp.success ) {
+                    console.log(rsp);
                     var msg = '결제가 완료되었습니다.';
                     msg += '고유ID : ' + rsp.imp_uid;
                     msg += '상점 거래ID : ' + rsp.merchant_uid;
                     msg += '결제 금액 : ' + rsp.paid_amount;
                     msg += '카드 승인번호 : ' + rsp.apply_num;
                     jQuery.ajax({
-                        url: "/trainer/billings/", // 서비스 웹서버
+                        url: "/payment/billings/", // 서비스 웹서버
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({
@@ -180,8 +182,10 @@
                             end_date: '2018-07-26',
                             payment_type_cd: 'PERIOD',
                             merchandise_type_cd: 'group',
-                            merchant_uid: 'pters_group_007',
-                            customer_uid: 'pters_customer_uid_{{request.user.id}}_02', // 카드(빌링키)와 1:1로 대응하는 값
+                            merchant_uid: rsp.merchant_uid,
+                            price : 3000,
+                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033',
+{#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
                         })
                     })
                 } else {
