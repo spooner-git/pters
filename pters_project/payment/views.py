@@ -139,6 +139,8 @@ def billing_check_logic(request):
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
+    logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크0'
+                + str(payment_user_info.member_id) + ':' + str(error))
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
         # print('merchant_uid:'+merchant_uid)
@@ -149,6 +151,8 @@ def billing_check_logic(request):
         # if error is None:
         #     user_id = payment_user_info.member_id
 
+    logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크1'
+                + str(payment_user_info.member_id) + ':' + str(error))
     if error is None:
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/"+json_loading_data['imp_uid'], method="GET",
@@ -156,6 +160,8 @@ def billing_check_logic(request):
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
+    logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크2'
+                + str(payment_user_info.member_id) + ':' + str(error))
     if error is None:
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
@@ -168,11 +174,11 @@ def billing_check_logic(request):
 
     if error is None:
         error = 'test'
-        logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크'
+        logger.info(str(payment_user_info.member.name) + '님 결제 완료 체크3'
                     + str(payment_user_info.member_id) + ':' + str(json_loading_data['merchant_uid']))
         return render(request, 'ajax/payment_error_info.html', error)
     else:
-        logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크'
+        logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크4'
                      + str(payment_user_info.member_id) + ':' + str(error))
         return render(request, 'ajax/payment_error_info.html', error)
 
