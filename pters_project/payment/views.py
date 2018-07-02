@@ -42,14 +42,12 @@ def billing_logic(request):
     customer_uid = None
     start_date = None
     end_date = None
-    # print('billing_logic')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
     if error is None:
         start_date = json_loading_data['start_date']
         end_date = json_loading_data['end_date']
@@ -64,12 +62,12 @@ def billing_logic(request):
                                      payment_type_cd=payment_type_cd,
                                      merchant_uid=merchant_uid, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
+                                     price=price,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         billing_info = BillingInfoTb(member_id=request.user.id,
                                      payment_type_cd=payment_type_cd,
                                      customer_uid=customer_uid,
                                      payment_date=datetime.date.today(),
-                                     price=price,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         payment_info.save()
         billing_info.save()
@@ -86,7 +84,6 @@ def billing_check_logic(request):
     access_token = token_result['access_token']
     error = token_result['error']
     payment_user_info = None
-    # print('billing_check_logic')
 
     try:
         json_loading_data = json.loads(json_data)
@@ -115,16 +112,13 @@ def billing_check_logic(request):
     if error is None:
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
-            # print('paid')
             if payment_user_info.payment_type_cd == 'PERIOD':
                 func_set_billing_schedule(payment_user_info.customer_uid)  # 결제 정보 저장
         else:  # 재결제 시도
-            # print('not paid/retry')
             func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid)
 
     if error is None:
         error = 'test'
-
     return render(request, 'ajax/payment_error_info.html', error)
 
 

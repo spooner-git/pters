@@ -17,6 +17,7 @@ def func_set_billing_schedule(customer_uid):
     else:
         next_month_today = today + datetime.timedelta(days=30)
     # current_time = timezone.now()
+    today_unix_timestamp = today.timestamp()
     unix_timestamp = next_month_today.timestamp()
 
     token_result = func_get_payment_token()
@@ -28,9 +29,9 @@ def func_set_billing_schedule(customer_uid):
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
                 'schedules': [
                     {
-                        'merchant_uid': 'pters_group_008',  # 주문 번호
+                        'merchant_uid': today_unix_timestamp,  # 주문 번호
                         'schedule_at': unix_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
-                        'amount': 5500,
+                        'amount': 3000,
                         'name': 'PTERS - 월간 이용권 정기결제',
                         'buyer_name': '김현기',
                         'buyer_tel': '01011112222',
