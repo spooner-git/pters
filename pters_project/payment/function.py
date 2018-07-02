@@ -14,7 +14,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     today = timezone.now()
     start_date = payment_user_info.end_date
     payment_type_cd = payment_user_info.payment_type_cd
-    date = billing_info.payed_date
+    date = int(billing_info.payed_date)
     end_date = start_date
     end_date_day = int(end_date.strftime('%d'))
 
@@ -38,7 +38,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
             test = True
             while test:
                 try:
-                    end_date = end_date.replace(days=int(date))
+                    end_date = end_date.replace(day=date)
                     test = False
                 except ValueError:
                     date -= 1
