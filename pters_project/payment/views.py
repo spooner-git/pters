@@ -35,7 +35,7 @@ class PaymentView(LoginRequiredMixin, View):
 
 
 @csrf_exempt
-def billing_logic(request):
+def add_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
     error = None
@@ -69,11 +69,55 @@ def billing_logic(request):
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         billing_info = BillingInfoTb(member_id=request.user.id,
                                      payment_type_cd=payment_type_cd,
+                                     merchant_uid=merchant_uid,
                                      customer_uid=customer_uid,
                                      payment_date=datetime.date.today(),
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         payment_info.save()
         billing_info.save()
+    return render(request, 'ajax/payment_error_info.html', error)
+
+
+@csrf_exempt
+def delete_billing_logic(request):
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    error = None
+    # merchandise_type_cd = None
+    # payment_type_cd = None
+    merchant_uid = None
+    # customer_uid = None
+    # start_date = None
+    # end_date = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    if error is None:
+        # start_date = json_loading_data['start_date']
+        # end_date = json_loading_data['end_date']
+        # payment_type_cd = json_loading_data['payment_type_cd']
+        # merchandise_type_cd = json_loading_data['merchandise_type_cd']
+        merchant_uid = json_loading_data['merchant_uid']
+        # customer_uid = json_loading_data['customer_uid']
+        # price = json_loading_data['price']
+
+    if error is None:
+        try:
+            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오는데 실패했습니다.'
+        payment_user_info.delete()
+    if error is None:
+        try:
+            billing_user_info = BillingInfoTb.objects.get(merchant_uid=str(merchant_uid))
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오는데 실패했습니다.'
+        billing_user_info.delete()
+
     return render(request, 'ajax/payment_error_info.html', error)
 
 

@@ -152,10 +152,26 @@
         function payment(){
             console.log('payment function test');
             alert('pters_group_merchant_'+ new Date().getTime());
+            var merchant_uid_data = 'pters_group_merchant_'+ new Date().getTime();
+            jQuery.ajax({
+                url: "/payment/add_billings/", // 서비스 웹서버
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({
+                    start_date: '2018-06-26',
+                    end_date: '2018-07-26',
+                    payment_type_cd: 'PERIOD',
+                    merchandise_type_cd: 'group',
+                    merchant_uid: merchant_uid_data,
+                    price : 3000,
+                    customer_uid: 'pters_customer_uid_{{request.user.id}}_033',
+{#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
+                })
+            });
             IMP.request_pay({
                 pg : 'jtnet', // version 1.1.0부터 지원.
                 pay_method : 'card',
-                merchant_uid : 'pters_group_merchant_'+ new Date().getTime(),
+                merchant_uid : merchant_uid_data,
                 customer_uid: 'pters_customer_uid_{{request.user.id}}_033', // 카드(빌링키)와 1:1로 대응하는 값
                 name : 'PTERS 그룹 기능',
                 amount : 3300,
@@ -173,24 +189,33 @@
                     msg += '상점 거래ID : ' + rsp.merchant_uid;
                     msg += '결제 금액 : ' + rsp.paid_amount;
                     msg += '카드 승인번호 : ' + rsp.apply_num;
-                    jQuery.ajax({
-                        url: "/payment/billings/", // 서비스 웹서버
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        data: JSON.stringify({
-                            start_date: '2018-06-26',
-                            end_date: '2018-07-26',
-                            payment_type_cd: 'PERIOD',
-                            merchandise_type_cd: 'group',
-                            merchant_uid: rsp.merchant_uid,
-                            price : 3000,
-                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033',
+{#                    jQuery.ajax({#}
+{#                        url: "/payment/billings/", // 서비스 웹서버#}
+{#                        method: "POST",#}
+{#                        headers: { "Content-Type": "application/json" },#}
+{#                        data: JSON.stringify({#}
+{#                            start_date: '2018-06-26',#}
+{#                            end_date: '2018-07-26',#}
+{#                            payment_type_cd: 'PERIOD',#}
+{#                            merchandise_type_cd: 'group',#}
+{#                            merchant_uid: rsp.merchant_uid,#}
+{#                            price : 3000,#}
+{#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033',#}
 {#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
-                        })
-                    })
+{#                        })#}
+{#                    })#}
                 } else {
                     var msg = '결제에 실패하였습니다.';
                     msg += '에러내용 : ' + rsp.error_msg;
+                    jQuery.ajax({
+                        url: "/payment/delete_billings/", // 서비스 웹서버
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        data: JSON.stringify({
+                            merchant_uid: merchant_uid_data,
+                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033',
+                        })
+                    });
                 }
                 alert(msg);
             });

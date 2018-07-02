@@ -27,6 +27,7 @@ class BillingInfoTb(models.Model):
     billing_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, null=True)
+    merchant_uid = models.CharField(db_column='MERCHANT_UID', max_length=100,  blank=True, null=True)
     customer_uid = models.CharField(db_column='CUSTOMER_UID', max_length=100, blank=True, null=True)
     payment_date = models.DateField(db_column='PAYMENT_DATE', blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
