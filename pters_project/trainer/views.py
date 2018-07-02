@@ -74,7 +74,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     class_type_name = ''
                     class_name = None
                     request.session['class_hour'] = class_info.class_tb.class_hour
-                    request.session['class_type_code'] = class_info.subject_cd
+                    request.session['class_type_code'] = class_info.class_tb.subject_cd
                     try:
                         class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
                     except ObjectDoesNotExist:
@@ -158,15 +158,15 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             try:
-                class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
+                class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
             except ObjectDoesNotExist:
                 error = '강좌 과목 정보를 불러오지 못했습니다.'
 
             if error is None:
-                if class_info.class_tb.subject_detail_nm is None or class_info.class_tb.subject_detail_nm == '':
+                if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
                     class_type_name = class_name.common_cd_nm
                 else:
-                    class_type_name = class_info.class_tb.subject_detail_nm
+                    class_type_name = class_info.subject_detail_nm
 
             if error is None:
                 request.session['class_type_name'] = class_type_name
