@@ -152,8 +152,8 @@
         function payment(name, payment_type_cd, merchandise_type_cd, price){
             var success = false;
             var date = new Date();
-            var merchant_uid_data = 'pters_group_merchant_'+ date.getTime();
-            var customer_uid_data = 'pters_group_customer_'+ date.getTime();
+            var merchant_uid_data = 'pters_merchant_'+ date.getTime();
+            var customer_uid_data = 'pters_customer_'+ date.getTime();
             var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
 
             $.ajax({
@@ -167,6 +167,7 @@
                     merchant_uid: merchant_uid_data,
                     price : price,
                     customer_uid: customer_uid_data,
+                    name : name,
 {#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
                 }),
 
@@ -184,7 +185,13 @@
                     }else {
                         console.log('success???');
                         success = true;
-                        payment_open_pg(name, merchant_uid_data, customer_uid_data, price);
+                        if(payment_type_cd=='PERIOD'){
+                            payment_open_pg(name, merchant_uid_data, customer_uid_data, price);
+                        }
+                        else{
+                            console.log('single::')
+                            payment_open_pg_single(name, merchant_uid_data, price);
+                        }
                     }
 
                 },
@@ -204,7 +211,8 @@
             }
         }
 
-        function payment_open_pg(name, merchant_uid_data, customer_uid_data, price, start_date, end_date) {
+        function payment_open_pg(name, merchant_uid_data, customer_uid_data, price) {
+            console.log('payment_open_pg');
                 IMP.request_pay({
                     pg : 'jtnet', // version 1.1.0부터 지원.
                     pay_method : 'card',
@@ -237,6 +245,45 @@
                             data: JSON.stringify({
                                 merchant_uid: merchant_uid_data,
                                 customer_uid: customer_uid_data
+                            })
+                        })
+                    }
+                    alert(msg);
+                });
+        }
+
+        function payment_open_pg_single(name, merchant_uid_data, price) {
+            console.log('payment_open_pg_single');
+                IMP.request_pay({
+                    pg : 'jtnet', // version 1.1.0부터 지원.
+                    pay_method : 'card',
+                    merchant_uid : merchant_uid_data,
+                    name : name,
+                    amount : price,
+                    buyer_email : '{{ request.user.email }}',
+                    buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                    buyer_tel : '',
+                    buyer_addr : '서울특별시 강남구 삼성동',
+                    buyer_postcode : '123-456',
+                    m_redirect_url : '/payment/add_billing/'
+                }, function(rsp) {
+                    var msg;
+                    if ( rsp.success ) {
+                        console.log(rsp);
+                        msg = '결제가 완료되었습니다.';
+                        msg += '고유ID : ' + rsp.imp_uid;
+                        msg += '상점 거래ID : ' + rsp.merchant_uid;
+                        msg += '결제 금액 : ' + rsp.paid_amount;
+                        msg += '카드 승인번호 : ' + rsp.apply_num;
+                    } else {
+                        msg = '결제에 실패하였습니다.';
+                        msg += '에러내용 : ' + rsp.error_msg;
+                        jQuery.ajax({
+                            url: "/payment/delete_billing/", // 서비스 웹서버
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            data: JSON.stringify({
+                                merchant_uid: merchant_uid_data,
                             })
                         })
                     }
