@@ -1027,9 +1027,7 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
-
                         var jsondata = JSON.parse(data);
-                        console.log('여기',jsondata)
                         initialJSON = jsondata;
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
@@ -1040,11 +1038,9 @@ $(document).ready(function(){
 
                             var repeat_info;
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
-
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
-                                console.log(total_count,jsondata.repeatScheduleCounterArray[0],RepeatDuplicationDateArray[0].split('/').length)
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
-                                    alert('등록할수 있는 일정이 없습니다.\n 일정을 다시 확인 후 등록해주세요.');
+                                    alert('모든 일정이 기존 일정과 겹쳐 등록할 수 있는 일정이 없습니다.\n 일정을 다시 확인 후 등록해주세요.');
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                 }else{
                                     var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");

@@ -708,6 +708,7 @@ $(document).ready(function(){
                 deleteTypeSelect = "memberinfodelete";
                 if($('#calendar').length!=0){
                     ajaxClassTime();
+                    $('#members_mobile, #members_pc').html('');
                     get_current_member_list();
                     get_current_group_list();
                 }
