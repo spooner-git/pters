@@ -328,7 +328,7 @@ $(document).ready(function(){
                         close_info_popup('cal_popup_plandelete')
                         // set_schedule_time(jsondata)
                         ajaxClassTime()
-                        get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+                        get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
                         //ajax_block_during_delete_monthcal = true;
                         enable_delete_btns_after_ajax()
                         $('#id_repeat_schedule_id_confirm').val('')
