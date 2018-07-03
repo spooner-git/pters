@@ -30,6 +30,7 @@ class BillingInfoTb(models.Model):
     merchant_uid = models.CharField(db_column='MERCHANT_UID', max_length=100,  blank=True, null=True)
     customer_uid = models.CharField(db_column='CUSTOMER_UID', max_length=100, blank=True, null=True)
     payment_date = models.DateField(db_column='PAYMENT_DATE', blank=True, null=True)  # Field name made lowercase.
+    payed_date = models.IntegerField(db_column='PAYED_DATE', blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.

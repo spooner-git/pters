@@ -1,38 +1,57 @@
 import datetime
 import json
 import httplib2
+import logging
 from django.utils import timezone
 
 from configs.const import USE
 from payment.models import PaymentInfoTb
 
+logger = logging.getLogger(__name__)
 
-def func_set_billing_schedule(customer_uid, payment_user_info):
+
+def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     today = timezone.now()
-    # today = today.replace(hour=14, minute=0)
-    # next_year = int(month_first_day.strftime('%Y')) + 1
-    this_month = int(today.strftime('%m'))
-    if this_month == 2:
-        next_month_today = today + datetime.timedelta(days=28)
-    elif this_month == 1 or this_month == 3 or this_month == 5 or this_month == 7\
-            or this_month == 8 or this_month == 10 or this_month == 12:
-        next_month_today = today + datetime.timedelta(days=31)
-    else:
-        next_month_today = today + datetime.timedelta(days=30)
-    # current_time = timezone.now()
-    next_day = today + datetime.timedelta(seconds=60*5)
+    start_date = payment_user_info.end_date
+    payment_type_cd = payment_user_info.payment_type_cd
+    date = int(billing_info.payed_date)
+    end_date = start_date
+    end_date_day = int(end_date.strftime('%d'))
+
+    if payment_type_cd == 'PERIOD':
+        next_month = int(end_date.strftime('%m')) % 12 + 1
+        # end_date = end_date + datetime.timedelta(days=1)
+        test = True
+        while test:
+            try:
+                end_date = end_date.replace(month=next_month)
+                test = False
+            except ValueError:
+                end_date = end_date - datetime.timedelta(days=1)
+
+        end_date_day = int(end_date.strftime('%d'))
+
+    if payment_type_cd == 'PERIOD':
+        if end_date_day != date:
+            test = True
+            while test:
+                try:
+                    end_date = end_date.replace(day=date)
+                    test = False
+                except ValueError:
+                    date -= 1
+
+    end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
     today_unix_timestamp = today.timestamp()
-    unix_timestamp = next_day.timestamp()
+    unix_timestamp = end_date.timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
     error = token_result['error']
     merchant_uid = 'pters_group_merchant_'+str(today_unix_timestamp).split('.')[0]
     merchandise_type_cd = payment_user_info.merchandise_type_cd
-    start_date = payment_user_info.end_date
-    end_date = next_month_today
-    payment_type_cd = payment_user_info.payment_type_cd
-    price = 3000
+    price = payment_user_info.price
+
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
