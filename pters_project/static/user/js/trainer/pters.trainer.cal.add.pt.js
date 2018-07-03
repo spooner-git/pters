@@ -1551,6 +1551,7 @@ function get_current_group_list(use, callback){
 }
 
 function set_member_dropdown_list(jsondata){
+    console.log('set_member_dropdown_list',jsondata)
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.db_id.length;
