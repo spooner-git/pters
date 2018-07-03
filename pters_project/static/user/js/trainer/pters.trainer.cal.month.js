@@ -327,7 +327,21 @@ $(document).ready(function(){
                         close_info_popup('cal_popup_plandelete')
                         // set_schedule_time(jsondata)
                         ajaxClassTime()
-                        get_repeat_info($('#cal_popup_repeatconfirm').attr('data-lectureid'),$('#cal_popup_repeatconfirm').attr('data-dbid'))
+                        get_repeat_info($('#cal_popup_repeatconfirm').attr('data-dbid'))
+                        $('#members_mobile, #members_pc').html('');
+                        get_current_member_list();
+                        get_current_group_list();
+                        if(deleteTypeSelect == "repeatptdelete"){
+                            get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
+                                var availCount_personal = 0;
+                                for (var i = 0; i < jsondata.availCountArray.length; i++) {
+                                    if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1") {
+                                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
+                                    }
+                                }
+                                $("#countsSelected").text(availCount_personal);
+                            });
+                        }
                         //ajax_block_during_delete_monthcal = true;
                         enable_delete_btns_after_ajax()
                         $('#id_repeat_schedule_id_confirm').val('')

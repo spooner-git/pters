@@ -1040,7 +1040,7 @@ $(document).ready(function(){
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
                                 if(total_count == RepeatDuplicationDateArray[0].split('/').length){
-                                    alert('등록할수 있는 일정이 없습니다.\n 일정을 다시 확인 후 등록해주세요.');
+                                    alert('모든 일정이 기존 일정과 겹쳐 등록할 수 있는 일정이 없습니다.\n 일정을 다시 확인 후 등록해주세요.');
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                 }else{
                                     var date = RepeatDuplicationDateArray[0].replace(/\//gi,", ");
@@ -1156,6 +1156,8 @@ $(document).ready(function(){
              */
             close_info_popup('cal_popup_repeatconfirm');
             ajaxRepeatConfirmSend('callback',function(){
+                clear_repeat_add_popup()
+                check_dropdown_selected_addplan()
                 var id;
                 if(addTypeSelect == "repeatgroupptadd"){
                     id = $('#cal_popup_repeatconfirm').attr('data-groupid');
@@ -1468,6 +1470,20 @@ function clear_pt_off_add_popup(){
     $('._REPEAT_ADD_wrap').css('display','none');
 }
 
+function clear_repeat_add_popup(){
+    //반복일정 요일선택 버튼 초기화
+    selectedDayGroup = [];
+    $('.dateButton').removeClass('dateButton_selected');
+
+    //반복일정 시작일자, 종료일자 초기화
+    $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null);
+    $('#datepicker_repeat_start').parent('p').removeClass('dropdown_selected');
+    $('#datepicker_repeat_end').parent('p').removeClass('dropdown_selected');
+
+    //반복빈도, 시작시간, 진행시간 드랍다운 초기화
+    $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>").removeClass('dropdown_selected');
+}
+
 
 function get_current_member_list(use, callback){
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_member_ing_list')
@@ -1551,6 +1567,7 @@ function get_current_group_list(use, callback){
 }
 
 function set_member_dropdown_list(jsondata){
+    console.log('set_member_dropdown_list',jsondata)
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.db_id.length;

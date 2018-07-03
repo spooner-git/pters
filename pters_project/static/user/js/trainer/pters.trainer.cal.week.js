@@ -683,15 +683,17 @@ $(document).ready(function(){
                         $('#members_mobile, #members_pc').html('');
                         get_current_member_list();
                         get_current_group_list();
-                        get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
-                            var availCount_personal = 0;
-                            for (var i = 0; i < jsondata.availCountArray.length; i++) {
-                                if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1") {
-                                    availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
+                        if(deleteTypeSelect == "repeatptdelete"){
+                            get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
+                                var availCount_personal = 0;
+                                for (var i = 0; i < jsondata.availCountArray.length; i++) {
+                                    if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1") {
+                                        availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
+                                    }
                                 }
-                            }
-                            $("#countsSelected").text(availCount_personal);
-                        });
+                                $("#countsSelected").text(availCount_personal);
+                            });
+                        }
                         if(bodywidth >= 600){
                             $('#calendar').css('position','relative');
                         }

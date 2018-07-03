@@ -83,7 +83,7 @@ $(document).ready(function(){
     }else if(class_code.match(/GOLF/)){
         $('body').addClass('bg_golf')
     }else{
-        $('body').addClass('bg_brick')
+        $('body').addClass('bg_basic')
     }
 
 });

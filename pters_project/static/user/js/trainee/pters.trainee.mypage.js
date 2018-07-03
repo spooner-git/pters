@@ -214,9 +214,6 @@ $(document).ready(function(){
             var durationcalc = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
             var durationcalc_minute = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])
 
-            console.log('끝:',Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]), durationcalc_minute)
-            console.log('시작:',Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]),durationcalc_minute)
-            console.log('durationcalc',durationcalc)
 
             if(durationcalc == 1 && durationcalc_minute == -30){
                 var durationText = Math.abs(durationcalc_minute)+'분'
