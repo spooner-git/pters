@@ -629,6 +629,11 @@ a:focus, a:hover{
     background-size:cover;
     background-position-x:center;
 }
+.bg_ymdText_basic{
+    background-image: url("/static/user/res/basic.png");
+    background-size:cover;
+    background-position-x:center;
+}
 
 
 

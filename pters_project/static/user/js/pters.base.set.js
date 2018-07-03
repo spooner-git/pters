@@ -976,5 +976,5 @@ if(class_code.match(/BL/)){
 }else if(class_code.match(/GOLF/)){
     $('#upperImg, #ymdText').addClass('bg_ymdText_golf');
 }else if(class_code.match(/ETC/)){
-    $('#upperImg, #ymdText').addClass('bg_ymdText_brick');
+    $('#upperImg, #ymdText').addClass('bg_ymdText_basic');
 }

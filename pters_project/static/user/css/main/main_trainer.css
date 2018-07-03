@@ -36,6 +36,9 @@ body{
 .bg_brick{
 	background-image: url("/static/user/res/main/bg-image-brick-mobile.jpg")
 }
+.bg_basic{
+	background-image: url("/static/user/res/main/bg-image-basic-mobile.jpg")
+}
 
 .navbar-default{
 	background-color: transparent;
@@ -254,6 +257,9 @@ body{
 	}
 	.bg_brick{
 		background-image: url("/static/user/res/main/bg-image-brick-pc.jpg")
+	}
+	.bg_basic{
+		background-image: url("/static/user/res/main/bg-image-basic-pc.png")
 	}
 
 	#main_content{
