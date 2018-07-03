@@ -1156,6 +1156,8 @@ $(document).ready(function(){
              */
             close_info_popup('cal_popup_repeatconfirm');
             ajaxRepeatConfirmSend('callback',function(){
+                clear_repeat_add_popup()
+                check_dropdown_selected_addplan()
                 var id;
                 if(addTypeSelect == "repeatgroupptadd"){
                     id = $('#cal_popup_repeatconfirm').attr('data-groupid');
@@ -1466,6 +1468,20 @@ function clear_pt_off_add_popup(){
     //반복일정 접기
     $('._NORMAL_ADD_wrap').css('display','block');
     $('._REPEAT_ADD_wrap').css('display','none');
+}
+
+function clear_repeat_add_popup(){
+    //반복일정 요일선택 버튼 초기화
+    selectedDayGroup = [];
+    $('.dateButton').removeClass('dateButton_selected');
+
+    //반복일정 시작일자, 종료일자 초기화
+    $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null);
+    $('#datepicker_repeat_start').parent('p').removeClass('dropdown_selected');
+    $('#datepicker_repeat_end').parent('p').removeClass('dropdown_selected');
+
+    //반복빈도, 시작시간, 진행시간 드랍다운 초기화
+    $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>").removeClass('dropdown_selected');
 }
 
 
