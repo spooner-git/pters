@@ -16,8 +16,9 @@ from django.utils import timezone
 
 from configs import settings
 from configs.const import USE
-from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info
-from payment.models import PaymentInfoTb, BillingInfoTb
+from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
+    func_check_payment_info, func_get_end_date, func_get_payment_result, func_send_refund_payment
+from payment.models import PaymentInfoTb, BillingInfoTb, ProductPriceTb
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,10 @@ def add_billing_logic(request):
     start_date = None
     end_date = None
     date = None
+    name = None
     price = 0
+    input_price = 0
+
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -59,25 +63,14 @@ def add_billing_logic(request):
         payment_type_cd = json_loading_data['payment_type_cd']
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
         merchant_uid = json_loading_data['merchant_uid']
-        price = json_loading_data['price']
+        input_price = json_loading_data['price']
         date = int(start_date.split('-')[2])
 
     if error is None:
-        if payment_type_cd == 'PERIOD':
-            customer_uid = json_loading_data['customer_uid']
-            end_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-            next_month = int(end_date.strftime('%m')) % 12 + 1
-            # end_date = end_date + datetime.timedelta(days=1)
-            test = True
-            while test:
-                try:
-                    end_date = end_date.replace(month=next_month)
-                    test = False
-                except ValueError:
-                    end_date = end_date - datetime.timedelta(days=1)
+        error = func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price)
 
-        else:
-            end_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date() + datetime.timedelta(days=30)
+    if error is None:
+        end_date = func_get_end_date(payment_type_cd, start_date, 1)
 
     if error is None:
         payment_info = PaymentInfoTb(member_id=request.user.id, merchandise_type_cd=merchandise_type_cd,
@@ -85,6 +78,7 @@ def add_billing_logic(request):
                                      merchant_uid=merchant_uid, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
                                      price=price,
+                                     name=name,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
 
         billing_info = BillingInfoTb(member_id=request.user.id,
@@ -171,24 +165,31 @@ def billing_check_logic(request):
         #     user_id = payment_user_info.member_id
 
     if error is None:
-        h = httplib2.Http()
-        resp, content = h.request("https://api.iamport.kr/payments/"+json_loading_data['imp_uid'], method="GET",
-                                  headers={'Authorization': access_token})
-        if resp['status'] != '200':
-            error = '통신중 에러가 발생했습니다.'
+        payment_result_status = func_get_payment_result(json_loading_data['imp_uid'], access_token)
+        if payment_result_status != 'paid':
+            error = '결제중 오류가 발생했습니다.'
+
+    if error is None:
+        if json_loading_data['success'] is False:
+            error = '결제중 오류가 발생했습니다.'
 
     if error is None:
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
-            if payment_user_info.payment_type_cd == 'PERIOD':
-                func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info, billing_info)  # 결제 정보 저장
+            if json_loading_data['paid_amount'] == payment_user_info.price:
+                if payment_user_info.payment_type_cd == 'PERIOD':
+                    # 결제 정보 저장
+                    func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info, billing_info)
+            else:
+                # 결제 취소 날리기
+                func_send_refund_payment(json_loading_data['imp_uid'], json_loading_data['merchant_uid'], access_token)
         elif status == 'ready':
             logger.info('ready Test 상태입니다..')
         else:  # 재결제 시도
-            func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid)
+            func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid,
+                                     payment_user_info.price)
 
     if error is None:
-        error = 'test'
         logger.info(str(payment_user_info.member.name) + '님 정기 결제 완료 '
                     + str(payment_user_info.member_id) + ':' + str(json_loading_data['merchant_uid']))
         return render(request, 'ajax/payment_error_info.html', error)
