@@ -176,7 +176,7 @@ def billing_check_logic(request):
         #     user_id = payment_user_info.member_id
 
     if error is None:
-        json_loading_data = None
+        # json_loading_data = None
         h = httplib2.Http()
         resp, content = h.request("https://api.iamport.kr/payments/" + json_loading_data['imp_uid'], method="GET",
                                   headers={'Authorization': access_token})
