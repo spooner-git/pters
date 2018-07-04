@@ -110,31 +110,30 @@
             location.href="/trainer/trainer_setting/"
         });
 
-
         $('#pay_group_function_monthly').click(function(e){
 {#            alert('그룹 정기 결제');#}
             e.preventDefault();
             payment('PTERS - 그룹기능 정기 결제', 'PERIOD', 'GROUP', 9000);
             //그룹 레슨 정기결제 버튼
-        })
+        });
         $('#pay_group_function_instant').click(function(e){
 {#            alert('그룹 1개월 이용권 결제');#}
             e.preventDefault();
             payment('PTERS - 그룹기능 1개월 이용권', 'SINGLE', 'GROUP', 12000);
             //그룹 레슨 1개월 결제 버튼
-        })
+        });
         $('#pay_ads_remove_monthly').click(function(e){
 {#            alert('광고 제거 정기 결제');#}
             e.preventDefault();
             payment('PTERS - 광고제거 정기 결제', 'PERIOD', 'ADVERTISE', 1000);
             //광고 제거 정기 결제 버튼
-        })
+        });
         $('#pay_ads_remove_instant').click(function(e){
 {#            alert('광고 제거 1개월 결제');#}
             e.preventDefault();
             payment('PTERS - 광고제거 1개월 이용권', 'SINGLE', 'ADVERTISE', 2000);
             //광고 제거 1개월 결제 버튼
-        })
+        });
 
         /*
         function goPage(option){
@@ -152,8 +151,8 @@
         function payment(name, payment_type_cd, merchandise_type_cd, price){
             var success = false;
             var date = new Date();
-            var merchant_uid_data = 'pters_merchant_'+ date.getTime();
-            var customer_uid_data = 'pters_customer_'+ date.getTime();
+            var merchant_uid_data = 'merchant_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var customer_uid_data = 'customer_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
 
             $.ajax({
@@ -168,7 +167,7 @@
                     customer_uid: customer_uid_data,
                     price : price,
                     name : name,
-{#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
+{#                  customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
                 }),
 
                 beforeSend:function(){
@@ -183,13 +182,12 @@
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                     }else {
-                        console.log('success???');
+                        console.log('success');
                         success = true;
                         if(payment_type_cd=='PERIOD'){
                             payment_open_pg(name, merchant_uid_data, customer_uid_data, price);
                         }
                         else{
-                            console.log('single::')
                             payment_open_pg_single(name, merchant_uid_data, price);
                         }
                     }

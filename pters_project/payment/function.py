@@ -17,19 +17,15 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
     date = int(billing_info.payed_date)
-    now = timezone.now()
+
     next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-    logger.info('test1::'+str(next_billing_date_time.strftime('%Y')))
-    logger.info('test2::'+str(next_billing_date_time.strftime('%m')))
-    logger.info('test3::'+str(next_billing_date_time.strftime('%d')))
-    next_schedule_timestamp = now.replace(year=int(next_billing_date_time.strftime('%y')),
-                                          month=int(next_billing_date_time.strftime('%m')),
-                                          day=int(next_billing_date_time.strftime('%d'))).timestamp()
+    next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
     error = token_result['error']
-    merchant_uid = 'pters_merchant_'+str(next_schedule_timestamp).split('.')[0]
+    merchant_uid = 'merchant_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
+                   + '_' + str(next_schedule_timestamp).split('.')[0]
 
     if error is None and access_token is not None:
         data = {
