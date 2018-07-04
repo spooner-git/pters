@@ -3,6 +3,8 @@ import json
 
 import httplib2
 import logging
+
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
@@ -39,6 +41,7 @@ class PaymentView(LoginRequiredMixin, View):
 def add_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
+    context = {'error':None}
     error = None
     merchandise_type_cd = None
     payment_type_cd = None
@@ -59,19 +62,21 @@ def add_billing_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
-        start_date = json_loading_data['start_date']
+        # start_date = json_loading_data['start_date']
+        start_date = today
         payment_type_cd = json_loading_data['payment_type_cd']
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
         merchant_uid = json_loading_data['merchant_uid']
         input_price = json_loading_data['price']
-        date = int(start_date.split('-')[2])
+        date = int(start_date.strftime('%d'))
 
     if error is None:
         if payment_type_cd == 'PERIOD':
             customer_uid = json_loading_data['customer_uid']
 
     if error is None:
-        payment_user_info_count = PaymentInfoTb.objects.filter(end_date__lte=today,
+        # today = datetime.datetime.combine(today, datetime.datetime.min.time())
+        payment_user_info_count = PaymentInfoTb.objects.filter(end_date__gte=today,
                                                                member_id=request.user.id,
                                                                merchandise_type_cd=merchandise_type_cd,
                                                                use=USE).count()
@@ -102,13 +107,19 @@ def add_billing_logic(request):
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         payment_info.save()
         billing_info.save()
-    return render(request, 'ajax/payment_error_info.html', error)
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
 @csrf_exempt
 def delete_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
+    context = {'error': None}
     error = None
     merchant_uid = None
     payment_user_info = None
@@ -141,7 +152,12 @@ def delete_billing_logic(request):
         if billing_user_info is not None:
             billing_user_info.delete()
 
-    return render(request, 'ajax/payment_error_info.html', error)
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
 @csrf_exempt
@@ -155,6 +171,7 @@ def billing_check_logic(request):
     error = token_result['error']
     payment_user_info = None
     billing_info = None
+    context = {'error': None}
 
     try:
         json_loading_data = json.loads(json_data)
@@ -232,11 +249,13 @@ def billing_check_logic(request):
     if error is None:
         logger.info(str(payment_user_info.member.name) + '님 정기 결제 완료 '
                     + str(payment_user_info.member_id) + ':' + str(json_loading_data['response']['merchant_uid']))
-        return render(request, 'ajax/payment_error_info.html', error)
+        context['error'] = error
+        return render(request, 'ajax/payment_error_info.html', context)
     else:
         logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크'
                      + str(payment_user_info.member_id) + ':' + str(error))
-        return render(request, 'ajax/payment_error_info.html', error)
+        context['error'] = error
+        return render(request, 'ajax/payment_error_info.html', context)
 
 
 class PaymentCompleteView(LoginRequiredMixin, TemplateView):
