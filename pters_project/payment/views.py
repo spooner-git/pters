@@ -202,15 +202,15 @@ def billing_check_logic(request):
     if error is None:
         # json_loading_data = payment_result_status['json_loading_data']
         logger.info('second::' + str(json_loading_data))
-        status = json_loading_data['status']
+        status = json_loading_data['response']['status']
         if status == 'paid':  # 결제 완료
-            if json_loading_data['paid_amount'] == payment_user_info.price:
+            if json_loading_data['response']['amount'] == payment_user_info.price:
                 if payment_user_info.payment_type_cd == 'PERIOD':
                     # 결제 정보 저장
                     func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info, billing_info)
             else:
                 # 결제 취소 날리기
-                func_send_refund_payment(json_loading_data['imp_uid'], json_loading_data['merchant_uid'], access_token)
+                func_send_refund_payment(json_loading_data['response']['imp_uid'], json_loading_data['response']['merchant_uid'], access_token)
         elif status == 'ready':
             logger.info('ready Test 상태입니다..')
         else:  # 재결제 시도
@@ -219,7 +219,7 @@ def billing_check_logic(request):
 
     if error is None:
         logger.info(str(payment_user_info.member.name) + '님 정기 결제 완료 '
-                    + str(payment_user_info.member_id) + ':' + str(json_loading_data['merchant_uid']))
+                    + str(payment_user_info.member_id) + ':' + str(json_loading_data['response']['merchant_uid']))
         return render(request, 'ajax/payment_error_info.html', error)
     else:
         logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크'
