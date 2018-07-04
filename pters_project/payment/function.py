@@ -19,9 +19,9 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     date = int(billing_info.payed_date)
     now = timezone.now()
     next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-    logger.log('test1::'+str(next_billing_date_time.strftime('%y')))
-    logger.log('test2::'+str(next_billing_date_time.strftime('%m')))
-    logger.log('test3::'+str(next_billing_date_time.strftime('%d')))
+    logger.info('test1::'+str(next_billing_date_time.strftime('%y')))
+    logger.info('test2::'+str(next_billing_date_time.strftime('%m')))
+    logger.info('test3::'+str(next_billing_date_time.strftime('%d')))
     next_schedule_timestamp = now.replace(year=int(next_billing_date_time.strftime('%y')),
                                           month=int(next_billing_date_time.strftime('%m')),
                                           day=int(next_billing_date_time.strftime('%d'))).timestamp()
