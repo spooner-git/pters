@@ -48,8 +48,8 @@ def add_billing_logic(request):
     end_date = None
     date = None
     name = None
-    price = 0
     input_price = 0
+    today = datetime.date.today()
 
     try:
         json_loading_data = json.loads(json_data)
@@ -69,6 +69,14 @@ def add_billing_logic(request):
     if error is None:
         if payment_type_cd == 'PERIOD':
             customer_uid = json_loading_data['customer_uid']
+
+    if error is None:
+        payment_user_info_count = PaymentInfoTb.objects.filter(end_date__lt=today,
+                                                               member_id=request.user.id,
+                                                               merchandise_type_cd=merchandise_type_cd,
+                                                               use=USE).count()
+        if payment_user_info_count != 0:
+            error = '이미 결제된 기능입니다.'
 
     if error is None:
         error = func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price)
@@ -156,12 +164,12 @@ def billing_check_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
-
-        logger.info(str(json_loading_data))
         merchant_uid = json_loading_data['merchant_uid']
         # print('merchant_uid:'+merchant_uid)
         try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
+            payment_user_info.use = USE
+            payment_user_info.save()
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오는데 실패했습니다.'
         # print('merchant_uid:'+merchant_uid)
@@ -201,11 +209,8 @@ def billing_check_logic(request):
 
     if error is None:
         # json_loading_data = payment_result_status['json_loading_data']
-        logger.info('second::' + str(json_loading_data))
         status = json_loading_data['response']['status']
         if status == 'paid':  # 결제 완료
-            logger.info('amount:::' + str(json_loading_data['response']['amount']))
-            logger.info('price:::' + str(payment_user_info.price))
             if int(json_loading_data['response']['amount']) == int(payment_user_info.price):
                 if payment_user_info.payment_type_cd == 'PERIOD':
                     # 결제 정보 저장
