@@ -178,9 +178,9 @@ def billing_check_logic(request):
         # if payment_result_status != 'paid':
         #     error = '결제중 오류가 발생했습니다.'
 
-    if error is None:
-        if json_loading_data['success'] is False:
-            error = '결제중 오류가 발생했습니다.'
+    # if error is None:
+    #     if json_loading_data['success'] is False:
+    #         error = '결제중 오류가 발생했습니다.'
 
     if error is None:
         status = json_loading_data['status']
