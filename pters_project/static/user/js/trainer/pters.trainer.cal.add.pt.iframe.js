@@ -2098,6 +2098,25 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
             planMemberDbid = '';
             planCode = '';
             break;
+
+        //iframe 적용시, 고정 그룹은 나오지 않도록 설정하기 위해 준비
+        //그룹 타입이 서버에서 jsondata에 넘어오지 않음
+        case 'privategroup':
+            plan = option;
+            planStartDate = jsondata.group_schedule_start_datetime;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.group_schedule_end_datetime;
+            planMemberName = jsondata.group_schedule_group_name;
+            planGroupid = jsondata.group_schedule_group_id;
+            planScheduleIdArray = jsondata.group_schedule_id;
+            planNoteArray = jsondata.group_schedule_note;
+            planScheduleFinishArray = jsondata.group_schedule_finish_check;
+            planColor = 'groupTime';
+            planfinished = ' groupTime_checked';
+            planMemberNum = jsondata.group_schedule_max_member_num;
+            planMemberDbid = '';
+            planCode = '';
+            break;
     }
 
     //2018_4_22_8_30_2_OFF_10_30

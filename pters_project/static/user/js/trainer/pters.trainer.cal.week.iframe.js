@@ -892,6 +892,8 @@ $(document).ready(function(){
 
     draw_time_graph(30,'');
     draw_time_graph(30,'mini');
+    $('.swiper-slide-active').css('width',$('#week').width())
+
 
 
 
@@ -992,6 +994,8 @@ $(document).ready(function(){
         }
         var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>'+text1+'</span></div>';
         //for(var i=0; i<=23; i++){
+
+        var tableHTML = []
         for(var i=Options.workStartTime; i<Options.workEndTime; i++){
             var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row">';
             var textToAppend_ = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_30M'+'" class="time-row time-row30">';
@@ -1205,9 +1209,10 @@ $(document).ready(function(){
             }
 
             var sum = textToAppend+toAppend1+textToAppend_+toAppend2;
-            slideIndex.append(sum);
-
+            //slideIndex.append(sum);
+            tableHTML.push(sum)
         }
+        slideIndex.html(tableHTML.join(''))
         slideIndex.append(fakeElementForBlankPage);
         weekNum_Set(Index);
         time_index_set();

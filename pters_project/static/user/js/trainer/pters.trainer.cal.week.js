@@ -871,6 +871,7 @@ $(document).ready(function(){
     calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
     calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
     //calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
+    $('.swiper-slide-active').css('width',$('#week').width())
 
 
 

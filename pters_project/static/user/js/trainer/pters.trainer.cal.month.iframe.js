@@ -617,6 +617,7 @@ $(document).ready(function(){
     calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
     calTable_Set(2,currentYear,currentPageMonth);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
     calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
+    $('.swiper-slide-active').css('width',$('#date').width())
 
     //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
     //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
