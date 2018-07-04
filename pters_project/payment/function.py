@@ -19,6 +19,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
 
+    logger.info('test00')
     date = int(billing_info.payed_date)
 
     end_date = func_get_end_date(payment_type_cd, str(start_date), 1, date)
@@ -26,11 +27,13 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     today_unix_timestamp = today.timestamp()
     unix_timestamp = end_date.timestamp()
 
+    logger.info('test11')
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
     error = token_result['error']
     merchant_uid = 'pters_merchant_'+str(today_unix_timestamp).split('.')[0]
 
+    logger.info('test22')
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
@@ -55,6 +58,9 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
+            logger.info(str(payment_user_info.member.name) + '님 정기 결제 예약 등록 '
+                        + str(payment_user_info.member_id) + ':' + str(resp))
+    logger.info('test33')
     if error is None:
 
         payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
@@ -66,6 +72,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         payment_info.save()
 
+    logger.info('test44')
     return error
 
 

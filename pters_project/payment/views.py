@@ -18,7 +18,7 @@ from configs import settings
 from configs.const import USE
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_info, func_get_end_date, func_get_payment_result, func_send_refund_payment
-from payment.models import PaymentInfoTb, BillingInfoTb, ProductPriceTb
+from payment.models import PaymentInfoTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -67,10 +67,14 @@ def add_billing_logic(request):
         date = int(start_date.split('-')[2])
 
     if error is None:
+        if payment_type_cd == 'PERIOD':
+            customer_uid = json_loading_data['customer_uid']
+
+    if error is None:
         error = func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price)
 
     if error is None:
-        end_date = func_get_end_date(payment_type_cd, start_date, 1)
+        end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
 
     if error is None:
         payment_info = PaymentInfoTb(member_id=request.user.id, merchandise_type_cd=merchandise_type_cd,
@@ -108,21 +112,26 @@ def delete_billing_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
     except TypeError:
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
     if error is None:
         merchant_uid = json_loading_data['merchant_uid']
 
     if error is None:
         try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
+            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오는데 실패했습니다.'
-        payment_user_info.delete()
     if error is None:
-        try:
-            billing_user_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
-        billing_user_info.delete()
+        if payment_user_info.customer_uid is not None and payment_user_info.customer_uid != '':
+            try:
+                billing_user_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
+            except ObjectDoesNotExist:
+                error = '결제 정보를 불러오는데 실패했습니다.'
+    if error is None:
+        if payment_user_info is not None:
+            payment_user_info.delete()
+        if billing_user_info is not None:
+            billing_user_info.delete()
 
     return render(request, 'ajax/payment_error_info.html', error)
 

@@ -165,8 +165,8 @@
                     payment_type_cd: payment_type_cd,
                     merchandise_type_cd: merchandise_type_cd,
                     merchant_uid: merchant_uid_data,
-                    price : price,
                     customer_uid: customer_uid_data,
+                    price : price,
                     name : name,
 {#                            customer_uid: 'pters_customer_uid_{{request.user.id}}_033' // 카드(빌링키)와 1:1로 대응하는 값#}
                 }),
@@ -214,7 +214,7 @@
         function payment_open_pg(name, merchant_uid_data, customer_uid_data, price) {
             console.log('payment_open_pg');
                 IMP.request_pay({
-                    pg : 'jtnet', // version 1.1.0부터 지원.
+                    pg : 'kcp', // version 1.1.0부터 지원.
                     pay_method : 'card',
                     merchant_uid : merchant_uid_data,
                     customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
@@ -255,7 +255,7 @@
         function payment_open_pg_single(name, merchant_uid_data, price) {
             console.log('payment_open_pg_single');
                 IMP.request_pay({
-                    pg : 'jtnet', // version 1.1.0부터 지원.
+                    pg : 'kcp', // version 1.1.0부터 지원.
                     pay_method : 'card',
                     merchant_uid : merchant_uid_data,
                     name : name,
@@ -283,7 +283,7 @@
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
-                                merchant_uid: merchant_uid_data,
+                                merchant_uid: merchant_uid_data
                             })
                         })
                     }
