@@ -83,6 +83,7 @@
 
 
     <div id="ymdText-pc" class="wrap">
+        <!--
         <div class="ymdText-pc-refresh">
             <div class="ymdText-pc-add-refresh">
                 <span class="KRtext">새로고침</span>
@@ -90,6 +91,7 @@
                 <span class="ENtext">Refresh</span>
             </div>
         </div>
+        -->
 
         <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
         <div class="ymdText-pc-fulldate">
@@ -1166,6 +1168,18 @@
         var selectedDayGroup = []; //반복일정에서 요일 선택
         var select_all_check;
         var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
+
+        var pters_iframe_options = {"planVisibility": "G", //C, O, G, CO, OG, CG, COG
+                                    "viewMode":0,
+        }
+        
+        if(pters_iframe_options.viewMode == 1){
+            alert('현재 뷰 모드')
+            $('div.ymdText-pc-add-off, div.ymdText-pc-add-pt').remove()
+        }else{
+            alert('현재 편집 모드')
+            //$('div.ymdText-pc-add-off, div.ymdText-pc-add-pt').show()
+        }
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.week.iframe.js" %}></script>
     <script>
@@ -1281,7 +1295,7 @@
         var DB_All = {};
 
     </script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.iframe.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script>
