@@ -1,0 +1,773 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+html,body{
+    font-family: 'Noto Sans KR',sans-serif !important;
+    background: #ffffff !important;
+}
+
+
+.beta_tag{
+    width: 30px;
+    position: absolute;
+}
+
+.display_block{
+    display: block !important;
+}
+.display_inline{
+    display: inline;
+}
+.display_none{
+    display: none;
+}
+
+
+#how_to_use_pters{
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #f4f4f4;
+    width: 90%;
+    max-width: 600px;
+    height: 90%;
+    max-height: 720px;
+    z-index: -10;
+}
+
+.ajaxloadingPC{
+    position: fixed;
+    display: none;
+    width: 62px;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%,-50%);
+    z-index: 202;
+}
+
+.ajaxloading_dropdown{
+    display: none;
+    position: absolute;
+    width: 20px;
+}
+
+
+.navbar-default .navbar-brand{
+    color:black;
+}
+
+a:focus, a:hover{
+    text-decoration: none;
+    color: unset;
+}
+
+#errorMessageBar{
+    display: none;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 35px;
+    text-align: center;
+    background: red;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    z-index: 1500;
+}
+#errorMessageBar span{
+    line-height: 35px;
+}
+#errorMessageBar span:nth-child(2){
+    position: absolute;
+    right: 0;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+
+.wrap{
+    width: 100%;
+    max-width: 1080px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
+.wrap800{
+    width: 100%;
+    max-width: 800px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
+.wrapunlimit{
+    width: 100%;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
+.wraptrainer{
+    width: 100%;
+    max-width: 750px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+
+
+
+/* Sidebar CSS */
+
+#user_name{
+    color: #fe4e65;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    position: absolute;
+    top: 57%;
+    width: 100%;
+}
+
+#welcome{
+    color: #fe4e65;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    position: absolute;
+    top: 68%;
+    width: 100%;
+
+}
+.sidebar_upper img{
+    width: 50px;
+
+    margin: auto;
+}
+
+.sidebar_upper div{
+    width: 100%;
+    position: absolute;
+    top: 25%;
+    text-align: center;
+}
+
+.outer_Sidenav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: black;
+    opacity: 0.8;
+    width: 100%;
+    height: 100%;
+    display: none;
+    overflow: hidden;
+    padding-top: 0;
+}
+
+.sidebar_text{
+    color:#282828;
+    font-weight: 600;
+    text-align: center;
+}
+
+.sidebar_upper{
+    height: 33%;
+    background: transparent;
+    position: relative;
+}
+
+.sidebar_icon{
+    position:absolute;
+    left: 33%;
+    padding: 15px 30px 15px 0px;
+    width: 50px;
+}
+
+#cal_day{
+    display: none;
+}
+
+.sidebar_div{
+    height: 50px;
+    border-top: 0.5px solid #cccccc;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+.sidebar_div:hover, .sidebar_div:active, .sidebar_div:focus, .sidebar_div_last1:hover, .sidebar_div_last2:hover,.sidebar_div_last1:active, .sidebar_div_last2:active{
+    color: #fe4e65 !important;
+    background: #eaeaea !important;
+}
+
+
+.sidebar_div_last{
+    position: absolute;
+    display: table;
+    bottom: 0%;
+    width: 100%;
+    border-top: 0px;
+    background: #ffffff;
+}
+
+.sidebar_div_last1{
+    position: relative;
+    display: table-cell;
+    width: 80%;
+    border-top: 0.5px solid #cccccc;
+    border-right: 5px solid #ffffff;
+    cursor: pointer;
+}
+
+.sidebar_div_last2{
+    position: relative;
+    display: table-cell;
+    width: 20%;
+    /*height: 50px;*/
+    margin: auto;
+    border-top: 0.5px solid #cccccc;
+    border-left: 2px solid #ffffff;
+    cursor: pointer;
+}
+
+.sidebar_icon_setting{
+    left: 20.8%;
+    padding: 15px 30px 15px 0px;
+}
+
+.sidebar_icon_info{
+    top: 0;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #282828;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    transition: 0.15s;
+    padding-top: 0px;
+}
+
+.sidenav-size{
+    width: 80%;
+}
+
+.sidenav a {
+    padding: 16px 8px 18px 57px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Sidebar에서 선택했을때 선택된 Text 색상 변경
+.sidenav a:hover, .offcanvas a:focus{
+    color: #cccccc;
+} 
+*/
+
+.outer_Sidenav .closebtn {
+    position: absolute;
+    top: 3%;
+    right: 5%;
+    font-size: 50px;
+    color: #ffffff;
+    z-index: 10;
+}
+
+#shade2{ /*회원달력*/
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.7;
+    display: none;
+    z-index: 101;
+}
+
+#navshade{
+    position: fixed;
+    display: none;
+    background: black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    z-index: 100;
+    top: 0;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/* 상단 Navbar CSS */
+
+#upbutton{
+    float:left;
+    left: 2%;
+    border: 0px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}
+
+#upbutton-x, #upbutton-x-modify{
+    float:left;
+    left: 2%;
+    border: 0px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+}
+#upbutton-x:active, #upbutton-x-modify:active{
+    background: #cccccc;
+}
+
+
+#upbutton-right, #upbutton-alarm, #upbutton-check , #upbutton-modify{
+    float:right;
+    right: 2%;
+    border: 0px;
+    margin-right: 0px;
+    height: 40px;
+    width: 40px;
+}
+
+#upbutton-right:active ,#upbutton-alarm:active, #upbutton-check:active, #upbutton-modify:active{
+    background: #cccccc;
+}
+
+.uptext{
+    position: absolute;
+    color: black;
+    text-decoration: none;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    max-width: 250px;
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    max-height: 48px;
+    padding-top: 17px;
+}
+
+#uptext1,#uptext2{
+    color: black !important;
+}
+
+
+/* Bootstrap css direct access & editing 부트스트랩 css 직접 수정*/
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: black;
+}
+
+.navbar-toggle .icon-bar{
+    height: 2.5px;
+}
+
+.navbar-toggle{
+    margin-bottom: 1px;
+}
+
+
+
+/* Bootstrap css direct access & editing 부트스트랩 css 직접 수정(화면이 커져도 Navbar collapse 되지 않도록)*/
+.navbar-header {
+    float: none;
+}
+.navbar-toggle {
+    display: block;
+}
+.navbar-collapse {
+    border-top: 1px solid transparent;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.navbar-collapse.collapse {
+    display: none!important;
+}
+.navbar-nav {
+    float: none!important;
+    margin: 7.5px -15px;
+}
+.navbar-nav>li {
+    float: none;
+}
+.navbar-nav>li>a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.navbar-collapse.collapse.in{
+    display:block!important;
+}
+
+#loginInfo{
+    display: none;
+    margin-right: 70px;
+}
+
+.pclogout{
+    display: none;
+}
+
+
+/*미디어 쿼리*/
+@media(min-width:415px){
+    .sidenav-size {
+        width: 35%;
+    }
+}
+/*미디어 쿼리*/
+
+#page-base{
+    display: block;
+    z-index: 99;
+}
+
+#page-base-addstyle{
+    display: none;
+    z-index: 150;
+    z-index: 151;
+    background: #ffffff;
+}
+
+#page-base-modifystyle{
+    display: none;
+    z-index: 150;
+    z-index: 151;
+    background: #ffffff;
+}
+
+#pcver{
+    display: none;
+    z-index: 99;
+}
+
+.fixfooter{
+    display: none;
+}
+
+
+.bottomfooter1{
+    color: #7d7d7d;
+    font-size: 12px;
+    font-weight: 400;
+    width: 100%;
+    max-width: 1000px;
+    margin:0 auto;
+    height: 20px;
+}
+
+.bottomfooter1 span{
+    line-height: 50px;
+    margin-left: 0px;
+}
+
+.bottomfooter2{
+    width: 512px;
+    max-width: 1000px;
+    margin:0 auto;
+    color: #282828;
+    font-size: 10px;
+}
+
+.bottomfooter2 p{
+    margin-bottom:1px;
+}
+
+.bottomfooter2 a{
+    color: #ffffff;
+}
+
+.bottomfooter2 a:hover{
+    color:#fe4e65;
+}
+
+.bottomfooter3{
+    width: 300px;
+    max-width: 300px;
+    margin:0 auto;
+    color: #282828;
+    font-size: 10px;
+    display: none;
+    text-align: center;
+}
+
+.bottomfooter3 p{
+    margin-bottom:1px;
+}
+
+.bottomfooter3 a{
+    color: #ffffff;
+}
+
+.bottomfooter3 a:hover{
+    color:#fe4e65;
+}
+
+.footergap{
+
+}
+
+
+/*PC버전 상단네비바*/
+
+.centermenu{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    max-width: 1080px;
+    margin:0 auto;
+}
+
+.centermenu_box{
+    position: fixed;
+    width: 550px;
+    top: 3px;
+    text-align: center;
+    margin-left: 70px;
+}
+
+.centermenu_div{
+    display: inline-block;
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+.centermenu_text{
+    line-height: 60px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #282828;
+    cursor: pointer;
+}
+
+.centermenu_text:hover,.centermenu_text:focus{
+    color:#fe4e65;
+}
+
+.centermenu_logo{
+    display: none;
+    height: 12px;
+    margin-left: 6px;
+    margin-top: 25px;
+}
+
+.pcwho{
+    color:#282828;
+    font-size: 12.5px;
+    margin-right: 10px;
+    font-weight: 500;
+    line-height: 62px;
+    cursor: pointer;
+}
+.pcwho:hover{
+    color: #fe4e65;
+}
+
+.pcwhere{
+    color: #282828;
+    font-size: 12.5px;
+    margin-right: 5px;
+    font-weight: 500;
+    /*line-height: 62px;*/
+    line-height: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 90px;
+    display: inline-block;
+
+}
+/*PC버전 상단,하단네비바*/
+
+.bg_ymdText_weight{
+    background-image: url("/static/user/res/pt.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_ballet{
+    background-image: url("/static/user/res/ballet.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_pilates{
+    background-image: url("/static/user/res/pilates.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_golf{
+    background-image: url("/static/user/res/golf.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_yoga{
+    background-image: url("/static/user/res/yoga.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_billiard{
+    background-image: url("/static/user/res/billiards.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_brick{
+    background-image: url("/static/user/res/brick.png");
+    background-size:cover;
+    background-position-x:center;
+}
+.bg_ymdText_basic{
+    background-image: url("/static/user/res/basic.png");
+    background-size:cover;
+    background-position-x:center;
+}
+
+
+
+/*미디어 쿼리*/
+@media(min-width:600px){
+    .beta_tag{
+        width: 28px;
+        top: 18px;
+        position: absolute;
+    }
+
+    #errorMessageBar{
+        display: none;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 35px;
+        text-align: center;
+        background: red;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: bold;
+        z-index: 1500;
+    }
+    #errorMessageBar span{
+        line-height: 35px;
+    }
+    #errorMessageBar span:nth-child(2){
+        position: absolute;
+        right: 0;
+        margin-right: 85px;
+        cursor: pointer;
+    }
+
+
+    #page-base, #page-base-addstyle, #page-base-modifystyle{
+        display: none;
+    }
+
+    #mobilever{
+        display: none;
+    }
+
+    #pcver{
+        display: block;
+        background: #ffffff;
+        border-top: 3px solid #fe4e65;
+        height: 65px;
+    }
+
+    body{
+        padding-top: 65px !important;
+    }
+
+    .centermenu_logo{
+        display: inline-block;
+    }
+
+    .fixfooter{
+        display: block;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        /*height: 150px;*/
+        padding-bottom: 15px;
+        background: #ffffff;
+        z-index: 1;
+    }
+
+    .language_set{
+        cursor: pointer;
+    }
+    .language_set:hover{
+        color: #fe4e65;
+    }
+}
+
+@media(min-width: 760px){
+    .centermenu_logo{
+        height: 24px;
+        margin-top: 18px;
+    }
+}
+
+@media(min-width:830px){
+    #loginInfo{
+        display: inline-block;
+    }
+
+    .pclogout{
+        position: absolute;
+        display: inline;
+        right: 0px;
+        top: 20px;
+        font-size: 9.5px;
+        border:0.5px solid #fe4e65;
+        background: transparent;
+        padding: 4px;
+        color: #fe4e65;
+        cursor: pointer;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .pclogout:hover,.pclogout:active{
+        background: #fe4e65;
+        color: #ffffff;
+    }
+
+}
+
+
+
+.ads_cal_side{
+    position: fixed;
+    display: none;
+    top: 215px;
+    right: 0;
+
+    width: 160px;
+    height:600px;
+}
+
+.ads_cal_insideTop{
+    width: 100%;
+    height: auto;
+    background: #f7f7f7;
+}
+
+
+@media(min-width:1470px){
+    .ads_cal_side{
+        display: block;
+        right: 1%;
+    }
+}

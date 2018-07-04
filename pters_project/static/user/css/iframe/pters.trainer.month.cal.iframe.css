@@ -2,7 +2,7 @@ body{
 	font-family: 'Noto Sans KR';
 	padding-top: 50px;
 	width: 100%;
-	background: #f7f7f7;
+	background: #ffffff;
 	position: relative;
 }
 
@@ -99,12 +99,15 @@ img,a,div,span,p{
 	padding-left: 35px;
 	height: auto;
 	z-index: 3;
-	background-color: #ffffff;
+	background-color: #f7f7f7;
 	max-width: 1200px;
 	margin:0 auto;
 
-	position: fixed;
-	top: 100px;
+	position: absolute;
+	top: 50px;
+
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
 }
 
 .arrowButton{
@@ -242,6 +245,7 @@ img,a,div,span,p{
 .calendar-day-style{  /*왈화수목금토일 스타일 */
 	font-size: 12px;
 	line-height: 31px;
+	background: #f7f7f7;
 }
 
 
@@ -251,26 +255,64 @@ img,a,div,span,p{
 }
 
 .weekday_style{
-	font-weight: 600;
+	font-weight: 400;
 	font-size: 1em;
 }
 
 
 #calendar{
-	position: relative; /*2017.10.02*/
+	position: absolute; /*2017.10.02*/
 	width: 100%;
-	height: 72.5%;
+	height: auto;
 	background-color: #ffffff;
 	padding-left: 20px;
 	padding-right:20px;
 	z-index: 2;
 	top: 93px;
 	overflow: hidden;
+	border-right: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
 }
 
 #ymdText-pc{
-	display: none;
-}
+		display: block;
+		position: absolute;
+		top: 0;
+		width:100%;
+		height: 50px;
+		text-align: center;
+		z-index: 5;
+		vertical-align: middle;
+		background-color: #ffffff;
+	}
+
+	#ymdText-pc div{
+		line-height: 50px;
+	}
+
+	#ymdText-pc img{
+		width: 20px;
+		margin-right: 10px;
+		margin-left: 10px;
+		margin-bottom: 5px;
+		cursor: pointer;
+	}
+
+	.ymdText-pc-year{
+		font-size: 17px;
+		font-weight: 500;
+	}
+
+	.ymdText-pc-fulldate{
+		display: inline-block;
+		font-size: 20px;
+		font-weight: 500;
+		width: 140px;
+	}
+
+	.ymdText-pc-add{
+		display: none;
+	}
 
 
 .cal_box{
@@ -628,45 +670,7 @@ img,a,div,span,p{
 		position: absolute;
 	}
 
-	#ymdText-pc{
-		display: block;
-		position: absolute;
-		top: 0;
-		width:100%;
-		height: 50px;
-		text-align: center;
-		z-index: 5;
-		vertical-align: middle;
-		background-color: #f7f7f7;
-	}
-
-	#ymdText-pc div{
-		line-height: 50px;
-	}
-
-	#ymdText-pc img{
-		width: 20px;
-		margin-right: 10px;
-		margin-left: 10px;
-		margin-bottom: 5px;
-		cursor: pointer;
-	}
-
-	.ymdText-pc-year{
-		font-size: 17px;
-		font-weight: 500;
-	}
-
-	.ymdText-pc-fulldate{
-		display: inline-block;
-		font-size: 20px;
-		font-weight: 500;
-		width: 140px;
-	}
-
-	.ymdText-pc-add{
-		display: none;
-	}
+	
 
 
 
@@ -862,7 +866,7 @@ img,a,div,span,p{
 	}
 
 	.weekdays{
-		color: #888888 !important;
+		color: #505050 !important;
 	}
 
 	#sunday{
@@ -998,10 +1002,10 @@ html{
 }
 @media(min-width: 600px){
 	html{
-		background: #f7f7f7;
+		background: #ffffff;
 	}
 
 	#gap{
-		background: #f7f7f7;
+		background: #ffffff;
 	}
 }

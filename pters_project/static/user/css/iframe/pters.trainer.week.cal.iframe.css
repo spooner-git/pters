@@ -2,7 +2,7 @@ body{
 	position: relative;
 	padding-top: 50px;
 	width: 100%;
-	background: #f7f7f7;
+	overflow-y: scroll;
 }
 
 
@@ -32,7 +32,8 @@ body{
 	width: 9.1%;
 	height: 29px;
 	color: transparent;
-	border-right: 0.5px solid #cccccc;
+	border: 1px solid #eaeaea;
+	border-bottom: 0;
 }
 
 .timeindex{
@@ -41,6 +42,7 @@ body{
 	width:9%;
 	z-index: 10;
 	color:white;
+	border-left: 1px solid #eaeaea;
 	/*padding-top: 53px;*/
 }
 
@@ -52,17 +54,19 @@ body{
 	line-height: 29px;
 	letter-spacing: -0.3px;
 	background-color: #f7f7f7;
+	color: #444444;
 }
 
 
 #week{
-	position: fixed;
+	position: absolute;
 	z-index: 4;
 	background-color: #ffffff;
 	height: 60px;
 	top: 50px;
 	max-width: 1080px;
 
+	border-top: 1px solid #eaeaea;
 	border-bottom:1px solid #eaeaea;
 	display: table;
 	width: 100%;
@@ -120,16 +124,16 @@ body{
 /***************************레이아웃 변경 검토*********************************/
 
 #calendar{
-	position: fixed;
+	position: absolute;
 	width: 100%;
-	top: 60px;
+	top: 110px;
 	background-color: transparent;
 	padding-right: 0;
 	padding-left: 0;
 	height: 90%;
 	z-index: 3;
 	max-width: 1080px;
-	height: 100%;
+	height: auto;
 	overflow-y: hidden;
 	overflow-x: hidden;
 }
@@ -416,7 +420,6 @@ img,a,div,span,p{
 }
 
 .timeindex_time{
-	color: #888888;
 	font-size: 12px;
 }
 
@@ -619,14 +622,14 @@ img,a,div,span,p{
 
 #ymdText-pc{
 		display: block;
-		position: fixed;
+		position: absolute;
 		top: 0;
 		width:100%;
 		height: 50px;
 		text-align: center;
 		z-index: 5;
 		vertical-align: middle;
-		background:#f7f7f7;
+		background:#ffffff;
 	}
 
 	#ymdText-pc div{
@@ -819,11 +822,12 @@ img,a,div,span,p{
 	}
 
 	#week{
-		position: fixed;
+		position: absolute;
 		left: 50%;
 		top: 50px;
 		transform:translateX(-50%);
 
+		border-top: 0;
 		border-bottom:1px solid #eaeaea;
 
 	}
@@ -897,18 +901,7 @@ img,a,div,span,p{
 		text-align: right;
 	}
 
-	.memberTime{
-		display: block;
-		position: absolute;
-		left: 4px;
-		font-weight: 300;
-		margin-top: 0px;
-		font-size: 12px;
-		letter-spacing: -0.3px;
-		color: black;
-		cursor: pointer;
-		text-align: left;
-	}
+	
 
 	.ymdText-pc-refresh{
 		display: inline;
@@ -974,6 +967,20 @@ img,a,div,span,p{
 		display:inline;
 	}
 }
+@media(min-width: 875px){
+	.memberTime{
+		display: block;
+		position: absolute;
+		left: 4px;
+		font-weight: 300;
+		margin-top: 0px;
+		font-size: 12px;
+		letter-spacing: -0.3px;
+		color: black;
+		cursor: pointer;
+		text-align: left;
+	}
+}
 
 
 @media(min-width:1030px){
@@ -981,9 +988,9 @@ img,a,div,span,p{
 		display:inline;
 		position: absolute;
 		left: 15px;
-		color: #888888;
+		color: #444444;
 		font-size: 15px;
-		font-weight: bold;
+		font-weight: 500;
 	}
 }
 
@@ -1019,11 +1026,11 @@ html{
 }
 @media(min-width: 600px){
 	html{
-		background: #f7f7f7;
+		background: #ffffff;
 	}
 
 	#gap{
-		background: #f7f7f7;
+		background: #ffffff;
 	}
 }
 
