@@ -156,8 +156,6 @@ def billing_check_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
-
-        logger.info(str(json_loading_data))
         merchant_uid = json_loading_data['merchant_uid']
         # print('merchant_uid:'+merchant_uid)
         try:
@@ -201,11 +199,8 @@ def billing_check_logic(request):
 
     if error is None:
         # json_loading_data = payment_result_status['json_loading_data']
-        logger.info('second::' + str(json_loading_data))
         status = json_loading_data['response']['status']
         if status == 'paid':  # 결제 완료
-            logger.info('amount:::' + str(json_loading_data['response']['amount']))
-            logger.info('price:::' + str(payment_user_info.price))
             if int(json_loading_data['response']['amount']) == int(payment_user_info.price):
                 if payment_user_info.payment_type_cd == 'PERIOD':
                     # 결제 정보 저장

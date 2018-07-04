@@ -13,28 +13,19 @@ logger = logging.getLogger(__name__)
 
 
 def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
-    today = timezone.now()
-    start_date = payment_user_info.start_date
     payment_type_cd = payment_user_info.payment_type_cd
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
-    logger.info('test00')
     date = int(billing_info.payed_date)
 
-    end_date = func_get_end_date(payment_type_cd, str(start_date), 1, date)
-    end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
-    next_billing_date_time = end_date.replace(hour=15, minute=0)
-    # today_unix_timestamp = today.timestamp()
-    next_schedule_timestamp = next_billing_date_time.timestamp()
+    next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
+    next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
     error = token_result['error']
     merchant_uid = 'pters_merchant_'+str(next_schedule_timestamp).split('.')[0]
 
-    logger.info('test11:'+merchant_uid)
-    logger.info('test22:'+str(next_schedule_timestamp))
-    logger.info('price:'+str(price))
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
@@ -59,11 +50,9 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
-        logger.info(str(payment_user_info.member.name) + '님 정기 결제 예약 등록 '
-                    + str(payment_user_info.member_id) + ':' + str(resp))
-    logger.info('test33')
     if error is None:
-
+        start_date = payment_user_info.end_date
+        end_date = func_get_end_date(payment_type_cd, str(start_date), 1, date)
         payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
                                      merchandise_type_cd=merchandise_type_cd,
                                      payment_type_cd=payment_type_cd,
@@ -73,7 +62,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
         payment_info.save()
 
-    logger.info('test44')
     return error
 
 
