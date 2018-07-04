@@ -17,9 +17,14 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
     date = int(billing_info.payed_date)
-
+    now = timezone.now()
     next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-    next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
+    logger.log('test1::'+str(next_billing_date_time.strftime('%y')))
+    logger.log('test2::'+str(next_billing_date_time.strftime('%m')))
+    logger.log('test3::'+str(next_billing_date_time.strftime('%d')))
+    next_schedule_timestamp = now.replace(year=int(next_billing_date_time.strftime('%y')),
+                                          month=int(next_billing_date_time.strftime('%m')),
+                                          day=int(next_billing_date_time.strftime('%d'))).timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
