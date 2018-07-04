@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     today = timezone.now()
-    start_date = payment_user_info.end_date
+    start_date = payment_user_info.start_date
     payment_type_cd = payment_user_info.payment_type_cd
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
@@ -23,7 +23,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
 
     end_date = func_get_end_date(payment_type_cd, str(start_date), 1, date)
     end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
-    end_date.replace(hour=15, minute=0)
+    end_date = end_date.replace(hour=15, minute=0)
     # today_unix_timestamp = today.timestamp()
     next_schedule_timestamp = end_date.timestamp()
 
