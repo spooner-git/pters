@@ -277,7 +277,7 @@ $(document).ready(function(){
             close_info_popup('cal_popup_plancheck')
             clear_pt_off_add_popup()
             open_pt_off_add_popup('ptadd', thisDate)
-            ajaxTimeGraphSet(thisDate)
+            ajaxTimeGraphSet()
             shade_index(100)
 
         })
