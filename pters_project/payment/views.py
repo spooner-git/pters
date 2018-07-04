@@ -204,13 +204,16 @@ def billing_check_logic(request):
         logger.info('second::' + str(json_loading_data))
         status = json_loading_data['response']['status']
         if status == 'paid':  # 결제 완료
-            if json_loading_data['response']['amount'] == payment_user_info.price:
+            logger.info('amount:::' + str(json_loading_data['response']['amount']))
+            logger.info('price:::' + str(payment_user_info.price))
+            if int(json_loading_data['response']['amount']) == int(payment_user_info.price):
                 if payment_user_info.payment_type_cd == 'PERIOD':
                     # 결제 정보 저장
                     func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info, billing_info)
             else:
                 # 결제 취소 날리기
-                func_send_refund_payment(json_loading_data['response']['imp_uid'], json_loading_data['response']['merchant_uid'], access_token)
+                func_send_refund_payment(json_loading_data['response']['imp_uid'],
+                                         json_loading_data['response']['merchant_uid'], access_token)
         elif status == 'ready':
             logger.info('ready Test 상태입니다..')
         else:  # 재결제 시도

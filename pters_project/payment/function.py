@@ -242,7 +242,7 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
 
     if error is None:
         if resp['status'] == '200':
-            context['status'] = json_loading_data['status']
+            context['status'] = json_loading_data['response']['status']
     else:
         context['error'] = error
 
