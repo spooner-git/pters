@@ -153,14 +153,14 @@
             var date = new Date();
             var merchant_uid_data = 'merchant_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var customer_uid_data = 'customer_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+{#            var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();#}
 
             $.ajax({
                 url: "/payment/add_billing/", // 서비스 웹서버
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
-                    start_date:  today,
+{#                    start_date:  today,#}
                     payment_type_cd: payment_type_cd,
                     merchandise_type_cd: merchandise_type_cd,
                     merchant_uid: merchant_uid_data,
