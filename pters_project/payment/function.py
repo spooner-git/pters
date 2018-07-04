@@ -6,7 +6,7 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
-from configs.const import USE
+from configs.const import USE, UN_USE
 from payment.models import PaymentInfoTb, ProductPriceTb
 
 logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
                                      merchant_uid=merchant_uid, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
                                      price=price,
-                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         payment_info.save()
 
     return error

@@ -182,7 +182,6 @@
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                     }else {
-                        console.log('success');
                         success = true;
                         if(payment_type_cd=='PERIOD'){
                             payment_open_pg(name, merchant_uid_data, customer_uid_data, price);

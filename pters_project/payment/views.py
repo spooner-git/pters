@@ -48,8 +48,8 @@ def add_billing_logic(request):
     end_date = None
     date = None
     name = None
-    price = 0
     input_price = 0
+    today = datetime.date.today()
 
     try:
         json_loading_data = json.loads(json_data)
@@ -69,6 +69,14 @@ def add_billing_logic(request):
     if error is None:
         if payment_type_cd == 'PERIOD':
             customer_uid = json_loading_data['customer_uid']
+
+    if error is None:
+        payment_user_info_count = PaymentInfoTb.objects.filter(end_date__lt=today,
+                                                               member_id=request.user.id,
+                                                               merchandise_type_cd=merchandise_type_cd,
+                                                               use=USE).count()
+        if payment_user_info_count != 0:
+            error = '이미 결제된 기능입니다.'
 
     if error is None:
         error = func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price)
@@ -160,6 +168,8 @@ def billing_check_logic(request):
         # print('merchant_uid:'+merchant_uid)
         try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
+            payment_user_info.use = USE
+            payment_user_info.save()
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오는데 실패했습니다.'
         # print('merchant_uid:'+merchant_uid)
