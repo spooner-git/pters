@@ -370,6 +370,90 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
 
         return render(request, self.template_name, context)
 
+# iframe화를 위해 skkim
+class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_week.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalWeekView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
+
+        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        request.session['setting_language'] = context['lt_lan_01']
+
+        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
+        return render(request, self.template_name, context)
+
+
+class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_month.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        context = func_get_trainer_setting_list(context, request.user.id, class_id)
+
+        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        request.session['setting_language'] = context['lt_lan_01']
+
+        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
+        return render(request, self.template_name, context)
+# iframe화를 위해 skkim
+
 
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'

@@ -1697,10 +1697,10 @@ function ajaxTimeGraphSet(date, use, callback){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 timeGraphSet("class","pink","AddClass", jsondata);  //시간 테이블 채우기
-                timeGraphSet("group","pink","AddClass", initialJSON);
+                timeGraphSet("group","pink","AddClass", jsondata);
                 timeGraphSet("off","grey","AddClass", jsondata);
                 timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
-                timeGraphSet("group","pink","mini", initialJSON);
+                timeGraphSet("group","pink","mini", jsondata);
                 timeGraphSet("off","grey","mini", jsondata);
                 startTimeSet('class');
                 if(use == "callback"){
