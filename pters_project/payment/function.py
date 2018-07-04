@@ -219,7 +219,7 @@ def func_get_payment_result(imp_uid, access_token):
 def func_send_refund_payment(imp_uid, merchant_uid, access_token):
     context = {'error': None, 'status': None}
     error = None
-    json_loading_data = None
+    # json_loading_data = None
 
     data = {'imp_uid': imp_uid,
             'merchant_uid': merchant_uid}
@@ -234,16 +234,18 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
     if error is None:
         json_data = content.decode('utf-8')
         try:
-            json_loading_data = json.loads(json_data)
+            # json_loading_data = json.loads(json_data)
+            json.loads(json_data)
         except ValueError:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
         except TypeError:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
-    if error is None:
-        if resp['status'] == '200':
-            context['status'] = json_loading_data['response']['status']
-    else:
+    if error is not None:
         context['error'] = error
+
+    #     if resp['status'] == '200':
+    #         context['status'] = json_loading_data['response']['status']
+    # else:
 
     return context

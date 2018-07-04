@@ -81,7 +81,7 @@ def add_billing_logic(request):
                                      payment_type_cd=payment_type_cd,
                                      merchant_uid=merchant_uid, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
-                                     price=price,
+                                     price=input_price,
                                      name=name,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
 
