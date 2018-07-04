@@ -18,22 +18,22 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
     payment_type_cd = payment_user_info.payment_type_cd
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
-
     logger.info('test00')
     date = int(billing_info.payed_date)
 
     end_date = func_get_end_date(payment_type_cd, str(start_date), 1, date)
     end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
-    today_unix_timestamp = today.timestamp()
-    unix_timestamp = end_date.timestamp()
+    end_date.replace(hour=15, minute=0)
+    # today_unix_timestamp = today.timestamp()
+    next_schedule_timestamp = end_date.timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
     error = token_result['error']
-    merchant_uid = 'pters_merchant_'+str(unix_timestamp).split('.')[0]
+    merchant_uid = 'pters_merchant_'+str(next_schedule_timestamp).split('.')[0]
 
     logger.info('test11:'+merchant_uid)
-    logger.info('test22:'+str(unix_timestamp))
+    logger.info('test22:'+str(next_schedule_timestamp))
     logger.info('price:'+str(price))
     if error is None and access_token is not None:
         data = {
@@ -41,7 +41,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
                 'schedules': [
                     {
                         'merchant_uid': merchant_uid,  # 주문 번호
-                        'schedule_at': unix_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
+                        'schedule_at': next_schedule_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
                         'amount': price,
                         'name': 'PTERS - 월간 이용권 정기결제',
                         'buyer_name': payment_user_info.member.name,
