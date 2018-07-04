@@ -23,9 +23,9 @@ def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
 
     end_date = func_get_end_date(payment_type_cd, str(start_date), 1, date)
     end_date = datetime.datetime.combine(end_date, datetime.datetime.min.time())
-    end_date = end_date.replace(hour=15, minute=0)
+    next_billing_date_time = end_date.replace(hour=15, minute=0)
     # today_unix_timestamp = today.timestamp()
-    next_schedule_timestamp = end_date.timestamp()
+    next_schedule_timestamp = next_billing_date_time.timestamp()
 
     token_result = func_get_payment_token()
     access_token = token_result['access_token']
