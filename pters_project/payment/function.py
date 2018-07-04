@@ -209,7 +209,7 @@ def func_get_payment_result(imp_uid, access_token):
 
     if error is None:
         if resp['status'] == '200':
-            context['status'] = json_loading_data['status']
+            context['json_loading_data'] = json_loading_data
     else:
         context['error'] = error
 

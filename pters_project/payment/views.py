@@ -17,7 +17,7 @@ from django.utils import timezone
 from configs import settings
 from configs.const import USE
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
-    func_check_payment_info, func_get_end_date, func_send_refund_payment
+    func_check_payment_info, func_get_end_date, func_send_refund_payment, func_get_payment_result
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
@@ -175,11 +175,13 @@ def billing_check_logic(request):
         # if error is None:
         #     user_id = payment_user_info.member_id
 
-    # if error is None:
-        # payment_result_status = func_get_payment_result(json_loading_data['imp_uid'], access_token)
-        # if payment_result_status != 'paid':
-        #     error = '결제중 오류가 발생했습니다.'
-
+    if error is None:
+        payment_result_status = func_get_payment_result(json_loading_data['imp_uid'], access_token)
+        if payment_result_status['error'] is not None:
+            error = payment_result_status['error']
+        else:
+            json_loading_data = payment_result_status['json_loading_data']
+            logger.info('second::'+str(json_loading_data))
     # if error is None:
     #     if json_loading_data['success'] is False:
     #         error = '결제중 오류가 발생했습니다.'
