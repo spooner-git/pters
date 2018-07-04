@@ -995,8 +995,8 @@ $(document).ready(function(){
 
 var clicked_td_date_info;
 function ajaxClassTime(){
-    var yyyy = $('#yearText').text()
-    var mm = $('#monthText').text().replace(/월/gi,"")
+    var yyyy = $('#ymdText-pc-year').text()
+    var mm = $('#ymdText-pc-month').text().replace(/월/gi,"")
     if(mm.length<2){
         var mm = '0' + mm
     }
