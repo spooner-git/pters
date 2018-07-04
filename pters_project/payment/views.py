@@ -201,6 +201,7 @@ def billing_check_logic(request):
 
     if error is None:
         # json_loading_data = payment_result_status['json_loading_data']
+        logger.info('second::' + str(json_loading_data))
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
             if json_loading_data['paid_amount'] == payment_user_info.price:
