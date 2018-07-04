@@ -17,7 +17,7 @@ from django.utils import timezone
 from configs import settings
 from configs.const import USE
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
-    func_check_payment_info, func_get_end_date, func_send_refund_payment, func_get_payment_result
+    func_check_payment_info, func_get_end_date, func_send_refund_payment
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
@@ -176,17 +176,31 @@ def billing_check_logic(request):
         #     user_id = payment_user_info.member_id
 
     if error is None:
-        payment_result_status = func_get_payment_result(json_loading_data['imp_uid'], access_token)
-        if payment_result_status['error'] is not None:
-            error = payment_result_status['error']
-        else:
-            json_loading_data = payment_result_status['json_loading_data']
-            logger.info('second::'+str(json_loading_data))
+        json_loading_data = None
+        h = httplib2.Http()
+        resp, content = h.request("https://api.iamport.kr/payments/" + json_loading_data['imp_uid'], method="GET",
+                                  headers={'Authorization': access_token})
+        if resp['status'] != '200':
+            error = '통신중 에러가 발생했습니다.'
+
+        if error is None:
+            json_data = content.decode('utf-8')
+            try:
+                json_loading_data = json.loads(json_data)
+            except ValueError:
+                error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            except TypeError:
+                error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        # if payment_result_status['error'] is not None:
+        #     error = payment_result_status['error']
+        # else:
+        #     logger.info('second::'+str(json_loading_data))
     # if error is None:
     #     if json_loading_data['success'] is False:
     #         error = '결제중 오류가 발생했습니다.'
 
     if error is None:
+        # json_loading_data = payment_result_status['json_loading_data']
         status = json_loading_data['status']
         if status == 'paid':  # 결제 완료
             if json_loading_data['paid_amount'] == payment_user_info.price:
