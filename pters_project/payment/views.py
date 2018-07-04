@@ -15,7 +15,7 @@ from django.views.generic import TemplateView
 from django.utils import timezone
 
 from configs import settings
-from configs.const import USE
+from configs.const import USE, UN_USE
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_info, func_get_end_date, func_send_refund_payment
 from payment.models import PaymentInfoTb, BillingInfoTb
@@ -71,7 +71,7 @@ def add_billing_logic(request):
             customer_uid = json_loading_data['customer_uid']
 
     if error is None:
-        payment_user_info_count = PaymentInfoTb.objects.filter(end_date__lt=today,
+        payment_user_info_count = PaymentInfoTb.objects.filter(end_date__lte=today,
                                                                member_id=request.user.id,
                                                                merchandise_type_cd=merchandise_type_cd,
                                                                use=USE).count()
@@ -91,7 +91,7 @@ def add_billing_logic(request):
                                      start_date=start_date, end_date=end_date,
                                      price=input_price,
                                      name=name,
-                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
 
         billing_info = BillingInfoTb(member_id=request.user.id,
                                      payment_type_cd=payment_type_cd,
@@ -99,7 +99,7 @@ def add_billing_logic(request):
                                      customer_uid=customer_uid,
                                      payment_date=datetime.date.today(),
                                      payed_date=date,
-                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         payment_info.save()
         billing_info.save()
     return render(request, 'ajax/payment_error_info.html', error)
@@ -169,6 +169,7 @@ def billing_check_logic(request):
         try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
             payment_user_info.use = USE
+            payment_user_info.mod_dt = timezone.now()
             payment_user_info.save()
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오는데 실패했습니다.'
@@ -178,6 +179,9 @@ def billing_check_logic(request):
         if payment_user_info.payment_type_cd == 'PERIOD':
             try:
                 billing_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
+                billing_info.use = USE
+                billing_info.mod_dt = timezone.now()
+                billing_info.save()
             except ObjectDoesNotExist:
                 error = '결제 정보를 불러오는데 실패했습니다.'
         # if error is None:
