@@ -156,6 +156,8 @@ def billing_check_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
+
+        logger.info(str(json_loading_data))
         merchant_uid = json_loading_data['merchant_uid']
         # print('merchant_uid:'+merchant_uid)
         try:
