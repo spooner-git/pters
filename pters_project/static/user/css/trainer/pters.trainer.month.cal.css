@@ -636,7 +636,7 @@ img,a,div,span,p{
 		text-align: center;
 		z-index: 5;
 		vertical-align: middle;
-		background-color: #f7f7f7;
+		background-color: #ffffff;
 	}
 
 	#ymdText-pc div{
@@ -810,6 +810,7 @@ img,a,div,span,p{
 
 	.calendar-day-style{  /*왈화수목금토일 스타일 */
 		font-size: 15px;
+		background: #f3f3f3;
 	}
 
 	.arrowButton a{
@@ -862,7 +863,7 @@ img,a,div,span,p{
 	}
 
 	.weekdays{
-		color: #888888 !important;
+		color: #444444 !important;
 	}
 
 	#sunday{
