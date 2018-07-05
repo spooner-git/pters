@@ -12,9 +12,12 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
     lastDay[1] = 28;
 }
 
-console.log('더하기 계산 : ', add_date('2017-7-3', 368))
-console.log('뺴기 계산 : ', substract_date('2018-7-5', -45))
+console.log('일 더하기 계산 : ', add_date('2017-7-3', 368))
+console.log('일 뺴기 계산 : ', substract_date('2018-7-5', -45))
 console.log('날짜 차이 계산 : ', diff_date('2017-12-5', '2018-7-5'))
+
+console.log('달 더하기 계산', add_month('2018-7-31', 10))
+console.log('달 빼기 계산', substract_month('2018-7-31',-17))
 
 
 //날짜 더하기 계산 : 2018-7-5에서 10일 후는 언제?
@@ -88,21 +91,46 @@ function diff_date(startdate, enddate){
 	return diff
 }
 
+//달 더하기 계산 : 2018-7-5에서 7개월 후는 언제?
+function add_month(startdate, addvalue){
+	var year = Number(startdate.split('-')[0]);
+	var month = Number(startdate.split('-')[1]);
+	var date = Number(startdate.split('-')[2]);
+	var summonth = month + addvalue
+	var newmonth = summonth;
+	var newyear  = year;
+	var newdate  = date;
+	while(newmonth > 12){
+		newmonth = newmonth - 12
+		newyear++
+	}
+	if(date == lastDay[month-1]){
+		var newdate = lastDay[newmonth-1]
+	}
 
-/*
-function add_month(){
 
+	var result = newyear + '-' + newmonth + '-' + newdate
+	return result
 }
 
-function substract_month(){
 
+function substract_month(startdate, addvalue){
+	var year = Number(startdate.split('-')[0]);
+	var month = Number(startdate.split('-')[1]);
+	var date = Number(startdate.split('-')[2]);
+	var summonth = month + addvalue
+	var newmonth = summonth;
+	var newyear  = year;
+	var newdate  = date;
+	while(newmonth <= 0){
+		newmonth = newmonth + 12
+		newyear--
+	}
+	if(date == lastDay[month-1]){
+		var newdate = lastDay[newmonth-1]
+	}
+
+
+	var result = newyear + '-' + newmonth + '-' + newdate
+	return result
 }
-
-function add_year(){
-
-}
-
-function substract_year(){
-
-}
-*/
