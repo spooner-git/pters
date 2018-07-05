@@ -3179,6 +3179,11 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     class_info.state_cd_name = ''
                 class_info.total_member_num = total_member_num
 
+                if class_info.background_img_url is None:
+                    class_info.background_img_url = ''
+                if class_info.background_img_url_mobile is None:
+                    class_info.background_img_url_mobile = ''
+
         context['class_data'] = member_class_data
 
         if error is not None:
