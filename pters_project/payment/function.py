@@ -16,22 +16,25 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
     error = None
     try:
         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
+        billing_info.mod_dt = timezone.now()
+        billing_info.save()
     except ObjectDoesNotExist:
         error = '정기 결제 등록에 실패했습니다.'
 
-    payment_type_cd = payment_user_info.payment_type_cd
-    merchandise_type_cd = payment_user_info.merchandise_type_cd
-    price = payment_user_info.price
-    date = int(billing_info.payed_date)
+    if error is None:
+        payment_type_cd = payment_user_info.payment_type_cd
+        merchandise_type_cd = payment_user_info.merchandise_type_cd
+        price = payment_user_info.price
+        date = int(billing_info.payed_date)
 
-    next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-    next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
+        next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
+        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
 
-    token_result = func_get_payment_token()
-    access_token = token_result['access_token']
-    error = token_result['error']
-    merchant_uid = 'merchant_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
-                   + '_' + str(next_schedule_timestamp).split('.')[0]
+        token_result = func_get_payment_token()
+        access_token = token_result['access_token']
+        error = token_result['error']
+        merchant_uid = 'merchant_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
+                       + '_' + str(next_schedule_timestamp).split('.')[0]
 
     if error is None and access_token is not None:
         data = {
@@ -239,9 +242,5 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
 
     if error is not None:
         context['error'] = error
-
-    #     if resp['status'] == '200':
-    #         context['status'] = json_loading_data['response']['status']
-    # else:
 
     return context
