@@ -24,7 +24,9 @@ class ClassTb(models.Model):
     class_member_num = models.IntegerField(db_column='CLASS_MEMBER_NUM', blank=True, null=True)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', blank=True, null=True)
-    background_img_url = models.CharField(db_column='BACKGROUD_IMG_URL', max_length=200, blank=True, null=True)
+    background_img_url = models.CharField(db_column='BACKGROUND_IMG_URL', max_length=200, blank=True, null=True)
+    background_img_url_mobile = models.CharField(db_column='BACKGROUND_IMG_URL_MOBILE',
+                                                 max_length=200, blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.

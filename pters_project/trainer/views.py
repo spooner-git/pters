@@ -75,7 +75,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     class_name = None
                     if class_info.class_tb.background_img_url is None:
                         class_info.class_tb.background_img_url = ''
+                    if class_info.class_tb.background_img_url_mobile is None:
+                        class_info.class_tb.background_img_url_mobile = ''
                     request.session['class_background_img_url'] = class_info.class_tb.background_img_url
+                    request.session['class_background_img_url_mobile'] = class_info.class_tb.background_img_url_mobile
                     request.session['class_hour'] = class_info.class_tb.class_hour
                     request.session['class_type_code'] = class_info.class_tb.subject_cd
                     try:
@@ -160,7 +163,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             if class_info.background_img_url is None:
                 class_info.background_img_url = ''
+            if class_info.background_img_url_mobile is None:
+                class_info.background_img_url_mobile = ''
             request.session['class_background_img_url'] = class_info.background_img_url
+            request.session['class_background_img_url_mobile'] = class_info.background_img_url_mobile
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             try:
@@ -3261,7 +3267,10 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_type_code'] = class_info.subject_cd
             if class_info.background_img_url is None:
                 class_info.background_img_url = ''
+            if class_info.background_img_url_mobile is None:
+                class_info.background_img_url_mobile = ''
             request.session['class_background_img_url'] = class_info.background_img_url
+            request.session['class_background_img_url_mobile'] = class_info.background_img_url_mobile
             class_type_name = ''
             class_name = None
             try:
@@ -3337,6 +3346,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 request.session['class_type_name'] = ''
                 request.session['class_center_name'] = ''
                 request.session['class_background_img_url'] = ''
+                request.session['class_background_img_url_mobile'] = ''
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
@@ -3369,6 +3379,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         start_hour_unit = request.POST.get('start_hour_unit', '')
         class_member_num = request.POST.get('class_member_num', '')
         background_img_url = request.POST.get('background_img_url', '')
+        background_img_url_mobile = request.POST.get('background_img_url_mobile', '')
 
         error = None
         class_info = None
@@ -3406,6 +3417,9 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
             if background_img_url is not None and background_img_url != '':
                 class_info.background_img_url = background_img_url
+
+            if background_img_url_mobile is not None and background_img_url_mobile != '':
+                class_info.background_img_url_mobile = background_img_url_mobile
 
         if error is None:
             class_info.mod_dt = timezone.now()
@@ -3451,7 +3465,10 @@ def select_class_processing_logic(request):
 
         if class_info.background_img_url is None:
             class_info.background_img_url = ''
+        if class_info.background_img_url_mobile is None:
+            class_info.background_img_url_mobile = ''
         request.session['class_background_img_url'] = class_info.background_img_url
+        request.session['class_background_img_url_mobile'] = class_info.background_img_url_mobile
         request.session['class_hour'] = class_info.class_hour
         request.session['class_type_code'] = class_info.subject_cd
 
