@@ -479,6 +479,14 @@ class HelpPtersView(AccessTestMixin, TemplateView):
 
         return context
 
+class BGSettingView(AccessTestMixin, TemplateView):
+    template_name = 'setting_background.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BGSettingView, self).get_context_data(**kwargs)
+
+        return context
+
 
 class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'trainer_class_select.html'
