@@ -52,6 +52,7 @@ body{
 	line-height: 29px;
 	letter-spacing: -0.3px;
 	background-color: #f7f7f7;
+	color: #444444;
 }
 
 
@@ -416,7 +417,6 @@ img,a,div,span,p{
 }
 
 .timeindex_time{
-	color: #888888;
 	font-size: 12px;
 }
 
@@ -727,7 +727,7 @@ img,a,div,span,p{
 
 	.timeindex_time{
 		float: right;
-		margin-right: 10px;
+		margin-right: 6px;
 		font-size: 16px;
 	}
 
@@ -979,7 +979,7 @@ img,a,div,span,p{
 		display:inline;
 		position: absolute;
 		left: 15px;
-		color: #888888;
+		color: #444444;
 		font-size: 15px;
 		font-weight: bold;
 	}
