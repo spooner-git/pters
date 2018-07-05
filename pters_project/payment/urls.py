@@ -27,11 +27,13 @@ urlpatterns = [
     url(r'^add_billing/$', views.add_billing_logic, name='add_billing'),
     url(r'^check_billing/$', views.check_billing_logic, name='check_billing'),
     url(r'^delete_billing/$', views.delete_billing_logic, name='delete_billing'),
+    url(r'^billing_finish/$', views.billing_finish_logic, name='billing_finish'),
     # 결제 페이지
     url(r'^billing_check/$', views.billing_check_logic, name='billing_check'),
     # 결제 페이지
     # url(r'^payment_schedule/$', views.payment_schedule_logic, name='payment_schedule'),
     # 결제 페이지
+    url(r'^resend_period_billing/$', views.resend_period_billing_logic, name='resend_period_billing'),
     url(r'^payment_complete/$', views.PaymentCompleteView.as_view(), name='payment_complete'),
     ######################################################################################################
 ]

@@ -172,10 +172,10 @@
                         error_check = false;
                     }else {
                         if(payment_type_cd=='PERIOD'){
-                            payment_open_pg(name, pay_method_type_cd, merchant_uid_data, customer_uid_data, price);
+                            payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, price);
                         }
                         else{
-                            payment_open_pg_single(name, pay_method_type_cd, merchant_uid_data, price);
+                            payment_open_pg_single(name, pay_method, merchant_uid_data, price);
                         }
                     }
 
@@ -197,7 +197,7 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(name, pay_method_type_cd, payment_type_cd, merchandise_type_cd, price){
+        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
             var success = false;
             var date = new Date();
             var merchant_uid_data = 'merchant_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
@@ -210,7 +210,7 @@
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
                     start_date:  today,
-                    pay_method_type_cd: pay_method_type_cd,
+                    pay_method: pay_method,
                     payment_type_cd: payment_type_cd,
                     merchandise_type_cd: merchandise_type_cd,
                     merchant_uid: merchant_uid_data,
@@ -233,10 +233,10 @@
                     }else {
                         success = true;
                         if(payment_type_cd=='PERIOD'){
-                            payment_open_pg(name, pay_method_type_cd, merchant_uid_data, customer_uid_data, price);
+                            payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, price);
                         }
                         else{
-                            payment_open_pg_single(name, pay_method_type_cd, merchant_uid_data, price);
+                            payment_open_pg_single(name, pay_method, merchant_uid_data, price);
                         }
                     }
 
@@ -257,11 +257,11 @@
             }
         }
 
-        function payment_open_pg(name, pay_method_type_cd, merchant_uid_data, customer_uid_data, price) {
+        function payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, price) {
             console.log('payment_open_pg');
                 IMP.request_pay({
                     pg : 'danal', // version 1.1.0부터 지원.
-                    pay_method : pay_method_type_cd,
+                    pay_method : pay_method,
                     merchant_uid : merchant_uid_data,
                     customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
                     name : name,
@@ -282,6 +282,15 @@
 {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
                         msg += '결제 금액 : ' + rsp.paid_amount;
 {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
+                        jQuery.ajax({
+                            url: "/payment/billing_finish/", // 서비스 웹서버
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            data: JSON.stringify({
+                                merchant_uid: rsp.merchant_uid,
+                                customer_uid: customer_uid_data
+                            })
+                        })
                     } else {
                         msg = '결제에 실패하였습니다.';
                         msg += '에러내용 : ' + rsp.error_msg;
@@ -299,10 +308,10 @@
                 });
         }
 
-        function payment_open_pg_single(name, pay_method_type_cd, merchant_uid_data, price) {
+        function payment_open_pg_single(name, pay_method, merchant_uid_data, price) {
                 IMP.request_pay({
                     pg : 'danal', // version 1.1.0부터 지원.
-                    pay_method : pay_method_type_cd,
+                    pay_method : pay_method,
                     merchant_uid : merchant_uid_data,
                     name : name,
                     amount : price,
@@ -322,6 +331,14 @@
 {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
                         msg += '결제 금액 : ' + rsp.paid_amount;
 {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
+                        jQuery.ajax({
+                            url: "/payment/billing_finish/", // 서비스 웹서버
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            data: JSON.stringify({
+                                merchant_uid: rsp.merchant_uid
+                            })
+                        })
                     } else {
                         msg = '결제에 실패하였습니다.';
                         msg += '에러내용 : ' + rsp.error_msg;

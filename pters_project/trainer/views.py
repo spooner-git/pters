@@ -3358,6 +3358,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_hour = request.POST.get('class_hour', '')
         start_hour_unit = request.POST.get('start_hour_unit', '')
         class_member_num = request.POST.get('class_member_num', '')
+        background_img_url = request.POST.get('background_img_url', '')
 
         error = None
         class_info = None
@@ -3392,6 +3393,9 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
             if class_member_num is not None and class_member_num != '':
                 class_info.class_member_num = class_member_num
+
+            if background_img_url is not None and background_img_url != '':
+                class_info.background_img_url = background_img_url
 
         if error is None:
             class_info.mod_dt = timezone.now()

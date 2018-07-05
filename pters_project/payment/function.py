@@ -7,12 +7,18 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from configs.const import USE, UN_USE
-from payment.models import PaymentInfoTb, ProductPriceTb
+from payment.models import PaymentInfoTb, ProductPriceTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
 
 
-def func_set_billing_schedule(customer_uid, payment_user_info, billing_info):
+def func_set_billing_schedule(customer_uid, payment_user_info):
+    error = None
+    try:
+        billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
+    except ObjectDoesNotExist:
+        error = '정기 결제 등록에 실패했습니다.'
+
     payment_type_cd = payment_user_info.payment_type_cd
     merchandise_type_cd = payment_user_info.merchandise_type_cd
     price = payment_user_info.price
