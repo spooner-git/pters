@@ -7,6 +7,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.shortcuts import render
 
 # Create your views here.
@@ -53,7 +54,7 @@ def add_billing_logic(request):
     date = None
     name = None
     input_price = 0
-    today = datetime.date.today()
+    # today = datetime.date.today()
 
     try:
         json_loading_data = json.loads(json_data)
@@ -70,6 +71,7 @@ def add_billing_logic(request):
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
         merchant_uid = json_loading_data['merchant_uid']
         input_price = json_loading_data['price']
+        name = json_loading_data['name']
         date = int(start_date.strftime('%d'))
 
     if error is None:
@@ -83,24 +85,41 @@ def add_billing_logic(request):
         end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
 
     if error is None:
-        payment_info = PaymentInfoTb(member_id=request.user.id, merchandise_type_cd=merchandise_type_cd,
-                                     payment_type_cd=payment_type_cd,
-                                     merchant_uid=merchant_uid, customer_uid=customer_uid,
-                                     start_date=start_date, end_date=end_date,
-                                     price=input_price,
-                                     name=name,
-                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
+        payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=merchant_uid).count()
+        if payment_info_check > 0:
+            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
+        if payment_type_cd == 'PERIOD':
+            billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
+            if billing_info_check > 0:
+                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
 
-        billing_info = BillingInfoTb(member_id=request.user.id,
-                                     pay_method_type_cd=pay_method_type_cd,
-                                     payment_type_cd=payment_type_cd,
-                                     merchant_uid=merchant_uid,
-                                     customer_uid=customer_uid,
-                                     payment_date=datetime.date.today(),
-                                     payed_date=date,
-                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
-        payment_info.save()
-        billing_info.save()
+    if error is None:
+        try:
+            with transaction.atomic():
+                payment_info = PaymentInfoTb(member_id=request.user.id, merchandise_type_cd=merchandise_type_cd,
+                                             pay_method_type_cd=pay_method_type_cd,
+                                             payment_type_cd=payment_type_cd,
+                                             merchant_uid=merchant_uid, customer_uid=customer_uid,
+                                             start_date=start_date, end_date=end_date,
+                                             price=input_price,
+                                             name=name,
+                                             mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
+                if payment_type_cd == 'PERIOD':
+                    billing_info = BillingInfoTb(member_id=request.user.id,
+                                                 pay_method_type_cd=pay_method_type_cd,
+                                                 payment_type_cd=payment_type_cd,
+                                                 merchant_uid=merchant_uid,
+                                                 customer_uid=customer_uid,
+                                                 payment_date=datetime.date.today(),
+                                                 payed_date=date,
+                                                 mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
+                    billing_info.save()
+                payment_info.save()
+        except TypeError:
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        except ValueError:
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
