@@ -21,6 +21,10 @@
       [{% for class_info in class_data %}"{{ class_info.class_tb.start_hour_unit }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "classMemberNumArray":
       [{% for class_info in class_data %}"{{ class_info.class_tb.class_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "background_img_url":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.background_img_url }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "background_img_url_mobile":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.background_img_url_mobile }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "modDtArray":
       [{% for class_info in class_data %}"{{ class_info.class_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "regDtArray":
