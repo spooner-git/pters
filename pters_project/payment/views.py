@@ -296,7 +296,6 @@ def billing_check_logic(request):
     error = token_result['error']
     payment_result = None
     payment_user_info = None
-    billing_info = None
     imp_uid = None
     merchant_uid = None
     context = {'error': None}
@@ -329,6 +328,7 @@ def billing_check_logic(request):
                 error = '결제 정보 json data parsing 에러'
             except TypeError:
                 error = '결제 정보 json data parsing 에러'
+
     if error is None:
         try:
             payment_result = json_loading_data['response']
@@ -374,8 +374,8 @@ def billing_check_logic(request):
             if payment_result['amount'] == payment_user_info.price:
                 if payment_user_info.payment_type_cd == 'PERIOD':
                     # 결제 정보 저장
-                    if error is None:
-                        func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info, billing_info)
+                    # if error is None:
+                    func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info)
 
             else:
                 # 결제 취소 날리기
