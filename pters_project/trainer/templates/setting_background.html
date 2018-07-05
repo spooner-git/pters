@@ -1,0 +1,131 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.background.setting.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+{% block content %}
+
+    <div id="ymdText">
+        <!--
+    <div class='arrowButton'>
+     <a style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+     <a style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+    </div>
+  -->
+        <div id="ymdTextWrap">
+            <div id="menuName">배경화면 설정
+            </div>
+            <div id="menuDescription">뒷 배경으로 변경을 원하는 사진을 선택하세요!
+            </div>
+        </div>
+    </div>
+
+    <div id="background_contents_wrap">
+        <div class="background_wrap">
+            <label>기본</label>
+            <div class="bg_basic bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap">
+            <label>필라테스</label>
+            <div class="bg_pilates bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap">
+            <label>웨이트 트레이닝</label>
+            <div class="bg_weight bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap">
+            <label>발레</label>
+            <div class="bg_ballet bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap">
+            <label>요가</label>
+            <div class="bg_yoga bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap">
+            <label>골프</label>
+            <div class="bg_golf bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap">
+            <label>당구</label>
+            <div class="bg_billiard bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+    </div>
+
+
+    <!--
+    <div class="popupBtn_mini">
+        <button class="submitBtn _button_Prev">이전</button>
+        <button class="submitBtn _button_Next" style="display: none;">등록</button>
+    </div>
+-->
+
+    <form id="update_background_image" method="post">
+        {% csrf_token %}
+        <div style="display: none">
+            {{ form.as_p }}
+        </div>
+        <input type="hidden" name="class_id" id="form_class_id" value="">
+        <input type="hidden" name="background_img_url" id="form_bg_url" value="">
+    </form>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- for db by hk.kim 170805-->
+    <script>
+        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+
+        var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+    </script>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script>
+        var bodywidth = $('body').width()
+        if(bodywidth < 600){
+            $('#page-base').css('display','block')
+            //$('#page-base-modifystyle').css('display','block')
+            $('#uptext3').text('배경화면 설정')
+            $('#uptext').text("배경화면 설정")
+            $('#upbutton-modify').hide()
+        }
+
+
+        $('#upbutton-x-modify, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_setting/"
+        })
+
+
+        $('.bg_select_button').click(function(){
+            console.log($(this).siblings('.bg_wrapper').css('background-image'))
+        })
+
+        
+
+
+
+    </script>
+
+{% endblock %}
