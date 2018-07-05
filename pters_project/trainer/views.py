@@ -73,6 +73,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     request.session['class_id'] = class_info.class_tb_id
                     class_type_name = ''
                     class_name = None
+                    if class_info.class_tb.background_img_url is None:
+                        class_info.class_tb.background_img_url = ''
+                    request.session['class_background_img_url'] = class_info.class_tb.background_img_url
                     request.session['class_hour'] = class_info.class_tb.class_hour
                     request.session['class_type_code'] = class_info.class_tb.subject_cd
                     try:
@@ -155,6 +158,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
+            if class_info.background_img_url is None:
+                class_info.background_img_url = ''
+            request.session['class_background_img_url'] = class_info.background_img_url
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             try:
@@ -3253,6 +3259,9 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_id'] = class_info.class_id
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
+            if class_info.background_img_url is None:
+                class_info.background_img_url = ''
+            request.session['class_background_img_url'] = class_info.background_img_url
             class_type_name = ''
             class_name = None
             try:
@@ -3327,6 +3336,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 request.session['class_type_code'] = ''
                 request.session['class_type_name'] = ''
                 request.session['class_center_name'] = ''
+                request.session['class_background_img_url'] = ''
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
@@ -3439,6 +3449,9 @@ def select_class_processing_logic(request):
         class_type_name = ''
         class_name = None
 
+        if class_info.background_img_url is None:
+            class_info.background_img_url = ''
+        request.session['class_background_img_url'] = class_info.background_img_url
         request.session['class_hour'] = class_info.class_hour
         request.session['class_type_code'] = class_info.subject_cd
 
