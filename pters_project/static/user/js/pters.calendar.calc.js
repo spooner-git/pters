@@ -3,7 +3,8 @@
 //										   Date Calculator
 //										  2018.07.05 SKKIM
 /*####################################################################################################*/
-
+var date = new Date();
+var currentYear = date.getFullYear(); //현재 년도
 var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
 if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
     lastDay[1] = 29;
