@@ -15,6 +15,7 @@ class PaymentInfoTb(models.Model):
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, null=True)
     price = models.IntegerField(db_column='PRICE', default=0)
+    imp_uid = models.CharField(db_column='IMP_UID', max_length=45, blank=True, null=True)
     channel = models.CharField(db_column='CHANNEL', max_length=45, blank=True, null=True)
     card_name = models.CharField(db_column='CARD_NAME', max_length=45, blank=True, null=True)
     buyer_email = models.CharField(db_column='BUYER_EMAIL', max_length=45, blank=True, null=True)

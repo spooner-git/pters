@@ -116,6 +116,22 @@ urlpatterns = [
     # 강좌 정보 선택 처리
     url(r'^select_class_processing/$', views.select_class_processing_logic, name='select_class_processing'),
 
+    # 배경 이미지 설정 기능 #################################################################################################
+    # 배경 이미지 타입 코드 조회
+    url(r'^get_background_img_type_list/$', views.GetBackgroundImgTypeListViewAjax.as_view(),
+        name='get_background_img_type_list'),
+    # 배경 이미지 정보 조회
+    url(r'^get_background_img_list/$', views.GetBackgroundImgListViewAjax.as_view(), name='get_background_img_list'),
+    # 배경 이미지 정보 추가/수정
+    url(r'^update_background_img_info/$', views.UpdateBackgroundImgInfoViewAjax.as_view(),
+        name='update_background_img_info'),
+    # 배경 이미지 정보 삭제
+    url(r'^delete_background_img_info/$', views.DeleteBackgroundImgInfoViewAjax.as_view(),
+        name='delete_background_img_info'),
+
+    # 강좌 정보 수정
+    url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
+
     # Mypage/Setting 기능 ###############################################################################################
     # 강사 정보 조회
     url(r'^get_trainer_info/$', views.GetTrainerInfoView.as_view(), name='get_trainer_info'),

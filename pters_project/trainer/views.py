@@ -35,7 +35,8 @@ from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule
-from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb
+from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
+    BackgroundImgTb
 from schedule.models import ClassTb
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
@@ -3146,7 +3147,7 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         context = {}
-        # class_id = self.request.session.get('class_id', '')
+        # class_id = request.session.get('class_id', '')
         error = None
         member_class_data = None
 
@@ -3186,11 +3187,6 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                 except ObjectDoesNotExist:
                     class_info.state_cd_name = ''
                 class_info.total_member_num = total_member_num
-
-                if class_info.background_img_url is None:
-                    class_info.background_img_url = ''
-                if class_info.background_img_url_mobile is None:
-                    class_info.background_img_url_mobile = ''
 
         context['class_data'] = member_class_data
 
@@ -3391,8 +3387,6 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_hour = request.POST.get('class_hour', '')
         start_hour_unit = request.POST.get('start_hour_unit', '')
         class_member_num = request.POST.get('class_member_num', '')
-        background_img_url = request.POST.get('background_img_url', '')
-        background_img_url_mobile = request.POST.get('background_img_url_mobile', '')
 
         error = None
         class_info = None
@@ -3427,12 +3421,6 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
             if class_member_num is not None and class_member_num != '':
                 class_info.class_member_num = class_member_num
-
-            if background_img_url is not None and background_img_url != '':
-                class_info.background_img_url = background_img_url
-
-            if background_img_url_mobile is not None and background_img_url_mobile != '':
-                class_info.background_img_url_mobile = background_img_url_mobile
 
         if error is None:
             class_info.mod_dt = timezone.now()
@@ -3513,6 +3501,157 @@ def select_class_processing_logic(request):
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
     return redirect(next_page)
+
+
+class GetBackgroundImgTypeListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = "ajax/trainer_common_code_ajax.html"
+
+    def get(self, request):
+        context = {}
+        error = None
+
+        context['common_cd_data'] = CommonCdTb.objects.filter(upper_common_cd='14', use=USE).order_by('order')
+
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
+
+
+class GetBackgroundImgListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = "ajax/trainer_background_ajax.html"
+
+    def get(self, request):
+        context = {}
+        class_id = request.POST.get('class_id', '')
+        error = None
+        background_img_data = None
+
+        if error is None:
+            if class_id is not None and class_id != '':
+                background_img_data = BackgroundImgTb.objects.filter(class_tb_id=class_id,
+                                                                     use=USE).order_by('-class_tb_id')
+            else:
+                background_img_data = BackgroundImgTb.objects.filter(class_tb__member_id=request.user.id,
+                                                                     use=USE).order_by('-class_tb_id')
+
+        if error is None:
+            for background_img_info in background_img_data:
+                try:
+                    background_img_type_name = \
+                        CommonCdTb.objects.get(common_cd=background_img_info.background_img_type_cd)
+                except ObjectDoesNotExist:
+                    background_img_type_name = None
+                if background_img_type_name is not None:
+                    background_img_info.background_img_type_name = background_img_type_name.common_cd_nm
+
+        context['background_img_data'] = background_img_data
+
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'ajax/trainer_error_ajax.html'
+
+    def post(self, request):
+        class_id = request.POST.get('class_id', '')
+        background_img_id = request.POST.get('background_img_id', '')
+        background_img_type_cd = request.POST.get('background_img_type_cd', '')
+        url = request.POST.get('url', '')
+
+        error = None
+        log_how_info = ''
+
+        if class_id is None or class_id == '':
+            error = '강좌 정보를 불러오지 못했습니다.'
+
+        if background_img_id == '' or background_img_id is None:
+            background_img_info = BackgroundImgTb(class_tb_id=class_id, background_img_type_cd=background_img_type_cd,
+                                                  url=url, reg_info=request.user.id,
+                                                  reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
+            background_img_info.save()
+            log_how_info = '추가'
+        else:
+            try:
+                background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id, use=USE)
+            except ObjectDoesNotExist:
+                error = '배경화면 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                if background_img_type_cd is not None and background_img_type_cd != '':
+                    background_img_info.background_img_type_cd = background_img_type_cd
+                if url is not None and url != '':
+                    background_img_info.url = url
+
+                background_img_info.mod_dt = timezone.now()
+                background_img_info.save()
+                log_how_info = '수정'
+
+        if error is None:
+            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_id,
+                             log_info='배경화면 정보', log_how=log_how_info,
+                             reg_dt=timezone.now(), use=USE)
+
+            log_data.save()
+
+        if error is not None:
+            logger.error(
+                request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'ajax/trainer_error_ajax.html'
+
+    def post(self, request):
+        class_id_session = request.session.get('class_id')
+        class_id = ''
+        background_img_id = request.POST.get('background_img_id', '')
+
+        error = None
+        if background_img_id is None or background_img_id == '':
+            error = '배경화면 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id)
+                class_id = background_img_info.class_tb_id
+                background_img_info.delete()
+            except ObjectDoesNotExist:
+                error = '강좌 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if class_id == class_id_session:
+                background_img_data = BackgroundImgTb.objects.filter(class_tb_id=class_id_session, use=USE)
+                if len(background_img_data) > 0:
+                    request.session['background_img_data'] = background_img_data
+                else:
+                    request.session['background_img_data'] = ''
+
+        if error is None:
+            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             class_tb_id=class_id,
+                             log_info='배경 화면 정보', log_how='삭제',
+                             reg_dt=timezone.now(), use=USE)
+
+            log_data.save()
+
+        if error is not None:
+            logger.error(
+                request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name)
 
 
 class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):

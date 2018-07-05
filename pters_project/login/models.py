@@ -37,12 +37,13 @@ class MemberTb(models.Model):
 
 
 class CommonCdTb(models.Model):
-    group_cd = models.CharField(db_column='GROUP_CD', max_length=10, blank=True, null=True)  # Field name made lowercase
-    common_cd = models.CharField(db_column='COMMON_CD', primary_key=True, max_length=10)  # Field name made lowercase.
+    common_cd_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    group_cd = models.CharField(db_column='GROUP_CD', max_length=45, blank=True, null=True)  # Field name made lowercase
+    common_cd = models.CharField(db_column='COMMON_CD', primary_key=True, max_length=45)  # Field name made lowercase.
     common_cd_nm = models.CharField(db_column='COMMON_CD_NM', max_length=100, blank=True, null=True)
-    group_cd_nm = models.CharField(db_column='GROUP_CD_NM', max_length=20, blank=True, null=True)
-    upper_common_cd = models.CharField(db_column='UPPER_COMMON_CD', max_length=10, blank=True, null=True)
-    upper_group_cd = models.CharField(db_column='UPPER_GROUP_CD', max_length=10, blank=True, null=True)
+    group_cd_nm = models.CharField(db_column='GROUP_CD_NM', max_length=100, blank=True, null=True)
+    upper_common_cd = models.CharField(db_column='UPPER_COMMON_CD', max_length=45, blank=True, null=True)
+    upper_group_cd = models.CharField(db_column='UPPER_GROUP_CD', max_length=45, blank=True, null=True)
     attribute1 = models.CharField(db_column='ATTRIBUTE1', max_length=255, blank=True, null=True)
     order = models.IntegerField(db_column='ORDER', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
