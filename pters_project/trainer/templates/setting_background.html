@@ -82,6 +82,7 @@
         </div>
         <input type="hidden" name="class_id" id="form_class_id" value="">
         <input type="hidden" name="background_img_url" id="form_bg_url" value="">
+        <input type="hidden" name="background_img_url_mobile" id="form_bg_url_mobile" value="">
     </form>
 
 {% endblock %}
@@ -117,9 +118,21 @@
             location.href="/trainer/trainer_setting/"
         })
 
-
         $('.bg_select_button').click(function(){
-            console.log($(this).siblings('.bg_wrapper').css('background-image'))
+            $('#form_class_id').val(class_id)
+            var url = $(this).siblings('.bg_wrapper').css('background-image')
+            var urlsplit = url.split('/')
+            var staticindex = urlsplit.indexOf('static')
+            var imageurlarray = []
+            for(var i=staticindex; i<urlsplit.length; i++){
+                imageurlarray.push(urlsplit[i].replace(/"\)/gi,""))
+            }
+            
+            var imageurl = '/'+imageurlarray.join("/")
+            $('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"))
+            $('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"))
+
+            $('#update_background_image').submit()
         })
 
         
