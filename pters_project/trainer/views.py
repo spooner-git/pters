@@ -73,6 +73,12 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     request.session['class_id'] = class_info.class_tb_id
                     class_type_name = ''
                     class_name = None
+                    if class_info.class_tb.background_img_url is None:
+                        class_info.class_tb.background_img_url = ''
+                    if class_info.class_tb.background_img_url_mobile is None:
+                        class_info.class_tb.background_img_url_mobile = ''
+                    request.session['class_background_img_url'] = class_info.class_tb.background_img_url
+                    request.session['class_background_img_url_mobile'] = class_info.class_tb.background_img_url_mobile
                     request.session['class_hour'] = class_info.class_tb.class_hour
                     request.session['class_type_code'] = class_info.class_tb.subject_cd
                     try:
@@ -155,6 +161,12 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
             error = '강사 정보를 불러오지 못했습니다.'
 
         if error is None:
+            if class_info.background_img_url is None:
+                class_info.background_img_url = ''
+            if class_info.background_img_url_mobile is None:
+                class_info.background_img_url_mobile = ''
+            request.session['class_background_img_url'] = class_info.background_img_url
+            request.session['class_background_img_url_mobile'] = class_info.background_img_url_mobile
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             try:
@@ -3175,6 +3187,11 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
                     class_info.state_cd_name = ''
                 class_info.total_member_num = total_member_num
 
+                if class_info.background_img_url is None:
+                    class_info.background_img_url = ''
+                if class_info.background_img_url_mobile is None:
+                    class_info.background_img_url_mobile = ''
+
         context['class_data'] = member_class_data
 
         if error is not None:
@@ -3261,6 +3278,12 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_id'] = class_info.class_id
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
+            if class_info.background_img_url is None:
+                class_info.background_img_url = ''
+            if class_info.background_img_url_mobile is None:
+                class_info.background_img_url_mobile = ''
+            request.session['class_background_img_url'] = class_info.background_img_url
+            request.session['class_background_img_url_mobile'] = class_info.background_img_url_mobile
             class_type_name = ''
             class_name = None
             try:
@@ -3335,6 +3358,8 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 request.session['class_type_code'] = ''
                 request.session['class_type_name'] = ''
                 request.session['class_center_name'] = ''
+                request.session['class_background_img_url'] = ''
+                request.session['class_background_img_url_mobile'] = ''
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
@@ -3366,6 +3391,8 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_hour = request.POST.get('class_hour', '')
         start_hour_unit = request.POST.get('start_hour_unit', '')
         class_member_num = request.POST.get('class_member_num', '')
+        background_img_url = request.POST.get('background_img_url', '')
+        background_img_url_mobile = request.POST.get('background_img_url_mobile', '')
 
         error = None
         class_info = None
@@ -3400,6 +3427,12 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
             if class_member_num is not None and class_member_num != '':
                 class_info.class_member_num = class_member_num
+
+            if background_img_url is not None and background_img_url != '':
+                class_info.background_img_url = background_img_url
+
+            if background_img_url_mobile is not None and background_img_url_mobile != '':
+                class_info.background_img_url_mobile = background_img_url_mobile
 
         if error is None:
             class_info.mod_dt = timezone.now()
@@ -3443,6 +3476,12 @@ def select_class_processing_logic(request):
         class_type_name = ''
         class_name = None
 
+        if class_info.background_img_url is None:
+            class_info.background_img_url = ''
+        if class_info.background_img_url_mobile is None:
+            class_info.background_img_url_mobile = ''
+        request.session['class_background_img_url'] = class_info.background_img_url
+        request.session['class_background_img_url_mobile'] = class_info.background_img_url_mobile
         request.session['class_hour'] = class_info.class_hour
         request.session['class_type_code'] = class_info.subject_cd
 
