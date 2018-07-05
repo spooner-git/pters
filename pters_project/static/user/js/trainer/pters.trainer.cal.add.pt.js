@@ -2118,7 +2118,11 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
         var planDura = "0.5";
         var hourType = '오전';
         if(plan == 'off'){
-            memberName = 'OFF';
+            if(planNoteArray[i].length > 0){
+                memberName = planNoteArray[i];
+            }else{
+                memberName = 'OFF';
+            }
         }else{
             memberName  = planMemberName[i];
         }
