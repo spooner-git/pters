@@ -41,7 +41,7 @@
             <p class="_step2_label"><img src="/static/user/res/PTERS_logo_pure.png"><span></span>
             <div class="registerbox_sublabel _step2_label">STEP 2<br>회원정보를 입력해주세요.</div>
             <p class="_step3_label"><img src="/static/user/res/PTERS_logo_pure.png"><span>가입 약관</span>
-            <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다./div>
+            <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다.</div>
         </div>
 
 
@@ -107,7 +107,7 @@
                 <input type="text" name="email_first" placeholder="이메일"  id="email_input"> @
                 <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
                 <div style="display: inline-block;">
-                    <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:66px;opacity: 0.5;">
+                    <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:15px;margin-left:66px;opacity: 0.5;">
                     <select class="login_dropdown" id="email_option" title="email">
                         <option id="optionnone">선택</option>
                         <option id="gmail">gmail.com</option>
@@ -117,7 +117,7 @@
                     </select>
                 </div>
                 <button class="register_button" onclick="check_email();">중복 확인</button>
-                <span class="email_confirm"></span>
+                <span class="email_confirm" style="margin-top: 0;"></span>
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
             </div>
             <div class="outerbox">
@@ -1380,10 +1380,10 @@
                     var id_check_message = jsondata.id_check_result;
                     if(id_check_message[0].length>0){
                         var error_msg = id_check_message[0];
-                        $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'});
+                        $('.email_confirm').text(error_msg).css({'display':'block','color':'#fe4e65'});
                         $form.find('#email_duplicate_check').val(0);
                     }else{
-                        $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'});
+                        $('.email_confirm').text('사용 가능').css({'display':'block','color':'green'});
                         $form.find('#email_duplicate_check').val(1);
                     }
                 },

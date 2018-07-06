@@ -55,7 +55,7 @@ body{
 	max-width: 500px;
 	width: 95%;
 	padding: 30px;
-	background:#00000099;
+	background:#28282894;
 	top: 0;
 	left: 50%;
 	color: #ffffff;
@@ -194,7 +194,6 @@ div._step1_label, div._step2_label, div._step3_label{
 	width: 90%;
 	margin:125px 0 10px 0;
 	text-align:center;
-	background:#00000099;
 	transition: 1s;
 	-webkit-transition: 1s;
 }
@@ -226,6 +225,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	margin: 0 50px 0 50px;
 	margin: 0 auto;
 	margin-top: 5px;
+	background-color: #28282894;
 }
 
 .selector_button{
@@ -449,7 +449,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.registerbox_add{
-		margin-top: 150px;
+		margin-top: 230px;
 	}
 	.outerbox{
 		margin-top: 15px;
@@ -461,7 +461,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.promise_wrap{
-		margin-top: 100px;
+		margin-top: 170px;
 	}
 
 	.contractread{
