@@ -1435,21 +1435,3 @@ function clear_badge_counter(){
         },
     })
 }
-
-
-var bodywidth = $('body').width()
-if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
-    $('#ymdText').addClass('bg_ymdText_ballet')
-}else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
-    $('#ymdText').addClass('bg_ymdText_weight')
-}else if(class_name.match(/웨이트/)|| class_name.match(/PT/) || class_name.match(/피티/) ){
-    $('#ymdText').addClass('bg_ymdText_weight')
-}else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
-    $('#ymdText').addClass('bg_ymdText_pilates')
-}else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
-    $('#ymdText').addClass('bg_ymdText_weight')
-}else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
-    $('#ymdText').addClass('bg_ymdText_golf')
-}else{
-    $('#ymdText').addClass('bg_ymdText_weight')
-}
