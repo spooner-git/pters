@@ -190,6 +190,7 @@
         }
 
         console.log(class_background_img_url)
+    {% autoescape off %}
 
         var len = $('.bg_wrapper').length;
         for(var i=1; i<len; i++){
@@ -214,6 +215,7 @@
             };
         };
 
+    {% endautoescape %}
         
 
 
