@@ -188,6 +188,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	background-color: #ffffff14;
 	color: #ffffff;
 	border: 0;
+	border-radius: 0;
 	border-bottom: 0;
 	border-bottom: 1px solid #ffffff;
 	-webkit-appearance:none;
