@@ -268,7 +268,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                               payment_result['amount'])
 
     if error is None:
-        end_date = func_get_end_date(custom_data['payment_type_cd'], custom_data['start_date'], 1, date)
+        end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, 1, date)
 
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
