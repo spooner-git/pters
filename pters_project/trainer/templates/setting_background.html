@@ -81,7 +81,6 @@
         <input type="hidden" name="background_img_id" id="form_background_img_id" value="">
         <input type="hidden" name="background_img_type_cd" id="form_background_img_type_cd" value="">
         <input type="hidden" name="url" id="form_bg_url" value="">
-{#        <input type="hidden" name="background_img_url_mobile" id="form_bg_url_mobile" value="">#}
     </form>
 
 {% endblock %}
@@ -132,11 +131,50 @@
             }
             {# /static/user/res/pt.png #}
             var imageurl = '/'+imageurlarray.join("/");
-            $('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
-{#            $('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));#}
-
-            $('#update_background_image').submit();
+            //$('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
+            //$('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));
+            var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg")
+            var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg")
+            var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png")
+            send_user_bg_set(class_id, url_pc, background_img_type_code[0])
+            send_user_bg_set(class_id, url_mobile, background_img_type_code[1])
+            send_user_bg_set(class_id, url_ymdText, background_img_type_code[2])
         });
+
+        function send_user_bg_set(class_id, imgurl, typecode){
+            console.log(class_id, imgurl, typecode)
+            $.ajax({
+            url: ' /trainer/update_background_img_info/',
+            type:'POST',
+            data:{"class_id":class_id, "background_img_id":"", "background_img_type_code":typecode, "url":imgurl},
+            async:false,
+            dataType : 'html',
+
+
+            beforeSend:function(){
+                beforeSend()
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                   
+                }
+            },
+
+            complete:function(){
+                completeSend()
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+
+        }
 
         
 

@@ -595,7 +595,7 @@ a:focus, a:hover{
 /*PC버전 상단,하단네비바*/
 
 .bg_ymdText_weight{
-    background-image: url("/static/user/res/ymdText/pt.png");
+    background-image: url("/static/user/res/ymdText/weight.png");
     background-size:cover;
     background-position-x:center;
 }
