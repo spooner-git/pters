@@ -259,6 +259,11 @@
 
         function payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, payment_type_cd, price) {
             console.log('payment_open_pg');
+                var custom_data = {
+                    "user_id":{{ request.user.id }},
+                    "payment_type_cd":payment_type_cd,
+                    "customer_uid":customer_uid_data
+                };
                 IMP.request_pay({
                     pg : 'danal', // version 1.1.0부터 지원.
                     pay_method : pay_method,
@@ -266,7 +271,8 @@
                     customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
                     name : name,
                     amount : price,
-                    custom_data: {user_id: {{ request.user.id }}, payment_type_cd: payment_type_cd, customer_uid: customer_uid_data},
+                    custom_data: custom_data,
+{#                    custom_data: {user_id: {{ request.user.id }}, payment_type_cd: payment_type_cd, customer_uid: customer_uid_data},#}
                     buyer_email : '{{ request.user.email }}',
                     buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
 {#                    buyer_tel : '',#}
@@ -337,13 +343,18 @@
         }
 
         function payment_open_pg_single(name, pay_method, merchant_uid_data, payment_type_cd, price) {
+
+                var custom_data = {
+                    "user_id":{{ request.user.id }},
+                    "payment_type_cd":payment_type_cd
+                };
                 IMP.request_pay({
                     pg : 'danal', // version 1.1.0부터 지원.
                     pay_method : pay_method,
                     merchant_uid : merchant_uid_data,
                     name : name,
                     amount : price,
-                    custom_data: {user_id: {{ request.user.id }}, payment_type_cd: payment_type_cd},
+                    custom_data: custom_data,
                     buyer_email : '{{ request.user.email }}',
                     buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
 {#                    buyer_tel : '',#}
