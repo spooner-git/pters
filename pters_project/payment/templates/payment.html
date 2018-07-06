@@ -198,170 +198,54 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
-            var success = false;
             var date = new Date();
             var merchant_uid_data = 'merchant_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var customer_uid_data = 'customer_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-
-            $.ajax({
-                url: "/payment/add_billing/", // 서비스 웹서버
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                data: JSON.stringify({
-                    start_date:  today,
-                    pay_method: pay_method,
-                    payment_type_cd: payment_type_cd,
-                    merchandise_type_cd: merchandise_type_cd,
-                    merchant_uid: merchant_uid_data,
-                    customer_uid: customer_uid_data,
-                    price : price,
-                    name : name
-                }),
-
-                beforeSend:function(){
-                    beforeSend();
-                },
-
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    initialJSON = jsondata;
-                    console.log(initialJSON);
-                    if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text(jsondata.messageArray);
-                    }else {
-                        success = true;
-                        if(payment_type_cd=='PERIOD'){
-                            payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, payment_type_cd, price);
-                        }
-                        else{
-                            payment_open_pg_single(name, pay_method, merchant_uid_data, payment_type_cd, price);
-                        }
-                    }
-
-                },
-
-                complete:function(){
-                    completeSend();
-                },
-
-                error:function(){
-                    console.log('server error');
-                }
-            });
-
-            if ( success == true){
-                console.log('success');
-
-            }
-        }
-
-        function payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, payment_type_cd, price) {
-            console.log('payment_open_pg');
-                var custom_data = {
+            var billing_data;
+            var request_pay_period_data = {
+                pg : 'danal', // version 1.1.0부터 지원.
+                pay_method : pay_method,
+                merchant_uid : merchant_uid_data,
+                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                name : name,
+                amount : price,
+                custom_data: {
                     "user_id":{{ request.user.id }},
+                    "merchandise_type_cd":merchandise_type_cd,
                     "payment_type_cd":payment_type_cd,
-                    "customer_uid":customer_uid_data
-                };
-                IMP.request_pay({
-                    pg : 'danal', // version 1.1.0부터 지원.
-                    pay_method : pay_method,
-                    merchant_uid : merchant_uid_data,
-                    customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
-                    name : name,
-                    amount : price,
-                    custom_data: custom_data,
-{#                    custom_data: {user_id: {{ request.user.id }}, payment_type_cd: payment_type_cd, customer_uid: customer_uid_data},#}
-                    buyer_email : '{{ request.user.email }}',
-                    buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
-{#                    buyer_tel : '',#}
-{#                    buyer_addr : '서울특별시 강남구 삼성동',#}
-{#                    buyer_postcode : '123-456',#}
-{#                    m_redirect_url : '/payment/add_billing/'#}
-                }, function(rsp) {
-                    var msg;
-                    if ( rsp.success ) {
-                        console.log(rsp);
-
-                        $.ajax({
-                            url: "/payment/billing_finish/", // 서비스 웹서버
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            data: JSON.stringify({
-                                merchant_uid: rsp.merchant_uid,
-                                customer_uid: customer_uid_data,
-                                paid_amount: rsp.paid_amount
-                            }),
-
-                            beforeSend:function(){
-                                beforeSend();
-                            },
-
-                            success:function(data){
-                                var jsondata = JSON.parse(data);
-                                initialJSON = jsondata;
-                                console.log('/payment/billing_finish/::'+jsondata);
-                                if(jsondata.messageArray.length>0){
-                                    msg = '결제에 실패하였습니다.';
-                                    msg += '에러내용 : ' + jsondata.messageArray;
-                                }else {
-                                    msg = '결제가 완료되었습니다.';
-            {#                        msg += '고유ID : ' + rsp.imp_uid;#}
-            {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
-                                    msg += '결제 금액 : ' + rsp.paid_amount;
-            {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
-                                }
-                                alert(msg);
-
-                            },
-
-                            complete:function(){
-                                completeSend();
-                            },
-
-                            error:function(){
-                                console.log('server error');
-                            }
-                        });
-
-                    } else {
-                        msg = '결제에 실패하였습니다.';
-                        msg += '에러내용 : ' + rsp.error_msg;
-                        jQuery.ajax({
-                            url: "/payment/delete_billing/", // 서비스 웹서버
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            data: JSON.stringify({
-                                merchant_uid: merchant_uid_data,
-                                customer_uid: customer_uid_data
-                            })
-                        });
-                        alert(msg);
-                    }
-                });
-        }
-
-        function payment_open_pg_single(name, pay_method, merchant_uid_data, payment_type_cd, price) {
-
-                var custom_data = {
+                    "customer_uid":customer_uid_data,
+                    "start_date":  today
+                },
+                buyer_email : '{{ request.user.email }}',
+                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                {#                    buyer_tel : '',#}
+                {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
+                {#                    buyer_postcode : '123-456',#}
+                {#                    m_redirect_url : '/payment/add_billing/'#}
+            };
+            var request_pay_single_data = {
+                pg : 'danal', // version 1.1.0부터 지원.
+                pay_method : pay_method,
+                merchant_uid : merchant_uid_data,
+                name : name,
+                amount : price,
+                custom_data: {
                     "user_id":{{ request.user.id }},
-                    "payment_type_cd":payment_type_cd
-                };
-                IMP.request_pay({
-                    pg : 'danal', // version 1.1.0부터 지원.
-                    pay_method : pay_method,
-                    merchant_uid : merchant_uid_data,
-                    name : name,
-                    amount : price,
-                    custom_data: custom_data,
-                    buyer_email : '{{ request.user.email }}',
-                    buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
-{#                    buyer_tel : '',#}
-{#                    buyer_addr : '서울특별시 강남구 삼성동',#}
-{#                    buyer_postcode : '123-456',#}
-{#                    m_redirect_url : '/payment/add_billing/'#}
-                }, function(rsp) {
+                    "merchandise_type_cd":merchandise_type_cd,
+                    "payment_type_cd":payment_type_cd,
+                    "start_date":  today
+                },
+                buyer_email : '{{ request.user.email }}',
+                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+            };
+
+            if(payment_type_cd=='PERIOD'){
+                billing_data = request_pay_period_data;
+            }
+            else{
+                billing_data = request_pay_single_data;
+            }
+            IMP.request_pay(billing_data, function(rsp) {
                     var msg;
                     if ( rsp.success ) {
                         console.log(rsp);
@@ -371,7 +255,8 @@
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
-                                merchant_uid: rsp.merchant_uid,
+                                merchandise_type_cd : merchandise_type_cd,
+                                payment_type_cd:payment_type_cd,
                                 paid_amount: rsp.paid_amount
                             }),
 
@@ -409,18 +294,19 @@
                     } else {
                         msg = '결제에 실패하였습니다.';
                         msg += '에러내용 : ' + rsp.error_msg;
-                        jQuery.ajax({
-                            url: "/payment/delete_billing/", // 서비스 웹서버
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            data: JSON.stringify({
-                                merchant_uid: merchant_uid_data
-                            })
-                        });
+{#                        jQuery.ajax({#}
+{#                            url: "/payment/delete_billing/", // 서비스 웹서버#}
+{#                            method: "POST",#}
+{#                            headers: { "Content-Type": "application/json" },#}
+{#                            data: JSON.stringify(delete_data)#}
+{#                        });#}
                         alert(msg);
                     }
                 });
+
         }
+
+
     </script>
 
 {% endblock %}

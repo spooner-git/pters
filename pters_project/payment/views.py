@@ -19,8 +19,9 @@ from django.utils import timezone
 
 from configs import settings
 from configs.const import USE, UN_USE
+from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
-    func_check_payment_info, func_get_end_date, func_send_refund_payment
+    func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
@@ -36,96 +37,6 @@ class PaymentView(LoginRequiredMixin, View):
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
 
         return render(request, self.template_name, context)
-
-
-@csrf_exempt
-def add_billing_logic(request):
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-    context = {'error': None}
-    error = None
-    merchandise_type_cd = None
-    payment_type_cd = None
-    pay_method = None
-    merchant_uid = None
-    customer_uid = None
-    start_date = None
-    end_date = None
-    date = None
-    name = None
-    input_price = 0
-    # today = datetime.date.today()
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    if error is None:
-        start_date = json_loading_data['start_date']
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-        payment_type_cd = json_loading_data['payment_type_cd']
-        pay_method = json_loading_data['pay_method']
-        merchandise_type_cd = json_loading_data['merchandise_type_cd']
-        merchant_uid = json_loading_data['merchant_uid']
-        input_price = json_loading_data['price']
-        name = json_loading_data['name']
-        date = int(start_date.strftime('%d'))
-
-    if error is None:
-        if payment_type_cd == 'PERIOD':
-            customer_uid = json_loading_data['customer_uid']
-
-    if error is None:
-        error = func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price)
-
-    if error is None:
-        end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
-
-    if error is None:
-        payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=merchant_uid).count()
-        if payment_info_check > 0:
-            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
-        if payment_type_cd == 'PERIOD':
-            billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
-            if billing_info_check > 0:
-                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                payment_info = PaymentInfoTb(member_id=request.user.id, merchandise_type_cd=merchandise_type_cd,
-                                             pay_method=pay_method,
-                                             payment_type_cd=payment_type_cd,
-                                             merchant_uid=merchant_uid, customer_uid=customer_uid,
-                                             start_date=start_date, end_date=end_date,
-                                             price=input_price,
-                                             name=name,
-                                             mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
-                if payment_type_cd == 'PERIOD':
-                    billing_info = BillingInfoTb(member_id=request.user.id,
-                                                 pay_method=pay_method,
-                                                 payment_type_cd=payment_type_cd,
-                                                 merchant_uid=merchant_uid,
-                                                 customer_uid=customer_uid,
-                                                 payment_date=datetime.date.today(),
-                                                 payed_date=date,
-                                                 mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
-                    billing_info.save()
-                payment_info.save()
-        except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-        except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-
-    context['error'] = error
-    return render(request, 'ajax/payment_error_info.html', context)
 
 
 @csrf_exempt
@@ -175,7 +86,7 @@ def check_billing_logic(request):
                                                                       use=USE).count()
 
     if error is None:
-        error = func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price)
+        error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
 
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -236,10 +147,9 @@ def billing_finish_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
 
-    merchant_uid = None
-    customer_uid = None
+    merchandise_type_cd = None
+    payment_type_cd = None
     paid_amount = 0
-    payment_user_info = None
     context = {'error': None}
     error = None
 
@@ -252,39 +162,21 @@ def billing_finish_logic(request):
 
     if error is None:
         try:
-            merchant_uid = json_loading_data['merchant_uid']
+            merchandise_type_cd = json_loading_data['merchandise_type_cd']
         except KeyError:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
         try:
-            customer_uid = json_loading_data['customer_uid']
+            payment_type_cd = json_loading_data['payment_type_cd']
         except KeyError:
-            customer_uid = None
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
         try:
             paid_amount = json_loading_data['paid_amount']
         except KeyError:
             paid_amount = 0
 
     if error is None:
-        if merchant_uid is not None and merchant_uid != '':
-            try:
-                payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
-                payment_user_info.use = USE
-                payment_user_info.save()
-            except ObjectDoesNotExist:
-                error = '결제 정보를 불러오는데 실패했습니다.'
-
-        if customer_uid is not None and customer_uid != '':
-            try:
-                billing_info = PaymentInfoTb.objects.get(customer_uid=customer_uid)
-                billing_info.use = USE
-                billing_info.mod_dt = timezone.now()
-                billing_info.save()
-            except ObjectDoesNotExist:
-                error = '결제 정보를 불러오는데 실패했습니다.'
-
-    if error is None:
-        error = func_check_payment_info(payment_user_info.merchandise_type_cd,
-                                        payment_user_info.payment_type_cd, paid_amount)
+        error = func_check_payment_price_info(merchandise_type_cd,
+                                              payment_type_cd, paid_amount)
 
     context['error'] = error
     if error is not None:
@@ -309,6 +201,8 @@ def billing_check_logic(request):
     imp_uid = None
     merchant_uid = None
     custom_data = None
+    user_id = None
+    member_info = None
     context = {'error': None}
 
     try:
@@ -354,54 +248,50 @@ def billing_check_logic(request):
 
     if error is None:
         try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
+            custom_data = json.loads(payment_result['custom_data'])
+        except ValueError:
+            error = '결제 정보 json data parsing 에러'
+        except TypeError:
+            error = '결제 정보 json data parsing 에러'
 
     if error is None:
         try:
-            payment_user_info.channel = payment_result['channel']
-            payment_user_info.card_name = payment_result['card_name']
-            payment_user_info.buyer_email = payment_result['buyer_email']
-            payment_user_info.status = payment_result['status']
-            payment_user_info.fail_reason = payment_result['fail_reason']
-            payment_user_info.currency = payment_result['currency']
-            payment_user_info.pay_method = payment_result['pay_method']
-            payment_user_info.pg_provider = payment_result['pg_provider']
-            payment_user_info.receipt_url = payment_result['receipt_url']
-            payment_user_info.buyer_name = payment_result['buyer_name']
-            payment_user_info.amount = payment_result['amount']
-            payment_user_info.mod_dt = timezone.now()
-            payment_user_info.use = USE
-            payment_user_info.save()
+            user_id = custom_data['user_id']
+            payment_type_cd = custom_data['payment_type_cd']
+            merchandise_type_cd = custom_data['merchandise_type_cd']
         except KeyError:
-            error = '결제 정보 [response] 세부사항 json data parsing KeyError'
+            error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
         except TypeError:
-            error = '결제 정보 [response] 세부사항 json data parsing TypeError'
+            error = '결제 정보 [custom_data] 세부사항 json data parsing TypeError'
         except ValueError:
-            error = '결제 정보 [response] 세부사항 json data parsing ValueError'
+            error = '결제 정보 [custom_data] 세부사항 json data parsing ValueError'
 
     if error is None:
-        if payment_user_info.payment_type_cd == 'PERIOD':
-            logger.info('custom data:::' + str(payment_result['custom_data']['user_id']) + ':'
-                        + str(payment_result['custom_data']['customer_uid']))
-        else:
-            try:
-                custom_data = json.loads(payment_result['custom_data'])
-            except ValueError:
-                error = '결제 정보 json data parsing 에러'
-            except TypeError:
-                error = '결제 정보 json data parsing 에러'
+        try:
+            customer_uid = custom_data['customer_uid']
+        except KeyError:
+            customer_uid = None
+        except TypeError:
+            customer_uid = None
+        except ValueError:
+            customer_uid = None
+
+    if error is None:
+        try:
+            member_info = MemberTb.objects.get(member_id=user_id)
+        except ObjectDoesNotExist:
+            member_info = None
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
-            error = func_check_payment_info(payment_user_info.merchandise_type_cd,
-                                            payment_user_info.payment_type_cd, payment_result['amount'])
+            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
             if error is None:
-                if payment_user_info.payment_type_cd == 'PERIOD':
-                    # 결제 정보 저장
-                    # if error is None:
-                    func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info)
+                error = func_add_billing_logic(custom_data, payment_result)
+                if error is None:
+                    if payment_user_info.payment_type_cd == 'PERIOD':
+                        # 결제 정보 저장
+                        # if error is None:
+                        func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info)
 
             else:
                 # 결제 취소 날리기
@@ -409,15 +299,16 @@ def billing_check_logic(request):
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
         else:  # 재결제 시도
-            func_resend_payment_info(payment_user_info.customer_uid, payment_user_info.merchant_uid,
-                                     payment_user_info.price)
+            func_resend_payment_info(customer_uid, merchant_uid,
+                                     payment_result['amount'])
 
     if error is None:
-        logger.info(str(payment_user_info.member.name) + '님 정기 결제 완료:'
-                    + str(payment_user_info.member_id) + ':' + str(payment_result['merchant_uid']))
+        if member_info is not None:
+            logger.info(str(member_info.name) + '님 정기 결제 완료:'
+                        + str(member_info.member_id) + ':' + str(payment_result['merchant_uid']))
     else:
-        logger.error(str(payment_user_info.member.name) + '님 결제 완료 체크:'
-                     + str(payment_user_info.member_id) + ':' + str(error))
+        logger.error(str(member_info.name) + '님 결제 완료 체크:'
+                     + str(member_info.member_id) + ':' + str(error))
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
 

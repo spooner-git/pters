@@ -3501,14 +3501,14 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                 background_img_info.save()
                 log_how_info = '수정'
 
-        if error is None:
-            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             class_tb_id=class_id,
-                             log_info='배경화면 정보', log_how=log_how_info,
-                             reg_dt=timezone.now(), use=USE)
-
-            log_data.save()
+        # if error is None:
+        #     log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+        #                      from_member_name=request.user.last_name + request.user.first_name,
+        #                      class_tb_id=class_id,
+        #                      log_info='배경화면 정보', log_how=log_how_info,
+        #                      reg_dt=timezone.now(), use=USE)
+        #
+        #     log_data.save()
 
         if error is not None:
             logger.error(

@@ -24,7 +24,6 @@ urlpatterns = [
     # 결제 페이지
     # url(r'^payment/$', views.PaymentView.as_view(), name='payment'),
     # 결제 페이지
-    url(r'^add_billing/$', views.add_billing_logic, name='add_billing'),
     url(r'^check_billing/$', views.check_billing_logic, name='check_billing'),
     url(r'^delete_billing/$', views.delete_billing_logic, name='delete_billing'),
     # 결제시 완료 페이지
