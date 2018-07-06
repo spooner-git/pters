@@ -308,6 +308,7 @@ def billing_check_logic(request):
     payment_user_info = None
     imp_uid = None
     merchant_uid = None
+    custom_data = None
     context = {'error': None}
 
     try:
@@ -392,8 +393,6 @@ def billing_check_logic(request):
                 error = '결제 정보 json data parsing 에러'
             except TypeError:
                 error = '결제 정보 json data parsing 에러'
-            logger.info('custom data:::' + str(custom_data))
-            logger.info('custom data:::' + str(custom_data['user_id']))
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
