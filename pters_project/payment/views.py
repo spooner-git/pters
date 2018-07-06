@@ -308,6 +308,7 @@ def billing_check_logic(request):
     payment_user_info = None
     imp_uid = None
     merchant_uid = None
+    custom_data = None
     context = {'error': None}
 
     try:
@@ -353,6 +354,12 @@ def billing_check_logic(request):
 
     if error is None:
         try:
+            custom_data = payment_result['custom_data']
+        except KeyError:
+            error = '결제 정보 [response] merchant_uid json data parsing 에러'
+
+    if error is None:
+        try:
             payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오는데 실패했습니다.'
@@ -382,10 +389,10 @@ def billing_check_logic(request):
 
     if error is None:
         if payment_user_info.payment_type_cd == 'PERIOD':
-            logger.info('custom data:::' + str(payment_result['custom_data']['user_id']) + ':'
-                        + str(payment_result['custom_data']['customer_uid']))
+            logger.info('custom data:::' + str(custom_data['user_id']) + ':'
+                        + str(custom_data['customer_uid']))
         else:
-            logger.info('custom data:::' + str(payment_result['custom_data']))
+            logger.info('custom data:::' + str(custom_data['user_id']))
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
