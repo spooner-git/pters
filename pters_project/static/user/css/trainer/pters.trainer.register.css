@@ -12,6 +12,7 @@ select{
 	height: 33px;
 	width: 80px;
 	color: #282828;
+	padding-bottom: 2px;
 }
 
 .ajaxloadingPC{
@@ -54,7 +55,7 @@ body{
 	position: absolute;
 	max-width: 500px;
 	width: 95%;
-	padding: 30px;
+	padding: 0 30px 15px 30px;
 	background:#28282894;
 	top: 0;
 	left: 50%;
@@ -179,12 +180,22 @@ div._step1_label, div._step2_label, div._step3_label{
 	display: none;
 }
 .outerbox{
-	margin-top: 15px;
+	margin-top: 30px;
 }
 .outerbox input{
 	line-height: 25px;
 	width: 110px;
+	background-color: #ffffff14;
+	color: #ffffff;
+	border: 0;
+	border-bottom: 0;
+	border-bottom: 1px solid #ffffff;
+	-webkit-appearance:none;
 }
+.outerbox input::-webkit-input-placeholder{
+	color: #adadad;
+}
+
 .outerbox_horizontal{
 	position: absolute;
 	left: 50%;
@@ -253,9 +264,9 @@ div._step1_label, div._step2_label, div._step3_label{
 	margin-top:9px;
 	margin-left: 5px;
 	line-height: 27px;
-	background: #fe4e65;
-	color: #ffffff;
-	border:1px solid #ffffff;
+	background: #ffffff;
+	color: #282828;
+	border:1px solid #cccccc;
 }
 
 .login_dropdown{
@@ -322,7 +333,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	color: #ffffff;
 }
 .explain_subject{
-	font-weight: bold;
+	font-weight: 500;
 	font-size: 17px;
 	padding-left: 10px;
 }
@@ -343,6 +354,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	width: 75px;
 	height: 28px;
 	font-weight: bold;
+	border: 1px solid #cccccc;
 }
 .buttongroup img{
 	width: 8px;
@@ -437,7 +449,7 @@ div._step1_label, div._step2_label, div._step3_label{
 		color: #ffffff;
 	}
 	.explain_subject{
-		font-weight: bold;
+		font-weight: 500;
 		font-size: 16px;
 		margin-bottom: 5px;
 		margin-top: 30px;
@@ -452,7 +464,7 @@ div._step1_label, div._step2_label, div._step3_label{
 		margin-top: 230px;
 	}
 	.outerbox{
-		margin-top: 15px;
+		margin-top: 30px;
 	}
 	.outerbox input{
 		line-height: 28px;
@@ -505,6 +517,12 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 	.bottomfooter2 p{
 		margin-bottom:1px;
+	}
+	.bottomfooter2 a{
+		color: #ffffff;
+		text-decoration: none;
+	}.bottomfooter2 a:hover{
+		color: #fe4e65;
 	}
 }
 

@@ -122,7 +122,7 @@
             </div>
             <div class="outerbox">
                 <input type="password" name="" placeholder="새 비밀번호"  id="pw_input">
-                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re"><span class="pw_confirm"></span>
+                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"><span class="pw_confirm"></span>
                 <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
             </div>
 
@@ -883,11 +883,12 @@
       -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <span class="_company">회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="http://www.spooner.co.kr" class="_company">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <!--<a href="">제휴제안</a><span style="margin-left:10px;margin-right: 10px;">|</span>-->
+            <a href='{% url 'policy' %}'>이용약관</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href='{% url 'privacy' %}'>개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <!--<a href="">고객센터</a><span style="margin-left:10px;margin-right: 10px;">|</span>-->
+            <span style="line-height: 0; font-size:11px;">문의/제휴 support@pters.co.kr</span>
         </div>
     </footer>
 
@@ -1277,7 +1278,7 @@
                     }
                 })
             }else{
-                alert('약관 동의필요 : 테스트 페이지 입니다.');
+                alert('약관 동의 후 가입할 수 있습니다.');
             }
         });
 
