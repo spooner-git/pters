@@ -202,6 +202,7 @@
             var merchant_uid_data = 'merchant_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var customer_uid_data = 'customer_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var billing_data;
+            var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
                 pay_method : pay_method,
