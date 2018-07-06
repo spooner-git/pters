@@ -17,6 +17,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
     try:
         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
         billing_info.mod_dt = timezone.now()
+        billing_info.use = USE
         billing_info.save()
     except ObjectDoesNotExist:
         error = '정기 결제 등록에 실패했습니다.'
