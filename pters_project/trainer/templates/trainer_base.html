@@ -226,8 +226,8 @@
                     <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
                     <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
                 {% endblock %}
-                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
-                    <a><img src="{% static_url "user/res/main/alarm-on.png" %}" style="width:20px;"></a>
+                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
+                    <a><img src="{% static_url "user/res/member/icon-repeat-white.png" %}" style="width:20px;"></a>
                 </button>
 
                 <div id="outer_Sidenav" class="outer_Sidenav">
@@ -278,10 +278,16 @@
                             </a>
                         </div>
                         -->
+                    <div class="sidebar_div"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
+                        <a href="{% url 'trainer:alarm' %}" class="sidebar_text __alarm">
+                        </a>
+                    </div>
+                    <!--
                     <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src="{% static_url "user/res/member/icon-repeat.png" %}" class="sidebar_icon" alt="#">
                         <a class="sidebar_text __calSelect">
                         </a>
                     </div>
+                    -->
                     <div class="sidebar_div"><img src="{% static_url "user/res/icon-pencil.png" %}" class="sidebar_icon" alt="#">
                         <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
                         </a>
