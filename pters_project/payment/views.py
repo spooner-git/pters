@@ -385,9 +385,16 @@ def billing_check_logic(request):
             logger.info('custom data:::' + str(payment_result['custom_data']['user_id']) + ':'
                         + str(payment_result['custom_data']['customer_uid']))
         else:
-            logger.info('custom data:::' + str(payment_result['custom_data']))
-            logger.info('custom data:::' + str(payment_result['custom_data'][0]))
-            logger.info('custom data:::' + str(payment_result['custom_data'][1]))
+            logger.info('custom data:::' + payment_result['custom_data'])
+            json_data = payment_result['custom_data'].decode('utf-8')
+            try:
+                custom_data = json.loads(json_data)
+            except ValueError:
+                error = '결제 정보 json data parsing 에러'
+            except TypeError:
+                error = '결제 정보 json data parsing 에러'
+            logger.info('custom data:::' + str(custom_data))
+            logger.info('custom data:::' + str(custom_data['user_id']))
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
