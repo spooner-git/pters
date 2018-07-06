@@ -981,6 +981,5 @@ if(class_code.match(/BL/)){
 }
 */
 
-
-$('#ymdText').css('background-image',"url('"+class_background_img_url[2]+"')")
+$('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
 

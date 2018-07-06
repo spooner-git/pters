@@ -5,6 +5,10 @@ html,body{
     background: #f7f7f7;
 }
 
+#ymdText{
+    background-size: cover;
+    background-position-x:center;
+}
 
 .beta_tag{
     width: 30px;
