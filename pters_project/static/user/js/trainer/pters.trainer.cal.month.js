@@ -35,7 +35,7 @@ $(document).ready(function(){
     var schedule_on_off = 0;
 
 
-    setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
+    setInterval(function(){ajaxCheckSchedule()}, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 
     function ajaxCheckSchedule(){
@@ -175,21 +175,19 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         //날짜를 클릭해서 나오는 일정들을 클릭했을때
         $(document).on('click','.plan_raw',function(){
+            var member = " 회원님의 ";
+            var yourplan = " 일정";
+            var text = '레슨 일정';
             switch(Options.language){
-                case "KOR" :
-                    var member = " 회원님의 ";
-                    var yourplan = " 일정";
-                    var text = '레슨 일정'
-                    break;
                 case "JPN" :
-                    var member = "様の ";
-                    var yourplan = " 日程";
-                    var text = 'PT 日程'
+                    member = "様の ";
+                    yourplan = " 日程";
+                    text = 'PT 日程'
                     break;
                 case "ENG" :
-                    var member = "'s schedule at ";
-                    var yourplan = "";
-                    var text = 'PT Plan'
+                    member = "'s schedule at ";
+                    yourplan = "";
+                    text = 'PT Plan'
                     break;
             }
             shade_index(150)
@@ -204,7 +202,7 @@ $(document).ready(function(){
             var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
             var selectedMemo = $(this).attr('data-memo')
             if($(this).attr('data-memo') == undefined){
-                var selectedMemo = ""
+                selectedMemo = ""
             }
 
             var infoText2 = '[그룹]'+name+' '+selectedTime+':'+selectedMinute+yourplan

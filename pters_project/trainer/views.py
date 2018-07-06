@@ -148,7 +148,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         context['to_be_end_member_num'] = 0
         context['today_schedule_num'] = 0
         context['new_member_num'] = 0
-        text = []
 
         if class_id is None or class_id == '':
             error = '강사 정보를 불러오지 못했습니다.'
