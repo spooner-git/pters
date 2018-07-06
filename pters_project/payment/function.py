@@ -153,7 +153,7 @@ def func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price):
     if error is None:
         price = product_price_info.sale_price
         if price != input_price:
-            error = '결제중 오류가 발생했습니다. 다시 시도해주세요.'
+            error = '결제금액 오류가 발생했습니다.'
 
     return error
 

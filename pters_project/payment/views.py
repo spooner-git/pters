@@ -282,9 +282,8 @@ def billing_finish_logic(request):
                 error = '결제 정보를 불러오는데 실패했습니다.'
 
     if error is None:
-        if payment_user_info is not None:
-            if payment_user_info.price != paid_amount:
-                error = '결제 금액 조회에 실패했습니다.'
+        error = func_check_payment_info(payment_user_info.merchandise_type_cd,
+                                        payment_user_info.payment_type_cd, payment_user_info.price)
 
     context['error'] = error
     if error is not None:
@@ -382,7 +381,9 @@ def billing_check_logic(request):
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
-            if payment_result['amount'] == payment_user_info.price:
+            error = func_check_payment_info(payment_user_info.merchandise_type_cd,
+                                            payment_user_info.payment_type_cd, payment_result['amount'])
+            if error is None:
                 if payment_user_info.payment_type_cd == 'PERIOD':
                     # 결제 정보 저장
                     # if error is None:
