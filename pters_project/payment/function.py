@@ -299,7 +299,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              merchant_uid=payment_result['merchant_uid'],
                                              customer_uid=customer_uid,
                                              start_date=start_date, end_date=end_date,
-                                             price=payment_result['amount'],
+                                             price=int(payment_result['amount']),
                                              name=payment_result['name'],
                                              channel=payment_result['channel'],
                                              card_name=payment_result['card_name'],
@@ -311,7 +311,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              pg_provider=payment_result['pg_provider'],
                                              receipt_url=payment_result['receipt_url'],
                                              buyer_name=payment_result['buyer_name'],
-                                             amount=payment_result['amount'],
+                                             amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
@@ -325,8 +325,8 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
                     billing_info.save()
                 payment_info.save()
-        except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.1'
+        except TypeError as e:
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.1:'+str(e)
         except ValueError:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
 
