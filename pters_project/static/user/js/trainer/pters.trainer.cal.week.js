@@ -766,6 +766,9 @@ $(document).ready(function(){
                     send_plan_delete('group', 'callback', function(){
                         //ajax_block_during_delete_weekcal = true
                         enable_delete_btns_after_ajax();
+                        $('#members_mobile, #members_pc').html('')
+                        get_current_member_list();
+                        get_current_group_list();
                     })
                 }
             }

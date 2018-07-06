@@ -389,8 +389,6 @@ $(document).ready(function(){
                     //ajax_block_during_delete_monthcal = true
                 }else if(deleteTypeSelect == "groupptdelete"){
                     var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
-
-                    send_plan_delete('group')
                     // send_plan_delete('group', 'callback', function(){})
                     // get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                     // 	for(var i=0; i<jsondata.scheduleIdArray.length; i++){
@@ -414,7 +412,13 @@ $(document).ready(function(){
                     // 	}
                     // })
                     //ajax_block_during_delete_monthcal = true
-                    enable_delete_btns_after_ajax()
+                    send_plan_delete('group', 'callback', function(){
+                        //ajax_block_during_delete_weekcal = true
+                        enable_delete_btns_after_ajax();
+                        $('#members_mobile, #members_pc').html('')
+                        get_current_member_list();
+                        get_current_group_list();
+                    })
                 }
             }
 
