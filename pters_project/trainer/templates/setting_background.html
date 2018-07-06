@@ -126,6 +126,7 @@
             location.href="/trainer/trainer_setting/";
         });
 
+
         $(document).on('click','.bg_select_button' , function(){
             if(!$(this).hasClass('disabled_button')){
                 $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
@@ -190,8 +191,6 @@
         }
 
         console.log(class_background_img_url)
-    {% autoescape off %}
-
         var len = $('.bg_wrapper').length;
         for(var i=1; i<len; i++){
             var $loc = $('#background_contents_wrap .background_wrap:nth-of-type('+i+')').find('.bg_wrapper')
@@ -212,11 +211,9 @@
             if(class_background_img_url.indexOf(myimgurl) != -1){
                 $loc.siblings('div.bg_select_button').find('span').text('현재 배경')
                 $loc.siblings('div.bg_select_button').addClass('disabled_button')
-            };
-        };
+            }
+        }
 
-    {% endautoescape %}
-        
 
 
 
