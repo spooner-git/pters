@@ -238,6 +238,8 @@ def billing_finish_logic(request):
 
     merchant_uid = None
     customer_uid = None
+    paid_amount = 0
+    payment_user_info = None
     context = {'error': None}
 
     try:
@@ -256,13 +258,16 @@ def billing_finish_logic(request):
             customer_uid = json_loading_data['customer_uid']
         except KeyError:
             customer_uid = None
+        try:
+            paid_amount = json_loading_data['paid_amount']
+        except KeyError:
+            paid_amount = 0
 
     if error is None:
         if merchant_uid is not None and merchant_uid != '':
             try:
                 payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
                 payment_user_info.use = USE
-                payment_user_info.mod_dt = timezone.now()
                 payment_user_info.save()
             except ObjectDoesNotExist:
                 error = '결제 정보를 불러오는데 실패했습니다.'
@@ -275,6 +280,11 @@ def billing_finish_logic(request):
                 billing_info.save()
             except ObjectDoesNotExist:
                 error = '결제 정보를 불러오는데 실패했습니다.'
+
+    if error is None:
+        if payment_user_info is not None:
+            if payment_user_info.price != paid_amount:
+                error = '결제 금액 조회에 실패했습니다.'
 
     context['error'] = error
     if error is not None:
@@ -360,6 +370,7 @@ def billing_check_logic(request):
             payment_user_info.receipt_url = payment_result['receipt_url']
             payment_user_info.buyer_name = payment_result['buyer_name']
             payment_user_info.amount = payment_result['amount']
+            payment_user_info.mod_dt = timezone.now()
             payment_user_info.use = USE
             payment_user_info.save()
         except KeyError:

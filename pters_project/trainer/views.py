@@ -3446,6 +3446,7 @@ class GetBackgroundImgListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
