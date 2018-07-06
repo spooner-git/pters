@@ -222,13 +222,15 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
     # json_loading_data = None
 
     data = {'imp_uid': imp_uid,
-            'merchant_uid': merchant_uid}
+            'merchant_uid': merchant_uid
+            }
     data = json.dumps(data)
 
     logger.error('refund::'+str(data))
     h = httplib2.Http()
     resp, content = h.request("https://api.iamport.kr/payments/cancel", method="POST",
-                              headers={'Authorization': access_token}, body=data)
+                              headers={'Content-Type': 'application/json;',
+                                       'Authorization': access_token}, body=data)
     if resp['status'] != '200':
         error = '통신중 에러가 발생했습니다.'
 
