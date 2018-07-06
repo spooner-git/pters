@@ -385,7 +385,9 @@ def billing_check_logic(request):
             logger.info('custom data:::' + str(payment_result['custom_data']['user_id']) + ':'
                         + str(payment_result['custom_data']['customer_uid']))
         else:
-            logger.info('custom data:::' + str(payment_result['custom_data']['user_id']))
+            logger.info('custom data:::' + str(payment_result['custom_data']))
+            logger.info('custom data:::' + str(payment_result['custom_data'][0]))
+            logger.info('custom data:::' + str(payment_result['custom_data'][1]))
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
