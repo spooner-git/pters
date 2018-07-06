@@ -3459,7 +3459,6 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
         error = None
         log_how_info = ''
         background_img_info = None
-
         if class_id is None or class_id == '':
             error = '강좌 정보를 불러오지 못했습니다.'
         if background_img_id == '' or background_img_id is None:

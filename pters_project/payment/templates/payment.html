@@ -372,7 +372,6 @@
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
                                 merchant_uid: rsp.merchant_uid,
-                                customer_uid: customer_uid_data,
                                 paid_amount: rsp.paid_amount
                             }),
 
@@ -415,8 +414,7 @@
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
-                                merchant_uid: merchant_uid_data,
-                                customer_uid: customer_uid_data
+                                merchant_uid: merchant_uid_data
                             })
                         });
                         alert(msg);
