@@ -4,16 +4,22 @@
     {# your code to show the entry #}
     <div style="margin-top:5px;margin-bottom:5px;">
         {% if log_info.log_read == 0 %}
-            <div style="color:#ffffff;background:#282828">
-                <img src="/static/user/res/main/alarm-on.png" style="width: 15px;">
-                <span style="line-height: 20px;font-size: 12px;">
-                    <span style="font-weight: bold;font-size: 13px;">{{ log_info.from_member_name }}</span>님이
-                            {% if log_info.to_member_name %}
-                                <span style="font-weight: bold;font-size: 13px;">{{ log_info.to_member_name }}</span>님의
-                            {% endif %}
-                            <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
-                                {{ log_info.log_how }}</span> 했습니다.
-                    <span style="font-weight: bold;font-size:12px;margin-left:20px;">
+            <div style="border-bottom:1px solid #e8e8e8;padding: 8px 2px 8px 2px;">
+                    <p style="font-weight: 500"> 
+                        <img src="/static/user/res/alarm/icon-alarm-new.png" style="width: 15px;margin-right: 8px;margin-bottom: 1px;">
+                        <span style="font-size: 14px;">{{ log_info.from_member_name }}</span>님이
+                                {% if log_info.to_member_name %}
+                                    <span style="font-size: 15px;">{{ log_info.to_member_name }}</span>님의
+                                {% endif %}
+                                <span style="color:#fe4e65;font-size: 15px;">{{ log_info.log_info }}</span>
+                                를
+                                <span style="color:#fe4e65;font-size: 15px;">{{ log_info.log_how }}</span> 했습니다.
+                    </p>
+                    <span style="color:#7d7d7d;font-size: 13px;margin-left: 22px;">
+                        2018.xx.xx 오전 xx:00 - 오후 xx:00
+                    </span>
+                    <span style="font-weight: 400;font-size:12px;float:right;color:#7d7d7d;">
+                        <img src="/static/user/res/alarm/icon_time.png" style="width: 12px;margin-bottom: 4px;">
                         {{ log_info.time_ago }}
                     </span>
                     <br>
@@ -23,31 +29,33 @@
                             {{ log_info.log_detail }}{% endif %}
 
                     </p>
-
-                </span>
             </div>
         {% else %}
-            <div style="color:#656565;background:#f4f4f4">
-                <img src="/static/user/res/main/alarm-off.png" style="width: 15px;">
-                <span style="line-height: 20px;font-size: 12px;">
-            <span style="font-weight: bold;font-size: 13px;">{{ log_info.from_member_name }}</span>님이
-                    {% if log_info.to_member_name %}
-                        <span style="font-weight: bold;font-size: 13px;">{{ log_info.to_member_name }}</span>님의
-                    {% endif %}
-                    <span style="font-weight: bold;color:#fe4e65;font-size: 13px;">{{ log_info.log_info }}를
-                        {{ log_info.log_how }}</span> 했습니다.
-            <span style="font-weight: bold;font-size:12px;margin-left:20px;">
-                {{ log_info.time_ago }}
-            </span>
-            <br>
-            <p style="padding-left: 20px;margin:3px 0 3px 0;color:#282828;">
-                {% if log_info.log_detail %}
-                    <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
-                    {{ log_info.log_detail }}{% endif %}
-                
-            </p>
-            
-        </span>
+            <div style="border-bottom:1px solid #e8e8e8;padding: 8px 2px 8px 2px;">
+                    <p style="font-weight: 500;color:#7d7d7d;"> 
+                        <img src="/static/user/res/alarm/icon-alarm-new.png" style="width: 15px;margin-right: 8px;margin-bottom: 1px;visibility: hidden;">
+                        <span style="font-size: 14px;">{{ log_info.from_member_name }}</span>님이
+                                {% if log_info.to_member_name %}
+                                    <span style="font-size: 15px;">{{ log_info.to_member_name }}</span>님의
+                                {% endif %}
+                                <span style="font-size: 15px;">{{ log_info.log_info }}</span>
+                                를
+                                <span style="font-size: 15px;">{{ log_info.log_how }}</span> 했습니다.
+                    </p>
+                    <span style="color:#7d7d7d;font-size: 13px;margin-left: 22px;">
+                        2018.xx.xx 오전 xx:00 - 오후 xx:00
+                    </span>
+                    <span style="font-weight: 400;font-size:12px;float:right;color:#7d7d7d;">
+                        <img src="/static/user/res/alarm/icon_time.png" style="width: 12px;margin-bottom: 4px;">
+                        {{ log_info.time_ago }}
+                    </span>
+                    <br>
+                    <p style="padding-left: 20px;margin:3px 0 3px 0;color:#ffffff;">
+                        {% if log_info.log_detail %}
+                            <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
+                            {{ log_info.log_detail }}{% endif %}
+
+                    </p>
             </div>
         {% endif %}
 

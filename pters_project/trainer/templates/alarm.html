@@ -1,4 +1,8 @@
-<form action="{% url 'trainer:alarm_delete' %}" name="alarm-delete-form" id="alarm-delete-form" method="post">
+{% extends "trainer_base.html" %}
+
+{% block content %}
+
+<form action="{% url 'trainer:alarm_delete' %}" name="alarm-delete-form" id="alarm-delete-form" method="post" style="padding:10px;background: #ffffff;">
     {% csrf_token %}
     <input type="hidden" name="log_id_size" id="log_id_size">
     <input type="hidden" name="next_page" value = '{% url 'trainer:alarm' %}'>
@@ -10,6 +14,11 @@
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="{% static_url "common/js/el-pagination.js" %}"></script>
     <script>
+        if($('body').width()<600){
+            $('#uptext3').text('일정 알림')
+            $('#uptext').html("일정 알림")
+            $('#upbutton-modify').hide()
+        }
 
         $.endlessPaginate({
             paginateOnScrollMargin: 10,
@@ -18,4 +27,6 @@
 
 
     </script>
+{% endblock %}
+
 {% endblock %}
