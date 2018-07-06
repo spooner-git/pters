@@ -146,7 +146,7 @@ def func_check_payment_info(merchandise_type_cd, payment_type_cd, input_price):
     if error is None:
         try:
             product_price_info = ProductPriceTb.objects.get(product_tb__merchandise_type_cd=merchandise_type_cd,
-                                                            payment_type_cd=payment_type_cd, use=1)
+                                                            payment_type_cd=payment_type_cd, use=USE)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오지 못했습니다.'
 

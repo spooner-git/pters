@@ -283,7 +283,7 @@ def billing_finish_logic(request):
 
     if error is None:
         error = func_check_payment_info(payment_user_info.merchandise_type_cd,
-                                        payment_user_info.payment_type_cd, payment_user_info.price)
+                                        payment_user_info.payment_type_cd, paid_amount)
 
     context['error'] = error
     if error is not None:
