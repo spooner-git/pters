@@ -595,42 +595,42 @@ a:focus, a:hover{
 /*PC버전 상단,하단네비바*/
 
 .bg_ymdText_weight{
-    background-image: url("/static/user/res/pt.png");
+    background-image: url("/static/user/res/ymdText/pt.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_ballet{
-    background-image: url("/static/user/res/ballet.png");
+    background-image: url("/static/user/res/ymdText/ballet.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_pilates{
-    background-image: url("/static/user/res/pilates.png");
+    background-image: url("/static/user/res/ymdText/pilates.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_golf{
-    background-image: url("/static/user/res/golf.png");
+    background-image: url("/static/user/res/ymdText/golf.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_yoga{
-    background-image: url("/static/user/res/yoga.png");
+    background-image: url("/static/user/res/ymdText/yoga.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_billiard{
-    background-image: url("/static/user/res/billiards.png");
+    background-image: url("/static/user/res/ymdText/billiards.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_brick{
-    background-image: url("/static/user/res/brick.png");
+    background-image: url("/static/user/res/ymdText/brick.png");
     background-size:cover;
     background-position-x:center;
 }
 .bg_ymdText_basic{
-    background-image: url("/static/user/res/basic.png");
+    background-image: url("/static/user/res/ymdText/basic.png");
     background-size:cover;
     background-position-x:center;
 }
