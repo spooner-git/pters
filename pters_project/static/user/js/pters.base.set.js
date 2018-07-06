@@ -963,6 +963,7 @@ if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match
 }
 */
 
+/*
 if(class_code.match(/BL/)){
     $('#upperImg, #ymdText').addClass('bg_ymdText_ballet');
 }else if(class_code.match(/YG/)){
@@ -978,3 +979,11 @@ if(class_code.match(/BL/)){
 }else if(class_code.match(/ETC/)){
     $('#upperImg, #ymdText').addClass('bg_ymdText_basic');
 }
+*/
+
+$(window).resize(function(){
+    var width_size = window.outerWidth;
+    if($('#ymdText').length>0){
+        $('#ymdText').css('background-image',"url('"+class_background_img_url[2]+"')")
+    }
+})
