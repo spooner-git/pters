@@ -27,12 +27,8 @@ select{
 body{
 	font-family: 'Noto Sans KR',sans-serif !important;
 	margin: 0;
-	background-image: url("/static/user/res/main/bg-image.jpg");
-	background-repeat: no-repeat;
-	background-position-x:center;
-	background-position-y:top;
-	background-size:100%;
-	background-color: black !important;
+	background-image: url("/static/user/res/main/bg-image-basic2-mobile.jpg");
+	background-size:cover;
 	overflow-x: hidden;
 	position: relative;
 	width: 100%;
@@ -68,6 +64,7 @@ body{
 	margin-top: 160px;
 	transition: 1s;
 	-webkit-transition: 1s;
+	text-align: left;
 }
 
 ._step1_label{
@@ -389,9 +386,7 @@ div._step1_label, div._step2_label, div._step3_label{
 
 @media(min-width: 600px){
 	body{
-		background-image: url("/static/user/res/main/bg-image-pc-login.png");
-		background-position-y:unset;
-		background-size: auto;
+		background-image: url("/static/user/res/main/bg-image-basic2-pc.jpg");
 	}
 
 	.registerbox{
@@ -454,7 +449,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.registerbox_add{
-		margin-top: 250px;
+		margin-top: 150px;
 	}
 	.outerbox{
 		margin-top: 15px;
@@ -466,7 +461,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.promise_wrap{
-		margin-top: 180px;
+		margin-top: 100px;
 	}
 
 	.contractread{
@@ -481,7 +476,7 @@ div._step1_label, div._step2_label, div._step3_label{
 		left: 50%;
 		transform: translateX(-50%);
 		-webkit-transform: translateX(-50%);
-		padding-bottom: 15px;
+		padding: 15px 0 15px 0;
 	}
 	.fixfooter p{
 		margin-top: 0px;
@@ -513,7 +508,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 }
 
-@media(max-height: 820px){
+@media(max-height: 890px){
 	.fixfooter{
 		visibility: hidden;
 	}

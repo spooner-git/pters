@@ -70,6 +70,7 @@ $(document).ready(function(){
     }
     */
 
+    /*
     if(class_code.match(/BL/)){
         $('body').addClass('bg_ballet')
     }else if(class_code.match(/YG/)){
@@ -85,6 +86,17 @@ $(document).ready(function(){
     }else{
         $('body').addClass('bg_basic')
     }
+    */
+
+    $(window).resize(function(){
+        var width_size = window.outerWidth;
+        if(width_size > 600){
+            $('body').css('background-image',"url('class_background_img_url')")
+        }else{
+            $('body').css('background-image',"url('class_background_img_url_mobile')")
+        }
+    })
+
 
 });
 

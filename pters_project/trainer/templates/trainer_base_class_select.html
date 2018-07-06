@@ -192,6 +192,7 @@
                         <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
                     </div>
 
+                    <!--
                     <div class="sidebar_div" id="cal_day"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
                         <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
                         </a>
@@ -223,12 +224,14 @@
                             <img src={% static_url "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
                         </div>
                     </div>
+                    -->
                 </div>
 
             </div>
         </div><!-- /.container -->
     </nav><!-- /.navbar -->
 
+    <!--
     <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
         <div class="container">
             <div class="navbar-header">
@@ -242,8 +245,8 @@
                     <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
                 </button>
             </div>
-        </div><!-- /.container -->
-    </nav><!-- /.navbar -->
+        </div>
+    </nav>
 
     <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
         <div class="container">
@@ -258,13 +261,15 @@
                     <img src={% static_url "user/res/member/icon-edit.png" %} style="width:100%;">
                 </button>
             </div>
-        </div><!-- /.container -->
-    </nav><!-- /.navbar -->
+        </div>
+    </nav>
+    -->
 
     <nav class="navbar navbar-fixed-top" id="pcver">
         <div class="centermenu">
             <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
             <div class="centermenu_box">
+                <!--
                 <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
                 </div>
@@ -280,11 +285,12 @@
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
                 </div>
+                -->
             </div>
             <div id="loginInfo" class="centermenu_div" style="float:right;">
                 <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                 <span class="pcwhere"></span>
-                <span class="pcwho">{{user.last_name}} {{user.first_name}} <span></span></span>
+                <span class="pcwho">{{user.last_name}} {{user.first_name}} 님<span></span></span>
             </div>
             <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <!--
