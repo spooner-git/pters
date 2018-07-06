@@ -386,7 +386,6 @@ def billing_check_logic(request):
             logger.info('custom data:::' + str(payment_result['custom_data']['user_id']) + ':'
                         + str(payment_result['custom_data']['customer_uid']))
         else:
-            logger.info('custom data:::' + payment_result['custom_data'])
             try:
                 custom_data = json.loads(payment_result['custom_data'])
             except ValueError:
