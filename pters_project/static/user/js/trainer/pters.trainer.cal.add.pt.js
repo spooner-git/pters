@@ -804,7 +804,7 @@ $(document).ready(function(){
         if($(this).attr('data-grouptype') == "personal"){
             addTypeSelect = "ptadd";
             $('#remainCount_mini').show();
-            $('#groupInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').hide();
+            $('#groupInfo, #groupmembersInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').hide();
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype','personal');
 
             //회원 이름을 클릭했을때, 회원의 수강일정중 1:1 레슨의 예약가능 횟수만을 표기해준다.
@@ -826,7 +826,7 @@ $(document).ready(function(){
         }else if($(this).attr('data-grouptype') == "group"){
             addTypeSelect = "groupptadd";
             $('#remainCount_mini, #remainCount_mini_text, #countsSelected_mini').hide();
-            $('#groupInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').show();
+            $('#groupInfo, #groupmembersInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').show();
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype','group');
             $('#grouptypenumInfo, #groupInfoSelected').text('('+$(this).attr('data-grouptypecd_nm')+' 정원'+$(this).attr('data-membernum')+'명)');
             $("#id_group_id").val($(this).attr('data-groupid'));
@@ -844,7 +844,7 @@ $(document).ready(function(){
                 addTypeSelect = "repeatptadd";
             }
             $('#remainCount').show();
-            $('#groupInfo').hide();
+            $('#groupInfo, #groupmembersInfo').hide();
             get_repeat_info($(this).attr('data-dbid'));
 
             //회원 이름을 클릭했을때, 회원의 수강일정중 1:1 레슨의 예약가능 횟수만을 표기해준다.
@@ -878,7 +878,7 @@ $(document).ready(function(){
                 addTypeSelect = "repeatgroupptadd";
             }
             $('#remainCount').hide();
-            $('#groupInfo').show();
+            $('#groupInfo, #groupmembersInfo').show();
 
 
             get_repeat_info($(this).attr('data-groupid'));
@@ -886,8 +886,12 @@ $(document).ready(function(){
 
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':$(this).attr('data-groupid')});
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
-            $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' ('+$(this).attr('data-groupmembernum')+' / '+$(this).attr('data-membernum')+')');
+            $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
             $("#id_group_id").val($(this).attr('data-groupid'));
+
+            get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){
+                console.log(jsondata)
+                draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))});
         }
 
         check_dropdown_selected_addplan();
@@ -1337,7 +1341,6 @@ function float_btn_addplan(option){
         open_pt_off_add_popup('ptadd');
         ajaxTimeGraphSet();
         shade_index(100);
-
         //scrollToDom($('#calendar'))
 
     }else if(option == 2){
@@ -1384,7 +1387,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }
 
     if(option == "ptadd"){
-        $('#remainCount, #groupInfo').css('display','none');
+        $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#memberName').css('display','block');
         $('#uptext2').text('레슨 일정 등록');
         $('#id_training_date').val(selector_datepicker.val());
@@ -1395,7 +1398,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         }
         $(".pt_memo_guide").css('display','block');
     }else if(option == "offadd"){
-        $('#memberName, #remainCount, #groupInfo').css('display','none');
+        $('#memberName, #remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#uptext2').text('OFF 일정 등록');
         $('#id_training_date_off').val(selector_datepicker.val());
         $('#id_repeat_start_date_off').val(selector_datepicker_repeat_start.val());
@@ -2997,6 +3000,40 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     }
     if(addedCount == 0){
         htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>");
+    }
+    var html = htmlToJoin.join('');
+    targetHTML.html(html);
+}
+//참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
+
+//참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
+function draw_groupMemberList_to_view(jsondata, targetHTML){
+    var len = jsondata.db_id.length;
+    var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">'+'회원명'+'</div>'+'<div>'+'예약 가능'+'</div>'+'<div>남은 횟수</div>'+'</div>'];
+    var addedCount = 0;
+    for(var i=1; i<=len; i++){
+        if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
+            addedCount++;
+            var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">';
+            htmlToJoin[i] = '<div class="list_viewByList" data-lastname="'+jsondata.last_name[i-1]+
+                '" data-firstname="'+jsondata.first_name[i-1]+
+                '" data-dbid="'+jsondata.db_id[i-1]+
+                '" data-id="'+jsondata.member_id[i-1]+
+                '" data-sex="'+jsondata.sex[i-1]+
+                '" data-phone="'+jsondata.phone[i-1]+
+                '"><div data-dbid="'+jsondata.db_id[i-1]+'">'+
+                //sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+
+                sexInfo+jsondata.name[i-1]+'</div>'+
+                '<div>'+jsondata.avail_count[i-1]+'</div>'+
+                '<div>'+jsondata.rem_count[i-1]+'</div>'+
+                '</div>';
+        }
+    }
+    if(len == 0){
+        htmlToJoin.push("<div class='list_viewByList' style='margin-top:30px;margin-bottom:30px;border:0'>그룹에 소속된 회원이 없습니다.</div>");
+    }
+    if(addedCount == 0){
+        htmlToJoin.push("<div class='list_viewByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>");
     }
     var html = htmlToJoin.join('');
     targetHTML.html(html);
