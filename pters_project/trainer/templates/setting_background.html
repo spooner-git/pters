@@ -132,23 +132,28 @@
                 $('.ajaxloadingPC').css('display','block')
                 $('#form_class_id').val(class_id);
                 var url = $(this).siblings('.bg_wrapper').css('background-image');
+                console.log(url)
                 var urlsplit = url.split('/');
                 var staticindex = urlsplit.indexOf('static');
                 var imageurlarray = [];
                 for(var i=staticindex; i<urlsplit.length; i++){
-                    imageurlarray.push(urlsplit[i].replace(/"\)/gi,""));
+                    imageurlarray.push(urlsplit[i]);
                 }
                 {# /static/user/res/pt.png #}
                 var imageurl = '/'+imageurlarray.join("/");
                 //$('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
                 //$('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));
-                var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg");
-                var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg");
-                var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png");
+                var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg").replace(/"\)/gi,"")
+                var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg").replace(/"\)/gi,"")
+                var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png").replace(/-mobile\.jpg/gi,"-ymdText.png").replace(/"\)/gi,"")
                 
-                send_user_bg_set(class_id, url_pc, background_img_type_code[0])
-                send_user_bg_set(class_id, url_mobile, background_img_type_code[1]);;
-                send_user_bg_set(class_id, url_ymdText, background_img_type_code[2])
+                console.log(url_pc, url_mobile, url_ymdText)
+
+                
+                send_user_bg_set(class_id, url_pc, background_img_type_code[0]);
+                send_user_bg_set(class_id, url_mobile, background_img_type_code[1]);
+                send_user_bg_set(class_id, url_ymdText, background_img_type_code[2]);
+                
             }
             
             
@@ -189,7 +194,6 @@
 
         }
 
-        console.log(class_background_img_url)
 
         var len = $('.bg_wrapper').length;
         for(var i=1; i<len; i++){
@@ -200,15 +204,8 @@
             for(var j=staticindex; j<wrapperimgurl.length; j++){
                 myimgurlarray.push(wrapperimgurl[j])
             }
-            var myimgurl = "/" + myimgurlarray.join("/").replace(/"\)/gi,"")
-
-            
-            console.log(class_background_img_url[1])
-            console.log(class_background_img_url[2])
-            console.log(class_background_img_url[0])
-            console.log(myimgurl)
-            console.log(class_background_img_url.indexOf(myimgurl))
-            if(class_background_img_url.indexOf(myimgurl) != -1){
+            var myimgurl = "/" + myimgurlarray.join("/")
+            if(class_background_img_url.indexOf(myimgurl.replace(/"\)/gi,"")) != -1){
                 $loc.siblings('div.bg_select_button').find('span').text('현재 배경')
                 $loc.siblings('div.bg_select_button').addClass('disabled_button')
             };

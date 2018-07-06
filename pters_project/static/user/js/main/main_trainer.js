@@ -90,17 +90,17 @@ $(document).ready(function(){
 
     var width_size = window.outerWidth;
     if(width_size > 600){
-        $('body').css('background-image',"url('"+class_background_img_url[0]+"')")
+        $('body').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')")
     }else{
-        $('body').css('background-image',"url('"+class_background_img_url[1]+"')")
+        $('body').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')")
     }
 
     $(window).resize(function(){
         var width_size = window.outerWidth;
         if(width_size > 600){
-            $('body').css('background-image',"url('"+class_background_img_url[0]+"')")
+            $('body').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')")
         }else{
-            $('body').css('background-image',"url('"+class_background_img_url[1]+"')")
+            $('body').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')")
         }
     })
 
