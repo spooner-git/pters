@@ -254,6 +254,7 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
 
 
 def func_add_billing_logic(custom_data, payment_result):
+    context = {'error': None, 'payment_user_info':None}
     error = None
     end_date = None
     date = None
@@ -325,10 +326,12 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
                     billing_info.save()
                 payment_info.save()
+                context['payment_user_info'] = payment_info
         except TypeError as e:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.1:'+str(e)
         except ValueError:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
 
+    context['error'] = error
     return error
 

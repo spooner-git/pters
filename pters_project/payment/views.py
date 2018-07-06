@@ -197,7 +197,6 @@ def billing_check_logic(request):
     access_token = token_result['access_token']
     error = token_result['error']
     payment_result = None
-    payment_user_info = None
     imp_uid = None
     merchant_uid = None
     custom_data = None
@@ -286,12 +285,13 @@ def billing_check_logic(request):
         if payment_result['status'] == 'paid':  # 결제 완료
             error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
             if error is None:
-                error = func_add_billing_logic(custom_data, payment_result)
+                payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
+                error = payment_user_info_result['error']
                 if error is None:
-                    if payment_user_info.payment_type_cd == 'PERIOD':
+                    if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
                         # if error is None:
-                        func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info)
+                        func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
 
             else:
                 # 결제 취소 날리기
