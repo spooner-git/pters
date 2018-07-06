@@ -126,28 +126,31 @@
             location.href="/trainer/trainer_setting/";
         });
 
-        $('.bg_select_button').click(function(){
-            $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-            $('.ajaxloadingPC').css('display','block')
-            $('#form_class_id').val(class_id);
-            var url = $(this).siblings('.bg_wrapper').css('background-image');
-            var urlsplit = url.split('/');
-            var staticindex = urlsplit.indexOf('static');
-            var imageurlarray = [];
-            for(var i=staticindex; i<urlsplit.length; i++){
-                imageurlarray.push(urlsplit[i].replace(/"\)/gi,""));
+        $(document).on('click','.bg_select_button' , function(){
+            if(!$(this).hasClass('disabled_button')){
+                $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+                $('.ajaxloadingPC').css('display','block')
+                $('#form_class_id').val(class_id);
+                var url = $(this).siblings('.bg_wrapper').css('background-image');
+                var urlsplit = url.split('/');
+                var staticindex = urlsplit.indexOf('static');
+                var imageurlarray = [];
+                for(var i=staticindex; i<urlsplit.length; i++){
+                    imageurlarray.push(urlsplit[i].replace(/"\)/gi,""));
+                }
+                {# /static/user/res/pt.png #}
+                var imageurl = '/'+imageurlarray.join("/");
+                //$('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
+                //$('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));
+                var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg");
+                var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg");
+                var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png");
+                
+                send_user_bg_set(class_id, url_pc, background_img_type_code[0])
+                send_user_bg_set(class_id, url_mobile, background_img_type_code[1]);;
+                send_user_bg_set(class_id, url_ymdText, background_img_type_code[2])
             }
-            {# /static/user/res/pt.png #}
-            var imageurl = '/'+imageurlarray.join("/");
-            //$('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
-            //$('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));
-            var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg");
-            var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg");
-            var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png");
             
-            send_user_bg_set(class_id, url_pc, background_img_type_code[0])
-            send_user_bg_set(class_id, url_mobile, background_img_type_code[1]);;
-            send_user_bg_set(class_id, url_ymdText, background_img_type_code[2])
             
         });
 
@@ -189,13 +192,27 @@
         console.log(class_background_img_url)
 
         var len = $('.bg_wrapper').length;
-        for(var i=1; i<=len; i++){
-            var wrapperimg = $('div.bg_wrapper:nth-child('+i+')').css('background-image')
-            console.log(wrapperimg)
-            if(class_background_img_url.indexOf(wrapperimg) != -1){
-                $('div.bg_wrapper:nth-type('+i+')').siblings('.bg_select_button').text('현재 적용중')
+        for(var i=1; i<len; i++){
+            var $loc = $('#background_contents_wrap .background_wrap:nth-of-type('+i+')').find('.bg_wrapper')
+            var wrapperimgurl = $loc.css('background-image').split('/')
+            var staticindex = wrapperimgurl.indexOf('static')
+            var myimgurlarray = []
+            for(var j=staticindex; j<wrapperimgurl.length; j++){
+                myimgurlarray.push(wrapperimgurl[j])
             }
-        }
+            var myimgurl = "/" + myimgurlarray.join("/").replace(/"\)/gi,"")
+
+            
+            console.log(class_background_img_url[1])
+            console.log(class_background_img_url[2])
+            console.log(class_background_img_url[0])
+            console.log(myimgurl)
+            console.log(class_background_img_url.indexOf(myimgurl))
+            if(class_background_img_url.indexOf(myimgurl) != -1){
+                $loc.siblings('div.bg_select_button').find('span').text('현재 배경')
+                $loc.siblings('div.bg_select_button').addClass('disabled_button')
+            };
+        };
 
         
 
