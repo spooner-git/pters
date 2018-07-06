@@ -286,12 +286,13 @@ def billing_check_logic(request):
             error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
             if error is None:
                 payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
-                error = payment_user_info_result['error']
-                if error is None:
+                if payment_user_info_result['error'] is None:
                     if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
                         # if error is None:
                         func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
+                else:
+                    error = payment_user_info_result['error']
 
             else:
                 # 결제 취소 날리기

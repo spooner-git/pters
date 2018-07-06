@@ -254,7 +254,7 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
 
 
 def func_add_billing_logic(custom_data, payment_result):
-    context = {'error': None, 'payment_user_info':None}
+    context = {'error': None, 'payment_user_info': None}
     error = None
     end_date = None
     date = None
