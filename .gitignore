@@ -20,4 +20,4 @@ pters_project/logs/schedule_log.log
 pters_project/login/templatetags/__pycache__/
 pters_project/payment/__pycache__/
 pters_project/payment/migrations/__pycache__/
-
+pters_project/trainer/templatetags/__pycache__/

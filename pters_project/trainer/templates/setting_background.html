@@ -75,14 +75,13 @@
     </div>
 -->
 
-    <form id="update_background_image" method="post">
+    <form id="update_background_image" method="post" action="{% url 'trainer:update_background_img_info' %}" >
         {% csrf_token %}
-        <div style="display: none">
-            {{ form.as_p }}
-        </div>
         <input type="hidden" name="class_id" id="form_class_id" value="">
-        <input type="hidden" name="background_img_url" id="form_bg_url" value="">
-        <input type="hidden" name="background_img_url_mobile" id="form_bg_url_mobile" value="">
+        <input type="hidden" name="background_img_id" id="form_background_img_id" value="">
+        <input type="hidden" name="background_img_type_cd" id="form_background_img_type_cd" value="">
+        <input type="hidden" name="url" id="form_bg_url" value="">
+{#        <input type="hidden" name="background_img_url_mobile" id="form_bg_url_mobile" value="">#}
     </form>
 
 {% endblock %}
@@ -99,41 +98,45 @@
         var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+        var background_img_type_code = [{% for common_cd_info in common_cd_data %}'{{ common_cd_info.common_cd }}'{% if forloop.last == False %},{% endif %}{% endfor %}];
+        var background_img_type_code_name = [{% for common_cd_info in common_cd_data %}'{{ common_cd_info.common_cd_nm }}'{% if forloop.last == False %},{% endif %}{% endfor %}];
+
     </script>
 
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
-        var bodywidth = $('body').width()
+        var bodywidth = $('body').width();
         if(bodywidth < 600){
-            $('#page-base').css('display','block')
+            $('#page-base').css('display','block');
             //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('배경화면 설정')
-            $('#uptext').text("배경화면 설정")
-            $('#upbutton-modify').hide()
+            $('#uptext3').text('배경화면 설정');
+            $('#uptext').text("배경화면 설정");
+            $('#upbutton-modify').hide();
         }
 
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
-        })
+            location.href="/trainer/trainer_setting/";
+        });
 
         $('.bg_select_button').click(function(){
-            $('#form_class_id').val(class_id)
-            var url = $(this).siblings('.bg_wrapper').css('background-image')
-            var urlsplit = url.split('/')
-            var staticindex = urlsplit.indexOf('static')
-            var imageurlarray = []
+            $('#form_class_id').val(class_id);
+            var url = $(this).siblings('.bg_wrapper').css('background-image');
+            var urlsplit = url.split('/');
+            var staticindex = urlsplit.indexOf('static');
+            var imageurlarray = [];
             for(var i=staticindex; i<urlsplit.length; i++){
-                imageurlarray.push(urlsplit[i].replace(/"\)/gi,""))
+                imageurlarray.push(urlsplit[i].replace(/"\)/gi,""));
             }
-            
-            var imageurl = '/'+imageurlarray.join("/")
-            $('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"))
-            $('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"))
+            {# /static/user/res/pt.png #}
+            var imageurl = '/'+imageurlarray.join("/");
+            $('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
+{#            $('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));#}
 
-            $('#update_background_image').submit()
-        })
+            $('#update_background_image').submit();
+        });
 
         
 
