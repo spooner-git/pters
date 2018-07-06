@@ -3469,9 +3469,11 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                                                                   use=USE)
             except ObjectDoesNotExist:
                 background_img_info = None
+
             if background_img_info is None:
-                background_img_info = BackgroundImgTb(class_tb_id=class_id, background_img_type_cd=background_img_type_cd,
-                                                      url=url, reg_info=request.user.id,
+                background_img_info = BackgroundImgTb(class_tb_id=class_id,
+                                                      background_img_type_cd=background_img_type_cd,
+                                                      url=url, reg_info_id=request.user.id,
                                                       reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
                 background_img_info.save()
                 log_how_info = '추가'
