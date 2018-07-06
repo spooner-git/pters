@@ -386,9 +386,8 @@ def billing_check_logic(request):
                         + str(payment_result['custom_data']['customer_uid']))
         else:
             logger.info('custom data:::' + payment_result['custom_data'])
-            json_data = payment_result['custom_data'].decode('utf-8')
             try:
-                custom_data = json.loads(json_data)
+                custom_data = json.loads(payment_result['custom_data'])
             except ValueError:
                 error = '결제 정보 json data parsing 에러'
             except TypeError:
