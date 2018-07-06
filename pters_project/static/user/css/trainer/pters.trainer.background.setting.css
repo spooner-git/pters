@@ -79,6 +79,9 @@ body{
 .bg_basic{
 	background-image: url("/static/user/res/main/bg-image-basic-mobile.jpg")
 }
+.bg_basic2{
+	background-image: url("/static/user/res/main/bg-image-basic2-mobile.jpg")
+}
 
 .bg_select_button{
 	width: 55px;
@@ -173,6 +176,9 @@ body{
 		background-image: url("/static/user/res/main/bg-image-brick-pc.jpg")
 	}
 	.bg_basic{
-		background-image: url("/static/user/res/main/bg-image-basic-pc.png")
+		background-image: url("/static/user/res/main/bg-image-basic-pc.jpg")
+	}
+	.bg_basic2{
+		background-image: url("/static/user/res/main/bg-image-basic2-pc.jpg")
 	}
 }

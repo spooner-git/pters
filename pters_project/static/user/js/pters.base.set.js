@@ -981,9 +981,6 @@ if(class_code.match(/BL/)){
 }
 */
 
-$(window).resize(function(){
-    var width_size = window.outerWidth;
-    if($('#ymdText').length>0){
-        $('#ymdText').css('background-image',"url('"+class_background_img_url[2]+"')")
-    }
-})
+
+$('#ymdText').css('background-image',"url('"+class_background_img_url[2]+"')")
+
