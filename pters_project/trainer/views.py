@@ -10,11 +10,13 @@ from urllib.parse import quote
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.serializers import serialize
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -146,6 +148,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         context['to_be_end_member_num'] = 0
         context['today_schedule_num'] = 0
         context['new_member_num'] = 0
+        text = []
 
         if class_id is None or class_id == '':
             error = '강사 정보를 불러오지 못했습니다.'
@@ -238,24 +241,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
 
         context['today_schedule_num'] = today_schedule_num
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_language'] = context['lt_lan_01']
-
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-
         if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + error)
@@ -309,24 +294,6 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, View):
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_language'] = context['lt_lan_01']
-
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-
         return render(request, self.template_name, context)
 
 
@@ -351,25 +318,8 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_language'] = context['lt_lan_01']
-
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-
         return render(request, self.template_name, context)
+
 
 # iframe화를 위해 skkim
 class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
@@ -391,24 +341,6 @@ class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
-
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_language'] = context['lt_lan_01']
-
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         return render(request, self.template_name, context)
 
@@ -433,24 +365,6 @@ class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
-
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_language'] = context['lt_lan_01']
-
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         return render(request, self.template_name, context)
 # iframe화를 위해 skkim
@@ -480,13 +394,40 @@ class HelpPtersView(AccessTestMixin, TemplateView):
 
         return context
 
-class BGSettingView(AccessTestMixin, TemplateView):
+
+class BGSettingView(AccessTestMixin, View):
     template_name = 'setting_background.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(BGSettingView, self).get_context_data(**kwargs)
+    def get(self, request):
+        # context = super(BGSettingView, self).get_context_data(**kwargs)
+        context = {}
+        class_id = request.session.get('class_id', '')
+        error = None
+        background_img_data = None
 
-        return context
+        context['common_cd_data'] = CommonCdTb.objects.filter(upper_common_cd='14', use=USE).order_by('order')
+
+        if error is None:
+            if class_id is not None and class_id != '':
+                background_img_data = BackgroundImgTb.objects.filter(class_tb_id=class_id,
+                                                                     use=USE).order_by('-class_tb_id')
+            else:
+                background_img_data = BackgroundImgTb.objects.filter(class_tb__member_id=request.user.id,
+                                                                     use=USE).order_by('-class_tb_id')
+
+        if error is None:
+            for background_img_info in background_img_data:
+                try:
+                    background_img_type_name = \
+                        CommonCdTb.objects.get(common_cd=background_img_info.background_img_type_cd)
+                except ObjectDoesNotExist:
+                    background_img_type_name = None
+                if background_img_type_name is not None:
+                    background_img_info.background_img_type_name = background_img_type_name.common_cd_nm
+
+        context['background_img_data'] = background_img_data
+
+        return render(request, self.template_name, context)
 
 
 class ClassSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -533,7 +474,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         next_schedule_start_dt = ''
         next_schedule_end_dt = ''
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
         today = datetime.date.today()
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
@@ -723,28 +663,8 @@ class PushSettingView(AccessTestMixin, View):
 class ReserveSettingView(AccessTestMixin, View):
     template_name = 'setting_reserve.html'
 
-    # def get_context_data(self, **kwargs):
     def get(self, request):
         context = {}
-        # context = super(ReserveSettingView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_language'] = context['lt_lan_01']
-
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         return render(request, self.template_name, context)
 
@@ -3495,7 +3415,7 @@ class GetBackgroundImgTypeListViewAjax(LoginRequiredMixin, AccessTestMixin, View
 class GetBackgroundImgListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = "ajax/trainer_background_ajax.html"
 
-    def get(self, request):
+    def post(self, request):
         context = {}
         class_id = request.POST.get('class_id', '')
         error = None
@@ -3527,7 +3447,6 @@ class GetBackgroundImgListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
@@ -3544,11 +3463,27 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             error = '강좌 정보를 불러오지 못했습니다.'
 
         if background_img_id == '' or background_img_id is None:
-            background_img_info = BackgroundImgTb(class_tb_id=class_id, background_img_type_cd=background_img_type_cd,
-                                                  url=url, reg_info=request.user.id,
-                                                  reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
-            background_img_info.save()
-            log_how_info = '추가'
+            try:
+                background_img_info = BackgroundImgTb.objects.get(class_id=class_id,
+                                                                  background_img_type_cd=background_img_type_cd,
+                                                                  use=USE)
+            except ObjectDoesNotExist:
+                background_img_info = None
+            if background_img_info is None:
+                background_img_info = BackgroundImgTb(class_tb_id=class_id, background_img_type_cd=background_img_type_cd,
+                                                      url=url, reg_info=request.user.id,
+                                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
+                background_img_info.save()
+                log_how_info = '추가'
+            else:
+                if background_img_type_cd is not None and background_img_type_cd != '':
+                    background_img_info.background_img_type_cd = background_img_type_cd
+                if url is not None and url != '':
+                    background_img_info.url = url
+
+                background_img_info.mod_dt = timezone.now()
+                background_img_info.save()
+                log_how_info = '수정'
         else:
             try:
                 background_img_info = BackgroundImgTb.objects.get(background_img_id=background_img_id, use=USE)
@@ -3587,7 +3522,6 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
     template_name = 'ajax/trainer_error_ajax.html'
 
     def post(self, request):
-        class_id_session = request.session.get('class_id')
         class_id = ''
         background_img_id = request.POST.get('background_img_id', '')
 
@@ -3602,14 +3536,6 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                 background_img_info.delete()
             except ObjectDoesNotExist:
                 error = '강좌 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            if class_id == class_id_session:
-                background_img_data = BackgroundImgTb.objects.filter(class_tb_id=class_id_session, use=USE)
-                if len(background_img_data) > 0:
-                    request.session['background_img_data'] = background_img_data
-                else:
-                    request.session['background_img_data'] = ''
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
@@ -3641,7 +3567,6 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         next_schedule_start_dt = ''
         next_schedule_end_dt = ''
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
         today = datetime.date.today()
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
@@ -4143,15 +4068,6 @@ def update_setting_reserve_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        request.session['setting_member_reserve_prohibition'] = setting_member_reserve_prohibition
-        request.session['setting_member_reserve_time_available'] = setting_member_reserve_time_available
-        request.session['setting_member_reserve_time_prohibition'] = setting_member_reserve_time_prohibition
-        request.session['setting_trainer_work_time_available'] = setting_trainer_work_time_available
-        request.session['setting_member_reserve_date_available'] = setting_member_reserve_date_available
-
-        request.session['setting_member_reserve_enable'] = setting_member_reserve_prohibition
-        request.session['setting_member_reserve_enable_time'] = int(setting_member_reserve_time_prohibition)
-        request.session['setting_member_reserve_cancel_time'] = int(setting_member_cancel_time)
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
@@ -4370,7 +4286,6 @@ def update_setting_language_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        request.session['setting_language'] = setting_member_language
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
