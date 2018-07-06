@@ -311,7 +311,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              pg_provider=payment_result['pg_provider'],
                                              receipt_url=payment_result['receipt_url'],
                                              buyer_name=payment_result['buyer_name'],
-                                             amount=int(payment_result['amount']),
+                                             # amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
