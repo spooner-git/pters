@@ -293,7 +293,7 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         try:
             with transaction.atomic():
-                payment_info = PaymentInfoTb(member_id=custom_data['user_id'],
+                payment_info = PaymentInfoTb(member_id=str(custom_data['user_id']),
                                              merchandise_type_cd=custom_data['merchandise_type_cd'],
                                              payment_type_cd=custom_data['payment_type_cd'],
                                              merchant_uid=payment_result['merchant_uid'],
@@ -315,7 +315,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
-                    billing_info = BillingInfoTb(member_id=custom_data['user_id'],
+                    billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
                                                  pay_method=payment_result['pay_method'],
                                                  payment_type_cd=custom_data['payment_type_cd'],
                                                  merchant_uid=payment_result['merchant_uid'],
@@ -326,9 +326,9 @@ def func_add_billing_logic(custom_data, payment_result):
                     billing_info.save()
                 payment_info.save()
         except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.1'
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
 
     return error
 
