@@ -333,5 +333,5 @@ def func_add_billing_logic(custom_data, payment_result):
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
 
     context['error'] = error
-    return error
+    return context
 
