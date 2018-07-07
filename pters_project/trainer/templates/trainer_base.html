@@ -386,8 +386,8 @@
                 -->
             </div>
             <div id="loginInfo" class="centermenu_div" style="float:right;">
-                <img src="/static/user/res/alarm/alarm-on.png" style="width: 16px;margin-bottom:3px;margin-right: 10px;" onclick="open_slide_menu_pc('alarm');">
-                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:4px;"  onclick="open_slide_menu_pc('class');">
+                <img src="/static/user/res/alarm/alarm-on.png" onclick="open_slide_menu_pc('alarm');" id="alarm_button">
+                <img src="/static/user/res/icon-name.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
                 <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
             </div>
@@ -424,9 +424,11 @@
                     <img src="/static/user/res/alarm/icon-delete.png" class="alarm_delete_pc">
                 </div>
                 <div id="alarm-iframe-div-pc">
+                    <!--
                     <iframe id="alarm-iframe" src="/trainer/alarm_pc/" width="100%" height="300" frameborder="0">
                         
                     </iframe>
+                -->
                 </div>
                 <div id="alarm_view_all">닫기</div>
             </div>
@@ -617,6 +619,10 @@
         else if(option == 'alarm'){
             $('.pcver-slide-menu_class').css('display','none')
             $('.pcver-slide-menu_alarm').css('display','block')
+            $("#alarm-iframe-div-pc").html('<iframe id="alarm-iframe" src="/trainer/alarm_pc/" width="100%" height="300" frameborder="0"></iframe>')
+                    
+
+
         }
     }
 
@@ -852,11 +858,12 @@
             //if(lec_select_npLectureCountsArray[i] == '0'){
             var currentClass = "";
             var table = "";
+            var currentIndicator = ""
             if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
                 currentClass = 'currentClass';
                 //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
-                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'+
-                        '<div class="currentIndicator"></div>';
+                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">';
+                currentIndicator = '<div class="currentIndicator"></div>'
             }else{
                 currentClass = "";
                 //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
@@ -864,7 +871,7 @@
             }
             //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
             var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>';
-            var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>';
+            var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+lec_select_subjectNameArray[i]+'</div>';
             var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+lec_select_classInProgressMemberNumArray[i]+'명</div>';
             var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+' ~</div>';
             var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>';
