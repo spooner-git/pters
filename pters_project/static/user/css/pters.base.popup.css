@@ -69,7 +69,7 @@
 	overflow: auto;
 }
 
-.pcver-slide-menu{
+.pcver-slide-menu_alarm, .pcver-slide-menu_class{
 	display: none;
 }
 
@@ -422,17 +422,19 @@
 		cursor: pointer;
 	}
 
-	.pcver-slide-menu{
+	.pcver-slide-menu_alarm, .pcver-slide-menu_class{
 		position: absolute;
-		display: block;
 		top: 62px;
 		right: 0px;
 		width: 450px;
-		height: 0;
-		background: #f4f4f4;
+		height: auto;
+		background: #ffffff;
 		overflow: hidden;
-		transition: 1s;
+		border:1px solid #e8e8e8;
 	}
+
+
+
 	#myInfo{
 		margin-top: 5px;
 		padding-left: 10px;
@@ -462,14 +464,15 @@
 		color: #ffffff;
 	}
 	#alarm-notify{
+		height: 40px;
 		margin-top: 10px;
-		margin-bottom: 10px;
 		padding-left: 10px;
+		border-bottom: 1px solid #cccccc;
 		cursor: pointer;
 	}
 	#alarm-on-pc{
-		width: 22px;
-		margin-right: 10px;
+		width: 19px;
+		margin: 0 3px 6px 6px;
 		cursor: pointer;
 	}
 	#alarm-page-arrow{
@@ -479,10 +482,11 @@
 		cursor:pointer;
 	}
 	#alarm-iframe-div-pc{
-		background: #f4f4f4;
-		height: 0;
+		height: 300px;
 		overflow-y: hidden;
-		transition: 1s;
+	}
+	.alarm_delete_pc{
+		float:right;width:15px;margin:5px;margin-right:10px;
 	}
 	#alarm-close-pc {
 		width: 100%;
@@ -497,6 +501,15 @@
 		width: 25px;
 		margin-left: 10px;
 		transform: rotate(180deg);
+	}
+	#alarm_view_all{
+		height: 30px;
+		font-size: 13px;
+		padding-top: 5px;
+		background: #282828;
+		color:#ffffff;
+		text-align: center;
+		cursor: pointer;
 	}
 
 	#popup_img{

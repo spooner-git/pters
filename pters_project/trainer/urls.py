@@ -200,6 +200,8 @@ urlpatterns = [
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     # 알람 조회 페이지
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+    # 알람 조회 페이지 PC
+    url(r'^alarm_pc/$', views.AlarmPCView.as_view(), name='alarm_pc'),
 
     # iframe 주간 일정 페이지
     url(r'^iframe_week/$', views.CalWeekIframeView.as_view(), name='iframe_week'),

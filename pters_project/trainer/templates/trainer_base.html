@@ -383,14 +383,15 @@
                 </div>
                 -->
             </div>
-            <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="open_lecture_select_popup_pc(); openAlarm('pc'); ">
-                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:4px;">
-                <span class="pcwhere">{{ request.session.class_type_name }}</span>
-                <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
+            <div id="loginInfo" class="centermenu_div" style="float:right;">
+                <img src="/static/user/res/alarm/alarm-on.png" style="width: 16px;margin-bottom:3px;margin-right: 10px;" onclick="open_slide_menu_pc('alarm');">
+                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:4px;"  onclick="open_slide_menu_pc('class');">
+                <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
+                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
             </div>
             <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
-            <div class="pcver-slide-menu">
+            <div class="pcver-slide-menu_class">
                 <div id="myInfo">
                     <label><img src="/static/user/res/member/icon-user.png"><span class="KRtext">내 클래스 정보</span><span class="JPtext">My Class</span><span class="ENtext">My Classes</span></label>
                     <span>{{ request.session.class_center_name }}</span>
@@ -407,15 +408,24 @@
                     <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
                 </div>
                 <div id="subject-selector"></div>
+            </div>
+            <div class="pcver-slide-menu_alarm">
                 <div id="alarm-notify">
-                    <img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png">
-                    <span class="KRtext">알림</span>
+                    <span class="KRtext" style="font-size:17px;font-weight:500;margin-left:16px;">일정 알림</span>
                     <span class="JPtext">新しい通知があります</span>
                     <span class="ENtext">New notification arrived</span>
-                    <img id="alarm-page-arrow" src="/static/user/res/icon-down-grey.png">
+                    <div id="new_alarm_count" style="display:inline-block;width:19px;height:19px;background:#fe4e65;color:#ffffff;border-radius:50%;font-size:12px;text-align:center;margin-right:8px;margin-left:8px;">
+                        <div style="padding-top:3px;font-size: 10px;"></div>
+                    </div>
+                    <span id="new_alarm_count_text" style="font-size:12px;color:#7d7d7d;"></span>
+                    <img src="/static/user/res/alarm/icon-delete.png" class="alarm_delete_pc">
                 </div>
-                <div id="alarm-iframe-div-pc"></div>
-                <div id="alarm-close-pc"><img src="/static/user/res/icon-down-grey.png"></div>
+                <div id="alarm-iframe-div-pc">
+                    <iframe id="alarm-iframe" src="/trainer/alarm_pc/" width="100%" height="300" frameborder="0">
+                        
+                    </iframe>
+                </div>
+                <div id="alarm_view_all">닫기</div>
             </div>
         </div>
     </nav>
@@ -592,29 +602,42 @@
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
     }
 
-
-    function openAlarm(option){ // pc or mobile
-        if(option == 'mobile'){
-            if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-                $('#alarm_delete').hide();
-            }else{
-                $('#alarm_delete').show();
-            }
-            shade_index(100);
-            $('#alarm').css('height','70%');
-            $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
+    //var selector_alarm_iframe = $('#alarm-delete-form');
+    
+    function open_slide_menu_pc(option){ // pc or mobile
+        var selector_alarm_iframe = $('#alarm-iframe')
+        if(option == 'class'){
+            $('.pcver-slide-menu_alarm').css('display','none')
+            $('.pcver-slide-menu_class').css('display','block')
         }
-        else if(option == 'pc'){
-            //open_lecture_select_popup_pc()
-            if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-                $('#alarm_delete').hide();
-            }else{
-                $('#alarm_delete').show();
-            }
-            $('.pcver-slide-menu').css({'height':'auto','box-shadow':'1px 1px 1px 1px #c5c5c5'});
-            $('#alarm-iframe-div-pc').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="100%" height="300" frameborder="0"></iframe>');
+        else if(option == 'alarm'){
+            $('.pcver-slide-menu_class').css('display','none')
+            $('.pcver-slide-menu_alarm').css('display','block')
+
+            /*
+            var newalarm_count = selector_alarm_iframe.contents().find("div.new_alarm").length;
+            $('#new_alarm_count').text(newalarm_count)
+            $('#new_alarm_count_text').text('새로운 알림이 '+newalarm_count+'건 있습니다.')
+            */
         }
     }
+
+    
+    /*
+    $('.alarm_delete_pc').click(function(){
+        var selector_alarm_iframe = $('#alarm-iframe')
+        var alarm_size = selector_alarm_iframe.contents().find(".log_id_array").length;
+        alert(alarm_size+'건의 알림을 삭제합니다.');
+        selector_alarm_iframe.contents().find("#log_id_size").val(alarm_size);
+        selector_alarm_iframe.contents().find('#alarm-delete-form').submit();
+    })
+    */
+
+    $('#alarm_view_all').click(function(){
+        $('.pcver-slide-menu_alarm').css('display','none')
+    })
+    
+    
 
     function closeAlarm(option){
         if(option=='pc'){
@@ -626,15 +649,6 @@
         }
     }
 
-    $('#alarm-notify').click(function(){
-        $('#alarm-iframe-div-pc').css('height','300px');
-        $('#alarm-close-pc').fadeIn();
-    });
-
-    $('#alarm-close-pc').click(function(){
-        $('#alarm-iframe-div-pc').css('height','0px');
-        $('#alarm-close-pc').fadeOut();
-    });
 
     var class_hour = '{{ request.session.class_hour }}';
 
