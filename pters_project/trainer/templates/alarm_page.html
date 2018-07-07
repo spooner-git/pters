@@ -4,7 +4,7 @@
     {# your code to show the entry #}
     <div style="margin-top:5px;margin-bottom:5px;">
         {% if log_info.log_read == 0 %}
-            <div style="border-bottom:1px solid #e8e8e8;padding: 8px 2px 8px 2px;">
+            <div class="new_alarm" style="border-bottom:1px solid #e8e8e8;padding: 8px 2px 8px 2px;">
                     <p style="font-weight: 500"> 
                         <img src="/static/user/res/alarm/icon-alarm-new.png" style="width: 15px;margin-right: 8px;margin-bottom: 1px;">
                         <span style="font-size: 14px;">{{ log_info.from_member_name }}</span>님이
@@ -16,22 +16,26 @@
                                 <span style="color:#fe4e65;font-size: 15px;">{{ log_info.log_how }}</span> 했습니다.
                     </p>
                     <span style="color:#7d7d7d;font-size: 13px;margin-left: 22px;">
-                        2018.xx.xx 오전 xx:00 - 오후 xx:00
+                        {% if log_info.log_detail %}
+                            <span style="color:#fe4e65;">{{ log_info.log_how }} :</span>
+                            {{ log_info.log_detail }}{% endif %}
                     </span>
                     <span style="font-weight: 400;font-size:12px;float:right;color:#7d7d7d;">
                         <img src="/static/user/res/alarm/icon_time.png" style="width: 12px;margin-bottom: 4px;">
                         {{ log_info.time_ago }}
                     </span>
                     <br>
-                    <p style="padding-left: 20px;margin:3px 0 3px 0;color:#ffffff;">
+                    <!--
+                    <p style="padding-left: 20px;margin:3px 0 3px 0;color:#7d7d7d;">
                         {% if log_info.log_detail %}
                             <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
                             {{ log_info.log_detail }}{% endif %}
 
                     </p>
+                    -->
             </div>
         {% else %}
-            <div style="border-bottom:1px solid #e8e8e8;padding: 8px 2px 8px 2px;">
+            <div class="old_alarm" style="border-bottom:1px solid #e8e8e8;padding: 8px 2px 8px 2px;">
                     <p style="font-weight: 500;color:#7d7d7d;"> 
                         <img src="/static/user/res/alarm/icon-alarm-new.png" style="width: 15px;margin-right: 8px;margin-bottom: 1px;visibility: hidden;">
                         <span style="font-size: 14px;">{{ log_info.from_member_name }}</span>님이
@@ -43,19 +47,23 @@
                                 <span style="font-size: 15px;">{{ log_info.log_how }}</span> 했습니다.
                     </p>
                     <span style="color:#7d7d7d;font-size: 13px;margin-left: 22px;">
-                        2018.xx.xx 오전 xx:00 - 오후 xx:00
+                        {% if log_info.log_detail %}
+                            <span>{{ log_info.log_how }} :</span>
+                            {{ log_info.log_detail }}{% endif %}
                     </span>
                     <span style="font-weight: 400;font-size:12px;float:right;color:#7d7d7d;">
                         <img src="/static/user/res/alarm/icon_time.png" style="width: 12px;margin-bottom: 4px;">
                         {{ log_info.time_ago }}
                     </span>
                     <br>
-                    <p style="padding-left: 20px;margin:3px 0 3px 0;color:#ffffff;">
+                   <!--
+                    <p style="padding-left: 20px;margin:3px 0 3px 0;color:#7d7d7d;">
                         {% if log_info.log_detail %}
-                            <span style="color:#fe4e65;font-weight: bold;">{{ log_info.log_how }} :</span>
+                            <span style="font-weight: bold;">{{ log_info.log_how }} :</span>
                             {{ log_info.log_detail }}{% endif %}
 
                     </p>
+                    -->
             </div>
         {% endif %}
 

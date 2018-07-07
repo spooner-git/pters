@@ -14,10 +14,21 @@
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="{% static_url "common/js/el-pagination.js" %}"></script>
     <script>
+        var selector_alarm_iframe = $('#alarm-delete-form');
         if($('body').width()<600){
-            $('#uptext3').text('일정 알림')
-            $('#uptext').html("일정 알림")
+            var newalarm_count = selector_alarm_iframe.find("div.new_alarm").length;
+            $('#uptext').html('일정 알림 '+
+                              '<div style="width:17px;height:17px;display:inline-block;font-size:12px;font-weight:400;background:#fe4e65;color:#ffffff;border-radius:50%;"><div style="display:inline;font-size:10px;">'+newalarm_count+'</div></div>')
             $('#upbutton-modify').hide()
+            $('#upbutton-alarm').attr('onclick','clearAlarmList()')
+            $('#upbutton-alarm img').attr('src','/static/user/res/alarm/icon-delete.png')
+        }
+
+        function clearAlarmList(){
+            var alarm_size = selector_alarm_iframe.find(".log_id_array").length;
+            alert(alarm_size+'건의 알림을 삭제합니다.');
+            selector_alarm_iframe.find("#log_id_size").val(alarm_size);
+            selector_alarm_iframe.submit();
         }
 
         $.endlessPaginate({
