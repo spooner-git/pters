@@ -85,6 +85,7 @@
             <span class="ENtext">Choose class</span>
             <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
         </p>
+        <!--
         <div class="pters_table">
             <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
             <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
@@ -92,6 +93,7 @@
             <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
             <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
         </div>
+        -->
         <div class="lecture_select_table_list">
         </div>
     </div>
@@ -393,21 +395,22 @@
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
             <div class="pcver-slide-menu_class">
                 <div id="myInfo">
-                    <label><img src="/static/user/res/member/icon-user.png"><span class="KRtext">내 클래스 정보</span><span class="JPtext">My Class</span><span class="ENtext">My Classes</span></label>
-                    <span>{{ request.session.class_center_name }}</span>
-                    <span>{{user.last_name}} {{user.first_name}}</span>
-                    <span class="_nameAttach"></span>
+                    <span id="myInfo_center_name">{{ request.session.class_center_name }}</span>&nbsp
+                    <span id="myInfo_user_name">{{user.last_name}} {{user.first_name}}<span class="_nameAttach"></span></span>
+                    
                     <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
-                    <img src="/static/user/res/ptadd/btn-x.png" onclick="closeAlarm('pc')">
+                    <img src="/static/user/res/ptadd/btn-x.png" onclick="" hidden>
+                    <p> 선택시 해당 클래스로 이동합니다.</p>
                 </div>
+                <!--
                 <div class="pters_table">
-                    <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
-                    <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
+                    <div class="pters_table_cell_head table_center_name"><span class="KRtext">클래스</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
                     <div class="pters_table_cell_head table_trainee_num"><span class="KRtext">수강생</span><span class="JPtext">受講生</span><span class="ENtext">Member</span></div>
                     <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
-                    <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
                 </div>
+            -->
                 <div id="subject-selector"></div>
+                <div id="class_view_all">닫기</div>
             </div>
             <div class="pcver-slide-menu_alarm">
                 <div id="alarm-notify">
@@ -609,45 +612,33 @@
         if(option == 'class'){
             $('.pcver-slide-menu_alarm').css('display','none')
             $('.pcver-slide-menu_class').css('display','block')
+            open_lecture_select_popup_pc()
         }
         else if(option == 'alarm'){
             $('.pcver-slide-menu_class').css('display','none')
             $('.pcver-slide-menu_alarm').css('display','block')
-
-            /*
-            var newalarm_count = selector_alarm_iframe.contents().find("div.new_alarm").length;
-            $('#new_alarm_count').text(newalarm_count)
-            $('#new_alarm_count_text').text('새로운 알림이 '+newalarm_count+'건 있습니다.')
-            */
         }
     }
 
-    
-    /*
-    $('.alarm_delete_pc').click(function(){
-        var selector_alarm_iframe = $('#alarm-iframe')
-        var alarm_size = selector_alarm_iframe.contents().find(".log_id_array").length;
-        alert(alarm_size+'건의 알림을 삭제합니다.');
-        selector_alarm_iframe.contents().find("#log_id_size").val(alarm_size);
-        selector_alarm_iframe.contents().find('#alarm-delete-form').submit();
-    })
-    */
 
     $('#alarm_view_all').click(function(){
         $('.pcver-slide-menu_alarm').css('display','none')
     })
-    
-    
+
+    $('#class_view_all').click(function(){
+        $('.pcver-slide-menu_class').css('display','none')
+    })
 
     function closeAlarm(option){
-        if(option=='pc'){
-            var selector_alarm_iframe_div_pc = $('#alarm-iframe-div-pc');
-            $('.pcver-slide-menu').css({'height':'0','box-shadow':'unset'});
-            selector_alarm_iframe_div_pc.css('height','0px');
-            $('#alarm-close-pc').fadeOut();
-            selector_alarm_iframe_div_pc.html('');
+        if(option == "pc"){
+            $('.pcver-slide-menu_alarm').css('display','none')
+            $('.pcver-slide-menu_class').css('display','none')
+        }else if(option == "mobile"){
+
         }
     }
+    
+    
 
 
     var class_hour = '{{ request.session.class_hour }}';
@@ -850,7 +841,6 @@
 
     function open_lecture_select_popup_pc(){
         $('.popups').hide();
-        closeNav();
         ajax_read_lecture_info_from_db($('#subject-selector'));
     }
 
@@ -865,7 +855,8 @@
             if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
                 currentClass = 'currentClass';
                 //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
-                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">';
+                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'+
+                        '<div class="currentIndicator"></div>';
             }else{
                 currentClass = "";
                 //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
@@ -874,8 +865,8 @@
             //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
             var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>';
             var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>';
-            var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>';
-            var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>';
+            var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+lec_select_classInProgressMemberNumArray[i]+'명</div>';
+            var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+' ~</div>';
             var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>';
             //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
             var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';

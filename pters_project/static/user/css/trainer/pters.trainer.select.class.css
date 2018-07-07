@@ -20,7 +20,7 @@ body{
 	border:1px solid #cccccc;
 	background:#ffffff;
 	z-index: 150;
-	padding:0 5px 10px 5px;
+	padding:0 0 10px 0;
 }
 button.classAdd{
 	display: block;
@@ -38,10 +38,12 @@ button.classAdd{
 	width: 100%;
 }
 #popup_lecture_select p{
-	font-size: 14px;
-	font-weight: 500;
+	font-size: 18px;
+	font-weight: bold;
 	margin-top: 10px;
-	margin-left: 15px;
+	padding-bottom: 15px;
+	padding-left: 20px;
+	border-bottom: 1px solid #cccccc;
 }
 #popup_lecture_select a{
 	cursor: pointer;
@@ -56,6 +58,7 @@ button.classAdd{
 }
 
 .pters_table{
+	position: relative;
 	display: table;
 	width: 100%;
 	margin-top: 10px;
@@ -84,10 +87,19 @@ button.classAdd{
 	padding-bottom: 7px;
 }
 .table_center_name{
-	width: 20%;
+	width: 100%;
+	display: block;
+	text-align: left;
+	padding-left: 10%;
+	color: #7d7d7d;
+	font-size: 15px;
 }
 .table_lecture_name{
-	width: 30%;
+	width: 50%;
+	display: inline-block;
+	text-align: left;
+	padding-left: 15%;
+	font-size: 17px;
 }
 .table_lecture_status{
 	width: 10%;
@@ -102,12 +114,12 @@ button.classAdd{
 	width: 15%;
 }
 .table_start_date{
-	display: none;
-	width: 15%;
+	display: inline-block;
+	width: 35%;
 }
 .table_trainee_num{
-	display: none;
-	width: 10%;
+	display: inline-block;
+	width: 15%;
 }
 .lecture_delete{
 	width: 10%;
@@ -118,6 +130,17 @@ button.classAdd{
 }
 .currentClass{
 	font-weight: bold;
+	color: #fe4e65;
+
+}
+.currentIndicator{
+	position: absolute;
+	top: 10px;
+	left: 18px;
+	width:11px;
+	height:11px;
+	background:#fe4e65;
+	border-radius:50%;
 }
 .lecture_row{
 	cursor: pointer;
@@ -141,6 +164,7 @@ button.classAdd{
 	width: 15px;
 	float: right;
 	margin-right: 20px;
+	margin-top: 7px;
 	cursor: pointer;
 }
 
@@ -205,6 +229,54 @@ button.classAdd{
 }
 
 @media(min-width: 600px){
+	.currentClass{
+		color: #fe4e65;
+		font-weight: bold;
+	}
+	.currentIndicator{
+		position: absolute;
+		top: 10px;
+		left: 18px;
+		width:11px;
+		height:11px;
+		background:#fe4e65;
+		border-radius:50%;
+	}
+
+	.table_center_name{
+		display: block;
+		width: 60%;
+		font-size: 14.5px;
+		text-align: left;
+		padding-left: 20px;
+		color: #7d7d7d;
+		font-weight: 500;
+	}
+	.table_lecture_name, .table_trainee_num, .table_start_date{
+		display: inline-block;
+	}
+	.table_lecture_name{
+		width: 58%;
+		font-size: 16.5px;
+		text-align: left;
+		padding-left: 40px;
+		font-weight: 500;
+	}
+	.table_trainee_num{
+		width:14%;
+		font-size: 12.5px;
+		font-weight: 500;
+	}
+	.table_start_date{
+		width:28%;
+		font-size: 12px;
+		color: #7d7d7d;
+		font-weight: 500;
+	}
+
+
+
+
 	._selection:hover,._selection:active,._selection:focus{
 		background:#fe4e65 !important;
 		color: #ffffff !important;
@@ -218,26 +290,7 @@ button.classAdd{
 	.pters_table_row{
 		display: none;
 	}
-	.table_start_date{
-		display: table-cell;
-		width: 15%;
-	}
-	.table_trainee_number{
-		display: table-cell;
-		width: 10%;
-	}
-	.table_trainee_num{
-		display: table-cell;
-		width: 10%;
-	}
-	.lecture_selection{
-		display: table-cell;
-		width: 10%;
-	}
-	.table_class_unit{
-		display: table-cell;
-		width: 10%;
-	}
+
 
 	.fixfooter{
 		position: fixed;
