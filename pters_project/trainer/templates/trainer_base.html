@@ -912,49 +912,6 @@
             list_table_to_join.push(subject_join.join(''))
         }//for1
         HTMLselector.html(list_table_to_join.join(''))
-
-
-
-        /*
-        var len = lec_select_subjectNameArray.length;
-        var list_table_to_join = [];
-        var center_counter = 0;
-        for(var i=0; i<len; i++){
-            //if(lec_select_npLectureCountsArray[i] == '0'){
-            var currentClass = "";
-            var table = "";
-            var currentIndicator = ""
-            if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
-                currentClass = 'currentClass';
-                //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
-                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">';
-                currentIndicator = '<div class="currentIndicator"></div>'
-            }else{
-                currentClass = "";
-                //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
-                table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>';
-            }
-            //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-            var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>';
-            var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+lec_select_subjectNameArray[i]+'</div>';
-            var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+lec_select_classInProgressMemberNumArray[i]+'명</div>';
-            var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+' ~</div>';
-            var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>';
-            //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
-            var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
-            list_table_to_join.push(sum);
-            if(lec_select_centerNameArray[i] != ''){
-                center_counter += 1;
-            }
-        }
-        var list_table = list_table_to_join.join('');
-        HTMLselector.html(list_table);
-
-        if(center_counter==0){
-            $('.table_center_name').css('display', 'none');
-        }
-        //$('.lecture_select_table_list').html(list_table)
-        */
     }
 
     function class_sort_by_center(jsondata){
