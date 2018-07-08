@@ -9,6 +9,13 @@ body{
 	color: #cccccc;
 }
 
+.borderless_top{
+	border-top-color:#ffffff !important;
+}
+.borderless_bottom{
+	border-bottom-color: #ffffff !important;
+}
+
 #popup_lecture_select{
 	position: fixed;
 	left: 50%;

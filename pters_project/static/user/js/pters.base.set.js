@@ -660,6 +660,10 @@ function remove_front_zeros(rawData){
     }
 }
 
+Array.prototype.insert = function(index, item){
+    this.splice(index, 0, item);
+};
+
 /*/////////////////////일정 관련 공통 함수////////////////////////////////*/
 
 

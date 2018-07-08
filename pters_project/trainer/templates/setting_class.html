@@ -13,12 +13,18 @@
         }
         .settingBox{
             margin-top: 80px;
+            border-bottom: 1px solid #cccccc;
         }
         #menuDescription{
             line-height: 40px;
         }
         .fixfooter{
             display: none;
+        }
+
+        .lecture_delete{
+            width: 20%;
+            vertical-align: bottom;
         }
         @media(min-width:600px){
             .table_trainee_num{
@@ -184,7 +190,7 @@
                         if(lec_select_classIdArray.length == 0){
                             location.href="{% url 'trainer:add_class' %}"
                         }else{
-                            fill_lecture_select_page()
+                            fill_lecture_select_page(jsondata)
                         }
                     }
                 },
@@ -233,12 +239,14 @@
             })
         }
 
-
-        function fill_lecture_select_page(){
+        /*
+        function fill_lecture_select_page(jsondata){
+            var json = class_sort_by_center(jsondata)
 
             var len = lec_select_subjectNameArray.length;
-            var list_table_to_join = []
+            var list_table_to_join = [];
             var center_counter = 0;
+            var centers = [];
             for(var i=0; i<len; i++){
                 //if(lec_select_npLectureCountsArray[i] == '0'){
                 if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
@@ -276,6 +284,8 @@
                 var centerName__ = lec_select_centerNameArray[i]
                 if(lec_select_centerNameArray[i] == ""){
                     var centerName__ = '-'
+                }else{
+                    centers.push(lec_select_centerNameArray[i])
                 }
                 var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'">'+centerName__+'</div>'
                 var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+lec_select_subjectNameArray[i]+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 클래스명을 입력 해주세요.">'+'</div>'
@@ -296,9 +306,17 @@
                     '&nbsp;  | &nbsp; ' + '개강일 '+ date_format_to_yyyymmdd(lec_select_startDateArray[i],'.') +
                     '&nbsp;  | &nbsp; ' + '수강생 '+lec_select_classInProgressMemberNumArray[i]+' 명'  + '</div>'
 
-
+                //센터가 같으면 같이 묶어서 표기
                 var sum = table + centerName + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
-                list_table_to_join.push(sum)
+                var index = lec_select_centerNameArray.indexOf(lec_select_centerNameArray[i])
+                if(centers.indexOf(lec_select_centerNameArray[i]) != -1 && i != index){
+                    sum = table + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    list_table_to_join.insert(index+1, sum)
+                }else{
+                    list_table_to_join.push(sum)
+                }
+                //센터가 같으면 같이 묶어서 표기
+                
                 if(lec_select_centerNameArray[i] != ''){
                     center_counter += 1;
                 }
@@ -308,6 +326,143 @@
             if(center_counter==0){
                 $('.table_center_name').css('display', 'none')
             }
+        }*/
+
+        function fill_lecture_select_page(jsondata){
+            var json = class_sort_by_center(jsondata)
+
+            var list_table_to_join = [];
+            for(center in json){
+                //console.log('center---',center)
+
+                var subject_join = []
+                var center_counter = 0;
+                var centers = [];
+                for(subject in json[center]){
+                    //console.log(subject)
+                    //console.log(json[center][subject]['classId'])
+                    var classId = json[center][subject]['classId'];
+                    var classHour = json[center][subject]['classHour'];
+                    var classHourUnit = json[center][subject]['classHourUnit'];
+                    var classIPNumber = json[center][subject]['classInProgressMemberNum'];
+                    var classMemberNum = json[center][subject]['classMemberNum'];
+                    var startDt = json[center][subject]['startDate'];
+                    var endDt = json[center][subject]['endDate'];
+                    var modDate = json[center][subject]['modDate'];
+                    var regDate = json[center][subject]['regDate'];
+                    var stateCode = json[center][subject]['stateCode'];
+                    var stateName = json[center][subject]['stateName'];
+                    var subjectCode = json[center][subject]['subjectCode']
+
+                    var borderCss = "borderless_top borderless_bottom"
+                    if(subject_join.length == 0){
+                        borderCss = "borderless_bottom"
+                    }
+
+                    if(classId == lec_select_currentClassId[0]){
+                        $('.pcwhere').text(subject)
+                        var table = '<div class="pters_table pters_table_at_setting_page '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
+                        var currentClass = 'currentClass'
+                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
+                        var selectionText = '<a style="cursor:default;">-</a>'
+                        if(Number(classHour) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                        }else if(Number(classHour) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                        }
+                        var goToLecture = '"'
+                        var textdeco = ""
+                        var classUnitDropdown = '<select data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+subject+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                    }else{
+                        var table = '<div class="pters_table pters_table_at_setting_page _selection '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
+                        var currentClass = ""
+                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
+                        var selectionText = '<a data="" '+'onclick="lecture_check('+classId+')"'+' style="cursor:pointer;">이동</a>'
+                        if(Number(classHour) == 60){
+                            var selected30 = ""
+                            var selected60 = "selected"
+                        }else if(Number(classHour) == 30){
+                            var selected30 = "selected"
+                            var selected60 = ""
+                        }
+                        var goToLecture = '" onclick="lecture_check('+classId+')"'
+                        var textdeco = ' class="subjectnamespan'
+                        var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+subject+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                    }
+                    var centerName__ = center;
+                    if(center == ""){
+                        var centerName__ = '센터 미지정'
+                    }
+                    var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'>'+centerName__+'</div>'
+                    var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+subject+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 클래스명을 입력 해주세요.">'+'</div>'
+                    var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+goToLecture+'>'+classIPNumber+'명</div>'
+                    var startDate = '<div class="pters_table_cell table_start_date '+currentClass+goToLecture+'>'+date_format_to_yyyymmdd(startDt,'.')+'</div>'
+                    var status = '<div class="pters_table_cell table_lecture_status '+currentClass+goToLecture+'>'+stateName+'</div>'
+                    var unitSelect = '<div class="pters_table_cell table_class_unit '+currentClass+'">'+classUnitDropdown+'</div>'
+                    var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify" data-type="view">'
+                    var manageIcon3 = '<img src="/static/user/res/btn-pt-complete-small.png" class="pcmanageicon _icon_send" data-classid="'+classId+'">'
+                    var manageIcon4 = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _icon_cancel" data-classid="'+classId+'">'
+
+                    var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+classId+'">'+manageIcon+manageIcon2+manageIcon3+manageIcon4+'</div>'
+                    var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+classId+'">'+selectionText+'</div>'
+
+
+                    var additionalRow = '<div class="pters_table_row">'+
+                                            '클래스 단위 ' + classUnitDropdown+
+                                            '&nbsp;  | &nbsp; ' + '개강일 '+ date_format_to_yyyymmdd(startDt,'.') +
+                                            '&nbsp;  | &nbsp; ' + '수강생 '+ classIPNumber+' 명'  + 
+                                        '</div>'
+
+                    //var sum = table + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    if(subject_join.length == 0){
+                        var sum = table + centerName + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    }else{
+                        var sum = table + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
+                    }
+                    
+                    subject_join.push(sum)
+                    if(center != ''){
+                        center_counter += 1;
+                    }
+
+                }//for2
+                console.log(subject_join)
+                list_table_to_join.push(subject_join.join(''))
+                
+            }//for1
+            $('.lecture_select_table_list').html(list_table_to_join.join(''))
+            
+        }
+
+        
+
+        function class_sort_by_center(jsondata){
+            var len = jsondata.subjectNameArray.length;
+            var center_subject = {}
+            for(var i=0; i<len; i++){
+                center_subject[jsondata.centerNameArray[i]] = {}
+            }
+            for(var j=0; j<len; j++){
+                center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+            }
+            for(var k=0; k<len; k++){
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+            }
+            console.log(center_subject)
+            return center_subject
         }
 
 
