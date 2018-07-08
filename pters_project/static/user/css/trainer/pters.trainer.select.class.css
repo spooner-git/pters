@@ -153,10 +153,22 @@ button.classAdd{
 .lecture_row{
 	cursor: pointer;
 }
+
+/*
 .lecture_row:hover{
 	color: #fe4e65 !important;
 	text-decoration: underline;
 }
+*/
+.lecture_row .table_lecture_name:hover{
+	color: #fe4e65 !important;
+	text-decoration: underline;
+}
+._selection .table_lecture_name:hover{
+	color: unset;
+	text-decoration: unset;
+}
+
 
 
 
