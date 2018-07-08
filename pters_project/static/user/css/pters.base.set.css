@@ -602,6 +602,8 @@ a:focus, a:hover{
     height: 12px;
     margin-left: 6px;
     margin-top: 25px;
+    position: absolute;
+    z-index: 10;
 }
 
 #alarm_button{
