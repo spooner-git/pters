@@ -8,7 +8,7 @@
             font-weight: bold;
             margin-top:0;
             margin-bottom: 5px;
-            font-size: 15px;
+            font-size: 14px;
             letter-spacing: -0.7;
         }
         .new_alarm > p > img{
@@ -56,7 +56,7 @@
             color:#7d7d7d;
             margin-top:0;
             margin-bottom: 5px;
-            font-size: 15px;
+            font-size: 13.5px;
             letter-spacing: -0.7;
         }
         .old_alarm > p > img{
@@ -118,6 +118,15 @@
             $('#new_alarm_count div', parent.document).text(newalarm_count)
             $('#new_alarm_count_text', parent.document).text('새로운 알림이 '+newalarm_count+'건 있습니다.')
         }
+
+        /*
+        if(newalarm_count > 0){
+            $('#alarm_button', parent.document).attr('src','/static/user/res/alarm/alarm-on.png')
+        }else{
+            $('#alarm_button', parent.document).attr('src','/static/user/res/alarm/alarm-off-white.png')
+        }
+        */
+
         
 
         $('.alarm_delete_pc',parent.document).click(function(){

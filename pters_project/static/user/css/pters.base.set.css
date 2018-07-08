@@ -421,6 +421,9 @@ a:focus, a:hover{
 #loginInfo{
     display: inline-block;
     margin-right: 10px;
+    position: absolute;
+    right: 0;
+    z-index: 1;
 }
 
 
@@ -732,7 +735,7 @@ a:focus, a:hover{
 
 
 
-@media(min-width:830px){
+@media(min-width:850px){
     .centermenu_div{
         margin-right: 13px;
     }
@@ -743,6 +746,10 @@ a:focus, a:hover{
     .centermenu_box{
         text-align: center;
     }
+    
+}
+
+@media(min-width: 900px){
     #loginInfo{
         margin-right: 70px;
     }
@@ -784,7 +791,6 @@ a:focus, a:hover{
         background: #fe4e65;
         color: #ffffff;
     }
-
 }
 
 
