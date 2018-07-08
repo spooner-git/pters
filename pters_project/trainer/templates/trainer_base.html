@@ -241,7 +241,7 @@
 
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                         <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
-                        <div style="z-index: -1"><img src="{% static_url "user/res/icon-pf.png" %}" alt="#"></div>
+                        <div style="z-index: -1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
                         <div id="user_name">{{user.last_name}} {{user.first_name}}
                             <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                         </div>
@@ -387,7 +387,7 @@
             </div>
             <div id="loginInfo" class="centermenu_div" style="float:right;">
                 <img src="/static/user/res/alarm/alarm-on.png" onclick="open_slide_menu_pc('alarm');" id="alarm_button">
-                <img src="/static/user/res/icon-name.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
+                <img src="/static/user/res/icon-name-b.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
                 <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
             </div>

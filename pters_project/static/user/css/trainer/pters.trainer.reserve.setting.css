@@ -2,6 +2,20 @@ body{
 	padding-top: 50px;
 	margin:0 auto;
 }
+#ymdText{
+	z-index: 30;
+}
+#menuName{
+
+}
+
+#menuDescription{
+    line-height: 40px;
+}
+#trainerWorkTimeSettingText{
+	margin-top: 50px;
+}
+
 
 .fixfooter{
 	position: relative;
@@ -239,4 +253,17 @@ li a{
 
 .switchon-back{
 	background: #ffffff;
+}
+
+@media(min-width: 600px){
+	#menuName{
+
+	}
+
+	#menuDescription{
+	    line-height: unset;
+	}
+	#trainerWorkTimeSettingText{
+		margin-top: 100px;
+	}
 }
