@@ -682,6 +682,7 @@
     var Options = {   "hourunit" : 30, // 30 or 60 달력을 30분단위로 선택이 가능하다.
         "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60  수업시간을 classDur 시간만큼 선택 가능
         "timeDur" : "",               //예약 기본 시간 단위
+        "startTime": 2,
         "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
         "limit":'{{ request.session.setting_member_reserve_enable_time }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
