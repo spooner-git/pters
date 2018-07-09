@@ -255,7 +255,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
-            request.session['class_hour'] = class_info.class_hour
+            request.session['class_hour'] = int(class_info.class_hour)
             request.session['class_type_code'] = class_info.subject_cd
 
         if error is None:
