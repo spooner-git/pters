@@ -271,7 +271,8 @@ def func_add_billing_logic(custom_data, payment_result):
 
     if error is None:
         payment_user_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                         end_date__lt=datetime.date.today()).order_by('end_date')
+                                                         end_date__lt=datetime.date.today(),
+                                                         use=USE).order_by('end_date')
         if len(payment_user_info) > 0:
             payment_info = payment_user_info[0]
 
