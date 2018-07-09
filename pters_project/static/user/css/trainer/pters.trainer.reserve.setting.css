@@ -52,7 +52,15 @@ li a{
 	z-index: 7;
 }
 	#ulTimes_rsvHour{
+		height: auto;
 		max-height: 190px;
+	}
+
+#memberStartHourSetting{
+	z-index: 6;
+}
+	#ulTimes_mstart{
+		height: auto;
 	}
 
 #memberAvailDateSetting{
@@ -76,7 +84,7 @@ li a{
 	width: 50%;
 }
 
-#timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect{
+#timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect, #mstartHourSelect{
 	left: 16%;
 	max-width: 170px;
 	display: inline-flex;
