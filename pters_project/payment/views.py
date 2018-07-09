@@ -64,6 +64,7 @@ def check_billing_logic(request):
     if error is None:
         payment_type_cd = json_loading_data['payment_type_cd']
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
+        input_price = json_loading_data['price']
 
     # if error is None:
     #     if payment_type_cd == 'PERIOD':
