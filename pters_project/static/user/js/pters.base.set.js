@@ -302,15 +302,6 @@ $(document).ready(function(){
 });
 
 
-$('#alarm_delete').click(function(){
-    var selector_alarm_ifram = $('#alarm-iframe');
-    var alarm_size = selector_alarm_ifram.contents().find(".log_id_array").length;
-    alert(alarm_size+'건의 알림을 삭제합니다.');
-    selector_alarm_ifram.contents().find("#log_id_size").val(alarm_size);
-    selector_alarm_ifram.contents().find("#alarm-delete-form").submit();
-
-});
-
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -668,6 +659,10 @@ function remove_front_zeros(rawData){
         }
     }
 }
+
+Array.prototype.insert = function(index, item){
+    this.splice(index, 0, item);
+};
 
 /*/////////////////////일정 관련 공통 함수////////////////////////////////*/
 

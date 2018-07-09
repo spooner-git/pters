@@ -112,9 +112,7 @@ body{
 
 @media(min-width: 600px){
 
-	#ymdText{
-		height: 100px;
-	}
+	
 
 	#background_contents_wrap{
 		margin-top: 130px;
@@ -127,6 +125,10 @@ body{
 			height: 80%;
 			background-size: cover;
 		}
+
+	#ymdText{
+		height: 100px;
+	}
 
 	#menuName{
 		display: block;

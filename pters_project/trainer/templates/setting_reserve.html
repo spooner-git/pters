@@ -22,6 +22,15 @@
         <input type="hidden" name="next_page" value = '{% url 'trainer:trainer_setting' %}'>
     </form>
 
+    <div id="ymdText">
+        <div id="ymdTextWrap">
+            <div id="menuName">예약 관련 설정
+            </div>
+            <div id="menuDescription">회원님의 예약에 관련된 설정을 합니다.
+            </div>
+        </div>
+    </div>
+
 
     <div id="trainerWorkTimeSettingText" class="settingMenu wrap800">
         <p class="settingText">업무 시간 설정</p>
@@ -293,7 +302,7 @@
         if($('body').width()<600){
             $('#page-base-addstyle').css('display','block')
             $('#page-base').css('display','none')
-            $('#uptext2').text("예약 허용 시간대 설정")
+            $('#uptext2').text("예약 관련 설정")
         }
 
         var select_all_check = false;

@@ -47,7 +47,7 @@ $(document).ready(function(){
     })
 
 
-    $('#loginInfo').find('img').attr('src','/static/user/res/icon-name-white.png')
+    $('#loginInfo').find('img:nth-of-type(2)').attr('src','/static/user/res/icon-name-w.png')
     $('.bottomfooter2').find('img').attr('src','/static/user/res/spooner.png')
     $('.bottomfooter3').find('img').attr('src','/static/user/res/spooner.png')
 
