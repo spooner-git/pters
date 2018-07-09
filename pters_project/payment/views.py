@@ -237,6 +237,8 @@ def billing_check_logic(request):
     if error is None:
         try:
             payment_result = json_loading_data['response']
+            logger.info(str(payment_result))
+
         except KeyError:
             error = '결제 정보 [response] json data parsing 에러'
 
@@ -310,11 +312,11 @@ def billing_check_logic(request):
 
     if error is None:
         if member_info is not None:
-            logger.info(str(member_info.name) + '님 정기 결제 완료:'
-                        + str(member_info.member_id) + ':' + str(payment_result['merchant_uid']))
+            logger.info(str(member_info.name) + '님 정기 결제 완료['
+                        + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
     else:
-        logger.error(str(member_info.name) + '님 결제 완료 체크:'
-                     + str(member_info.member_id) + ':' + str(error))
+        logger.error(str(member_info.name) + '님 결제 완료 체크['
+                     + str(member_info.member_id) + ']' + str(error))
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
 

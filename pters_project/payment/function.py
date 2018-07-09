@@ -202,9 +202,9 @@ def func_get_payment_result(imp_uid, access_token):
         try:
             json_loading_data = json.loads(json_data)
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.5'
         except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.6'
 
     if error is None:
         if resp['status'] == '200':
@@ -362,9 +362,9 @@ def func_update_billing_logic(payment_result):
                 payment_user_info.save()
                 context['payment_user_info'] = payment_user_info
         except TypeError as e:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.1:'+str(e)
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.3:'+str(e)
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.4'
 
     context['error'] = error
     return context
