@@ -28,9 +28,11 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         price = payment_user_info.price
         date = int(billing_info.payed_date)
 
-        next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
-
+        # next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
+        # next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0).timestamp()
+        next_schedule_timestamp = timezone.now + datetime.timedelta(minutes=5)
+        logger.info('next_schedule_timestamp:'+str(next_schedule_timestamp))
+        next_schedule_timestamp = next_schedule_timestamp.timestamp()
         token_result = func_get_payment_token()
         access_token = token_result['access_token']
         error = token_result['error']
@@ -273,8 +275,6 @@ def func_add_billing_logic(custom_data, payment_result):
         except ValueError:
             customer_uid = None
 
-    logger.info('customer_uid::'+str(payment_result['merchant_uid']))
-    logger.info('customer_uid::'+str(custom_data['customer_uid']))
     if error is None:
         start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
         date = int(start_date.strftime('%d'))
