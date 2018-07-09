@@ -277,11 +277,11 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
         if payment_info_check > 0:
-            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
+            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.1:'+str(payment_result['merchant_uid'])
         if custom_data['payment_type_cd'] == 'PERIOD':
             billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
             if billing_info_check > 0:
-                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
+                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.2:'+str(payment_result['customer_uid'])
 
     if error is None:
 
