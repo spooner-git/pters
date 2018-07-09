@@ -262,7 +262,7 @@ def billing_check_logic(request):
                 user_id = custom_data['user_id']
                 payment_type_cd = custom_data['payment_type_cd']
                 merchandise_type_cd = custom_data['merchandise_type_cd']
-                customer_uid = custom_data['customer_uid']
+                customer_uid = payment_result['customer_uid']
             except KeyError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
             except TypeError:
