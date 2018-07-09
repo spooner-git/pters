@@ -274,7 +274,7 @@ def billing_check_logic(request):
                 payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
                 user_id = payment_user_info.member_id
                 payment_type_cd = payment_user_info.payment_type_cd
-                merchandise_type_cd = payment_user_info.payment_type_cd
+                merchandise_type_cd = payment_user_info.merchandise_type_cd
                 customer_uid = payment_user_info.customer_uid
             except ObjectDoesNotExist:
                 error = '결제 정보 [정기결제 예약 스케쥴] 세부 사항 조회 에러'
