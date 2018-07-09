@@ -284,6 +284,7 @@ def billing_check_logic(request):
             member_info = MemberTb.objects.get(member_id=user_id)
         except ObjectDoesNotExist:
             member_info = None
+        logger.info(str(user_id))
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
@@ -315,8 +316,9 @@ def billing_check_logic(request):
             logger.info(str(member_info.name) + '님 정기 결제 완료['
                         + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
     else:
-        logger.error(str(member_info.name) + '님 결제 완료 체크['
-                     + str(member_info.member_id) + ']' + str(error))
+        if member_info is not None:
+            logger.error(str(member_info.name) + '님 결제 완료 체크['
+                         + str(member_info.member_id) + ']' + str(error))
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
 
