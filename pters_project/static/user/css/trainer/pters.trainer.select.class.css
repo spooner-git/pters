@@ -249,6 +249,12 @@ button.classAdd{
 }
 
 @media(min-width: 600px){
+	.table_class_unit{
+		display: table-cell;
+		font-size: 12px;
+		width: 10%;
+		vertical-align: bottom;
+	}
 	.currentClass{
 		color: #fe4e65;
 		font-weight: bold;
@@ -290,7 +296,7 @@ button.classAdd{
 	.table_start_date{
 		width:28%;
 		font-size: 12px;
-		color: #7d7d7d;
+		color: #282828;
 		font-weight: 500;
 	}
 
