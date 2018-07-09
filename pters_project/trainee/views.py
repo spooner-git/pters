@@ -349,7 +349,7 @@ def add_trainee_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     group_schedule_id = request.POST.get('group_schedule_id', None)
     training_date = request.POST.get('training_date', '')
-    time_duration = request.POST.get('time_duration', '')
+    # time_duration = request.POST.get('time_duration', '')
     training_time = request.POST.get('training_time', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
@@ -364,6 +364,7 @@ def add_trainee_schedule_logic(request):
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     schedule_info = None
     lecture_id = None
+    lt_res_member_time_duration = 1
 
     if class_id is None or class_id == '':
         error = '강좌 정보를 불러오지 못했습니다.'
@@ -379,10 +380,17 @@ def add_trainee_schedule_logic(request):
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
             error = '강좌 정보를 불러오지 못했습니다.'
+    if error is None:
+        try:
+            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                 setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
+            lt_res_member_time_duration = int(setting_data.setting_info)
+        except ObjectDoesNotExist:
+            lt_res_member_time_duration = 1
 
     if error is None:
         if group_schedule_id is None or group_schedule_id == '':
-            time_duration_temp = class_info.class_hour*int(time_duration)
+            time_duration_temp = class_info.class_hour*int(lt_res_member_time_duration)
             start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M:%S.%f')
             end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
         else:
@@ -1509,6 +1517,12 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_enable = setting_data.setting_info
     except ObjectDoesNotExist:
         lt_res_enable = lt_res_03
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                             setting_type_cd='LT_MEMBER_TIME_DURATION')
+        lt_res_member_time_duration = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_member_time_duration = 1
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
@@ -1518,6 +1532,7 @@ def get_trainer_setting_data(context, user_id, class_id):
     context['lt_res_enable_time'] = lt_res_enable_time
     context['lt_res_cancel_time'] = lt_res_cancel_time
     context['lt_res_enable'] = lt_res_enable
+    context['lt_res_member_time_duration'] = lt_res_member_time_duration
 
     return context
 

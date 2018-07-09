@@ -4018,6 +4018,7 @@ def update_setting_reserve_logic(request):
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
     # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
+    setting_member_reserve_time_duration = request.POST.get('setting_member_reserve_time_duration', '')
 
     class_id = request.session.get('class_id', '')
 
@@ -4030,6 +4031,7 @@ def update_setting_reserve_logic(request):
     lt_res_05 = None
     lt_res_cancel_time = None
     lt_res_enable_time = None
+    lt_res_member_time_duration = None
 
     if error is None:
         if setting_member_reserve_time_available is None or setting_member_reserve_time_available == '':
@@ -4044,6 +4046,8 @@ def update_setting_reserve_logic(request):
             setting_trainer_work_time_available = '00:00-23:59'
         if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
             setting_member_reserve_date_available = '14'
+        if setting_member_reserve_time_duration is None or setting_member_reserve_time_duration == '':
+            setting_member_reserve_time_duration = '1'
 
     if error is None:
         try:
@@ -4084,6 +4088,14 @@ def update_setting_reserve_logic(request):
             lt_res_enable_time = SettingTb(member_id=request.user.id,
                                            class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME',
                                            reg_dt=timezone.now(), use=USE)
+        try:
+            lt_res_member_time_duration = SettingTb.objects.get(member_id=request.user.id,
+                                                                class_tb_id=class_id,
+                                                                setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
+        except ObjectDoesNotExist:
+            lt_res_member_time_duration = SettingTb(member_id=request.user.id,
+                                                    class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_TIME_DURATION',
+                                                    reg_dt=timezone.now(), use=USE)
 
     if error is None:
         try:
@@ -4111,6 +4123,10 @@ def update_setting_reserve_logic(request):
                 lt_res_enable_time.mod_dt = timezone.now()
                 lt_res_enable_time.setting_info = setting_member_reserve_time_prohibition
                 lt_res_enable_time.save()
+
+                lt_res_member_time_duration.mod_dt = timezone.now()
+                lt_res_member_time_duration.setting_info = setting_member_reserve_time_duration
+                lt_res_member_time_duration.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'

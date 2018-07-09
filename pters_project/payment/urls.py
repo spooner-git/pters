@@ -25,7 +25,7 @@ urlpatterns = [
     # url(r'^payment/$', views.PaymentView.as_view(), name='payment'),
     # 결제 페이지
     url(r'^check_billing/$', views.check_billing_logic, name='check_billing'),
-    url(r'^delete_billing/$', views.delete_billing_logic, name='delete_billing'),
+    # ㄱ
     # 결제시 완료 페이지
     url(r'^billing_finish/$', views.billing_finish_logic, name='billing_finish'),
     # iamport 에서 결과 전송할때 동작하는 페이지
