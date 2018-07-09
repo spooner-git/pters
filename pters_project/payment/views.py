@@ -237,7 +237,7 @@ def billing_check_logic(request):
     if error is None:
         try:
             payment_result = json_loading_data['response']
-            logger.info(str(payment_result))
+            # logger.info(str(payment_result))
 
         except KeyError:
             error = '결제 정보 [response] json data parsing 에러'
@@ -286,20 +286,27 @@ def billing_check_logic(request):
             member_info = None
         logger.info(str(user_id))
 
+    logger.info('pp1')
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
+            logger.info('pp2')
             error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
+            logger.info('pp3')
             if error is None:
+                logger.info('pp4')
                 if custom_data is not None:
                     payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
                 else:
                     payment_user_info_result = func_update_billing_logic(payment_result)
+                logger.info('pp5')
                 if payment_user_info_result['error'] is None:
+                    logger.info('pp6')
                     if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
                         # if error is None:
                         func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
                 else:
+                    logger.info('pp7')
                     error = payment_user_info_result['error']
 
             else:
