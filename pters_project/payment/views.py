@@ -286,7 +286,7 @@ def billing_check_logic(request):
             member_info = None
         logger.info(str(user_id))
 
-    logger.info('pp1')
+    logger.info('pp1:'+str(error))
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
             logger.info('pp2')
