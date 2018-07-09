@@ -309,6 +309,7 @@ var currentDate = date.getDate();
 var currentHour = date.getHours();
 var currentMinute = date.getMinutes();
 var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
+var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate,'-')
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
