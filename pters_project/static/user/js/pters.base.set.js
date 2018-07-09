@@ -977,5 +977,11 @@ if(class_code.match(/BL/)){
 }
 */
 
-$('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
+
+if(class_background_img_url.length == 0){
+    $('#ymdText, #upperImg').css('background-image',"url(/static/user/res/main/bg-image-basic-ymdText.png)")
+}else{
+    $('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
+}
+
 
