@@ -428,7 +428,7 @@ def add_trainee_schedule_logic(request):
             error = '예약 가능 횟수를 확인해주세요.'
 
     if error is None:
-        error = pt_add_logic_func(training_date, time_duration, training_time, request.user.id, lecture_id, class_id,
+        error = pt_add_logic_func(training_date, start_date, end_date, request.user.id, lecture_id, class_id,
                                   request, group_schedule_id)
 
     if error is None:
@@ -1277,32 +1277,32 @@ class AlarmViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_time, user_id,
+def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                       lecture_id, class_id, request, group_schedule_id):
 
     error = None
     lecture_info = None
-    class_info = None
+    # class_info = None
     today = datetime.datetime.today()
     fifteen_days_after = today + datetime.timedelta(days=15)
     group_schedule_info = None
     group_id = None
-    start_date = None
-    end_date = None
+    # start_date = None
+    # end_date = None
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
     elif pt_schedule_date == '':
         error = '날짜를 선택해 주세요.'
-    elif pt_schedule_time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
-    elif pt_schedule_time == '':
-        error = '시작 시간을 선택해 주세요.'
+    # elif pt_schedule_time_duration == '':
+    #     error = '진행 시간을 선택해 주세요.'
+    # elif pt_schedule_time == '':
+    #     error = '시작 시간을 선택해 주세요.'
 
-    if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+    # if error is None:
+    #     try:
+    #         class_info = ClassTb.objects.get(class_id=class_id)
+    #     except ObjectDoesNotExist:
+    #         error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         if group_schedule_id is not None and group_schedule_id != '':
@@ -1315,10 +1315,6 @@ def pt_add_logic_func(pt_schedule_date, pt_schedule_time_duration, pt_schedule_t
             group_schedule_id = None
 
     if error is None:
-        time_duration_temp = class_info.class_hour*int(pt_schedule_time_duration)
-        start_date = datetime.datetime.strptime(pt_schedule_date+' '+pt_schedule_time, '%Y-%m-%d %H:%M:%S.%f')
-        end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
-
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
         except ObjectDoesNotExist:

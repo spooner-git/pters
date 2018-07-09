@@ -262,19 +262,27 @@ def billing_check_logic(request):
                 user_id = custom_data['user_id']
                 payment_type_cd = custom_data['payment_type_cd']
                 merchandise_type_cd = custom_data['merchandise_type_cd']
-                customer_uid = custom_data['customer_uid']
             except KeyError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
             except TypeError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing TypeError'
             except ValueError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing ValueError'
+
+            try:
+                customer_uid = custom_data['customer_uid']
+            except KeyError:
+                customer_uid = None
+            except TypeError:
+                customer_uid = None
+            except ValueError:
+                customer_uid = None
         else:
             try:
                 payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
                 user_id = payment_user_info.member_id
                 payment_type_cd = payment_user_info.payment_type_cd
-                merchandise_type_cd = payment_user_info.payment_type_cd
+                merchandise_type_cd = payment_user_info.merchandise_type_cd
                 customer_uid = payment_user_info.customer_uid
             except ObjectDoesNotExist:
                 error = '결제 정보 [정기결제 예약 스케쥴] 세부 사항 조회 에러'
@@ -284,29 +292,21 @@ def billing_check_logic(request):
             member_info = MemberTb.objects.get(member_id=user_id)
         except ObjectDoesNotExist:
             member_info = None
-        logger.info(str(user_id))
 
-    logger.info('pp1:'+str(error))
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
-            logger.info('pp2')
             error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
-            logger.info('pp3')
             if error is None:
-                logger.info('pp4')
                 if custom_data is not None:
                     payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
                 else:
                     payment_user_info_result = func_update_billing_logic(payment_result)
-                logger.info('pp5')
                 if payment_user_info_result['error'] is None:
-                    logger.info('pp6')
                     if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
                         # if error is None:
                         func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
                 else:
-                    logger.info('pp7')
                     error = payment_user_info_result['error']
 
             else:
@@ -314,9 +314,9 @@ def billing_check_logic(request):
                 func_send_refund_payment(imp_uid, merchant_uid, access_token)
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
-        else:  # 재결제 시도
-            func_resend_payment_info(customer_uid, merchant_uid,
-                                     payment_result['amount'])
+        # else:  # 재결제 시도
+        #     func_resend_payment_info(customer_uid, merchant_uid,
+        #                              payment_result['amount'])
 
     if error is None:
         if member_info is not None:
