@@ -273,6 +273,8 @@ def func_add_billing_logic(custom_data, payment_result):
         except ValueError:
             customer_uid = None
 
+    logger.info('customer_uid::'+str(payment_result['merchant_uid']))
+    logger.info('customer_uid::'+str(payment_result['customer_uid']))
     if error is None:
         start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
         date = int(start_date.strftime('%d'))
@@ -292,7 +294,6 @@ def func_add_billing_logic(custom_data, payment_result):
             billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
             if billing_info_check > 0:
                 error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.2:'+str(customer_uid)
-
 
     if error is None:
         try:
