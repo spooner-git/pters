@@ -1632,7 +1632,7 @@ $(document).ready(function(){
         // index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         console.log(sortedlist)
         //var semiresult = []
-        offAddOkArray = []
+        semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
             if(sortedlist[p*2+2] - sortedlist[p*2+1] >= (Options.classDur)*Options.timeDur/60){
                 var z = 0;
@@ -1642,11 +1642,28 @@ $(document).ready(function(){
                     if(selecteddate == today_YY_MM_DD && sortedlist[p*2+1] + z*(Options.classDur)/60 <= Options.limit+currentHour+0.5){
 
                     }else{
-                        offAddOkArray.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
+                        semiresult.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
                     }
                     z = z + 0.5;
                 }
             }
+        }
+
+        offAddOkArray = []
+        if(Options.startTime == 0){ //매 시작 정시만
+            for(var t=0; t<semiresult.length; t++){
+                if(semiresult[t] - parseInt(semiresult[t]) == 0){
+                    offAddOkArray.push(semiresult[t])
+                }
+            }
+        }else if(Options.startTime == 1){ //매 시각 30분에만
+            for(var t=0; t<semiresult.length; t++){
+                if(semiresult[t] - parseInt(semiresult[t]) == 0.5){
+                    offAddOkArray.push(semiresult[t])
+                }
+            }
+        }else{
+            offAddOkArray = semiresult
         }
         
         /*
