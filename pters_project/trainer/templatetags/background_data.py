@@ -45,6 +45,7 @@ def get_setting_info(request):
     request.session['setting_member_reserve_date_available'] = context['lt_res_05']
     request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
     request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+    request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
     request.session['setting_language'] = context['lt_lan_01']
 
     request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
