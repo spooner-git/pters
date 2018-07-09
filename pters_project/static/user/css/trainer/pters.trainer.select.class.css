@@ -160,11 +160,11 @@ button.classAdd{
 	text-decoration: underline;
 }
 */
-.lecture_row .table_lecture_name:hover{
+.lecture_row .table_lecture_name:hover, .lecture_row .table_lecture_name:active{
 	color: #fe4e65 !important;
 	text-decoration: underline;
 }
-._selection .table_lecture_name:hover{
+._selection .table_lecture_name:hover, ._selection .table_lecture_name:active{
 	color: unset;
 	text-decoration: unset;
 }

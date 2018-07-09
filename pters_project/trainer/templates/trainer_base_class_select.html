@@ -455,7 +455,7 @@
                 lec_select_stateCodeArray = jsondata.stateCodeArray;
                 lec_select_subjectCodeArray= jsondata.subjectCodeArray;
 
-                fill_lecture_select_popup()
+                fill_lecture_select_popup(jsondata, $('.lecture_select_table_list'))
             },
 
             complete:function(){
@@ -516,6 +516,7 @@
         ajax_read_lecture_info_from_db()
     }
 
+    /*
     function fill_lecture_select_popup(){
         var len = lec_select_subjectNameArray.length;
         var list_table_to_join = []
@@ -540,6 +541,93 @@
         if(center_counter==0){
             $('.table_center_name').css('display', 'none')
         }
+    }
+    */
+
+    function fill_lecture_select_popup(jsondata, HTMLselector){
+        var json = class_sort_by_center(jsondata);
+        console.log(json)
+
+        var list_table_to_join = [];
+        for(center in json){
+            var subject_join = []
+            var center_counter = 0;
+            var centers = [];
+            for(subject in json[center]){
+                var classId = json[center][subject]['classId'];
+                var classHour = json[center][subject]['classHour'];
+                var classHourUnit = json[center][subject]['classHourUnit'];
+                var classIPNumber = json[center][subject]['classInProgressMemberNum'];
+                var classMemberNum = json[center][subject]['classMemberNum'];
+                var startDt = json[center][subject]['startDate'];
+                var endDt = json[center][subject]['endDate'];
+                var modDate = json[center][subject]['modDate'];
+                var regDate = json[center][subject]['regDate'];
+                var stateCode = json[center][subject]['stateCode'];
+                var stateName = json[center][subject]['stateName'];
+                var subjectCode = json[center][subject]['subjectCode']
+
+                var currentClass = "";
+                var table = "";
+                var currentIndicator = ""
+
+                    currentClass = "";
+                    //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                    table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+classId+'" '+'onclick="lecture_check('+classId+')"'+'>';
+                
+                var centerName__ = center;
+                if(center == ""){
+                    var centerName__ = '센터 미지정'
+                }
+               
+                //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+                var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+subject+'</div>';
+                var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+classIPNumber+'명</div>';
+                var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(startDt,'.')+' ~</div>';
+                var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+stateName+'</div>';
+                //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
+                if(subject_join.length == 0){
+                    var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
+                }else{
+                    var sum = table + lectureName + traineeNum + startDate + status + '</div>';
+                }
+
+                subject_join.push(sum);
+                if(center != ''){
+                    center_counter += 1;
+                }
+            } //for2
+            list_table_to_join.push(subject_join.join(''))
+        }//for1
+        HTMLselector.html(list_table_to_join.join(''))
+    }
+
+    function class_sort_by_center(jsondata){
+        var len = jsondata.subjectNameArray.length;
+        var center_subject = {}
+        for(var i=0; i<len; i++){
+            center_subject[jsondata.centerNameArray[i]] = {}
+        }
+        for(var j=0; j<len; j++){
+            center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+        }
+        for(var k=0; k<len; k++){
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+        }
+        console.log(center_subject)
+        return center_subject
     }
 
 
