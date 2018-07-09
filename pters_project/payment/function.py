@@ -15,14 +15,13 @@ logger = logging.getLogger(__name__)
 
 def func_set_billing_schedule(customer_uid, payment_user_info):
     error = None
+    logger.info('test1:'+str(customer_uid))
     try:
         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
-        billing_info.mod_dt = timezone.now()
-        billing_info.use = USE
-        billing_info.save()
     except ObjectDoesNotExist:
         error = '정기 결제 등록에 실패했습니다.'
 
+    logger.info('test2:'+str(payment_user_info))
     if error is None:
         payment_type_cd = payment_user_info.payment_type_cd
         merchandise_type_cd = payment_user_info.merchandise_type_cd
@@ -38,6 +37,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         merchant_uid = 'merchant_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
+    logger.info('test3')
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
@@ -46,7 +46,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                         'merchant_uid': merchant_uid,  # 주문 번호
                         'schedule_at': next_schedule_timestamp,  # 결제 시도 시각 in Unix Time Stamp.ex.다음 달  1 일
                         'amount': price,
-                        'name': 'PTERS - 월간 이용권 정기결제',
+                        'name': payment_user_info.name,
                         'buyer_name': payment_user_info.member.name,
                         'buyer_tel': '',
                         'buyer_email': payment_user_info.member.user.email
@@ -62,6 +62,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
+    logger.info('test4')
     if error is None:
         start_date = payment_user_info.end_date
         end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
@@ -70,10 +71,12 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                      payment_type_cd=payment_type_cd,
                                      merchant_uid=merchant_uid, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
+                                     name=payment_user_info.name,
                                      price=price,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         payment_info.save()
 
+    logger.info(str(error))
     return error
 
 
@@ -204,9 +207,9 @@ def func_get_payment_result(imp_uid, access_token):
         try:
             json_loading_data = json.loads(json_data)
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.5'
         except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.6'
 
     if error is None:
         if resp['status'] == '200':
@@ -274,11 +277,11 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
         if payment_info_check > 0:
-            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
+            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.1:'+str(payment_result['merchant_uid'])
         if custom_data['payment_type_cd'] == 'PERIOD':
             billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
             if billing_info_check > 0:
-                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.'
+                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.2:'+str(customer_uid)
 
     if error is None:
 
@@ -331,6 +334,42 @@ def func_add_billing_logic(custom_data, payment_result):
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.1:'+str(e)
         except ValueError:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
+
+    context['error'] = error
+    return context
+
+
+def func_update_billing_logic(payment_result):
+    context = {'error': None, 'payment_user_info': None}
+    error = None
+
+    if error is None:
+        try:
+            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=payment_result['merchant_uid'])
+        except ObjectDoesNotExist:
+            error = '결제 정보를 update 하는데 실패했습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                payment_user_info.channel = payment_result['channel']
+                payment_user_info.card_name = payment_result['card_name']
+                payment_user_info.buyer_email = payment_result['buyer_email']
+                payment_user_info.status = payment_result['status']
+                payment_user_info.fail_reason = payment_result['fail_reason']
+                payment_user_info.currency = payment_result['currency']
+                payment_user_info.pay_method = payment_result['pay_method']
+                payment_user_info.pg_provider = payment_result['pg_provider']
+                payment_user_info.receipt_url = payment_result['receipt_url']
+                payment_user_info.buyer_name = payment_result['buyer_name']
+                payment_user_info.mod_dt = timezone.now()
+                payment_user_info.USE = USE
+                payment_user_info.save()
+                context['payment_user_info'] = payment_user_info
+        except TypeError as e:
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.3:'+str(e)
+        except ValueError:
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.4'
 
     context['error'] = error
     return context

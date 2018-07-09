@@ -21,7 +21,8 @@ from configs import settings
 from configs.const import USE, UN_USE
 from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
-    func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic
+    func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
+    func_update_billing_logic
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
@@ -236,6 +237,8 @@ def billing_check_logic(request):
     if error is None:
         try:
             payment_result = json_loading_data['response']
+            logger.info(str(payment_result))
+
         except KeyError:
             error = '결제 정보 [response] json data parsing 에러'
 
@@ -249,43 +252,48 @@ def billing_check_logic(request):
         try:
             custom_data = json.loads(payment_result['custom_data'])
         except ValueError:
-            error = '결제 정보 json data parsing 에러'
+            custom_data = None
         except TypeError:
-            error = '결제 정보 json data parsing 에러'
+            custom_data = None
 
     if error is None:
-        try:
-            user_id = custom_data['user_id']
-            payment_type_cd = custom_data['payment_type_cd']
-            merchandise_type_cd = custom_data['merchandise_type_cd']
-        except KeyError:
-            error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
-        except TypeError:
-            error = '결제 정보 [custom_data] 세부사항 json data parsing TypeError'
-        except ValueError:
-            error = '결제 정보 [custom_data] 세부사항 json data parsing ValueError'
-
-    if error is None:
-        try:
-            customer_uid = custom_data['customer_uid']
-        except KeyError:
-            customer_uid = None
-        except TypeError:
-            customer_uid = None
-        except ValueError:
-            customer_uid = None
+        if custom_data is not None:
+            try:
+                user_id = custom_data['user_id']
+                payment_type_cd = custom_data['payment_type_cd']
+                merchandise_type_cd = custom_data['merchandise_type_cd']
+                customer_uid = payment_result['customer_uid']
+            except KeyError:
+                error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
+            except TypeError:
+                error = '결제 정보 [custom_data] 세부사항 json data parsing TypeError'
+            except ValueError:
+                error = '결제 정보 [custom_data] 세부사항 json data parsing ValueError'
+        else:
+            try:
+                payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
+                user_id = payment_user_info.member_id
+                payment_type_cd = payment_user_info.payment_type_cd
+                merchandise_type_cd = payment_user_info.payment_type_cd
+                customer_uid = payment_user_info.customer_uid
+            except ObjectDoesNotExist:
+                error = '결제 정보 [정기결제 예약 스케쥴] 세부 사항 조회 에러'
 
     if error is None:
         try:
             member_info = MemberTb.objects.get(member_id=user_id)
         except ObjectDoesNotExist:
             member_info = None
+        logger.info(str(user_id))
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
             error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
             if error is None:
-                payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
+                if custom_data is not None:
+                    payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
+                else:
+                    payment_user_info_result = func_update_billing_logic(payment_result)
                 if payment_user_info_result['error'] is None:
                     if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
@@ -305,11 +313,12 @@ def billing_check_logic(request):
 
     if error is None:
         if member_info is not None:
-            logger.info(str(member_info.name) + '님 정기 결제 완료:'
-                        + str(member_info.member_id) + ':' + str(payment_result['merchant_uid']))
+            logger.info(str(member_info.name) + '님 정기 결제 완료['
+                        + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
     else:
-        logger.error(str(member_info.name) + '님 결제 완료 체크:'
-                     + str(member_info.member_id) + ':' + str(error))
+        if member_info is not None:
+            logger.error(str(member_info.name) + '님 결제 완료 체크['
+                         + str(member_info.member_id) + ']' + str(error))
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
 
