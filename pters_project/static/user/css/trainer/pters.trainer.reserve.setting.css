@@ -48,6 +48,13 @@ li a{
 
 }
 
+#memberReserveBasicHourSetting{
+	z-index: 7;
+}
+	#ulTimes_rsvHour{
+		max-height: 190px;
+	}
+
 #memberAvailDateSetting{
 	z-index: 5;
 }
@@ -69,7 +76,7 @@ li a{
 	width: 50%;
 }
 
-#timeSelect, #dateSelect, #timeSelect2{
+#timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect{
 	left: 16%;
 	max-width: 170px;
 	display: inline-flex;
