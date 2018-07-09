@@ -265,7 +265,7 @@ def func_add_billing_logic(custom_data, payment_result):
 
     if error is None:
         try:
-            customer_uid = payment_result['customer_uid']
+            customer_uid = custom_data['customer_uid']
         except KeyError:
             customer_uid = None
         except TypeError:
@@ -274,7 +274,7 @@ def func_add_billing_logic(custom_data, payment_result):
             customer_uid = None
 
     logger.info('customer_uid::'+str(payment_result['merchant_uid']))
-    logger.info('customer_uid::'+str(payment_result['customer_uid']))
+    logger.info('customer_uid::'+str(custom_data['customer_uid']))
     if error is None:
         start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
         date = int(start_date.strftime('%d'))
