@@ -416,23 +416,28 @@
         }
 
         function show_explain_page_to_target(target, device){
-            $('.__targetall, .pagination').css('display','block')
+            $('.__targetall').css('display','block')
+            
+            
             var loc_1 = $('#promote_1').height()
             if(device == "pc"){
+                $('.pagination').css('display','block')
                 $('body, html').animate({scrollTop : loc_1},700)
             }else if(device ="mobile"){
+                $('.paginationMobile').css('display','table')
                 right_page()
             }
             if(target == "__teacher"){
                 explain_mode = 5;
                 $('.__teacher').css('display','block')
                 $('.__student').css('display','none')
-                $('#page5, #page6').css('display','block')
+                $('.paginationMobile #page6').css('display','table-cell')
+                $('.pagination #page6').css('display','block')
             }else if(target == "__student"){
                 explain_mode = 4;
                 $('.__teacher').css('display','none')
                 $('.__student').css('display','block')
-                $('#page5, #page6').css('display','none')
+                $('.paginationMobile #page6, .pagination #page6').css('display','none')
             }
         }
 

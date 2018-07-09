@@ -46,7 +46,7 @@ nav.upperbar span:hover{
 }
 
 .paginationMobile{
-	display: table;
+	display: none;
 	position: fixed;
 	bottom: 100px;
 	right: 0;
