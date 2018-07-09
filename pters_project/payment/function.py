@@ -15,13 +15,11 @@ logger = logging.getLogger(__name__)
 
 def func_set_billing_schedule(customer_uid, payment_user_info):
     error = None
-    logger.info('test1:'+str(customer_uid))
     try:
         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
     except ObjectDoesNotExist:
         error = '정기 결제 등록에 실패했습니다.'
 
-    logger.info('test2:'+str(payment_user_info))
     if error is None:
         payment_type_cd = payment_user_info.payment_type_cd
         merchandise_type_cd = payment_user_info.merchandise_type_cd
@@ -39,7 +37,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         merchant_uid = 'merchant_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
-    logger.info('test3')
     if error is None and access_token is not None:
         data = {
                 'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
@@ -64,7 +61,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
 
-    logger.info('test4')
     if error is None:
         start_date = payment_user_info.end_date
         end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
@@ -78,7 +74,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         payment_info.save()
 
-    logger.info(str(error))
     return error
 
 
@@ -240,8 +235,6 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
     if resp['status'] != '200':
         error = '통신중 에러가 발생했습니다.'
 
-    logger.error('resp::'+str(resp))
-    logger.error('content::'+str(content))
     if error is None:
         json_data = content.decode('utf-8')
         try:
@@ -364,7 +357,7 @@ def func_update_billing_logic(payment_result):
                 payment_user_info.receipt_url = payment_result['receipt_url']
                 payment_user_info.buyer_name = payment_result['buyer_name']
                 payment_user_info.mod_dt = timezone.now()
-                payment_user_info.USE = USE
+                payment_user_info.use = USE
                 payment_user_info.save()
                 context['payment_user_info'] = payment_user_info
         except TypeError as e:
