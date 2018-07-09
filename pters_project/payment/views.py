@@ -262,13 +262,21 @@ def billing_check_logic(request):
                 user_id = custom_data['user_id']
                 payment_type_cd = custom_data['payment_type_cd']
                 merchandise_type_cd = custom_data['merchandise_type_cd']
-                customer_uid = custom_data['customer_uid']
             except KeyError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
             except TypeError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing TypeError'
             except ValueError:
                 error = '결제 정보 [custom_data] 세부사항 json data parsing ValueError'
+
+            try:
+                customer_uid = custom_data['customer_uid']
+            except KeyError:
+                customer_uid = None
+            except TypeError:
+                customer_uid = None
+            except ValueError:
+                customer_uid = None
         else:
             try:
                 payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
@@ -306,9 +314,9 @@ def billing_check_logic(request):
                 func_send_refund_payment(imp_uid, merchant_uid, access_token)
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
-        else:  # 재결제 시도
-            func_resend_payment_info(customer_uid, merchant_uid,
-                                     payment_result['amount'])
+        # else:  # 재결제 시도
+        #     func_resend_payment_info(customer_uid, merchant_uid,
+        #                              payment_result['amount'])
 
     if error is None:
         if member_info is not None:
