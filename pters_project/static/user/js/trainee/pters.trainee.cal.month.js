@@ -542,6 +542,7 @@ $(document).ready(function(){
 
     function send_reservation(){
         click_check = 0
+        console.log($('#pt-add-form').serialize())
         $.ajax({
             url: '/trainee/add_trainee_schedule/',
             data: $('#pt-add-form').serialize(),
@@ -553,7 +554,9 @@ $(document).ready(function(){
             },
 
             success:function(data){
+                console.log(data)
                 var jsondata = JSON.parse(data);
+
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -1032,6 +1035,7 @@ $(document).ready(function(){
                     var planEDate   = Number(jsondata.group_schedule_end_datetime[i].split(' ')[0].split('-')[2])
                     var planEndHour = Number(jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0])
                     var planEndMin  = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
+                    /*
                     if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
                         if(planEndHour-planHour == 0){
                             var planDura = "0.5"
@@ -1052,6 +1056,8 @@ $(document).ready(function(){
                     }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
                         var planDura = 24-planHour
                     }
+                    */
+                    var planDura = calc_duration_by_start_end(jsondata.group_schedule_start_datetime[i].split(' ')[0], jsondata.group_schedule_start_datetime[i].split(' ')[1], jsondata.group_schedule_end_datetime[i].split(' ')[0], jsondata.group_schedule_end_datetime[i].split(' ')[1])
 
 
                     //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
@@ -1096,7 +1102,7 @@ $(document).ready(function(){
                         '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
                         '" data-dur="'+planDura+
                         '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div></div></div>'+
-                        jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' - ['+
+                        jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+ jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' : ['+
                         jsondata.group_schedule_group_name[i]+'] ('+
                         jsondata.group_schedule_current_member_num[i]+'/'+
                         jsondata.group_schedule_max_member_num[i]+
