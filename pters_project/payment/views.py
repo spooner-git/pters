@@ -48,9 +48,9 @@ def check_billing_logic(request):
     error = None
     merchandise_type_cd = None
     payment_type_cd = None
-    start_date = None
-    end_date = None
-    date = None
+    # start_date = None
+    # end_date = None
+    # date = None
     input_price = 0
     today = datetime.date.today()
 
@@ -65,9 +65,9 @@ def check_billing_logic(request):
         payment_type_cd = json_loading_data['payment_type_cd']
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
 
-    if error is None:
-        if payment_type_cd == 'PERIOD':
-            customer_uid = json_loading_data['customer_uid']
+    # if error is None:
+    #     if payment_type_cd == 'PERIOD':
+    #         customer_uid = json_loading_data['customer_uid']
 
     if error is None:
         # today = datetime.datetime.combine(today, datetime.datetime.min.time())
@@ -78,13 +78,13 @@ def check_billing_logic(request):
                                                                       use=USE).order_by('end_date')
         if payment_user_info_count_period != 0:
             error = '이미 정기결제 중인 기능입니다.'
-
-    if error is None:
-        payment_user_info_count_single = PaymentInfoTb.objects.filter(end_date__gte=today,
-                                                                      member_id=request.user.id,
-                                                                      merchandise_type_cd=merchandise_type_cd,
-                                                                      payment_type_cd='SINGLE',
-                                                                      use=USE).count()
+    #
+    # if error is None:
+    #     payment_user_info_count_single = PaymentInfoTb.objects.filter(end_date__gte=today,
+    #                                                                   member_id=request.user.id,
+    #                                                                   merchandise_type_cd=merchandise_type_cd,
+    #                                                                   payment_type_cd='SINGLE',
+    #                                                                   use=USE).count()
 
     if error is None:
         error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
@@ -314,9 +314,12 @@ def billing_check_logic(request):
                 func_send_refund_payment(imp_uid, merchant_uid, access_token)
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
-        # else:  # 재결제 시도
-        #     func_resend_payment_info(customer_uid, merchant_uid,
-        #                              payment_result['amount'])
+        else:  # 재결제 시도
+            payment_user_info_result = func_update_billing_logic(payment_result)
+            # func_resend_payment_info(customer_uid, merchant_uid,
+            #                          payment_result['amount'])
+            if payment_user_info_result['error'] is not None:
+                error = payment_user_info_result['error']
 
     if error is None:
         if member_info is not None:

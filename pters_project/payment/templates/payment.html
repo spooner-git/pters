@@ -113,25 +113,25 @@
         $('#pay_group_function_monthly').click(function(e){
 {#            alert('그룹 정기 결제');#}
             e.preventDefault();
-            payment('PTERS - 그룹기능 정기 결제', 'card', 'PERIOD', 'GROUP', 9000);
+            check_payment('PTERS - 그룹기능 정기 결제', 'card', 'PERIOD', 'GROUP', 9000);
             //그룹 레슨 정기결제 버튼
         });
         $('#pay_group_function_instant').click(function(e){
 {#            alert('그룹 1개월 이용권 결제');#}
             e.preventDefault();
-            payment('PTERS - 그룹기능 1개월 이용권', 'card', 'SINGLE', 'GROUP', 12000);
+            check_payment('PTERS - 그룹기능 1개월 이용권', 'card', 'SINGLE', 'GROUP', 12000);
             //그룹 레슨 1개월 결제 버튼
         });
         $('#pay_ads_remove_monthly').click(function(e){
 {#            alert('광고 제거 정기 결제');#}
             e.preventDefault();
-            payment('PTERS - 광고제거 정기 결제', 'card', 'PERIOD', 'ADVERTISE', 1000);
+            check_payment('PTERS - 광고제거 정기 결제', 'card', 'PERIOD', 'ADVERTISE', 1000);
             //광고 제거 정기 결제 버튼
         });
         $('#pay_ads_remove_instant').click(function(e){
 {#            alert('광고 제거 1개월 결제');#}
             e.preventDefault();
-            payment('PTERS - 광고제거 1개월 이용권', 'card', 'SINGLE', 'ADVERTISE', 2000);
+            check_payment('PTERS - 광고제거 1개월 이용권', 'card', 'SINGLE', 'ADVERTISE', 2000);
             //광고 제거 1개월 결제 버튼
         });
 
@@ -144,7 +144,7 @@
             }
         }
         */
-        function check_payment(payment_type_cd, merchandise_type_cd, price){
+        function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
             var error_check = true;
 
             $.ajax({
@@ -170,12 +170,13 @@
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                         error_check = false;
+                        alert(jsondata.messageArray);
                     }else {
                         if(payment_type_cd=='PERIOD'){
-                            payment_open_pg(name, pay_method, merchant_uid_data, customer_uid_data, price);
+                            payment(name, pay_method, payment_type_cd, merchandise_type_cd, price)
                         }
                         else{
-                            payment_open_pg_single(name, pay_method, merchant_uid_data, price);
+                            payment(name, pay_method, payment_type_cd, merchandise_type_cd, price)
                         }
                     }
 

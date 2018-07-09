@@ -257,6 +257,7 @@ def func_add_billing_logic(custom_data, payment_result):
     end_date = None
     date = None
     customer_uid = None
+    payment_info = None
 
     if error is None:
         try:
@@ -269,7 +270,16 @@ def func_add_billing_logic(custom_data, payment_result):
             customer_uid = None
 
     if error is None:
-        start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
+        payment_user_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
+                                                         end_date__lt=datetime.date.today()).order_by('end_date')
+        if len(payment_user_info) > 0:
+            payment_info = payment_user_info[0]
+
+    if error is None:
+        if payment_info is None:
+            start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
+        else:
+            start_date = payment_info.end_date
         date = int(start_date.strftime('%d'))
 
     if error is None:
