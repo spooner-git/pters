@@ -477,7 +477,7 @@ $(document).ready(function(){
         $("#id_time_duration").val(1);
         var arry = $(this).attr('data-trainingtime').split(':')
         //durTimeSet(arry[0]);
-        addGraphIndicator(1)
+        addGraphIndicator(Options.timeDur)
         check_dropdown_selected();
         //var selected_start_time = Number($('td.graphindicator_leftborder').attr('id').replace(/g/gi,""))
         var selected_start_time = Number($(this).attr('data-trainingtime').split(':')[0])
@@ -1301,7 +1301,7 @@ $(document).ready(function(){
                 }else{
                     timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
                     timeGraphSet("off","grey", "AddClass", jsondata);
-                    startTimeSet('class');  //일정등록 가능한 시작시간 리스트 채우기
+                    startTimeSet('class', jsondata, today_form);  //일정등록 가능한 시작시간 리스트 채우기
                     draw_time_group_graph(jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
                 }
 
@@ -1529,6 +1529,7 @@ $(document).ready(function(){
 
     }
 
+    /*
     function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리스트 채우기  회원용!!!!
         switch(option){
             case "class" :
@@ -1570,12 +1571,126 @@ $(document).ready(function(){
         }
         console.log(offAddOkArray)
     }
+    */
+
+    function startTimeArraySet(selecteddate, jsondata){ //offAddOkArray 채우기 : 시작시간 리스트 채우기  회원용!!!!
+        switch(option){
+            case "class" :
+                var option = ""
+                break;
+            case "mini" :
+                var option = "_mini"
+                break;
+        }
+
+        var plan_starttime = {};
+        var plan_endtime = {};
+
+        for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
+            if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
+                plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
+            }
+            if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate){
+                plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
+            }
+        }
+        for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
+            if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
+                plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
+            }
+            if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate){
+                plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
+            }
+        }
+
+        var plan_time = [];
+        for(starttime in  plan_starttime){
+            var hour = starttime.split(':')[0];
+            var min = starttime.split(':')[1];
+            if(min == '00'){
+                plan_time.push(Number(hour))
+            }else if(min == '30'){
+                plan_time.push(Number(hour)+0.5)
+            }
+        }
+        for(endtime in plan_endtime){
+            var ehour = endtime.split(':')[0];
+            var emin = endtime.split(':')[1];
+            if(emin == '00'){
+                plan_time.push(Number(ehour))
+            }else if(emin == '30'){
+                plan_time.push(Number(ehour)+0.5)
+            }
+        }
+        plan_time.push(Options.workEndTime)
+        if(plan_time.length==1 && plan_time[0] == Options.workEndTime){
+            plan_time.push(Options.workStartTime)
+            plan_time.push(0)
+        }
+
+        var sortedlist = plan_time.sort(function(a,b){return a-b;})
+        // index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
+        console.log(sortedlist)
+        //var semiresult = []
+        offAddOkArray = []
+        for(var p=0; p<(sortedlist.length-1)/2; p++){
+            if(sortedlist[p*2+2] - sortedlist[p*2+1] >= (Options.classDur)*Options.timeDur/60){
+                var z = 0;
+                while(sortedlist[p*2+2] >= sortedlist[p*2+1] + z*(Options.classDur)/60 + (Options.classDur)*Options.timeDur/60){
+                    //semiresult.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
+                    console.log(today_YY_MM_DD,selecteddate)
+                    if(selecteddate == today_YY_MM_DD && sortedlist[p*2+1] + z*(Options.classDur)/60 <= Options.limit+currentHour+0.5){
+
+                    }else{
+                        offAddOkArray.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
+                    }
+                    z = z + 0.5;
+                }
+            }
+        }
+        
+        /*
+        offAddOkArray = []
+        
+        //if(Number(classHourArray[0]) == 60){
+        if(Options.classDur == 60){
+            for(var i=Options.workStartTime;i<Options.workEndTime;i++){
+                if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
+                    if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') && !$('#'+i+'g_30'+option).hasClass('greytimegraph') && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft'))
+                        offAddOkArray.push(i);
+                }
+                if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+                    if($('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
+                        //
+                    }else{
+                        if(i+1 < Options.workEndTime){
+                            //offAddOkArray.push(i+0.5)
+                        }
+
+                    }
+                }
+            }
+            //}else if(Number(classHourArray[0]) == 30){
+        }else if(Options.classDur == 30){
+            for(var i=Options.workStartTime;i<Options.workEndTime;i++){
+                if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
+                    offAddOkArray.push(i);
+                }
+                if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
+                    offAddOkArray.push(i+0.5)
+                }
+            }
+        }
+
+        console.log(offAddOkArray)
+        */
+    }
 
 
 
 
-    function startTimeSet(option){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
-        startTimeArraySet(option); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
+    function startTimeSet(option, jsondata, selecteddate){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
+        startTimeArraySet(selecteddate, jsondata); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
         switch(option){
             case "class":
                 var options = ""
