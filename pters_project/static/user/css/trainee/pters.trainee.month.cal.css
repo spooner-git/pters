@@ -655,9 +655,9 @@ img,a,div,span,p{
 	background: #ffffff;
 	z-index: 150;
 }
-.groupreserve{
+.groupreserve, .classreserve{
 	display: none;
-	min-height: 128px;
+	min-height: 156px;
 }
 
 
@@ -982,17 +982,14 @@ img,a,div,span,p{
 		width: 450px;
 	}
 
-	#timeGraph.personalreserve, .groupreserve{
+	#timeGraph.personalreserve, .groupreserve, .classreserve{
 		position: relative;
 		background: #f4f4f4;
 		margin : 0 auto;
 		width: 450px;
 	}
 
-	.groupreserve{
-		display: none;
-		min-height: 128px;
-	}
+	
 
 	#popup_info,#popup_info2,#popup_info3,#popup_info4, #popup_info3_memo{
 		background: #ffffff;

@@ -105,6 +105,9 @@
             {% if group_lecture_flag %}
                 <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="groupreserve">그룹 레슨</div>
             {% endif %}
+            {% if group_lecture_flag %}
+                <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="classreserve">클래스 예약</div>
+            {% endif %}
         </div>
 
         {% if lecture_flag %}
@@ -145,6 +148,16 @@
                     <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
                 </div>
                 <div id="groupTimeSelect"></div>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+            </div>
+        {% endif %}
+
+        {% if group_lecture_flag %}
+            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph classreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
+                <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">개설된 클래스
+                    <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+                </div>
+                <div id="classTimeSelect"></div>
                 <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
             </div>
         {% endif %}

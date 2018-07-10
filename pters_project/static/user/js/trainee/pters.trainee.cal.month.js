@@ -81,12 +81,15 @@ $(document).ready(function(){
         var page = $(this).attr('data-page')
         if(page == "personalreserve"){
             $('.'+page).show()
-            $('.groupreserve').hide()
+            $('.groupreserve, .classreserve').hide()
             $('.groupreserve div.checked').removeClass('checked ptersCheckboxInner');
 
         }else if(page == "groupreserve"){
             $('.'+page).show()
-            $('.personalreserve').hide()
+            $('.personalreserve, .classreserve').hide()
+        }else if(page == "classreserve"){
+            $('.'+page).show()
+            $('.personalreserve, .groupreserve').hide()
         }
         $(this).addClass('mode_active')
         $(this).siblings('.mode_switch_button').removeClass('mode_active')
@@ -1023,8 +1026,13 @@ $(document).ready(function(){
 
 
 
-    function draw_time_group_graph(jsondata, dateinfo){
+    function draw_time_group_graph(option, jsondata, dateinfo){
         console.log(jsondata)
+        if(option == "group"){
+            $htmlTarget = $('#groupTimeSelect');
+        }else if(option == "class"){
+            $htmlTarget = $('#classTimeSelect');
+        }
         var len = jsondata.group_schedule_group_id.length;
         var htmlTojoin = []
         for(var i=0; i<len; i++){
@@ -1065,6 +1073,10 @@ $(document).ready(function(){
 
                     //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
                     var disable = ""
+                    var myreserve = ""
+                    var myreservecheckbox1 = ""
+                    var myreservecheckbox2 = ""
+                    
                     var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(jsondata.group_schedule_start_datetime[i].split(' ')[0],'')
                     var today = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'_'+oriMonth+'_'+oriDate,'');
 
@@ -1086,6 +1098,9 @@ $(document).ready(function(){
                     //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화
                     if(jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) !=  -1){
                         var disable = "disabled_button"
+                        var myreserve = "<span style='color:#fe4e65'> - 내 예약</span>"
+                        var myreservecheckbox1 = 'checked '
+                        var myreservecheckbox2 = 'ptersCheckboxInner'
                     }
 
                     //완료된 그룹은 비활성화
@@ -1100,16 +1115,17 @@ $(document).ready(function(){
                         var fulled = "(마감)"
                     }
 
-
-                    htmlTojoin.push('<div><div class="ptersCheckbox '+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+                    htmlTojoin.push('<div><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
                         '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
                         '" data-dur="'+planDura+
-                        '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div></div></div>'+
-                        jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+ jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' : ['+
-                        jsondata.group_schedule_group_name[i]+'] ('+
+                        '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class='+myreservecheckbox2+'></div></div>'+
+                        jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
+                        jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' (' + 
+                        duration_number_to_hangul(planDura)+') : '+
+                        jsondata.group_schedule_group_name[i]+' ('+
                         jsondata.group_schedule_current_member_num[i]+'/'+
                         jsondata.group_schedule_max_member_num[i]+
-                        ')'+fulled+'</div>')
+                        ')'+fulled+myreserve+'</div>')
                 //}
             }
         }
@@ -1123,7 +1139,7 @@ $(document).ready(function(){
                 $('#submitBtn').show()
             }
         }
-        $('#groupTimeSelect').html(htmlTojoin.join(''))
+        $htmlTarget.html(htmlTojoin.join(''))
     }
 
 
@@ -1305,7 +1321,7 @@ $(document).ready(function(){
                     timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
                     timeGraphSet("off","grey", "AddClass", jsondata);
                     startTimeSet('class', jsondata, today_form);  //일정등록 가능한 시작시간 리스트 채우기
-                    draw_time_group_graph(jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
+                    draw_time_group_graph('group', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
                 }
 
             },
