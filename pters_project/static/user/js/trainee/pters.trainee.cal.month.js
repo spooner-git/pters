@@ -1630,19 +1630,20 @@ $(document).ready(function(){
 
         var sortedlist = plan_time.sort(function(a,b){return a-b;})
         // index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
-        console.log(sortedlist)
         //var semiresult = []
         semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
+            console.log('(Options.classDur)*Options.timeDur/60',(Options.classDur)*Options.timeDur/60)
             if(sortedlist[p*2+2] - sortedlist[p*2+1] >= (Options.classDur)*Options.timeDur/60){
                 var z = 0;
-                while(sortedlist[p*2+2] >= sortedlist[p*2+1] + z*(Options.classDur)/60 + (Options.classDur)*Options.timeDur/60){
+                while(sortedlist[p*2+2] >= sortedlist[p*2+1] + z + (Options.classDur)*Options.timeDur/60){
                     //semiresult.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
                     console.log(today_YY_MM_DD,selecteddate)
-                    if(selecteddate == today_YY_MM_DD && sortedlist[p*2+1] + z*(Options.classDur)/60 <= Options.limit+currentHour+0.5){
+                    if(selecteddate == today_YY_MM_DD && sortedlist[p*2+1] + z <= Options.limit+currentHour+0.5){
 
                     }else{
-                        semiresult.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
+                        console.log('sortedlist[p*2+1] + z*(Options.classDur)/60',sortedlist[p*2+1] + z)
+                        semiresult.push(sortedlist[p*2+1] + z)
                     }
                     z = z + 0.5;
                 }
@@ -1665,6 +1666,7 @@ $(document).ready(function(){
         }else{
             offAddOkArray = semiresult
         }
+        console.log('offAddOkArray',offAddOkArray)
         
         /*
         offAddOkArray = []
