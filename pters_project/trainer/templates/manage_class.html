@@ -259,9 +259,9 @@
     <div id="page_managemember">
         <div id="ymdText" style="position: relative;margin-bottom: 20px;">
             <div id="ymdTextWrap">
-                <div id="menuName">그룹 관리
+                <div id="menuName">클래스 관리
                 </div>
-                <div id="menuDescription">고정된 멤버로 짜여진 그룹을 생성합니다.
+                <div id="menuDescription">일정표에 개설 할 클래스를 생성합니다.
                 </div>
             </div>
         </div>
@@ -294,13 +294,15 @@
                     <p>새로운 회원을 등록하고</p>
                     <p>피터스의 기능들을 사용해보세요.</p>
                 </div>
+                <!--
                 <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
                     <span class="KRtext">고정 그룹 추가</span>
                     <span class="JPtext"></span>
                     <span class="ENtext"></span>
                 </div>
+                -->
                 <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
-                    <span class="KRtext">자유 그룹 추가</span>
+                    <span class="KRtext">클래스 생성</span>
                     <span class="JPtext"></span>
                     <span class="ENtext"></span>
                 </div>
@@ -347,9 +349,11 @@
                 <th class="_groupname">
                     <span class="KRtext">그룹명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
                 </th>
+                <!--
                 <th class="_grouptypecd">
                     <span class="KRtext">유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
                 </th>
+                -->
                 <th class="_grouppartystatus">
                     <span class="KRtext">소속/정원(명)</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
                 </th>
@@ -892,9 +896,12 @@
                         <p style="font-size: 12.5px;">정해진 멤버들로 고정적으로 운영되는 방식입니다.</p>
                     </div>
                     <div id="explain_open_lesson">
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 클래스?</p>
+                        <p style="font-size: 14px;">클래스는 회원들이 신청을 원하는 <span style="color:#fe4e65">클래스의 정원을 확인하여 참석 신청</span>을 하는 방식으로 운영합니다.<br>
+                        한 타임당 <span style="color:#fe4e65">수업 정원을 설정</span>하고, 이 클래스에 <span style="color:#fe4e65">예약이 가능한 회원</span>들을 <span style="color:#fe4e65">하위에 추가</span>하여 사용합니다.</p>
                         <p style="font-size: 13px;">
-                            <span style="color:#fe4e65;font-weight: bold;">자유 그룹</span>은 회원을 <span style="color:#fe4e65;font-weight: bold;">숫자 제한 없이</span> 추가 가능합니다. </p>
-                        <p style="font-size: 12.5px;">이 레슨 유형에 속한 회원들은 수업 정원을 확인하여 참석 신청을 하는 방식으로 운영됩니다.</p>
+                            <span style="color:#fe4e65;font-weight: bold;">클래스</span>는 하위에 회원을 <span style="color:#fe4e65;font-weight: bold;">숫자 제한 없이</span> 추가 가능합니다. </p>
+                        
                     </div>
                 </div>
 
@@ -1125,8 +1132,8 @@
 
 
 {% block local_js_footer %}
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.group.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.class.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.class.group.js" %}></script>
     <script>
         $('a.__groupmanage').css('color','#fe4e65;')
         $('#uptext').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>")
