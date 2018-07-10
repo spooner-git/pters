@@ -944,6 +944,7 @@ function groupListSet(option, jsondata){ //option : current, finished
     console.log('groupListSet',jsondata)
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
+    var ordernum = 0;
     for(var i=0; i<groupNum; i++){
         var group_name = jsondata.name[i];
         var group_id = jsondata.group_id[i];
@@ -957,35 +958,38 @@ function groupListSet(option, jsondata){ //option : current, finished
         var groupstatus = jsondata.state_cd_name[i];
         var groupstatus_cd = jsondata.state_cd[i];
 
-        var full_group = ""
-        if(group_membernum == group_capacity && group_type == "NORMAL"){
-            var full_group = "red_color_text"
+        if(group_type == "NORMAL"){
+            ordernum++
+            var full_group = ""
+            if(group_membernum == group_capacity && group_type == "NORMAL"){
+                var full_group = "red_color_text"
+            }
+
+            var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
+            var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
+            var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
+            var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
+
+            var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
+            var htmlend = '</div>'
+            var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
+            var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
+
+            var main = '<div class="_groupnum">'+(i+1)+'</div>'+
+                '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
+                //'<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+                '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
+                '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+                '<div class="_grouppartystatus '+full_group+'"><span>'+ group_membernum + ' /</span> ' + '<input style="width:40px;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
+                '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
+                '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
+                '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
+                //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
+                '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+            htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
-
-        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
-        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
-        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
-        var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
-
-        var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
-        var htmlend = '</div>'
-        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
-        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
-
-        var main = '<div class="_groupnum">'+(i+1)+'</div>'+
-            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-            '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
-            '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
-            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-            '<div class="_grouppartystatus '+full_group+'"><span>'+ group_membernum + ' /</span> ' + '<input style="width:40px;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-            '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
-            '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
-            '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-            //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
-            '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
-        htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
     }
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
     $targetHTML.html(htmlToJoin.join(''))
 }
 //그룹 목록을 화면에 뿌리기

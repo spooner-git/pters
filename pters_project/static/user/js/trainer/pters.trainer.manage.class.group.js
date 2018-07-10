@@ -944,6 +944,7 @@ function groupListSet(option, jsondata){ //option : current, finished
     console.log('groupListSet',jsondata)
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
+    var ordernum = 0;
     for(var i=0; i<groupNum; i++){
         var group_name = jsondata.name[i];
         var group_id = jsondata.group_id[i];
@@ -958,6 +959,7 @@ function groupListSet(option, jsondata){ //option : current, finished
         var groupstatus_cd = jsondata.state_cd[i];
 
         if(group_type == "EMPTY"){
+            ordernum++
             var full_group = ""
             if(group_membernum == group_capacity && group_type == "NORMAL"){
                 var full_group = "red_color_text"
@@ -973,7 +975,7 @@ function groupListSet(option, jsondata){ //option : current, finished
             var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
             var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
 
-            var main = '<div class="_groupnum">'+(i+1)+'</div>'+
+            var main = '<div class="_groupnum">'+ordernum+'</div>'+
                 '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
                 //'<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                 '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
@@ -987,7 +989,7 @@ function groupListSet(option, jsondata){ //option : current, finished
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
     }
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
     $targetHTML.html(htmlToJoin.join(''))
 }
 //그룹 목록을 화면에 뿌리기

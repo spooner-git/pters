@@ -1722,6 +1722,8 @@ function grouptype_dropdown_set(grouplistJSON){
 //DB데이터를 memberListSet에서 사용가능하도록 가공
 function DataFormatting(jsondata){
 
+    console.log(jsondata)
+
     var countListResult = [];
     var nameListResult = [];
     var dateListResult = [];

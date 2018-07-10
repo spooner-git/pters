@@ -1261,9 +1261,9 @@ function float_btn_managemember(option){
 
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 고정 그룹')
+        $('#addgrouptypename').text('신규 그룹')
 
-        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
+        $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         //$('._ADD_GROUPMEMBER_NEW').show()
@@ -1427,9 +1427,9 @@ function pc_add_member(option){
         $('#explain_open_lesson').hide()
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 고정 그룹')
+        $('#addgrouptypename').text('신규 그룹')
 
-        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
+        $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
