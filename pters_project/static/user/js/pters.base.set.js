@@ -258,6 +258,7 @@ $(document).ready(function(){
         $('.__monthplan').text("월간 일정");
         $('.__membermanage').text("회원 관리");
         $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
+        $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
         $('.__workmanage').text("업무 통계");
         $('.__setting').text("설정");
         $('._nameAttach').text("님");
@@ -977,5 +978,11 @@ if(class_code.match(/BL/)){
 }
 */
 
-$('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
+
+if(class_background_img_url.length == 0){
+    $('#ymdText, #upperImg').css('background-image',"url(/static/user/res/main/bg-image-basic-ymdText.png)")
+}else{
+    $('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
+}
+
 

@@ -170,6 +170,8 @@ urlpatterns = [
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     # 그룹 관리 페이지
     url(r'^group_manage/$', views.ManageGroupView.as_view(), name='group_manage'),
+    # 클래스 관리 페이지
+    url(r'^class_manage/$', views.ManageClassView.as_view(), name='class_manage'),
     # 이용 문의 페이지
     url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
     # 강좌 선택 페이지
