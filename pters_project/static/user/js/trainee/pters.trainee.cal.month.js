@@ -305,6 +305,7 @@ $(document).ready(function(){
             $('#cal_popup_plancheck').fadeIn('fast');
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
+            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
@@ -312,6 +313,7 @@ $(document).ready(function(){
             $('#cal_popup_plancheck').css('display','block')
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
+            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').show()
             shade_index(100)
@@ -319,6 +321,7 @@ $(document).ready(function(){
             $('#cal_popup_plancheck').fadeIn('fast');
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
+            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
