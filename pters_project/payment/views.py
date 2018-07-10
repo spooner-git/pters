@@ -22,7 +22,7 @@ from configs.const import USE, UN_USE
 from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
-    func_update_billing_logic
+    func_update_billing_logic, func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
@@ -148,10 +148,9 @@ def cancel_period_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
     context = {'error': None}
-    error = None
+    customer_uid = None
     merchant_uid = None
-    payment_user_info = None
-    billing_user_info = None
+    payment_data = None
 
     try:
         json_loading_data = json.loads(json_data)
@@ -161,24 +160,20 @@ def cancel_period_billing_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
+        customer_uid = json_loading_data['customer_uid']
         merchant_uid = json_loading_data['merchant_uid']
 
     if error is None:
-        try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
+        payment_data = PaymentInfoTb.objects.filter(merchant_uid=merchant_uid,
+                                                    status__isnull=True,
+                                                    payment_type_cd='PERIOD', use=UN_USE)
+
     if error is None:
-        if payment_user_info.customer_uid is not None and payment_user_info.customer_uid != '':
-            try:
-                billing_user_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
-            except ObjectDoesNotExist:
-                error = '결제 정보를 불러오는데 실패했습니다.'
+        error = func_cancel_period_billing_schedule(customer_uid)
+
     if error is None:
-        if payment_user_info is not None:
-            payment_user_info.delete()
-        if billing_user_info is not None:
-            billing_user_info.delete()
+        if len(payment_data) > 0:
+            payment_data.update(mod_dt=timezone.now(), status='cancel', use=UN_USE)
 
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -423,6 +418,43 @@ def resend_period_billing_logic(request):
     else:
         logger.info(str(request.user.last_name)+str(request.user.first_name)
                     + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
+@csrf_exempt
+def delete_billing_info_logic(request):
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    context = {'error': None}
+    error = None
+    merchant_uid = None
+    payment_user_info = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        merchant_uid = json_loading_data['merchant_uid']
+
+    if error is None:
+        try:
+            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오는데 실패했습니다.'
+    if error is None:
+        if payment_user_info is not None:
+            payment_user_info.use = UN_USE
+            payment_user_info.save()
+
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)

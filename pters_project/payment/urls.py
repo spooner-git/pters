@@ -35,6 +35,9 @@ urlpatterns = [
     url(r'^cancel_period_billing/$', views.cancel_period_billing_logic, name='cancel_period_billing'),
     # 결제 페이지
     url(r'^resend_period_billing/$', views.resend_period_billing_logic, name='resend_period_billing'),
+
     url(r'^payment_complete/$', views.PaymentCompleteView.as_view(), name='payment_complete'),
+
+    url(r'^delete_billing_info/$', views.delete_billing_info_logic, name='delete_billing_info'),
     ######################################################################################################
 ]

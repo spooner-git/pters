@@ -379,3 +379,24 @@ def func_update_billing_logic(payment_result):
     context['error'] = error
     return context
 
+
+def func_cancel_period_billing_schedule(customer_uid):
+    token_result = func_get_payment_token()
+    access_token = token_result['access_token']
+    error = token_result['error']
+
+    if error is None and access_token is not None:
+        data = {
+                'customer_uid': customer_uid,  # 카드(빌링키)와 1: 1 로 대응하는 값
+        }
+
+        body = json.dumps(data)
+        h = httplib2.Http()
+        resp, content = h.request("https://api.iamport.kr/subscribe/payments/unschedule", method="POST", body=body,
+                                  headers={'Content-Type': 'application/json;',
+                                           'Authorization': access_token})
+        if resp['status'] != '200':
+            error = '통신중 에러가 발생했습니다.'
+
+    return error
+
