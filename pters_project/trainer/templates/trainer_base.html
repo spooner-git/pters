@@ -80,7 +80,7 @@
         </form>
         <!--<label>클래스 선택</label>-->
         <p>
-            <span class="KRtext">캘린더를 선택 해주세요.</span>
+            <span class="KRtext">이동할 캘린더를 선택 해주세요.</span>
             <span class="JPtext">クラスを選択してください。</span>
             <span class="ENtext">Choose class</span>
             <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
@@ -272,6 +272,10 @@
                     </div>
                     <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                         <a class="sidebar_text __groupmanage">
+                        </a>
+                    </div>
+                    <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        <a class="sidebar_text __classmanage">
                         </a>
                     </div>
                     <!--
