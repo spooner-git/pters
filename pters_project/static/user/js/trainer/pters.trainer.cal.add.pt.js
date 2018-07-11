@@ -871,6 +871,8 @@ $(document).ready(function(){
             }
 
         }else if($(this).attr("data-grouptype") == "group"){
+            var grouptypecd = $(this).attr('data-grouptypecd');
+            var groupid = $(this).attr('data-groupid');
 
             if($('._NORMAL_ADD_wrap').css('display') == 'block'){
                 addTypeSelect = "groupptadd";
@@ -878,20 +880,25 @@ $(document).ready(function(){
                 addTypeSelect = "repeatgroupptadd";
             }
             $('#remainCount').hide();
-            $('#groupInfo, #groupmembersInfo').show();
+            $('#groupInfo').show();
 
 
-            get_repeat_info($(this).attr('data-groupid'));
-            $('#id_repeat_group_id').val($(this).attr('data-groupid'));
+            get_repeat_info(groupid);
+            $('#id_repeat_group_id').val(groupid);
 
-            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':$(this).attr('data-groupid')});
+            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':groupid});
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
             $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
-            $("#id_group_id").val($(this).attr('data-groupid'));
+            $("#id_group_id").val(groupid);
 
-            get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){
-                console.log(jsondata)
-                draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))});
+            if(grouptypecd == "NORMAL"){
+                $('#groupmembersInfo').show()
+               get_groupmember_list(groupid, 'callback', function(jsondata){
+                draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))}); 
+            }else if(grouptypecd == "EMPTY"){
+                $('#groupmembersInfo').hide()
+            }
+            
         }
 
         check_dropdown_selected_addplan();
@@ -1230,6 +1237,7 @@ $(document).ready(function(){
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext("2d");
 
+
     canvas.addEventListener("mousedown",listener);
     canvas.addEventListener("mousemove",listener);
     canvas.addEventListener("mouseup",listener);
@@ -1240,14 +1248,14 @@ $(document).ready(function(){
     canvas.addEventListener("touchcancel",listener);
 
     $("canvas").attr("width", 324).attr("height", 200);
-    $(document).on('click','div.classTime, div.plan_raw, div.groupTime',function(){
+    $(document).on('click','div.classTime, div.plan_raw, div.groupTime, #popup_btn_sign_close',function(){
         ctx.clearRect(0,0,324,300);
         $('#cal_popup').css({'top':'35%'});
     });
 
     function listener(event){
         var selector_canvas = $('#canvas');
-        var selector_pupup_text0_popup_btn_complete =  $('#popup_text0, #popup_btn_complete');
+        var selector_pupup_text0_popup_btn_complete =  $('#popup_text0, #popup_btn_sign_complete');
         switch(event.type){
             case "touchstart":
                 initDraw(event);
@@ -1284,6 +1292,7 @@ $(document).ready(function(){
     }
 
     function initDraw(event){
+        ctx.strokeStyle="#FFFFFF";
         ctx.beginPath();
         pos.drawable = true;
         var coors = getPosition(event);
@@ -1293,6 +1302,7 @@ $(document).ready(function(){
     }
 
     function draw(event){
+        ctx.strokeStyle="#FFFFFF";
         event.preventDefault();
         var coors = getPosition(event);
         ctx.lineTo(coors.X, coors.Y);
@@ -1604,7 +1614,7 @@ function set_group_dropdown_list(jsondata){
 
     if(memberSize>0){
         for(var i=0; i<memberSize; i++){
-            member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
+            member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+ '" data-grouptypecd="'+jsondata.group_type_cd[i] +'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
             member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
         }
     }else if(memberSize == 0){
@@ -3008,7 +3018,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 }
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 
-//참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
+//일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 function draw_groupMemberList_to_view(jsondata, targetHTML){
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">'+'회원명'+'</div>'+'<div>'+'예약 가능'+'</div>'+'<div>남은 횟수</div>'+'</div>'];
@@ -3041,7 +3051,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
     var html = htmlToJoin.join('');
     targetHTML.html(html);
 }
-//참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
+//일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.

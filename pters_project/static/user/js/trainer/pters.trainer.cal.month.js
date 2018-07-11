@@ -192,7 +192,6 @@ $(document).ready(function(){
             }
             shade_index(150)
             $('#popup_planinfo_title').text('레슨 일정')
-            $('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
             var schedule_finish_check = $(this).attr('data-schedule-check')
             var dbid = $(this).attr('data-dbid');
             var name = $(this).attr('data-membername')
@@ -213,9 +212,8 @@ $(document).ready(function(){
 
             $('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
-            $('#canvas').hide().css({'border-color':'#282828'});
-            $('#canvasWrap').css({'height':'0px'});
-            $('#canvasWrap span').hide();
+            $('#canvas').css({'border-color':'#282828'});
+            $('#canvasWrap').css({'display':'none'});
 
             $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
             $("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
@@ -433,7 +431,20 @@ $(document).ready(function(){
 
         //일정 완료 버튼 클릭
         //var ajax_block_during_complete_monthcal = true
-        $("#popup_btn_complete").click(function(){
+        $("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
+            $('#canvas, #canvasWrap').css('display','block');
+            $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+            var $popup = $('#cal_popup_planinfo');
+            var $signcomplete_button = $('#popup_btn_sign_complete');
+            if($popup.attr('data-grouptype') == "class"){
+                $signcomplete_button.attr('data-signtype','class')
+            }else if($popup.attr('data-grouptype') == "group"){
+                $signcomplete_button.attr('data-signtype','group')
+            }
+        });
+
+
+        $("#popup_btn_sign_complete").click(function(){
             if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
                 $('#canvas').show()
                 $('#canvasWrap').animate({'height':'200px'},200)
@@ -451,15 +462,8 @@ $(document).ready(function(){
                         signImageSend(senddata);
                         close_info_popup('cal_popup_planinfo')
                         completeSend();
-                        // set_schedule_time(json)
                         ajaxClassTime()
-                        //ajax_block_during_complete_monthcal = true
                         enable_popup_btns_after_ajax()
-                        $('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
-                        $('#canvas').hide().css({'border-color':'#282828'})
-                        $('#canvasWrap span').hide();
-                        $('#canvasWrap').css({'height':'0px'})
-                        shade_index(100)
                     })
 
                 }else if(schedule_on_off == 2){
@@ -471,10 +475,8 @@ $(document).ready(function(){
                             send_memo("blank")
                             signImageSend(senddata);
                             completeSend();
-                            // set_schedule_time(json);
                             ajaxClassTime()
                             close_info_popup('cal_popup_planinfo')
-                            //ajax_block_during_complete_monthcal = true
                             enable_popup_btns_after_ajax()
                         })
 
@@ -483,44 +485,31 @@ $(document).ready(function(){
                             send_memo("blank")
                             signImageSend(senddata);
                             completeSend();
-                            // set_schedule_time(json);
                             ajaxClassTime()
                             close_info_popup('cal_popup_planinfo')
-                            //ajax_block_during_complete_monthcal = true
                             enable_popup_btns_after_ajax()
                         })
-
-                        // send_group_plan_complete("callback", function(){
-                        // 	ajaxClassTime();
-                        // })
-                        // for(var i=0; i<len; i++){
-                        // 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-                        // 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-                        // 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
-                        // 	send_plan_complete('callback', function(json, senddata){
-                        // 		z++
-                        // 		send_memo("blank")
-                        // 		signImageSend(senddata);
-                        // 		if(z==len){
-                        // 			completeSend();
-                        // 			//ajaxClassTime()
-                        // 			close_info_popup('cal_popup_planinfo')
-                        // 			ajax_block_during_complete_monthcal = true
-                        // 		}
-                        // 	})
-                        // }
-
                     }
                 }
             }
         })
 
+        $('#popup_btn_sign_close').click(function(){ //사인 창 닫기
+            close_sign_popup();
+        })
+
+        function close_sign_popup(){
+            $('#canvasWrap').css('display','none');
+            $('#canvas').css({'border-color':'#282828','display':'none'});
+            $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+        }
+
         function disable_popup_btns_during_ajax(){
-            $("#popup_btn_complete, #popup_btn_delete").addClass('disabled_button')
+            $("#popup_btn_sign_complete, #popup_btn_delete").addClass('disabled_button')
         }
 
         function enable_popup_btns_after_ajax(){
-            $("#popup_btn_complete, #popup_btn_delete").removeClass('disabled_button')
+            $("#popup_btn_sign_complete, #popup_btn_delete").removeClass('disabled_button')
         }
 
 

@@ -96,23 +96,28 @@
 	display: none;
 	text-align: left;
 	height: 25px;
-	margin-top: 8px;
+	margin-top: 0px;
 	cursor: pointer;
+	background: #f4f4f4;
 }
 #popup_btn_viewGroupParticipants:hover{
-	background: #f4f4f4;
+	background: #f1f1f1;
 }
 #popup_btn_viewGroupParticipants img{
 	width: 12px;
 	float: left;
-	margin: 9px 5px 0px 28px;
+	margin: 9px 5px 0px 20px;
 }
 #groupParticipants{
 	height: 0px;
+	max-height: 128px;
 	width: 100%;
 	background: #ffffff;
 	overflow-y:auto;
+	transition: 0.2s;
 }
+
+
 .groupParticipantsRow{
 	text-align: left;
 	margin-top: 3px;
@@ -132,6 +137,7 @@
 #groupParticipants img.group_member_cancel{
 	float: right;
 	cursor: pointer;
+	margin-top: 5px;
 }
 #groupParticipants img.add_groupmember_plan{
 	width: 20px;
@@ -223,9 +229,27 @@
 
 #popup_sign_img{
 	display: none;
+	height: 50px;
 	position: relative;
 	background: #ffffff;
 }
+#popup_sign_img span{
+	position: absolute;
+	left: 0;
+	margin-left: 20px;
+	margin-top: 17px;
+	color: #282828;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+#id_sign_img{
+	height:  100%;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+	filter: invert(100);
+}
+
 
 .popup_inner{
 	background: #ffffff;
@@ -366,27 +390,32 @@
 
 
 #canvasWrap{
-	position: relative;
-	width: 100%;
-	height: 0px;
-}
-#canvasWrap span{
 	position: absolute;
 	display: none;
-	width: 100%;
-	left:50%;
-	top:10px;
+	top: 163px;
+	width: 329px;
 	transform: translateX(-50%);
+	left: 50%;
+	z-index: 1;
+}
+#canvasWrap p{
+	position: absolute;
+	margin-top: 5px;
+	margin-bottom: 0;
+	font-size: 13px;
+	width:100%;
 	color: #e6e6e6;
 	z-index: 1500;
 }
 
 #canvas{
 	display: none;
+	width: 100%;
 	position: relative;
-	background:#ffffff;
+	background:#282828;
 	z-index: 1400;
-	border: 3px solid #282828;
+	border: 2px solid #282828;
+	margin-bottom: 1px;
 }
 
 #ng_popup{
@@ -665,5 +694,23 @@
 		color: #282828;
 	}
 	/**/
+
+	/*일정창내 그룹원 리스트*/
+	#groupParticipants{
+		max-height: 170px;
+	}
+	/*일정창내 그룹원 리스트*/
+
+	/*완료 사인 창*/
+	#canvasWrap{
+		top: 159px;
+		background: #ffffff;
+	}
+
+	#popup_btn_sign_complete, #popup_btn_sign_close{
+		margin-bottom: 5px;
+		margin-top: 5px;
+	}
+	/*완료 사인 창*/
 
 }

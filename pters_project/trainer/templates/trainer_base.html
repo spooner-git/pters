@@ -121,16 +121,23 @@
             <span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Close</span>
         </div>
         <div id="canvasWrap">
-            <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
-            <span class="JPtext">完了署名を入力して下さい</span>
-            <span class="ENtext">Enter Completion Signature</span>
+            <p class="KRtext">회원님 완료 서명을 입력해주세요.</p>
+            <p class="JPtext">完了署名を入力して下さい</span>
+            <p class="ENtext">Enter Completion Signature</p>
             <canvas id="canvas"></canvas>
+            <div id="popup_btn_sign_complete" class="popup_inner popup_inner_finish popup_inner_x3">
+                <span class="KRtext">완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
+            </div>
+            <div id="popup_btn_sign_close" class="popup_inner popup_inner_delete  popup_inner_x3">
+                <span class="KRtext">닫기</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
+            </div>
         </div>
         <div id="popup_btn_viewGroupParticipants"><span>참석자</span><img src="/static/user/res/icon-down-grey.png"></div>
         <div id="groupParticipants">
 
         </div>
         <div id="popup_sign_img">
+            <span>완료 서명</span>
             <img src="" id="id_sign_img">
         </div>
 

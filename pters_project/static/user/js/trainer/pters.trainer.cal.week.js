@@ -272,8 +272,7 @@ $(document).ready(function(){
         selector_popup_info3_memo.attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
-        $('#canvasWrap').css({'height':'0px'});
-        $('#canvasWrap span').hide();
+        $('#canvasWrap').css({'display':'none'});
 
         $('#page-addplan-pc').hide();
         selector_cal_popup_planinfo.css('display','block');
@@ -377,8 +376,7 @@ $(document).ready(function(){
         selector_popup_info3_memo.attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
-        $('#canvasWrap').css({'height':'0px'});
-        $('#canvasWrap span').hide();
+        $('#canvasWrap').css({'display':'none'});
 
         $('#page-addplan-pc').hide();
         //$('.td00').css('background','transparent')
@@ -476,8 +474,7 @@ $(document).ready(function(){
         selector_popup_info3_memo.attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
-        $('#canvasWrap').css({'height':'0px'});
-        $('#canvasWrap span').hide();
+        $('#canvasWrap').css({'display':'none'});
 
         $('#page-addplan-pc').hide();
         selector_cal_popup_plan_info.css('display','block').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
@@ -538,10 +535,20 @@ $(document).ready(function(){
         //일정 완료 기능 추가 - hk.kim 180106
         //var ajax_block_during_complete_weekcal = true
         $("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
+            $('#canvas, #canvasWrap').css('display','block');
+            $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+            var $popup = $('#cal_popup_planinfo');
+            var $signcomplete_button = $('#popup_btn_sign_complete');
+            if($popup.attr('data-grouptype') == "class"){
+                $signcomplete_button.attr('data-signtype','class')
+            }else if($popup.attr('data-grouptype') == "group"){
+                $signcomplete_button.attr('data-signtype','group')
+            }
+        });
+
+        $('#popup_btn_sign_complete').click(function(){
             if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
-                $('#canvas').show();
-                $('#canvasWrap').animate({'height':'200px'},200);
-                $('#canvasWrap span').show();
+                $('#canvas, #canvasWrap').css('display','block');
                 if(schedule_on_off == 2){
                     toggleGroupParticipantsList('on');
                 }
@@ -555,80 +562,57 @@ $(document).ready(function(){
                         signImageSend(senddata);
                         close_info_popup('cal_popup_planinfo');
                         completeSend();
-                        // set_schedule_time(json);
                         ajaxClassTime();
-
-                        //ajax_block_during_complete_weekcal = true
                         enable_popup_btns_after_ajax();
-                        $('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('');
-                        $('#canvas').hide().css({'border-color':'#282828'});
-                        $('#canvasWrap span').hide();
-                        $('#canvasWrap').css({'height':'0px'});
-                        //shade_index(-100)
                     })
                 }else if(schedule_on_off == 2){
-                    var len = $('#groupParticipants .groupParticipantsRow').length;
+                    var groupOrMember = $('#popup_btn_sign_complete').attr('data-signtype');
                     $('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'));
-                    if(len == 0){
+                    if(groupOrMember == 'group'){
+                        console.log('!!!!!!')
                         send_group_plan_complete('callback', function(json, senddata){
                             send_memo("blank");
                             signImageSend(senddata);
                             completeSend();
-                            // set_schedule_time(json);
                             ajaxClassTime();
                             close_info_popup('cal_popup_planinfo');
-                            //ajax_block_during_complete_weekcal = true
                             enable_popup_btns_after_ajax();
+                            console.log('lllll')
                         });
 
-                    }else{
+                    }else if(groupOrMember == 'groupmember'){
                         send_group_plan_complete('callback', function(json, senddata){
                             send_memo("blank");
                             signImageSend(senddata);
                             completeSend();
-                            // set_schedule_time(json);
                             ajaxClassTime();
-                            close_info_popup('cal_popup_planinfo');
-                            //ajax_block_during_complete_weekcal = true
+                            close_sign_popup()
                             enable_popup_btns_after_ajax();
                         });
-                        // send_group_plan_complete("callback", function(){
-                        // 	ajaxClassTime();
-                        // })
-                        // for(var i=0; i<len; i++){
-                        // 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-                        // 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-                        // 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
-                        // 	console.log('스케쥴아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-                        // 	console.log('렉쳐아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-                        // 	console.log('디비아이디: ',$('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
-                        // 	send_plan_complete('callback', function(json, senddata){
-                        // 		z++
-                        // 		send_memo("blank")
-                        // 		signImageSend(senddata);
-                        // 		if(z==len){
-                        // 			completeSend();
-                        // 			//ajaxClassTime();
-                        // 			close_info_popup('cal_popup_planinfo')
-                        // 			ajax_block_during_complete_weekcal = true
-                        // 		}
-                        // 	})
-                        // }
-
                     }
-
                 }
-
             }
-        });
+        })
+
+        $('#popup_btn_sign_close').click(function(){ //사인 창 닫기
+            close_sign_popup();
+        })
+
+        function close_sign_popup(){
+            $('#canvasWrap').css('display','none');
+            $('#canvas').css({'border-color':'#282828','display':'none'});
+            $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+        }
+
 
         function disable_popup_btns_during_ajax(){
-            $("#popup_btn_complete, #popup_btn_delete").addClass('disabled_button');
+            $("#popup_btn_sign_complete, #popup_btn_delete").addClass('disabled_button');
         }
 
         function enable_popup_btns_after_ajax(){
-            $("#popup_btn_complete, #popup_btn_delete").removeClass('disabled_button');
+            $("#popup_btn_sign_complete, #popup_btn_delete").removeClass('disabled_button');
         }
+
 
 
 

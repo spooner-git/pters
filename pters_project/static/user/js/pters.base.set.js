@@ -150,7 +150,7 @@ function toggleGroupParticipantsList(onoff){
     switch(onoff){
         case 'on':
             toggleGroupParticipants = 'on';
-            selector_grouopParticipants.animate({'height':'200px'},200);
+            //selector_grouopParticipants.animate({'height':'200px'},200);
             //$('#groupParticipants').css('height','200px')
             selector_popup_btn_viewGroupParticipants_img.css('transform','rotate(180deg)');
             var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
@@ -160,12 +160,13 @@ function toggleGroupParticipantsList(onoff){
             get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
                 draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+                selector_grouopParticipants.css({'height':'auto'})
                 completeSend();
             });
             break;
         case 'off':
             toggleGroupParticipants = 'off';
-            selector_grouopParticipants.animate({'height':0},200).html('');
+            selector_grouopParticipants.css({'height':0}).html('');
             selector_popup_btn_viewGroupParticipants_img.css('transform','rotate(0deg)');
             break;
     }
