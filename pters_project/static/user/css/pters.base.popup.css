@@ -91,6 +91,16 @@
 	z-index: 150;
 	text-align: center;
 }
+	#inner_shade_planinfo{
+		display: none;
+		position: absolute;
+		width: 101%;
+		height: 101%;
+		background: black;
+		z-index: 1;
+		opacity: 0.7;
+		top:-2px;
+	}
 
 #popup_btn_viewGroupParticipants{
 	display: none;
@@ -392,9 +402,10 @@
 #canvasWrap{
 	position: absolute;
 	display: none;
-	top: 163px;
+	/*top: 163px;*/
+	top: 50%;
 	width: 329px;
-	transform: translateX(-50%);
+	transform: translate(-50%,-50%);
 	left: 50%;
 	z-index: 1;
 }
@@ -705,6 +716,11 @@
 	#canvasWrap{
 		top: 159px;
 		background: #ffffff;
+	}
+
+	#inner_shade_planinfo{
+		width: 330px;
+		left: -1px;
 	}
 
 	#popup_btn_sign_complete, #popup_btn_sign_close{

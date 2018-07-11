@@ -273,6 +273,7 @@ $(document).ready(function(){
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
+        $('#inner_shade_planinfo').css('display','none');
 
         $('#page-addplan-pc').hide();
         selector_cal_popup_planinfo.css('display','block');
@@ -377,6 +378,7 @@ $(document).ready(function(){
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
+        $('#inner_shade_planinfo').css('display','none');
 
         $('#page-addplan-pc').hide();
         //$('.td00').css('background','transparent')
@@ -475,6 +477,7 @@ $(document).ready(function(){
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
+        $('#inner_shade_planinfo').css('display','none');
 
         $('#page-addplan-pc').hide();
         selector_cal_popup_plan_info.css('display','block').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
@@ -536,6 +539,7 @@ $(document).ready(function(){
         //var ajax_block_during_complete_weekcal = true
         $("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
             $('#canvas, #canvasWrap').css('display','block');
+            $('#inner_shade_planinfo').css('display','block');
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
             var $popup = $('#cal_popup_planinfo');
             var $signcomplete_button = $('#popup_btn_sign_complete');
@@ -544,9 +548,11 @@ $(document).ready(function(){
             }else if($popup.attr('data-grouptype') == "group"){
                 $signcomplete_button.attr('data-signtype','group')
             }
+            disable_window_scroll()
         });
 
         $('#popup_btn_sign_complete').click(function(){
+            enable_window_scroll()
             if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
                 $('#canvas, #canvasWrap').css('display','block');
                 if(schedule_on_off == 2){
@@ -599,9 +605,11 @@ $(document).ready(function(){
         })
 
         function close_sign_popup(){
+            enable_window_scroll()
             $('#canvasWrap').css('display','none');
             $('#canvas').css({'border-color':'#282828','display':'none'});
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+            $('#inner_shade_planinfo').css('display','none');
         }
 
 

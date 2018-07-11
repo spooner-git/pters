@@ -214,6 +214,7 @@ $(document).ready(function(){
 
             $('#canvas').css({'border-color':'#282828'});
             $('#canvasWrap').css({'display':'none'});
+            $('#inner_shade_planinfo').css('display','none');
 
             $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
             $("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
@@ -433,6 +434,7 @@ $(document).ready(function(){
         //var ajax_block_during_complete_monthcal = true
         $("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
             $('#canvas, #canvasWrap').css('display','block');
+            $('#inner_shade_planinfo').css('display','block');
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
             var $popup = $('#cal_popup_planinfo');
             var $signcomplete_button = $('#popup_btn_sign_complete');
@@ -441,10 +443,12 @@ $(document).ready(function(){
             }else if($popup.attr('data-grouptype') == "group"){
                 $signcomplete_button.attr('data-signtype','group')
             }
+            disable_window_scroll()
         });
 
 
         $("#popup_btn_sign_complete").click(function(){
+            enable_window_scroll()
             if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
                 $('#canvas').show()
                 $('#canvasWrap').animate({'height':'200px'},200)
@@ -499,9 +503,11 @@ $(document).ready(function(){
         })
 
         function close_sign_popup(){
+            enable_window_scroll()
             $('#canvasWrap').css('display','none');
             $('#canvas').css({'border-color':'#282828','display':'none'});
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+            $('#inner_shade_planinfo').css('display','none');
         }
 
         function disable_popup_btns_during_ajax(){
