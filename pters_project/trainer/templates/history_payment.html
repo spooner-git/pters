@@ -1,0 +1,297 @@
+{% extends "trainer_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.history.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+{% block content %}
+
+    <div id="ymdText">
+        <!--
+    <div class='arrowButton'>
+     <a style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+     <a style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+    </div>
+  -->
+        <div id="ymdTextWrap">
+            <div id="menuName">이용권 구매내역
+            </div>
+            <div id="menuDescription">내 이용권과 구매내역을 확인합니다.
+            </div>
+        </div>
+    </div>
+
+
+    <div id="main_menu_wrap" class="centered">
+        <label class="main_label">내 이용권/구매내역</label>
+        <div class="main_menu_table">
+            <div class="main_menu_table_cell main_cell_active" id="pay_history">이용권 내역</div>
+            <!--<div class="main_menu_table_cell" id="pay_change">이용권 변경</div>-->
+            <div class="main_menu_table_cell" id="pay_method_change">이용권 결제방법 변경</div>
+            <div class="main_menu_table_cell" id="pay_cancel">이용권 해지신청</div>
+            <div class="main_menu_table_cell" id="pay_cancel_cancel">이용권 해지신청 취소</div>
+        </div>
+    </div>
+
+    <div id="page_wrap" class="centered">
+        <div id="page_pay_history" class="page_content_wrap">
+            <div class="page_menu_table">
+                <div class="page_menu_table_cell cell_active" id="current_use">보유현황</div>
+                <div class="page_menu_table_cell" id="mypay_history">결제내역</div>
+                <div class="page_menu_table_cell" id="monthly_pay_stop_history">정기결제 일시정지/해제내역</div>
+                <div class="page_menu_table_cell_blank"></div>
+            </div>
+            <div id="page_current_use" class="sub_pages">
+                <p style="margin-top: 20px;padding-left:5px;">
+                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+                </p>
+                <div class="current_use_table_label">
+                    <div>NO</div>
+                    <div>PTERS 이용권</div>
+                    <div>이용 가능 서비스</div>
+                    <div>다음 결제 안내</div>
+                </div>
+                <div class="current_use_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                        <p>2018.07.12 - 2018.08.12</p>
+                    </div>
+                    <div>
+                        <p>그룹 관리 메뉴 사용</p>
+                        <p>그룹 일정 관리</p>
+                        <p>광고 제거</p>
+                    </div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                        <p style="color:#fe4e65;">결제예정일: <span>2018.08.12</span> </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page_mypay_history" class="sub_pages">
+                <p style="margin-top: 20px;padding-left:5px;">
+                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 결제내역
+                </p>
+                <div class="mypay_history_table_label">
+                    <div>NO</div>
+                    <div>PTERS 이용권</div>
+                    <div>결제일</div>
+                    <div>결제금액(부가세 10%별도)</div>
+                    <div>결제방법</div>
+                </div>
+                <div class="mypay_history_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                        <p>2018.07.12 - 2018.08.12</p>
+                    </div>
+                    <div>
+                        <p>2018.07.12</p>
+                    </div>
+                    <div>
+                        <span>총 결제금액</span><span>15,000 원</span>
+                    </div>
+                    <div>
+                        <p>다날 카드 결제</p>
+                    </div>
+                </div>
+                <div class="mypay_history_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                        <p>2018.07.12 - 2018.08.12</p>
+                    </div>
+                    <div>
+                        <p>2018.07.12</p>
+                    </div>
+                    <div>
+                        <span>총 결제금액</span><span>15,000 원</span>
+                    </div>
+                    <div>
+                        <p>다날 카드 결제</p>
+                    </div>
+                </div>
+                <div class="mypay_history_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                        <p>2018.07.12 - 2018.08.12</p>
+                    </div>
+                    <div>
+                        <p>2018.07.12</p>
+                    </div>
+                    <div>
+                        <span>총 결제금액</span><span>15,000 원</span>
+                    </div>
+                    <div>
+                        <p>다날 카드 결제</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page_monthly_pay_stop_history" class="sub_pages">
+                <div class="monthly_pay_stop_table_label">
+                    <div>NO</div>
+                    <div>PTERS 이용권</div>
+                    <div>정기결제정보</div>
+                    <div>일시정지일</div>
+                    <div>일시정지 해제/종료일</div>
+                    <div>상태</div>
+                    <div>사유</div>
+                </div>
+                <div class="monthly_pay_stop_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                    </div>
+                    <div>
+                        <p>2018.07.12 결제</p>
+                    </div>
+                    <div>
+                        <p>2018.07.12</p>
+                    </div>
+                    <div>
+                        <p>2018.08.12</p>
+                    </div>
+                    <div>
+                        <p>일시 정지중</p>
+                    </div>
+                    <div>
+                        <p>결제 실패</p>
+                    </div>
+                </div>
+
+                <div id="monthly_pay_stop_annai1">
+                    <label>일시정지 해제하기</label>
+                    <p>정기결제수단의 정지/한도초과/정보변경 등의 사유로 사용중인 이용권이 일시정지가 된 상태에서 기존 정기결제수단 또는 새로운 정기결제수단으로 다시 결제를 하시면 일시정지된 정기결제를 다시 시작할 수 있습니다.</p>
+                </div>
+
+                <div id="monthly_pay_stop_annai2">
+                    <label>정기결제 일시정지/해제 상태 안내</label>
+                    <p class="annai_label">정기결제 일시정지란?</p>
+                    <p>고객님의 부득이한 사정으로 사용중인 이용권의 정기결제수단이 정지/한도초과/정보변경 등으로 결제상태가 변경될 경우 다음 정기결제예정일에 사용중인 이용권의 정기결제가 일시정지되는 것을 의미합니다.</p>
+                    <p class="annai_label">정기결제 일시정지 해제란?</p>
+                    <p>일시정지된 정기결제이용권의 결제수단이 다시 결제가능한 상태가 될 때 다시 결제가 처리되고 이용권이 재시작 되는 것을 의미합니다.</p>
+                    <p class="annai_label">정기결제 일시정지 종료란?</p>
+                    <p>일시정지된 정기결제 이용권의 결제수단이 더 이상 결제가 불가능한 상태가 되거나 다른 결제수단으로 새로 이용권을 구매하거나 또는 고객님의 종료처리요청으로 인해 정기결제가 더이상 유효하지 않고 종료되는 것을 의미합니다.</p>
+                    <div style="width: 100%;height: 1px;background: #cccccc;margin:0 auto;margin-top:10px;margin-bottom: 10px;"></div>
+                    <p>- 정기결제 일시정지/해제 이력은 일시정지일부터 1년간 제공됩니다.</p>
+                    <p>- 신규로 이용권 구매 시 스트리밍 서비스가 중복되는 경우 일시정지 상태인 이용권 중 스트리밍 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>
+                    <p>- 일시정지 날로부터 90일 이내 정기결제 일시정지 해제를 하지 않는 경우 기간 만료로 인한 자동종료 처리됩니다.</p>
+                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 이용문의 메뉴에 요청사항을 남겨주세요.</p>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="page_pay_change" class="page_content_wrap">
+            
+        </div>
+
+
+        <div id="page_pay_method_change" class="page_content_wrap">
+            <p style="margin-top: 20px;padding-left:5px;">
+                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기 결제 대상 이용권
+            </p>
+            <div class="pay_method_change_table_label">
+                <div>NO</div>
+                <div>PTERS 이용권</div>
+                <div>결제예정일</div>
+                <div>총 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 별도)</span></div>
+                <div>결제방법</div>
+                <div>결제방법 변경</div>
+            </div>
+            <div class="pay_method_change_table_content">
+                <div>1</div>
+                <div>
+                    <p>그룹레슨 이용권</p>
+                </div>
+                <div>
+                    <p>2018.08.12</p>
+                </div>
+                <div>
+                    <p>15,000 원</p>
+                </div>
+                <div>
+                    <p>신용카드 결제<br><span> - 다날 신용카드 결제 (하나은행 xxxxxxxxxxxxxxxxxxxxxx)</span></p>
+                </div>
+                <div>
+                    <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="page_pay_cancel" class="page_content_wrap">
+            <p style="margin-top: 20px;padding-left:5px;">
+                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+            </p>
+            <div class="pay_cancel_table_label">
+                <div>NO</div>
+                <div>PTERS 이용권</div>
+                <div>이용 가능 서비스</div>
+                <div>다음 결제 안내</div>
+                <div>해지 신청</div>
+            </div>
+            <div class="pay_cancel_table_content">
+                <div>1</div>
+                <div>
+                    <p>그룹레슨 이용권</p>
+                    <p>2018.07.12 - 2018.08.12</p>
+                </div>
+                <div>
+                    <p>그룹 관리 메뉴 사용</p>
+                    <p>그룹 일정 관리</p>
+                    <p>광고 제거</p>
+                </div>
+                <div>
+                    <p>그룹레슨 이용권</p>
+                    <p style="color:#fe4e65;">결제예정일: <span>2018.08.12</span> </p>
+                </div>
+                <div>
+                    <div class="pay_cancel_Button" data-payid="페이먼트 id"><span>이용권해지</span></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="page_pay_cancel_cancel" class="page_content_wrap"></div>
+    </div>
+
+
+
+    <form id="modify-member-id-form" method="post">
+        {% csrf_token %}
+        <div style="display: none">
+            {{ form.as_p }}
+        </div>
+        <input type="hidden" name="member_id" id="userDbId" value="">
+
+    </form>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script>
+
+        if($('body').width()<600){
+            $('#page-base').css('display','block')
+            //$('#page-base-modifystyle').css('display','block')
+            $('#uptext3').text('이용권 구매')
+            $('#uptext').text("이용권 구매")
+            $('#upbutton-modify').hide()
+        }
+
+
+        $('#upbutton-x-modify, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_setting/"
+        })
+    </script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.history.js" %}></script>
+
+{% endblock %}

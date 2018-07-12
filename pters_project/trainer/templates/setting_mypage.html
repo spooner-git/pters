@@ -57,6 +57,16 @@
             </div>
         </div>
 
+        <div id="planBoardWrap" class="boardWrap">
+            <div class="planBoard _My_Purchse">
+                <div style="margin-bottom: 10px;">
+                    <img src="/static/user/res/icon-card@3x.png" alt="" style="width:19px;">내 이용권
+                    <div class="menuButton" style="line-height: 18px;"><button onclick="goPage('payment_history')">내역</button></div>
+                </div>
+                <p> <span style="color:#fe4e65;font-size: 19px;">이용권 종류?? 표시</span> </p>
+            </div>
+        </div>
+
         <!--
         <div id="dateBoardWrap" class="boardWrap">
             <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">PT 시작일</p><p style="margin:0;"></p></div></div>
@@ -766,8 +776,12 @@
         function goPage(option){
             if(option == 2){
                 location.href= "/accounts/password/change/"
-            }else if(option = "delAccount"){
+
+            }else if(option == "delAccount"){
                 location.href="/trainer/delete_account/";
+
+            }else if(option == "payment_history"){
+                location.href = "/trainer/payment_history/";
             }
         }
 
