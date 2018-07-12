@@ -267,11 +267,11 @@ def billing_check_logic(request):
                     error = payment_user_info_result['error']
 
             else:
-                # 결제 취소 날리기
+                # 결제 취소 날리기 / 결제 오류 상태로 바꾸기
                 func_send_refund_payment(imp_uid, merchant_uid, access_token)
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
-        else:  # 재결제 시도
+        else:  # 결제 오류 상태로 업데이트
             payment_user_info_result = func_update_billing_logic(payment_result)
             # func_resend_payment_info(customer_uid, merchant_uid,
             #                          payment_result['amount'])
@@ -446,66 +446,59 @@ def update_period_billing_logic(request):
 
 
 class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
-    template_name = 'payment_complete.html'
+    template_name = 'ajax/payment_info.html'
 
     def get(self, request):
         context = {}
         payment_info = None
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                    end_date__lt=datetime.date.today(),
                                                     payment_type_cd='PERIOD',
-                                                    use=UN_USE).order_by('end_date')
+                                                    use=UN_USE).order_by('-end_date')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
         context['payment_info'] = payment_info
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class GetPaymentInfoView(LoginRequiredMixin, View):
-    template_name = 'payment_complete.html'
+    template_name = 'ajax/payment_info.html'
 
     def get(self, request):
         context = {}
         payment_info = None
         payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                    end_date__lt=datetime.date.today(),
-                                                    use=USE).order_by('end_date')
+                                                    use=USE).order_by('-end_date')
         if len(payment_data) > 0:
             payment_info = payment_data[0]
+            payment_info.start_date = str(payment_info.start_date)
+            payment_info.end_date = str(payment_info.end_date)
         context['payment_info'] = payment_info
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class GetBillingInfoView(LoginRequiredMixin, View):
-    template_name = 'payment_complete.html'
+    template_name = 'ajax/billing_list.html'
 
     def get(self, request):
         context = {'error': None, 'billing_info': None}
+        billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, state_cd='IP', use=USE)
 
-        try:
-            billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
-                                                     state_cd='IP',
-                                                     use=USE)
-        except ObjectDoesNotExist:
-            context['error'] = '정기 결제 진행중인 내역이 없습니다.'
+        context['billing_data'] = billing_data
 
-        if context['error'] is not None:
-            context['billing_info'] = billing_info
-
-        return context
+        return render(request, self.template_name, context)
 
 
 class GetPaymentListView(LoginRequiredMixin, View):
-    template_name = 'payment_list.html'
+    template_name = 'ajax/payment_list.html'
 
     def get(self, request):
         context = {}
-        payment_list = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE)
-        context['payment_list'] = payment_list
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE).order_by('-end_date')
+        context['payment_data'] = payment_data
 
-        return context
+        return render(request, self.template_name, context)
 
 
 class PaymentCompleteView(LoginRequiredMixin, TemplateView):
