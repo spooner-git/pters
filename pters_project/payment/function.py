@@ -324,7 +324,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
-                merchandise_type_cd_list = custom_data['user_id'].split('/')
+                merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
                 for merchandise_type_cd_info in merchandise_type_cd_list:
                     try:
                         function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
