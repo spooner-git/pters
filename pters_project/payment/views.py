@@ -54,7 +54,6 @@ def check_billing_logic(request):
     input_price = 0
     payment_info = None
     today = datetime.date.today()
-
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -69,12 +68,8 @@ def check_billing_logic(request):
 
     if error is None:
         # today = datetime.datetime.combine(today, datetime.datetime.min.time())
-        payment_user_info_count_period = PaymentInfoTb.objects.filter(end_date__gte=today,
-                                                                      member_id=request.user.id,
-                                                                      merchandise_type_cd=merchandise_type_cd,
-                                                                      payment_type_cd='PERIOD',
-                                                                      use=USE).order_by('end_date')
-        if payment_user_info_count_period != 0:
+        billing_info = BillingInfoTb.objects.filter(member_id=request.user.id, state_cd='IP', use=USE).count()
+        if billing_info > 0:
             error = '이미 정기결제 중인 기능입니다.'
 
     if error is None:
@@ -85,12 +80,12 @@ def check_billing_logic(request):
             payment_info = payment_user_info[0]
 
     if error is None:
-        if payment_info is None:
+        if payment_info is not None:
             date = int(payment_info.start_date.strftime('%d'))
             context['start_date'] = payment_info.start_date
             context['end_date'] = payment_info.end_date
             context['next_start_date'] = payment_info.end_date
-            context['next_end_date'] = func_get_end_date(payment_user_info.payment_type_cd,
+            context['next_end_date'] = func_get_end_date(payment_info.payment_type_cd,
                                                          payment_info.start_date, 1, date)
 
     if error is None:
