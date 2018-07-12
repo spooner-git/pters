@@ -25,11 +25,33 @@ $(document).ready(function(){
         //To- Do
     })
 
-    $(document).on('click','pay_cancel_Button',function(){
+    $(document).on('click','.pay_cancel_Button',function(){
         var payid = $(this).attr('data-payid');
-        alert(payid)
+        $('#pay_cancel_confirm_popup').show()
         //To- Do
     })
+        $(document).on('click','#popup_cancel_btn_yes',function(){
+            $('#pay_cancel_survey').show()
+            $('#pay_cancel_confirm_popup').hide()
+        })
+        $(document).on('click','#popup_cancel_btn_no',function(){
+            $('#pay_cancel_confirm_popup').hide()
+        })
 
+    $('.ptersCheckbox').click(function(){
+        $('#submit_pay_cancel').addClass('active')
+        $('div.checked').removeClass('checked ptersCheckboxInner');
+        var pterscheckbox = $(this).find('div');
+        $(this).addClass('checked');
+        pterscheckbox.addClass('checked');
+        pterscheckbox.addClass('ptersCheckboxInner');
+    });
+
+    $('#submit_pay_cancel').click(function(){
+        if($(this).hasClass('active')){
+            alert('해지 프로세스')
+            //To-do
+        }
+    })
 
 });
