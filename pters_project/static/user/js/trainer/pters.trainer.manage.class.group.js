@@ -1,6 +1,16 @@
 var db_id_flag = 0;
 var user_id_flag = 1;
 
+/////////////옵션
+if(Options.auth_class == 0){
+    $('._groupaddbutton').attr('onclick',"purchase_annai()");
+    $('._groupaddbutton').append('<img src="/static/user/res/login/icon-lock-pink.png" style="margin-bottom:3px;height:16px;">')
+}
+function purchase_annai(){
+    alert('클래스 기능 이용권 구매후 이용이 가능합니다.')
+}
+/////////////옵션
+
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
 $('#groupname').keyup(function(){
     check_dropdown_selected()
@@ -969,11 +979,16 @@ function groupListSet(option, jsondata){ //option : current, finished
             var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
             var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
             var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
+            var img_lock_function = '<img src="/static/user/res/login/icon-lock-pink.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">'
 
             var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
             var htmlend = '</div>'
             var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
             var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
+            var manageimgs = '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>';
+            if(Options.auth_class == 0){
+                manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>'
+            }
 
             var main = '<div class="_groupnum">'+ordernum+'</div>'+
                 '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
@@ -984,8 +999,8 @@ function groupListSet(option, jsondata){ //option : current, finished
                 '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
                 '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
                 '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-                //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdownloadimage+pcdeleteimage+'</div>'
-                '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+                manageimgs
+                //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
     }
@@ -1104,11 +1119,18 @@ function groupMemberListSet(group_id, jsondata){
         //var group_type = group_capacity+"인 비공개"
         var EMPTY_EXPLAIN = ""
     }
-    if(groupcapacity <= len && grouptype =='NORMAL'){
-        var addButton = ''
+
+    if(Options.auth_class == 0){
+        var addButton = '<div><img src="/static/user/res/login/icon-lock-pink.png" style="width:20px;margin-top: 10px;margin-bottom:10px;"  title="기능 구매 후 이용가능" onclick="purchase_annai()"></div>'
     }else{
-        var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>'
+        if(groupcapacity <= len && grouptype =='NORMAL'){
+            var addButton = ''
+        }else{
+            var addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>'
+        }
     }
+
+    
 
     var html = htmlToJoin.join('') + addButton
     if(jsondata.db_id.length == 0){
