@@ -35,6 +35,8 @@ from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
+from payment.models import PaymentInfoTb
+from payment.models import ProductTb
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
@@ -609,6 +611,20 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             next_schedule_start_dt = pt_schedule_data[0].start_dt
             next_schedule_end_dt = pt_schedule_data[0].end_dt
 
+        product_list = ProductTb.objects.filter(use=USE)
+        current_payment_data = []
+        for product_info in product_list:
+            try:
+                payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                            merchandise_type_cd=product_info.merchandise_type_cd,
+                                                            use=USE).latest('end_date')
+            except ObjectDoesNotExist:
+                payment_info = None
+            if payment_info is not None:
+                current_payment_data.append(payment_info)
+
+        context['current_payment_data'] = current_payment_data
+
         context['next_schedule_start_dt'] = str(next_schedule_start_dt)
         context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['member_info'] = user_member_info
@@ -640,24 +656,6 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TrainerSettingView, self).get_context_data(**kwargs)
-
-        return context
-
-
-class PaymentSettingView(AccessTestMixin, TemplateView):
-    template_name = 'setting_payment.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PaymentSettingView, self).get_context_data(**kwargs)
-
-        return context
-
-
-class PaymentHistoryView(AccessTestMixin, TemplateView):
-    template_name = 'history_payment.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PaymentHistoryView, self).get_context_data(**kwargs)
 
         return context
 
