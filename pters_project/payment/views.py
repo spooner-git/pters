@@ -23,7 +23,7 @@ from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
     func_update_billing_logic, func_cancel_period_billing_schedule
-from payment.models import PaymentInfoTb, BillingInfoTb
+from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb
 
 logger = logging.getLogger(__name__)
 
@@ -68,13 +68,25 @@ def check_billing_logic(request):
 
     if error is None:
         # today = datetime.datetime.combine(today, datetime.datetime.min.time())
-        billing_info = BillingInfoTb.objects.filter(member_id=request.user.id, state_cd='IP', use=USE).count()
-        if billing_info > 0:
-            error = '이미 정기결제 중인 기능입니다.'
+        merchandise_type_cd_list = merchandise_type_cd.split('/')
+        for merchandise_type_cd_info in merchandise_type_cd_list:
+            function_auth_info_count = FunctionAuthTb.objects.filter(member_id=request.user.id,
+                                                                     function_auth_type_cd=merchandise_type_cd_info,
+                                                                     payment_type_cd='PERIOD', use=USE).count()
+            if function_auth_info_count > 0:
+                error = '이미 정기결제 중인 기능이 포함되어있습니다.'
+                break
+
+        # billing_info = BillingInfoTb.objects.filter(member_id=request.user.id,
+        #                                             merchandise_type_cd=merchandise_type_cd,
+        #                                             state_cd='IP', use=USE).count()
+        # if billing_info > 0:
+        #     error = '이미 정기결제 중인 기능입니다.'
 
     if error is None:
         payment_user_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                          end_date__lt=datetime.date.today(),
+                                                         merchandise_type_cd=merchandise_type_cd,
                                                          use=USE).order_by('end_date')
         if len(payment_user_info) > 0:
             payment_info = payment_user_info[0]
