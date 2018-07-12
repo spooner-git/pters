@@ -105,102 +105,6 @@ def check_billing_logic(request):
 
 
 @csrf_exempt
-def delete_billing_logic(request):
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-    context = {'error': None}
-    error = None
-    merchant_uid = None
-    payment_user_info = None
-    billing_user_info = None
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    if error is None:
-        merchant_uid = json_loading_data['merchant_uid']
-
-    if error is None:
-        try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
-    if error is None:
-        if payment_user_info.customer_uid is not None and payment_user_info.customer_uid != '':
-            try:
-                billing_user_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
-            except ObjectDoesNotExist:
-                error = '결제 정보를 불러오는데 실패했습니다.'
-    if error is None:
-        if payment_user_info is not None:
-            payment_user_info.delete()
-        if billing_user_info is not None:
-            billing_user_info.delete()
-
-    if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-
-    context['error'] = error
-    return render(request, 'ajax/payment_error_info.html', context)
-
-
-@csrf_exempt
-def cancel_period_billing_logic(request):
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-    context = {'error': None}
-    customer_uid = None
-    merchant_uid = None
-    payment_data = None
-    billing_info = None
-    error = None
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    if error is None:
-        customer_uid = json_loading_data['customer_uid']
-        merchant_uid = json_loading_data['merchant_uid']
-
-    if error is None:
-        payment_data = PaymentInfoTb.objects.filter(merchant_uid=merchant_uid,
-                                                    status__isnull=True,
-                                                    payment_type_cd='PERIOD', use=UN_USE)
-    if error is None:
-        try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-        except ObjectDoesNotExist:
-            error = '정기 결제 정보를 불러오지 못했습니다.'
-
-    if error is None:
-        error = func_cancel_period_billing_schedule(customer_uid)
-
-    if error is None:
-        billing_info.state_cd = 'ST'
-        billing_info.save()
-
-    if error is None:
-        if len(payment_data) > 0:
-            payment_data.update(mod_dt=timezone.now(), status='cancel', use=UN_USE)
-
-    if error is not None:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-
-    context['error'] = error
-    return render(request, 'ajax/payment_error_info.html', context)
-
-
-@csrf_exempt
 def billing_finish_logic(request):
 
     json_data = request.body.decode('utf-8')
@@ -391,85 +295,71 @@ def billing_check_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-class PaymentCompleteView(LoginRequiredMixin, TemplateView):
-    template_name = 'payment_complete.html'
+@csrf_exempt
+def cancel_period_billing_logic(request):
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    context = {'error': None}
+    customer_uid = None
+    # merchant_uid = None
+    payment_data = None
+    billing_info = None
+    error = None
 
-    def get_context_data(self, **kwargs):
-        context = super(PaymentCompleteView, self).get_context_data(**kwargs)
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
-        return context
-
-
-class GetPaymentListView(LoginRequiredMixin, View):
-    template_name = 'payment_list.html'
-
-    def get(self, request):
-        context = {}
-        payment_list = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE)
-        context['payment_list'] = payment_list
-
-        return context
-
-
-class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
-    template_name = 'payment_complete.html'
-
-    def get(self, request):
-        context = {}
-        payment_info = None
-        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                    end_date__lt=datetime.date.today(),
-                                                    payment_type_cd='PERIOD',
-                                                    use=UN_USE).order_by('end_date')
-        if len(payment_data) > 0:
-            payment_info = payment_data[0]
-        context['payment_info'] = payment_info
-
-        return context
-
-
-class GetPaymentInfoView(LoginRequiredMixin, View):
-    template_name = 'payment_complete.html'
-
-    def get(self, request):
-        context = {}
-        payment_info = None
-        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                    end_date__lt=datetime.date.today(),
-                                                    use=USE).order_by('end_date')
-        if len(payment_data) > 0:
-            payment_info = payment_data[0]
-        context['payment_info'] = payment_info
-
-        return context
-
-
-class GetBillingInfoView(LoginRequiredMixin, View):
-    template_name = 'payment_complete.html'
-
-    def get(self, request):
-        context = {'error': None, 'billing_info': None}
-
+    if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
-                                                     state_cd='IP',
-                                                     use=USE)
+            customer_uid = json_loading_data['customer_uid']
+            # merchant_uid = json_loading_data['merchant_uid']
+        except KeyError:
+            error = '결제 정보 json data parsing KeyError'
+        except TypeError:
+            error = '결제 정보 json data parsing TypeError'
+        except ValueError:
+            error = '결제 정보 json data parsing ValueError'
+
+    if error is None:
+        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                    status__isnull=True,
+                                                    payment_type_cd='PERIOD', use=UN_USE)
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
         except ObjectDoesNotExist:
-            context['error'] = '정기 결제 진행중인 내역이 없습니다.'
+            error = '정기 결제 정보를 불러오지 못했습니다.'
 
-        if context['error'] is not None:
-            context['billing_info'] = billing_info
+    if error is None:
+        error = func_cancel_period_billing_schedule(customer_uid)
 
-        return context
+    if error is None:
+        billing_info.state_cd = 'ST'
+        billing_info.save()
+
+    if error is None:
+        if len(payment_data) > 0:
+            payment_data.update(mod_dt=timezone.now(), status='cancel', use=UN_USE)
+
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
+# 정기 결제 재시작 기능 - 확인 필요
 @csrf_exempt
 def restart_period_billing_logic(request):
 
     json_data = request.body.decode('utf-8')
     json_loading_data = None
-    payment_info = None
-    billing_info = None
+    customer_uid = None
     context = {'error': None}
 
     try:
@@ -480,27 +370,30 @@ def restart_period_billing_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
-        merchant_uid = json_loading_data['merchant_uid']
         try:
-            payment_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
+            customer_uid = json_loading_data['customer_uid']
+        except KeyError:
+            error = '결제 정보 json data parsing KeyError'
+        except TypeError:
+            error = '결제 정보 json data parsing TypeError'
+        except ValueError:
+            error = '결제 정보 json data parsing ValueError'
 
     if error is None:
-        customer_uid = json_loading_data['customer_uid']
+        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                    payment_type_cd='PERIOD', use=USE).order_by('end_date')
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+    if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, state_cd='ST', use=USE)
+            billing_info.state_cd = 'IP'
+            billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        billing_info.state_cd = 'IP'
-        billing_info.save()
-
-    if error is None:
-        payment_user_info_result = func_update_billing_logic(payment_info)
-        func_set_billing_schedule(payment_info.customer_uid, payment_user_info_result['payment_user_info'])
-        error = payment_user_info_result['error']
+        error = func_set_billing_schedule(customer_uid, payment_info)
 
     context['error'] = error
     if error is not None:
@@ -555,6 +448,78 @@ def update_period_billing_logic(request):
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
+
+
+class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
+    template_name = 'payment_complete.html'
+
+    def get(self, request):
+        context = {}
+        payment_info = None
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    end_date__lt=datetime.date.today(),
+                                                    payment_type_cd='PERIOD',
+                                                    use=UN_USE).order_by('end_date')
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+        context['payment_info'] = payment_info
+
+        return context
+
+
+class GetPaymentInfoView(LoginRequiredMixin, View):
+    template_name = 'payment_complete.html'
+
+    def get(self, request):
+        context = {}
+        payment_info = None
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    end_date__lt=datetime.date.today(),
+                                                    use=USE).order_by('end_date')
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+        context['payment_info'] = payment_info
+
+        return context
+
+
+class GetBillingInfoView(LoginRequiredMixin, View):
+    template_name = 'payment_complete.html'
+
+    def get(self, request):
+        context = {'error': None, 'billing_info': None}
+
+        try:
+            billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                                                     state_cd='IP',
+                                                     use=USE)
+        except ObjectDoesNotExist:
+            context['error'] = '정기 결제 진행중인 내역이 없습니다.'
+
+        if context['error'] is not None:
+            context['billing_info'] = billing_info
+
+        return context
+
+
+class GetPaymentListView(LoginRequiredMixin, View):
+    template_name = 'payment_list.html'
+
+    def get(self, request):
+        context = {}
+        payment_list = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE)
+        context['payment_list'] = payment_list
+
+        return context
+
+
+class PaymentCompleteView(LoginRequiredMixin, TemplateView):
+    template_name = 'payment_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentCompleteView, self).get_context_data(**kwargs)
+
+        return context
 
 
 @csrf_exempt
@@ -632,3 +597,49 @@ def delete_billing_info_logic(request):
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
+
+
+@csrf_exempt
+def delete_billing_logic(request):
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    context = {'error': None}
+    error = None
+    merchant_uid = None
+    payment_user_info = None
+    billing_user_info = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        merchant_uid = json_loading_data['merchant_uid']
+
+    if error is None:
+        try:
+            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=merchant_uid)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오는데 실패했습니다.'
+    if error is None:
+        if payment_user_info.customer_uid is not None and payment_user_info.customer_uid != '':
+            try:
+                billing_user_info = BillingInfoTb.objects.get(customer_uid=payment_user_info.customer_uid)
+            except ObjectDoesNotExist:
+                error = '결제 정보를 불러오는데 실패했습니다.'
+    if error is None:
+        if payment_user_info is not None:
+            payment_user_info.delete()
+        if billing_user_info is not None:
+            billing_user_info.delete()
+
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
+

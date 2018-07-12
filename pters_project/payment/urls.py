@@ -34,8 +34,14 @@ urlpatterns = [
     url(r'^cancel_period_billing/$', views.cancel_period_billing_logic, name='cancel_period_billing'),
     # 정기 결제 재시작 페이지
     url(r'^restart_period_billing/$', views.restart_period_billing_logic, name='restart_period_billing'),
+
+
+
     # 정기 결제 결제 방법 변경 페이지
     url(r'^update_period_billing/$', views.update_period_billing_logic, name='update_period_billing'),
+
+
+
 
     # 결제 정보 조회 ######################################################################################################
     # 결제 예정인 결제 정보 불러오기
