@@ -653,6 +653,15 @@ class PaymentSettingView(AccessTestMixin, TemplateView):
         return context
 
 
+class PaymentHistoryView(AccessTestMixin, TemplateView):
+    template_name = 'history_payment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentHistoryView, self).get_context_data(**kwargs)
+
+        return context
+
+
 class PushSettingView(AccessTestMixin, View):
     template_name = 'setting_push.html'
 
