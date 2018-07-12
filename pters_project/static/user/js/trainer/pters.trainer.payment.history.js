@@ -13,30 +13,32 @@ $(document).ready(function(){
         $(this).addClass('cell_active');
         $(this).siblings('div.page_menu_table_cell').removeClass('cell_active');
         $('#page_'+thisID).css('display','block');
-        $('#page_'+thisID).siblings('div.sub_pages').css('display','none')
-    })
+        $('#page_'+thisID).siblings('div.sub_pages').css('display','none');
+    });
     //////////////////////////////메뉴들 탭 이동//////////////////////////////////////////////
 
 
     ////////결제방법 변경 버튼
     $(document).on('click','.pay_method_changeButton',function(){
         var payid = $(this).attr('data-payid');
-        alert(payid)
+        alert(payid);
         //To- Do
     })
 
     $(document).on('click','.pay_cancel_Button',function(){
         var payid = $(this).attr('data-payid');
-        $('#pay_cancel_confirm_popup').show()
+        $('#pay_cancel_confirm_popup').show();
         //To- Do
-    })
-        $(document).on('click','#popup_cancel_btn_yes',function(){
-            $('#pay_cancel_survey').show()
-            $('#pay_cancel_confirm_popup').hide()
-        })
-        $(document).on('click','#popup_cancel_btn_no',function(){
-            $('#pay_cancel_confirm_popup').hide()
-        })
+    });
+        $('#popup_cancel_btn_yes').click(function(e){
+            e.stopPropagation();
+            $('#pay_cancel_survey').show();
+            $('#pay_cancel_confirm_popup').hide();
+        });
+        $('#popup_cancel_btn_no').click(function(e){
+            e.stopPropagation();
+            $('#pay_cancel_confirm_popup').hide();
+        });
 
     $('.ptersCheckbox').click(function(){
         $('#submit_pay_cancel').addClass('active')
@@ -51,7 +53,7 @@ $(document).ready(function(){
         if($(this).hasClass('active')){
             alert('해지 프로세스')
             //To-do
-        }
-    })
+        };
+    });
 
 });

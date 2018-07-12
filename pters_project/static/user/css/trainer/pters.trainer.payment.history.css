@@ -72,7 +72,7 @@ body{
 }
 
 #main_menu_wrap{
-	margin-top: 150px;
+	margin-top: 60px;
 }
 
 .main_label{
@@ -97,7 +97,7 @@ body{
 		display: table-cell;
 		cursor: pointer;
 		font-weight: 500;
-		font-size: 15px;
+		font-size: 13px;
 	}
 	.main_menu_table_cell:hover{
 		text-decoration: underline;
@@ -142,7 +142,7 @@ body{
 		cursor: pointer;
 	}
 	.page_menu_table_cell_blank{
-		display: table-cell;
+		display: none;
 		width: 40%;
 		border-top: 0;
 		border-right: 0;
@@ -161,6 +161,7 @@ body{
 	#page_current_use{
 
 	}
+
 		.current_use_table_label{
 			display: table;
 			width: 100%;
@@ -179,6 +180,7 @@ body{
 		}
 		.current_use_table_label div:nth-child(1){
 			width: 10%;
+			display: none;
 		}
 		.current_use_table_label div:nth-child(2){
 			width: 30%;
@@ -211,6 +213,7 @@ body{
 		}
 		.current_use_table_content div:nth-child(1){
 			width: 10%;
+			display: none;
 		}
 		.current_use_table_content div:nth-child(2){
 			width: 30%;
@@ -248,8 +251,10 @@ body{
 			font-size: 13px;
 			font-weight: 500;
 			background: #fbfbfb;
+			vertical-align: middle;
 		}
 		.mypay_history_table_label div:nth-child(1){
+			display: none;
 			width: 10%;
 		}
 		.mypay_history_table_label div:nth-child(2){
@@ -285,15 +290,17 @@ body{
 			margin-bottom: 5px;
 		}
 		.mypay_history_table_content div:nth-child(1){
+			display: none;
 			width: 10%;
 		}
 		.mypay_history_table_content div:nth-child(2){
 			width: 25%;
 		}
 			.mypay_history_table_content div:nth-child(2) p:nth-child(1){
-					
+				
 			}
 			.mypay_history_table_content div:nth-child(2) p:nth-child(2){
+				display: none;
 				color: #7d7d7d;
 				font-size: 12px;
 			}
@@ -305,6 +312,7 @@ body{
 			width: 25%;
 		}
 			.mypay_history_table_content div:nth-child(4) span:nth-child(1){
+				display: none;
 				margin-right: 15px;
 			}
 			.mypay_history_table_content div:nth-child(4) span:nth-child(2){
@@ -333,14 +341,17 @@ body{
 			font-size: 13px;
 			font-weight: 500;
 			background: #fbfbfb;
+			vertical-align:middle;
 		}
 		.monthly_pay_stop_table_label div:nth-child(1){
+			display: none;
 			width: 4%;
 		}
 		.monthly_pay_stop_table_label div:nth-child(2){
 			width: 16%;
 		}
 		.monthly_pay_stop_table_label div:nth-child(3){
+			display: none;
 			width: 16%;
 		}
 		.monthly_pay_stop_table_label div:nth-child(4){
@@ -369,7 +380,7 @@ body{
 			background: #ffffff;
 			text-align: center;
 			font-weight: 500;
-			font-size: 13px;
+			font-size: 12px;
 			vertical-align: middle;
 		}
 		.monthly_pay_stop_table_content div p{
@@ -377,12 +388,14 @@ body{
 			margin-bottom: 5px;
 		}
 		.monthly_pay_stop_table_content div:nth-child(1){
+			display: none;
 			width: 4%;
 		}
 		.monthly_pay_stop_table_content div:nth-child(2){
 			width: 16%;
 		}
 		.monthly_pay_stop_table_content div:nth-child(3){
+			display: none;
 			width: 16%;
 		}
 		.monthly_pay_stop_table_content div:nth-child(4){
@@ -422,8 +435,11 @@ body{
 	#page_pay_method_change{
 		display: none;
 	}
+	#page_pay_method_change > p {
+		border-bottom: 1px solid #cccccc;
+	}
 		.pay_method_change_table_label{
-			display: table;
+			display: none;
 			width: 100%;
 			height: 30px;
 			border-top:1px solid #cccccc;
@@ -459,7 +475,7 @@ body{
 		}
 
 		.pay_method_change_table_content{
-			display: table;
+			display: block;
 			width: 100%;
 			height: auto;
 			border-bottom: 1px solid #cccccc;
@@ -479,9 +495,12 @@ body{
 			margin-bottom: 5px;
 		}
 		.pay_method_change_table_content div:nth-child(1){
+			display: none;
 			width: 4%;
 		}
 		.pay_method_change_table_content div:nth-child(2){
+			color: #fe4e65;
+			font-size: 20px;
 			width: 16%;
 		}
 		.pay_method_change_table_content div:nth-child(3){
@@ -491,10 +510,16 @@ body{
 			width: 15%;
 		}
 		.pay_method_change_table_content div:nth-child(5){
-			width: 35%;
+			width: 100%;
+			text-align: left;
+			display: block;
+			padding-left: 10px;
 		}
 		.pay_method_change_table_content div:nth-child(6){
-			width: 15%;
+			width: 100%;
+			display: block;
+			margin-top: 15px;
+			margin-bottom: 15px;
 		}
 		.pay_method_changeButton{
 			font-size: 12px !important;
@@ -533,12 +558,14 @@ body{
 			background: #fbfbfb;
 		}
 		.pay_cancel_table_label div:nth-child(1){
+			display: none;
 			width: 10%;
 		}
 		.pay_cancel_table_label div:nth-child(2){
 			width: 25%;
 		}
 		.pay_cancel_table_label div:nth-child(3){
+			display: none;
 			width: 20%;
 		}
 		.pay_cancel_table_label div:nth-child(4){
@@ -568,6 +595,7 @@ body{
 			margin-bottom: 5px;
 		}
 		.pay_cancel_table_content div:nth-child(1){
+			display: none;
 			width: 10%;
 		}
 		.pay_cancel_table_content div:nth-child(2){
@@ -581,6 +609,7 @@ body{
 				font-size: 12px;
 			}
 		.pay_cancel_table_content div:nth-child(3){
+			display: none;
 			width: 20%;
 			font-weight: 400;
 		}
@@ -672,6 +701,101 @@ body{
 
 
 @media(min-width: 600px){
+	.page_menu_table_cell_blank{
+		display: table-cell;
+	}
+	#main_menu_wrap{
+		margin-top: 130px;
+	}
+	.main_menu_table_cell{
+		font-size: 15px;
+	}
+
+	.current_use_table_label{
+		display: table;
+	}
+	.current_use_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.current_use_table_content div:nth-child(1){
+		display: table-cell;
+	}
+
+	.mypay_history_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.mypay_history_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.mypay_history_table_content div:nth-child(2) p:nth-child(2){
+		display: block;
+	}
+	.mypay_history_table_content div:nth-child(4) span:nth-child(1){
+		display: inline;
+	}
+
+	.monthly_pay_stop_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.monthly_pay_stop_table_content div{
+		font-size: 13px;
+	}
+	.monthly_pay_stop_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.monthly_pay_stop_table_label div:nth-child(3){
+		display: table-cell;
+	}
+	.monthly_pay_stop_table_content div:nth-child(3){
+		display: table-cell;
+	}
+	#page_pay_method_change > p{
+		border-bottom: 0;
+	}
+	.pay_method_change_table_label{
+		display: table;
+	}
+	.pay_method_change_table_content{
+		display: table;
+	}
+	.pay_method_change_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.pay_method_change_table_content div:nth-child(2){
+		font-size: 13px;
+		color: unset;
+	}
+	.pay_method_change_table_content div:nth-child(5){
+		display: table-cell;
+		width:35%;
+		text-align:center;
+		padding-left: unset;
+	}
+	.pay_method_change_table_content div:nth-child(6){
+		display: table-cell;
+		width: 15%;
+		margin-top: unset;
+		margin-bottom: unset;
+	}
+
+	.pay_cancel_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.pay_cancel_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.pay_cancel_table_label div:nth-child(3){
+		display: table-cell;
+	}
+	.pay_cancel_table_content div:nth-child(3){
+		display: table-cell;
+	}
+
+
+
+
+
+
 
 	#ymdText{
 		height: 100px;
