@@ -333,6 +333,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  customer_uid=customer_uid,
                                                  payment_date=datetime.date.today(),
                                                  payed_date=date,
+                                                 state_cd='IP',
                                                  mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
                     billing_info.save()
                 payment_info.save()
