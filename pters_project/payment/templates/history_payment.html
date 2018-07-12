@@ -53,22 +53,27 @@
                     <div>이용 가능 서비스</div>
                     <div>다음 결제 안내</div>
                 </div>
+            {% for current_payment_info in current_payment_data %}
                 <div class="current_use_table_content">
-                    <div>1</div>
+                    <div>{{ forloop.counter }}</div>
                     <div>
-                        <p>그룹레슨 이용권</p>
-                        <p>2018.07.12 - 2018.08.12</p>
+                        <p>{{ current_payment_info.name }}</p>
+                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
                     </div>
                     <div>
-                        <p>그룹 관리 메뉴 사용</p>
-                        <p>그룹 일정 관리</p>
-                        <p>광고 제거</p>
+                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
+                            <p>{{ payment_merchandise_info }}</p>
+                        {% endfor %}
+{#                        <p>그룹 관리 메뉴 사용</p>#}
+{#                        <p>그룹 일정 관리</p>#}
+{#                        <p>광고 제거</p>#}
                     </div>
                     <div>
-                        <p>그룹레슨 이용권</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>2018.08.12</span> </p>
+                        <p>{{ current_payment_info.name }}</p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
                     </div>
                 </div>
+            {% endfor %}
             </div>
 
             <div id="page_mypay_history" class="sub_pages">
@@ -82,54 +87,25 @@
                     <div>결제금액(부가세 10%별도)</div>
                     <div>결제방법</div>
                 </div>
+
+            {% for payment_info in payment_data_history %}
                 <div class="mypay_history_table_content">
-                    <div>1</div>
+                    <div>{{ forloop.counter }}</div>
                     <div>
-                        <p>그룹레슨 이용권</p>
-                        <p>2018.07.12 - 2018.08.12</p>
+                        <p>{{ payment_info.name }}</p>
+                        <p>{{ payment_info.start_date }} ~ {{ payment_info.end_date }}</p>
                     </div>
                     <div>
-                        <p>2018.07.12</p>
+                        <p>{{ payment_info.start_date }}</p>
                     </div>
                     <div>
-                        <span>총 결제금액</span><span>15,000 원</span>
+                        <span>총 결제금액</span><span>{{ payment_info.price }} 원</span>
                     </div>
                     <div>
-                        <p>다날 카드 결제</p>
+                        <p>{{ payment_info.card_name }}</p>
                     </div>
                 </div>
-                <div class="mypay_history_table_content">
-                    <div>1</div>
-                    <div>
-                        <p>그룹레슨 이용권</p>
-                        <p>2018.07.12 - 2018.08.12</p>
-                    </div>
-                    <div>
-                        <p>2018.07.12</p>
-                    </div>
-                    <div>
-                        <span>총 결제금액</span><span>15,000 원</span>
-                    </div>
-                    <div>
-                        <p>다날 카드 결제</p>
-                    </div>
-                </div>
-                <div class="mypay_history_table_content">
-                    <div>1</div>
-                    <div>
-                        <p>그룹레슨 이용권</p>
-                        <p>2018.07.12 - 2018.08.12</p>
-                    </div>
-                    <div>
-                        <p>2018.07.12</p>
-                    </div>
-                    <div>
-                        <span>총 결제금액</span><span>15,000 원</span>
-                    </div>
-                    <div>
-                        <p>다날 카드 결제</p>
-                    </div>
-                </div>
+            {% endfor %}
             </div>
 
             <div id="page_monthly_pay_stop_history" class="sub_pages">
@@ -206,24 +182,26 @@
                 <div>결제방법</div>
                 <div>결제방법 변경</div>
             </div>
-            <div class="pay_method_change_table_content">
-                <div>1</div>
-                <div>
-                    <p>그룹레슨 이용권</p>
+            {% for current_payment_info in current_period_payment_data %}
+                <div class="pay_method_change_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>{{ current_payment_info.name }}</p>
+                    </div>
+                    <div>
+                        <p>{{ current_payment_info.end_date }}</p>
+                    </div>
+                    <div>
+                        <p>{{ current_payment_info.price }} 원</p>
+                    </div>
+                    <div>
+                        <p>{{ current_payment_info.card_name }}</p>
+                    </div>
+                    <div>
+                        <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
+                    </div>
                 </div>
-                <div>
-                    <p>2018.08.12</p>
-                </div>
-                <div>
-                    <p>15,000 원</p>
-                </div>
-                <div>
-                    <p>신용카드 결제<br><span> - 다날 신용카드 결제 (하나은행 xxxxxxxxxxxxxxxxxxxxxx)</span></p>
-                </div>
-                <div>
-                    <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
 
 
@@ -238,26 +216,28 @@
                 <div>다음 결제 안내</div>
                 <div>해지 신청</div>
             </div>
-            <div class="pay_cancel_table_content">
-                <div>1</div>
-                <div>
-                    <p>그룹레슨 이용권</p>
-                    <p>2018.07.12 - 2018.08.12</p>
-                </div>
-                <div>
-                    <p>그룹 관리 메뉴 사용</p>
-                    <p>그룹 일정 관리</p>
-                    <p>광고 제거</p>
-                </div>
-                <div>
-                    <p>그룹레슨 이용권</p>
-                    <p style="color:#fe4e65;">결제예정일: <span>2018.08.12</span> </p>
-                </div>
-                <div>
-                    <div class="pay_cancel_Button" data-payid="페이먼트 id"><span>이용권해지</span></div>
-                </div>
-            </div>
 
+            {% for current_payment_info in current_period_payment_data %}
+                <div class="pay_cancel_table_content">
+                    <div>{{ forloop.counter }}</div>
+                    <div>
+                        <p>{{ current_payment_info.name }}</p>
+                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+                    </div>
+                    <div>
+                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
+                            <p>{{ payment_merchandise_info }}</p>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <p>{{ current_payment_info.name }}</p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
+                    </div>
+                    <div>
+                        <div class="pay_cancel_Button" data-payid="페이먼트 id"><span>이용권해지</span></div>
+                    </div>
+                </div>
+            {% endfor %}
 
             <div id="pay_cancel_survey">
                 <label>이용권 해지 전 설문조사</label>

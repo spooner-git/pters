@@ -7,7 +7,6 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction
 from django.shortcuts import render
 
 # Create your views here.
@@ -23,7 +22,7 @@ from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
     func_update_billing_logic, func_cancel_period_billing_schedule
-from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb
+from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb, ProductTb
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,7 @@ def check_billing_logic(request):
     # date = None
     input_price = 0
     payment_info = None
-    today = datetime.date.today()
+    # today = datetime.date.today()
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -172,6 +171,9 @@ def billing_check_logic(request):
     custom_data = None
     user_id = None
     member_info = None
+    merchandise_type_cd = None
+    payment_type_cd = None
+    customer_uid = None
     context = {'error': None}
 
     try:
@@ -368,6 +370,8 @@ def restart_period_billing_logic(request):
     json_loading_data = None
     customer_uid = None
     context = {'error': None}
+    error = None
+    payment_info = None
 
     try:
         json_loading_data = json.loads(json_data)
@@ -423,6 +427,7 @@ def update_period_billing_logic(request):
     json_loading_data = None
     payment_user_info = None
     context = {'error': None}
+    error = None
 
     try:
         json_loading_data = json.loads(json_data)
@@ -529,6 +534,7 @@ def resend_period_billing_logic(request):
     json_loading_data = None
     payment_user_info = None
     context = {'error': None}
+    error = None
 
     try:
         json_loading_data = json.loads(json_data)
@@ -642,4 +648,40 @@ def delete_billing_logic(request):
 
     context['error'] = error
     return render(request, 'ajax/payment_error_info.html', context)
+
+
+class PaymentHistoryView(LoginRequiredMixin, View):
+    template_name = 'history_payment.html'
+
+    def get(self, request):
+        context = {'payment_data': None, 'current_payment_data':None}
+        product_list = ProductTb.objects.filter(use=USE)
+        current_payment_data = []
+        current_period_payment_data = []
+        for product_info in product_list:
+            try:
+                payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                            merchandise_type_cd=product_info.merchandise_type_cd,
+                                                            use=USE).latest('end_date')
+            except ObjectDoesNotExist:
+                payment_info = None
+
+            if payment_info is not None:
+                try:
+                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=payment_info.merchandise_type_cd)
+                    merchandise_type_name = merchandise_type.contents
+                except ObjectDoesNotExist:
+                    merchandise_type_name = ''
+                merchandise_type_name_list = merchandise_type_name.split('+')
+                payment_info.merchandise_type_name = merchandise_type_name_list
+                current_payment_data.append(payment_info)
+                if payment_info.payment_type_cd == 'PERIOD':
+                    current_period_payment_data.append(payment_info)
+
+        payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE).order_by('-end_date')
+        context['payment_data_history'] = payment_data_history
+        context['current_payment_data'] = current_payment_data
+        context['current_period_payment_data'] = current_period_payment_data
+
+        return render(request, self.template_name, context)
 

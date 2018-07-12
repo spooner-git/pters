@@ -61,5 +61,8 @@ urlpatterns = [
     url(r'^resend_period_billing/$', views.resend_period_billing_logic, name='resend_period_billing'),
     # 결제 완료 페이지
     url(r'^payment_complete/$', views.PaymentCompleteView.as_view(), name='payment_complete'),
+
+    # 이용권 구매 내역 페이지
+    url(r'^payment_history/$', views.PaymentHistoryView.as_view(), name='payment_history'),
     ###################################################################################################################
 ]
