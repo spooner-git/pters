@@ -485,6 +485,51 @@
 		border:1px solid #e8e8e8;
 	}
 
+	#popup_triangle{
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	#popup_triangle:after{
+		content: '';
+	    position: absolute;
+	    border-bottom: 12px solid #ffffff;
+	    border-right: 10px solid transparent;
+	    border-left: 10px solid transparent;
+	    bottom: -10px;
+	    left: 5px;
+	}
+	#popup_triangle:before{
+		content: '';
+	    position: absolute;
+	    border-bottom: 13px solid #cccccc;
+	    border-right: 11px solid transparent;
+	    border-left: 11px solid transparent;
+	    bottom: -10px;
+	    left: 4px;
+	}
+	@media(min-width:900px){
+		#popup_triangle:after{
+			content: '';
+		    position: absolute;
+		    border-bottom: 20px solid #ffffff;
+		    border-right: 10px solid transparent;
+		    border-left: 10px solid transparent;
+		    bottom: -10px;
+		    left: 5px;
+		}
+		#popup_triangle:before{
+			content: '';
+		    position: absolute;
+		    border-bottom: 22px solid #cccccc;
+		    border-right: 11px solid transparent;
+		    border-left: 11px solid transparent;
+		    bottom: -10px;
+		    left: 4px;
+		}
+	}
 
 
 	#myInfo{

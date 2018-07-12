@@ -5,6 +5,10 @@ body{
 	height: 300px;
 }
 
+#ymdTextWrap{
+	padding: 0;
+}
+
 #blank_member_popup{
 	position: absolute;
 	width: 90%;

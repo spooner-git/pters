@@ -8,6 +8,10 @@ body{
 	background-color: #ffffff;
 }
 
+#ymdTextWrap{
+	padding: 0;
+}
+
 .pshade,.mshade{
 	position: fixed;
 	display: none;

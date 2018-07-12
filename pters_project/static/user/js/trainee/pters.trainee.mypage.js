@@ -230,7 +230,19 @@ $(document).ready(function(){
             var duration     = '<div class="cell3">'+durationText+'</div>'
             var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
             var memo         = '<div class="cell5">'+jsondata.ptScheduleNoteArray[i]+'</div>'
-            html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+            
+            if(jsondata.ptScheduleIdxArray[i+1] != undefined){
+                if(jsondata.ptScheduleIdxArray[i].split('-')[0] != jsondata.ptScheduleIdxArray[i+1].split('-')[0]){
+                    html.push('<div class="lecture_history_table_row" style="border-bottom:1px solid #cccccc;padding-bottom:10px;">'+number+date+duration+state+memo+'</div>')
+                }else{
+                    html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+                }
+            }else{
+                html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+            }
+
+            //html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+            
         }
         $Loc.html(tableHeader+html.join(''))
     }
