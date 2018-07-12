@@ -437,6 +437,7 @@ body{
 			font-size: 13px;
 			font-weight: 500;
 			background: #fbfbfb;
+			vertical-align: middle;
 		}
 		.pay_method_change_table_label div:nth-child(1){
 			width: 4%;
