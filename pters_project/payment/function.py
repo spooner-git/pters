@@ -336,7 +336,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                                             reg_dt=timezone.now(),
                                                             mod_dt=timezone.now(),
                                                             use=USE)
-                    function_auth_info.payment_type_cd = custom_data['PERIOD']
+                    function_auth_info.payment_type_cd = custom_data['payment_type_cd']
                     function_auth_info.expired_date = end_date
                     function_auth_info.save()
 
