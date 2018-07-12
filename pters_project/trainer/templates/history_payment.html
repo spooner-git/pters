@@ -28,7 +28,7 @@
         <label class="main_label">내 이용권/구매내역</label>
         <div class="main_menu_table">
             <div class="main_menu_table_cell main_cell_active" id="pay_history">이용권 내역</div>
-            <div class="main_menu_table_cell" id="pay_change">이용권 변경</div>
+            <!--<div class="main_menu_table_cell" id="pay_change">이용권 변경</div>-->
             <div class="main_menu_table_cell" id="pay_method_change">이용권 결제방법 변경</div>
             <div class="main_menu_table_cell" id="pay_cancel">이용권 해지신청</div>
             <div class="main_menu_table_cell" id="pay_cancel_cancel">이용권 해지신청 취소</div>
@@ -70,7 +70,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div id="page_mypay_history" class="sub_pages">
                 <p style="margin-top: 20px;padding-left:5px;">
@@ -133,7 +132,6 @@
                 </div>
             </div>
 
-
             <div id="page_monthly_pay_stop_history" class="sub_pages">
                 <div class="monthly_pay_stop_table_label">
                     <div>NO</div>
@@ -187,15 +185,53 @@
                     <p></p>
                 </div>
             </div>
-
-
         </div>
 
 
 
-        <div id="page_pay_change" class="page_content_wrap"></div>
-        <div id="page_pay_method_change" class="page_content_wrap"></div>
+        <div id="page_pay_change" class="page_content_wrap">
+            
+        </div>
+
+
+        <div id="page_pay_method_change" class="page_content_wrap">
+            <div class="sub_pages">
+                <p style="margin-top: 20px;padding-left:5px;">
+                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기 결제 대상 이용권
+                </p>
+                <div class="pay_method_change_table_label">
+                    <div>NO</div>
+                    <div>PTERS 이용권</div>
+                    <div>결제예정일</div>
+                    <div>총 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 별도)</span></div>
+                    <div>결제방법</div>
+                    <div>결제방법 변경</div>
+                </div>
+                <div class="pay_method_change_table_content">
+                    <div>1</div>
+                    <div>
+                        <p>그룹레슨 이용권</p>
+                    </div>
+                    <div>
+                        <p>2018.08.12</p>
+                    </div>
+                    <div>
+                        <p>15,000 원</p>
+                    </div>
+                    <div>
+                        <p>신용카드 결제<br><span> - 다날 신용카드 결제 (하나은행 xxxxxxxxxxxxxxxxxxxxxx)</span></p>
+                    </div>
+                    <div>
+                        <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div id="page_pay_cancel" class="page_content_wrap"></div>
+
+
         <div id="page_pay_cancel_cancel" class="page_content_wrap"></div>
     </div>
 
