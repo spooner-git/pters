@@ -20,24 +20,42 @@ from payment import views
 urlpatterns = [
     url(r'^$', views.PaymentView.as_view(), name='index'),
 
-    # 페이지 #####################################################################################################
-    # 결제 페이지
-    # url(r'^payment/$', views.PaymentView.as_view(), name='payment'),
-    # 결제 페이지
+    # 결제 관련 ##########################################################################################################
+    # 결제 검사
     url(r'^check_billing/$', views.check_billing_logic, name='check_billing'),
-    # ㄱ
-    # 결제시 완료 페이지
+    # 결제시 완료 검사 페이지
     url(r'^billing_finish/$', views.billing_finish_logic, name='billing_finish'),
     # iamport 에서 결과 전송할때 동작하는 페이지
     url(r'^billing_check/$', views.billing_check_logic, name='billing_check'),
-    # 결제 페이지
-    # url(r'^payment_schedule/$', views.payment_schedule_logic, name='payment_schedule'),
+
+
+    # 정기 결제 변경 ######################################################################################################
+    # 정기 결제 취소 페이지
     url(r'^cancel_period_billing/$', views.cancel_period_billing_logic, name='cancel_period_billing'),
+    # 정기 결제 재시작 페이지
+    url(r'^restart_period_billing/$', views.restart_period_billing_logic, name='restart_period_billing'),
+    # 정기 결제 결제 방법 변경 페이지
+    url(r'^update_period_billing/$', views.update_period_billing_logic, name='update_period_billing'),
+
+    # 결제 정보 조회 ######################################################################################################
+    # 결제 예정인 결제 정보 불러오기
+    url(r'^get_payment_schedule_info/$', views.GetPaymentScheduleInfoView.as_view(), name='get_payment_schedule_info'),
+
+    # 현재 이용중인 결제 정보 불러오기 (정기 결제인지 아닌지도 전달)
+    url(r'^get_payment_info/$', views.GetPaymentInfoView.as_view(), name='get_payment_info'),
+
+    # 현재 진행중인 정기 결제 정보 불러오기
+    url(r'^get_billing_info/$', views.GetBillingInfoView.as_view(), name='get_billing_info'),
+
+    # 결제 정보 리스트 조회
+    url(r'^get_payment_list/$', views.GetPaymentListView.as_view(), name='get_payment_list'),
+
+
+    # 현재 미사용 ########################################################################################################
+    url(r'^delete_billing_info/$', views.delete_billing_info_logic, name='delete_billing_info'),
     # 결제 페이지
     url(r'^resend_period_billing/$', views.resend_period_billing_logic, name='resend_period_billing'),
-
+    # 결제 완료 페이지
     url(r'^payment_complete/$', views.PaymentCompleteView.as_view(), name='payment_complete'),
-
-    url(r'^delete_billing_info/$', views.delete_billing_info_logic, name='delete_billing_info'),
-    ######################################################################################################
+    ###################################################################################################################
 ]

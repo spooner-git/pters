@@ -1,0 +1,40 @@
+{
+
+      "name" :
+      [{% for payment_info in payment_data %}"{{ payment_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "merchandise_type_cd" :
+      [{% for payment_info in payment_data %}"{{ payment_info.merchandise_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "start_date" :
+      [{% for payment_info in payment_data %}"{{ payment_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "end_date" :
+      [{% for payment_info in payment_data %}"{{ payment_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "payment_type_cd" :
+      [{% for payment_info in payment_data %}"{{ payment_info.payment_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "price" :
+      [{% for payment_info in payment_data %}"{{ payment_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "channel" :
+      [{% for payment_info in payment_data %}"{{ payment_info.channel }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "card_name" :
+      [{% for payment_info in payment_data %}"{{ payment_info.card_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "buyer_email" :
+      [{% for payment_info in payment_data %}"{{ payment_info.buyer_email }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "status" :
+      [{% for payment_info in payment_data %}"{{ payment_info.status }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "fail_reason" :
+      [{% for payment_info in payment_data %}"{{ payment_info.fail_reason }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "currency" :
+      [{% for payment_info in payment_data %}"{{ payment_info.currency }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "pay_method" :
+      [{% for payment_info in payment_data %}"{{ payment_info.pay_method }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "pg_provider" :
+      [{% for payment_info in payment_data %}"{{ payment_info.pg_provider }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "receipt_url" :
+      [{% for payment_info in payment_data %}"{{ payment_info.receipt_url }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "buyer_name" :
+      [{% for payment_info in payment_data %}"{{ payment_info.buyer_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "mod_dt" :
+      [{% for payment_info in payment_data %}"{{ payment_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "messageArray" :
+    [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+}

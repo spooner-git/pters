@@ -310,6 +310,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              start_date=start_date, end_date=end_date,
                                              price=int(payment_result['amount']),
                                              name=payment_result['name'],
+                                             imp_uid=payment_result['imp_uid'],
                                              channel=payment_result['channel'],
                                              card_name=payment_result['card_name'],
                                              buyer_email=payment_result['buyer_email'],
@@ -357,6 +358,7 @@ def func_update_billing_logic(payment_result):
     if error is None:
         try:
             with transaction.atomic():
+                payment_user_info.imp_uid = payment_result['imp_uid']
                 payment_user_info.channel = payment_result['channel']
                 payment_user_info.card_name = payment_result['card_name']
                 payment_user_info.buyer_email = payment_result['buyer_email']
