@@ -185,7 +185,7 @@
 	border-bottom-color: #fe4e65;
 }
 
-#cal_popup_plandelete, #cal_popup_repeatconfirm{
+#cal_popup_plandelete, #cal_popup_repeatconfirm, #pay_cancel_confirm_popup{
 	display: none;
 	position: fixed;
 	background: #ffffff;

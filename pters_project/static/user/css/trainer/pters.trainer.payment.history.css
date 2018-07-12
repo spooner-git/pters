@@ -605,6 +605,62 @@ body{
 			.pay_cancel_Button:hover{
 				opacity:0.8;
 			}
+	#pay_cancel_survey{
+		display: none;
+		margin-top: 80px;
+		border-top: 1px solid #cccccc;
+		border-bottom: 1px solid #cccccc;
+		background: #f7f7f7;
+		padding: 15px;
+		margin-bottom: 70px;
+	}
+	#pay_cancel_survey > p{
+		margin: 0;
+		font-size: 13px;
+
+	}
+	#survey_wrap{
+		margin-top: 10px;
+	}
+		.surver_answer_wrap{
+			display: inline-block;
+			width: 49%;
+			margin-top: 20px;
+		}
+		.surver_answer_wrap .ptersCheckbox{
+			display: inline-block;
+	margin-right: 10px;
+		}
+		.surver_answer_wrap span{
+			line-height: 18px;
+		}
+	#pay_cancel_survey textarea{
+		margin-top: 15px;
+		resize: none;
+		width: 100%;
+		min-height: 100px;
+	}
+	#submit_pay_cancel{
+		width: 120px;
+		height: 35px;
+		background: #ffffff;
+		color: #282828;
+		font-weight: bold;
+		margin: 0 auto;
+		margin-top: 10px;
+		border: 1px solid #282828;
+		text-align: center;
+	}
+		#submit_pay_cancel:hover{
+			opacity: 0.8;
+		}
+		#submit_pay_cancel span{
+			line-height: 35px;
+		}
+	.active{
+		color: #ffffff !important;
+		background: #fe4e65 !important;
+	}
 
 
 
