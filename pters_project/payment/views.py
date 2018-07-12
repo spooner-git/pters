@@ -52,6 +52,7 @@ def check_billing_logic(request):
     # end_date = None
     # date = None
     input_price = 0
+    payment_info = None
     today = datetime.date.today()
 
     try:
@@ -66,10 +67,6 @@ def check_billing_logic(request):
         merchandise_type_cd = json_loading_data['merchandise_type_cd']
         input_price = json_loading_data['price']
 
-    # if error is None:
-    #     if payment_type_cd == 'PERIOD':
-    #         customer_uid = json_loading_data['customer_uid']
-
     if error is None:
         # today = datetime.datetime.combine(today, datetime.datetime.min.time())
         payment_user_info_count_period = PaymentInfoTb.objects.filter(end_date__gte=today,
@@ -79,13 +76,22 @@ def check_billing_logic(request):
                                                                       use=USE).order_by('end_date')
         if payment_user_info_count_period != 0:
             error = '이미 정기결제 중인 기능입니다.'
-    #
-    # if error is None:
-    #     payment_user_info_count_single = PaymentInfoTb.objects.filter(end_date__gte=today,
-    #                                                                   member_id=request.user.id,
-    #                                                                   merchandise_type_cd=merchandise_type_cd,
-    #                                                                   payment_type_cd='SINGLE',
-    #                                                                   use=USE).count()
+
+    if error is None:
+        payment_user_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                         end_date__lt=datetime.date.today(),
+                                                         use=USE).order_by('end_date')
+        if len(payment_user_info) > 0:
+            payment_info = payment_user_info[0]
+
+    if error is None:
+        if payment_info is None:
+            date = int(payment_info.start_date.strftime('%d'))
+            context['start_date'] = payment_info.start_date
+            context['end_date'] = payment_info.end_date
+            context['next_start_date'] = payment_info.end_date
+            context['next_end_date'] = func_get_end_date(payment_user_info.payment_type_cd,
+                                                         payment_info.start_date, 1, date)
 
     if error is None:
         error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
@@ -151,6 +157,8 @@ def cancel_period_billing_logic(request):
     customer_uid = None
     merchant_uid = None
     payment_data = None
+    billing_info = None
+    error = None
 
     try:
         json_loading_data = json.loads(json_data)
@@ -167,9 +175,18 @@ def cancel_period_billing_logic(request):
         payment_data = PaymentInfoTb.objects.filter(merchant_uid=merchant_uid,
                                                     status__isnull=True,
                                                     payment_type_cd='PERIOD', use=UN_USE)
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
 
     if error is None:
         error = func_cancel_period_billing_schedule(customer_uid)
+
+    if error is None:
+        billing_info.state_cd = 'ST'
+        billing_info.save()
 
     if error is None:
         if len(payment_data) > 0:
@@ -381,6 +398,163 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         context = super(PaymentCompleteView, self).get_context_data(**kwargs)
 
         return context
+
+
+class GetPaymentListView(LoginRequiredMixin, View):
+    template_name = 'payment_list.html'
+
+    def get(self, request):
+        context = {}
+        payment_list = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE)
+        context['payment_list'] = payment_list
+
+        return context
+
+
+class GetPaymentScheduleInfoView(LoginRequiredMixin, View):
+    template_name = 'payment_complete.html'
+
+    def get(self, request):
+        context = {}
+        payment_info = None
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    end_date__lt=datetime.date.today(),
+                                                    payment_type_cd='PERIOD',
+                                                    use=UN_USE).order_by('end_date')
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+        context['payment_info'] = payment_info
+
+        return context
+
+
+class GetPaymentInfoView(LoginRequiredMixin, View):
+    template_name = 'payment_complete.html'
+
+    def get(self, request):
+        context = {}
+        payment_info = None
+        payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                    end_date__lt=datetime.date.today(),
+                                                    use=USE).order_by('end_date')
+        if len(payment_data) > 0:
+            payment_info = payment_data[0]
+        context['payment_info'] = payment_info
+
+        return context
+
+
+class GetBillingInfoView(LoginRequiredMixin, View):
+    template_name = 'payment_complete.html'
+
+    def get(self, request):
+        context = {'error': None, 'billing_info': None}
+
+        try:
+            billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                                                     state_cd='IP',
+                                                     use=USE)
+        except ObjectDoesNotExist:
+            context['error'] = '정기 결제 진행중인 내역이 없습니다.'
+
+        if context['error'] is not None:
+            context['billing_info'] = billing_info
+
+        return context
+
+
+@csrf_exempt
+def restart_period_billing_logic(request):
+
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    payment_info = None
+    billing_info = None
+    context = {'error': None}
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        merchant_uid = json_loading_data['merchant_uid']
+        try:
+            payment_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오는데 실패했습니다.'
+
+    if error is None:
+        customer_uid = json_loading_data['customer_uid']
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, state_cd='ST', use=USE)
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        billing_info.state_cd = 'IP'
+        billing_info.save()
+
+    if error is None:
+        payment_user_info_result = func_update_billing_logic(payment_info)
+        func_set_billing_schedule(payment_info.customer_uid, payment_user_info_result['payment_user_info'])
+        error = payment_user_info_result['error']
+
+    context['error'] = error
+    if error is not None:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
+                     + str(error))
+    else:
+        logger.info(str(request.user.last_name)+str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
+@csrf_exempt
+def update_period_billing_logic(request):
+    # 기존 예약 결제 취소 -> 0원으로 billing 결제 및 새로운 예약 스케쥴 등록
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    payment_user_info = None
+    context = {'error': None}
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        merchant_uid = json_loading_data['merchant_uid']
+        try:
+            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오는데 실패했습니다.'
+
+    if error is None:
+        payment_user_info_result = func_update_billing_logic(payment_user_info)
+        func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info_result['payment_user_info'])
+        error = payment_user_info_result['error']
+
+    context['error'] = error
+    if error is not None:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
+                     + str(error))
+    else:
+        logger.info(str(request.user.last_name)+str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
 @csrf_exempt
