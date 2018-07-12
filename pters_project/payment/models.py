@@ -90,7 +90,7 @@ class FunctionAuthTb(models.Model):
     function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
     function_auth_type_cd = models.CharField(db_column='FUNCTION_AUTH_TYPE_CD', max_length=45, blank=True, null=True)
-    expired_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    expired_date = models.DateField(db_column='EXPIRED_DATE', blank=True, null=True)  # Field name made lowercase.
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
