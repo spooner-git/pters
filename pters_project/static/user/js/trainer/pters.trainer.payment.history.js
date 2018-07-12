@@ -24,4 +24,12 @@ $(document).ready(function(){
         alert(payid)
         //To- Do
     })
+
+    $(document).on('click','pay_cancel_Button',function(){
+        var payid = $(this).attr('data-payid');
+        alert(payid)
+        //To- Do
+    })
+
+
 });

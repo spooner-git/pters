@@ -195,41 +195,69 @@
 
 
         <div id="page_pay_method_change" class="page_content_wrap">
-            <div class="sub_pages">
-                <p style="margin-top: 20px;padding-left:5px;">
-                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기 결제 대상 이용권
-                </p>
-                <div class="pay_method_change_table_label">
-                    <div>NO</div>
-                    <div>PTERS 이용권</div>
-                    <div>결제예정일</div>
-                    <div>총 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 별도)</span></div>
-                    <div>결제방법</div>
-                    <div>결제방법 변경</div>
+            <p style="margin-top: 20px;padding-left:5px;">
+                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기 결제 대상 이용권
+            </p>
+            <div class="pay_method_change_table_label">
+                <div>NO</div>
+                <div>PTERS 이용권</div>
+                <div>결제예정일</div>
+                <div>총 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 별도)</span></div>
+                <div>결제방법</div>
+                <div>결제방법 변경</div>
+            </div>
+            <div class="pay_method_change_table_content">
+                <div>1</div>
+                <div>
+                    <p>그룹레슨 이용권</p>
                 </div>
-                <div class="pay_method_change_table_content">
-                    <div>1</div>
-                    <div>
-                        <p>그룹레슨 이용권</p>
-                    </div>
-                    <div>
-                        <p>2018.08.12</p>
-                    </div>
-                    <div>
-                        <p>15,000 원</p>
-                    </div>
-                    <div>
-                        <p>신용카드 결제<br><span> - 다날 신용카드 결제 (하나은행 xxxxxxxxxxxxxxxxxxxxxx)</span></p>
-                    </div>
-                    <div>
-                        <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
-                    </div>
+                <div>
+                    <p>2018.08.12</p>
+                </div>
+                <div>
+                    <p>15,000 원</p>
+                </div>
+                <div>
+                    <p>신용카드 결제<br><span> - 다날 신용카드 결제 (하나은행 xxxxxxxxxxxxxxxxxxxxxx)</span></p>
+                </div>
+                <div>
+                    <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
                 </div>
             </div>
         </div>
 
 
-        <div id="page_pay_cancel" class="page_content_wrap"></div>
+        <div id="page_pay_cancel" class="page_content_wrap">
+            <p style="margin-top: 20px;padding-left:5px;">
+                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+            </p>
+            <div class="pay_cancel_table_label">
+                <div>NO</div>
+                <div>PTERS 이용권</div>
+                <div>이용 가능 서비스</div>
+                <div>다음 결제 안내</div>
+                <div>해지 신청</div>
+            </div>
+            <div class="pay_cancel_table_content">
+                <div>1</div>
+                <div>
+                    <p>그룹레슨 이용권</p>
+                    <p>2018.07.12 - 2018.08.12</p>
+                </div>
+                <div>
+                    <p>그룹 관리 메뉴 사용</p>
+                    <p>그룹 일정 관리</p>
+                    <p>광고 제거</p>
+                </div>
+                <div>
+                    <p>그룹레슨 이용권</p>
+                    <p style="color:#fe4e65;">결제예정일: <span>2018.08.12</span> </p>
+                </div>
+                <div>
+                    <div class="pay_cancel_Button" data-payid="페이먼트 id"><span>이용권해지</span></div>
+                </div>
+            </div>
+        </div>
 
 
         <div id="page_pay_cancel_cancel" class="page_content_wrap"></div>
