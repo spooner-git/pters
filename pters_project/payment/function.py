@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from configs.const import USE, UN_USE
-from payment.models import PaymentInfoTb, ProductPriceTb, BillingInfoTb
+from payment.models import PaymentInfoTb, ProductPriceTb, BillingInfoTb, FunctionAuthTb
 
 logger = logging.getLogger(__name__)
 
@@ -303,7 +303,7 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         try:
             with transaction.atomic():
-                payment_info = PaymentInfoTb(member_id=str(custom_data['user_id']),
+                payment_info = PaymentInfoTb(member_id=custom_data['user_id'],
                                              merchandise_type_cd=custom_data['merchandise_type_cd'],
                                              payment_type_cd=custom_data['payment_type_cd'],
                                              merchant_uid=payment_result['merchant_uid'],
@@ -325,6 +325,19 @@ def func_add_billing_logic(custom_data, payment_result):
                                              # amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
 
+                try:
+                    function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
+                                                                    function_auth_type_cd=
+                                                                    custom_data['merchandise_type_cd'],
+                                                                    use=USE)
+                except ObjectDoesNotExist:
+                    function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
+                                                        function_auth_type_cd=custom_data['merchandise_type_cd'],
+                                                        reg_dt=timezone.now(),
+                                                        mod_dt=timezone.now(),
+                                                        use=USE)
+                function_auth_info.expired_date = end_date
+                function_auth_info.save()
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
                                                  pay_method=payment_result['pay_method'],
@@ -337,6 +350,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
                     billing_info.save()
                 payment_info.save()
+
                 context['payment_user_info'] = payment_info
         except TypeError as e:
             error = '오류가 발생했습니다. 관리자에게 문의해주세요.1:'+str(e)
@@ -353,32 +367,54 @@ def func_update_billing_logic(payment_result):
 
     if error is None:
         try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=payment_result['merchant_uid'])
+            payment_info = PaymentInfoTb.objects.get(merchant_uid=payment_result['merchant_uid'])
         except ObjectDoesNotExist:
             error = '결제 정보를 update 하는데 실패했습니다.'
 
     if error is None:
         try:
             with transaction.atomic():
-                payment_user_info.imp_uid = payment_result['imp_uid']
-                payment_user_info.channel = payment_result['channel']
-                payment_user_info.card_name = payment_result['card_name']
-                payment_user_info.buyer_email = payment_result['buyer_email']
-                payment_user_info.status = payment_result['status']
-                payment_user_info.fail_reason = payment_result['fail_reason']
-                payment_user_info.currency = payment_result['currency']
-                payment_user_info.pay_method = payment_result['pay_method']
-                payment_user_info.pg_provider = payment_result['pg_provider']
-                payment_user_info.receipt_url = payment_result['receipt_url']
-                payment_user_info.buyer_name = payment_result['buyer_name']
-                payment_user_info.mod_dt = timezone.now()
-                payment_user_info.use = USE
-                payment_user_info.save()
-                context['payment_user_info'] = payment_user_info
+                payment_info.imp_uid = payment_result['imp_uid']
+                payment_info.channel = payment_result['channel']
+                payment_info.card_name = payment_result['card_name']
+                payment_info.buyer_email = payment_result['buyer_email']
+                payment_info.status = payment_result['status']
+                payment_info.fail_reason = payment_result['fail_reason']
+                payment_info.currency = payment_result['currency']
+                payment_info.pay_method = payment_result['pay_method']
+                payment_info.pg_provider = payment_result['pg_provider']
+                payment_info.receipt_url = payment_result['receipt_url']
+                payment_info.buyer_name = payment_result['buyer_name']
+                payment_info.mod_dt = timezone.now()
+                payment_info.use = USE
+                payment_info.save()
+                context['payment_user_info'] = payment_info
         except TypeError as e:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.3:'+str(e)
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.:'+str(e)
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.4'
+            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        if payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
+            try:
+                billing_info = BillingInfoTb.objects.get(member_id=payment_info.member_id,
+                                                         customer_uid=payment_info.customer_uid,
+                                                         use=USE)
+                billing_info.state_cd = 'ERR'
+                billing_info.save()
+            except ObjectDoesNotExist:
+                error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            function_auth_info = FunctionAuthTb.objects.get(member_id=payment_info.member_id,
+                                                            function_auth_type_cd=
+                                                            payment_info.merchandise_type_cd,
+                                                            use=USE)
+            function_auth_info.expired_date = payment_info.end_date
+            function_auth_info.save()
+        except ObjectDoesNotExist:
+            error = '권한 정보를 불러오지 못했습니다.'
 
     context['error'] = error
     return context

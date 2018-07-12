@@ -267,11 +267,11 @@ def billing_check_logic(request):
                     error = payment_user_info_result['error']
 
             else:
-                # 결제 취소 날리기
+                # 결제 취소 날리기 / 결제 오류 상태로 바꾸기
                 func_send_refund_payment(imp_uid, merchant_uid, access_token)
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
-        else:  # 재결제 시도
+        else:  # 결제 오류 상태로 업데이트
             payment_user_info_result = func_update_billing_logic(payment_result)
             # func_resend_payment_info(customer_uid, merchant_uid,
             #                          payment_result['amount'])
