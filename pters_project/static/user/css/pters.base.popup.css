@@ -80,14 +80,17 @@
 
 #cal_popup_planinfo{
 	display: none;
-	position: fixed;
+	position: absolute;
 	background: #ffffff;
 	border:1px solid #cccccc;
-	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
+	/*
+	position: fixed;
+	top: 50%;
 	left: 50%;
 	transform:translate(-50%,-50%);
+	*/
 	z-index: 150;
 	text-align: center;
 }
@@ -301,15 +304,17 @@
 /*월간달력 팝업*/
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
 	display: none;
-	position: fixed;
+	position: absolute;
 	width: 300px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	z-index: -2;
 	text-align: center;
+	/*
 	top: 50%;
 	left:50%;
 	transform: translate(-50%,-50%);
+	*/
 	z-index: 125;
 }
 

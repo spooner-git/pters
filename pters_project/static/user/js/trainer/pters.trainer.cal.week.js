@@ -276,7 +276,8 @@ $(document).ready(function(){
         $('#inner_shade_planinfo').css('display','none');
 
         $('#page-addplan-pc').hide();
-        selector_cal_popup_planinfo.css('display','block');
+        //selector_cal_popup_planinfo.css('display','block');
+        
         //shade_index(100)
         //closeAlarm('pc')
 
@@ -324,6 +325,9 @@ $(document).ready(function(){
             }
         }
         schedule_on_off = 1;
+
+        selector_cal_popup_planinfo.css({'display':'block','top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
+        disable_window_scroll();
     });
 
     //Off 일정 클릭시 팝업 Start
@@ -382,7 +386,9 @@ $(document).ready(function(){
 
         $('#page-addplan-pc').hide();
         //$('.td00').css('background','transparent')
-        selector_cal_popup_plan_info.css('display','block');
+        //selector_cal_popup_plan_info.css('display','block');
+        
+
         $('#popup_info3_memo,#popup_info3_memo_modify').show();
 
         var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')';
@@ -400,6 +406,9 @@ $(document).ready(function(){
         selector_popup_btn_complete.hide();
         $("#popup_sign_img").css("display","none");
         schedule_on_off = 0;
+
+        selector_cal_popup_plan_info.css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+        disable_window_scroll();
     });
 
     //스케쥴 클릭시 팝업 Start
@@ -480,7 +489,8 @@ $(document).ready(function(){
         $('#inner_shade_planinfo').css('display','none');
 
         $('#page-addplan-pc').hide();
-        selector_cal_popup_plan_info.css('display','block').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
+        //selector_cal_popup_plan_info.css('display','block').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
+        
 
         $('#popup_info3_memo,#popup_info3_memo_modify').show();
         var schedule_finish_check = $(this).attr('data-schedule-check');
@@ -529,7 +539,8 @@ $(document).ready(function(){
         schedule_on_off = 2;
         //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
 
-
+        selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+        disable_window_scroll();
     });
 
     mini_popup_event();
@@ -548,7 +559,7 @@ $(document).ready(function(){
             }else if($popup.attr('data-grouptype') == "group"){
                 $signcomplete_button.attr('data-signtype','group')
             }
-            disable_window_scroll()
+            //disable_window_scroll()
         });
 
         $('#popup_btn_sign_complete').click(function(){
@@ -605,7 +616,7 @@ $(document).ready(function(){
         })
 
         function close_sign_popup(){
-            enable_window_scroll()
+            //enable_window_scroll()
             $('#canvasWrap').css('display','none');
             $('#canvas').css({'border-color':'#282828','display':'none'});
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');

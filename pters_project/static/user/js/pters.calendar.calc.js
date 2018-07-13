@@ -134,3 +134,44 @@ function substract_month(startdate, addvalue){
 	var result = newyear + '-' + newmonth + '-' + newdate
 	return result
 }
+
+
+// 시간에서 시간을 빼면 몇시?
+// 11:30 에서 2시간을 빼면 ??
+function substract_time(starttime, subvalue){
+	var shour = Number(starttime.split(':')[0]);
+	var smin = Number(starttime.split(':')[1]);
+	var subhour = Number(subvalue.split(':')[0]);
+	var submin = Number(subvalue.split(':')[1]);
+
+	console.log(shour,smin,subhour,submin)
+
+	if(smin - submin >= 0){
+		if(shour - subhour >= 0){
+			var resultHour = shour - subhour;
+			var resultMin = smin - submin;
+		}else if(shour - subhour < 0){
+			var resultHour = 24 + (shour - subhour);
+			var resultMin = smin - submin;
+		}
+		
+	}else if(smin - submin < 0){
+		if(shour - subhour > 0){
+			var resultHour = shour - subhour - 1;
+			var resultMin = smin + (60 - submin)
+		}else if(shour - subhour <= 0){
+			var resultHour = 24 + (shour - subhour) - 1;
+			var resultMin = smin + (60 - submin)
+		}
+	}
+
+	if(resultHour<10){
+		var resultHour = '0' + resultHour
+	}
+	if(resultMin<10){
+		var resultMin = '0' + resultMin
+	}
+
+
+	return resultHour + ":" + resultMin;
+}

@@ -1,6 +1,7 @@
 body{
 	padding-top: 50px;
 	margin:0 auto;
+	background: #ffffff;
 }
 #ymdText{
 	z-index: 30;
@@ -13,7 +14,7 @@ body{
     line-height: 40px;
 }
 #trainerWorkTimeSettingText{
-	margin-top: 50px;
+	margin-top: 70px;
 }
 
 
@@ -82,12 +83,14 @@ li a{
 #hourSelect, #hourSelect2, #workTimehourSelect, #workTimehourSelect2{
 	display: inline-flex;
 	width: 50%;
+	margin-top: 4px;
 }
 
 #timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect, #mstartHourSelect{
 	left: 16%;
 	max-width: 170px;
 	display: inline-flex;
+	margin-top: 4px;
 }
 
 #pushTimeSet{
@@ -157,21 +160,28 @@ li a{
 
 .settingMenu{
 	position: relative;
-	height: 60.5px;
+	height: auto;
 	background: #ffffff;
 	font-size: 14.9px;
 	font-weight: 500;
 	color: #282828;
-	padding-top: 15px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+
+	border: 1px solid #eaeaea;
+	margin-top: 20px;
 }
 
 .settingBox{
 	position: relative;
 	z-index: 2;
+	margin: 0;
+	background: #eaeaea;
 }
 
 
 .settingText{
+	font-size: 16.5px;
 	margin: 0;
 	margin-left: 14.5px;
 }
@@ -197,7 +207,7 @@ li a{
 	position: relative;
 	font-size: 13.9px;
 	color: #3b3d3d;
-	margin-left: 14.5px;
+	padding-left: 14.5px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
@@ -223,7 +233,7 @@ li a{
 }
 
 #trainerPushSettingText{
-	margin-top: 10px;
+	margin-bottom: 40px;
 }
 
 
@@ -271,6 +281,10 @@ li a{
 }
 
 @media(min-width: 600px){
+	.settingMenu{
+		height: 75px;
+		padding-top: 10px;
+	}
 	#menuName{
 
 	}
@@ -279,6 +293,12 @@ li a{
 	    line-height: unset;
 	}
 	#trainerWorkTimeSettingText{
-		margin-top: 100px;
+		margin-top: 120px;
+	}
+	.settingText{
+		font-size: 20px;
+	}
+	.settingText2{
+		font-size: 14px;
 	}
 }

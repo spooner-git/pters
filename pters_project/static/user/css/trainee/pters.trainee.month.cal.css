@@ -911,7 +911,7 @@ img,a,div,span,p{
 
 
 .ptersCheckbox{
-	display: inline-block;
+	display: table-cell;
 	margin-right: 4px !important;
 }
 
