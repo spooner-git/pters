@@ -103,6 +103,7 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
+        enable_window_scroll();
         //$('body').css('overflow-y','overlay');
     }
     else if(option =="cal_popup_plandelete"){
@@ -139,6 +140,7 @@ function close_info_popup(option){
     else if(option = "cal_popup_plancheck"){
         $('#'+option).css('display','none');
         shade_index(-100);
+        enable_window_scroll();
     }
 }
 

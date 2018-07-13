@@ -150,7 +150,8 @@ $(document).ready(function(){
         closeAlarm('pc')
         if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
             deleteTypeSelect = ''
-            $('#cal_popup_plancheck').css('display','block');
+            var $cal_popup_plancheck = $('#cal_popup_plancheck');
+            //$cal_popup_plancheck.css('display','block');
             shade_index(100)
             var info = $(this).attr('data-date').split('_')
             var yy=info[0]
@@ -165,6 +166,8 @@ $(document).ready(function(){
             $('#countNum').text(countNum)
             $('.popup_ymdText').html(infoText)
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
+            $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
+            disable_window_scroll();
             clicked_td_date_info = yy+'_'+mm+'_'+dd
         }
     })
