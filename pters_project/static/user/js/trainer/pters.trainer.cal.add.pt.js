@@ -2270,6 +2270,272 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     }
 }
 
+function scheduleTime_Mobile(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+    var plan = '';
+    var planStartDate = '';
+    var planGroupStartDate = '';
+    var planEndDate = '';
+    var planMemberName = '';
+    var planScheduleIdArray = '';
+    var planNoteArray = '';
+    var planScheduleFinishArray = '';
+    var planColor = '';
+    var planfinished = '';
+    var planMemberNum = '';
+    var planMemberDbid = '';
+    var planGroupid = '';
+    var planCode = '';
+    switch(option){
+        case 'class':
+            plan = option;
+            planStartDate = jsondata.classTimeArray_start_date;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.classTimeArray_end_date;
+            planMemberName = jsondata.classTimeArray_member_name;
+            planMemberDbid = jsondata.classTimeArray_member_id;
+            planScheduleIdArray = jsondata.scheduleIdArray;
+            planNoteArray = jsondata.scheduleNoteArray;
+            planScheduleFinishArray = jsondata.scheduleFinishArray;
+            planColor = 'classTime';
+            planfinished = ' classTime_checked';
+            planMemberNum = '';
+            planGroupid = '';
+            planCode = '';
+            break;
+        case 'off':
+            plan = option;
+            planGroupid = '';
+            planStartDate = jsondata.offTimeArray_start_date;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.offTimeArray_end_date;
+            planScheduleIdArray = jsondata.offScheduleIdArray;
+            planScheduleFinishArray = '';
+            planNoteArray = jsondata.offScheduleNoteArray;
+            planColor = 'offTime';
+            planMemberNum = '';
+            planMemberDbid = '';
+            planCode = '';
+            console.log('scheduleTime("off")',jsondata);
+            break;
+        case 'group':
+
+            plan = option;
+            planStartDate = jsondata.group_schedule_start_datetime;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.group_schedule_end_datetime;
+            planMemberName = jsondata.group_schedule_group_name;
+            planGroupid = jsondata.group_schedule_group_id;
+            planScheduleIdArray = jsondata.group_schedule_id;
+            planNoteArray = jsondata.group_schedule_note;
+            planScheduleFinishArray = jsondata.group_schedule_finish_check;
+            planColor = 'groupTime';
+            planfinished = ' groupTime_checked';
+            planMemberNum = jsondata.group_schedule_max_member_num;
+            planMemberDbid = '';
+            planCode = '';
+            break;
+    }
+
+    //2018_4_22_8_30_2_OFF_10_30
+
+    var planheight = 60;
+    if($calendarWidth>=600){
+        planheight = 60;
+    }
+    var len = planScheduleIdArray.length;
+
+    var date_sorted = {};
+
+    for(var j=0; j<len; j++){
+        var planYear    = Number(planStartDate[j].split(' ')[0].split('-')[0]);
+        var planMonth   = Number(planStartDate[j].split(' ')[0].split('-')[1]);
+        var planDate    = Number(planStartDate[j].split(' ')[0].split('-')[2]);
+        date_sorted[planYear+'_'+planMonth+'_'+planDate] = []
+    }
+    console.log(date_sorted)
+
+    for(var i=0; i<len; i++){
+        //2018-05-11 10:00:00
+        var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
+        var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
+        var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
+        var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+        var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+        var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
+        var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
+        var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+        var memberName = 'OFF';
+        var planDura = "0.5";
+        var hourType = '오전';
+        if(plan == 'off'){
+            if(planNoteArray[i].length > 0){
+                memberName = planNoteArray[i];
+            }else{
+                memberName = 'OFF';
+            }
+        }else{
+            memberName  = planMemberName[i];
+        }
+
+
+        if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
+            if(planEndHour-planHour == 0){
+                planDura = "0.5";
+            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
+                planDura = String((planEndHour-planHour-1))+'.5';
+            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
+                planDura = String((planEndHour-planHour))+'.5';
+            }
+        }else{
+            planDura = planEndHour - planHour;
+        }
+
+        //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+        if(planEDate == planDate+1 && planEndHour==planHour){
+            planDura = 24;
+        }else if(planEDate == planDate+1 && planEndHour == 0){
+            planDura = 24-planHour;
+        }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
+            planDura = 24-planHour;
+        }
+
+        if(planMinute == '00'){
+            if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
+
+                planDura = planDura - (Options.workStartTime - planHour); // 2 - (10 - 8)
+                planHour = Options.workStartTime;
+                //2018_4_22_8_30_2_OFF_10_30
+            }
+        }else if(planMinute == '30'){
+            //(10>8)  (2>=10-8)
+            if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
+
+                planDura = planDura - (Options.workStartTime - planHour)+0.5; // 2 - (10 - 8)
+                planHour = Options.workStartTime;
+                planMinute = '00';
+                //2018_4_22_8_30_2_OFF_10_30
+            }
+        }
+
+
+        if(planHour < 12){
+            hourType = '오전';
+        }else{
+            if(planHour == 24){
+                hourType = '오전';
+            }else{
+                hourType = '오후';
+            }
+        }
+
+        var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
+        var planStartArr = [planYear, planMonth, planDate];
+        var planStart = planStartArr.join("_");
+        var tdPlanStart = $("#"+planStart+" div"); //2018_7_8
+        var tdPlan = $("#"+planStart);
+        //tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
+
+        var planColor_ = planColor+planfinished;
+        var textcolor = "bluetext";
+        var hideornot = 'hideelement';
+        if(option != 'off'){
+            if(planScheduleFinishArray[i] == 1){
+                planColor_ = planColor+planfinished;
+            }else{
+                planColor_ = planColor;
+            }
+        }else{
+            planColor_ = planColor;
+        }
+
+        if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+            textcolor = "bluetext";
+        }else{
+            textcolor = "";
+        }
+
+        if(Number(planDura*planheight-1) < 59){
+            hideornot = 'hideelement';
+        }else{
+            hideornot = 'inlineelement';
+        }
+
+
+
+        if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+            var innerNameTag = '<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>'
+            planhtml = '<div class-time="'+planArray.join('_')+
+                        '" class-schedule-id="'+planScheduleIdArray[i]+
+                        '" data-starttime="'+planStartDate[i]+
+                        '" data-groupid="'+planGroupid[i]+
+                        '" data-membernum="'+planMemberNum[i]+
+                        '" data-memo="'+planNoteArray[i]+
+                        '" data-schedule-check="'+planScheduleFinishArray[i]+
+                        '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                        '" data-dbid="'+planMemberDbid[i]+
+                        '" data-memberName="'+memberName+
+                        '" class="'+planColor_+
+                        '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+(60*(planHour-Options.workStartTime)+60*planMinute/60)+'px;'+
+                        '">'+
+                            innerNameTag+
+                       '</div>'
+            date_sorted[planStart].push(planhtml)
+        }else if(option == 'group'){
+            var innerNameTag = '<span class="memberName">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+'<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+            planhtml = '<div group-time="'+planArray.join('_')+
+                        '" group-schedule-id="'+planScheduleIdArray[i]+
+                        '" data-starttime="'+planStartDate[i]+
+                        '" data-groupid="'+planGroupid[i]+
+                        '" data-membernum="'+planMemberNum[i]+
+                        '" data-memo="'+planNoteArray[i]+
+                        '" data-schedule-check="'+planScheduleFinishArray[i]+
+                        '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                        '" data-dbid="'+planMemberDbid[i]+
+                        '" data-memberName="'+memberName+
+                        '" class="'+planColor_+
+                        '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+(60*(planHour-Options.workStartTime)+60*planMinute/60)+'px;'+
+                        '">'+
+                            innerNameTag+
+                       '</div>'
+            date_sorted[planStart].push(planhtml)
+        }else if(option == 'off'){
+            var innerNameTag = '<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+            planhtml = '<div off-time="'+planArray.join('_')+
+                        '" off-schedule-id="'+planScheduleIdArray[i]+
+                        '" data-starttime="'+planStartDate[i]+
+                        '" data-groupid="'+planGroupid[i]+
+                        '" data-membernum="'+planMemberNum[i]+
+                        '" data-memo="'+planNoteArray[i]+
+                        '" data-schedule-check="'+planScheduleFinishArray[i]+
+                        '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                        '" data-dbid="'+planMemberDbid[i]+
+                        '" data-memberName="'+memberName+
+                        '" class="'+planColor_+
+                        '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+(60*(planHour-Options.workStartTime)+60*planMinute/60)+'px;'+
+                        '">'+
+                            innerNameTag+
+                       '</div>'
+            date_sorted[planStart].push(planhtml)
+        }
+
+        /*
+        var hhh = Number(planHour);
+        var mmm = planMinute;
+
+        for(var j=0; j<planDura/0.5; j++){
+            if(mmm == 60){
+                hhh = hhh + 1;
+                mmm = '00';
+            }
+            $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
+            mmm = Number(mmm) + 30;
+        }
+        */
+    }
+    for(date in date_sorted){
+        $('#'+date).append(date_sorted[date].join(''))
+    }
+}
 
 /*
  function beforeSend(use, callback){

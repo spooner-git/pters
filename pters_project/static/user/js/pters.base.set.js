@@ -970,6 +970,11 @@ function TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER){
 
 
 var bodywidth = selector_body.width();
+/*
+$(window).resize(function(){
+    bodywidth = window.innerWidth;
+})
+*/
 
 if(class_background_img_url.length == 0){
     $('#ymdText, #upperImg').css('background-image',"url(/static/user/res/main/bg-image-basic-ymdText.png)")
