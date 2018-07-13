@@ -284,7 +284,6 @@
         "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
         "availDate":Number({{ lt_res_05 }}),
         "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
-
         "firstPushToMember":'-',
         "secondPushToMember":'-',
         "regErgentPushToMember":'-',
@@ -294,9 +293,9 @@
         "workStartTime":worktimeStart,
         "workEndTime":worktimeEnd,
 
-        "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan"           //Korea, Japan, English, Chinese
-    };
+        "language" : "KOR",             //Korea, Japan, English
+        "location" : "Japan"           //Korea, Japan, English
+    }
     {#            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];#}
     {#            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];#}
 
