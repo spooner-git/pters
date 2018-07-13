@@ -117,7 +117,7 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-
+        enable_window_scroll();
         //$('body').css('overflow-y','overlay');
     }
     else if(option =="page-addplan"){
@@ -140,6 +140,7 @@ function close_info_popup(option){
             //$('._calmonth').css({'height':'90%','position':'fixed'})
             //$('body').css('overflow-y','overlay');
         }
+        enable_window_scroll();
     }
     else if(option = "cal_popup_plancheck"){
         $('#'+option).css('display','none');

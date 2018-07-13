@@ -166,7 +166,11 @@ $(document).ready(function(){
             $('#countNum').text(countNum)
             $('.popup_ymdText').html(infoText)
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-            $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
+            if(bodywidth > 600){
+                $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
+            }else{
+                $cal_popup_plancheck.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+            }
             disable_window_scroll();
             clicked_td_date_info = yy+'_'+mm+'_'+dd
         }
@@ -269,9 +273,12 @@ $(document).ready(function(){
                 toggleGroupParticipantsList('off')
                 schedule_on_off = 1;
             }
+            if(bodywidth > 600){
+                $("#cal_popup_planinfo").css({'display':'block','top':(($(window).height()-$("#cal_popup_planinfo").outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$("#cal_popup_planinfo").outerWidth())/2+$(window).scrollLeft())}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+            }else{
+                $('#cal_popup_planinfo').css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+            }
 
-            $("#cal_popup_planinfo").css({'display':'block','top':(($(window).height()-$("#cal_popup_planinfo").outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$("#cal_popup_planinfo").outerWidth())/2+$(window).scrollLeft())}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
-            
         })
 
         $(document).on('click','.plan_raw_add',function(){

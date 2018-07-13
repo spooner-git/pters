@@ -80,6 +80,7 @@ $(document).ready(function(){
             //$('#calendar').css('display','block')
             selector_calendar.css('height','100%');
         }
+        enable_window_scroll();
     });
     $(document).on('click','#upbutton-x',function(){
         var bodywidth = window.innerWidth;

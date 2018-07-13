@@ -85,6 +85,7 @@ $(document).ready(function(){
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
             shade_index(100);
+            enable_window_scroll();
         }else if(bodywidth >= 600){
             get_indiv_member_info(dbID);
             get_indiv_repeat_info(dbID);
@@ -325,8 +326,11 @@ $(document).ready(function(){
             }
         }
         schedule_on_off = 1;
-
-        selector_cal_popup_planinfo.css({'display':'block','top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
+        if(bodywidth > 600){
+            selector_cal_popup_planinfo.css({'display':'block','top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
+        }else{
+            selector_cal_popup_planinfo.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+        }
         disable_window_scroll();
     });
 
@@ -407,7 +411,11 @@ $(document).ready(function(){
         $("#popup_sign_img").css("display","none");
         schedule_on_off = 0;
 
-        selector_cal_popup_plan_info.css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+        if(bodywidth > 600){
+            selector_cal_popup_plan_info.css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+        }else{
+            selector_cal_popup_plan_info.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+        }
         disable_window_scroll();
     });
 
@@ -538,8 +546,11 @@ $(document).ready(function(){
         }
         schedule_on_off = 2;
         //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
-
-        selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+        if(bodywidth > 600){
+            selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+        }else{
+            selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+        }
         disable_window_scroll();
     });
 
