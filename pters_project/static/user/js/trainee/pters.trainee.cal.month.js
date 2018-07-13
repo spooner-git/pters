@@ -488,7 +488,9 @@ $(document).ready(function(){
         //var selected_start_time = Number($('td.graphindicator_leftborder').attr('id').replace(/g/gi,""))
         var selected_start_time = Number($(this).attr('data-trainingtime').split(':')[0])
         if(Options.cancellimit <= 12){
-            $('.cancellimit_time').text(Options.cancellimit+"시간 전"+(selected_start_time-Options.cancellimit)+":00)")
+            var timetext = substract_time($(this).attr('data-trainingtime').split(':')[0]+':'+$(this).attr('data-trainingtime').split(':')[1], Options.cancellimit+':00')
+            //$('.cancellimit_time').text(Options.cancellimit+"시간 전 ("+(selected_start_time-Options.cancellimit)+":00)")
+            $('.cancellimit_time').text(Options.cancellimit+"시간 전 ("+timetext+")")
         }else{
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
         }
@@ -899,7 +901,6 @@ $(document).ready(function(){
             $('.swiper-slide:nth-child('+Index+')'+' #week'+i+Year+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
         }
 
-        console.log(Year,Month)
         calendarSetting(Year,Month);
     } //calTable_Set
 
@@ -1119,17 +1120,17 @@ $(document).ready(function(){
                     }
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
 
-                    htmlTojoin.push('<div><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+                    htmlTojoin.push('<div style="display:table;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
                         '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
                         '" data-dur="'+planDura+
-                        '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class='+myreservecheckbox2+'></div></div>'+
+                        '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class='+myreservecheckbox2+'></div></div><div style="margin-left:5px;">'+
                         jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
                         jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' (' + 
                         duration_number_to_hangul(planDura)+') : '+
                         jsondata.group_schedule_group_name[i]+' ('+
                         jsondata.group_schedule_current_member_num[i]+'/'+
                         jsondata.group_schedule_max_member_num[i]+
-                        ')'+fulled+myreserve+'</div>')
+                        ')'+fulled+myreserve+'</div></div>')
                 //}
             }
         }
@@ -1552,50 +1553,6 @@ $(document).ready(function(){
 
     }
 
-    /*
-    function startTimeArraySet(option){ //offAddOkArray 채우기 : 시작시간 리스트 채우기  회원용!!!!
-        switch(option){
-            case "class" :
-                var option = ""
-                break;
-            case "mini" :
-                var option = "_mini"
-                break;
-        }
-        offAddOkArray = []
-        //if(Number(classHourArray[0]) == 60){
-        if(Options.classDur == 60){
-            for(i=Options.workStartTime;i<Options.workEndTime;i++){
-                if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-                    if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') && !$('#'+i+'g_30'+option).hasClass('greytimegraph') && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft'))
-                        offAddOkArray.push(i);
-                }
-                if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
-                    if($('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-                        //
-                    }else{
-                        if(i+1 < Options.workEndTime){
-                            //offAddOkArray.push(i+0.5)
-                        }
-
-                    }
-                }
-            }
-            //}else if(Number(classHourArray[0]) == 30){
-        }else if(Options.classDur == 30){
-            for(i=Options.workStartTime;i<Options.workEndTime;i++){
-                if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-                    offAddOkArray.push(i);
-                }
-                if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
-                    offAddOkArray.push(i+0.5)
-                }
-            }
-        }
-        console.log(offAddOkArray)
-    }
-    */
-
     function startTimeArraySet(selecteddate, jsondata){ //offAddOkArray 채우기 : 시작시간 리스트 채우기  회원용!!!!
         switch(option){
             case "class" :
@@ -1689,43 +1646,6 @@ $(document).ready(function(){
         }else{
             offAddOkArray = semiresult
         }
-        console.log('offAddOkArray',offAddOkArray)
-        
-        /*
-        offAddOkArray = []
-        
-        //if(Number(classHourArray[0]) == 60){
-        if(Options.classDur == 60){
-            for(var i=Options.workStartTime;i<Options.workEndTime;i++){
-                if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-                    if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') && !$('#'+i+'g_30'+option).hasClass('greytimegraph') && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft'))
-                        offAddOkArray.push(i);
-                }
-                if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
-                    if($('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph') == true || $('#'+(i+1)+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true || $('#'+(i+1)+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-                        //
-                    }else{
-                        if(i+1 < Options.workEndTime){
-                            //offAddOkArray.push(i+0.5)
-                        }
-
-                    }
-                }
-            }
-            //}else if(Number(classHourArray[0]) == 30){
-        }else if(Options.classDur == 30){
-            for(var i=Options.workStartTime;i<Options.workEndTime;i++){
-                if(!$('#'+i+'g_00'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_00'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_00'+option).hasClass('greytimegraph_greyleft') == true){
-                    offAddOkArray.push(i);
-                }
-                if(!$('#'+i+'g_30'+option).hasClass('pinktimegraph') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph') == true && !$('#'+i+'g_30'+option).hasClass('pinktimegraph_pinkleft') == true && !$('#'+i+'g_30'+option).hasClass('greytimegraph_greyleft') == true){
-                    offAddOkArray.push(i+0.5)
-                }
-            }
-        }
-
-        console.log(offAddOkArray)
-        */
     }
 
 

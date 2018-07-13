@@ -157,12 +157,13 @@ li a{
 
 .settingMenu{
 	position: relative;
-	height: 60.5px;
+	height: auto;
 	background: #ffffff;
 	font-size: 14.9px;
 	font-weight: 500;
 	color: #282828;
-	padding-top: 15px;
+	padding-top: 7px;
+	padding-bottom: 7px;
 }
 
 .settingBox{
@@ -271,6 +272,9 @@ li a{
 }
 
 @media(min-width: 600px){
+	.settingMenu{
+		height: 60.5px;
+	}
 	#menuName{
 
 	}

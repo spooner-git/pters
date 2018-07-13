@@ -662,8 +662,6 @@
             var availDate = $('#id_setting_member_reserve_available_date').val();
             var basicTimeDur = $('#id_setting_member_reserve_time_duration').val();
             var startTime = $('#id_setting_member_start_time').val();
-            console.log(startTime)
-            console.log(Options.startTime)
             if(availableTime == stoptime && limit == Options.limit && reservedisable == Options.reserve && workTime == worktime && availDate == Options.availDate && cancellimit == Options.cancellimit && basicTimeDur == Options.timeDur && startTime == Options.startTime){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 select_all_check=false;
