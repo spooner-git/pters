@@ -82,7 +82,7 @@ $(document).ready(function(){
         if(page == "personalreserve"){
             $('.'+page).show()
             $('.groupreserve, .classreserve').hide()
-            $('.groupreserve div.checked').removeClass('checked ptersCheckboxInner');
+            $('._userchecked').removeClass('checked ptersCheckboxInner');
 
         }else if(page == "groupreserve"){
             $('.'+page).show()
@@ -115,8 +115,8 @@ $(document).ready(function(){
 
             $('#groupTimeSelect div.checked').removeClass('checked ptersCheckboxInner');
             var pterscheckbox = $(this).find('div');
-            $(this).addClass('checked');
-            pterscheckbox.addClass('ptersCheckboxInner checked');
+            $(this).addClass('checked _userchecked');
+            pterscheckbox.addClass('ptersCheckboxInner checked _userchecked');
             check_dropdown_selected();
         }
     });
@@ -130,8 +130,8 @@ $(document).ready(function(){
 
             $('#classTimeSelect div.checked').removeClass('checked ptersCheckboxInner');
             var pterscheckbox = $(this).find('div');
-            $(this).addClass('checked');
-            pterscheckbox.addClass('ptersCheckboxInner checked');
+            $(this).addClass('checked _userchecked');
+            pterscheckbox.addClass('ptersCheckboxInner checked _userchecked');
             check_dropdown_selected();
         }
     });
@@ -1044,10 +1044,14 @@ $(document).ready(function(){
 
     function draw_time_group_graph(option, jsondata, dateinfo){
         console.log(jsondata)
+        var targetSelected;
+        var $htmlTarget;
         if(option == "group"){
             $htmlTarget = $('#groupTimeSelect');
+            targetSelected = "NORMAL"
         }else if(option == "class"){
             $htmlTarget = $('#classTimeSelect');
+            targetSelected = "EMPTY"
         }
         var len = jsondata.group_schedule_group_id.length;
         var htmlTojoin = []
@@ -1062,30 +1066,8 @@ $(document).ready(function(){
                     var planEDate   = Number(jsondata.group_schedule_end_datetime[i].split(' ')[0].split('-')[2])
                     var planEndHour = Number(jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0])
                     var planEndMin  = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
-                    /*
-                    if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
-                        if(planEndHour-planHour == 0){
-                            var planDura = "0.5"
-                        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
-                            var planDura = String((planEndHour-planHour-1))+'.5'
-                        }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
-                            var planDura = String((planEndHour-planHour))+'.5'
-                        }
-                    }else{
-                        var planDura = planEndHour - planHour;
-                    }
-
-                    //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-                    if(planEDate == planDate+1 && planEndHour==planHour){
-                        var planDura = 24
-                    }else if(planEDate == planDate+1 && planEndHour == 0){
-                        var planDura = 24-planHour
-                    }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
-                        var planDura = 24-planHour
-                    }
-                    */
                     var planDura = calc_duration_by_start_end(jsondata.group_schedule_start_datetime[i].split(' ')[0], jsondata.group_schedule_start_datetime[i].split(' ')[1], jsondata.group_schedule_end_datetime[i].split(' ')[0], jsondata.group_schedule_end_datetime[i].split(' ')[1])
-
+                    var grouptypecd = jsondata.group_schedule_type_cd[i];
 
                     //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
                     var disable = ""
@@ -1135,19 +1117,19 @@ $(document).ready(function(){
                     }
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
 
-
-                    htmlTojoin.push('<div style="display:table;line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
-                        '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
-                        '" data-dur="'+planDura+
-                        '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class='+myreservecheckbox2+'></div></div><div style="margin-left:5px;">'+
-                        jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
-                        jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' (' + 
-                        duration_number_to_hangul(planDura)+') : '+
-                        jsondata.group_schedule_group_name[i]+' ('+
-                        jsondata.group_schedule_current_member_num[i]+'/'+
-                        jsondata.group_schedule_max_member_num[i]+
-                        ')'+fulled+myreserve+'</div></div>')
-
+                    if(targetSelected == grouptypecd){
+                        htmlTojoin.push('<div style="display:table;line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+                            '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
+                            '" data-dur="'+planDura+
+                            '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class="'+myreservecheckbox1+myreservecheckbox2+'"></div></div><div style="margin-left:5px;">'+
+                            jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
+                            jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' (' + 
+                            duration_number_to_hangul(planDura)+') : '+
+                            jsondata.group_schedule_group_name[i]+' ('+
+                            jsondata.group_schedule_current_member_num[i]+'/'+
+                            jsondata.group_schedule_max_member_num[i]+
+                            ')'+fulled+myreserve+'</div></div>')
+                    }
                 //}
             }
         }
