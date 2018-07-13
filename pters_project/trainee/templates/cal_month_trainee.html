@@ -103,10 +103,10 @@
                 <div class="mode_switch_button mode_active" data-page="personalreserve">1:1 레슨</div>
             {% endif %}
             {% if group_lecture_flag %}
-                <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="groupreserve">그룹 레슨</div>
+                <div class="mode_switch_button {% if not lecture_flag %}{% if not class_lecture_flag %}mode_active{% endif %}{% endif %}" data-page="groupreserve">그룹 레슨</div>
             {% endif %}
-            {% if group_lecture_flag %}
-                <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="classreserve">클래스 예약</div>
+            {% if class_lecture_flag %}
+                <div class="mode_switch_button {% if not lecture_flag %}{% if not group_lecture_flag %}mode_active{% endif %}{% endif %}" data-page="classreserve">클래스 예약</div>
             {% endif %}
         </div>
 
@@ -143,7 +143,7 @@
         {% endif %}
 
         {% if group_lecture_flag %}
-            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
+            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}{% if not class_lecture_flag %}style="display: block;"{% endif %}{% endif %}>
                 <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
                     <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
                 </div>
@@ -152,8 +152,8 @@
             </div>
         {% endif %}
 
-        {% if group_lecture_flag %}
-            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph classreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
+        {% if class_lecture_flag %}
+            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph classreserve" {% if not lecture_flag %}{% if not group_lecture_flag %}style="display: block;"{% endif %}{% endif %}>
                 <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">개설된 클래스
                     <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
                 </div>
@@ -286,9 +286,12 @@
         var lecture_avail_count = [{{ lecture_avail_count }}];
         var lecture_reg_count = [{{ lecture_reg_count }}];
         var lecture_finish_count = [{{ lecture_finish_count }}];
-        var group_lecture_avail_count = [{{ lgroup_ecture_avail_count }}];
+        var group_lecture_avail_count = [{{ group_lecture_avail_count }}];
         var group_lecture_reg_count = [{{ group_lecture_reg_count }}];
         var group_lecture_finish_count = [{{ group_lecture_finish_count }}];
+        var class_lecture_avail_count = [{{ class_lecture_avail_count }}];
+        var class_lecture_reg_count = [{{ class_lecture_reg_count }}];
+        var class_lecture_finish_count = [{{ class_lecture_finish_count }}];
         var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
         var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
