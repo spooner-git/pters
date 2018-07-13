@@ -55,7 +55,7 @@
                 </div>
             {% for current_payment_info in current_payment_data %}
                 <div class="current_use_table_content">
-                    <div>{{ forloop.counter }}</div>
+                    <div>{{ forloop.counter }} {{ current_payment_info.billing_state_cd }}</div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
                         <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
@@ -70,7 +70,7 @@
                     </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
+                        <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.end_date }}</span> </p>
                     </div>
                 </div>
             {% endfor %}
@@ -198,7 +198,7 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <div class="pay_method_changeButton" data-payid="{{ current_payment_info.payment_info_id }}"><span>변경</span></div>
+                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>변경</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -234,7 +234,7 @@
                         <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_cancel_Button" data-payid="{{ current_payment_info.payment_info_id }}"><span>이용권해지</span></div>
+                        <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>이용권해지</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -286,8 +286,13 @@
     </div>
 
     <form action="{% url 'payment:cancel_period_billing' %}" id="cancel-period-payment-form" method="post">
-        <input type="hidden" name="payment_id" id="id_payment_id" value="">
+        <input type="hidden" name="customer_uid" id="id_customer_uid" value="">
+        <input type="hidden" name="next_page" id="id_next_page" value="{% url 'payment:payment_history' %}">
 
+    </form>
+    <form action="{% url 'payment:restart_period_billing' %}" id="restart-period-payment-form" method="post">
+        <input type="hidden" name="customer_uid" id="id_customer_uid" value="">
+        <input type="hidden" name="next_page" id="id_next_page" value="{% url 'payment:payment_history' %}">
     </form>
 
     <form id="modify-member-id-form" method="post">

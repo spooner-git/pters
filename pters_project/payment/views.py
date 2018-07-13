@@ -7,7 +7,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.views import View
@@ -306,38 +306,39 @@ def billing_check_logic(request):
 
 @csrf_exempt
 def cancel_period_billing_logic(request):
-    payment_id = request.POST.get('payment_id', '')
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
+    customer_uid = request.POST.get('customer_uid', '')
+    next_page = request.POST.get('next_page', '')
+    # json_data = request.body.decode('utf-8')
+    # json_loading_data = None
     context = {'error': None}
-    customer_uid = None
+    # customer_uid = None
     # merchant_uid = None
     payment_data = None
     billing_info = None
     error = None
+    #
+    # try:
+    #     json_loading_data = json.loads(json_data)
+    # except ValueError:
+    #     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    # except TypeError:
+    #     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    if error is None:
-        try:
-            customer_uid = json_loading_data['customer_uid']
-            # merchant_uid = json_loading_data['merchant_uid']
-        except KeyError:
-            error = '결제 정보 json data parsing KeyError'
-        except TypeError:
-            error = '결제 정보 json data parsing TypeError'
-        except ValueError:
-            error = '결제 정보 json data parsing ValueError'
+    # if error is None:
+    #     try:
+    #         customer_uid = json_loading_data['customer_uid']
+    #         # merchant_uid = json_loading_data['merchant_uid']
+    #     except KeyError:
+    #         error = '결제 정보 json data parsing KeyError'
+    #     except TypeError:
+    #         error = '결제 정보 json data parsing TypeError'
+    #     except ValueError:
+    #         error = '결제 정보 json data parsing ValueError'
 
     if error is None:
         payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
-                                                    status__isnull=True,
-                                                    payment_type_cd='PERIOD', use=UN_USE)
+                                                    status='reserve',
+                                                    payment_type_cd='PERIOD')
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
@@ -346,7 +347,6 @@ def cancel_period_billing_logic(request):
 
     if error is None:
         error = func_cancel_period_billing_schedule(customer_uid)
-
     if error is None:
         billing_info.state_cd = 'ST'
         billing_info.save()
@@ -360,13 +360,13 @@ def cancel_period_billing_logic(request):
         messages.error(request, error)
 
     context['error'] = error
-    return render(request, 'ajax/payment_error_info.html', context)
+    return redirect(next_page)
 
 
 # 정기 결제 재시작 기능 - 확인 필요
 @csrf_exempt
 def restart_period_billing_logic(request):
-
+    next_page = request.POST.get('next_page', '')
     json_data = request.body.decode('utf-8')
     json_loading_data = None
     customer_uid = None
@@ -418,7 +418,7 @@ def restart_period_billing_logic(request):
                     + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
-    return render(request, 'ajax/payment_error_info.html', context)
+    return redirect(next_page)
 
 
 @csrf_exempt
@@ -675,12 +675,24 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                     merchandise_type_name = ''
                 merchandise_type_name_list = merchandise_type_name.split('+')
                 payment_info.merchandise_type_name = merchandise_type_name_list
-                current_payment_data.append(payment_info)
                 if payment_info.payment_type_cd == 'PERIOD':
-                    if payment_info.status != 'cancel':
-                        current_period_payment_data.append(payment_info)
+                    try:
+                        billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
+                    except ObjectDoesNotExist:
+                        billing_info = None
+                    if billing_info is not None:
+                        payment_info.billing_state_cd = billing_info.state_cd
+                        if billing_info.state_cd == 'IP':
+                            payment_info.billing_state_name = '결제 예정일'
+                            current_period_payment_data.append(payment_info)
+                        else:
+                            payment_info.billing_state_name = '종료 예정일'
 
-        payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE).order_by('-end_date')
+                current_payment_data.append(payment_info)
+
+        payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                            status='paid',
+                                                            use=USE).order_by('-end_date')
         context['payment_data_history'] = payment_data_history
         context['current_payment_data'] = current_payment_data
         context['current_period_payment_data'] = current_period_payment_data

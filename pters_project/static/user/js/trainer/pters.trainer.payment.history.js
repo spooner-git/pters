@@ -26,10 +26,10 @@ $(document).ready(function(){
     })
 
     $(document).on('click','.pay_cancel_Button',function(){
-        var payid = $(this).attr('data-payid');
+        var payid = $(this).attr('data-customer_uid');
         alert(payid);
-        $('#submit_pay_cancel').attr('data-payment-id', payid);
-        $('#id_payment_id').val(payid);
+        $('#submit_pay_cancel').attr('data-customer_uid', payid);
+        $('#id_customer_uid').val(payid);
         $('#pay_cancel_confirm_popup').show();
         //To- Do
     });
@@ -54,10 +54,10 @@ $(document).ready(function(){
 
     $('#submit_pay_cancel').click(function(){
         if($(this).hasClass('active')){
-            var payid = $(this).attr('data-payment-id');
+            var payid = $(this).attr('data-customer_uid');
             alert('해지 프로세스:'+payid);
             //To-do
-            // document.getElementById('update-setting-reserve-form').submit();
+            document.getElementById('cancel-period-payment-form').submit();
             // /payment/cancel_period_billing_logic/
         };
     });
