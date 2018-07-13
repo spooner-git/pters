@@ -1085,8 +1085,10 @@ $(document).ready(function(){
                         var todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/24),'')
                     }
 
+
+                    ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
+                    var fulled = ""
                     if(selecteddate > today && selecteddate < todayandlimitSum){
-                        console.log(selecteddate+'>'+today+' && '+selecteddate+'<'+todayandlimitSum)
                         var disable = "disabled_button"
                     }else if(selecteddate == today){
                         if(planHour < currentHour + Options.limit +1){
@@ -1106,14 +1108,16 @@ $(document).ready(function(){
                     //완료된 그룹은 비활성화
                     if(jsondata.group_schedule_finish_check[i] == 1){
                         var disable = "disabled_button"
+                        fulled = " (종료)"
                     }
 
                     if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
-                        var fulled = ""
+                        //var fulled = ""
                     }else if(jsondata.group_schedule_current_member_num[i] == jsondata.group_schedule_max_member_num[i]){
                         var disable = "disabled_button"
-                        var fulled = "(마감)"
+                        fulled = "(마감)"
                     }
+                    ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
 
                     htmlTojoin.push('<div><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
                         '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
