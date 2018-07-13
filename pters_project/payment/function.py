@@ -410,15 +410,16 @@ def func_update_billing_logic(payment_result):
                 error = '정기 결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        try:
-            function_auth_info = FunctionAuthTb.objects.get(member_id=payment_info.member_id,
-                                                            function_auth_type_cd=
-                                                            payment_info.merchandise_type_cd,
-                                                            use=USE)
-            function_auth_info.expired_date = payment_info.end_date
-            function_auth_info.save()
-        except ObjectDoesNotExist:
-            error = '권한 정보를 불러오지 못했습니다.'
+        merchandise_type_cd_list = payment_info.merchandise_type_cd.split('/')
+        for merchandise_type_cd_info in merchandise_type_cd_list:
+            try:
+                function_auth_info = FunctionAuthTb.objects.get(member_id=payment_info.member_id,
+                                                                function_auth_type_cd=merchandise_type_cd_info,
+                                                                use=USE)
+                function_auth_info.expired_date = payment_info.end_date
+                function_auth_info.save()
+            except ObjectDoesNotExist:
+                error = '권한 정보를 불러오지 못했습니다.'
 
     context['error'] = error
     return context
