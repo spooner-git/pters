@@ -1272,7 +1272,7 @@ $(document).ready(function(){
         }else if(Options.language == "ENG"){
             text1 = "No Schedule added";
         }
-        //var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>'+text1+'</span></div>';
+        var fakeElementForBlankPage = '<div class="fake_for_blankpage"><span>'+text1+'</span></div>';
         //for(var i=0; i<=23; i++){
 
         var tableHTML = []
@@ -1438,7 +1438,7 @@ $(document).ready(function(){
 
 
         slideIndex.html(tableHTML.join(''))
-        //slideIndex.append(fakeElementForBlankPage);
+        slideIndex.append(fakeElementForBlankPage);
         //weekNum_Set(Index);
         time_index_set();
         $('.swiper-slide').css('height',$('div.timeindex').height())
@@ -1996,7 +1996,10 @@ function fake_show(){
     var selector_swiper_slide_active = $('.swiper-slide-active');
     if(selector_swiper_slide_active.find('.classTime').length == 0 && selector_swiper_slide_active.find('.offTime').length == 0 && selector_swiper_slide_active.find('.groupTime').length == 0){
         selector_swiper_slide_active.find('.fake_for_blankpage').css('display','block');
-    }/*else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
+    }else{
+        selector_swiper_slide_active.find('.fake_for_blankpage').css('display','none');
+    }
+    /*else if($('.swiper-slide-active').find('.classTime').length == 0 && $('.swiper-slide-active').find('.offTime').length == 0){
      $('.swiper-slide-active').find('.fake_for_blankpage').css('display','block')
      }*/
 }
@@ -2075,7 +2078,7 @@ function set_schedule_time(jsondata){
         scheduleTime_Mobile('class', jsondata);
         scheduleTime_Mobile('off', jsondata);
         scheduleTime_Mobile('group', jsondata);
-        //fake_show();
+        fake_show();
     }
     
 }
