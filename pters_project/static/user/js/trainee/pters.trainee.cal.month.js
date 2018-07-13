@@ -1136,7 +1136,7 @@ $(document).ready(function(){
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
 
 
-                    htmlTojoin.push('<div style="display:table;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+                    htmlTojoin.push('<div style="display:table;line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
                         '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
                         '" data-dur="'+planDura+
                         '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class='+myreservecheckbox2+'></div></div><div style="margin-left:5px;">'+
