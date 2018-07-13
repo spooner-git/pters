@@ -1674,13 +1674,13 @@ $(document).ready(function(){
         }
 
         offAddOkArray = []
-        if(Options.startTime == 0){ //매 시작 정시만
+        if(Options.startTime == 'A-0'){ //매 시작 정시만
             for(var t=0; t<semiresult.length; t++){
                 if(semiresult[t] - parseInt(semiresult[t]) == 0){
                     offAddOkArray.push(semiresult[t])
                 }
             }
-        }else if(Options.startTime == 1){ //매 시각 30분에만
+        }else if(Options.startTime == 'A-30'){ //매 시각 30분에만
             for(var t=0; t<semiresult.length; t++){
                 if(semiresult[t] - parseInt(semiresult[t]) == 0.5){
                     offAddOkArray.push(semiresult[t])

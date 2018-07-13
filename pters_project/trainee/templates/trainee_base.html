@@ -276,8 +276,8 @@
 
     var Options = {  "hourunit" : 30,                       // 30 or 60
         "classDur" : {{ request.session.class_hour }},      // 30 or 60
-        "timeDur" : 3,
-        "startTime": 2,
+        "timeDur" : {{ lt_res_member_time_duration }},
+        "startTime": '{{ lt_res_member_start_time }}',
         "stoptimeStart": stoptimeStart ,                    //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": stoptimeEnd ,                        //강사가 설정한 예약불가 시간 (종료)
         "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
@@ -295,8 +295,8 @@
         "workEndTime":worktimeEnd,
 
         "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan",           //Korea, Japan, English, Chinese
-    }
+        "location" : "Japan"           //Korea, Japan, English, Chinese
+    };
     {#            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];#}
     {#            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];#}
 

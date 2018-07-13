@@ -370,8 +370,8 @@ def add_trainee_schedule_logic(request):
         error = '강좌 정보를 불러오지 못했습니다.'
     if training_date == '':
         error = '날짜를 선택해 주세요.'
-    elif time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
+    # elif time_duration == '':
+    #     error = '진행 시간을 선택해 주세요.'
     elif training_time == '':
         error = '시작 시간을 선택해 주세요.'
 
@@ -1519,10 +1519,16 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_enable = lt_res_03
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
-                                             setting_type_cd='LT_MEMBER_TIME_DURATION')
-        lt_res_member_time_duration = setting_data.setting_info
+                                             setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
+        lt_res_member_time_duration = int(setting_data.setting_info)
     except ObjectDoesNotExist:
         lt_res_member_time_duration = 1
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                             setting_type_cd='LT_RES_MEMBER_START_TIME')
+        lt_res_member_start_time = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_member_start_time = 'A-0'
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
@@ -1533,6 +1539,7 @@ def get_trainer_setting_data(context, user_id, class_id):
     context['lt_res_cancel_time'] = lt_res_cancel_time
     context['lt_res_enable'] = lt_res_enable
     context['lt_res_member_time_duration'] = lt_res_member_time_duration
+    context['lt_res_member_start_time'] = lt_res_member_start_time
 
     return context
 
