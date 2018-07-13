@@ -14,7 +14,7 @@ body{
     line-height: 40px;
 }
 #trainerWorkTimeSettingText{
-	margin-top: 50px;
+	margin-top: 70px;
 }
 
 
@@ -207,7 +207,7 @@ li a{
 	position: relative;
 	font-size: 13.9px;
 	color: #3b3d3d;
-	margin-left: 14.5px;
+	padding-left: 14.5px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
