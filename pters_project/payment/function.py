@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 def func_set_billing_schedule(customer_uid, payment_user_info):
     error = None
+    # print(str(customer_uid))
     try:
         billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
     except ObjectDoesNotExist:
@@ -26,10 +27,9 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         price = payment_user_info.price
         date = int(billing_info.payed_date)
 
-        next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
-        # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
-        # logger.info('next_schedule_timestamp:'+str(next_schedule_timestamp))
+        # next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
+        # next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
+        next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
         token_result = func_get_payment_token()
         access_token = token_result['access_token']
@@ -60,6 +60,8 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                            'Authorization': access_token})
         if resp['status'] != '200':
             error = '통신중 에러가 발생했습니다.'
+        # print(str(resp))
+        # print(str(content))
 
     if error is None:
         start_date = payment_user_info.end_date

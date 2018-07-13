@@ -24,13 +24,22 @@ $(document).ready(function(){
         // alert(payid);
         //To- Do
     })
-
+    // 해지신청
     $(document).on('click','.pay_cancel_Button',function(){
         var payid = $(this).attr('data-customer_uid');
         alert(payid);
         $('#submit_pay_cancel').attr('data-customer_uid', payid);
-        $('#id_customer_uid').val(payid);
+        $('#id_customer_uid_cancel').val(payid);
         $('#pay_cancel_confirm_popup').show();
+        //To- Do
+    });
+    // 해지신청 취소
+    $(document).on('click','.pay_restart_Button',function(){
+        var payid = $(this).attr('data-customer_uid');
+        alert(payid);
+        // $('#submit_pay_restart').attr('data-customer_uid', payid);
+        $('#id_customer_uid_restart').val(payid);
+        document.getElementById('restart-period-payment-form').submit();
         //To- Do
     });
         $('#popup_cancel_btn_yes').click(function(e){

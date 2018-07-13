@@ -366,43 +366,59 @@ def cancel_period_billing_logic(request):
 # 정기 결제 재시작 기능 - 확인 필요
 @csrf_exempt
 def restart_period_billing_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
     next_page = request.POST.get('next_page', '')
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-    customer_uid = None
+    # json_data = request.body.decode('utf-8')
+    # json_loading_data = None
+    # customer_uid = None
     context = {'error': None}
     error = None
     payment_info = None
+    today = datetime.date.today()
+    date = int(today.strftime('%d'))
 
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    # try:
+    #     json_loading_data = json.loads(json_data)
+    # except ValueError:
+    #     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    # except TypeError:
+    #     error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    #
+    # if error is None:
+    #     try:
+    #         customer_uid = json_loading_data['customer_uid']
+    #     except KeyError:
+    #         error = '결제 정보 json data parsing KeyError'
+    #     except TypeError:
+    #         error = '결제 정보 json data parsing TypeError'
+    #     except ValueError:
+    #         error = '결제 정보 json data parsing ValueError'
 
-    if error is None:
-        try:
-            customer_uid = json_loading_data['customer_uid']
-        except KeyError:
-            error = '결제 정보 json data parsing KeyError'
-        except TypeError:
-            error = '결제 정보 json data parsing TypeError'
-        except ValueError:
-            error = '결제 정보 json data parsing ValueError'
-
-    if error is None:
-        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
-                                                    payment_type_cd='PERIOD', use=USE).order_by('end_date')
-        if len(payment_data) > 0:
-            payment_info = payment_data[0]
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, state_cd='ST', use=USE)
+            if date != billing_info.payed_date:
+                billing_info.payed_date = date
             billing_info.state_cd = 'IP'
             billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, customer_uid=customer_uid,
+                                                        payment_type_cd='PERIOD', status='paid',
+                                                        use=USE).latest('end_date')
+        except ObjectDoesNotExist:
+            payment_info = None
+        # payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+        #                                             payment_type_cd='PERIOD', use=USE).order_by('end_date')
+        # if len(payment_data) > 0:
+        #     payment_info = payment_data[0]
+        if payment_info is not None:
+            if payment_info.end_date < today:
+                # print(str(payment_info.end_date))
+                payment_info.end_date = today
 
     if error is None:
         error = func_set_billing_schedule(customer_uid, payment_info)
@@ -659,6 +675,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         product_list = ProductTb.objects.filter(use=USE)
         current_payment_data = []
         current_period_payment_data = []
+        cancel_period_payment_data = []
         for product_info in product_list:
             try:
                 payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
@@ -687,6 +704,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                             current_period_payment_data.append(payment_info)
                         else:
                             payment_info.billing_state_name = '종료 예정일'
+                            cancel_period_payment_data.append(payment_info)
 
                 current_payment_data.append(payment_info)
 
@@ -696,6 +714,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         context['payment_data_history'] = payment_data_history
         context['current_payment_data'] = current_payment_data
         context['current_period_payment_data'] = current_period_payment_data
+        context['cancel_period_payment_data'] = cancel_period_payment_data
 
         return render(request, self.template_name, context)
 

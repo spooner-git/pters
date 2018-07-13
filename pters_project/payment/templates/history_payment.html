@@ -31,7 +31,7 @@
             <!--<div class="main_menu_table_cell" id="pay_change">이용권 변경</div>-->
             <div class="main_menu_table_cell" id="pay_method_change">결제방법 변경</div>
             <div class="main_menu_table_cell" id="pay_cancel">해지신청</div>
-            <div class="main_menu_table_cell" id="pay_cancel_cancel">해지신청 취소</div>
+            <div class="main_menu_table_cell" id="pay_restart">해지신청 취소</div>
         </div>
     </div>
 
@@ -55,7 +55,7 @@
                 </div>
             {% for current_payment_info in current_payment_data %}
                 <div class="current_use_table_content">
-                    <div>{{ forloop.counter }} {{ current_payment_info.billing_state_cd }}</div>
+                    <div>{{ forloop.counter }} </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
                         <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
@@ -252,7 +252,7 @@
                     <div id="survey_a6" class="surver_answer_wrap"><div class="ptersCheckbox"><div></div></div><span>기타사유 (적어주시면 좋은 참고가 됩니다.)</span></div>
                 </div>
                 <textarea></textarea>
-                <div id="submit_pay_cancel" data-payment-id=""><span>해지 신청</span></div>
+                <div id="submit_pay_cancel" data-customer_uid=""><span>해지 신청</span></div>
             </div>
 
 
@@ -282,17 +282,50 @@
         </div>
 
 
-        <div id="page_pay_cancel_cancel" class="page_content_wrap"></div>
+        <div id="page_pay_restart" class="page_content_wrap">
+            <p style="margin-top: 20px;padding-left:5px;">
+                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기결제 해지신청 현황
+            </p>
+            <div class="pay_cancel_table_label">
+                <div>NO</div>
+                <div>PTERS 이용권</div>
+                <div>이용 가능 서비스</div>
+                <div>다음 결제 안내</div>
+                <div>해지신청 취소</div>
+            </div>
+
+            {% for cancel_period_payment_info in cancel_period_payment_data %}
+                <div class="pay_cancel_table_content">
+                    <div>{{ forloop.counter }}</div>
+                    <div>
+                        <p>{{ cancel_period_payment_info.name }}</p>
+                        <p>{{ cancel_period_payment_info.start_date }} ~ {{ cancel_period_payment_info.end_date }}</p>
+                    </div>
+                    <div>
+                        {% for payment_merchandise_info in cancel_period_payment_info.merchandise_type_name %}
+                            <p>{{ payment_merchandise_info }}</p>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <p>{{ cancel_period_payment_data.name }}</p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.end_date }}</span> </p>
+                    </div>
+                    <div>
+                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.customer_uid }}"><span>해지 취소</span></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
     <form action="{% url 'payment:cancel_period_billing' %}" id="cancel-period-payment-form" method="post">
-        <input type="hidden" name="customer_uid" id="id_customer_uid" value="">
-        <input type="hidden" name="next_page" id="id_next_page" value="{% url 'payment:payment_history' %}">
+        <input type="hidden" name="customer_uid" id="id_customer_uid_cancel" value="">
+        <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
 
     </form>
     <form action="{% url 'payment:restart_period_billing' %}" id="restart-period-payment-form" method="post">
-        <input type="hidden" name="customer_uid" id="id_customer_uid" value="">
-        <input type="hidden" name="next_page" id="id_next_page" value="{% url 'payment:payment_history' %}">
+        <input type="hidden" name="customer_uid" id="id_customer_uid_restart" value="">
+        <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
 
     <form id="modify-member-id-form" method="post">
