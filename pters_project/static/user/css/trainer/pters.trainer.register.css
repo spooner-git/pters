@@ -56,11 +56,13 @@ body{
 	max-width: 500px;
 	width: 95%;
 	padding: 0 30px 15px 30px;
-	background:#28282894;
+	
 	top: 0;
 	left: 50%;
 	color: #ffffff;
 	transform: translateX(250%);
+	background: rgba(40, 40, 40, 0.5803921568627451);
+
 	-webkit-transform: translateX(250%);
 	margin-top: 160px;
 	transition: 1s;
@@ -185,7 +187,7 @@ div._step1_label, div._step2_label, div._step3_label{
 .outerbox input{
 	line-height: 25px;
 	width: 110px;
-	background-color: #ffffff14;
+	background-color: rgba(255, 255, 255, 0.0784313725490196);
 	color: #ffffff;
 	border: 0;
 	border-radius: 0;
@@ -237,7 +239,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	margin: 0 50px 0 50px;
 	margin: 0 auto;
 	margin-top: 5px;
-	background-color: #28282894;
+	background-color: rgba(40, 40, 40, 0.5803921568627451);
 }
 
 .selector_button{
