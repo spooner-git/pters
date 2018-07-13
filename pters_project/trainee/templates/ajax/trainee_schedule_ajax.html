@@ -38,6 +38,8 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_note":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_type_cd":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "lecture_avail_count" :
       [{{ lecture_avail_count }}],
@@ -51,6 +53,12 @@
       [{{ group_lecture_reg_count }}],
       "group_lecture_finish_count" :
       [{{ group_lecture_finish_count }}],
+      "class_lecture_avail_count" :
+      [{{ class_lecture_avail_count }}],
+      "class_lecture_reg_count" :
+      [{{ class_lecture_reg_count }}],
+      "class_lecture_finish_count" :
+      [{{ class_lecture_finish_count }}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]

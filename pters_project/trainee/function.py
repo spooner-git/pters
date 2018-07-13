@@ -243,8 +243,12 @@ def func_get_class_lecture_count(context, class_id, user_id):
     group_lecture_reg_count_sum = 0
     group_lecture_rem_count_sum = 0
     group_lecture_avail_count_sum = 0
+    class_lecture_reg_count_sum = 0
+    class_lecture_rem_count_sum = 0
+    class_lecture_avail_count_sum = 0
     lecture_flag = False
     group_lecture_flag = False
+    class_lecture_flag = False
     lecture_list = None
 
     if error is None:
@@ -265,35 +269,49 @@ def func_get_class_lecture_count(context, class_id, user_id):
 
                 if error is None:
 
-                    group_lecture_check = 0
+                    # group_lecture_check = 0
+                    group_lecture_info = None
                     try:
-                        GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                   lecture_tb_id=lecture_info.lecture_id, use=USE)
+                        group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+                                                                        lecture_tb_id=lecture_info.lecture_id, use=USE)
                     except ObjectDoesNotExist:
-                        group_lecture_check = 1
+                        group_lecture_info = None
 
-                    if group_lecture_check == 1:
+                    if group_lecture_info is None:
                         if lecture_info.state_cd == 'IP':
                             lecture_reg_count_sum += lecture_info.lecture_reg_count
                             lecture_rem_count_sum += lecture_info.lecture_rem_count
                             lecture_avail_count_sum += lecture_info.lecture_avail_count
                     else:
                         if lecture_info.state_cd == 'IP':
-                            group_lecture_reg_count_sum += lecture_info.lecture_reg_count
-                            group_lecture_rem_count_sum += lecture_info.lecture_rem_count
-                            group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                            if group_lecture_info.group_tb.group_type_cd == 'EMPTY':
+                                class_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                                class_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                                class_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                            else:
+                                group_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                                group_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                                group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+
     if lecture_reg_count_sum > 0:
         lecture_flag = True
     if group_lecture_reg_count_sum > 0:
         group_lecture_flag = True
+    if class_lecture_reg_count_sum > 0:
+        class_lecture_flag = True
+
     context['lecture_flag'] = lecture_flag
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
     context['group_lecture_flag'] = group_lecture_flag
+    context['class_lecture_flag'] = class_lecture_flag
     context['group_lecture_reg_count'] = group_lecture_reg_count_sum
     context['group_lecture_finish_count'] = group_lecture_reg_count_sum - group_lecture_rem_count_sum
     context['group_lecture_avail_count'] = group_lecture_avail_count_sum
+    context['class_lecture_reg_count'] = class_lecture_reg_count_sum
+    context['class_lecture_finish_count'] = class_lecture_reg_count_sum - class_lecture_rem_count_sum
+    context['class_lecture_avail_count'] = class_lecture_avail_count_sum
 
     return context
 
