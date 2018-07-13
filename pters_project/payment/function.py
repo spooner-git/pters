@@ -34,7 +34,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         token_result = func_get_payment_token()
         access_token = token_result['access_token']
         error = token_result['error']
-        merchant_uid = 'merchant_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
+        merchant_uid = 'm_' + str(payment_user_info.member_id) + '_' + payment_user_info.merchandise_type_cd\
                        + '_' + str(next_schedule_timestamp).split('.')[0]
 
     if error is None and access_token is not None:

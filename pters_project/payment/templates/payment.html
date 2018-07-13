@@ -231,8 +231,8 @@
 
         function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
             var date = new Date();
-            var merchant_uid_data = 'merchant_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var customer_uid_data = 'customer_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var billing_data;
             var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
             var request_pay_period_data = {
