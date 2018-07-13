@@ -198,7 +198,7 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <div class="pay_method_changeButton" data-payid="페이먼트 id"><span>변경</span></div>
+                        <div class="pay_method_changeButton" data-payid="{{ current_payment_info.payment_info_id }}"><span>변경</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -234,7 +234,7 @@
                         <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_cancel_Button" data-payid="페이먼트 id"><span>이용권해지</span></div>
+                        <div class="pay_cancel_Button" data-payid="{{ current_payment_info.payment_info_id }}"><span>이용권해지</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -252,7 +252,7 @@
                     <div id="survey_a6" class="surver_answer_wrap"><div class="ptersCheckbox"><div></div></div><span>기타사유 (적어주시면 좋은 참고가 됩니다.)</span></div>
                 </div>
                 <textarea></textarea>
-                <div id="submit_pay_cancel"><span>해지 신청</span></div>
+                <div id="submit_pay_cancel" data-payment-id=""><span>해지 신청</span></div>
             </div>
 
 
@@ -285,7 +285,10 @@
         <div id="page_pay_cancel_cancel" class="page_content_wrap"></div>
     </div>
 
+    <form action="{% url 'payment:cancel_period_billing' %}" id="cancel-period-payment-form" method="post">
+        <input type="hidden" name="payment_id" id="id_payment_id" value="">
 
+    </form>
 
     <form id="modify-member-id-form" method="post">
         {% csrf_token %}

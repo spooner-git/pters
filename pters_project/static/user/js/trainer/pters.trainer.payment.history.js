@@ -21,12 +21,15 @@ $(document).ready(function(){
     ////////결제방법 변경 버튼
     $(document).on('click','.pay_method_changeButton',function(){
         var payid = $(this).attr('data-payid');
-        alert(payid);
+        // alert(payid);
         //To- Do
     })
 
     $(document).on('click','.pay_cancel_Button',function(){
         var payid = $(this).attr('data-payid');
+        alert(payid);
+        $('#submit_pay_cancel').attr('data-payment-id', payid);
+        $('#id_payment_id').val(payid);
         $('#pay_cancel_confirm_popup').show();
         //To- Do
     });
@@ -51,8 +54,11 @@ $(document).ready(function(){
 
     $('#submit_pay_cancel').click(function(){
         if($(this).hasClass('active')){
-            alert('해지 프로세스')
+            var payid = $(this).attr('data-payment-id');
+            alert('해지 프로세스:'+payid);
             //To-do
+            // document.getElementById('update-setting-reserve-form').submit();
+            // /payment/cancel_period_billing_logic/
         };
     });
 

@@ -788,7 +788,7 @@ $(document).ready(function(){
 
 
     $("#btn_close4").click(function(){ //일정예약 상세화면 팝업 X버튼 눌렀을때 팝업 닫기
-        close_reserve_popup()
+        close_reserve_popup();
         close_info_popup('cal_popup_plancheck');
     });
 
@@ -802,7 +802,7 @@ $(document).ready(function(){
         $("#starttimesSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
         $("#durationsSelected .btn:first-child").val('').html('선택<span class="caret"></span>')
         if($('#addpopup').css('display')=='block'){
-            $("#addpopup").css({'display':'none'})
+            $("#addpopup").css({'display':'none'});
             $('#shade2').css({'display':'none'});
         }
         /*

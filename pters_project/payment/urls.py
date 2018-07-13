@@ -30,8 +30,9 @@ urlpatterns = [
 
 
     # 정기 결제 변경 ######################################################################################################
-    # 정기 결제 취소 페이지
+    # 정기 결제 취소(해지) 페이지
     url(r'^cancel_period_billing/$', views.cancel_period_billing_logic, name='cancel_period_billing'),
+
     # 정기 결제 재시작 페이지
     url(r'^restart_period_billing/$', views.restart_period_billing_logic, name='restart_period_billing'),
 

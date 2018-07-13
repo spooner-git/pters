@@ -306,6 +306,7 @@ def billing_check_logic(request):
 
 @csrf_exempt
 def cancel_period_billing_logic(request):
+    payment_id = request.POST.get('payment_id', '')
     json_data = request.body.decode('utf-8')
     json_loading_data = None
     context = {'error': None}
@@ -676,7 +677,8 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 payment_info.merchandise_type_name = merchandise_type_name_list
                 current_payment_data.append(payment_info)
                 if payment_info.payment_type_cd == 'PERIOD':
-                    current_period_payment_data.append(payment_info)
+                    if payment_info.status != 'cancel':
+                        current_period_payment_data.append(payment_info)
 
         payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id, use=USE).order_by('-end_date')
         context['payment_data_history'] = payment_data_history
