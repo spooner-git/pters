@@ -208,7 +208,7 @@ $(document).ready(function(){
             }
 
             var infoText2 = '[그룹]'+name+' '+selectedTime+':'+selectedMinute+yourplan
-            $("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
+            //$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
             $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
             $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
             $('#popup_info').text(selectedDate);
@@ -269,6 +269,9 @@ $(document).ready(function(){
                 toggleGroupParticipantsList('off')
                 schedule_on_off = 1;
             }
+
+            $("#cal_popup_planinfo").css({'display':'block','top':(($(window).height()-$("#cal_popup_planinfo").outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$("#cal_popup_planinfo").outerWidth())/2+$(window).scrollLeft())}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+            
         })
 
         $(document).on('click','.plan_raw_add',function(){

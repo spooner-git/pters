@@ -103,7 +103,10 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        enable_window_scroll();
+        console.log($('._calweek').length,$('._calweek').length,"$('._calweek').length",$('._calweek').length,)
+        if($('._calweek').length != 0){
+            enable_window_scroll();
+        }
         //$('body').css('overflow-y','overlay');
     }
     else if(option =="cal_popup_plandelete"){
@@ -121,6 +124,7 @@ function close_info_popup(option){
         $('#'+option).css('display','none');
         $('#calendar').css('position','relative');
         shade_index(-100);
+        enable_window_scroll();
     }
     else if(option =="cal_popup_repeatconfirm"){
         $('#'+option).css('display','none');

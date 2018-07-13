@@ -893,8 +893,10 @@ $(document).ready(function(){
 
             if(grouptypecd == "NORMAL"){
                 $('#groupmembersInfo').show()
-               get_groupmember_list(groupid, 'callback', function(jsondata){
-                draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))}); 
+                get_groupmember_list(groupid, 'callback', function(jsondata){
+                    draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
+                    //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},100)
+                });
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide()
             }
@@ -1382,6 +1384,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});
         $('#page-addplan-pc').css('display','none');
+        //disable_window_scroll();
     }
 
     if(date != undefined){
