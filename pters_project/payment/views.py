@@ -276,7 +276,7 @@ def billing_check_logic(request):
                     if payment_type_cd == 'PERIOD':
                         # 결제 정보 저장
                         # if error is None:
-                        func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
+                        error = func_set_billing_schedule(customer_uid, payment_user_info_result['payment_user_info'])
                 else:
                     error = payment_user_info_result['error']
 
