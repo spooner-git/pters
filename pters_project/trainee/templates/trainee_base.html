@@ -274,16 +274,17 @@
 
     var class_background_img_url = []
 
-    var Options = {  "hourunit" : 30,                       // 30 or 60
-        "classDur" : {{ request.session.class_hour }},      // 30 or 60
-        "timeDur" : 3,                                      //회원이 예약 가능한 기본 수업 시간 단위
-        "startTime": 2,                                     //회원이 매정시에만/ 매30분에만// 둘다// 예약시작 시간
-        "stoptimeStart": stoptimeStart ,                    //강사가 설정한 예약불가 시간 (시작)
-        "stoptimeEnd": stoptimeEnd ,                        //강사가 설정한 예약불가 시간 (종료)
-        "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-        "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number('{{ lt_res_05 }}'),              //오늘부터 몇일 앞까지 예약 허용할 것인지
-        "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
+    var Options = {  
+        "hourunit" : 30,                                        // 30 or 60
+        "classDur" : {{ request.session.class_hour }},          // 30 or 60
+        "timeDur" : 3,                                          //회원이 예약 가능한 기본 수업 시간 단위
+        "startTime": 2,                                         //회원이 매정시에만/ 매30분에만// 둘다// 예약시작 시간
+        "stoptimeStart": stoptimeStart ,                        //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": stoptimeEnd ,                            //강사가 설정한 예약불가 시간 (종료)
+        "limit":Number('{{ lt_res_enable_time }}')/60,          //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "reserve":Number('{{ lt_res_03 }}'),                    //회원 일정 기능을 enable 1/disable 0
+        "availDate":Number('{{ lt_res_05 }}'),                  //오늘부터 몇일 앞까지 예약 허용할 것인지
+        "cancellimit":Number('{{ lt_res_cancel_time }}')/60,    //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
 
         "firstPushToMember":'-',
         "secondPushToMember":'-',
@@ -294,8 +295,8 @@
         "workStartTime":worktimeStart,
         "workEndTime":worktimeEnd,
 
-        "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan",           //Korea, Japan, English, Chinese
+        "language" : "KOR",             //Korea, Japan, English
+        "location" : "Japan",           //Korea, Japan, English
     }
     {#            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];#}
     {#            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];#}
