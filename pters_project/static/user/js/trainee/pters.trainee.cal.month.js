@@ -480,7 +480,7 @@ $(document).ready(function(){
         $("#starttimesSelected .btn:first-child").text($(this).text());
         $("#starttimesSelected .btn:first-child").val($(this).text());
         $("#id_training_time").val($(this).attr('data-trainingtime'));
-        $("#id_time_duration").val(1);
+        $("#id_time_duration").val(Options.timeDur);
         var arry = $(this).attr('data-trainingtime').split(':')
         //durTimeSet(arry[0]);
         addGraphIndicator(Options.timeDur)
