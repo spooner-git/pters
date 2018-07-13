@@ -1438,7 +1438,7 @@ $(document).ready(function(){
 
 
         slideIndex.html(tableHTML.join(''))
-        slideIndex.append(fakeElementForBlankPage);
+        //slideIndex.append(fakeElementForBlankPage);
         //weekNum_Set(Index);
         time_index_set();
         $('.swiper-slide').css('height',$('div.timeindex').height())
@@ -2078,7 +2078,7 @@ function set_schedule_time(jsondata){
         scheduleTime_Mobile('class', jsondata);
         scheduleTime_Mobile('off', jsondata);
         scheduleTime_Mobile('group', jsondata);
-        fake_show();
+        //fake_show();
     }
     
 }
