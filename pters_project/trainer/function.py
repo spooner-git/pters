@@ -690,6 +690,12 @@ def func_get_trainer_setting_list(context, user_id, class_id):
         lt_res_member_time_duration = int(setting_data.setting_info)
     except ObjectDoesNotExist:
         lt_res_member_time_duration = 1
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                             setting_type_cd='LT_RES_MEMBER_START_TIME', use=USE)
+        lt_res_member_start_time = setting_data.setting_info
+    except ObjectDoesNotExist:
+        lt_res_member_start_time = 'A-0'
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
@@ -741,6 +747,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['lt_res_enable_time'] = lt_res_enable_time
     context['lt_res_cancel_time'] = lt_res_cancel_time
     context['lt_res_member_time_duration'] = lt_res_member_time_duration
+    context['lt_res_member_start_time'] = lt_res_member_start_time
     context['lt_pus_01'] = lt_pus_01
     context['lt_pus_02'] = lt_pus_02
     context['lt_pus_03'] = lt_pus_03
