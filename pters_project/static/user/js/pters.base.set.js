@@ -49,7 +49,17 @@ function sideGoPage(page){
     location.href="/trainer/"+page+'/'
 }
 
+
+
 function shade_index(option){
+    var initialbodywidth = window.innerWidth;
+    var initialbodyheight = document.documentElement.clientHeight + 100;
+    console.log(initialbodywidth,initialbodyheight)
+    if(initialbodywidth > 600){
+        $('#pshade').css({'width':initialbodywidth, 'height':initialbodyheight});
+    }else{
+        $('#mshade').css({'width':initialbodywidth, 'height':initialbodyheight});
+    }
     var bodywidth = window.innerWidth;
     if(bodywidth > 600){
         if(option<0){

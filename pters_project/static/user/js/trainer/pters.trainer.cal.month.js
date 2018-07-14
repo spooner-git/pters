@@ -171,7 +171,7 @@ $(document).ready(function(){
             }else{
                 $cal_popup_plancheck.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
             }
-            disable_window_scroll();
+            //disable_window_scroll();
             clicked_td_date_info = yy+'_'+mm+'_'+dd
         }
     })
@@ -456,7 +456,7 @@ $(document).ready(function(){
             }else if($popup.attr('data-grouptype') == "group"){
                 $signcomplete_button.attr('data-signtype','group')
             }
-            disable_window_scroll()
+            disable_window_scroll();
         });
 
 
@@ -516,7 +516,7 @@ $(document).ready(function(){
         })
 
         function close_sign_popup(){
-            enable_window_scroll()
+            enable_window_scroll();
             $('#canvasWrap').css('display','none');
             $('#canvas').css({'border-color':'#282828','display':'none'});
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');

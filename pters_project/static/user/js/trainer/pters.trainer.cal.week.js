@@ -331,7 +331,7 @@ $(document).ready(function(){
         }else{
             selector_cal_popup_planinfo.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
         }
-        disable_window_scroll();
+        //disable_window_scroll();
     });
 
     //Off 일정 클릭시 팝업 Start
@@ -416,7 +416,7 @@ $(document).ready(function(){
         }else{
             selector_cal_popup_plan_info.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
         }
-        disable_window_scroll();
+        //disable_window_scroll();
     });
 
     //스케쥴 클릭시 팝업 Start
@@ -551,7 +551,7 @@ $(document).ready(function(){
         }else{
             selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
         }
-        disable_window_scroll();
+        //disable_window_scroll();
     });
 
     mini_popup_event();
@@ -570,7 +570,7 @@ $(document).ready(function(){
             }else if($popup.attr('data-grouptype') == "group"){
                 $signcomplete_button.attr('data-signtype','group')
             }
-            //disable_window_scroll()
+            disable_window_scroll();
         });
 
         $('#popup_btn_sign_complete').click(function(){
@@ -627,7 +627,7 @@ $(document).ready(function(){
         })
 
         function close_sign_popup(){
-            //enable_window_scroll()
+            enable_window_scroll();
             $('#canvasWrap').css('display','none');
             $('#canvas').css({'border-color':'#282828','display':'none'});
             $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
@@ -889,12 +889,13 @@ $(document).ready(function(){
         calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
         calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
         //calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
-        $('.swiper-slide-active').css('width',$('#week').width())
+        
     }else if(bodywidth<=600){
         calTable_Set_Mobile(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
         calTable_Set_Mobile(2,currentYear,currentPageMonth,currentDate,0); // 이번주
         calTable_Set_Mobile(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
     }
+    $('.swiper-slide-active').css('width',$('#week').width())
 
 
     weekNum_Set_fixed();
