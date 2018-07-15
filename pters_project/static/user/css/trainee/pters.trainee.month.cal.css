@@ -915,8 +915,15 @@ img,a,div,span,p{
 
 
 .ptersCheckbox{
-	display: table-cell;
+	display: inline-block;
 	margin-right: 4px !important;
+}
+
+.plan_list_row{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 18px;
+	width: 90%;
 }
 
 
