@@ -529,7 +529,6 @@ $(document).ready(function(){
         var form_dura = $('#id_time_duration')
         var form_group = $('#id_group_schedule_id')
 
-        console.log(form_date.val(), form_time.val(), form_dura.val())
         if(form_date.val() && form_time.val() && form_dura.val()){
             $("#submitBtn").addClass('submitBtnActivated');
             select_all_check=true;
@@ -566,7 +565,6 @@ $(document).ready(function(){
 
     function send_reservation(){
         click_check = 0
-        console.log($('#pt-add-form').serialize())
         $.ajax({
             url: '/trainee/add_trainee_schedule/',
             data: $('#pt-add-form').serialize(),
@@ -578,7 +576,6 @@ $(document).ready(function(){
             },
 
             success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
 
                 if(jsondata.messageArray.length>0){
@@ -714,9 +711,7 @@ $(document).ready(function(){
             },
 
             success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -923,7 +918,6 @@ $(document).ready(function(){
 
 
     function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
-        console.log(Year,Month)
         var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
         var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
 
@@ -1295,8 +1289,9 @@ $(document).ready(function(){
         $('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
         var countNumber = $('.popup_inner_month .plan_raw').length
         $('#countNum').text(countNumber)
-        console.log(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) ,date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate))
-        if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate)){
+        var todaydate = date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate);
+        var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(oriYear+'-'+oriMonth+'-'+oriDate, Options.availDate),'')
+        if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate) && date_format_yyyy_m_d_to_yyyymmdd(dateinfo) < limitdate){
             // if(dateplans.length==0 && click_check == 0) {
             if(dateplans.length==0 && click_check == 0) {
                 //close_info_popup('cal_popup_plancheck');
@@ -1534,7 +1529,6 @@ $(document).ready(function(){
             var todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(yy+'-'+(Number(mm)+1)+'-'+parseInt(limit/24),'')
         }
 
-        console.log(selecteddate,today,todayandlimitSum);
         if(selecteddate > today && selecteddate < todayandlimitSum){
             for(var i=0;i<=23;i++){
                 //var time = $('#'+i+'g')
@@ -1615,16 +1609,13 @@ $(document).ready(function(){
         //var semiresult = []
         semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
-            console.log('(Options.classDur)*Options.timeDur/60',(Options.classDur)*Options.timeDur/60)
             if(sortedlist[p*2+2] - sortedlist[p*2+1] >= (Options.classDur)*Options.timeDur/60){
                 var z = 0;
                 while(sortedlist[p*2+2] >= sortedlist[p*2+1] + z + (Options.classDur)*Options.timeDur/60){
                     //semiresult.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
-                    console.log(today_YY_MM_DD,selecteddate)
                     if(selecteddate == today_YY_MM_DD && sortedlist[p*2+1] + z <= Options.limit+currentHour+0.5){
 
                     }else{
-                        console.log('sortedlist[p*2+1] + z*(Options.classDur)/60',sortedlist[p*2+1] + z)
                         semiresult.push(sortedlist[p*2+1] + z)
                     }
                     z = z + 0.5;
@@ -1721,11 +1712,8 @@ $(document).ready(function(){
         var durTimeList = $('#durations')
         var index = offAddOkArray.indexOf(Number(selectedTime));
         var substr = offAddOkArray[index+1]-offAddOkArray[index];
-        console.log(index)
-        console.log(substr)
         if(substr>1){
             durTimeList.html('<li><a data-dur="1" class="pointerList">1시간</a></li>')
-            console.log(index)
         }else{
             durTimeList.html('')
             for(var j=index; j<=len; j++){
@@ -1962,8 +1950,6 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
     $('div._classTime').html('')
     var count_date_info = classInfoProcessed(jsondata)
     var len = jsondata.classTimeArray_start_date.length;
-    console.log('classDates',jsondata)
-    console.log('count_date_info',count_date_info)
     var already_added = []
     for(var i=0; i<len; i++){
         var finish = jsondata.scheduleFinishArray[i]
