@@ -428,7 +428,8 @@ $(document).ready(function(){
 
 
     $(document).on('click','.plan_raw_add',function(){
-        $('#groupTimeSelect, #classTimeSelect').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="width:30px;marign:auto;"></div>');
+        $('#groupTimeSelect, #classTimeSelect, .timegraphtext').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="height:23px;marign:auto;"></div>');
+
         clear_pt_add_logic_form();
         $('#addpopup').fadeIn('fast');
         //$('#shade2').css({'display':'block'});
@@ -841,7 +842,7 @@ $(document).ready(function(){
     monthText(); //상단에 연, 월 표시
     availableDateIndicator(availableStartTime,availableEndTime);
     krHoliday(); //대한민국 공휴일
-    draw_time_graph(Options.hourunit,'')
+    //draw_time_graph(Options.hourunit,'')
     ajaxClassTime("this"); //나의 PT일정에 핑크색 동그라미 표시
 
     //다음페이지로 슬라이드 했을때 액션
@@ -1318,11 +1319,11 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(data)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
                 }else{
+                    draw_time_graph(Options.hourunit,'')
                     timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
                     timeGraphSet("off","grey", "AddClass", jsondata);
                     startTimeSet('class', jsondata, today_form);  //일정등록 가능한 시작시간 리스트 채우기
