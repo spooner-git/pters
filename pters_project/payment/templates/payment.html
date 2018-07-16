@@ -208,7 +208,12 @@
                         error_check = false;
                         alert(jsondata.messageArray);
                     }else {
-                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price);
+                        console.log(jsondata.start_date);
+                        console.log(jsondata.end_date);
+                        console.log(jsondata.next_start_date);
+                        console.log(jsondata.next_end_date);
+                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price,
+                            jsondata.next_start_date[0]);
                     }
 
                 },
@@ -229,12 +234,22 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
+        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, start_date){
             var date = new Date();
             var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var billing_data;
             var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+            if(start_date != ''){
+{#                if(today != start_date){#}
+{#                    if(payment_type_cd == 'PERIOD'){#}
+{#                        price = 0;#}
+{#                        console.log('today::'+today);#}
+{#                        console.log('start_date::'+start_date);#}
+{#                    }#}
+{#                }#}
+                today = start_date;
+            }
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
                 pay_method : pay_method,
