@@ -1016,6 +1016,16 @@ option{
 	margin-top: 2px;
 }
 
+#starttimesSelected button{
+	overflow: hidden;
+}
+
+.starttimes_selected{
+	border: 0;
+	padding-left: 25px;
+}
+
+
 @media(min-width: 600px){
 	.ajaxloadingPC{
 		width: 40px;
