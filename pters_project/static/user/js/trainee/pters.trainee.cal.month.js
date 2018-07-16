@@ -595,7 +595,7 @@ $(document).ready(function(){
             },
 
             complete:function(){
-                completeSend()
+                //completeSend()
                 ajax_block_during_sending_send_reservation = true
             },
 
