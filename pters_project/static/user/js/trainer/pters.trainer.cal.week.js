@@ -1812,6 +1812,7 @@ $(document).ready(function(){
         }
     }
 
+    /*
     function startTimeSet(){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21];
         startTimeArraySet(); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
         var offOkLen = offAddOkArray.length;
@@ -1869,7 +1870,9 @@ $(document).ready(function(){
             }
         }
     }
-
+    */
+    
+    /*
     function durTimeSet(selectedTime){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
         var len = offAddOkArray.length;
         var durTimeList = $('#durations');
@@ -1955,6 +1958,7 @@ $(document).ready(function(){
         }
         durTimeList.append('<li><a data-dur="dummy" class="pointerList">'+'<img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;">'+'</a></li>');
     }
+    */
 
 });//document(ready)
 

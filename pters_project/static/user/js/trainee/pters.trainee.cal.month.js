@@ -1614,7 +1614,7 @@ $(document).ready(function(){
                 while(sortedlist[p*2+2] >= sortedlist[p*2+1] + z + (Options.classDur)*Options.timeDur/60){
                     //semiresult.push(sortedlist[p*2+1] + z*(Options.classDur)/60)
                     if(selecteddate == today_YY_MM_DD && sortedlist[p*2+1] + z <= Options.limit+currentHour+0.5){
-
+                        //이 if문은 회원용 (오늘 이미 지난 일정은 드랍다운에 표시 안되도록)
                     }else{
                         semiresult.push(sortedlist[p*2+1] + z)
                     }
