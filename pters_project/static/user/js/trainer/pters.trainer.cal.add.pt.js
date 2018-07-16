@@ -2938,15 +2938,9 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
 
     plan_time.push(workEndTime_)
     if(plan_time.length==1 && plan_time[0] == Options.workEndTime){
-        console.log('111')
         plan_time.push(workStartTime_)
         plan_time.push(0)
-    }else if(plan_time[0] == Options.workStartTime){
-        console.log('222')
-        plan_time.unshift(workStartTime_)
-        plan_time.unshift('')
     }else{
-        console.log('444')
         plan_time.unshift(workStartTime_)
         plan_time.unshift('')
     } 
@@ -2958,11 +2952,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
     //var semiresult = []
 
-    //console.log('sortedlist',plan_time.sort())
-
     semiresult = []
-
-    //console.log('sortedlist', sortedlist)
     for(var p=0; p<(sortedlist.length-1)/2; p++){
         var zz = 0;
         if(compare_time(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+2],'0:01'))==false){
@@ -2984,8 +2974,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         }
     }
 
-    console.log('addOkArrayList',addOkArrayList)
-
     allplans = sortedlist
     return {"addOkArray":addOkArrayList, "allplans":sortedlist}
 }
@@ -2995,7 +2983,6 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkAr
     var sArraySet =  startTimeArraySet(selecteddate, jsondata, Timeunit); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
     var addOkArray = sArraySet.addOkArray;
     var options = "";
-    console.log(sArraySet.allplans)
     switch(option){
         case "class":
             options = "";
