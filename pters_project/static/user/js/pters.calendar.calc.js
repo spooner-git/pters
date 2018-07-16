@@ -211,3 +211,19 @@ function add_time(starttime, addvalue){
 
 	return resultHour + ":" + resultMin;
 }
+
+function compare_time(time1, time2){
+	var hour1 = time1.split(':')[0];
+	var min1  = time1.split(':')[1];
+	var hour2 = time2.split(':')[0];
+	var min2  = time2.split(':')[1];
+
+	var time1_num = hour1+min1;
+	var time2_num = hour2+min2;
+
+	if(time1_num > time2_num){
+		return true;
+	}else{
+		return false;
+	}
+}
