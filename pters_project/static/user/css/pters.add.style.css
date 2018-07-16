@@ -806,6 +806,21 @@ button._info_baseedit_img{
 	background: #e3e3e3;
 }
 
+.ptersCheckbox_wrapper{
+	display: block;
+	padding-left: 5%;
+	padding-right: 8%;
+	height: 25px;
+	text-align: right;
+}
+	.ptersCheckbox_wrapper p{
+		display: inline-block;
+		vertical-align: middle;
+		margin-bottom: 7px;
+		font-size: 13px;
+		color: #444444;
+	}
+
 .ptersCheckbox{
 	position: relative;
 	width: 18px;
@@ -816,6 +831,16 @@ button._info_baseedit_img{
 	margin: 0 auto;
 	cursor: pointer;
 }
+	.ptersCheckbox_sm{
+		position: relative;
+		width: 15px;
+		height: 15px;
+		background: #ffffff;
+		border : 1px solid #e9e9e9;
+		border-radius: 50%;
+		margin: 0 auto;
+		cursor: pointer;
+	}
 
 .ptersCheckboxInner{
 	position: absolute;
@@ -826,6 +851,19 @@ button._info_baseedit_img{
 	left: 3px;
 	top: 3px;
 }
+	.ptersCheckboxInner_sm{
+		position: absolute;
+		width: 7px;
+		height: 7px;
+		background: #fe4e65;
+		border-radius: 50%;
+		left: 2px;
+		top: 2px;
+	}
+
+	.add_time_unit{
+		display: inline-block;
+	}
 
 .checked{
 	border: 2px solid #fe4e65;

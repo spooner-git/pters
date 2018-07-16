@@ -401,7 +401,14 @@
                 </table>
             </div>
 
-            <div id="classStartTime" class="ptaddbox _NORMAL_ADD">
+            <div class="ptersCheckbox_wrapper">
+                <div class="ptersCheckbox_sm add_time_unit">
+                    <div></div>
+                </div>
+                <p>시간 상세하게 설정</p>
+            </div>
+
+            <div id="classStartTime" class="ptaddbox _NORMAL_ADD" style="margin-top: 0;">
                 <div class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
                     <span class="KRtext"> 시작 시간</span>
@@ -1216,8 +1223,9 @@
         var offDateData=[];
         var offTimeData = [];
 
-        var offAddOkArray = []; //OFF 등록 시작 시간 리스트
-        var durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+        //var offAddOkArray = []; //OFF 등록 시작 시간 리스트
+        //var durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+        
 
         var addTypeSelect = "ptadd"; //팝업 종류 선택 (PT or OFF)
         var deleteTypeSelect;

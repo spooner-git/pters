@@ -630,11 +630,38 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
      }
      */
 
-    return planDura;
+    return planDura;//시간단위로 아웃풋
+}
+
+function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함) // 분단위로 아웃풋
+    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+        lastDay[1] = 29;
+    }else{
+        lastDay[1] = 28;
+    }
+
+    
+
+    var planYear    = Number(planStartDate.split('-')[0]);
+    var planMonth   = Number(planStartDate.split('-')[1]);
+    var planDate    = Number(planStartDate.split('-')[2]);
+    var planHour    = Number(planStartTime.split(':')[0]);
+    var planMinute  =        planStartTime.split(':')[1];
+
+    var planEDate   = Number(planEndDate.split('-')[2]);
+    var planEndHour = Number(planEndTime.split(':')[0]);
+    var planEndMin  =        planEndTime.split(':')[1];
+   
+    var duraMin = 0;
+    while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planEndTime.split(':')[0]+':'+planEndTime.split(':')[1]){
+        duraMin++
+    }
+   
+    return duraMin;
 }
 
 function duration_number_to_hangul(number){  // 0.5시간, 1.5시간, 1시간 --> 30분, 1시간 30분, 1시간
-
     if(number - parseInt(number) == 0.5){
         if(parseInt(number) != 0){
             number = parseInt(number)+'시간' + ' 30분';
@@ -645,6 +672,18 @@ function duration_number_to_hangul(number){  // 0.5시간, 1.5시간, 1시간 --
         number = number + '시간';
     }
     return number;
+}
+
+function duration_number_to_hangul_minute(minute){
+    var nums_result;
+    if(minute < 60){
+        nums_result = minute + ' 분';
+    }else if(minute%60 == 0){
+        nums_result = minute/60+' 시간'
+    }else { //125
+        nums_result = parseInt(minute/60)+ ' 시간 '+ (minute-60*parseInt(minute/60)) + '분'
+    }
+    return nums_result;
 }
 
 

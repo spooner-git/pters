@@ -174,7 +174,7 @@ function substract_time(starttime, subvalue){
 	return resultHour + ":" + resultMin;
 }
 
-
+console.log(add_time('02:10','00:01'))
 function add_time(starttime, addvalue){
 	var shour = Number(starttime.split(':')[0]);
 	var smin = Number(starttime.split(':')[1]);
