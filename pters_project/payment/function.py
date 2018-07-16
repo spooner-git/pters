@@ -262,7 +262,6 @@ def func_add_billing_logic(custom_data, payment_result):
     date = None
     customer_uid = None
     payment_info = None
-
     if error is None:
         try:
             customer_uid = custom_data['customer_uid']
@@ -274,11 +273,16 @@ def func_add_billing_logic(custom_data, payment_result):
             customer_uid = None
 
     if error is None:
-        payment_user_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                         end_date__lt=datetime.date.today(),
-                                                         use=USE).order_by('end_date')
-        if len(payment_user_info) > 0:
-            payment_info = payment_user_info[0]
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
+                                                        use=USE).latest('end_date')
+        except ObjectDoesNotExist:
+            payment_info = None
+        # payment_user_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
+        #                                                  end_date__lt=datetime.date.today(),
+        #                                                  use=USE).order_by('end_date')
+        # if len(payment_user_info) > 0:
+        #     payment_info = payment_user_info[0]
 
     if error is None:
         if payment_info is None:
@@ -297,11 +301,11 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
         if payment_info_check > 0:
-            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.1:'+str(payment_result['merchant_uid'])
+            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.:'+str(payment_result['merchant_uid'])
         if custom_data['payment_type_cd'] == 'PERIOD':
             billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
             if billing_info_check > 0:
-                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.2:'+str(customer_uid)
+                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.:'+str(customer_uid)
 
     if error is None:
         try:
