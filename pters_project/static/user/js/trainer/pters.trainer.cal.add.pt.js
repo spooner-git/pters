@@ -973,11 +973,11 @@ $(document).ready(function(){
     $(document).on('click',"#durations li a, #repeatdurations li a",function(){
         $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-            var durationTime_class = Number($(this).attr('data-dur'))*(30/Options.classDur);
+            var durationTime_class = Number($(this).attr('data-dur'));
             $("#id_time_duration").val(durationTime_class);
             addGraphIndicator($(this).attr('data-dur'));
         }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($(this).attr('data-dur'))*(30/Options.classDur);
+            var durationTime = Number($(this).attr('data-dur'));
             $("#id_time_duration_off").val(durationTime);
             addGraphIndicator($(this).attr('data-dur'));
         }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
@@ -3365,7 +3365,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
         zz++
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
-            durTimeList.append('<li><a data-dur="'+zz/60+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
+            durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
         }
     }
     

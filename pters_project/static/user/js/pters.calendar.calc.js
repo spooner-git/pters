@@ -183,7 +183,11 @@ function add_time(starttime, addvalue){
 
 	if(smin + addmin >= 60){
 		if(shour + addhour >= 24){  // 23 + 4 --> 3
-			var resultHour = addhour - (24-shour);
+			if(shour + addhour == 24){
+				var resultHour = 24
+			}else{
+				var resultHour = addhour - (24-shour);
+			}
 			var resultMin = smin + addmin - 60;
 		}else if(shour + addhour < 24){
 			var hourplus = parseInt((smin + addmin)/60)
@@ -193,7 +197,11 @@ function add_time(starttime, addvalue){
 		
 	}else if(smin + addmin < 60){
 		if(shour + addhour >= 24){  //23 + 1 --> 00
-			var resultHour = (shour + addhour) - 24;
+			if(shour + addhour == 24){
+				var resultHour = 24;
+			}else{
+				var resultHour = (shour + addhour) - 24;
+			}
 			var resultMin = smin + addmin;
 		}else if(shour + addhour < 24){
 			var resultHour = shour + addhour ;

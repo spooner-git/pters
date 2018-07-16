@@ -6,7 +6,7 @@ $(document).ready(function(){
         $(this).siblings('.mode_switch_button').removeClass('mode_active')
 
         if((addTypeSelect == "ptadd" || addTypeSelect == "groupptadd") && pageSelector == 'repeat'){
-            repeatStartTimeSet()
+            repeatStartTimeSet(Options.classDur)
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
@@ -28,7 +28,7 @@ $(document).ready(function(){
                 $('#offRepeatSummary').html('').hide()
             }
         }else if(addTypeSelect == "offadd" && pageSelector == 'repeat'){
-            repeatStartTimeSet()
+            repeatStartTimeSet(Options.classDur)
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
@@ -102,7 +102,7 @@ $(document).ready(function(){
         }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
         }
-        var time = $(this).attr('data-trainingtime').split(':')
+        var time = $(this).attr('data-trainingtime').split(':');
         //durTimeSet(time[0],"class");
         $("#durationsSelected button").removeClass("dropdown_selected");
         $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
@@ -111,71 +111,43 @@ $(document).ready(function(){
         repeatDurationTimeSet()
     })
 
-    function repeatStartTimeSet(){
+    function repeatStartTimeSet(Timeunit){
         var start = Options.workStartTime;
         var end   = Options.workEndTime;
         var startTimeList = []
 
-        if(Options.classDur == 30){
-            for(var i=start; i<end; i++){
-                if(i == 24){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+'12'+'시 30분</a></li>')
-                }else if(i<12){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+i+'시 30분</a></li>')
-                }else if(i>12){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+(i-12)+'시 30분</a></li>')
-                }else if(i==12){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+'12'+'시 30분</a></li>')
-                }
-            }
-        }else if(Options.classDur == 60){
-            for(var i=start; i<end; i++){
-                /*
-                 if(i == 24){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
-                 }else if(i<12){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
-                 }else if(i>12){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
-                 }else if(i==12){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
-                 }
-                 */
-                if(i == (end-1)){
-                    if(i == 24){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
-                    }else if(i<12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
-                    }else if(i>12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
-                    }else if(i==12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
-                    }
-                }else{
-                    if(i == 24){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+'12'+'시 30분</a></li>')
-                    }else if(i<12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+i+'시 30분</a></li>')
-                    }else if(i>12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+(i-12)+'시 30분</a></li>')
-                    }else if(i==12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+'12'+'시 30분</a></li>')
-                    }
-                }
+
+        var zz = 0;
+        console.log(add_time(start+':00', '00:0'+zz) , add_time(end+':00','00:01'))
+        while(add_time(start+':00', '00:0'+zz) < add_time(end+':00','00:00')){
+            var time = add_time(start+':00', '00:0'+zz)
+            var timehangul = time_format_to_hangul2(add_time(start+':00', '00:0'+zz))
+            startTimeList.push('<li><a data-trainingtime="'+time+':00.000000">'+timehangul+'</a></li>')
+            zz++;
+        }
+
+
+        var semiresult = [];
+        for(var t=0; t<startTimeList.length; t++){
+            if(Number(startTimeList[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
+                semiresult.push(startTimeList[t])
             }
         }
 
-        $('#repeatstarttimes').html(startTimeList.join(''))
+        
+        $('#repeatstarttimes').html(semiresult.join(''))
         $('#repeatdurations').html('')
     }
 
-    function repeatDurationTimeSet(){
+    function repeatDurationTimeSet(Timeunit){
         var start = Options.workStartTime;
         var end   = Options.workEndTime;
         var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
         var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
         var durTimeList = []
 
+
+        /*
         if(Options.classDur == 30){
             var tengo=0.5
             if(selectedMin == "30"){
@@ -201,7 +173,7 @@ $(document).ready(function(){
                 }
             }
         }
-
+        */
 
         $('#repeatdurations').html(durTimeList.join(''))
     }

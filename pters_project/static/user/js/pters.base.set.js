@@ -526,8 +526,45 @@ function time_format_to_hangul(timedata){
     }else{
         hourText = '오전';
     }
+    if(min<10){
+        min = '0'+min
+    }
+    if(hour<10){
+        hour = '0'+hour
+    }
 
-    return hangul_time = hourText + ' ' + hour + '시';
+    return hangul_time = hourText + ' ' + hour + '시 '+min+'분';
+}
+
+
+//10:00:00.000000 --> 오전 10시
+function time_format_to_hangul2(timedata){
+    var time = timedata.split(':');
+    var hour = Number(time[0]);
+    var min = Number(time[1]);
+    var hourText;
+    if(hour>=12){
+        if(hour==24){
+            hourText = '오전';
+            hour = 12;
+        }else if(hour==12){
+            hourText = "오후";
+            hour = 12;
+        }else{
+            hourText = "오후";
+            //hour = hour-12;
+        }
+    }else{
+        hourText = '오전';
+    }
+    if(min<10){
+        min = '0'+min
+    }
+    if(hour<10){
+        hour = '0'+hour
+    }
+
+    return hangul_time = hourText + ' ' + hour + ':'+min;
 }
 
 function time_h_m_to_hh_mm(time){
