@@ -74,6 +74,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                      name=payment_user_info.name,
                                      price=price,
                                      status='reserve',
+                                     pay_method=payment_user_info.pay_method,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         payment_info.save()
 

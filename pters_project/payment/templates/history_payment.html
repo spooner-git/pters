@@ -144,8 +144,8 @@
                     <div>
                         <p>{{ current_payment_info.status_name }}</p>
                     </div>
-                    <div>
-                        <p>{{ current_payment_info.fail_reason }}</p>
+                    <div data-customer_uid="{{ current_payment_info.customer_uid }}" onclick="test('{{ current_payment_info.customer_uid }}');">
+                        <p> {{ current_payment_info.fail_reason }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -363,6 +363,14 @@
         $('#upbutton-x-modify, ._button_Prev').click(function(){
             location.href="/trainer/trainer_setting/"
         })
+
+    function test(payid){
+        console.log('test');
+{#        var payid = $(this).attr('data-customer_uid');#}
+        alert(payid);
+        $('#id_customer_uid_restart').val(payid);
+        document.getElementById('restart-period-payment-form').submit();
+    }
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.history.js" %}></script>
 
