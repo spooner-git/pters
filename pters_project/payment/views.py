@@ -285,6 +285,23 @@ def billing_check_logic(request):
                 func_send_refund_payment(imp_uid, merchant_uid, access_token)
         elif payment_result['status'] == 'ready':
             logger.info('ready Test 상태입니다..')
+            payment_user_info_result = func_update_billing_logic(payment_result)
+            # func_resend_payment_info(customer_uid, merchant_uid,
+            #                          payment_result['amount'])
+            if payment_user_info_result['error'] is not None:
+                error = payment_user_info_result['error']
+        elif payment_result['status'] == 'failed':  # 결제 오류 상태로 업데이트
+            payment_user_info_result = func_update_billing_logic(payment_result)
+            # func_resend_payment_info(customer_uid, merchant_uid,
+            #                          payment_result['amount'])
+            if payment_user_info_result['error'] is not None:
+                error = payment_user_info_result['error']
+        elif payment_result['status'] == 'cancelled':  # 결제 오류 상태로 업데이트
+            payment_user_info_result = func_update_billing_logic(payment_result)
+            # func_resend_payment_info(customer_uid, merchant_uid,
+            #                          payment_result['amount'])
+            if payment_user_info_result['error'] is not None:
+                error = payment_user_info_result['error']
         else:  # 결제 오류 상태로 업데이트
             payment_user_info_result = func_update_billing_logic(payment_result)
             # func_resend_payment_info(customer_uid, merchant_uid,
@@ -353,7 +370,7 @@ def cancel_period_billing_logic(request):
 
     if error is None:
         if len(payment_data) > 0:
-            payment_data.update(mod_dt=timezone.now(), status='cancel', use=UN_USE)
+            payment_data.update(mod_dt=timezone.now(), status='cancelled', use=UN_USE)
 
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -676,6 +693,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         current_payment_data = []
         current_period_payment_data = []
         cancel_period_payment_data = []
+        stop_period_payment_data = []
         for product_info in product_list:
             try:
                 payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
@@ -692,6 +710,16 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                     merchandise_type_name = ''
                 merchandise_type_name_list = merchandise_type_name.split('+')
                 payment_info.merchandise_type_name = merchandise_type_name_list
+                if payment_info.status == 'cancelled':
+                    payment_info.status_name = '결제 취소'
+                elif payment_info.status == 'paid':
+                    payment_info.status_name = '결제 완료'
+                elif payment_info.status == 'failed':
+                    payment_info.status_name = '결제 실패'
+
+                if payment_info.fail_reason is None:
+                    payment_info.fail_reason = '고객 요청'
+
                 if payment_info.payment_type_cd == 'PERIOD':
                     try:
                         billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
@@ -702,19 +730,31 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                         if billing_info.state_cd == 'IP':
                             payment_info.billing_state_name = '결제 예정일'
                             current_period_payment_data.append(payment_info)
-                        else:
+                        elif billing_info.state_cd == 'ST':
                             payment_info.billing_state_name = '종료 예정일'
                             cancel_period_payment_data.append(payment_info)
+                        else:
+                            payment_info.billing_state_name = '종료 예정일'
+                            stop_period_payment_data.append(payment_info)
 
                 current_payment_data.append(payment_info)
 
         payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                            status='paid',
+                                                            # status='paid',
                                                             use=USE).order_by('-end_date')
+        for payment_info in payment_data_history:
+            if payment_info.status == 'cancelled':
+                payment_info.status_name = '결제 취소'
+            elif payment_info.status == 'paid':
+                payment_info.status_name = '결제 완료'
+            elif payment_info.status == 'failed':
+                payment_info.status_name = '결제 실패'
+
         context['payment_data_history'] = payment_data_history
         context['current_payment_data'] = current_payment_data
         context['current_period_payment_data'] = current_period_payment_data
         context['cancel_period_payment_data'] = cancel_period_payment_data
+        context['stop_period_payment_data'] = stop_period_payment_data
 
         return render(request, self.template_name, context)
 
