@@ -47,9 +47,6 @@ def check_billing_logic(request):
     error = None
     merchandise_type_cd = None
     payment_type_cd = None
-    # start_date = None
-    # end_date = None
-    # date = None
     input_price = 0
     payment_info = None
     # today = datetime.date.today()
@@ -83,12 +80,14 @@ def check_billing_logic(request):
         #     error = '이미 정기결제 중인 기능입니다.'
 
     if error is None:
-        payment_user_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                         end_date__lt=datetime.date.today(),
-                                                         merchandise_type_cd=merchandise_type_cd,
-                                                         use=USE).order_by('end_date')
-        if len(payment_user_info) > 0:
-            payment_info = payment_user_info[0]
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                        merchandise_type_cd=merchandise_type_cd,
+                                                        use=USE).latest('end_date')
+        except ObjectDoesNotExist:
+            payment_info = None
+        # if len(payment_user_info) > 0:
+        #     payment_info = payment_user_info[0]
 
     if error is None:
         if payment_info is not None:
@@ -97,7 +96,7 @@ def check_billing_logic(request):
             context['end_date'] = payment_info.end_date
             context['next_start_date'] = payment_info.end_date
             context['next_end_date'] = func_get_end_date(payment_info.payment_type_cd,
-                                                         payment_info.start_date, 1, date)
+                                                         payment_info.end_date, 1, date)
 
     if error is None:
         error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
