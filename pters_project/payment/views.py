@@ -22,7 +22,7 @@ from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
     func_update_billing_logic, func_cancel_period_billing_schedule, func_add_empty_billing_logic
-from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb, ProductTb
+from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb, ProductTb, BillingCancelInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -355,6 +355,8 @@ def billing_check_logic(request):
 @csrf_exempt
 def cancel_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
+    cancel_type = request.POST.get('cancel_type', '')
+    cancel_reason = request.POST.get('cancel_reason', '')
     next_page = request.POST.get('next_page', '')
     # json_data = request.body.decode('utf-8')
     # json_loading_data = None
@@ -396,7 +398,18 @@ def cancel_period_billing_logic(request):
     if error is None:
         error = func_cancel_period_billing_schedule(customer_uid)
     if error is None:
+        billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                                                  member_id=request.user.id,
+                                                  cancel_type=cancel_type,
+                                                  cancel_reason=cancel_reason,
+                                                  mod_dt=timezone.now(),
+                                                  reg_dt=timezone.now(),
+                                                  use=USE)
+        billing_cancel_info.save()
+        # billing_info.cancel_type = cancel_type
+        # billing_info.cancel_reason = cancel_reason
         billing_info.state_cd = 'ST'
+        billing_info.mod_dt = timezone.now()
         billing_info.save()
 
     if error is None:
@@ -431,6 +444,7 @@ def restart_period_billing_logic(request):
             if date != billing_info.payed_date:
                 billing_info.payed_date = date
             billing_info.state_cd = 'IP'
+            billing_info.mod_dt = timezone.now()
             billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
@@ -486,6 +500,7 @@ def clear_pause_period_billing_logic(request):
             if date != billing_info.payed_date:
                 billing_info.payed_date = date
             billing_info.state_cd = 'IP'
+            billing_info.mod_dt = timezone.now()
             billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
@@ -697,6 +712,7 @@ def delete_billing_info_logic(request):
     if error is None:
         if payment_user_info is not None:
             payment_user_info.use = UN_USE
+            payment_user_info.mod_dt = timezone.now()
             payment_user_info.save()
 
     if error is not None:
@@ -769,12 +785,14 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             merchandise_type_cd=product_info.merchandise_type_cd,
                                                             start_date__lte=today, end_date__gte=today,
+                                                            payment_type_cd='SINGLE',
                                                             use=USE).latest('end_date')
             except ObjectDoesNotExist:
                 payment_info = None
             try:
                 period_payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                                    merchandise_type_cd=product_info.merchandise_type_cd,
+                                                                   end_date__gte=today,
                                                                    payment_type_cd='PERIOD').latest('end_date')
             except ObjectDoesNotExist:
                 period_payment_info = None
@@ -831,7 +849,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_info.merchandise_type_name = merchandise_type_name_list
 
                 if billing_info is None:
-                    period_payment_info.next_payment_date = payment_info.end_date
+                    period_payment_info.next_payment_date = period_payment_info.end_date
                     period_payment_info.billing_state_name = '종료 예정일'
                 else:
 

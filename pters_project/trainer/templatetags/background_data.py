@@ -3,8 +3,8 @@ import html.parser as parser
 import logging
 from django import template
 
-from configs.const import USE
-from payment.models import FunctionAuthTb
+from configs.const import USE, UN_USE
+from payment.models import FunctionAuthTb, BillingInfoTb
 from schedule.models import BackgroundImgTb
 from trainer.function import func_get_trainer_setting_list
 
@@ -70,5 +70,13 @@ def get_function_auth(request):
                                                        use=USE)
     for function_auth_info in function_auth_data:
         function_auth.append(parser.unescape(function_auth_info.function_auth_type_cd))
+
+    billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
+
+    if len(billing_data) > 0:
+        for billing_info in billing_data:
+            billing_info.state_cd = 'ST'
+            billing_info.use = UN_USE
+            billing_info.save()
 
     return function_auth
