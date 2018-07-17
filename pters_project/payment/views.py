@@ -149,10 +149,10 @@ def billing_finish_logic(request):
 
     if error is None:
         if str(today) == start_date:
-            logger.info('today:'+str(today))
+            # logger.info('today:'+str(today))
             error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, paid_amount)
-        else:
-            logger.info('start_date:'+str(start_date))
+        # else:
+        #     logger.info('start_date:'+str(start_date))
 
     context['error'] = error
     if error is not None:
@@ -280,12 +280,12 @@ def billing_check_logic(request):
 
             logger.info('today:'+str(today))
             logger.info('start_date:'+str(start_date))
-            if today == start_date:
-                logger.info('test11111111')
+            if str(today) == str(start_date):
+                # logger.info('test11111111')
                 error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
 
-            if str(today) == str(start_date):
-                logger.info('test222222222')
+            # if str(today) == str(start_date):
+                # logger.info('test222222222')
 
             if error is None:
                 if custom_data is not None:
