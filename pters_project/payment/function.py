@@ -449,6 +449,21 @@ def func_add_empty_billing_logic(custom_data, payment_result):
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
+                merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
+                for merchandise_type_cd_info in merchandise_type_cd_list:
+                    try:
+                        function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
+                                                                        function_auth_type_cd=merchandise_type_cd_info,
+                                                                        use=USE)
+                    except ObjectDoesNotExist:
+                        function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
+                                                            function_auth_type_cd=merchandise_type_cd_info,
+                                                            reg_dt=timezone.now(),
+                                                            mod_dt=timezone.now(),
+                                                            use=USE)
+                    function_auth_info.payment_type_cd = custom_data['payment_type_cd']
+                    function_auth_info.expired_date = start_date
+                    function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
