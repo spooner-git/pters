@@ -775,7 +775,6 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             try:
                 period_payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                                    merchandise_type_cd=product_info.merchandise_type_cd,
-                                                                   start_date__lte=today, end_date__gte=today,
                                                                    payment_type_cd='PERIOD').latest('end_date')
             except ObjectDoesNotExist:
                 period_payment_info = None
