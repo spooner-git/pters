@@ -83,7 +83,9 @@ def add_schedule_logic(request):
     if schedule_date == '':
         error = '날짜를 선택해 주세요.'
     elif schedule_time == '':
-        error = '시작 시간을 선택해 주세요.'
+        error = '시작 시각을 선택해 주세요.'
+    elif schedule_end_time == '':
+        error = '종료 시각을 선택해 주세요.'
     # elif schedule_time_duration == '':
     #     error = '진행 시간을 선택해 주세요.'
 
@@ -562,9 +564,11 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         if repeat_start_time == '':
-            error = '시작 시간을 선택해 주세요.'
-        elif repeat_schedule_time_duration == '':
-            error = '진행 시간을 선택해 주세요.'
+            error = '시작 시각을 선택해 주세요.'
+        elif repeat_end_time == '':
+            error = '종료 시각을 선택해 주세요.'
+        # elif repeat_schedule_time_duration == '':
+        #     error = '진행 시간을 선택해 주세요.'
 
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
@@ -1053,7 +1057,9 @@ def add_group_schedule_logic(request):
     elif schedule_date == '':
         error = '날짜를 선택해 주세요.'
     elif schedule_time == '':
-        error = '시작 시간을 선택해 주세요.'
+        error = '시작 시각을 선택해 주세요.'
+    elif schedule_end_time == '':
+        error = '종료 시각을 선택해 주세요.'
     # elif schedule_time_duration == '':
     #     error = '진행 시간을 선택해 주세요.'
 
@@ -1711,9 +1717,11 @@ def add_group_repeat_schedule_logic(request):
 
     if error is None:
         if repeat_start_time == '':
-            error = '시작 시간을 선택해 주세요.'
-        elif repeat_schedule_time_duration == '':
-            error = '진행 시간을 선택해 주세요.'
+            error = '시작 시각을 선택해 주세요.'
+        elif repeat_end_time == '':
+            error = '종료 시각을 선택해 주세요.'
+        # elif repeat_schedule_time_duration == '':
+        #     error = '진행 시간을 선택해 주세요.'
 
     if error is None:
         try:

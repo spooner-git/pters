@@ -59,16 +59,24 @@ $(document).ready(function(){
         $(this).addClass('checked');
         pterscheckbox.addClass('checked');
         pterscheckbox.addClass('ptersCheckboxInner');
+
+        console.log('test');
+        var checkbox_info = $(this);
+        console.log(checkbox_info.val());
+        console.log(checkbox_info.text());
     });
 
     $('#submit_pay_cancel').click(function(){
         if($(this).hasClass('active')){
             var payid = $(this).attr('data-customer_uid');
-            alert('해지 프로세스:'+payid);
+            var cancel_survey_text_area = $('#cancel_survey_text_area');
+
             //To-do
-            document.getElementById('cancel-period-payment-form').submit();
+            $('#id_cancel_type').val(cancel_survey_text_area.val());
+
+            // document.getElementById('cancel-period-payment-form').submit();
             // /payment/cancel_period_billing_logic/
-        };
+        }
     });
 
 });
