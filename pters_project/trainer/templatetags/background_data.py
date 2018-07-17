@@ -1,8 +1,10 @@
+import datetime
 import html.parser as parser
 import logging
 from django import template
 
 from configs.const import USE
+from payment.models import FunctionAuthTb
 from schedule.models import BackgroundImgTb
 from trainer.function import func_get_trainer_setting_list
 
@@ -57,3 +59,16 @@ def get_setting_info(request):
     request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
     return context
+
+
+@register.simple_tag
+def get_function_auth(request):
+    today = datetime.date.today()
+    function_auth = []
+    function_auth_data = FunctionAuthTb.objects.filter(member_id=request.user.id,
+                                                       expired_date__gte=today,
+                                                       use=USE)
+    for function_auth_info in function_auth_data:
+        function_auth.append(parser.unescape(function_auth_info.function_auth_type_cd))
+
+    return function_auth
