@@ -955,17 +955,20 @@ $(document).ready(function(){
         var selector_durationsSelected_button = $('#durationsSelected button');
         var selector_durations_li_first_child = $('#durations li:first-child a');
         $("#durationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
-        selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur'));
+        selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
             var durationTime_class = Number(selector_durationsSelected_button.val())*(30/Options.classDur);
             $("#id_time_duration").val(durationTime_class);
-            addGraphIndicator(selector_durationsSelected_button.val());
+            addGraphIndicator(selector_durationsSelected_button.attr('data-durmin'));
+
         }else if(addTypeSelect == "offadd"){
             var durationTime = Number(selector_durationsSelected_button.val())*(30/Options.classDur);
             $("#id_time_duration_off").val(durationTime);
-            addGraphIndicator(selector_durationsSelected_button.val());
+            addGraphIndicator(selector_durationsSelected_button.attr('data-durmin'));
+
         }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_dur").val(selector_durationsSelected_button.val());
+
         }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_dur_off").val(selector_durationsSelected_button.val());
         }
@@ -975,15 +978,15 @@ $(document).ready(function(){
     });
 
     $(document).on('click',"#durations li a, #repeatdurations li a",function(){
-        $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
+        $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
             var durationTime_class = Number($(this).attr('data-dur'));
             $("#id_time_duration").val(durationTime_class);
-            addGraphIndicator($(this).attr('data-dur'));
+            addGraphIndicator($(this).attr('data-durmin'));
         }else if(addTypeSelect == "offadd"){
             var durationTime = Number($(this).attr('data-dur'));
             $("#id_time_duration_off").val(durationTime);
-            addGraphIndicator($(this).attr('data-dur'));
+            addGraphIndicator($(this).attr('data-durmin'));
         }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
             $("#id_repeat_dur").val($(this).attr('data-dur'));
         }else if(addTypeSelect == "repeatoffadd"){
@@ -3390,7 +3393,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
         zz++
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
-            durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
+            durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
         }
     }
     
@@ -3418,7 +3421,7 @@ function send_Data(serializeArray){
 }
 
 
-
+/*
 function addGraphIndicator(datadur){
     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
     var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
@@ -3472,6 +3475,32 @@ function addGraphIndicator(datadur){
             min = Number(min)+30;
         }
     }
+
+}*/
+
+function addGraphIndicator(durmin){
+    if($('.plan_indicators .selectedplan_indi').length == 0){
+        $('.plan_indicators').append('<div class="selectedplan_indi"></div>')
+    }else{
+
+    }
+
+
+    var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
+    var daymorning = starttext[0];
+    var planHour = starttext[1].split(':')[0];
+    var planMinute = starttext[1].split(':')[1];
+    var planDura = durmin;
+    var workstart = Options.workStartTime;
+
+    var timegraph_hourwidth = ($('.tdgraph_30').width()+0.5)*2;
+    var timegraph_houroffset = $('.tdgraph_30').position().left;
+    var timegraph_houroffsetb = $('.tdgraph_30').position().top;
+
+    var planWidth   = timegraph_hourwidth*(planDura/60);
+    var planLoc     = timegraph_hourwidth*(planHour-workstart) + timegraph_hourwidth*(planMinute/60) + timegraph_houroffset;
+
+    $('.selectedplan_indi').css({'top':timegraph_houroffsetb,'left':planLoc,'width':planWidth});
 
 }
 
