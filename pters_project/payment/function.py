@@ -20,6 +20,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         billing_info = BillingInfoTb.objects.get(member_id=payment_user_info.member.member_id,
                                                  customer_uid=customer_uid, use=USE)
         billing_info.next_payment_date = payment_user_info.end_date
+        billing_info.mod_dt = timezone.now()
         billing_info.save()
     except ObjectDoesNotExist:
         error = '정기 결제 등록에 실패했습니다.'
@@ -356,10 +357,10 @@ def func_add_billing_logic(custom_data, payment_result):
                         function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
                                                             function_auth_type_cd=merchandise_type_cd_info,
                                                             reg_dt=timezone.now(),
-                                                            mod_dt=timezone.now(),
                                                             use=USE)
                     function_auth_info.payment_type_cd = custom_data['payment_type_cd']
                     function_auth_info.expired_date = end_date
+                    function_auth_info.mod_dt = timezone.now()
                     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
@@ -460,10 +461,10 @@ def func_add_empty_billing_logic(custom_data, payment_result):
                         function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
                                                             function_auth_type_cd=merchandise_type_cd_info,
                                                             reg_dt=timezone.now(),
-                                                            mod_dt=timezone.now(),
                                                             use=USE)
                     function_auth_info.payment_type_cd = custom_data['payment_type_cd']
                     function_auth_info.expired_date = start_date
+                    function_auth_info.mod_dt = timezone.now()
                     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
@@ -531,6 +532,7 @@ def func_update_billing_logic(payment_result):
                                                          customer_uid=payment_info.customer_uid,
                                                          use=USE)
                 billing_info.state_cd = 'ERR'
+                billing_info.mod_dt = timezone.now()
                 billing_info.save()
             except ObjectDoesNotExist:
                 error = '정기 결제 정보를 불러오지 못했습니다.'
@@ -543,6 +545,7 @@ def func_update_billing_logic(payment_result):
                                                                 function_auth_type_cd=merchandise_type_cd_info,
                                                                 use=USE)
                 function_auth_info.expired_date = payment_info.end_date
+                function_auth_info.mod_dt = timezone.now()
                 function_auth_info.save()
             except ObjectDoesNotExist:
                 error = '권한 정보를 불러오지 못했습니다.'

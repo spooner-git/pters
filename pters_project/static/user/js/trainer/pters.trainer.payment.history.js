@@ -27,7 +27,7 @@ $(document).ready(function(){
     // 해지신청
     $(document).on('click','.pay_cancel_Button',function(){
         var payid = $(this).attr('data-customer_uid');
-        alert(payid);
+        // alert(payid);
         $('#submit_pay_cancel').attr('data-customer_uid', payid);
         $('#id_customer_uid_cancel').val(payid);
         $('#pay_cancel_confirm_popup').show();
@@ -53,26 +53,20 @@ $(document).ready(function(){
         });
 
     $('.ptersCheckbox').click(function(){
-        $('#submit_pay_cancel').addClass('active')
+        $('#submit_pay_cancel').addClass('active');
         $('div.checked').removeClass('checked ptersCheckboxInner');
         var pterscheckbox = $(this).find('div');
         $(this).addClass('checked');
         pterscheckbox.addClass('checked');
         pterscheckbox.addClass('ptersCheckboxInner');
-
-        console.log('test');
-        var checkbox_info = $(this);
-        console.log(checkbox_info.val());
-        console.log(checkbox_info.text());
+        $('#id_cancel_type').val($(this).siblings("span").text());
     });
 
     $('#submit_pay_cancel').click(function(){
         if($(this).hasClass('active')){
             var payid = $(this).attr('data-customer_uid');
             var cancel_survey_text_area = $('#cancel_survey_text_area');
-
-            //To-do
-            $('#id_cancel_type').val(cancel_survey_text_area.val());
+            $('#id_cancel_reason').val(cancel_survey_text_area.val());
 
             // document.getElementById('cancel-period-payment-form').submit();
             // /payment/cancel_period_billing_logic/

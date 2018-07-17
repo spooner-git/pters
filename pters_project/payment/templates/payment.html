@@ -242,13 +242,21 @@
             var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var billing_data;
-            var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+            var month = date.getMonth()+1;
+            var day = date.getDate();
+            if(month <10){
+                month = '0'+month;
+            }
+            if(day <10){
+                day = '0'+day;
+            }
+            var today = date.getFullYear()+'-'+month+'-'+day;
+            console.log('today::'+today);
+            console.log('start_date::'+start_date);
             if(start_date != ''){
                 if(today != start_date){
                     if(payment_type_cd == 'PERIOD'){
                         price = 0;
-                        console.log('today::'+today);
-                        console.log('start_date::'+start_date);
 {#                        alert(start_date+'부터 정기 결제가 시작됩니다.')#}
                     }
                 }
