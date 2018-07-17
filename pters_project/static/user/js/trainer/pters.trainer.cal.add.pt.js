@@ -43,7 +43,7 @@ $(document).ready(function(){
                 var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
                 if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
                     //$("#id_training_date").val($("#datepicker").val()).submit();
-                    $("#id_training_date").val(selector_datepicker.val());
+                    $("#id_training_date, #id_training_end_date").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
                         //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
@@ -62,7 +62,7 @@ $(document).ready(function(){
                 }
                 else if(addTypeSelect =="offadd"){
                     //$("#id_training_date_off").val($("#datepicker").val()).submit();
-                    $("#id_training_date_off").val(selector_datepicker.val());
+                    $("#id_training_date_off, #id_training_end_date_off").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
                         //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
@@ -499,16 +499,17 @@ $(document).ready(function(){
     //긁어서 일정 추가
 
     function show_mini_plan_add_popup(thisID, dur){
-
-        $("#id_training_date, #id_training_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
-        $("#id_training_time, #id_training_time_off").val(time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4]+':00.000000');
-
+        var durMin = dur*Options.classDur
+        var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
+        $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        $("#id_training_time, #id_training_time_off").val(starttime+':00.000000');
+        console.log(dur, durMin)
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
-            $("#id_time_duration").val(dur);
-            $("#id_time_duration_off").val(dur);
+            $('#id_training_end_time').val(add_time(starttime, '00:'+durMin) + ':00.000000')
+            $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin) + ':00.000000')
         }else if(addTypeSelect == "offadd"){
-            $("#id_time_duration").val(dur);
-            $("#id_time_duration_off").val(dur);
+            $('#id_training_end_time').val(add_time(starttime, '00:'+durMin) + ':00.000000')
+            $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin) + ':00.000000')
         }
         //$("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
         $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(duration_number_to_hangul((Options.classDur*Number(dur))/60)).val(dur);
@@ -635,12 +636,6 @@ $(document).ready(function(){
         $(this).siblings('.toggleBtnWrap').removeClass('typeSelected');
         if($(this).attr('id').split('_')[1]=="ptadd"){
             $('#memberName_mini, #remainCount_mini').css('display','inline');
-            /*
-             //$('#remainCount_mini').show('fast')
-             $("#durationsSelected .btn:first-child").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>"+'선택'+"</span>").val("");
-             $("#id_time_duration").val('')
-             planAddView($("#id_time_duration").val())
-             */
             $('.pt_memo_guide_mini').css('visibility','unset');
             if($('#membersSelected_mini button').attr('data-grouptype') == "group"){
                 addTypeSelect = "groupptadd";
@@ -649,31 +644,25 @@ $(document).ready(function(){
             }
         }else if($(this).attr('id').split('_')[1]=="offadd"){
             $('#memberName_mini, #remainCount_mini').css('display','none');
-            //$('#remainCount_mini').hide('fast')
-            /*
-             $("#durationsSelected .btn:first-child").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>"+'선택'+"</span>").val("");
-             $("#id_time_duration_off").val('')
-             planAddView($("#id_time_duration_off").val())
-             */
             $('.pt_memo_guide_mini').css('visibility','hidden');
             addTypeSelect = "offadd";
         }
-
         check_dropdown_selected_addplan();
-        //planAddView($("#id_time_duration").val())
     });
 
     $(document).on('click',"#durations_mini li a",function(){
         $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
 
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
-            var durationTime_class =  Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur);
-            $("#id_time_duration, #id_time_duration_off").val(durationTime_class);
+            //var durationTime_class =  Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur);
+            //$("#id_time_duration, #id_time_duration_off").val(durationTime_class);
+            $('#id_training_end_time, #id_training_end_time_off').val($(this).attr('data-endtime')+':00.000000')
             planAddView($(this).attr('data-dur'));
 
         }else if(addTypeSelect == "offadd"){
-            var durationTime = Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur);
-            $("#id_time_duration, #id_time_duration_off").val(durationTime);
+            //var durationTime = Number($(this).attr('data-dur').replace(/시간/gi,''))*(30/Options.classDur);
+            $('#id_training_end_time, #id_training_end_time_off').val($(this).attr('data-endtime')+':00.000000')
+            //$("#id_time_duration, #id_time_duration_off").val(durationTime);
             planAddView($(this).attr('data-dur'));
         }
         check_dropdown_selected_addplan();
@@ -800,7 +789,7 @@ $(document).ready(function(){
     }
 
     function closeMiniPopupByChange(){
-        $("#id_time_duration_off").val("");
+        $("#id_training_end_time, #id_training_end_time_off").val("");
         $('#page-addplan-pc').hide();
         $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview');
         clear_pt_off_add_popup_mini();
@@ -937,10 +926,6 @@ $(document).ready(function(){
             $("#id_training_time").val($(this).attr('data-trainingtime'));
         }else if(addTypeSelect == "offadd"){
             $("#id_training_time_off").val($(this).attr('data-trainingtime'));
-        }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-            $("#id_repeat_start_time").val($(this).attr('data-trainingtime'));
-        }else if(addTypeSelect == "repeatoffadd"){
-            $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
         }
         var arry = $(this).attr('data-trainingtime').split(':');
 
@@ -951,46 +936,39 @@ $(document).ready(function(){
             durTimeSet(arry[0],arry[1],"class", Options.classDur);
         }
         
-        //진행시간 자동으로 1시간으로 Default 셋팅
+        //진행시간 자동으로 최소 단위 시간으로 Default 셋팅
         var selector_durationsSelected_button = $('#durationsSelected button');
         var selector_durations_li_first_child = $('#durations li:first-child a');
         $("#durationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
         selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
             var durationTime_class = Number(selector_durationsSelected_button.val())*(30/Options.classDur);
-            $("#id_time_duration").val(durationTime_class);
+            //$("#id_time_duration").val(durationTime_class);
+            $('#id_training_end_time').val(selector_durations_li_first_child.attr('data-endtime') + ':00.000000')
             addGraphIndicator(selector_durationsSelected_button.attr('data-durmin'));
 
         }else if(addTypeSelect == "offadd"){
             var durationTime = Number(selector_durationsSelected_button.val())*(30/Options.classDur);
-            $("#id_time_duration_off").val(durationTime);
+            //$("#id_time_duration_off").val(durationTime);
+            $('#id_training_end_time_off').val(selector_durations_li_first_child.attr('data-endtime') + ':00.000000')
             addGraphIndicator(selector_durationsSelected_button.attr('data-durmin'));
 
-        }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-            $("#id_repeat_dur").val(selector_durationsSelected_button.val());
-
-        }else if(addTypeSelect == "repeatoffadd"){
-            $("#id_repeat_dur_off").val(selector_durationsSelected_button.val());
         }
-
         check_dropdown_selected_addplan();
-
     });
 
-    $(document).on('click',"#durations li a, #repeatdurations li a",function(){
+    $(document).on('click',"#durations li a",function(){
         $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
             var durationTime_class = Number($(this).attr('data-dur'));
-            $("#id_time_duration").val(durationTime_class);
+            //$("#id_time_duration").val(durationTime_class);
+            $('#id_training_end_time').val($(this).attr('data-endtime') + ':00.000000')
             addGraphIndicator($(this).attr('data-durmin'));
         }else if(addTypeSelect == "offadd"){
             var durationTime = Number($(this).attr('data-dur'));
-            $("#id_time_duration_off").val(durationTime);
+            //$("#id_time_duration_off").val(durationTime);
+            $('#id_training_end_time_off').val($(this).attr('data-endtime') + ':00.000000')
             addGraphIndicator($(this).attr('data-durmin'));
-        }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-            $("#id_repeat_dur").val($(this).attr('data-dur'));
-        }else if(addTypeSelect == "repeatoffadd"){
-            $("#id_repeat_dur_off").val($(this).attr('data-dur'));
         }
         check_dropdown_selected_addplan();
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
@@ -1429,7 +1407,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#memberName').css('display','block');
         $('#uptext2').text('레슨 일정 등록');
-        $('#id_training_date').val(selector_datepicker.val());
+        $('#id_training_date, #id_training_end_date').val(selector_datepicker.val());
         $('#id_repeat_start_date').val(selector_datepicker_repeat_start.val());
         if(bodywidth > 600){
             $('#addpopup_pc_label_pt').show();
@@ -1439,7 +1417,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }else if(option == "offadd"){
         $('#memberName, #remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#uptext2').text('OFF 일정 등록');
-        $('#id_training_date_off').val(selector_datepicker.val());
+        $('#id_training_date_off, #id_training_end_date_off').val(selector_datepicker.val());
         $('#id_repeat_start_date_off').val(selector_datepicker_repeat_start.val());
         if(bodywidth > 600){
             $('#addpopup_pc_label_off').show();
@@ -1778,8 +1756,8 @@ function clear_start_dur_dropdown(){
 }
 
 function clear_repeat_start_dur_dropdown(){
-    //반복빈도, 시작시간, 진행시간 드랍다운 초기화
-    $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>").removeClass('dropdown_selected');
+    //시작시간, 진행시간 드랍다운 초기화
+    $('#repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>").removeClass('dropdown_selected');
 }
 
 
@@ -3407,13 +3385,14 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
 
     var zz = 0
     durTimeList.html('');
-    //durTimeList = []
+
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
         zz++
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
-            durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
+            durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
         }
     }
+    
     
     durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
 }
