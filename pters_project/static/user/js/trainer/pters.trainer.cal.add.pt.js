@@ -2177,6 +2177,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
         //var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
         var planStartArr = [planYear, planMonth, planDate, planHour, '00'];
         var planStart = planStartArr.join("_");
+        var planStartDiv = $("#"+planStart);
         var tdPlanStart = $("#"+planStart+" div");
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
@@ -2207,29 +2208,111 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
         }
 
         if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
-            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i], 'data-memo' : planNoteArray[i],
-                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
-                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+            if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
+                planStartDiv.append('<div class-time="'+planArray.join('_')+
+                                       '" class-schedule-id="'+planScheduleIdArray[i]+
+                                       '" data-starttime="'+planStartDate[i]+
+                                       '" data-groupid="'+planGroupid[i]+
+                                       '" data-membernum="'+planMemberNum[i]+
+                                       '" data-memo="'+planNoteArray[i]+
+                                       '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                       '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                       '" data-dbid="'+planMemberDbid[i]+
+                                       '" data-memberName="'+memberName+
+                                       '" class="'+planColor_+
+                                       '" style="height:'+Number(planDura*planheight-1)+'px;'+
+                                                 'top:'+Number(planArray[4])+'px;'+
+                                       '">'+
+                                            '<span class="memberName">'+planCode+memberName+' </span>'+
+                                            '<span class="memberTime">'+ 
+                                                '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+
+                                    '</div>'
+                                    )
+                /*
+                planStartDiv.attr('class-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+                            .attr('class-schedule-id' , planScheduleIdArray[i])
+                            .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i], 'data-memo' : planNoteArray[i],
+                                'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+                            .addClass(planColor_)
+                            .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
+                            .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+                */
+            }
+
+            
         }else if(option == 'group'){
-            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
+            if(planStartDiv.find('div['+'group-schedule-id='+planScheduleIdArray[i]+']').length == 0){
+                planStartDiv.append('<div group-time="'+planArray.join('_')+
+                                       '" group-schedule-id="'+planScheduleIdArray[i]+
+                                       '" data-starttime="'+planStartDate[i]+
+                                       '" data-groupid="'+planGroupid[i]+
+                                       '" data-membernum="'+planMemberNum[i]+
+                                       '" data-memo="'+planNoteArray[i]+
+                                       '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                       '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                       '" data-dbid="'+planMemberDbid[i]+
+                                       '" data-memberName="'+memberName+
+                                       '" class="'+planColor_+
+                                       '" style="height:'+Number(planDura*planheight-1)+'px;'+
+                                                 'top:'+Number(planArray[4])+'px;'+
+                                       '">'+
+                                            '<span class="memberName">'+
+                                                    '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                                    '<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span> '+
+                                                    '</span>'+'<span class="memberTime">'+ 
+                                                        '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+
+                                    '</div>'
+                                    )
+ 
+            }
+            /*
+            planStartDiv.attr('group-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+                .attr('group-schedule-id' , planScheduleIdArray[i])
                 .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
                     'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
                 .addClass(planColor_)
                 .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
                 .html('<span class="memberName">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+'<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+            */
         }else if(option == 'off'){
-            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
+            if(planStartDiv.find('div['+'off-schedule-id='+planScheduleIdArray[i]+']').length == 0){
+                planStartDiv.append('<div off-time="'+planArray.join('_')+
+                                       '" off-schedule-id="'+planScheduleIdArray[i]+
+                                       '" data-starttime="'+planStartDate[i]+
+                                       '" data-groupid="'+planGroupid[i]+
+                                       '" data-membernum="'+planMemberNum[i]+
+                                       '" data-memo="'+planNoteArray[i]+
+                                       '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                       '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                       '" data-dbid="'+planMemberDbid[i]+
+                                       '" data-memberName="'+memberName+
+                                       '" class="'+planColor_+
+                                       '" style="height:'+Number(planDura*planheight-1)+'px;'+
+                                                 'top:'+Number(planArray[4])+'px;'+
+                                       '">'+
+                                            '<span class="memberName">'+planCode+memberName+' </span>'+
+                                            '<span class="memberTime">'+ 
+                                                '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+                                    '</div>'
+                                    )
+ 
+            }
+
+
+            /*            
+            planStartDiv.attr('off-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+                .attr('off-schedule-id' , planScheduleIdArray[i])
                 .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
                     'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
                 .addClass(planColor_)
                 .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
                 .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+            */
         }
 
 
