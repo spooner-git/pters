@@ -1482,7 +1482,7 @@ function clear_pt_off_add_popup(){
 
     //Time 그래프 숨기기
     $('#timeGraph').css('display','none');
-    $('.plan_indicators').html('')
+    //$('.plan_indicators').html('')
 
     //시작시간, 진행시간 드랍다운 초기화
     $("#starttimesSelected button, #durationsSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>선택</span>").val("");
@@ -1716,7 +1716,6 @@ function ajaxRepeatConfirmSend(use, callback){
 
 
 function ajaxTimeGraphSet(date, use, callback){
-    console.log(date)
     var today_form = date;
     offAddOkArray = []; //OFF 등록 시작 시간 리스트
     durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
@@ -1740,7 +1739,8 @@ function ajaxTimeGraphSet(date, use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                $('.plan_indicators').html('')
+                //$('.plan_indicators').html('')
+                draw_time_graph(60,'');
                 timeGraphSet("class","pink","AddClass", jsondata);  //시간 테이블 채우기
                 timeGraphSet("group","pink","AddClass", jsondata);
                 timeGraphSet("off","grey","AddClass", jsondata);
@@ -3230,14 +3230,13 @@ function draw_time_graph(option, type){  //type = '' and mini
         types = ''
     }
 
-    var tablewidth = $('.timegraphtext').width();
+    var tablewidth = $('.timegraphtext').width()-10;
     //var tdwidth = (tablewidth/((Options.workEndTime-Options.workStartTime)*2))-1
     //var tdwidth_ = (tablewidth/((Options.workEndTime-Options.workStartTime)))-2.5
 
-    var tdwidth = (tablewidth/((Options.workEndTime-Options.workStartTime)*2))
-    var tdwidth_ = (tablewidth/((Options.workEndTime-Options.workStartTime)))-0.5
+    var tdwidth = (tablewidth/(Options.workEndTime-Options.workStartTime));
+    var tdwidth_ = (tablewidth/(Options.workEndTime-Options.workStartTime));
 
-    console.log('tablewidth',tablewidth,'tdwidth',tdwidth,'Options.workEndTime-Options.workStartTime',Options.workEndTime-Options.workStartTime)
 
     var tr1 = [];
     var tr2 = [];
@@ -3249,16 +3248,16 @@ function draw_time_graph(option, type){  //type = '' and mini
         }
     }else if(option == "60"){
         for(i; i<Options.workEndTime; i++){
-            tr1[i] = '<div>'+(i)+'</div>';
-            tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></div>';
+            tr1[i] = '<div style="width:'+tdwidth+'px;" class="colspan">'+(i)+'</div>';
+            tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div>';
         }
     }
-    var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('')+'</div>';
+    var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
     targetHTML.html(tbody);
 }
 
 function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래프 채우기
-    draw_time_graph(30,'');
+    
     //1. option인자 : "class", "off"
     //2. CSS테마인자 : "grey", "pink"
     var planStartDate = '';
@@ -3315,16 +3314,15 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             break;
     }
 
-    console.log($('.tdgraph_30').width()+'px')
-
+ 
     var date = datepicker.val();
     var Arraylength = planScheduleIdArray.length;
-    var $tableTarget    = $('#timeGraph div.plan_indicators');
+    //var $tableTarget    = $('#timeGraph div.plan_indicators');
+    var $tableTarget    = $('#timeGraph div.timegraph_display');
     var workstart = Options.workStartTime;
-    var timegraph_hourwidth = ($('.tdgraph_30').width()+0.5)*2;
-    var timegraph_houroffset = $('.tdgraph_30').position().left;
-    var timegraph_houroffsetb = $('.tdgraph_30').position().top;
+    
     var htmlToJoin = [];
+
     var date = $('#datepicker').val();
     for(var i=0;i<Arraylength;i++){
         var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
@@ -3335,11 +3333,17 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+
+        var timegraph_hourwidth = $('#'+planHour+'g_00').width();
+        var timegraph_houroffset = $('#'+planHour+'g_00').position().left;
+        var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+
+
         if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
             var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
 
             var planWidth   = timegraph_hourwidth*(planDura/60)
-            var planLoc     = timegraph_hourwidth*(planHour-workstart) + timegraph_hourwidth*(planMinute/60) + timegraph_houroffset
+            var planLoc     = timegraph_houroffset + timegraph_hourwidth*(planMinute/60);
 
             if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
                 
@@ -3349,6 +3353,8 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             
         }
     }
+    console.log(htmlToJoin.join(''))
+
     $tableTarget.append(htmlToJoin.join(''))
 }
 
@@ -3479,26 +3485,28 @@ function addGraphIndicator(datadur){
 }*/
 
 function addGraphIndicator(durmin){
-    if($('.plan_indicators .selectedplan_indi').length == 0){
-        $('.plan_indicators').append('<div class="selectedplan_indi"></div>')
+    
+    if($('.timegraph_display .selectedplan_indi').length == 0){
+        $('.timegraph_display').append('<div class="selectedplan_indi"></div>')
     }else{
 
     }
-
-
+    
     var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
     var daymorning = starttext[0];
-    var planHour = starttext[1].split(':')[0];
-    var planMinute = starttext[1].split(':')[1];
+    var planHour = Number(starttext[1].split(':')[0]);
+    var planMinute = Number(starttext[1].split(':')[1]);
     var planDura = durmin;
     var workstart = Options.workStartTime;
 
-    var timegraph_hourwidth = ($('.tdgraph_30').width()+0.5)*2;
-    var timegraph_houroffset = $('.tdgraph_30').position().left;
-    var timegraph_houroffsetb = $('.tdgraph_30').position().top;
+    var timegraph_hourwidth = $('#'+planHour+'g_00').width()+1;
+    var timegraph_houroffset = $('#'+planHour+'g_00').position().left;
+    var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+
+    console.log(timegraph_hourwidth)
 
     var planWidth   = timegraph_hourwidth*(planDura/60);
-    var planLoc     = timegraph_hourwidth*(planHour-workstart) + timegraph_hourwidth*(planMinute/60) + timegraph_houroffset;
+    var planLoc     = timegraph_houroffset + timegraph_hourwidth*(planMinute/60) - 0.1*(planMinute/60);
 
     $('.selectedplan_indi').css({'top':timegraph_houroffsetb,'left':planLoc,'width':planWidth});
 

@@ -523,10 +523,17 @@ ul a{
 .selectedplan_indi{
 	height: 8px;
 	position: absolute;
-	background: blue;
 	z-index: 1;
 	opacity: 0.8;
 	border-left: 0.5px solid #ffffff;
+
+	background: #fe4e65;
+	-webkit-animation-name:blink;
+	-webkit-animation-duration:1s;
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+
 }
 
 .timegraph_plans_pink{
@@ -549,7 +556,7 @@ ul a{
 
 
 .tdgraph_60{
-	width : 4.15% !important;
+	display: inline-block;
 	height: 8px;
 	/*background: #cacaca;*/
 	background: #ffffff;
@@ -558,7 +565,7 @@ ul a{
 }
 
 .colspan{
-	display: inline-table;
+	display: inline-block;
 }
 
 .tdgraph_30{
