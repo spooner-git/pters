@@ -21,7 +21,7 @@ from configs.const import USE, UN_USE
 from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
-    func_update_billing_logic, func_cancel_period_billing_schedule
+    func_update_billing_logic, func_cancel_period_billing_schedule, func_add_empty_billing_logic
 from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb, ProductTb
 
 logger = logging.getLogger(__name__)
@@ -278,15 +278,15 @@ def billing_check_logic(request):
             if custom_data is not None:
                 start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
 
-            logger.info('today:'+str(today))
-            logger.info('start_date:'+str(start_date))
             if today == start_date:
-                logger.info('test11111111:'+str(start_date))
                 error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
 
             if error is None:
                 if custom_data is not None:
-                    payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
+                    if today == start_date:
+                        payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
+                    else:
+                        payment_user_info_result = func_add_empty_billing_logic(custom_data, payment_result)
                 else:
                     payment_user_info_result = func_update_billing_logic(payment_result)
                 if payment_user_info_result['error'] is None:
