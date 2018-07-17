@@ -54,7 +54,9 @@ def add_schedule_logic(request):
     member_id = request.POST.get('member_id')
     schedule_date = request.POST.get('training_date')
     schedule_time = request.POST.get('training_time')
-    schedule_time_duration = request.POST.get('time_duration')
+    schedule_end_date = request.POST.get('training_end_date')
+    schedule_end_time = request.POST.get('training_end_time')
+    schedule_time_duration = request.POST.get('time_duration', '')
     en_dis_type = request.POST.get('en_dis_type')
     note = request.POST.get('add_memo', '')
     class_id = request.session.get('class_id', '')
@@ -82,8 +84,8 @@ def add_schedule_logic(request):
         error = '날짜를 선택해 주세요.'
     elif schedule_time == '':
         error = '시작 시간을 선택해 주세요.'
-    elif schedule_time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
+    # elif schedule_time_duration == '':
+    #     error = '진행 시간을 선택해 주세요.'
 
     if note is None:
         note = ''
@@ -105,12 +107,14 @@ def add_schedule_logic(request):
 
     if error is None:
         # 최초 날짜 값 셋팅
-        time_duration_temp = class_info.class_hour*int(schedule_time_duration)
+        # time_duration_temp = class_info.class_hour*int(schedule_time_duration)
 
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
                                                                  '%Y-%m-%d %H:%M:%S.%f')
-            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
+            schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
+                                                                 '%Y-%m-%d %H:%M:%S.%f')
+            # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -508,7 +512,8 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_end_date = request.POST.get('repeat_end_date')
     repeat_week_type = request.POST.get('repeat_day', '')
     repeat_start_time = request.POST.get('repeat_start_time')
-    repeat_schedule_time_duration = request.POST.get('repeat_dur')
+    repeat_end_time = request.POST.get('repeat_end_time')
+    repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
@@ -580,8 +585,9 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M:%S.%f')
-        temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
-        repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
+        # temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
+        repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M:%S.%f')
+        # repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
         repeat_schedule_start_time = repeat_schedule_start_time.time()
         repeat_schedule_end_time = repeat_schedule_end_time.time()
     if error is None:
@@ -1015,7 +1021,9 @@ def add_group_schedule_logic(request):
     group_id = request.POST.get('group_id')
     schedule_date = request.POST.get('training_date')
     schedule_time = request.POST.get('training_time')
-    schedule_time_duration = request.POST.get('time_duration')
+    schedule_end_date = request.POST.get('training_end_date')
+    schedule_end_time = request.POST.get('training_end_time')
+    # schedule_time_duration = request.POST.get('time_duration', '')
     note = request.POST.get('add_memo', '')
     date = request.POST.get('date', '')
     day = request.POST.get('day', '')
@@ -1046,8 +1054,8 @@ def add_group_schedule_logic(request):
         error = '날짜를 선택해 주세요.'
     elif schedule_time == '':
         error = '시작 시간을 선택해 주세요.'
-    elif schedule_time_duration == '':
-        error = '진행 시간을 선택해 주세요.'
+    # elif schedule_time_duration == '':
+    #     error = '진행 시간을 선택해 주세요.'
 
     if note is None:
         note = ''
@@ -1070,12 +1078,14 @@ def add_group_schedule_logic(request):
         error = func_check_group_schedule_enable(group_id)
     if error is None:
         # 최초 날짜 값 셋팅
-        time_duration_temp = class_info.class_hour * int(schedule_time_duration)
+        # time_duration_temp = class_info.class_hour * int(schedule_time_duration)
 
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
                                                                  '%Y-%m-%d %H:%M:%S.%f')
-            schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
+            schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
+                                                               '%Y-%m-%d %H:%M:%S.%f')
+            # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -1651,7 +1661,8 @@ def add_group_repeat_schedule_logic(request):
     repeat_schedule_end_date = request.POST.get('repeat_end_date')
     repeat_week_type = request.POST.get('repeat_day', '')
     repeat_start_time = request.POST.get('repeat_start_time')
-    repeat_schedule_time_duration = request.POST.get('repeat_dur')
+    repeat_end_time = request.POST.get('repeat_end_time')
+    repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
@@ -1734,8 +1745,9 @@ def add_group_repeat_schedule_logic(request):
 
     if error is None:
         repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M:%S.%f')
-        temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
-        repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
+        # temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
+        repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M:%S.%f')
+        # repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
         repeat_schedule_start_time = repeat_schedule_start_time.time()
         repeat_schedule_end_time = repeat_schedule_end_time.time()
 
