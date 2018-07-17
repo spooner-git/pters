@@ -280,8 +280,14 @@ def billing_check_logic(request):
             else:
                 start_date = today
 
+            logger.info('today:'+str(today))
+            logger.info('start_date:'+str(start_date))
             if today == start_date:
+                logger.info('test1')
                 error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
+
+            if str(today) == str(start_date):
+                logger.info('test2')
 
             if error is None:
                 if custom_data is not None:
