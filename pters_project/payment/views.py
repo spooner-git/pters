@@ -49,7 +49,9 @@ def check_billing_logic(request):
     payment_type_cd = None
     input_price = 0
     payment_info = None
-    # today = datetime.date.today()
+    today = datetime.date.today()
+    single_payment_check = False
+    billing_info = ''
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -72,6 +74,11 @@ def check_billing_logic(request):
             if function_auth_info_count > 0:
                 error = '이미 정기결제 중인 기능이 포함되어있습니다.'
                 break
+            function_auth_info_count = FunctionAuthTb.objects.filter(member_id=request.user.id,
+                                                                     function_auth_type_cd=merchandise_type_cd_info,
+                                                                     use=USE).count()
+            if function_auth_info_count > 0:
+                single_payment_check = True
 
         # billing_info = BillingInfoTb.objects.filter(member_id=request.user.id,
         #                                             merchandise_type_cd=merchandise_type_cd,
@@ -82,7 +89,7 @@ def check_billing_logic(request):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd=merchandise_type_cd,
+                                                        merchandise_type_cd__contains=merchandise_type_cd,
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
@@ -97,6 +104,12 @@ def check_billing_logic(request):
             context['next_start_date'] = str(payment_info.end_date)
             context['next_end_date'] = str(func_get_end_date(payment_info.payment_type_cd,
                                                              payment_info.end_date, 1, date))
+            if single_payment_check:
+                billing_info = '이미 결제중인 기능이 포함되어있어 '+context['next_start_date']+'부터 결제가 진행됩니다.'
+        else:
+            context['next_start_date'] = str(today)
+            if single_payment_check:
+                billing_info = '이미 결제중인 기능이 포함되어있습니다. 그래도 결제 하시겠습니까?'
 
     if error is None:
         error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
@@ -106,6 +119,7 @@ def check_billing_logic(request):
         messages.error(request, error)
 
     context['error'] = error
+    context['billing_info'] = billing_info
     return render(request, 'ajax/payment_error_info.html', context)
 
 
@@ -283,7 +297,7 @@ def billing_check_logic(request):
 
             if error is None:
                 if custom_data is not None:
-                    if today == start_date:
+                    if today == start_date or payment_type_cd == 'SINGLE':
                         payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
                     else:
                         payment_user_info_result = func_add_empty_billing_logic(custom_data, payment_result)
@@ -424,8 +438,7 @@ def restart_period_billing_logic(request):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, customer_uid=customer_uid,
-                                                        payment_type_cd='PERIOD', status='paid',
-                                                        use=USE).latest('end_date')
+                                                        payment_type_cd='PERIOD', status='paid').latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
         # payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
@@ -447,7 +460,7 @@ def restart_period_billing_logic(request):
                      + str(error))
     else:
         logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+                    + '(' + str(request.user.id) + ')님 재결제 신청 완료')
 
     context['error'] = error
     return redirect(next_page)
@@ -749,13 +762,30 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         current_period_payment_data = []
         cancel_period_payment_data = []
         stop_period_payment_data = []
+        current_billing_info = []
+        today = datetime.date.today()
         for product_info in product_list:
             try:
                 payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             merchandise_type_cd=product_info.merchandise_type_cd,
+                                                            start_date__lte=today, end_date__gte=today,
                                                             use=USE).latest('end_date')
             except ObjectDoesNotExist:
                 payment_info = None
+            try:
+                period_payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                                   merchandise_type_cd=product_info.merchandise_type_cd,
+                                                                   start_date__lte=today, end_date__gte=today,
+                                                                   payment_type_cd='PERIOD').latest('end_date')
+            except ObjectDoesNotExist:
+                period_payment_info = None
+
+            try:
+                billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                                                         merchandise_type_cd=product_info.merchandise_type_cd,
+                                                         use=USE)
+            except ObjectDoesNotExist:
+                billing_info = None
 
             if payment_info is not None:
                 try:
@@ -765,6 +795,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                     merchandise_type_name = ''
                 merchandise_type_name_list = merchandise_type_name.split('+')
                 payment_info.merchandise_type_name = merchandise_type_name_list
+
                 if payment_info.status == 'cancelled':
                     payment_info.status_name = '결제 취소'
                 elif payment_info.status == 'paid':
@@ -775,25 +806,51 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 if payment_info.fail_reason is None:
                     payment_info.fail_reason = '고객 요청'
 
-                if payment_info.payment_type_cd == 'PERIOD':
-                    try:
-                        billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
-                    except ObjectDoesNotExist:
-                        billing_info = None
-                    if billing_info is not None:
-                        payment_info.billing_state_cd = billing_info.state_cd
-                        if billing_info.state_cd == 'IP':
-                            payment_info.billing_state_name = '결제 예정일'
-                            current_period_payment_data.append(payment_info)
-                        elif billing_info.state_cd == 'ST':
-                            payment_info.billing_state_name = '종료 예정일'
-                            cancel_period_payment_data.append(payment_info)
-                        else:
-                            payment_info.billing_state_name = '종료 예정일'
-                            current_period_payment_data.append(payment_info)
-                            stop_period_payment_data.append(payment_info)
-
+                # if billing_info is None:
+                payment_info.next_payment_date = payment_info.end_date
+                payment_info.billing_state_name = '종료 예정일'
+                # else:
+                #
+                #     payment_info.billing_info = billing_info
+                #     payment_info.next_payment_date = billing_info.next_payment_date
+                #     payment_info.billing_state_cd = billing_info.state_cd
+                #     if billing_info.state_cd == 'IP':
+                #         payment_info.billing_state_name = '결제 예정일'
+                #     elif billing_info.state_cd == 'ST':
+                #         payment_info.billing_state_name = '종료 예정일'
+                #     else:
+                #         payment_info.billing_state_name = '종료 예정일'
                 current_payment_data.append(payment_info)
+
+            if period_payment_info is not None:
+                try:
+                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.merchandise_type_cd)
+                    merchandise_type_name = merchandise_type.contents
+                except ObjectDoesNotExist:
+                    merchandise_type_name = ''
+                merchandise_type_name_list = merchandise_type_name.split('+')
+                period_payment_info.merchandise_type_name = merchandise_type_name_list
+
+                if billing_info is None:
+                    period_payment_info.next_payment_date = payment_info.end_date
+                    period_payment_info.billing_state_name = '종료 예정일'
+                else:
+
+                    period_payment_info.billing_info = billing_info
+                    period_payment_info.next_payment_date = billing_info.next_payment_date
+                    period_payment_info.billing_state_cd = billing_info.state_cd
+                    if billing_info.state_cd == 'IP':
+                        period_payment_info.billing_state_name = '결제 예정일'
+                        current_period_payment_data.append(period_payment_info)
+                    elif billing_info.state_cd == 'ST':
+                        period_payment_info.billing_state_name = '종료 예정일'
+                        cancel_period_payment_data.append(period_payment_info)
+                    else:
+                        period_payment_info.billing_state_name = '종료 예정일'
+                        current_period_payment_data.append(period_payment_info)
+                        stop_period_payment_data.append(period_payment_info)
+
+                current_billing_info.append(period_payment_info)
 
         payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             # status='paid',
@@ -813,6 +870,8 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         context['current_period_payment_data'] = current_period_payment_data
         context['cancel_period_payment_data'] = cancel_period_payment_data
         context['stop_period_payment_data'] = stop_period_payment_data
+
+        context['current_billing_info'] = current_billing_info
 
         return render(request, self.template_name, context)
 

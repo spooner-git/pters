@@ -74,6 +74,27 @@
                     </div>
                 </div>
             {% endfor %}
+            {% for current_payment_info in current_billing_info %}
+                <div class="current_use_table_content">
+                    <div>{{ forloop.counter }} </div>
+                    <div>
+                        <p>{{ current_payment_info.name }}</p>
+                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+                    </div>
+                    <div>
+                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
+                            <p>{{ payment_merchandise_info }}</p>
+                        {% endfor %}
+{#                        <p>그룹 관리 메뉴 사용</p>#}
+{#                        <p>그룹 일정 관리</p>#}
+{#                        <p>광고 제거</p>#}
+                    </div>
+                    <div>
+                        <p>{{ current_payment_info.name }}</p>
+                        <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>
+                    </div>
+                </div>
+            {% endfor %}
             </div>
 
             <div id="page_mypay_history" class="sub_pages">
@@ -126,26 +147,26 @@
                     <div>상태</div>
                     <div>사유</div>
                 </div>
-            {% for current_payment_info in stop_period_payment_data %}
+            {% for stop_payment_info in stop_period_payment_data %}
                 <div class="monthly_pay_stop_table_content">
                     <div>{{ forloop.counter }}</div>
                     <div>
-                        <p>{{ current_payment_info.name }}</p>
+                        <p>{{ stop_payment_info.name }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.start_date }} 결제</p>
+                        <p>{{ stop_payment_info.start_date }} 결제</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.end_date }}</p>
+                        <p>{{ stop_payment_info.end_date }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.end_date }}</p>
+                        <p>{{ stop_payment_info.end_date }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.status_name }}</p>
+                        <p>{{ stop_payment_info.status_name }}</p>
                     </div>
-                    <div data-customer_uid="{{ current_payment_info.customer_uid }}" onclick="test('{{ current_payment_info.customer_uid }}');">
-                        <p> {{ current_payment_info.fail_reason }}</p>
+                    <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">
+                        <p> {{ stop_payment_info.fail_reason }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -191,14 +212,14 @@
                 <div>결제방법</div>
                 <div>결제방법 변경</div>
             </div>
-            {% for current_payment_info in current_period_payment_data %}
+            {% for current_payment_info in current_billing_info %}
                 <div class="pay_method_change_table_content">
                     <div>1</div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.end_date }}</p>
+                        <p>{{ current_payment_info.next_payment_date }}</p>
                     </div>
                     <div>
                         <p>{{ current_payment_info.price }} 원</p>
@@ -240,10 +261,10 @@
                     </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.billing_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>이용권해지</span></div>
+                        <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.billing_info.customer_uid }}"><span>이용권해지</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -317,10 +338,10 @@
                     </div>
                     <div>
                         <p>{{ cancel_period_payment_data.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.end_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.customer_uid }}"><span>해지 취소</span></div>
+                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"><span>해지 취소</span></div>
                     </div>
                 </div>
             {% endfor %}
