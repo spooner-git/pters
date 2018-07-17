@@ -281,7 +281,7 @@ def billing_check_logic(request):
             logger.info('today:'+str(today))
             logger.info('start_date:'+str(start_date))
             if str(today) == str(start_date):
-                # logger.info('test11111111')
+                logger.info('test11111111')
                 error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
 
             # if str(today) == str(start_date):
