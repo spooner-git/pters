@@ -49,7 +49,7 @@ def check_billing_logic(request):
     payment_type_cd = None
     input_price = 0
     payment_info = None
-    # today = datetime.date.today()
+    today = datetime.date.today()
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -97,6 +97,8 @@ def check_billing_logic(request):
             context['next_start_date'] = str(payment_info.end_date)
             context['next_end_date'] = str(func_get_end_date(payment_info.payment_type_cd,
                                                              payment_info.end_date, 1, date))
+        else:
+            context['next_start_date'] = str(today)
 
     if error is None:
         error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
