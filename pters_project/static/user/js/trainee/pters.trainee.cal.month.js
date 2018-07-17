@@ -1609,6 +1609,18 @@ $(document).ready(function(){
                 var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
 
 
+                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
+                if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) ){
+                    planHour = Options.workStartTime;
+                    planMinute = 0;
+                }else if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false ){
+                    continue;
+                }else if(compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workEndTime+':00','00:00'))){
+                    continue;
+                }
+                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
+
+
                 var timegraph_hourwidth = $('#'+planHour+'g_00').width();
                 var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
                 var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
@@ -1640,10 +1652,19 @@ $(document).ready(function(){
             }
         }else{
             var limit = add_time(currentHour+':'+currentMinute,'00:'+Options.limit);
-            var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
-            var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;
-            var timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-            var timegraph_hourendoffset = $('#'+limit.split(':')[0]+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
+
+            console.log(limit,add_time(Options.workEndTime+':00','00:00'))
+            if(compare_time(limit,add_time(Options.workEndTime+':00','00:00'))){
+                var timegraph_hourwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;
+                var timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
+                var timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourwidth
+            }else{
+                var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
+                var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;
+                var timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
+                var timegraph_hourendoffset = $('#'+limit.split(':')[0]+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
+            }
 
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
             var planLoc     = timegraph_houroffset;
@@ -1864,7 +1885,7 @@ $(document).ready(function(){
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         //var semiresult = []
 
-        
+        console.log('sortedlist',sortedlist)
         semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
             var zz = 0;
@@ -1885,18 +1906,24 @@ $(document).ready(function(){
         for(var t=0; t<semiresult.length; t++){
             //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
-                if(compare_time(semiresult[t], add_time(currentTime, '00:'+Options.limit)) ){          //근접예약 금지
+                if(compare_time(semiresult[t], add_time(currentTime, '00:'+Options.limit))                      //업무시간
+                    && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
+                    && compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){ //근접예약 금지
                     if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
                         addOkArrayList.push(semiresult[t])
                     }
                 }
             }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
-                if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
-                    addOkArrayList.push(semiresult[t])
+                if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false 
+                    && compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
+                    if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
+                        addOkArrayList.push(semiresult[t])
+                    }
                 }
+                
             }
         }
-
+        console.log('addOkArrayList',addOkArrayList)
         allplans = sortedlist
         return {"addOkArray":addOkArrayList, "allplans":sortedlist}
     }
