@@ -1768,6 +1768,11 @@ function clear_start_dur_dropdown(){
     $('#durations').html('');
 }
 
+function clear_repeat_start_dur_dropdown(){
+    //반복빈도, 시작시간, 진행시간 드랍다운 초기화
+    $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>").removeClass('dropdown_selected');
+}
+
 
 function get_repeat_info(dbID){
     var url_;

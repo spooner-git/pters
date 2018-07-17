@@ -811,7 +811,7 @@ button._info_baseedit_img{
 	display: block;
 	padding-left: 5%;
 	padding-right: 8%;
-	height: 25px;
+	height: 20px;
 	text-align: right;
 }
 	.ptersCheckbox_wrapper p{
@@ -821,6 +821,10 @@ button._info_baseedit_img{
 		font-size: 13px;
 		color: #444444;
 	}
+
+#repeatStartTime{
+	margin-top: 0;
+}
 
 .ptersCheckbox{
 	position: relative;
@@ -862,7 +866,7 @@ button._info_baseedit_img{
 		top: 2px;
 	}
 
-	.add_time_unit{
+	.add_time_unit, .repeatadd_time_unit{
 		display: inline-block;
 	}
 

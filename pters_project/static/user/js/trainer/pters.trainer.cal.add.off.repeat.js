@@ -6,7 +6,12 @@ $(document).ready(function(){
         $(this).siblings('.mode_switch_button').removeClass('mode_active')
 
         if((addTypeSelect == "ptadd" || addTypeSelect == "groupptadd") && pageSelector == 'repeat'){
-            repeatStartTimeSet(Options.classDur)
+            if($('.repeatadd_time_unit').hasClass('checked')){
+                repeatStartTimeSet(5)
+            }else{
+                repeatStartTimeSet(Options.classDur)
+            }
+            
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
@@ -28,7 +33,11 @@ $(document).ready(function(){
                 $('#offRepeatSummary').html('').hide()
             }
         }else if(addTypeSelect == "offadd" && pageSelector == 'repeat'){
-            repeatStartTimeSet(Options.classDur)
+            if($('.repeatadd_time_unit').hasClass('checked')){
+                repeatStartTimeSet(5)
+            }else{
+                repeatStartTimeSet(Options.classDur)
+            }
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
@@ -103,12 +112,33 @@ $(document).ready(function(){
             $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
         }
         var time = $(this).attr('data-trainingtime').split(':');
+        var selectedTime = time[0]+':'+time[1];
         //durTimeSet(time[0],"class");
         $("#durationsSelected button").removeClass("dropdown_selected");
         $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
         $("#durationsSelected .btn:first-child").val("");
         check_dropdown_selected_addplan();
-        repeatDurationTimeSet()
+
+        if($('.repeatadd_time_unit').hasClass('checked')){
+            repeatDurationTimeSet(selectedTime, 5)
+        }else{
+            repeatDurationTimeSet(selectedTime, Options.classDur)
+        }
+    })
+
+
+    $('.repeatadd_time_unit').click(function(){
+        clear_repeat_start_dur_dropdown();
+        var $child = $(this).find('div')
+        if($(this).hasClass('checked')){
+            $(this).removeClass('checked');
+            $child.removeClass('ptersCheckboxInner_sm');
+            repeatStartTimeSet(Options.classDur)
+        }else{
+            $(this).addClass('checked');
+            $child.addClass('ptersCheckboxInner_sm');
+            repeatStartTimeSet(5)
+        }
     })
 
     function repeatStartTimeSet(Timeunit){
@@ -139,12 +169,27 @@ $(document).ready(function(){
         $('#repeatdurations').html('')
     }
 
-    function repeatDurationTimeSet(Timeunit){
+    function repeatDurationTimeSet(selectedTime, Timeunit){
         var start = Options.workStartTime;
         var end   = Options.workEndTime;
-        var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
-        var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
+        //var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
+        //var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
+        var selectedHour = selectedTime.split(':')[0];
+        var selectedMin = selectedTime.split(':')[1];
         var durTimeList = []
+
+        for(var i=0; i<end; i++){
+
+        }
+
+        var dur = 1;
+        while(add_time(selectedTime,'00:0'+dur) != add_time(end+':00','00:01')){
+            var durTimes = add_time(selectedTime,'00:0'+dur);
+            if(durTimes.split(':')[1]%Timeunit == 0){
+                durTimeList.push('<li><a data-dur="'+dur/Options.classDur+'">'+duration_number_to_hangul_minute(dur)+' (~'+durTimes+')</a></li>')
+            }
+            dur++
+        }
 
 
         /*
