@@ -191,14 +191,14 @@
                 <div>결제방법</div>
                 <div>결제방법 변경</div>
             </div>
-            {% for current_payment_info in current_period_payment_data %}
+            {% for current_payment_info in current_billing_info %}
                 <div class="pay_method_change_table_content">
                     <div>1</div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.end_date }}</p>
+                        <p>{{ current_payment_info.next_payment_date }}</p>
                     </div>
                     <div>
                         <p>{{ current_payment_info.price }} 원</p>
@@ -207,7 +207,7 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.billing_info.customer_uid }}"><span>변경</span></div>
+                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>변경</span></div>
                     </div>
                 </div>
             {% endfor %}

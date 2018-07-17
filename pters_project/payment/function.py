@@ -31,7 +31,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         date = int(billing_info.payed_date)
 
         next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
-        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=1, second=0, microsecond=0)
+        next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
         # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
         token_result = func_get_payment_token()
@@ -62,6 +62,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                      price=price,
                                      status='reserve',
                                      pay_method=payment_user_info.pay_method,
+                                     card_name=payment_user_info.card_name,
                                      mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
         # payment_info.save()
         payment_info.save()

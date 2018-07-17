@@ -212,6 +212,8 @@
                         console.log(jsondata.end_date);
                         console.log(jsondata.next_start_date);
                         console.log(jsondata.next_end_date);
+                        if(jsondata.billing_info != '')
+                        alert(jsondata.billing_info);
                         payment(name, pay_method, payment_type_cd, merchandise_type_cd, price,
                             jsondata.next_start_date[0]);
                     }
@@ -246,7 +248,7 @@
                         price = 0;
                         console.log('today::'+today);
                         console.log('start_date::'+start_date);
-                        alert(start_date+'부터 정기 결제가 시작됩니다.')
+{#                        alert(start_date+'부터 정기 결제가 시작됩니다.')#}
                     }
                 }
                 today = start_date;
