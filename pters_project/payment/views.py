@@ -120,6 +120,7 @@ def billing_finish_logic(request):
     paid_amount = 0
     context = {'error': None}
     error = None
+    today = datetime.date.today()
 
     try:
         json_loading_data = json.loads(json_data)
@@ -141,10 +142,17 @@ def billing_finish_logic(request):
             paid_amount = json_loading_data['paid_amount']
         except KeyError:
             paid_amount = 0
+        try:
+            start_date = json_loading_data['start_date']
+        except KeyError:
+            start_date = str(today)
 
     if error is None:
-        error = func_check_payment_price_info(merchandise_type_cd,
-                                              payment_type_cd, paid_amount)
+        if str(today) == start_date:
+            logger.info('today:'+str(today))
+            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, paid_amount)
+        else:
+            logger.info('start_date:'+str(start_date))
 
     context['error'] = error
     if error is not None:
@@ -174,6 +182,7 @@ def billing_check_logic(request):
     payment_type_cd = None
     customer_uid = None
     context = {'error': None}
+    today = datetime.date.today()
 
     try:
         json_loading_data = json.loads(json_data)
@@ -265,7 +274,15 @@ def billing_check_logic(request):
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
-            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
+
+            if custom_data is not None:
+                start_date = datetime.datetime.strptime(custom_data['start_date'], "%Y-%m-%d").date()
+            else:
+                start_date = today
+
+            if today == start_date:
+                error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, payment_result['amount'])
+
             if error is None:
                 if custom_data is not None:
                     payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
@@ -295,7 +312,7 @@ def billing_check_logic(request):
             #                          payment_result['amount'])
             if payment_user_info_result['error'] is not None:
                 error = payment_user_info_result['error']
-        elif payment_result['status'] == 'cancelled':  # 결제 오류 상태로 업데이트
+        elif payment_result['status'] == 'cancelled':  # 결제 취소 상태로 업데이트
             payment_user_info_result = func_update_billing_logic(payment_result)
             # func_resend_payment_info(customer_uid, merchant_uid,
             #                          payment_result['amount'])
@@ -382,6 +399,62 @@ def cancel_period_billing_logic(request):
 # 정기 결제 재시작 기능 - 확인 필요
 @csrf_exempt
 def restart_period_billing_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
+    next_page = request.POST.get('next_page', '')
+    # json_data = request.body.decode('utf-8')
+    # json_loading_data = None
+    # customer_uid = None
+    context = {'error': None}
+    error = None
+    payment_info = None
+    today = datetime.date.today()
+    date = int(today.strftime('%d'))
+
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+            if date != billing_info.payed_date:
+                billing_info.payed_date = date
+            billing_info.state_cd = 'IP'
+            billing_info.save()
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, customer_uid=customer_uid,
+                                                        payment_type_cd='PERIOD', status='paid',
+                                                        use=USE).latest('end_date')
+        except ObjectDoesNotExist:
+            payment_info = None
+        # payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+        #                                             payment_type_cd='PERIOD', use=USE).order_by('end_date')
+        # if len(payment_data) > 0:
+        #     payment_info = payment_data[0]
+        if payment_info is not None:
+            if payment_info.end_date < today:
+                payment_info.end_date = today
+
+    if error is None:
+        error = func_set_billing_schedule(customer_uid, payment_info)
+
+    context['error'] = error
+    if error is not None:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
+                     + str(error))
+    else:
+        logger.info(str(request.user.last_name)+str(request.user.first_name)
+                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
+
+    context['error'] = error
+    return redirect(next_page)
+
+
+# 정기 결제 일시정지 해제 기능 - 확인 필요
+@csrf_exempt
+def clear_pause_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     next_page = request.POST.get('next_page', '')
     # json_data = request.body.decode('utf-8')

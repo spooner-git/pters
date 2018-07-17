@@ -241,13 +241,14 @@
             var billing_data;
             var today = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
             if(start_date != ''){
-{#                if(today != start_date){#}
-{#                    if(payment_type_cd == 'PERIOD'){#}
-{#                        price = 0;#}
-{#                        console.log('today::'+today);#}
-{#                        console.log('start_date::'+start_date);#}
-{#                    }#}
-{#                }#}
+                if(today != start_date){
+                    if(payment_type_cd == 'PERIOD'){
+                        price = 0;
+                        console.log('today::'+today);
+                        console.log('start_date::'+start_date);
+                        alert(start_date+'부터 정기 결제가 시작됩니다.')
+                    }
+                }
                 today = start_date;
             }
             var request_pay_period_data = {
@@ -305,7 +306,8 @@
                             data: JSON.stringify({
                                 merchandise_type_cd : merchandise_type_cd,
                                 payment_type_cd:payment_type_cd,
-                                paid_amount: rsp.paid_amount
+                                paid_amount: rsp.paid_amount,
+                                start_date: today
                             }),
 
                             beforeSend:function(){

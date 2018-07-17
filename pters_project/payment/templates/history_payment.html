@@ -40,7 +40,7 @@
             <div class="page_menu_table">
                 <div class="page_menu_table_cell cell_active" id="current_use">보유현황</div>
                 <div class="page_menu_table_cell" id="mypay_history">결제내역</div>
-                <div class="page_menu_table_cell" id="monthly_pay_stop_history">정기결제 일시정지/해제내역</div>
+                <div class="page_menu_table_cell" id="monthly_pay_stop_history">정기결제 일시정지/해제</div>
                 <div class="page_menu_table_cell_blank"></div>
             </div>
             <div id="page_current_use" class="sub_pages">
@@ -336,6 +336,10 @@
         <input type="hidden" name="customer_uid" id="id_customer_uid_restart" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
+    <form action="{% url 'payment:clear_pause_period_billing' %}" id="clear-pause-period-payment-form" method="post">
+        <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
+        <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
+    </form>
 
     <form id="modify-member-id-form" method="post">
         {% csrf_token %}
@@ -365,11 +369,9 @@
         })
 
     function test(payid){
-        console.log('test');
 {#        var payid = $(this).attr('data-customer_uid');#}
-        alert(payid);
-        $('#id_customer_uid_restart').val(payid);
-        document.getElementById('restart-period-payment-form').submit();
+        $('#id_customer_uid_clear_pause').val(payid);
+        document.getElementById('clear-pause-period-payment-form').submit();
     }
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.history.js" %}></script>

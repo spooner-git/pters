@@ -35,6 +35,9 @@ urlpatterns = [
 
     # 정기 결제 재시작 페이지
     url(r'^restart_period_billing/$', views.restart_period_billing_logic, name='restart_period_billing'),
+    # 정기 결제 재시작 페이지
+    url(r'^clear_pause_period_billing/$', views.clear_pause_period_billing_logic,
+        name='clear_pause_period_billing'),
 
 
 
