@@ -262,6 +262,7 @@ def func_add_billing_logic(custom_data, payment_result):
     date = None
     customer_uid = None
     payment_info = None
+    today = datetime.date.today()
     if error is None:
         try:
             customer_uid = custom_data['customer_uid']
@@ -292,8 +293,9 @@ def func_add_billing_logic(custom_data, payment_result):
         date = int(start_date.strftime('%d'))
 
     if error is None:
-        error = func_check_payment_price_info(custom_data['merchandise_type_cd'], custom_data['payment_type_cd'],
-                                              payment_result['amount'])
+        if today == start_date:
+            error = func_check_payment_price_info(custom_data['merchandise_type_cd'], custom_data['payment_type_cd'],
+                                                  payment_result['amount'])
 
     if error is None:
         end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, 1, date)
