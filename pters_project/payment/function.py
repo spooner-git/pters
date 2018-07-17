@@ -147,7 +147,7 @@ def func_resend_payment_info(customer_uid, merchant_uid, price):
 def func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price):
     error = None
     product_price_info = None
-    logger.info('price::'+input_price)
+    logger.info('price::'+str(input_price))
     if error is None:
         try:
             product_price_info = ProductPriceTb.objects.get(product_tb__merchandise_type_cd=merchandise_type_cd,
