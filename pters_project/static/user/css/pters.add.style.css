@@ -513,17 +513,16 @@ ul a{
 	font-size: 11px;
 	text-align: center;
 	width: 100%;
+	table-layout: fixed;
 }
 
 .plan_indicators{
-	position: absolute;
-	height: 23px;
+
 }
 
 .timegraph_plans_pink{
 	height: 8px;
 	position: absolute;
-	bottom: 0;
 	background: #fe4e65;
 	z-index: 1;
 	opacity: 0.8;
@@ -533,7 +532,6 @@ ul a{
 .timegraph_plans_grey{
 	height: 8px;
 	position: absolute;
-	bottom: 0;
 	background: #cccccc;
 	z-index: 1;
 	opacity: 0.8;
@@ -549,8 +547,13 @@ ul a{
 	/*background: #282828;*/
 	border-left : 0.5px solid #f4f4f4;
 }
+
+.colspan{
+	display: inline-table;
+}
+
 .tdgraph_30{
-	width : 2% !important;
+	display: inline-table;
 	height: 8px;
 	background: #ffffff;
 	border-left : 0.5px solid #f4f4f4;
