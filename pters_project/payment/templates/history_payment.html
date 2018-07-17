@@ -70,7 +70,7 @@
                     </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.end_date }}</span> </p>
+                        <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>
                     </div>
                 </div>
             {% endfor %}
@@ -126,26 +126,26 @@
                     <div>상태</div>
                     <div>사유</div>
                 </div>
-            {% for current_payment_info in stop_period_payment_data %}
+            {% for stop_payment_info in stop_period_payment_data %}
                 <div class="monthly_pay_stop_table_content">
                     <div>{{ forloop.counter }}</div>
                     <div>
-                        <p>{{ current_payment_info.name }}</p>
+                        <p>{{ stop_payment_info.name }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.start_date }} 결제</p>
+                        <p>{{ stop_payment_info.start_date }} 결제</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.end_date }}</p>
+                        <p>{{ stop_payment_info.end_date }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.end_date }}</p>
+                        <p>{{ stop_payment_info.end_date }}</p>
                     </div>
                     <div>
-                        <p>{{ current_payment_info.status_name }}</p>
+                        <p>{{ stop_payment_info.status_name }}</p>
                     </div>
-                    <div data-customer_uid="{{ current_payment_info.customer_uid }}" onclick="test('{{ current_payment_info.customer_uid }}');">
-                        <p> {{ current_payment_info.fail_reason }}</p>
+                    <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">
+                        <p> {{ stop_payment_info.fail_reason }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -207,7 +207,7 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>변경</span></div>
+                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.billing_info.customer_uid }}"><span>변경</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -240,10 +240,10 @@
                     </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.end_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.billing_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>이용권해지</span></div>
+                        <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.billing_info.customer_uid }}"><span>이용권해지</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -317,10 +317,10 @@
                     </div>
                     <div>
                         <p>{{ cancel_period_payment_data.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.end_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.customer_uid }}"><span>해지 취소</span></div>
+                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"><span>해지 취소</span></div>
                     </div>
                 </div>
             {% endfor %}

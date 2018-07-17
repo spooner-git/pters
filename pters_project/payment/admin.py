@@ -13,5 +13,5 @@ class PaymentInfoTbAdmin(admin.ModelAdmin):
 
 @admin.register(BillingInfoTb)
 class BillingInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('billing_info_id', 'member', 'payment_type_cd', 'customer_uid', 'payment_date',
-                    'reg_dt', 'mod_dt', 'use')
+    list_display = ('billing_info_id', 'member', 'payment_type_cd', 'customer_uid', 'payment_reg_date',
+                    'next_payment_date', 'reg_dt', 'mod_dt', 'use')
