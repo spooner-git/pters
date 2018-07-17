@@ -907,8 +907,8 @@ $(document).ready(function(){
     todayFinderArrow();
     ajaxClassTime();
 
-    draw_time_graph(30,'');
-    draw_time_graph(30,'mini');
+    //draw_time_graph(30,'');
+    //draw_time_graph(30,'mini');
 
 
 
@@ -1629,6 +1629,7 @@ $(document).ready(function(){
         }
     }
 
+    /*
     function draw_time_graph(option, type){  //type = '' and mini
 
         var targetHTML =  '';
@@ -1637,28 +1638,35 @@ $(document).ready(function(){
             targetHTML =  $('#timeGraph.ptaddbox_mini table');
             types = "_mini"
         }else{
-            targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table');
+            targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph .timegraphtext');
             types = ''
         }
+
+        var tablewidth = $('.timegraphtext').width();
+        var tdwidth = (tablewidth/(Options.workEndTime-Options.workStartTime)*2)-1
+        var tdwidth_ = (tablewidth/(Options.workEndTime-Options.workStartTime)*4)-2.5
+
+        console.log('tablewidth',tablewidth)
 
         var tr1 = [];
         var tr2 = [];
         var i=Options.workStartTime;
         if(option == "30"){
             for(i; i<Options.workEndTime; i++){
-                tr1[i] = '<td colspan="2">'+(i)+'</td>';
-                tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>';
+                tr1[i] = '<div colspan="2" style="width:'+tdwidth_+'px" class="colspan">'+(i)+'</div>';
+                tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
             }
         }else if(option == "60"){
             for(i; i<Options.workEndTime; i++){
-                tr1[i] = '<td>'+(i)+'</td>';
-                tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>';
+                tr1[i] = '<div>'+(i)+'</div>';
+                tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></div>';
             }
         }
-        var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr class="timegraph_display">'+tr2.join('')+'</tbody>';
+        var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('')+'</div>';
         targetHTML.html(tbody);
     }
-
+    */
+    
     function todayFinderArrow(){
         var currentMM = String(currentPageMonth);
         var currentDD = String(currentDate);

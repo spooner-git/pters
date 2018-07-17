@@ -513,17 +513,32 @@ ul a{
 	font-size: 11px;
 	text-align: center;
 	width: 100%;
+	table-layout: fixed;
 }
 
 .plan_indicators{
+
+}
+
+.selectedplan_indi{
+	height: 8px;
 	position: absolute;
-	height: 23px;
+	z-index: 1;
+	opacity: 0.8;
+	border-left: 0.5px solid #ffffff;
+
+	background: #fe4e65;
+	-webkit-animation-name:blink;
+	-webkit-animation-duration:1s;
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+
 }
 
 .timegraph_plans_pink{
 	height: 8px;
 	position: absolute;
-	bottom: 0;
 	background: #fe4e65;
 	z-index: 1;
 	opacity: 0.8;
@@ -533,7 +548,6 @@ ul a{
 .timegraph_plans_grey{
 	height: 8px;
 	position: absolute;
-	bottom: 0;
 	background: #cccccc;
 	z-index: 1;
 	opacity: 0.8;
@@ -542,15 +556,20 @@ ul a{
 
 
 .tdgraph_60{
-	width : 4.15% !important;
+	display: inline-block;
 	height: 8px;
 	/*background: #cacaca;*/
 	background: #ffffff;
 	/*background: #282828;*/
 	border-left : 0.5px solid #f4f4f4;
 }
+
+.colspan{
+	display: inline-block;
+}
+
 .tdgraph_30{
-	width : 2% !important;
+	display: inline-table;
 	height: 8px;
 	background: #ffffff;
 	border-left : 0.5px solid #f4f4f4;
