@@ -1461,7 +1461,7 @@ $(document).ready(function(){
             afternoon = '<span class="ENtext">PM</span>';
         }
 
-        for(var i=start; i<=end; i++){
+        for(var i=start; i<end; i++){
             if(i<12 && i == start){
                 timelist.push('<div class="hour" id="hour'+i+'"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
             }else if(i==12){
