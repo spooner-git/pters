@@ -1655,7 +1655,7 @@ $(document).ready(function(){
                 tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>';
             }
         }
-        var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>';
+        var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr class="timegraph_display">'+tr2.join('')+'</tbody>';
         targetHTML.html(tbody);
     }
 

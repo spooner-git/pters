@@ -506,11 +506,40 @@ ul a{
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 }
 
+#timeGraph{
+	position: relative;
+}
 .timegraphtext{
 	font-size: 11px;
 	text-align: center;
 	width: 100%;
 }
+
+.plan_indicators{
+	position: absolute;
+	height: 23px;
+}
+
+.timegraph_plans_pink{
+	height: 8px;
+	position: absolute;
+	bottom: 0;
+	background: #fe4e65;
+	z-index: 1;
+	opacity: 0.8;
+	border-left: 0.5px solid #ffffff;
+}
+
+.timegraph_plans_grey{
+	height: 8px;
+	position: absolute;
+	bottom: 0;
+	background: #cccccc;
+	z-index: 1;
+	opacity: 0.8;
+	border-left: 0.5px solid #ffffff;
+}
+
 
 .tdgraph_60{
 	width : 4.15% !important;
@@ -811,7 +840,7 @@ button._info_baseedit_img{
 	display: block;
 	padding-left: 5%;
 	padding-right: 8%;
-	height: 25px;
+	height: 20px;
 	text-align: right;
 }
 	.ptersCheckbox_wrapper p{
@@ -821,6 +850,10 @@ button._info_baseedit_img{
 		font-size: 13px;
 		color: #444444;
 	}
+
+#repeatStartTime{
+	margin-top: 0;
+}
 
 .ptersCheckbox{
 	position: relative;
@@ -862,7 +895,7 @@ button._info_baseedit_img{
 		top: 2px;
 	}
 
-	.add_time_unit{
+	.add_time_unit, .repeatadd_time_unit{
 		display: inline-block;
 	}
 

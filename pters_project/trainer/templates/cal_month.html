@@ -291,8 +291,16 @@
 
             <div id="timeGraph" class="ptaddbox _NORMAL_ADD_timegraph" style="display: none;">
                 <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;"><span class="KRtext"> 등록 가능 시간 </span><span class="JPtext"> 登録可能時間</span><span class="ENtext">Available Time</span><div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
+                <div class="plan_indicators"></div>
                 <table class="timegraphtext">
                 </table>
+            </div>
+
+            <div class="ptersCheckbox_wrapper">
+                <div class="ptersCheckbox_sm add_time_unit">
+                    <div></div>
+                </div>
+                <p>5분단위 설정</p>
             </div>
 
             <div id="classStartTime" class="ptaddbox _NORMAL_ADD">
@@ -400,13 +408,20 @@
             </div>
 
             <div id="dateSelector_repeat_start" class="ptaddbox _REPEAT_ADD">
-                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작</div>
+                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 시작일</div>
                 <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_start" placeholder="-" readonly></p>
             </div>
 
             <div id="dateSelector_repeat_end" class="ptaddbox _REPEAT_ADD">
-                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료</div>
+                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> 반복 종료일</div>
                 <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>
+            </div>
+
+            <div class="ptersCheckbox_wrapper">
+                <div class="ptersCheckbox_sm repeatadd_time_unit">
+                    <div></div>
+                </div>
+                <p>5분단위 설정</p>
             </div>
 
             <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
