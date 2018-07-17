@@ -297,7 +297,7 @@ def billing_check_logic(request):
 
             if error is None:
                 if custom_data is not None:
-                    if today == start_date:
+                    if today == start_date or payment_type_cd == 'SINGLE':
                         payment_user_info_result = func_add_billing_logic(custom_data, payment_result)
                     else:
                         payment_user_info_result = func_add_empty_billing_logic(custom_data, payment_result)
@@ -763,16 +763,19 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         cancel_period_payment_data = []
         stop_period_payment_data = []
         current_billing_info = []
+        today = datetime.date.today()
         for product_info in product_list:
             try:
                 payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             merchandise_type_cd=product_info.merchandise_type_cd,
+                                                            start_date__lte=today, end_date__gte=today,
                                                             use=USE).latest('end_date')
             except ObjectDoesNotExist:
                 payment_info = None
             try:
                 period_payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                                    merchandise_type_cd=product_info.merchandise_type_cd,
+                                                                   start_date__lte=today, end_date__gte=today,
                                                                    payment_type_cd='PERIOD').latest('end_date')
             except ObjectDoesNotExist:
                 period_payment_info = None
@@ -803,20 +806,20 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 if payment_info.fail_reason is None:
                     payment_info.fail_reason = '고객 요청'
 
-                if billing_info is None:
-                    payment_info.next_payment_date = payment_info.end_date
-                    payment_info.billing_state_name = '종료 예정일'
-                else:
-
-                    payment_info.billing_info = billing_info
-                    payment_info.next_payment_date = billing_info.next_payment_date
-                    payment_info.billing_state_cd = billing_info.state_cd
-                    if billing_info.state_cd == 'IP':
-                        payment_info.billing_state_name = '결제 예정일'
-                    elif billing_info.state_cd == 'ST':
-                        payment_info.billing_state_name = '종료 예정일'
-                    else:
-                        payment_info.billing_state_name = '종료 예정일'
+                # if billing_info is None:
+                payment_info.next_payment_date = payment_info.end_date
+                payment_info.billing_state_name = '종료 예정일'
+                # else:
+                #
+                #     payment_info.billing_info = billing_info
+                #     payment_info.next_payment_date = billing_info.next_payment_date
+                #     payment_info.billing_state_cd = billing_info.state_cd
+                #     if billing_info.state_cd == 'IP':
+                #         payment_info.billing_state_name = '결제 예정일'
+                #     elif billing_info.state_cd == 'ST':
+                #         payment_info.billing_state_name = '종료 예정일'
+                #     else:
+                #         payment_info.billing_state_name = '종료 예정일'
                 current_payment_data.append(payment_info)
 
             if period_payment_info is not None:
