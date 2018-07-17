@@ -573,6 +573,9 @@ function time_h_m_to_hh_mm(time){
     if(hour < 10){
         var hour = '0' + Number(time.split(':')[0]);
     }
+    if(min < 10){
+        var min = '0' + time.split(':')[1];
+    }
     return hour + ':' + min;
 }
 
