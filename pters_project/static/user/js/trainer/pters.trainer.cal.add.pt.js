@@ -43,7 +43,7 @@ $(document).ready(function(){
                 var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
                 if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
                     //$("#id_training_date").val($("#datepicker").val()).submit();
-                    $("#id_training_date").val(selector_datepicker.val());
+                    $("#id_training_date, #id_training_end_date").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
                         //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
@@ -62,7 +62,7 @@ $(document).ready(function(){
                 }
                 else if(addTypeSelect =="offadd"){
                     //$("#id_training_date_off").val($("#datepicker").val()).submit();
-                    $("#id_training_date_off").val(selector_datepicker.val());
+                    $("#id_training_date_off, #id_training_end_date_off").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
                         //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
@@ -1407,7 +1407,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#memberName').css('display','block');
         $('#uptext2').text('레슨 일정 등록');
-        $('#id_training_date').val(selector_datepicker.val());
+        $('#id_training_date, #id_training_end_date').val(selector_datepicker.val());
         $('#id_repeat_start_date').val(selector_datepicker_repeat_start.val());
         if(bodywidth > 600){
             $('#addpopup_pc_label_pt').show();
@@ -1417,7 +1417,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }else if(option == "offadd"){
         $('#memberName, #remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#uptext2').text('OFF 일정 등록');
-        $('#id_training_date_off').val(selector_datepicker.val());
+        $('#id_training_date_off, #id_training_end_date_off').val(selector_datepicker.val());
         $('#id_repeat_start_date_off').val(selector_datepicker_repeat_start.val());
         if(bodywidth > 600){
             $('#addpopup_pc_label_off').show();
