@@ -114,9 +114,9 @@ $(document).ready(function(){
         var time = $(this).attr('data-trainingtime').split(':');
         var selectedTime = time[0]+':'+time[1];
         //durTimeSet(time[0],"class");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
+        $("#repeatdurationsSelected button").removeClass("dropdown_selected");
+        $("#repeatdurationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#repeatdurationsSelected .btn:first-child").val("");
         check_dropdown_selected_addplan();
 
         if($('.repeatadd_time_unit').hasClass('checked')){
@@ -124,7 +124,32 @@ $(document).ready(function(){
         }else{
             repeatDurationTimeSet(selectedTime, Options.classDur);
         };
+
+        //진행시간 자동으로 최소 단위 시간으로 Default 셋팅
+        var selector_durationsSelected_button = $('#repeatdurationsSelected button');
+        var selector_durations_li_first_child = $('#repeatdurations li:first-child a');
+        $("#repeatdurationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
+        selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
+        if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
+            $('#id_repeat_end_time').val(selector_durations_li_first_child.attr('data-endtime') + ':00.000000');
+            //$("#id_repeat_dur").val(selector_durationsSelected_button.val());
+
+        }else if(addTypeSelect == "repeatoffadd"){
+            $('#id_repeat_end_time_off').val(selector_durations_li_first_child.attr('data-endtime') + ':00.000000')
+            //$("#id_repeat_dur_off").val(selector_durationsSelected_button.val());
+        }
+        check_dropdown_selected_addplan();
     })
+
+    $(document).on('click',"#repeatdurations li a",function(){
+        $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
+        if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
+            $('#id_repeat_end_time').val($(this).attr('data-endtime') + ':00.000000');
+        }else if(addTypeSelect == "repeatoffadd"){
+            $('#id_repeat_end_time_off').val($(this).attr('data-endtime') + ':00.000000')
+        }
+        check_dropdown_selected_addplan();
+    }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
     $('.repeatadd_time_unit').click(function(){
@@ -178,7 +203,7 @@ $(document).ready(function(){
         while(add_time(selectedTime,'00:0'+dur) != add_time(end+':00','00:01')){
             var durTimes = add_time(selectedTime,'00:0'+dur);
             if(durTimes.split(':')[1]%Timeunit == 0){
-                durTimeList.push('<li><a data-dur="'+dur/Options.classDur+'">'+duration_number_to_hangul_minute(dur)+' (~'+durTimes+')</a></li>')
+                durTimeList.push('<li><a data-dur="'+dur/Options.classDur+'" data-endtime="'+durTimes+'" >'+duration_number_to_hangul_minute(dur)+' (~'+durTimes+')</a></li>')
             };
             dur++;
         };

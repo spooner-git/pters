@@ -569,12 +569,12 @@ function time_format_to_hangul2(timedata){
 
 function time_h_m_to_hh_mm(time){
     var hour = Number(time.split(':')[0]);
-    var min = time.split(':')[1];
+    var min = Number(time.split(':')[1]);
     if(hour < 10){
         var hour = '0' + Number(time.split(':')[0]);
     }
     if(min < 10){
-        var min = '0' + time.split(':')[1];
+        var min = '0' + Number(time.split(':')[1]);
     }
     return hour + ':' + min;
 }
