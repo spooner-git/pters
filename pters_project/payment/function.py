@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from configs.const import USE, UN_USE
-from payment.models import PaymentInfoTb, ProductPriceTb, BillingInfoTb, FunctionAuthTb
+from payment.models import PaymentInfoTb, ProductPriceTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -347,21 +347,21 @@ def func_add_billing_logic(custom_data, payment_result):
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
-                merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
-                for merchandise_type_cd_info in merchandise_type_cd_list:
-                    try:
-                        function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
-                                                                        function_auth_type_cd=merchandise_type_cd_info,
-                                                                        use=USE)
-                    except ObjectDoesNotExist:
-                        function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
-                                                            function_auth_type_cd=merchandise_type_cd_info,
-                                                            reg_dt=timezone.now(),
-                                                            mod_dt=timezone.now(),
-                                                            use=USE)
-                    function_auth_info.payment_type_cd = custom_data['payment_type_cd']
-                    function_auth_info.expired_date = end_date
-                    function_auth_info.save()
+                # merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
+                # for merchandise_type_cd_info in merchandise_type_cd_list:
+                #     try:
+                #         function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
+                #                                                         function_auth_type_cd=merchandise_type_cd_info,
+                #                                                         use=USE)
+                #     except ObjectDoesNotExist:
+                #         function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
+                #                                             function_auth_type_cd=merchandise_type_cd_info,
+                #                                             reg_dt=timezone.now(),
+                #                                             mod_dt=timezone.now(),
+                #                                             use=USE)
+                #     function_auth_info.payment_type_cd = custom_data['payment_type_cd']
+                #     function_auth_info.expired_date = end_date
+                #     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
@@ -451,21 +451,21 @@ def func_add_empty_billing_logic(custom_data, payment_result):
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
                                              mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
-                merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
-                for merchandise_type_cd_info in merchandise_type_cd_list:
-                    try:
-                        function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
-                                                                        function_auth_type_cd=merchandise_type_cd_info,
-                                                                        use=USE)
-                    except ObjectDoesNotExist:
-                        function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
-                                                            function_auth_type_cd=merchandise_type_cd_info,
-                                                            reg_dt=timezone.now(),
-                                                            use=USE)
-                    function_auth_info.payment_type_cd = custom_data['payment_type_cd']
-                    function_auth_info.expired_date = start_date
-                    function_auth_info.mod_dt = timezone.now()
-                    function_auth_info.save()
+                # merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
+                # for merchandise_type_cd_info in merchandise_type_cd_list:
+                #     try:
+                #         function_auth_info = FunctionAuthTb.objects.get(member_id=custom_data['user_id'],
+                #                                                         function_auth_type_cd=merchandise_type_cd_info,
+                #                                                         use=USE)
+                #     except ObjectDoesNotExist:
+                #         function_auth_info = FunctionAuthTb(member_id=custom_data['user_id'],
+                #                                             function_auth_type_cd=merchandise_type_cd_info,
+                #                                             reg_dt=timezone.now(),
+                #                                             use=USE)
+                #     function_auth_info.payment_type_cd = custom_data['payment_type_cd']
+                #     function_auth_info.expired_date = start_date
+                #     function_auth_info.mod_dt = timezone.now()
+                #     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
@@ -537,18 +537,18 @@ def func_update_billing_logic(payment_result):
             except ObjectDoesNotExist:
                 error = '정기 결제 정보를 불러오지 못했습니다.'
 
-    if error is None:
-        merchandise_type_cd_list = payment_info.merchandise_type_cd.split('/')
-        for merchandise_type_cd_info in merchandise_type_cd_list:
-            try:
-                function_auth_info = FunctionAuthTb.objects.get(member_id=payment_info.member_id,
-                                                                function_auth_type_cd=merchandise_type_cd_info,
-                                                                use=USE)
-                function_auth_info.expired_date = payment_info.end_date
-                function_auth_info.mod_dt = timezone.now()
-                function_auth_info.save()
-            except ObjectDoesNotExist:
-                error = '권한 정보를 불러오지 못했습니다.'
+    # if error is None:
+    #     merchandise_type_cd_list = payment_info.merchandise_type_cd.split('/')
+    #     for merchandise_type_cd_info in merchandise_type_cd_list:
+    #         try:
+    #             function_auth_info = FunctionAuthTb.objects.get(member_id=payment_info.member_id,
+    #                                                             function_auth_type_cd=merchandise_type_cd_info,
+    #                                                             use=USE)
+    #             function_auth_info.expired_date = payment_info.end_date
+    #             function_auth_info.mod_dt = timezone.now()
+    #             function_auth_info.save()
+    #         except ObjectDoesNotExist:
+    #             error = '권한 정보를 불러오지 못했습니다.'
 
     context['error'] = error
     return context
