@@ -34,6 +34,7 @@
 }
 
 .daycal_plan_window{
+	position: relative;
 	display: table-cell;
 	width: 85%;
 	height: 100%;
