@@ -390,6 +390,9 @@ $(document).ready(function(){
         var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
         var thisIDHour = $(this).attr('id').split('_')[3];
         var thisIDMin  = $(this).attr('id').split('_')[4];
+
+        console.log(thisID)
+        
         if(Options.classDur == 30){
             if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                 $('.blankSelected30').removeClass('blankSelected30');
@@ -443,8 +446,9 @@ $(document).ready(function(){
                 next30IDMin  = '00';
             }
             var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
-
+            console.log('여기는?')
             if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                console.log('여기 들어오나?')
                 $('.blankSelected').removeClass('blankSelected');
                 $(this).find('div').addClass('blankSelected');
 
