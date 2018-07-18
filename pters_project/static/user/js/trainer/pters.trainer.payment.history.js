@@ -21,7 +21,9 @@ $(document).ready(function(){
     ////////결제방법 변경 버튼
     $(document).on('click','.pay_method_changeButton',function(){
         var customer_uid = $(this).attr('data-customer_uid');
-        check_payment(customer_uid);
+        var payment_name = $(this).attr('data-payment_name');
+        var merchandise_type_cd = $(this).attr('data-merchandise_type_cd');
+        check_payment(name, customer_uid, merchandise_type_cd);
         // alert(payid);
         //To- Do
     })

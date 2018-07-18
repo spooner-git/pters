@@ -584,10 +584,8 @@ def check_update_period_billing_logic(request):
     json_loading_data = None
     context = {'error': None, 'start_date': None}
     error = None
-    merchandise_type_cd = None
-    payment_info = None
+    billing_info = None
     today = datetime.date.today()
-    billing_info = ''
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -596,27 +594,19 @@ def check_update_period_billing_logic(request):
         error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
 
     if error is None:
-        merchandise_type_cd = json_loading_data['merchandise_type_cd']
         customer_uid = json_loading_data['customer_uid']
 
     if error is None:
         try:
-            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd__contains=merchandise_type_cd,
-                                                        use=USE).latest('end_date')
+            billing_info = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                        customer_uid=customer_uid,
+                                                        use=USE)
         except ObjectDoesNotExist:
-            payment_info = None
-        # if len(payment_user_info) > 0:
-        #     payment_info = payment_user_info[0]
+            billing_info = None
 
     if error is None:
-        if payment_info is not None:
-            date = int(payment_info.start_date.strftime('%d'))
-            context['start_date'] = str(payment_info.start_date)
-            context['end_date'] = str(payment_info.end_date)
-            context['next_start_date'] = str(payment_info.end_date)
-            context['next_end_date'] = str(func_get_end_date(payment_info.payment_type_cd,
-                                                             payment_info.end_date, 1, date))
+        if billing_info is not None:
+            context['next_start_date'] = str(billing_info.next_payment_date)
         else:
             context['next_start_date'] = str(today)
 
@@ -625,7 +615,6 @@ def check_update_period_billing_logic(request):
         messages.error(request, error)
 
     context['error'] = error
-    context['billing_info'] = billing_info
     return render(request, 'ajax/payment_error_info.html', context)
 
 
