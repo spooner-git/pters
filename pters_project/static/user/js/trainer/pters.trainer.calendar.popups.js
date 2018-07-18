@@ -7,6 +7,32 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////일정 클릭 이벤트
+    $(document).on('mouseenter','div.classTime, div.offTime, div.groupTime',function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        var thisWidth = $(this).width();
+        var thisHeight = $(this).height();
+        var thisZindex = $(this).css('z-index');
+
+        var zoomV = 1.05;
+        var zoomH = 1.05;
+        if(thisHeight < 35){
+            var zoomV = zoomV * (35/thisHeight)
+        }
+
+        var thisOffsetleft = $(this).position().left;
+        var offSet = thisOffsetleft - (thisWidth*zoomH - thisWidth)/2
+
+        $(this).css({'height':thisHeight*zoomV, 'width':thisWidth*zoomH, 'z-index':150, 'border':'2px solid #fe4e65', 'left':offSet});
+
+        $(document).on('mouseleave','div.classTime, div.offTime, div.groupTime',function(e){
+            $(this).css({'height':thisHeight, 'width':thisWidth, 'z-index':thisZindex, 'border':'0', 'left':thisOffsetleft});
+        
+        })
+    })
+
+
+
     $(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
         shade_index(100);
