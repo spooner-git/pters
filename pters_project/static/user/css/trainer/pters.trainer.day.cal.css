@@ -1,3 +1,6 @@
+#calendar{
+	top: 50px;
+}
 .timeindex_day .hour{
 	text-align: center;
 	width: 100%;
@@ -40,6 +43,24 @@
 	height: 100%;
 	background-image: url('/static/user/res/calendar_hour_day2.png');
 	background-size: 100% 150px;
+}
+
+.classTime, .offTime, .groupTime{
+	opacity: 0.8;
+	padding:5px 0 0 12px;
+}
+.memberName{
+	font-size: 20px;
+	font-weight: 500;
+}
+.memberTime{
+	display: block;
+	color: black;
+	font-size: 17px;
+}
+.groupnametag{
+	display: inline;
+	margin-right: 5px;
 }
 
 @media(min-width: 400px){
