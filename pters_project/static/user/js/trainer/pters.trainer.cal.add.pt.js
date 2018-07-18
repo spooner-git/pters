@@ -1098,12 +1098,8 @@ $(document).ready(function(){
                                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                                     }
                                 }
-                                if($('._calweek').length == 1){
-                                    super_ajaxClassTime();
-                                }
-                                else if($('._calmonth').length == 1){
-                                    super_ajaxClassTime();
-                                }
+                                
+                                super_ajaxClassTime();
                                 $('#members_mobile, #members_pc').html('');
                                 get_current_member_list();
                                 get_current_group_list();

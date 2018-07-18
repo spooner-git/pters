@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+    /*
     $('#float_inner1').click(function(){ //PT추가버튼
         scrollToDom($('body'))
         addTypeSelect = "ptadd"
@@ -42,101 +43,9 @@ $(document).ready(function(){
             $('#pcaddpopup_off').show()
         }
     })
-
-    $('#upbutton-x').click(function(){
-        $('#calendar').css('height','90%')
-        $('#shade3').fadeOut();
-        $('#shade').hide();
-        $('#page-addplan').fadeOut('fast','swing');
-        $('#float_btn_wrap').fadeIn();
-        $('#float_btn').removeClass('rotate_btn');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
-
-        $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-        $("#membersSelected .btn:first-child").val("");
-        $("#countsSelected").text("")
-        $("#dateSelector p").removeClass("dropdown_selected");
-        $('#timeGraph').hide();
-        $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected .btn:first-child").val("");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes").empty();
-        $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
-    })
-    //모바일 스타일
-
-    //PC 스타일
-    $('.cancelBtn').click(function(){
-        $('#shade').hide();
-        $('#page-addplan').fadeOut('fast','swing');
-        $('#float_btn_wrap').fadeIn();
-        $('#float_btn').removeClass('rotate_btn');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
-        $('.submitBtn').removeClass('submitBtnActivated')
-
-        $("#membersSelected button").removeClass("dropdown_selected");
-        $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-        $("#membersSelected .btn:first-child").val("");
-        $("#countsSelected").text("")
-        $("#dateSelector p").removeClass("dropdown_selected");
-        $('#timeGraph').hide();
-        $("#starttimesSelected button").removeClass("dropdown_selected");
-        $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#starttimesSelected .btn:first-child").val("");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
-        $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-        $("#starttimes").empty();
-        $("#durations").empty();
-        $('.tdgraph').removeClass('graphindicator')
-    })
-    //PC 스타일
-
-
+    */
 
     var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
-
-
-        //플로팅 버튼 Start
-    $('#float_btn').click(function(){
-        //addPtMemberListSet();
-        $("#float_btn").animate({opacity:'1'})
-        if($('#shade').css('display')=='none'){
-            $('#shade').show();
-            $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
-            $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
-            $('#float_btn').addClass('rotate_btn');
-        }else{
-            $('#shade').hide();
-            $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-            $('#float_btn').removeClass('rotate_btn');
-        }
-    });
-    //플로팅 버튼 End
-
-    //플로팅 버튼 스크롤시 숨기기 Start
-    var ts;
-    $("body").bind("touchstart",function(e){
-        ts = e.originalEvent.touches[0].clientY;
-    });
-    $("body").bind("touchend",function(e){
-        var te = e.originalEvent.changedTouches[0].clientY;
-        if(ts>te+5){
-            $("#float_btn").animate({opacity:'0'})
-        }else if(ts<te-5){
-            $("#float_btn").animate({opacity:'1'})
-        }
-    });
-    //플로팅 버튼 스크롤시 숨기기 End
 
     var date = new Date();
     var currentYear = date.getFullYear(); //현재 년도
