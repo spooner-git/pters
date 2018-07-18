@@ -4,8 +4,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////일정 클릭 이벤트
     $(document).on('mouseenter','div.classTime, div.offTime, div.groupTime',function(e){
         e.stopPropagation();
@@ -21,13 +19,24 @@
         }
 
         var thisOffsetleft = $(this).position().left;
-        var offSet = thisOffsetleft - (thisWidth*zoomH - thisWidth)/2
+        var offSet = thisOffsetleft - (thisWidth*zoomH - thisWidth)/2;
 
         $(this).css({'height':thisHeight*zoomV, 'width':thisWidth*zoomH, 'z-index':150, 'border':'2px solid #fe4e65', 'left':offSet});
 
+        var $memberName = $(this).find('.memberName');
+        var $memberTime = $(this).find('.memberTime');
+        if($memberName.hasClass('hideelement')){
+            $memberName.removeClass('hideelement').addClass('_hided');
+            $memberTime.removeClass('hideelement').addClass('_hided');
+        }
+
+
         $(document).on('mouseleave','div.classTime, div.offTime, div.groupTime',function(e){
-            $(this).css({'height':thisHeight, 'width':thisWidth, 'z-index':thisZindex, 'border':'0', 'left':thisOffsetleft});
-        
+            $(this).css({'height':thisHeight+2, 'width':'98.5%', 'z-index':thisZindex, 'border':'1px solid #e4e4e4', 'left':thisOffsetleft});
+            if($memberName.hasClass('_hided')){
+                $memberName.removeClass('_hided').addClass('hideelement');
+                $memberTime.removeClass('_hided').addClass('hideelement');
+            }
         })
     })
 
