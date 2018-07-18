@@ -23,7 +23,7 @@ $(document).ready(function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
         var merchandise_type_cd = $(this).attr('data-merchandise_type_cd');
-        check_payment(name, customer_uid, merchandise_type_cd);
+        check_payment(payment_name, customer_uid, merchandise_type_cd);
         // alert(payid);
         //To- Do
     })
