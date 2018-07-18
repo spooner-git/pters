@@ -2688,45 +2688,14 @@ function scheduleTime_Mobile(option, jsondata){ // 그룹 수업정보를 DB로 
             memberName  = planMemberName[i];
         }
 
-
-        if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
-            if(planEndHour-planHour == 0){
-                planDura = "0.5";
-            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
-                planDura = String((planEndHour-planHour-1))+'.5';
-            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
-                planDura = String((planEndHour-planHour))+'.5';
-            }
-        }else{
-            planDura = planEndHour - planHour;
+        if(compare_time(add_time(planHour+':'+planMinute, '00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin, '00:00'), add_time(Options.workStartTime+':00','00:00')) ){
+            planHour = Options.workStartTime;
+            planMinute = '00';
         }
 
-        //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-        if(planEDate == planDate+1 && planEndHour==planHour){
-            planDura = 24;
-        }else if(planEDate == planDate+1 && planEndHour == 0){
-            planDura = 24-planHour;
-        }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
-            planDura = 24-planHour;
-        }
+        var planDuraMin = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], add_time(planHour+':'+planMinute,'00:00'), planEndDate[i].split(' ')[0], add_time(planEndHour+':'+planEndMin,'00:00') )
+        var planDura = planDuraMin/60;
 
-        if(planMinute == '00'){
-            if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
-
-                planDura = planDura - (Options.workStartTime - planHour); // 2 - (10 - 8)
-                planHour = Options.workStartTime;
-                //2018_4_22_8_30_2_OFF_10_30
-            }
-        }else if(planMinute == '30'){
-            //(10>8)  (2>=10-8)
-            if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
-
-                planDura = planDura - (Options.workStartTime - planHour)+0.5; // 2 - (10 - 8)
-                planHour = Options.workStartTime;
-                planMinute = '00';
-                //2018_4_22_8_30_2_OFF_10_30
-            }
-        }
 
 
         if(planHour < 12){
@@ -2848,25 +2817,7 @@ function scheduleTime_Mobile(option, jsondata){ // 그룹 수업정보를 DB로 
     }
 }
 
-/*
- function beforeSend(use, callback){
- if(use == "callback"){
- callback()
- }
- $('html').css("cursor","wait");
- $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
- $('.ajaxloadingPC').show();
- }
 
- function completeSend(use, callback){
- if(use == "callback"){
- callback()
- }
- $('html').css("cursor","auto");
- $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
- $('.ajaxloadingPC').hide();
- }
- */
 
 function closeAddPopup(){
     //$('body').css('overflow-y','overlay');
