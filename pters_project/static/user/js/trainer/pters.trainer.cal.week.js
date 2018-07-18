@@ -187,8 +187,18 @@ $(document).ready(function(){
             myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
             if(bodywidth > 600){
                 calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기
+                if($('#hidetoggle').attr('data-type') == '1'){
+                    $('.td00, .td30').css({'background':'unset',
+                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                        'background-size':'60px '+$('.td00').height()+'px'})
+                }
             }else if(bodywidth<=600){
                 calTable_Set_Mobile(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기
+                if($('#hidetoggle').attr('data-type') == '1'){
+                    $('.td00, .td30').css({'background':'unset',
+                                          'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                          'background-size':'60px '+ ($('.hour').height()+1)+'px'})
+                }
             }
             
             ajaxClassTime();
@@ -205,8 +215,18 @@ $(document).ready(function(){
             myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
             if(bodywidth > 600){
                 calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
+                if($('#hidetoggle').attr('data-type') == '1'){
+                    $('.td00, .td30').css({'background':'unset',
+                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                        'background-size':'60px '+$('.td00').height()+'px'})
+                }
             }else if(bodywidth<=600){
                 calTable_Set_Mobile(first-1,firstYY,firstMM,firstDD,-7,0);
+                if($('#hidetoggle').attr('data-type') == '1'){
+                    $('.td00, .td30').css({'background':'unset',
+                                          'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                          'background-size':'60px '+ ($('.hour').height()+1)+'px'})
+                }
             }
             
             ajaxClassTime();
