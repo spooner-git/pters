@@ -302,7 +302,6 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
     //주간달력 상단표시줄 (요일, 날짜, Today표식)
 
     //weekTable(Index)
-
     var W = Week;
     var slideIndex = $('#slide'+Index);
     var currentDates = Number(Dates)+W;
@@ -331,8 +330,8 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
 
     var tableHTML = []
     for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-        var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row">';
-        var textToAppend_ = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_30M'+'" class="time-row time-row30">';
+        var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row" style="height:'+(30*calendarSize)+'px;">';
+        var textToAppend_ = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_30M'+'" class="time-row time-row30" style="height:'+(30*calendarSize)+'px;">';
         var divToAppend = $(textToAppend);
         var divToAppend_ = $(textToAppend_);
         var td1_1 = '';
@@ -550,7 +549,7 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
     slideIndex.html(tableHTML.join(''))
     slideIndex.append(fakeElementForBlankPage);
     weekNum_Set(Index);
-    time_index_set();
+    time_index_set(calendarSize);
 } //calTable_Set
 
 function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
@@ -750,11 +749,11 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
     slideIndex.html(tableHTML.join(''))
     //slideIndex.append(fakeElementForBlankPage);
     //weekNum_Set(Index);
-    time_index_set();
+    time_index_set(calendarSize);
     $('.swiper-slide').css('height',$('div.timeindex').height())
 } //calTable_Set
 
-function time_index_set(){
+function time_index_set(size){
     var start = Options.workStartTime;
     var end = Options.workEndTime;
     var timelist = [];
@@ -769,13 +768,14 @@ function time_index_set(){
         afternoon = '<span class="ENtext">PM</span>';
     }
 
+
     for(var i=start; i<end; i++){
         if(i<12 && i == start){
-            timelist.push('<div class="hour" id="hour'+i+'"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else if(i==12){
-            timelist.push('<div class="hour" id="hour'+i+'"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else{
-            timelist.push('<div class="hour" id="hour'+i+'"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }
     }
     $('div.timeindex').html(timelist.join(''));
@@ -1120,14 +1120,14 @@ function set_schedule_time(jsondata){
     $('._on').removeClass('_on');
     initialJSON = jsondata;
     if(bodywidth > 600){
-        scheduleTime('class', jsondata);
-        scheduleTime('off', jsondata);
-        scheduleTime('group', jsondata);
+        scheduleTime('class', jsondata, calendarSize);
+        scheduleTime('off', jsondata, calendarSize);
+        scheduleTime('group', jsondata, calendarSize);
         fake_show();
     }else if(bodywidth <= 600){
-        scheduleTime_Mobile('class', jsondata);
-        scheduleTime_Mobile('off', jsondata);
-        scheduleTime_Mobile('group', jsondata);
+        scheduleTime_Mobile('class', jsondata, calendarSize);
+        scheduleTime_Mobile('off', jsondata, calendarSize);
+        scheduleTime_Mobile('group', jsondata, calendarSize);
         //fake_show();
     }
 }

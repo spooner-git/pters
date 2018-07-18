@@ -325,8 +325,20 @@ img,a,div,span,p{
 */
 
 #hidetoggle{
-	display: none;
+	position: fixed;
+	background:transparent;
+	bottom: 20px;
+	z-index: 100;
+	color: #444444;
+	font-size: 12px;
+	cursor: pointer;
 }
+	#hidetoggle img{
+		margin-right: 7px;
+		margin-left: 50px;
+		margin-bottom: 4px;
+		width: 10px;
+	}
 
 #gapbox{
 	width: 100%;
@@ -432,6 +444,8 @@ img,a,div,span,p{
 	background: #fbf3bd;
 	z-index: 100;
 	cursor: pointer;
+
+	border: 1px solid #e4e4e4;
 }
 
 .classTime_checked{
@@ -542,10 +556,10 @@ img,a,div,span,p{
 	color: blue;
 }
 .inlineelement{
-	display: inline;
+	display: inline !important;
 }
 .hideelement{
-	display: none;
+	display: none !important;
 }
 
 .hourType{
@@ -637,6 +651,7 @@ img,a,div,span,p{
 		font-size: 12px;
 		font-weight: 300;
 		z-index: 10;
+		bottom: unset;
 		cursor: pointer;
 	}
 	#hidetoggle img{

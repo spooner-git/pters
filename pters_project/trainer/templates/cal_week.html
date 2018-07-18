@@ -1258,6 +1258,7 @@
             onlyExternal: true
         });
 
+        var calendarSize = 1;
         if(bodywidth > 600){
             week_calendar(today_YY_MM_DD)
         }else if(bodywidth<=600){
@@ -1267,19 +1268,52 @@
 
         $('#hidetoggle').click(function(){
             if($(this).attr('data-type') == '0'){
-                $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1');
-                $(this).find('img').css('-webkit-transform','rotate(-90deg)');
-                $('#ymdText-pc').css({'margin-top':'17px'});
-                $('#week').css({'padding-top':'24px'});
-                $('#calendar').css('padding-top','19px');
-                $('#ymdText').css('display','none');
+                calendarSize = 3;
+                $('#hidetoggle span').text('일정 축소 보기');
+                if(bodywidth > 600){
+                    $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1');
+                    $(this).find('img').css('-webkit-transform','rotate(-90deg)');
+                    $('#ymdText-pc').css({'margin-top':'17px'});
+                    $('#week').css({'padding-top':'32px'});
+                    $('#calendar').css('padding-top','16px');
+                    $('#ymdText').css('display','none');
+                    week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'unset',
+                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                        'background-size':'60px '+$('.td00').height()+'px'})
+
+                }else if(bodywidth<=600){
+                    $(this).attr('data-type','1');
+                    $(this).find('img').css('-webkit-transform','rotate(-90deg)');
+                    week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'unset',
+                                          'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                          'background-size':'60px '+ ($('.hour').height()+1)+'px'})
+                }
+
             }else{
-                $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
-                $(this).find('img').css('-webkit-transform','rotate(90deg)');
-                $('#ymdText-pc').css({'margin-top':'100px'});
-                $('#week').css({'padding-top':'115px'});
-                $('#calendar').css('padding-top','110px');
-                $('#ymdText').css('display','block');
+                calendarSize = 1;
+                $('#hidetoggle span').text('일정 축소 보기');
+                if(bodywidth > 600){
+                    $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
+                    $(this).find('img').css('-webkit-transform','rotate(90deg)');
+                    $('#ymdText-pc').css({'margin-top':'100px'});
+                    $('#week').css({'padding-top':'115px'});
+                    $('#calendar').css('padding-top','99px');
+                    $('#ymdText').css('display','block');
+                    week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'#ffffff',
+                                       'background-image':'unset',
+                                        'background-size':'unset'})
+                }else if(bodywidth<=600){
+                    $(this).attr('data-type','0');
+                    $(this).find('img').css('-webkit-transform','rotate(90deg)');
+                    week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'#f7f7f7',
+                                       'background-image':'url("/static/user/res/calendar_hour.png")',
+                                        'background-size':'60px 60px'})
+                }
+                
             }
         });
 
