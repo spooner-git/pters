@@ -307,9 +307,9 @@ $(document).ready(function(){
         }
 
         var slideIndex = $('#slide'+Index);
-        var textToAppend = '<div id="'+i+'H_'+Year+'_'+Month+'_'+Day+'" class="time-style time-row"'+'>'
+        var textToAppend = '<div class="time-style time-row"'+'>'
         var slidegap = '<div class="slidegap_day"></div>'
-        var textToAppend2 = '<div id="'+Year+'_'+Month+'_'+Day+'_'+i+'H'+'" class="daycal_plan_window"></div>';
+        var textToAppend2 = '<div id="'+Year+'_'+Month+'_'+Day+'" class="daycal_plan_window"></div>';
         var sum = textToAppend+slidegap+textToAppend2 + '</div>'
         console.log(sum)
         slideIndex.html(sum);
@@ -346,33 +346,64 @@ $(document).ready(function(){
     }
 
 
-    function ajaxClassTime(){
+    function ajaxClassTime(use, callfunction){
+        var beforeSend_;
+        var completeSend_;
+        if(use == "callbefore"){
+            beforeSend_ = function(){beforeSend('callback', function(){callfunction();})};
+            completeSend_ = function(){completeSend()};
+        }else if(use == "callafter"){
+            beforeSend_ = function(){beforeSend()};
+            completeSend_ = function(){completeSend('callback', function(){callfunction();})};
+        }else{
+            beforeSend_ = function(){beforeSend()};
+            completeSend_ = function(){completeSend()};
+        }
+
+        //var $weekNum4 = $('#weekNum_4').attr('data-date');
+        //var today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2);
 
         $.ajax({
-            url: '/trainer/get_trainer_schedule',
+            url: '/trainer/get_trainer_schedule/',
+            type : 'POST',
+            data : {"date":today_form, "day":3},
             dataType : 'html',
 
             beforeSend:function(){
-                BeforeSend();
+                beforeSend_();
+                $('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','');
             },
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                
+                //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    set_schedule_time_day(jsondata);
+                }
+
+                completeSend_();
+
+                $('.ymdText-pc-add div').removeClass('disabled_button');
+                $('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)');
+                $('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)');
+
             },
 
             complete:function(){
-                completeSend();
+
             },
 
             error:function(){
-                console.log('server error')
+                console.log('server error');
             }
         })
-    };
+    }
 
 
-    function set_schedule_time(jsondata){
+    function set_schedule_time_day(jsondata){
         $('.classTime, .offTime, .groupTime').parent().html('<div></div>');
         $('._on').removeClass('_on');
         initialJSON = jsondata;
@@ -438,7 +469,6 @@ $(document).ready(function(){
                 planMemberNum = '';
                 planMemberDbid = '';
                 planCode = '';
-                console.log('scheduleTime("off")',jsondata);
                 break;
             case 'group':
 
@@ -461,9 +491,9 @@ $(document).ready(function(){
 
         //2018_4_22_8_30_2_OFF_10_30
 
-        var planheight = 60;
+        var planheight = 150;
         if($calendarWidth>=600){
-            planheight = 60;
+            planheight = 150;
         }
         var len = planScheduleIdArray.length;
         for(var i=0; i<len; i++){
@@ -507,8 +537,6 @@ $(document).ready(function(){
             }
 
 
-
-
             var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
             //var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
             var planStartArr = [planYear, planMonth, planDate, planHour, '00'];
@@ -537,11 +565,13 @@ $(document).ready(function(){
                 textcolor = "";
             }
 
+            //일정이 작아지면 안에 텍스트를 숨긴다
             if(Number(planDura*planheight-1) < 59){
                 hideornot = 'hideelement';
             }else{
                 hideornot = 'inlineelement';
             }
+            //일정이 작아지면 안에 텍스트를 숨긴다
 
             if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
                 if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
