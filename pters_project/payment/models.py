@@ -47,8 +47,6 @@ class BillingInfoTb(models.Model):
     next_payment_date = models.DateField(db_column='NEXT_PAYMENT_DATE', blank=True, null=True)
     payed_date = models.IntegerField(db_column='PAYED_DATE', blank=True, null=True)  # Field name made lowercase.
     state_cd = models.CharField(db_column='STATE_CD', max_length=45, blank=True, null=True)
-    cancel_type = models.CharField(db_column='CANCEL_TYPE', max_length=100, blank=True, null=True)
-    cancel_reason = models.CharField(db_column='CANCEL_REASON', max_length=1000, blank=True, null=True)
     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.

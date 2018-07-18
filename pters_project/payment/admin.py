@@ -16,7 +16,7 @@ class PaymentInfoTbAdmin(admin.ModelAdmin):
 class BillingInfoTbAdmin(admin.ModelAdmin):
     list_display = ('billing_info_id', 'member', 'pay_method', 'merchandise_type_cd',
                     'payment_type_cd', 'merchant_uid', 'customer_uid', 'payment_reg_date',
-                    'next_payment_date', 'payed_date','cancel_type', 'cancel_reason', 'reg_dt', 'mod_dt', 'use')
+                    'next_payment_date', 'payed_date', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(ProductTb)

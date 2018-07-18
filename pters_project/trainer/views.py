@@ -10,9 +10,7 @@ from urllib.parse import quote
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.serializers import serialize
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
