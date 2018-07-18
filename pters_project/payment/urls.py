@@ -39,10 +39,11 @@ urlpatterns = [
     url(r'^clear_pause_period_billing/$', views.clear_pause_period_billing_logic,
         name='clear_pause_period_billing'),
 
+    # 정기 결제 결제 방법 변경 체크 페이지
+    url(r'^check_update_period_billing/$', views.check_update_period_billing_logic, name='check_update_period_billing'),
     # 정기 결제 결제 방법 변경 페이지
     url(r'^update_period_billing/$', views.update_period_billing_logic, name='update_period_billing'),
-    # 정기 결제 결제 방법 변경 페이지
-    url(r'^check_update_period_billing/$', views.check_update_period_billing_logic, name='check_update_period_billing'),
+
 
 
     # 결제 정보 조회 ######################################################################################################
