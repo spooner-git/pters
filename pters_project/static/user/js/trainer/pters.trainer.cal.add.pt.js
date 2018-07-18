@@ -22,8 +22,6 @@ $(document).ready(function(){
     //var select_all_check = false;
     var offset_for_canvas;
 
-
-
     var date = new Date();
     var currentYear = date.getFullYear(); //현재 년도
     var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -998,37 +996,43 @@ $(document).ready(function(){
             $form = $('#pt-add-form');
             serverURL = '/schedule/add_schedule/';
             serializeArray = $form.serializeArray();
-            sendData = send_Data(serializeArray);
+            //sendData = send_Data(serializeArray);
+            sendData = serializeArray;
 
         }else if(addTypeSelect=="groupptadd"){
             $form = $('#pt-add-form');
             serverURL = '/schedule/add_group_schedule/';
             serializeArray = $form.serializeArray();
-            sendData = send_Data(serializeArray);
+            //sendData = send_Data(serializeArray);
+            sendData = serializeArray;
 
         }else if(addTypeSelect=="offadd"){
             $form = $('#off-add-form');
             serverURL = '/schedule/add_schedule/';
             serializeArray = $form.serializeArray();
-            sendData = send_Data(serializeArray);
+            //sendData = send_Data(serializeArray);
+            sendData = serializeArray;
 
         }else if(addTypeSelect=="repeatptadd"){
             $form = $('#add-repeat-schedule-form');
             serverURL = '/schedule/add_repeat_schedule/';
             serializeArray = $form.serializeArray();
-            sendData = send_Data(serializeArray);
+            //sendData = send_Data(serializeArray);
+            sendData = serializeArray;
 
         }else if(addTypeSelect=="repeatgroupptadd"){
             $form = $('#add-repeat-schedule-form');
             serverURL = '/schedule/add_group_repeat_schedule/';
             serializeArray = $form.serializeArray();
-            sendData = send_Data(serializeArray);
+            //sendData = send_Data(serializeArray);
+            sendData = serializeArray;
 
         }else if(addTypeSelect=="repeatoffadd"){
             $form = $('#add-off-repeat-schedule-form');
             serverURL = '/schedule/add_repeat_schedule/';
             serializeArray = $form.serializeArray();
-            sendData = send_Data(serializeArray);
+            //sendData = send_Data(serializeArray);
+            sendData = serializeArray;
         }
         if(select_all_check==true){
             //ajax 회원정보 입력된 데이터 송신
@@ -1094,17 +1098,8 @@ $(document).ready(function(){
                                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                                     }
                                 }
-                                if($('._calweek').length == 1){
-                                    // scheduleTime('class', jsondata);
-                                    // scheduleTime('off', jsondata);
-                                    // scheduleTime('group', jsondata);
-                                    ajaxClassTime();
-                                }
-                                else if($('._calmonth').length == 1){
-                                    // classDatesTrainer(jsondata);
-                                    ajaxClassTime();
-
-                                }
+                                
+                                super_ajaxClassTime();
                                 $('#members_mobile, #members_pc').html('');
                                 get_current_member_list();
                                 get_current_group_list();
@@ -1676,8 +1671,8 @@ function ajaxRepeatConfirmSend(use, callback){
                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                     }
                 }
-                ajaxClassTime();
-                // set_schedule_time(jsondata)
+                super_ajaxClassTime();
+
                 if(use == "callback"){
                     callback(jsondata);
                 }
@@ -3483,6 +3478,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
 }
 
+/*
 function send_Data(serializeArray){
     var today_form;
     var selector_calendar = $('#calendar');
@@ -3496,12 +3492,16 @@ function send_Data(serializeArray){
     }else if(selector_calendar.hasClass('_calweek')){
         var $weekNum4 = $('#weekNum_4').attr('data-date');
         today_form = $weekNum4.substr(0,4)+'-'+$weekNum4.substr(4,2)+'-'+$weekNum4.substr(6,2);
+    }else if(selector_calendar.hasClass('._calday')){
+
     }
     serializeArray.push({"name":"date", "value":today_form});
     serializeArray.push({"name":"day", "value":46});
     // var sendData = serializeArray;
     return serializeArray;
 }
+*/
+
 
 
 /*
@@ -3828,9 +3828,10 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 //그룹일정에 참석자 추가 img.add_listedMember(플러스버튼)을 누르면 호출된다.
 function send_add_groupmember_plan(use, callback){
-    var $form = $('#add_groupmember-plan-form').serializeArray();
-    var sendData = send_Data($form);
-    //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/schedule/add_member_group_schedule')
+    //var $form = $('#add_groupmember-plan-form').serializeArray();
+    //var sendData = send_Data($form);
+    var sendData = $('#add_groupmember-plan-form').serializeArray();
+    
     $.ajax({
         url: '/schedule/add_member_group_schedule/',
         type : 'POST',
@@ -3884,7 +3885,8 @@ $(document).on('click','.group_member_cancel',function(){
     var group_schedule_id = $(this).attr('group-schedule-id');
     var max = $(this).attr('data-max');
     send_plan_delete('pt', 'callback', function(){
-        ajaxClassTime();
+        super_ajaxClassTime();
+
         if($('._calmonth').length > 0){
             shade_index(150);
         }else if($('._calweek').length > 0){
@@ -3906,28 +3908,25 @@ function send_plan_delete(option, callbackoption, callback){
     if(option == "pt"){
         $form = $('#daily-pt-delete-form');
         serializeArray = $form.serializeArray();
-        sendData = send_Data(serializeArray);
+        //sendData = send_Data(serializeArray);
         url_ = '/schedule/delete_schedule/';
-        console.log(serializeArray,'pt');
     }else if(option == "off"){
         $form = $('#daily-off-delete-form');
         serializeArray = $form.serializeArray();
-        sendData = send_Data(serializeArray);
+        //sendData = send_Data(serializeArray);
         url_ = '/schedule/delete_schedule/';
-        console.log(serializeArray, 'off');
     }else if(option == "group"){
         $form = $('#daily-pt-delete-form');
         $('#id_schedule_id').val($('#cal_popup_plandelete').attr('schedule-id'));
         serializeArray = $form.serializeArray();
-        sendData = send_Data(serializeArray);
+        //sendData = send_Data(serializeArray);
         url_ = '/schedule/delete_group_schedule/';
-        console.log(serializeArray,'group');
     }
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
     $.ajax({
         url: url_,
         type:'POST',
-        data: sendData,
+        data: serializeArray,//sendData,
 
         beforeSend:function(){
             beforeSend();
@@ -3947,7 +3946,7 @@ function send_plan_delete(option, callbackoption, callback){
                     }
                 }
                 if(callbackoption == 'callback'){
-                    ajaxClassTime();
+                    super_ajaxClassTime();
                     // set_schedule_time(jsondata)
                     close_info_popup('cal_popup_plandelete');
                     if($('._calmonth').length == 1){
@@ -3957,7 +3956,7 @@ function send_plan_delete(option, callbackoption, callback){
                     }
                     callback(jsondata);
                 }else{
-                    ajaxClassTime();
+                    super_ajaxClassTime();
                     // set_schedule_time(jsondata)
                     close_info_popup('cal_popup_plandelete');
                     if($('._calmonth').length == 1){
@@ -4064,5 +4063,18 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated');
             select_all_check=false;
         }
+    }
+}
+
+
+
+function super_ajaxClassTime(){
+    var selector_calendar = $('#calendar');
+    if(selector_calendar.hasClass('_calmonth')){
+        ajaxClassTime();
+    }else if(selector_calendar.hasClass('_calweek')){
+        ajaxClassTime();
+    }else if(selector_calendar.hasClass('_calday')){
+        ajaxClassTime_day();
     }
 }
