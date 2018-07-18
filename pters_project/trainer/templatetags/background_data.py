@@ -5,7 +5,7 @@ from django import template
 
 from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
-from payment.models import FunctionAuthTb, BillingInfoTb
+from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count
 from schedule.models import BackgroundImgTb, ScheduleTb
 from trainer.function import func_get_trainer_setting_list
@@ -77,12 +77,12 @@ def get_setting_info(request):
 @register.simple_tag
 def get_function_auth(request):
     today = datetime.date.today()
-    function_auth = []
-    function_auth_data = FunctionAuthTb.objects.filter(member_id=request.user.id,
-                                                       expired_date__gte=today,
-                                                       use=USE)
-    for function_auth_info in function_auth_data:
-        function_auth.append(parser.unescape(function_auth_info.function_auth_type_cd))
+    # function_auth = []
+    # function_auth_data = FunctionAuthTb.objects.filter(member_id=request.user.id,
+    #                                                    expired_date__gte=today,
+    #                                                    use=USE)
+    # for function_auth_info in function_auth_data:
+    #     function_auth.append(parser.unescape(function_auth_info.function_auth_type_cd))
 
     billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
 
@@ -92,4 +92,4 @@ def get_function_auth(request):
             billing_info.use = UN_USE
             billing_info.save()
 
-    return function_auth
+    return billing_data

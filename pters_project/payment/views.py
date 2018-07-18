@@ -23,7 +23,7 @@ from login.models import MemberTb
 from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
     func_update_billing_logic, func_cancel_period_billing_schedule, func_add_empty_billing_logic
-from payment.models import PaymentInfoTb, BillingInfoTb, FunctionAuthTb, ProductTb, BillingCancelInfoTb
+from payment.models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,8 @@ def check_billing_logic(request):
     input_price = 0
     payment_info = None
     today = datetime.date.today()
-    single_payment_check = False
+    single_payment_counter = 0
+    period_payment_counter = 0
     billing_info = ''
     try:
         json_loading_data = json.loads(json_data)
@@ -68,20 +69,37 @@ def check_billing_logic(request):
         input_price = json_loading_data['price']
 
     if error is None:
-        # today = datetime.datetime.combine(today, datetime.datetime.min.time())
         merchandise_type_cd_list = merchandise_type_cd.split('/')
-        for merchandise_type_cd_info in merchandise_type_cd_list:
-            function_auth_info_count = FunctionAuthTb.objects.filter(member_id=request.user.id,
-                                                                     function_auth_type_cd=merchandise_type_cd_info,
-                                                                     payment_type_cd='PERIOD', use=USE).count()
-            if function_auth_info_count > 0:
+        for merchandise_type_info in merchandise_type_cd_list:
+            period_payment_counter = PaymentInfoTb.objects.filter(member_id=request.user.id, payment_type_cd='PERIOD',
+                                                                  merchandise_type_cd__contains=merchandise_type_info,
+                                                                  end_date__gt=today
+                                                                  ).count()
+            if period_payment_counter > 0:
                 error = '이미 정기결제 중인 기능이 포함되어있습니다.'
-                break
-            function_auth_info_count = FunctionAuthTb.objects.filter(member_id=request.user.id,
-                                                                     function_auth_type_cd=merchandise_type_cd_info,
-                                                                     use=USE).count()
-            if function_auth_info_count > 0:
-                single_payment_check = True
+
+            if error is None:
+                single_payment_counter = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                                      payment_type_cd='SINGLE',
+                                                                      end_date__gt=today,
+                                                                      merchandise_type_cd__contains=merchandise_type_info,
+                                                                      use=USE).count()
+
+    # if error is None:
+    #     # today = datetime.datetime.combine(today, datetime.datetime.min.time())
+    #     merchandise_type_cd_list = merchandise_type_cd.split('/')
+    #     for merchandise_type_cd_info in merchandise_type_cd_list:
+    #         function_auth_info_count = FunctionAuthTb.objects.filter(member_id=request.user.id,
+    #                                                                  function_auth_type_cd=merchandise_type_cd_info,
+    #                                                                  payment_type_cd='PERIOD', use=USE).count()
+    #         if function_auth_info_count > 0:
+    #             error = '이미 정기결제 중인 기능이 포함되어있습니다.'
+    #             break
+    #         function_auth_info_count = FunctionAuthTb.objects.filter(member_id=request.user.id,
+    #                                                                  function_auth_type_cd=merchandise_type_cd_info,
+    #                                                                  use=USE).count()
+    #         if function_auth_info_count > 0:
+    #             single_payment_check = True
 
         # billing_info = BillingInfoTb.objects.filter(member_id=request.user.id,
         #                                             merchandise_type_cd=merchandise_type_cd,
@@ -107,11 +125,11 @@ def check_billing_logic(request):
             context['next_start_date'] = str(payment_info.end_date)
             context['next_end_date'] = str(func_get_end_date(payment_info.payment_type_cd,
                                                              payment_info.end_date, 1, date))
-            if single_payment_check:
-                billing_info = '이미 결제중인 기능이 포함되어있어 '+context['next_start_date']+'부터 결제가 진행됩니다.'
+            if single_payment_counter > 0:
+                billing_info = '이미 결제중인 기능이기 때문에 '+context['next_start_date']+'부터 결제가 진행됩니다.'
         else:
             context['next_start_date'] = str(today)
-            if single_payment_check:
+            if single_payment_counter > 0:
                 billing_info = '이미 결제중인 기능이 포함되어있습니다. 그래도 결제 하시겠습니까?'
 
     if error is None:
