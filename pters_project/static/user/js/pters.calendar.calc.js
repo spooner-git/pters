@@ -136,6 +136,27 @@ function substract_month(startdate, addvalue){
 }
 
 
+function find_max_date(dateArray){ //어레이 안에서 가장 최근 날짜를 찾아낸다.
+	var len = dateArray.length;
+	var dates = [];
+	console.log(dateArray)
+	for(var i=0; i<len; i++){
+		var date = dateArray[i]
+		if(date == '9999-12-31' || date == '소진시까지'){
+
+		}else{
+			dates.push(date)
+		}
+	}
+	var sorted = dates.sort();
+	if(sorted.length==0){
+		return today_YY_MM_DD;
+	}else{
+		return sorted[sorted.length-1];
+	}
+}
+
+
 // 시간에서 시간을 빼면 몇시?
 // 11:30 에서 2시간을 빼면 ??
 function substract_time(starttime, subvalue){
