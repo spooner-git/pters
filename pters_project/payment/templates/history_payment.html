@@ -353,7 +353,6 @@
         <input type="hidden" name="cancel_type" id="id_cancel_type" value="">
         <input type="hidden" name="cancel_reason" id="id_cancel_reason" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
-
     </form>
     <form action="{% url 'payment:restart_period_billing' %}" id="restart-period-payment-form" method="post">
         <input type="hidden" name="customer_uid" id="id_customer_uid_restart" value="">
@@ -363,14 +362,9 @@
         <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
-
-    <form id="modify-member-id-form" method="post">
-        {% csrf_token %}
-        <div style="display: none">
-            {{ form.as_p }}
-        </div>
-        <input type="hidden" name="member_id" id="userDbId" value="">
-
+    <form action="{% url 'payment:update_period_billing' %}" id="update-period-payment-form" method="post">
+        <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
+        <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
 
 {% endblock %}
@@ -386,13 +380,11 @@
             $('#upbutton-modify').hide()
         }
 
-
         $('#upbutton-x-modify, ._button_Prev').click(function(){
             location.href="/trainer/trainer_setting/"
         })
 
     function test(payid){
-{#        var payid = $(this).attr('data-customer_uid');#}
         $('#id_customer_uid_clear_pause').val(payid);
         document.getElementById('clear-pause-period-payment-form').submit();
     }

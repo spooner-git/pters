@@ -32,9 +32,11 @@ class PaymentView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
+        product_list = ProductTb.objects.filter(use=USE)
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
+        context['product_data'] = product_list
 
         return render(request, self.template_name, context)
 
@@ -539,31 +541,11 @@ def clear_pause_period_billing_logic(request):
 
 @csrf_exempt
 def update_period_billing_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
+    next_page = request.POST.get('next_page', '')
     # 기존 예약 결제 취소 -> 0원으로 billing 결제 및 새로운 예약 스케쥴 등록
-    json_data = request.body.decode('utf-8')
-    json_loading_data = None
-    payment_user_info = None
     context = {'error': None}
     error = None
-
-    try:
-        json_loading_data = json.loads(json_data)
-    except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-    except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
-
-    if error is None:
-        merchant_uid = json_loading_data['merchant_uid']
-        try:
-            payment_user_info = PaymentInfoTb.objects.get(merchant_uid=str(merchant_uid))
-        except ObjectDoesNotExist:
-            error = '결제 정보를 불러오는데 실패했습니다.'
-
-    if error is None:
-        payment_user_info_result = func_update_billing_logic(payment_user_info)
-        func_set_billing_schedule(payment_user_info.customer_uid, payment_user_info_result['payment_user_info'])
-        error = payment_user_info_result['error']
 
     context['error'] = error
     if error is not None:
@@ -772,7 +754,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
     template_name = 'history_payment.html'
 
     def get(self, request):
-        context = {'payment_data': None, 'current_payment_data':None}
+        context = {'payment_data': None, 'current_payment_data': None}
         product_list = ProductTb.objects.filter(use=USE)
         current_payment_data = []
         current_period_payment_data = []
@@ -793,7 +775,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                                    merchandise_type_cd=product_info.merchandise_type_cd,
                                                                    end_date__gte=today,
-                                                                   payment_type_cd='PERIOD').latest('end_date')
+                                                                   payment_type_cd='PERIOD', use=USE).latest('end_date')
             except ObjectDoesNotExist:
                 period_payment_info = None
 

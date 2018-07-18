@@ -3,9 +3,11 @@ import html.parser as parser
 import logging
 from django import template
 
-from configs.const import USE, UN_USE
+from django.utils import timezone
+from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from payment.models import FunctionAuthTb, BillingInfoTb
-from schedule.models import BackgroundImgTb
+from schedule.functions import func_refresh_lecture_count
+from schedule.models import BackgroundImgTb, ScheduleTb
 from trainer.function import func_get_trainer_setting_list
 
 register = template.Library()
@@ -37,6 +39,7 @@ def get_background_type_cd(request):
 @register.simple_tag
 def get_setting_info(request):
     context = {}
+    now = timezone.now()
     class_id = request.session.get('class_id', '')
     context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
@@ -49,6 +52,7 @@ def get_setting_info(request):
     request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
     request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
     request.session['setting_member_start_time'] = context['lt_res_member_start_time']
+    request.session['setting_member_auto_finish'] = context['lt_res_member_auto_finish']
     request.session['setting_language'] = context['lt_lan_01']
 
     request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
@@ -57,6 +61,15 @@ def get_setting_info(request):
     request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
     request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
     request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+
+    if context['lt_res_member_auto_finish'] == AUTO_FINISH_ON:
+        not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                             end_dt__lt=now, state_cd='NP',
+                                                             en_dis_type=ON_SCHEDULE_TYPE, use=USE)
+        for not_finish_schedule_info in not_finish_schedule_data:
+            not_finish_schedule_info.state_cd = 'PE'
+            not_finish_schedule_info.save()
+            func_refresh_lecture_count(not_finish_schedule_info.lecture_tb_id)
 
     return context
 
