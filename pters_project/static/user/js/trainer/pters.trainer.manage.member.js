@@ -908,7 +908,7 @@ $(document).ready(function(){
 
             $(this).addClass("dropdown_selected");
             selector_datepicker2_add.datepicker('option','minDate',selector_datepicker_add.val());
-            selector_datepicker_add.datepicker('option','maxDate',selector_datepicker2_add.val());
+            //selector_datepicker_add.datepicker('option','maxDate',selector_datepicker2_add.val());
             check_dropdown_selected();
         }
     });
@@ -931,7 +931,7 @@ $(document).ready(function(){
                 var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date');
                 var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date');
                 $("input.lec_end_date").datepicker('option','minDate',startDatepicker.val());
-                $("input.lec_start_date").datepicker('option','maxDate',endDatepicker.val());
+                //$("input.lec_start_date").datepicker('option','maxDate',endDatepicker.val());
             }
         });
     });
@@ -1046,9 +1046,11 @@ $(document).ready(function(){
         $(this).parent('div').siblings('.simpleReg').fadeIn('fast');
         $(this).addClass('selectbox_checked');
         $(this).siblings('.btnCallManual').removeClass('selectbox_checked');
-        $('p, .datepicktext input').removeClass("dropdown_selected");
+        /*
+        $('p, #datepicker_add').removeClass("dropdown_selected");
         $('#memberCount_add_fast').removeClass('dropdown_selected');
         $('#datepicker_add,#datepicker2_add,#memberCount_add,#lecturePrice_add_2').val("");
+        */
         $('#fast_check').val('0');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
             $('#form_member_groupid').val($('#simpleReg select.grouptypeselect').val());
@@ -1061,14 +1063,16 @@ $(document).ready(function(){
         $(this).parent('div').siblings('.manualReg').fadeIn('fast');
         $(this).addClass('selectbox_checked');
         $(this).siblings('.btnCallSimple').removeClass('selectbox_checked');
+        /*
         $('._due div.checked').removeClass('checked ptersCheckboxInner');
         $('._count div.checked').removeClass('checked ptersCheckboxInner');
-        $('p, .datepicktext input').removeClass("dropdown_selected");
+        $('p, #datepicker_fast').removeClass("dropdown_selected");
         $('#datepicker_fast,#lecturePrice_add,#memberDue_add_2').val("");
         var selector_datepicker_add = $("#datepicker_add");
         var selector_datepicker2_add = $("#datepicker2_add");
         selector_datepicker2_add.datepicker('option','minDate',selector_datepicker_add.val());
         selector_datepicker_add.datepicker('option','maxDate',selector_datepicker2_add.val());
+        */
         $('#fast_check').val('1');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
             $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val());
@@ -1483,11 +1487,27 @@ function pc_add_member(option){
             userID = $('#memberId').val();
             $('#memberSearch_add').val(userID);
         }
-        closePopup('member_info');
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+        var regEnddate = [];
+        for(var i=1; i<= $('.lec_end_date').length; i++){
+            regEnddate.push($('.wraps:nth-child('+i+') .lec_end_date').val().replace(/\./gi,'-'))
+        }
+        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+
+        check_dropdown_selected();
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+
+        
+        closePopup('member_info');
+        
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
+
         birth_dropdown_set();
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
