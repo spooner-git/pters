@@ -232,6 +232,7 @@ $.datepicker.setDefaults({
 });
 
 
+
 function week_calendar(referencedate){
     var page1 = $('.swiper-slide:nth-of-type(1)');
     var page2 = $('.swiper-slide:nth-of-type(2)');

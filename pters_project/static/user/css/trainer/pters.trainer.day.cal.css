@@ -71,14 +71,16 @@
 
 @media(min-width: 600px){
 	.timeindex_day{
-		height: 100%;
+		height: auto;
 	}
 	.timeindex_time{
 		float: right;
 		margin-right: 6px;
 		font-size: 16px;
 	}
-	.time-row{
-		height: 30px;
+	.daycal_plan_window{
+
+		background-size: 120px 150px;
 	}
+
 }
