@@ -617,30 +617,27 @@ $(document).ready(function(){
 
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /*
     calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
     calTable_Set(2,currentYear,currentPageMonth);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
     calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
+    */
+    month_calendar(today_YY_MM_DD)
     $('.swiper-slide-active').css('width',$('#calendar').width())
-    //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
-    //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
-    //DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
 
-    //dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
-    //classDatesTrainer(); // 트레이너 월간일정에 핑크색 동그라미 표시하고 PT 갯수 표기
-    //addPtMemberListSet()
-
-
+    /*
     monthText(); //상단에 연, 월 표시
-    //availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
     krHoliday(); //대한민국 공휴일
     draw_time_graph(Options.hourunit,'')
-
     ajaxClassTime()
+    */
+
+    
 
 
     //다음페이지로 슬라이드 했을때 액션
     myswiper.on('onSlideNextEnd',function(){
+        /*
         ++currentPageMonth;
         if(currentPageMonth+1>12){
             ++currentYear
@@ -649,10 +646,13 @@ $(document).ready(function(){
         }else{
             slideControl.append();
         };
+        */
+        slideControl.append();
     })
 
     //이전페이지로 슬라이드 했을때 액션
     myswiper.on('onSlidePrevEnd',function(){
+        /*
         --currentPageMonth;
         if(currentPageMonth-1<1){
             --currentYear
@@ -661,16 +661,23 @@ $(document).ready(function(){
         }else{
             slideControl.prepend();
         };
+        */
+        slideControl.prepend();
     })
 
 
     //페이지 이동에 대한 액션 클래스
     var slideControl = {
         'append' : function(){ //다음페이지로 넘겼을때
+            var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
+            var lastdateinfo = selector_swiper_slide_last_child.find('.container-fluid').attr('id').split('_');
+            var lastYY = Number(lastdateinfo[1]);
+            var lastMM = Number(lastdateinfo[2]);
+
             myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
             myswiper.appendSlide('<div class="swiper-slide"></div>') //마지막 슬라이드에 새슬라이드 추가
             //(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
-            calTable_Set(3,currentYear,currentPageMonth+1); //새로 추가되는 슬라이드에 달력 채우기
+            calTable_Set(3,lastYY,lastMM+1); //새로 추가되는 슬라이드에 달력 채우기
             //dateDisabled();
             monthText();
             krHoliday();
@@ -681,10 +688,15 @@ $(document).ready(function(){
         },
 
         'prepend' : function(){
+            var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
+            var firstdateinfo = selector_swiper_slide_first_child.find('.container-fluid').attr('id').split('_');
+            var firstYY = Number(firstdateinfo[1]);
+            var firstMM = Number(firstdateinfo[2]);
+
             myswiper.removeSlide(2);
             myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
             //(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
-            calTable_Set(1,currentYear,currentPageMonth-1);
+            calTable_Set(1,firstYY,firstMM-1);
             //dateDisabled();
             monthText();
             krHoliday();
@@ -696,98 +708,7 @@ $(document).ready(function(){
     };
 
 
-    function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
-        if(Month>12){
-            var Month = Month-12
-            var Year = Year+1
-        }else if(Month<1){
-            var Month = Month+12
-            var Year = Year-1
-        }
 
-        for(var i=1; i<=6; i++){
-            $('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+Year+Month+'" class="container-fluid week-style">')
-        };
-
-
-        for(var i=1; i<=6; i++){
-            $('.swiper-slide:nth-child('+Index+')'+' #week'+i+Year+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
-        };
-
-        calendarSetting(Year,Month);
-    }; //calTable_Set
-
-
-    function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
-        var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
-        var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
-
-        if( (Year % 4 == 0 && Year % 100 != 0) || Year % 400 == 0 ){  //윤년
-            lastDay[1] = 29;
-        }else{
-            lastDay[1] = 28;
-        }
-
-
-        //1. 현재달에 전달 마지막 부분 채우기
-        if(Month>1){ //2~12월
-            for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
-                $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
-            };
-        }else if(Month==1){ //1월
-            for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
-                $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
-            };
-        }
-
-        //2. 첫번째 주 채우기
-        for(var i=1; i<=7-firstDayCurrentPage; i++){
-            if(i==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표시하기
-                $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>');
-            }else{
-                $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
-            }
-        };
-
-        //3.현재달에 두번째 주부터 나머지 모두 채우기
-        var lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:nth-child(2)').text());
-        for(var i=lastOfweek1+1; i<=lastOfweek1+7; i++){
-            for(var j=0;j<=4;j++){
-                if(Number(i+j*7)==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표기
-                    $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7) +'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>')
-                }else if(Number(i+j*7<=lastDay[Month-1])){ //둘째주부터 날짜 모두
-                    $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7)+'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }
-            }
-        };
-
-        //4. 현재달 마지막에 다음달 첫주 채우기
-        var howmanyWeek6 = $('#week6'+Year+Month+' td').length;
-        var howmanyWeek5 = $('#week5'+Year+Month+' td').length;
-
-        if(howmanyWeek5<=7 && howmanyWeek6==0){
-            for (var i=1; i<=7-howmanyWeek5;i++){
-                if(Month<12){
-                    $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }else if(Month==12){
-                    $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }
-            };
-            ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
-        }else if(howmanyWeek6<7 && howmanyWeek6>0){
-            for (var i=1; i<=7-howmanyWeek6;i++){
-                if(Month<12){
-                    $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }else if(Month==12){
-                    $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }
-            };
-        }
-        for(i=1;i<=6;i++){
-            $('#week'+i+Year+Month+'child td:first-child').addClass('tdsunday'); //일요일 날짜는 Red 표기
-            $('#week'+i+Year+Month+'child td:last-child').addClass('tdsaturday'); //토요일 날짜는 Blue 표기
-        }
-    }; //calendarSetting()
 
     function dateDisabled(){ //PT 불가일자를 DB로부터 받아서 disabledDates 배열에 넣으면, 날짜 회색 표시
         for(var i=0; i<disabledDates.length; i++){
@@ -832,79 +753,13 @@ $(document).ready(function(){
 
 
 
-    function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
-        for(var i=0; i<krHolidayList.length; i++){
-            $("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
-            $("td[data-date="+krHolidayList[i]+"]").find('.holidayName').text(krHolidayNameList[i])
-        };
-    };
-
-    function monthText(){
-        var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
-        //currentYMD 형식  ex : week120177
-        var textYear = currentYMD.substr(5,4); //2017
-        var textMonth = currentYMD.substr(9,2); //7
-        $('#yearText, #ymdText-pc-year').text(textYear);
-        $('#monthText, #ymdText-pc-month').text(textMonth+'월');
-        todayFinderArrow(textYear,textMonth);
-    };
+    
 
 
-    function draw_time_graph(option, type){  //type = '' and mini
-        if(type == 'mini'){
-            var targetHTML =  $('#timeGraph.ptaddbox_mini table')
-            var types = "_mini"
-        }else{
-            var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
-            var types = ''
-        }
-
-        var tr1 = []
-        var tr2 = []
-
-        if(option == "30"){
-            for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-                tr1[i] = '<td colspan="2">'+(i)+'</td>'
-                tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
-            }
-        }else if(option == "60"){
-            for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-                tr1[i] = '<td>'+(i)+'</td>'
-                tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
-            }
-        }
-        var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
-        targetHTML.html(tbody)
-    }
+    
 
 
-    function todayFinderArrow(Year,Month){
-        var currentYY = String(oriYear)
-        var pageYY = String(Year)
-        var currentMM = String(oriMonth);
-        var pageMM = String(Month)
-        if(currentMM.length<2){
-            var currentMM = '0'+currentMM
-        }
-        if(pageMM.length<2){
-            var pageMM = '0'+pageMM
-        }
-        var todayInfo = currentYY + currentMM
-        var pageInfo = pageYY + pageMM
-
-        if(todayInfo<pageInfo){
-            $('._pinkarrowafter').addClass('setunVisible')
-            $('._pinkarrowbefore').removeClass('setunVisible')
-            $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
-        }else if(todayInfo>pageInfo){
-            $('._pinkarrowafter').removeClass('setunVisible')
-            $('._pinkarrowbefore').addClass('setunVisible')
-            $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
-        }else{
-            $('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
-            $("#ymdText").addClass('todayindi').removeClass('nottodayindi')
-        }
-    }
+    
 
     //일정변경 가능 날짜에 표기 (CSS Class 붙이기)
     function availableDateIndicator(not_AvailableStartTime,Endtime){
@@ -942,9 +797,7 @@ $(document).ready(function(){
 
 
 
-    function ad_month(selector){ // 월간 달력 하단에 광고
-        selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
-    }
+
 
 
     /*
@@ -1442,4 +1295,194 @@ function clear_badge_counter(){
             //console.log('error:clear_badge_counter')
         },
     })
+}
+
+function month_calendar(referencedate){
+    var page1 = $('.swiper-slide:nth-of-type(1)');
+    var page2 = $('.swiper-slide:nth-of-type(2)');
+    var page3 = $('.swiper-slide:nth-of-type(3)');
+
+    page1.html('')
+    page2.html('')
+    page3.html('')
+
+    var year = Number(referencedate.split('-')[0]);
+    var month = Number(referencedate.split('-')[1]);
+    calTable_Set(1,year,month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
+    calTable_Set(2,year,month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
+    calTable_Set(3,year,month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
+
+    monthText(); //상단에 연, 월 표시
+    krHoliday(); //대한민국 공휴일
+    draw_time_graph(Options.hourunit,'')
+    ajaxClassTime()
+}
+
+function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+    if(Month>12){
+        var Month = Month-12
+        var Year = Year+1
+    }else if(Month<1){
+        var Month = Month+12
+        var Year = Year-1
+    }
+
+    for(var i=1; i<=6; i++){
+        $('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">')
+    };
+
+
+    for(var i=1; i<=6; i++){
+        $('.swiper-slide:nth-child('+Index+')'+' #week'+i+'_'+Year+'_'+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
+    };
+
+    calendarSetting(Year,Month);
+}; //calTable_Set
+
+
+function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
+    var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
+    var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
+
+    if( (Year % 4 == 0 && Year % 100 != 0) || Year % 400 == 0 ){  //윤년
+        lastDay[1] = 29;
+    }else{
+        lastDay[1] = 28;
+    }
+
+
+    //1. 현재달에 전달 마지막 부분 채우기
+    if(Month>1){ //2~12월
+        for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
+            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+        };
+    }else if(Month==1){ //1월
+        for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
+            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+        };
+    }
+
+    //2. 첫번째 주 채우기
+    for(var i=1; i<=7-firstDayCurrentPage; i++){
+        if(i==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표시하기
+            $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>');
+        }else{
+            $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+        }
+    };
+
+    //3.현재달에 두번째 주부터 나머지 모두 채우기
+    var lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:nth-child(2)').text());
+    for(var i=lastOfweek1+1; i<=lastOfweek1+7; i++){
+        for(var j=0;j<=4;j++){
+            if(Number(i+j*7)==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표기
+                $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7) +'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>')
+            }else if(Number(i+j*7<=lastDay[Month-1])){ //둘째주부터 날짜 모두
+                $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7)+'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }
+        }
+    };
+
+    //4. 현재달 마지막에 다음달 첫주 채우기
+    var howmanyWeek6 = $('#week6'+'_'+Year+'_'+Month+' td').length;
+    var howmanyWeek5 = $('#week5'+'_'+Year+'_'+Month+' td').length;
+
+    if(howmanyWeek5<=7 && howmanyWeek6==0){
+        for (var i=1; i<=7-howmanyWeek5;i++){
+            if(Month<12){
+                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }else if(Month==12){
+                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }
+        };
+        ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
+    }else if(howmanyWeek6<7 && howmanyWeek6>0){
+        for (var i=1; i<=7-howmanyWeek6;i++){
+            if(Month<12){
+                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }else if(Month==12){
+                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }
+        };
+    }
+    for(i=1;i<=6;i++){
+        $('#week'+i+Year+Month+'child td:first-child').addClass('tdsunday'); //일요일 날짜는 Red 표기
+        $('#week'+i+Year+Month+'child td:last-child').addClass('tdsaturday'); //토요일 날짜는 Blue 표기
+    }
+}; //calendarSetting()
+
+function ad_month(selector){ // 월간 달력 하단에 광고
+    selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
+}
+
+function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
+    for(var i=0; i<krHolidayList.length; i++){
+        $("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
+        $("td[data-date="+krHolidayList[i]+"]").find('.holidayName').text(krHolidayNameList[i])
+    };
+};
+
+function monthText(){
+    var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
+    //currentYMD 형식  ex : week120177
+    var textYear = currentYMD.split('_')[1]
+    var textMonth = currentYMD.split('_')[2] //7
+    $('#yearText, #ymdText-pc-year').text(textYear);
+    $('#monthText, #ymdText-pc-month').text(textMonth+'월');
+    todayFinderArrow(textYear,textMonth);
+};
+
+function draw_time_graph(option, type){  //type = '' and mini
+    if(type == 'mini'){
+        var targetHTML =  $('#timeGraph.ptaddbox_mini table')
+        var types = "_mini"
+    }else{
+        var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
+        var types = ''
+    }
+
+    var tr1 = []
+    var tr2 = []
+
+    if(option == "30"){
+        for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+            tr1[i] = '<td colspan="2">'+(i)+'</td>'
+            tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
+        }
+    }else if(option == "60"){
+        for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+            tr1[i] = '<td>'+(i)+'</td>'
+            tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
+        }
+    }
+    var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
+    targetHTML.html(tbody)
+}
+
+function todayFinderArrow(Year,Month){
+    var currentYY = String(oriYear)
+    var pageYY = String(Year)
+    var currentMM = String(oriMonth);
+    var pageMM = String(Month)
+    if(currentMM.length<2){
+        var currentMM = '0'+currentMM
+    }
+    if(pageMM.length<2){
+        var pageMM = '0'+pageMM
+    }
+    var todayInfo = currentYY + currentMM
+    var pageInfo = pageYY + pageMM
+
+    if(todayInfo<pageInfo){
+        $('._pinkarrowafter').addClass('setunVisible')
+        $('._pinkarrowbefore').removeClass('setunVisible')
+        $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+    }else if(todayInfo>pageInfo){
+        $('._pinkarrowafter').removeClass('setunVisible')
+        $('._pinkarrowbefore').addClass('setunVisible')
+        $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+    }else{
+        $('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
+        $("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+    }
 }

@@ -885,15 +885,21 @@ $(document).ready(function(){
 
     if(bodywidth > 600){
         //calTable_Set(1,currentYear,currentPageMonth,currentDate,-14); // 이번주-2
+        /*
         calTable_Set(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
         calTable_Set(2,currentYear,currentPageMonth,currentDate,0); // 이번주
         calTable_Set(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
+        */
         //calTable_Set(5,currentYear,currentPageMonth,currentDate,14); // 이번주+2
+        week_calendar(today_YY_MM_DD)
         
     }else if(bodywidth<=600){
+        /*
         calTable_Set_Mobile(1,currentYear,currentPageMonth,currentDate,-7); // 이번주-1
         calTable_Set_Mobile(2,currentYear,currentPageMonth,currentDate,0); // 이번주
         calTable_Set_Mobile(3,currentYear,currentPageMonth,currentDate,7); // 이번주+1
+        */
+        week_calendar_mobile(today_YY_MM_DD)
     }
     $('.swiper-slide-active').css('width',$('#week').width())
 
@@ -910,7 +916,49 @@ $(document).ready(function(){
     //draw_time_graph(30,'');
     //draw_time_graph(30,'mini');
 
+    function week_calendar(referencedate){
+        var page1 = $('.swiper-slide:nth-of-type(1)');
+        var page2 = $('.swiper-slide:nth-of-type(2)');
+        var page3 = $('.swiper-slide:nth-of-type(3)');
 
+        var page1_id_num = $('.swiper-slide:nth-of-type(1)').attr('id').replace(/slide/gi,'');
+        var page2_id_num = $('.swiper-slide:nth-of-type(2)').attr('id').replace(/slide/gi,'');
+        var page3_id_num = $('.swiper-slide:nth-of-type(3)').attr('id').replace(/slide/gi,'');
+
+        page1.html('')
+        page2.html('')
+        page3.html('')
+
+        var year = Number(referencedate.split('-')[0]);
+        var month = Number(referencedate.split('-')[1]);
+        var date = Number(referencedate.split('-')[2]);
+        //calTable_Set(1,year,month,currentDate,-14); // 이번주-2
+        calTable_Set(page1_id_num,year,month,date,-7); // 이번주-1
+        calTable_Set(page2_id_num,year,month,date,0); // 이번주
+        calTable_Set(page3_id_num,year,month,date,7); // 이번주+1
+        //calTable_Set(5,year,month,currentDate,14); // 이번주+2
+    }
+
+    function week_calendar_mobile(referencedate){
+        var page1 = $('.swiper-slide:nth-of-type(1)');
+        var page2 = $('.swiper-slide:nth-of-type(2)');
+        var page3 = $('.swiper-slide:nth-of-type(3)');
+
+        var page1_id_num = $('.swiper-slide:nth-of-type(1)').attr('id').replace(/slide/gi,'');
+        var page2_id_num = $('.swiper-slide:nth-of-type(2)').attr('id').replace(/slide/gi,'');
+        var page3_id_num = $('.swiper-slide:nth-of-type(3)').attr('id').replace(/slide/gi,'');
+
+        page1.html('')
+        page2.html('')
+        page3.html('')
+
+        var year = Number(referencedate.split('-')[0]);
+        var month = Number(referencedate.split('-')[1]);
+        var date = Number(referencedate.split('-')[2]);
+        calTable_Set_Mobile(page1_id_num,year,month,date,-7); // 이번주-1
+        calTable_Set_Mobile(page2_id_num,year,month,date,0); // 이번주
+        calTable_Set_Mobile(page3_id_num,year,month,date,7); // 이번주+1
+    }
 
 
 // ****************************구동시 실행********************************************************************************
