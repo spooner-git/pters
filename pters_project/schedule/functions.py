@@ -6,7 +6,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from configs import settings
-from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
+from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_ON
 from login.models import LogTb, PushInfoTb, CommonCdTb
 from schedule.models import GroupLectureTb, ClassLectureTb, LectureTb, ScheduleTb, GroupTb, MemberLectureTb, \
     MemberClassTb, ClassTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
@@ -156,9 +156,11 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
 def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       group_id, group_schedule_id,
                       start_datetime, end_datetime,
-                      note, en_dis_type, user_id):
+                      note, en_dis_type, user_id, auto_finish_info):
     error = None
     context = {'error': None, 'schedule_id': ''}
+    state_cd = 'NP'
+    now = timezone.now()
 
     if lecture_id == '':
         lecture_id = None
@@ -168,6 +170,10 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
         group_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
+
+    if auto_finish_info == AUTO_FINISH_ON and now > end_datetime:
+        state_cd = 'PE'
+
     try:
         with transaction.atomic():
             add_schedule_info = ScheduleTb(class_tb_id=class_id,
@@ -176,7 +182,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            group_schedule_id=group_schedule_id,
                                            repeat_schedule_tb_id=repeat_schedule_id,
                                            start_dt=start_datetime, end_dt=end_datetime,
-                                           state_cd='NP', permission_state_cd='AP',
+                                           state_cd=state_cd, permission_state_cd='AP',
                                            note=note, member_note='', en_dis_type=en_dis_type,
                                            reg_member_id=user_id,
                                            reg_dt=timezone.now(), mod_dt=timezone.now())

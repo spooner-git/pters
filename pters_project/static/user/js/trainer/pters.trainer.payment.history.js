@@ -68,7 +68,7 @@ $(document).ready(function(){
             var cancel_survey_text_area = $('#cancel_survey_text_area');
             $('#id_cancel_reason').val(cancel_survey_text_area.val());
 
-            // document.getElementById('cancel-period-payment-form').submit();
+            document.getElementById('cancel-period-payment-form').submit();
             // /payment/cancel_period_billing_logic/
         }
     });

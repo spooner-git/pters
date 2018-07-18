@@ -31,7 +31,8 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
-from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
+from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
+    MEMBER_RESERVE_PROHIBITION_ON
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
@@ -1950,8 +1951,15 @@ def update_lecture_info_logic(request):
             lecture_info.lecture_reg_count = input_lecture_reg_count
             lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
             lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
+        else:
+            if lecture_info.lecture_reg_count < input_lecture_reg_count:
+                lecture_info.lecture_reg_count = input_lecture_reg_count
+                lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
+                lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
+                lecture_info.state_cd='IP'
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
+    print('test5')
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
@@ -4024,15 +4032,17 @@ def update_setting_push_logic(request):
 
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_reserve_logic(request):
-    setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '')
+    setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '00:00-23:59')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
     setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
-    setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition', '')
-    setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '')
-    setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '')
+    setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
+                                                          MEMBER_RESERVE_PROHIBITION_ON)
+    setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
+    setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '14')
     # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
     setting_member_reserve_time_duration = request.POST.get('setting_member_reserve_time_duration', '1')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
+    setting_member_auto_finish = request.POST.get('setting_member_auto_finish', AUTO_FINISH_OFF)
     class_id = request.session.get('class_id', '')
 
     next_page = request.POST.get('next_page')
@@ -4055,7 +4065,7 @@ def update_setting_reserve_logic(request):
         if setting_member_cancel_time is None or setting_member_cancel_time == '':
             setting_member_cancel_time = '60'
         if setting_member_reserve_prohibition is None or setting_member_reserve_prohibition == '':
-            setting_member_reserve_prohibition = '1'
+            setting_member_reserve_prohibition = MEMBER_RESERVE_PROHIBITION_ON
         if setting_trainer_work_time_available is None or setting_trainer_work_time_available == '':
             setting_trainer_work_time_available = '00:00-23:59'
         if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
@@ -4064,6 +4074,8 @@ def update_setting_reserve_logic(request):
             setting_member_reserve_time_duration = '1'
         if setting_member_start_time is None or setting_member_start_time == '':
             setting_member_start_time = 'A-0'
+        if setting_member_auto_finish is None or setting_member_auto_finish == '':
+            setting_member_auto_finish = AUTO_FINISH_OFF
 
     if error is None:
         try:
@@ -4120,6 +4132,14 @@ def update_setting_reserve_logic(request):
             lt_res_member_start_time = SettingTb(member_id=request.user.id,
                                                  class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_START_TIME',
                                                  reg_dt=timezone.now(), use=USE)
+        try:
+            lt_res_member_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                              class_tb_id=class_id,
+                                                              setting_type_cd='LT_RES_MEMBER_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            lt_res_member_auto_finish = SettingTb(member_id=request.user.id,
+                                                  class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_AUTO_FINISH',
+                                                  reg_dt=timezone.now(), use=USE)
 
     if error is None:
         try:
@@ -4155,6 +4175,10 @@ def update_setting_reserve_logic(request):
                 lt_res_member_start_time.mod_dt = timezone.now()
                 lt_res_member_start_time.setting_info = setting_member_start_time
                 lt_res_member_start_time.save()
+
+                lt_res_member_auto_finish.mod_dt = timezone.now()
+                lt_res_member_auto_finish.setting_info = setting_member_auto_finish
+                lt_res_member_auto_finish.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'

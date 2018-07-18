@@ -115,6 +115,9 @@ urlpatterns = [
     url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
     # 강좌 정보 선택 처리
     url(r'^select_class_processing/$', views.select_class_processing_logic, name='select_class_processing'),
+    # 강좌 정보 수정
+    url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
+
 
     # 배경 이미지 설정 기능 #################################################################################################
     # 배경 이미지 타입 코드 조회
@@ -129,8 +132,6 @@ urlpatterns = [
     url(r'^delete_background_img_info/$', views.DeleteBackgroundImgInfoViewAjax.as_view(),
         name='delete_background_img_info'),
 
-    # 강좌 정보 수정
-    url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
 
     # Mypage/Setting 기능 ###############################################################################################
     # 강사 정보 조회
@@ -146,9 +147,11 @@ urlpatterns = [
     # 언어 Setting 정보 수정
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
+
     # 알람 기능 ##########################################################################################################
     # 알람 삭제
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
+
 
     # 공지 기능 ##########################################################################################################
     # 공지사항 조회
