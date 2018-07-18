@@ -53,48 +53,48 @@
                     <div>이용 가능 서비스</div>
                     <div>다음 결제 안내</div>
                 </div>
-            {% for current_payment_info in current_payment_data %}
-                <div class="current_use_table_content">
-                    <div>{{ forloop.counter }} </div>
-                    <div>
-                        <p>{{ current_payment_info.name }}</p>
-                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+                {% for current_payment_info in current_payment_data %}
+                    <div class="current_use_table_content">
+                        <div>{{ forloop.counter }} </div>
+                        <div>
+                            <p>{{ current_payment_info.name }}</p>
+                            <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+                        </div>
+                        <div>
+                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
+                                <p>{{ payment_merchandise_info }}</p>
+                            {% endfor %}
+                            {#                        <p>그룹 관리 메뉴 사용</p>#}
+                            {#                        <p>그룹 일정 관리</p>#}
+                            {#                        <p>광고 제거</p>#}
+                        </div>
+                        <div>
+                            <p>{{ current_payment_info.name }}</p>
+                            <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.end_date }}</span> </p>
+                        </div>
                     </div>
-                    <div>
-                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                            <p>{{ payment_merchandise_info }}</p>
-                        {% endfor %}
-{#                        <p>그룹 관리 메뉴 사용</p>#}
-{#                        <p>그룹 일정 관리</p>#}
-{#                        <p>광고 제거</p>#}
+                {% endfor %}
+                {% for current_payment_info in current_billing_info %}
+                    <div class="current_use_table_content">
+                        <div>{{ forloop.counter }} </div>
+                        <div>
+                            <p>{{ current_payment_info.name }}</p>
+                            <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+                        </div>
+                        <div>
+                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
+                                <p>{{ payment_merchandise_info }}</p>
+                            {% endfor %}
+                            {#                        <p>그룹 관리 메뉴 사용</p>#}
+                            {#                        <p>그룹 일정 관리</p>#}
+                            {#                        <p>광고 제거</p>#}
+                        </div>
+                        <div>
+                            <p>{{ current_payment_info.name }}</p>
+                            <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>
+                        </div>
                     </div>
-                    <div>
-                        <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.end_date }}</span> </p>
-                    </div>
-                </div>
-            {% endfor %}
-            {% for current_payment_info in current_billing_info %}
-                <div class="current_use_table_content">
-                    <div>{{ forloop.counter }} </div>
-                    <div>
-                        <p>{{ current_payment_info.name }}</p>
-                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
-                    </div>
-                    <div>
-                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                            <p>{{ payment_merchandise_info }}</p>
-                        {% endfor %}
-{#                        <p>그룹 관리 메뉴 사용</p>#}
-{#                        <p>그룹 일정 관리</p>#}
-{#                        <p>광고 제거</p>#}
-                    </div>
-                    <div>
-                        <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
             </div>
 
             <div id="page_mypay_history" class="sub_pages">
@@ -111,30 +111,30 @@
                     <div>영수증</div>
                 </div>
 
-            {% for payment_info in payment_data_history %}
-                <div class="mypay_history_table_content">
-                    <div>{{ forloop.counter }}</div>
-                    <div>
-                        <p>{{ payment_info.name }}</p>
-                        <p>{{ payment_info.start_date }} ~ {{ payment_info.end_date }}</p>
+                {% for payment_info in payment_data_history %}
+                    <div class="mypay_history_table_content">
+                        <div>{{ forloop.counter }}</div>
+                        <div>
+                            <p>{{ payment_info.name }}</p>
+                            <p>{{ payment_info.start_date }} ~ {{ payment_info.end_date }}</p>
+                        </div>
+                        <div>
+                            <p>{{ payment_info.start_date }}</p>
+                        </div>
+                        <div>
+                            <span>총 결제금액</span><span>{{ payment_info.price }} 원</span>
+                        </div>
+                        <div>
+                            <span>{{ payment_info.status_name }}</span>
+                        </div>
+                        <div>
+                            <p>{{ payment_info.card_name }}</p>
+                        </div>
+                        <div>
+                            <p><a href="{{ payment_info.receipt_url }}" target="_blank">클릭</a></p>
+                        </div>
                     </div>
-                    <div>
-                        <p>{{ payment_info.start_date }}</p>
-                    </div>
-                    <div>
-                        <span>총 결제금액</span><span>{{ payment_info.price }} 원</span>
-                    </div>
-                    <div>
-                        <span>{{ payment_info.status_name }}</span>
-                    </div>
-                    <div>
-                        <p>{{ payment_info.card_name }}</p>
-                    </div>
-                    <div>
-                        <p><a href="{{ payment_info.receipt_url }}" target="_blank">클릭</a></p>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
             </div>
 
             <div id="page_monthly_pay_stop_history" class="sub_pages">
@@ -147,29 +147,29 @@
                     <div>상태</div>
                     <div>사유</div>
                 </div>
-            {% for stop_payment_info in stop_period_payment_data %}
-                <div class="monthly_pay_stop_table_content">
-                    <div>{{ forloop.counter }}</div>
-                    <div>
-                        <p>{{ stop_payment_info.name }}</p>
+                {% for stop_payment_info in stop_period_payment_data %}
+                    <div class="monthly_pay_stop_table_content">
+                        <div>{{ forloop.counter }}</div>
+                        <div>
+                            <p>{{ stop_payment_info.name }}</p>
+                        </div>
+                        <div>
+                            <p>{{ stop_payment_info.start_date }} 결제</p>
+                        </div>
+                        <div>
+                            <p>{{ stop_payment_info.end_date }}</p>
+                        </div>
+                        <div>
+                            <p>{{ stop_payment_info.end_date }}</p>
+                        </div>
+                        <div>
+                            <p>{{ stop_payment_info.status_name }}</p>
+                        </div>
+                        <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">
+                            <p> {{ stop_payment_info.fail_reason }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p>{{ stop_payment_info.start_date }} 결제</p>
-                    </div>
-                    <div>
-                        <p>{{ stop_payment_info.end_date }}</p>
-                    </div>
-                    <div>
-                        <p>{{ stop_payment_info.end_date }}</p>
-                    </div>
-                    <div>
-                        <p>{{ stop_payment_info.status_name }}</p>
-                    </div>
-                    <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">
-                        <p> {{ stop_payment_info.fail_reason }}</p>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
                 <div id="monthly_pay_stop_annai1">
                     <label>일시정지 해제하기</label>
                     <p>정기결제수단의 정지/한도초과/정보변경 등의 사유로 사용중인 이용권이 일시정지가 된 상태에서 기존 정기결제수단 또는 새로운 정기결제수단으로 다시 결제를 하시면 일시정지된 정기결제를 다시 시작할 수 있습니다.</p>
@@ -196,7 +196,7 @@
 
 
         <div id="page_pay_change" class="page_content_wrap">
-            
+
         </div>
 
 
@@ -228,7 +228,9 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"><span>변경</span></div>
+                        <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
+                             data-payment_name="{{ current_payment_info.name }}"
+                             data-merchandise_type_cd="{{ current_payment_info.merchandise_type_cd }}"><span>변경</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -272,7 +274,7 @@
             <div id="pay_cancel_survey">
                 <label>이용권 해지 전 설문조사</label>
                 <p>해지 신청을 계속하시려면 다음 설문조사에 답해주시기 바랍니다.</p>
-                <p>회원님께서 알려주신 소중한 정보를 바탕으로 반드시 회원님께 더 좋은 서비스로 보답드리겠습니다.</p> 
+                <p>회원님께서 알려주신 소중한 정보를 바탕으로 반드시 회원님께 더 좋은 서비스로 보답드리겠습니다.</p>
                 <div id="survey_wrap">
                     <div id="survey_a1" class="surver_answer_wrap"><div class="ptersCheckbox"><div></div></div><span>이용이 불편하고, 장애가 많아서</span></div>
                     <div id="survey_a2" class="surver_answer_wrap"><div class="ptersCheckbox"><div></div></div><span>사용빈도가 낮음</span></div>
@@ -384,10 +386,153 @@
             location.href="/trainer/trainer_setting/"
         })
 
-    function test(payid){
-        $('#id_customer_uid_clear_pause').val(payid);
-        document.getElementById('clear-pause-period-payment-form').submit();
-    }
+        function test(payid){
+            $('#id_customer_uid_clear_pause').val(payid);
+            document.getElementById('clear-pause-period-payment-form').submit();
+        }
+
+        function check_payment(name, customer_uid){
+            var error_check = true;
+
+            $.ajax({
+                url: "/payment/check_billing/", // 서비스 웹서버
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({
+                    customer_uid: customer_uid
+                }),
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    initialJSON = jsondata;
+                    console.log(initialJSON);
+                    if(jsondata.messageArray.length>0){
+                        {#                        $('#errorMessageBar').show();#}
+                        {#                        $('#errorMessageText').text(jsondata.messageArray);#}
+                        error_check = false;
+                        alert(jsondata.messageArray);
+                    }else {
+                        if(jsondata.billing_info != ''){
+                            alert(jsondata.billing_info);
+                        }
+                        payment(name, 'card',  merchandise_type_cd,
+                            jsondata.next_start_date[0]);
+                    }
+
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            });
+
+
+            return error_check;
+        }
+        var IMP = window.IMP; // 생략가능
+        IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+
+        function payment(name, pay_method, merchandise_type_cd, start_date){
+            var date = new Date();
+            var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var month = date.getMonth()+1;
+            var day = date.getDate();
+            var price = 0;
+            var payment_type_cd = 'PERIOD';
+            if(month <10){
+                month = '0'+month;
+            }
+            if(day <10){
+                day = '0'+day;
+            }
+            var today = date.getFullYear()+'-'+month+'-'+day;
+
+            if(start_date != ''){
+                today = start_date;
+            }
+            var request_pay_period_data = {
+                pg : 'danal', // version 1.1.0부터 지원.
+                pay_method : pay_method,
+                merchant_uid : merchant_uid_data,
+                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                name : name,
+                amount : price,
+                custom_data: {
+                    "user_id":{{ request.user.id }},
+                    "merchandise_type_cd":merchandise_type_cd,
+                    "payment_type_cd":payment_type_cd,
+                    "customer_uid":customer_uid_data,
+                    "start_date":  today
+                },
+                buyer_email : '{{ request.user.email }}',
+                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+            };
+
+            IMP.request_pay(request_pay_period_data, function(rsp) {
+                var msg;
+                if ( rsp.success ) {
+                    console.log(rsp);
+
+                    $.ajax({
+                        url: "/payment/billing_finish/", // 서비스 웹서버
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        data: JSON.stringify({
+                            merchandise_type_cd : merchandise_type_cd,
+                            payment_type_cd:payment_type_cd,
+                            paid_amount: rsp.paid_amount,
+                            start_date: today
+                        }),
+
+                        beforeSend:function(){
+                            beforeSend();
+                        },
+
+                        success:function(data){
+                            var jsondata = JSON.parse(data);
+                            initialJSON = jsondata;
+                            console.log('/payment/billing_finish/::'+jsondata);
+                            if(jsondata.messageArray.length>0){
+                                msg = '결제에 실패하였습니다.';
+                                msg += '에러내용 : ' + jsondata.messageArray;
+                            }else {
+                                msg = '결제가 완료되었습니다.';
+                                {#                        msg += '고유ID : ' + rsp.imp_uid;#}
+                                {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
+                                msg += '결제 금액 : ' + rsp.paid_amount;
+                                {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
+                            }
+                            alert(msg);
+
+                        },
+
+                        complete:function(){
+                            completeSend();
+                        },
+
+                        error:function(){
+                            console.log('server error');
+                        }
+                    });
+
+                } else {
+                    msg = '결제에 실패하였습니다.';
+                    msg += '에러내용 : ' + rsp.error_msg;
+                    alert(msg);
+                }
+            });
+
+        }
+
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.history.js" %}></script>
 

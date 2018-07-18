@@ -543,21 +543,89 @@ def clear_pause_period_billing_logic(request):
 def update_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     next_page = request.POST.get('next_page', '')
-    # 기존 예약 결제 취소 -> 0원으로 billing 결제 및 새로운 예약 스케쥴 등록
     context = {'error': None}
+    payment_data = None
+    billing_info = None
     error = None
 
-    context['error'] = error
+    if error is None:
+        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                    status='reserve',
+                                                    payment_type_cd='PERIOD')
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        error = func_cancel_period_billing_schedule(customer_uid)
+    if error is None:
+        billing_info.state_cd = 'DEL'
+        billing_info.mod_dt = timezone.now()
+        billing_info.use = UN_USE
+        billing_info.save()
+
+    if error is None:
+        if len(payment_data) > 0:
+            payment_data.update(mod_dt=timezone.now(), status='cancelled', use=UN_USE)
+
     if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        logger.error(str(request.user.last_name)+str(request.user.first_name)
-                     + '(' + str(request.user.id) + ')님 재결제 신청 오류:'
-                     + str(error))
-    else:
-        logger.info(str(request.user.last_name)+str(request.user.first_name)
-                    + '(' + str(request.user.id) + ')님 재결제 신청 완료:')
 
     context['error'] = error
+    return redirect(next_page)
+
+
+@csrf_exempt
+def check_update_period_billing_logic(request):
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+    context = {'error': None, 'start_date': None}
+    error = None
+    merchandise_type_cd = None
+    payment_info = None
+    today = datetime.date.today()
+    billing_info = ''
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+
+    if error is None:
+        merchandise_type_cd = json_loading_data['merchandise_type_cd']
+        customer_uid = json_loading_data['customer_uid']
+
+    if error is None:
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                        merchandise_type_cd__contains=merchandise_type_cd,
+                                                        use=USE).latest('end_date')
+        except ObjectDoesNotExist:
+            payment_info = None
+        # if len(payment_user_info) > 0:
+        #     payment_info = payment_user_info[0]
+
+    if error is None:
+        if payment_info is not None:
+            date = int(payment_info.start_date.strftime('%d'))
+            context['start_date'] = str(payment_info.start_date)
+            context['end_date'] = str(payment_info.end_date)
+            context['next_start_date'] = str(payment_info.end_date)
+            context['next_end_date'] = str(func_get_end_date(payment_info.payment_type_cd,
+                                                             payment_info.end_date, 1, date))
+        else:
+            context['next_start_date'] = str(today)
+
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    context['billing_info'] = billing_info
     return render(request, 'ajax/payment_error_info.html', context)
 
 

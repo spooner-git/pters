@@ -20,25 +20,26 @@ $(document).ready(function(){
 
     ////////결제방법 변경 버튼
     $(document).on('click','.pay_method_changeButton',function(){
-        var payid = $(this).attr('data-payid');
+        var customer_uid = $(this).attr('data-customer_uid');
+        check_payment(customer_uid);
         // alert(payid);
         //To- Do
     })
     // 해지신청
     $(document).on('click','.pay_cancel_Button',function(){
-        var payid = $(this).attr('data-customer_uid');
+        var customer_uid = $(this).attr('data-customer_uid');
         // alert(payid);
-        $('#submit_pay_cancel').attr('data-customer_uid', payid);
-        $('#id_customer_uid_cancel').val(payid);
+        $('#submit_pay_cancel').attr('data-customer_uid', customer_uid);
+        $('#id_customer_uid_cancel').val(customer_uid);
         $('#pay_cancel_confirm_popup').show();
         //To- Do
     });
     // 해지신청 취소
     $(document).on('click','.pay_restart_Button',function(){
-        var payid = $(this).attr('data-customer_uid');
-        alert(payid);
+        var customer_uid = $(this).attr('data-customer_uid');
+        alert(customer_uid);
         // $('#submit_pay_restart').attr('data-customer_uid', payid);
-        $('#id_customer_uid_restart').val(payid);
+        $('#id_customer_uid_restart').val(customer_uid);
         document.getElementById('restart-period-payment-form').submit();
         //To- Do
     });
