@@ -616,6 +616,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             try:
                 payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             merchandise_type_cd=product_info.merchandise_type_cd,
+                                                            start_date__lte=today, end_date__gte=today,
                                                             use=USE).latest('end_date')
             except ObjectDoesNotExist:
                 payment_info = None
