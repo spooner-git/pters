@@ -74,27 +74,24 @@
                         </div>
                     </div>
                 {% endfor %}
-{#                {% for current_payment_info in current_billing_info %}#}
-{#                    <div class="current_use_table_content">#}
-{#                        <div>{{ forloop.counter }} </div>#}
-{#                        <div>#}
-{#                            <p>{{ current_payment_info.name }}</p>#}
-{#                            <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>#}
-{#                        </div>#}
-{#                        <div>#}
-{#                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}#}
-{#                                <p>{{ payment_merchandise_info }}</p>#}
-{#                            {% endfor %}#}
-                            {#                        <p>그룹 관리 메뉴 사용</p>#}
-                            {#                        <p>그룹 일정 관리</p>#}
-                            {#                        <p>광고 제거</p>#}
-{#                        </div>#}
-{#                        <div>#}
-{#                            <p>{{ current_payment_info.name }}</p>#}
-{#                            <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                {% endfor %}#}
+                {% for current_payment_info in current_billing_info %}
+                    <div class="current_use_table_content">
+                        <div>{{ forloop.counter }} </div>
+                        <div>
+                            <p>{{ current_payment_info.name }}</p>
+                            <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+                        </div>
+                        <div>
+                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
+                                <p>{{ payment_merchandise_info }}</p>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <p>{{ current_payment_info.name }}</p>
+                            <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
 
             <div id="page_mypay_history" class="sub_pages">
@@ -476,7 +473,7 @@
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
             };
-            console.log(request_pay_period_data)
+
             IMP.request_pay(request_pay_period_data, function(rsp) {
                 var msg;
                 if ( rsp.success ) {
@@ -506,17 +503,14 @@
                                 msg += '에러내용 : ' + jsondata.messageArray;
                             }else {
                                 msg = '결제가 완료되었습니다.';
-                                {#                        msg += '고유ID : ' + rsp.imp_uid;#}
-                                {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
-                                msg += '결제 금액 : ' + rsp.paid_amount;
-                                {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
+{#                                msg += '결제 금액 : ' + rsp.paid_amount;#}
 
                                 $.ajax({
                                     url: "/payment/update_period_billing/", // 서비스 웹서버
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     data: JSON.stringify({
-                                        customer_uid : before_customer_uid,
+                                        customer_uid : before_customer_uid
                                     }),
 
                                     beforeSend:function(){

@@ -104,83 +104,56 @@
 {% block local_js_footer %}
 
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-    <!-- for db by hk.kim 170805-->
-    <script>
-        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-
-        var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-    </script>
-
     <!-- Placed at the end of the document so the pages load faster -->
-
     <script>
+
+        var IMP = window.IMP; // 생략가능
+        IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         if($('body').width()<600){
-            $('#page-base').css('display','block')
+            $('#page-base').css('display','block');
             //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('이용권 구매')
-            $('#uptext').text("이용권 구매")
-            $('#upbutton-modify').hide()
+            $('#uptext3').text('이용권 구매');
+            $('#uptext').text("이용권 구매");
+            $('#upbutton-modify').hide();
         }
-
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
             location.href="/trainer/trainer_setting/"
         });
 
         $('#pay_class_group_function_monthly').click(function(e){
-{#            alert('클래스 + 그룹 정기 결제');#}
             e.preventDefault();
             check_payment('클래스 + 그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'CLA/GRO/ADV', 13200);
             //클래스 + 그룹 레슨 정기결제 버튼
         });
         $('#pay_class_group_function_instant').click(function(e){
-{#            alert('클래스 + 그룹 1개월 이용권 결제');#}
             e.preventDefault();
             check_payment('클래스 + 그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'CLA/GRO/ADV', 16500);
             //클래스 + 그룹 레슨 1개월 결제 버튼
         });
         $('#pay_group_function_monthly').click(function(e){
-{#            alert('그룹 정기 결제');#}
             e.preventDefault();
 
             check_payment('그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'GRO/ADV', 9900);
             //그룹 레슨 정기결제 버튼
         });
         $('#pay_group_function_instant').click(function(e){
-{#            alert('그룹 1개월 이용권 결제');#}
             e.preventDefault();
             check_payment('그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'GRO/ADV', 13200);
             //그룹 레슨 1개월 결제 버튼
         });
         $('#pay_ads_remove_monthly').click(function(e){
-{#            alert('광고 제거 정기 결제');#}
             e.preventDefault();
             check_payment('광고 제거 - 정기 결제', 'card', 'PERIOD', 'ADV', 1100);
             //광고 제거 정기 결제 버튼
         });
         $('#pay_ads_remove_instant').click(function(e){
-{#            alert('광고 제거 1개월 결제');#}
             e.preventDefault();
             check_payment('광고 제거 - 1개월 이용권', 'card', 'SINGLE', 'ADV', 2200);
             //광고 제거 1개월 결제 버튼
         });
 
-        /*
-        function goPage(option){
-            if(option == 2){
-                location.href= "/accounts/password/change/"
-            }else if(option = "delAccount"){
-                location.href="/trainer/delete_account/";
-            }
-        }
-        */
         function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
             var error_check = true;
 
@@ -201,22 +174,14 @@
                 success:function(data){
                     var jsondata = JSON.parse(data);
                     initialJSON = jsondata;
-                    console.log(initialJSON);
                     if(jsondata.messageArray.length>0){
-{#                        $('#errorMessageBar').show();#}
-{#                        $('#errorMessageText').text(jsondata.messageArray);#}
                         error_check = false;
                         alert(jsondata.messageArray);
                     }else {
-                        console.log(jsondata.start_date);
-                        console.log(jsondata.end_date);
-                        console.log(jsondata.next_start_date);
-                        console.log(jsondata.next_end_date);
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price,
-                            jsondata.next_start_date[0]);
+                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, jsondata.next_start_date[0]);
                     }
 
                 },
@@ -230,12 +195,9 @@
                 }
             });
 
-
             return error_check;
         }
 
-        var IMP = window.IMP; // 생략가능
-        IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, start_date){
             var date = new Date();
@@ -251,13 +213,11 @@
                 day = '0'+day;
             }
             var today = date.getFullYear()+'-'+month+'-'+day;
-            console.log('today::'+today);
-            console.log('start_date::'+start_date);
+
             if(start_date != ''){
                 if(today != start_date){
                     if(payment_type_cd == 'PERIOD'){
                         price = 0;
-{#                        alert(start_date+'부터 정기 결제가 시작됩니다.')#}
                     }
                 }
                 today = start_date;
@@ -278,10 +238,6 @@
                 },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
-                {#                    buyer_tel : '',#}
-                {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
-                {#                    buyer_postcode : '123-456',#}
-                {#                    m_redirect_url : '/payment/add_billing/'#}
             };
             var request_pay_single_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
@@ -297,6 +253,9 @@
                 },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                {#                    buyer_tel : '',#}
+                {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
+                {#                    buyer_postcode : '123-456',#}
             };
 
             if(payment_type_cd=='PERIOD'){
@@ -305,6 +264,7 @@
             else{
                 billing_data = request_pay_single_data;
             }
+
             IMP.request_pay(billing_data, function(rsp) {
                     var msg;
                     if ( rsp.success ) {
@@ -328,7 +288,6 @@
                             success:function(data){
                                 var jsondata = JSON.parse(data);
                                 initialJSON = jsondata;
-                                console.log('/payment/billing_finish/::'+jsondata);
                                 if(jsondata.messageArray.length>0){
                                     msg = '결제에 실패하였습니다.';
                                     msg += '에러내용 : ' + jsondata.messageArray;
@@ -355,12 +314,6 @@
                     } else {
                         msg = '결제에 실패하였습니다.';
                         msg += '에러내용 : ' + rsp.error_msg;
-{#                        jQuery.ajax({#}
-{#                            url: "/payment/delete_billing/", // 서비스 웹서버#}
-{#                            method: "POST",#}
-{#                            headers: { "Content-Type": "application/json" },#}
-{#                            data: JSON.stringify(delete_data)#}
-{#                        });#}
                         alert(msg);
                     }
                 });
