@@ -11,6 +11,7 @@ body{
 	display: table;
 	width: 100%;
 	height: 100%;
+	background-color:#f7f7f7;
 }
 
 .time-row30{
@@ -714,6 +715,7 @@ img,a,div,span,p{
 	.time-row{
 		height: 30px;
 		border-bottom:1px solid #f4f4f4;
+		background-color: unset;
 	}
 
 	.hour{
