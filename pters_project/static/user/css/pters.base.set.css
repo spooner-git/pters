@@ -213,13 +213,14 @@ a:focus, a:hover{
 .sidebar_icon{
     position:absolute;
     left: 33%;
-    padding: 15px 30px 15px 0px;
+    padding: 10px 30px 10px 0px;
     width: 50px;
 }
 
 
 .sidebar_div{
-    height: 50px;
+    height: 40px;
+    max-height: 50px;
     border-top: 0.5px solid #cccccc;
     background-color: #ffffff;
     cursor: pointer;
@@ -287,7 +288,7 @@ a:focus, a:hover{
 }
 
 .sidenav a {
-    padding: 16px 8px 18px 57px;
+    padding: 11px 8px 11px 57px;
     text-decoration: none;
     display: block;
 }
@@ -328,10 +329,7 @@ a:focus, a:hover{
     top: 0;
 }
 
-@media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-}
+
 
 
 

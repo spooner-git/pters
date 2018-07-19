@@ -328,7 +328,7 @@ img,a,div,span,p{
 	position: fixed;
 	background:transparent;
 	bottom: 20px;
-	z-index: 100;
+	z-index: 5;
 	color: #444444;
 	font-size: 12px;
 	cursor: pointer;
