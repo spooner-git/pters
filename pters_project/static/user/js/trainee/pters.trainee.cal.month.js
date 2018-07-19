@@ -1240,7 +1240,7 @@ $(document).ready(function(){
         var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(oriYear+'-'+oriMonth+'-'+oriDate, Options.availDate),'')
         if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate) && date_format_yyyy_m_d_to_yyyymmdd(dateinfo) < limitdate){
             // if(dateplans.length==0 && click_check == 0) {
-            if(dateplans.length==0 && click_check == 0) {
+            if(dateplans.length==0 && click_check == 0 && Options.reserve != 1){
                 //close_info_popup('cal_popup_plancheck');
                 $('.plan_raw_add').trigger('click');
             }

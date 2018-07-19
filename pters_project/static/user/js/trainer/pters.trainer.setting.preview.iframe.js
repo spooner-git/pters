@@ -1243,7 +1243,7 @@ $(document).ready(function(){
         var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(oriYear+'-'+oriMonth+'-'+oriDate, Preview_Options.availDate),'')
         if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate) && date_format_yyyy_m_d_to_yyyymmdd(dateinfo) < limitdate){
             // if(dateplans.length==0 && click_check == 0) {
-            if(dateplans.length==0 && click_check == 0) {
+            if(dateplans.length==0 && click_check == 0 && Preview_Options.reserve != 1){
                 //close_info_popup('cal_popup_plancheck');
                 $('.plan_raw_add').trigger('click');
             }
@@ -2184,7 +2184,7 @@ var oriDate = date.getDate();
 
 var availableStartTime = Preview_Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
 var availableEndTime = Preview_Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
-var reserveOption = Preview_Options.reserve
+var reserveOption = Preview_Options.reserve;
 
 /*
 function ajaxClassTime(referencedate, howmanydates, use, callback){
@@ -2656,6 +2656,7 @@ function availableDateIndicator(availableStartTime,Endtime){
     // 요소설명
     // availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
     // availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
+    console.log('currentHour',currentHour)
     if(Preview_Options.reserve == 1){
         $('td:not([schedule-id])').addClass('option_notavailable')
         $('.blackballoon').parent('td').addClass('option_notavailable')
