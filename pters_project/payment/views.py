@@ -825,6 +825,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         current_billing_info = []
         period_info_flag = []
         today = datetime.date.today()
+        period_payment_no = 1
         for product_info in product_list:
             # try:
             #     payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
@@ -908,6 +909,8 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                     current_payment_data.append(payment_info)
 
             if period_payment_info is not None:
+                period_payment_no += len(payment_data)
+                period_payment_info.counter = period_payment_no
                 try:
                     merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.merchandise_type_cd)
                     merchandise_type_name = merchandise_type.contents

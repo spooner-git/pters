@@ -74,9 +74,10 @@
                         </div>
                     </div>
                 {% endfor %}
+
                 {% for current_payment_info in current_billing_info %}
                     <div class="current_use_table_content">
-                        <div>{{ forloop.counter }} </div>
+                        <div>{{ current_payment_info.counter }} </div>
                         <div>
                             <p>{{ current_payment_info.name }}</p>
                             <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
