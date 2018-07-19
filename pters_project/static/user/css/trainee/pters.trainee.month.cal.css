@@ -662,9 +662,10 @@ img,a,div,span,p{
 	background: #ffffff;
 	z-index: 150;
 }
+
 .groupreserve, .classreserve{
 	display: none;
-	min-height: 156px;
+	min-height: 180px;
 }
 
 
@@ -1509,4 +1510,5 @@ img,a,div,span,p{
 	width: 100px;
 	margin-right: 14.845px;
 	margin-left: 14.845px;
+	filter: invert(100);
 }

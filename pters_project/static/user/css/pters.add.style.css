@@ -554,6 +554,15 @@ ul a{
 	border-left: 0.5px solid #ffffff;
 }
 
+.timegraph_plans_grey_trainee{
+	height: 8px;
+	position: absolute;
+	background: #cccccc;
+	z-index: 1;
+	opacity: 1;
+	border-left: 0.5px solid transparent;
+}
+
 
 .tdgraph_60{
 	display: inline-block;
@@ -581,7 +590,7 @@ ul a{
 
 .tdgraph_trainee_popup{
 	/*height: 116px;*/
-	height: 126px;
+	height: 140px;
 	overflow-y: auto;
 	background: #f4f4f4;
 	border-top: 0.5px solid #3b3d3d;
