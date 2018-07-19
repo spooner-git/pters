@@ -444,9 +444,7 @@ $(document).ready(function(){
                 next30IDMin  = '00';
             }
             var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
-            console.log('여기는?')
             if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                console.log('여기 들어오나?')
                 $('.blankSelected').removeClass('blankSelected');
                 $(this).find('div').addClass('blankSelected');
 
@@ -2173,8 +2171,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }
 
 
-
-
         var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
         //var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
         var timeoffset = '00';
@@ -2240,15 +2236,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
                                     '</div>'
                                     )
-                /*
-                planStartDiv.attr('class-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                            .attr('class-schedule-id' , planScheduleIdArray[i])
-                            .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i], 'data-memo' : planNoteArray[i],
-                                'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                            .addClass(planColor_)
-                            .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
-                            .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
-                */
             }
 
             
@@ -2279,15 +2266,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                     )
  
             }
-            /*
-            planStartDiv.attr('group-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr('group-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
-                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
-                .html('<span class="memberName">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+'<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
-            */
         }else if(option == 'off'){
             if(planStartDiv.find('div['+'off-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 planStartDiv.append('<div off-time="'+planArray.join('_')+
@@ -2312,39 +2290,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                     )
  
             }
-
-
-            /*            
-            planStartDiv.attr('off-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr('off-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
-                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px', 'top':Number(planArray[4])})
-                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
-            */
         }
 
-
-        
-        /*
-        var lens = parseInt(planDura)+1
-        if(mmm !='00' && mmm != 30){
-            mmm = '00'
-            lens = parseInt(planDura)+2
-        }
-
-        for(var j=0; j<lens; j++){
-            if(mmm == 60){
-                hhh = hhh+1;
-                mmm = '00';
-            }
-            $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
-            mmm = Number(mmm) + 30;
-        }*/
-
-        // 7:25 ~ 8:10
-        
         var sMinute;
         var eMinute;
         if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
@@ -2353,7 +2300,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }else if(planMinute < 30 && planEndMin >= 30){ // 7:15 ~ 8:40
             sMinute = '00';
             eMinute =  planEndMin;
-        }else if(planMinute >= 30 && planEndMin < 30){ // 7:40 ~ 8:15
+        }else if(planMinute >= 30 && planEndMin < 30 && planEndMin > 0){ // 7:40 ~ 8:15
+            sMinute = '30'
+            eMinute = '01';
+        }else if(planMinute >= 30 && planEndMin < 30 && planEndMin == 0){ // 7:40 ~ 8:15
             sMinute = '30'
             eMinute = '00';
         }else if(planMinute < 30 && planEndMin < 30 && planEndMin > 0){ // 7:15 ~ 8:15

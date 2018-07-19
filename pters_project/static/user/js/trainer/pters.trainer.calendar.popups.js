@@ -5,7 +5,15 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////일정 클릭 이벤트
-    $(document).on('mouseenter','div.classTime, div.offTime, div.groupTime',function(e){
+    //if(bodywidth > 600){
+        var eventstart = 'mouseenter'
+        var eventend = 'mouseleave'
+    //}else{
+        //var eventstart = 'touchstart'
+        //var eventend = 'touchend'
+    //}
+
+    $(document).on(eventstart,'div.classTime, div.offTime, div.groupTime',function(e){
         e.stopPropagation();
         e.preventDefault();
         var thisWidth = $(this).width();
@@ -31,7 +39,7 @@
         }
 
 
-        $(document).on('mouseleave','div.classTime, div.offTime, div.groupTime',function(e){
+        $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             $(this).css({'height':thisHeight+2, 'width':'98.5%', 'z-index':thisZindex, 'border':'1px solid #e4e4e4', 'left':thisOffsetleft});
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
@@ -76,7 +84,7 @@
         var dayarryJP = ['日','月','火','水','木','金','土'];
         var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
 
-        var member = " 회원님의 ";
+        var member = " 님 ";
         var yourplan = " 일정";
         var day = dayarryKR[dayraw];
         var text = '레슨 일정';
@@ -115,7 +123,9 @@
         var schedule_finish_check = $(this).attr('data-schedule-check');
 
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
-        var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan;
+        var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
+        var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
+        var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
         var infoText3 = $(this).attr('data-memo');
         if($(this).attr('data-memo') == undefined){
             infoText3 = "";
@@ -149,9 +159,12 @@
             // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
             $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
             var myImage = document.getElementById("id_sign_img");
-            myImage.onerror = function() {
-                this.src="";
-                $("#popup_sign_img").css("display","none");
+            myImage.onerror = function(){
+                /*this.src="";
+                */
+                $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
+               // $("#popup_sign_img").css("display","none");
+
             }
         }
         schedule_on_off = 1;
@@ -225,13 +238,16 @@
         $('#popup_info3_memo,#popup_info3_memo_modify').show();
 
         var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')';
-        var infoText2 = comment + time +':'+minute+ yourplan;
+        var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
+        var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
+
+        var infoText2 = '<span>'+yourplan +'</span><br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
         var infoText3 = $(this).attr('data-memo');
         if($(this).attr('data-memo') == undefined){
             infoText3 = "";
         }
         $('#popup_info').text(infoText);
-        $('#popup_info2').text(infoText2);
+        $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
         selector_cal_popup_plan_info.attr({'schedule-id':$(this).attr('off-schedule-id'), 'data-grouptype':'off'});
         $("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
@@ -290,13 +306,13 @@
         var dayarryKR = ['일','월','화','수','목','금','토'];
         var dayarryJP = ['日','月','火','水','木','金','土'];
         var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
-        var member = " 회원님의 ";
+        var member = " 님의 ";
         var yourplan = " 일정";
         var day = dayarryKR[dayraw];
         var text = '그룹 레슨 일정';
         switch(Options.language){
             case "KOR" :
-                member = " 회원님의 ";
+                member = " 님의 ";
                 yourplan = " 일정";
                 day = dayarryKR[dayraw];
                 text = '그룹 레슨 일정';
@@ -334,14 +350,16 @@
 
 
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
-        var infoText2 = '<span class="memberNameForInfoView" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+time+':'+minute+yourplan;
+        var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
+        var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
+        var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">[그룹]'+info[6]+'</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
         var infoText3 = $(this).attr('data-memo');
         if($(this).attr('data-memo') == undefined){
             infoText3 = "";
         }
         $('#popup_info').text(infoText);
         //$('#popup_info2').html(infoText2);
-        $('#popup_info2').text('[그룹]'+info[6]+' '+time+':'+minute+yourplan);
+        $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
 
         $("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장

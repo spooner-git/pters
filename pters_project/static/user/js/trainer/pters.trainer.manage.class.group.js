@@ -35,7 +35,6 @@ $('button#addByNew').click(function(e){
     var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
     var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
 
-    console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type)
     if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
         alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
     }else{
@@ -43,7 +42,7 @@ $('button#addByNew').click(function(e){
         e.preventDefault()
         added_New_Member_Num++
         var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">'
-        var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">'
+        var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">'
         var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
         var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
         var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
@@ -152,7 +151,6 @@ $(document).on('click','img.add_listedMember',function(){
             var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
 
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-                console.log('여기',jsondata)
                 if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
                     for(var i=0; i<jsondata.scheduleIdArray.length; i++){
                         if(jsondata.scheduleFinishArray[i] == 0){
@@ -203,7 +201,6 @@ $(document).on('click','img.add_listedMember',function(){
         var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
         var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
 
-        console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type)
         if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
             alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
         }else{
@@ -270,11 +267,12 @@ function draw_memberlist_for_addByList(targetHTML){
 
                 var len = jsondata.dIdArray.length;
                 var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
+                var addedNum = 0;
                 for(var i=1; i<=len; i++){
-                    console.log($('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length)
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
                         htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                        addedNum++
                     }
                 }
                 var len_finish = jsondata.finishDidArray.length;
@@ -282,8 +280,13 @@ function draw_memberlist_for_addByList(targetHTML){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.finishsexArray[j-1]+'.png">'
                         htmlToJoin[i+j-1] = '<div class="list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'"><div data-dbid="'+jsondata.finishDidArray[j-1]+'">'+sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                        addedNum++
                     }
                 }
+                if(addedNum == 0){
+                    htmlToJoin.push('<div class="list_addByList">'+'추가 가능한 회원이 없습니다.'+'</div>')
+                }
+
                 var html = htmlToJoin.join('')
                 targetHTML.html(html)
             }
@@ -322,7 +325,6 @@ $('button#addBySearch_search').click(function(e){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -391,7 +393,6 @@ function added_member_info_to_jsonformat(){
         var end_date = $('#memberDue_add_2_fast').val()
         var memo = $('#comment_fast').val();
     }
-    console.log(memo)
     var dataObject = {
         "new_member_data":[],
         "old_member_data":[],
@@ -414,7 +415,6 @@ function added_member_info_to_jsonformat(){
             var lastname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname');
             var phone = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone');
             var sex = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex')
-            console.log(firstname, lastname, phone, sex)
             var data = {
                 "first_name" : firstname,
                 "last_name" : lastname,
@@ -732,7 +732,6 @@ function delete_group_from_list(group_id){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(data)
             if(jsondata.messageArray.length>0){
                 $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -769,7 +768,6 @@ function delete_group_from_list(group_id){
 
 //그룹원 지우기
 function delete_groupmember_from_grouplist(){
-    console.log('group_delete_JSON', group_delete_JSON)
     $.ajax({
         url:'/trainer/delete_group_member_info/',
         type:'POST',
@@ -951,7 +949,6 @@ function groupListSet(option, jsondata){ //option : current, finished
             var text_membernum = "종료된 클래스 "
             break;
     }
-    console.log('groupListSet',jsondata)
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
     var ordernum = 0;
@@ -1068,7 +1065,6 @@ function get_groupmember_list(group_id, use, callback){
 
 //그룹원 목록을 그룹에 그리기 
 function groupMemberListSet(group_id, jsondata){
-    console.log('groupmemberlist',jsondata)
     var htmlToJoin = ['<div class="groupmemberline_thead">'+
     '<div class="_tdname">회원명</div>'+
     '<div class="_id">회원 ID</div>'+
@@ -1154,7 +1150,6 @@ $(document).on('click','img.substract_groupMember',function(e){
     group_delete_JSON.ids.push(groupmember_dbid)
     group_delete_JSON.fullnames.push(groupmember_name)
     group_delete_JSON.group_id = groupmember_groupid
-    console.log(group_delete_JSON)
     delete_groupmember_from_grouplist()
 })
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
@@ -1175,7 +1170,6 @@ function get_group_repeat_info(group_id){
 
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_group_repeat_info',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -1214,7 +1208,6 @@ function set_group_repeat_info(jsondata, group_id){
         var text2 = 'h'
         var text3 = 'Repeat : '
     }
-    console.log('set_group_repeat_info',jsondata)
 
     var repeat_info_dict= { 'KOR':
         {'DD':'매일', 'WW':'매주', '2W':'격주',
@@ -1313,7 +1306,6 @@ function set_group_repeat_info(jsondata, group_id){
 
 //그룹의 반복일정 id를 보내서 그 반복일정에 묶여있는 회원들의 반복일정 id를 불러온다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
 function set_group_member_repeat_info(group_repeat_id, use, callback){
-    console.log(group_repeat_id)
     $.ajax({
         url: '/trainer/get_group_repeat_schedule_list/',
         type:'POST',
@@ -1326,7 +1318,6 @@ function set_group_member_repeat_info(group_repeat_id, use, callback){
 
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('set_group_member_repeat_info',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -1366,10 +1357,3 @@ function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=f
     $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable))
 }
 
-
-
-//test
-$('#uptext2_PC').click(function(){
-    console.log($('.addByNewRaw').length, $('.addByNewRaw:nth-child(1)').attr('data-name'), $('.addByNewRaw:nth-child(2)').attr('data-name'),$('.addByNewRaw:nth-child(3)').attr('data-name'))
-    console.log('그룹원 추가',added_member_info_to_jsonformat())
-})

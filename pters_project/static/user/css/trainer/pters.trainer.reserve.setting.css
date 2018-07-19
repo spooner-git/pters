@@ -286,7 +286,7 @@ li a{
 
 @media(min-width: 600px){
 	.settingMenu{
-		height: 75px;
+		height: auto;
 		padding-top: 10px;
 	}
 	#menuName{
