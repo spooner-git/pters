@@ -5,7 +5,15 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////일정 클릭 이벤트
-    $(document).on('mouseenter','div.classTime, div.offTime, div.groupTime',function(e){
+    //if(bodywidth > 600){
+        var eventstart = 'mouseenter'
+        var eventend = 'mouseleave'
+    //}else{
+        //var eventstart = 'touchstart'
+        //var eventend = 'touchend'
+    //}
+
+    $(document).on(eventstart,'div.classTime, div.offTime, div.groupTime',function(e){
         e.stopPropagation();
         e.preventDefault();
         var thisWidth = $(this).width();
@@ -31,7 +39,7 @@
         }
 
 
-        $(document).on('mouseleave','div.classTime, div.offTime, div.groupTime',function(e){
+        $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             $(this).css({'height':thisHeight+2, 'width':'98.5%', 'z-index':thisZindex, 'border':'1px solid #e4e4e4', 'left':thisOffsetleft});
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
@@ -149,9 +157,12 @@
             // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
             $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
             var myImage = document.getElementById("id_sign_img");
-            myImage.onerror = function() {
-                this.src="";
-                $("#popup_sign_img").css("display","none");
+            myImage.onerror = function(){
+                /*this.src="";
+                */
+                $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
+               // $("#popup_sign_img").css("display","none");
+
             }
         }
         schedule_on_off = 1;
