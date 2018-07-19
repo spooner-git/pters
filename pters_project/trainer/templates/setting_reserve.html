@@ -327,7 +327,15 @@
 
     <div class="popupBtn_mini">
         <button class="submitBtn _button_Prev">이전</button>
+        <button class="submitBtn _button_Preview">미리보기</button>
         <button class="submitBtn _button_Next">등록</button>
+    </div>
+
+
+
+    <div id="preview_popup">
+
+        
     </div>
 
 
@@ -673,6 +681,10 @@
         $('#upbutton-x, ._button_Prev').click(function(){
             location.href="/trainer/trainer_setting/"
         });
+
+        $('._button_Preview').click(function(){
+            location.href="/trainer/iframe_preview/"
+        })
 
         function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
             var availableTime = $('#id_setting_member_reserve_available_time').val();

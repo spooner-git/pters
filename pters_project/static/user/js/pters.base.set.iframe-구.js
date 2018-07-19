@@ -49,17 +49,7 @@ function sideGoPage(page){
     location.href="/trainer/"+page+'/'
 }
 
-
-
 function shade_index(option){
-    var initialbodywidth = window.innerWidth;
-    var initialbodyheight = document.documentElement.clientHeight + 100;
-    console.log(initialbodywidth,initialbodyheight)
-    if(initialbodywidth > 600){
-        $('#pshade').css({'width':initialbodywidth, 'height':initialbodyheight});
-    }else{
-        $('#mshade').css({'width':initialbodywidth, 'height':initialbodyheight});
-    }
     var bodywidth = window.innerWidth;
     if(bodywidth > 600){
         if(option<0){
@@ -113,28 +103,21 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        console.log($('._calweek').length,$('._calweek').length,"$('._calweek').length",$('._calweek').length,)
-        if($('._calweek').length != 0){
-            enable_window_scroll();
-        }
         //$('body').css('overflow-y','overlay');
     }
     else if(option =="cal_popup_plandelete"){
         $("#"+option).css({'display':'none'});
-        console.log('1');
         if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
             shade_index(100);
         }else{
             shade_index(-100);
         }
-        enable_window_scroll();
+
         //$('body').css('overflow-y','overlay');
     }
     else if(option =="page-addplan"){
         $('#'+option).css('display','none');
-        $('#calendar').css('position','relative');
         shade_index(-100);
-        enable_window_scroll();
     }
     else if(option =="cal_popup_repeatconfirm"){
         $('#'+option).css('display','none');
@@ -144,18 +127,10 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        if(bodywidth>=600){
-            $('#calendar').css('position','relative');
-        }else{
-            //$('._calmonth').css({'height':'90%','position':'fixed'})
-            //$('body').css('overflow-y','overlay');
-        }
-        enable_window_scroll();
     }
     else if(option = "cal_popup_plancheck"){
         $('#'+option).css('display','none');
         shade_index(-100);
-        enable_window_scroll();
     }
 }
 
@@ -167,7 +142,7 @@ function toggleGroupParticipantsList(onoff){
     switch(onoff){
         case 'on':
             toggleGroupParticipants = 'on';
-            //selector_grouopParticipants.animate({'height':'200px'},200);
+            selector_grouopParticipants.animate({'height':'200px'},200);
             //$('#groupParticipants').css('height','200px')
             selector_popup_btn_viewGroupParticipants_img.css('transform','rotate(180deg)');
             var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
@@ -177,13 +152,12 @@ function toggleGroupParticipantsList(onoff){
             get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
                 draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
-                selector_grouopParticipants.css({'height':'auto'})
                 completeSend();
             });
             break;
         case 'off':
             toggleGroupParticipants = 'off';
-            selector_grouopParticipants.css({'height':0}).html('');
+            selector_grouopParticipants.animate({'height':0},200).html('');
             selector_popup_btn_viewGroupParticipants_img.css('transform','rotate(0deg)');
             break;
     }
@@ -276,7 +250,6 @@ $(document).ready(function(){
         $('.__monthplan').text("월간 일정");
         $('.__membermanage').text("회원 관리");
         $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
         $('.__workmanage').text("업무 통계");
         $('.__setting').text("설정");
         $('._nameAttach').text("님");
@@ -321,6 +294,15 @@ $(document).ready(function(){
 });
 
 
+$('#alarm_delete').click(function(){
+    var selector_alarm_ifram = $('#alarm-iframe');
+    var alarm_size = selector_alarm_ifram.contents().find(".log_id_array").length;
+    alert(alarm_size+'건의 알림을 삭제합니다.');
+    selector_alarm_ifram.contents().find("#log_id_size").val(alarm_size);
+    selector_alarm_ifram.contents().find("#alarm-delete-form").submit();
+
+});
+
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -328,8 +310,6 @@ var currentDate = date.getDate();
 var currentHour = date.getHours();
 var currentMinute = date.getMinutes();
 var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
-var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate,'-')
-var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
@@ -526,59 +506,9 @@ function time_format_to_hangul(timedata){
     }else{
         hourText = '오전';
     }
-    if(min<10){
-        min = '0'+min
-    }
-    if(hour<10){
-        hour = '0'+hour
-    }
 
-    return hangul_time = hourText + ' ' + hour + '시 '+min+'분';
+    return hangul_time = hourText + ' ' + hour + '시';
 }
-
-
-//10:00:00.000000 --> 오전 10시
-function time_format_to_hangul2(timedata){
-    var time = timedata.split(':');
-    var hour = Number(time[0]);
-    var min = Number(time[1]);
-    var hourText;
-    if(hour>=12){
-        if(hour==24){
-            hourText = '오전';
-            hour = 12;
-        }else if(hour==12){
-            hourText = "오후";
-            hour = 12;
-        }else{
-            hourText = "오후";
-            //hour = hour-12;
-        }
-    }else{
-        hourText = '오전';
-    }
-    if(min<10){
-        min = '0'+min
-    }
-    if(hour<10){
-        hour = '0'+hour
-    }
-
-    return hangul_time = hourText + ' ' + hour + ':'+min;
-}
-
-function time_h_m_to_hh_mm(time){
-    var hour = Number(time.split(':')[0]);
-    var min = Number(time.split(':')[1]);
-    if(hour < 10){
-        var hour = '0' + Number(time.split(':')[0]);
-    }
-    if(min < 10){
-        var min = '0' + Number(time.split(':')[1]);
-    }
-    return hour + ':' + min;
-}
-
 
 function time_h_format_to_hh(time){
     var result = String(time);
@@ -670,38 +600,11 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
      }
      */
 
-    return planDura;//시간단위로 아웃풋
-}
-
-function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함) // 분단위로 아웃풋
-    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
-    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
-        lastDay[1] = 29;
-    }else{
-        lastDay[1] = 28;
-    }
-
-    
-
-    var planYear    = Number(planStartDate.split('-')[0]);
-    var planMonth   = Number(planStartDate.split('-')[1]);
-    var planDate    = Number(planStartDate.split('-')[2]);
-    var planHour    = Number(planStartTime.split(':')[0]);
-    var planMinute  =        planStartTime.split(':')[1];
-
-    var planEDate   = Number(planEndDate.split('-')[2]);
-    var planEndHour = Number(planEndTime.split(':')[0]);
-    var planEndMin  =        planEndTime.split(':')[1];
-   
-    var duraMin = 0;
-    while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planEndTime.split(':')[0]+':'+planEndTime.split(':')[1]){
-        duraMin++
-    }
-   
-    return duraMin;
+    return planDura;
 }
 
 function duration_number_to_hangul(number){  // 0.5시간, 1.5시간, 1시간 --> 30분, 1시간 30분, 1시간
+
     if(number - parseInt(number) == 0.5){
         if(parseInt(number) != 0){
             number = parseInt(number)+'시간' + ' 30분';
@@ -712,18 +615,6 @@ function duration_number_to_hangul(number){  // 0.5시간, 1.5시간, 1시간 --
         number = number + '시간';
     }
     return number;
-}
-
-function duration_number_to_hangul_minute(minute){
-    var nums_result;
-    if(minute < 60){
-        nums_result = minute + ' 분';
-    }else if(minute%60 == 0){
-        nums_result = minute/60+' 시간'
-    }else { //125
-        nums_result = parseInt(minute/60)+ ' 시간 '+ (minute-60*parseInt(minute/60)) + '분'
-    }
-    return nums_result;
 }
 
 
@@ -769,10 +660,6 @@ function remove_front_zeros(rawData){
         }
     }
 }
-
-Array.prototype.insert = function(index, item){
-    this.splice(index, 0, item);
-};
 
 /*/////////////////////일정 관련 공통 함수////////////////////////////////*/
 
@@ -932,26 +819,6 @@ function scrollToDom(dom){
     }
 }
 
-function disable_window_scroll(){
-    if(bodywidth < 600){
-       $('#calendar').css('position','fixed'); 
-    }
-    
-    $('body, #calendar').on('scroll touchmove mousewheel',function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    })
-}
-
-function enable_window_scroll(){
-    if(bodywidth < 600){
-       $('#calendar').css('position','relative'); 
-    }
-
-    $('body, #calendar').off('scroll touchmove mousewheel');
-}
-
 
 //알림창에 얼마전에 뜬 알람인지 계산
 function date_calculator(yyyy_mm_dd_hh_mm_ss){
@@ -1071,7 +938,35 @@ function TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER){
 
 var bodywidth = selector_body.width();
 /*
-$(window).resize(function(){
-    bodywidth = window.innerWidth;
-})
+if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_ballet');
+}else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_yoga');
+}else if(class_name.match(/웨이트/)|| class_name.match(/PT/) || class_name.match(/피티/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight');
+}else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_pilates');
+}else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_billiard');
+}else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_golf');
+}else{
+    $('#upperImg, #ymdText').addClass('bg_ymdText_brick');
+}
 */
+
+if(class_code.match(/BL/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_ballet');
+}else if(class_code.match(/YG/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_yoga');
+}else if(class_code.match(/WT/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_weight');
+}else if(class_code.match(/PI/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_pilates');
+}else if(class_code.match(/BILLIARD/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_billiard');
+}else if(class_code.match(/GOLF/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_golf');
+}else if(class_code.match(/ETC/)){
+    $('#upperImg, #ymdText').addClass('bg_ymdText_basic');
+}

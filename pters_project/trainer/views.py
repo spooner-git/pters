@@ -367,6 +367,30 @@ class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
         context['holiday'] = holiday
 
         return render(request, self.template_name, context)
+
+
+class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_preview.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
 # iframe화를 위해 skkim
 
 
