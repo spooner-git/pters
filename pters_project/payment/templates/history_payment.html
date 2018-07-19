@@ -111,7 +111,7 @@
 
                 {% for payment_info in payment_data_history %}
                     <div class="mypay_history_table_content">
-                        <div>{{ forloop.counter }}</div>
+                        <div>{{ forloop.revcounter }}</div>
                         <div>
                             <p>{{ payment_info.name }}</p>
                             <p>{{ payment_info.start_date }} ~ {{ payment_info.end_date }}</p>
