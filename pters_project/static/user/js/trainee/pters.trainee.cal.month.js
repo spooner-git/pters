@@ -1579,7 +1579,7 @@ $(document).ready(function(){
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
             var planLoc     = timegraph_houroffset;
 
-            if(planHour >= Options.workStartTime && planHour < Options.workEndTime){
+            
                 for(var i=0;i<Arraylength;i++){
                     var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
                     var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
@@ -1589,39 +1589,41 @@ $(document).ready(function(){
                     var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
                     var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
                     var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+                    
+                    if(planHour >= Options.workStartTime && planHour < Options.workEndTime){
+                        var timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                        var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                        var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
 
-                    var timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                    var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                        var timegraph_hourendwidth;
+                        var timegraph_hourendoffset;
 
-                    var timegraph_hourendwidth;
-                    var timegraph_hourendoffset;
-
-                    if(planEndHour == Options.workEndTime){
-                        timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
-                        timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
-                    }else if(planEndHour > Options.workEndTime){
-                        timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-                        timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
-                    }else{
-                        timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
-                        timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
-                    }
-
-                    if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
-                        var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
-
-                        var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
-                        var planLoc     = timegraph_houroffset;
-
-                        if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
-                            
+                        if(planEndHour == Options.workEndTime){
+                            timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
+                            timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
+                        }else if(planEndHour > Options.workEndTime){
+                            timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                            timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
                         }else{
-                            htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
+                            timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
+                            timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
+                        }
+
+                        if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
+                            var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
+
+                            var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
+                            var planLoc     = timegraph_houroffset;
+
+                            if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
+                                
+                            }else{
+                                htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
+                            }
                         }
                     }
                 }
-            }
+            
 
 
             htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
