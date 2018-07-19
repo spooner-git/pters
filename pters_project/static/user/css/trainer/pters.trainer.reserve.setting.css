@@ -284,6 +284,16 @@ li a{
 	background: #ffffff;
 }
 
+#preview_popup{
+	position: fixed;
+	width: 90%;
+	max-width: 450px;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+
 @media(min-width: 600px){
 	.settingMenu{
 		height: auto;

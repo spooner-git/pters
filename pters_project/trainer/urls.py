@@ -210,5 +210,7 @@ urlpatterns = [
     url(r'^iframe_week/$', views.CalWeekIframeView.as_view(), name='iframe_week'),
     # iframe 월간 일정 페이지
     url(r'^iframe_month/$', views.CalMonthIframeView.as_view(), name='iframe_month'),
+    # iframe 회원 달력 미리보기 페이지
+    url(r'^iframe_preview/$', views.CalPreviewIframeView.as_view(), name='iframe_preview'),
     ######################################################################################################
 ]
