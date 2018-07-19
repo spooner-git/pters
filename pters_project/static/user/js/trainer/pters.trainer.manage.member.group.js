@@ -23,7 +23,7 @@ $('button#addByNew').click(function(e){
     e.preventDefault();
     added_New_Member_Num++;
     var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">';
-    var nameinput = '<input class="new_member_lastname" placeholder="회원 성"><input class="new_member_firstname" placeholder="회원 이름">';
+    var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
     var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
     var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
     var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';
@@ -234,6 +234,7 @@ function draw_memberlist_for_addByList(targetHTML){
 
                 var len = jsondata.dIdArray.length;
                 var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
+                var addedNum = 0;
                 for(var i=1; i<=len; i++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">';
@@ -248,6 +249,7 @@ function draw_memberlist_for_addByList(targetHTML){
                             sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+
                             //sexInfo+jsondata.nameArray[i-1]+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+
                             '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>';
+                        addedNum++
                     }
                 }
                 var len_finish = jsondata.finishDidArray.length;
@@ -265,7 +267,11 @@ function draw_memberlist_for_addByList(targetHTML){
                             sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+
                             //sexInfo+jsondata.finishnameArray[j-1]+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+
                             '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>';
+                        addedNum++
                     }
+                }
+                if(addedNum == 0){
+                    htmlToJoin.push('<div class="list_addByList">'+'추가 가능한 회원이 없습니다.'+'</div>')
                 }
                 var html = htmlToJoin.join('');
                 targetHTML.html(html);
