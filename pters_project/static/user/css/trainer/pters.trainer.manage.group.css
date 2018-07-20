@@ -1418,6 +1418,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		height: 22px;
 		width: 70px;
 		font-size: 13px;
+		border: 0;
 	}
 	.button_shift_info:active{
 		background: #fe4e65;
