@@ -39,19 +39,16 @@
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
     <!--플로팅 버튼-->
-    <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_managemember(0)">
-            <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt="">  <!--2017.10.2-->
-        </div>
-        <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('openlesson')">
-            <a class="KRtext">신규<br/>클래스</a><a class="JPtext">New<br/>Class</a><a class="ENtext">New<br/>Class</a>
-        </div>
-        <!--
-        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
-            <a class="KRtext">자유<br/>그룹</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
-        </div>
-        -->
+    <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
     </div>
+    <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('openlesson')">
+        <a class="KRtext">신규<br/>클래스</a><a class="JPtext">New<br/>Class</a><a class="ENtext">New<br/>Class</a>
+    </div>
+    <!--
+    <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
+        <a class="KRtext">자유<br/>그룹</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
+    </div>
+    -->
     <!--플로팅 버튼-->
 
     <div id="notice_popup">

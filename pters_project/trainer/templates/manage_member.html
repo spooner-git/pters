@@ -33,19 +33,19 @@
     <!--플로팅 버튼-->
 
     <!--플로팅 버튼-->
-    <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_managemember(0)">
-            <img src={% static_url "user/res/memberadd/float_plus_member.png" %} alt="">  <!--2017.10.2-->
-        </div>
-        <div id="float_inner1" class="float_inner" onclick="float_btn_managemember(1)">
-            <a class="KRtext">회원<br/>추가</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
-        </div>
-        <!--
-        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
-            <a class="KRtext">그룹<br/>추가</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
-        </div>
-        -->
+
+    <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
+        
     </div>
+    <div id="float_inner1" class="float_inner" onclick="float_btn_managemember(1)">
+        <a class="KRtext">회원<br/>추가</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+    </div>
+    <!--
+    <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
+        <a class="KRtext">그룹<br/>추가</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+    </div>
+    -->
+
 
     <div id="instructPopup" class="instructPopup">
 

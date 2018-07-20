@@ -35,13 +35,15 @@ function completeSend(use, callback){
 }
 
 function upTouchEvent(){
+    console.log('up')
     if($('#mshade').css('z-index')<0){
-        $("#float_btn_wrap").show()
+        $("#float_btn").fadeIn('fast')
     }
 
 }
 function downTouchEvent(){
-    $("#float_btn_wrap").fadeOut('fast')
+    console.log('up')
+    $("#float_btn").fadeOut('fast')
 
 }
 
