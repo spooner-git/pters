@@ -514,23 +514,23 @@ $(document).ready(function(){
      });
      */
 
-    /*그룹 진행완료, 재개와 겹침
+    /*그룹 진행완료, 재개와 겹침*/
      //진행 완료 처리 버튼
      $('.lectureStateChangeSelectPopup ._complete').click(function(){
-     var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-     var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-     complete_member_reg_data_pc(lectureID, dbID)
-     $('.lectureStateChangeSelectPopup').css('display','none')
+         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+         var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+         complete_member_reg_data_pc(lectureID, dbID)
+         $('.lectureStateChangeSelectPopup').css('display','none')
      })
 
      //재개 처리 버튼
      $('.lectureStateChangeSelectPopup ._resume').click(function(){
-     var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-     var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-     resume_member_reg_data_pc(lectureID, dbID)
-     $('.lectureStateChangeSelectPopup').css('display','none')
+         var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+         var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+         resume_member_reg_data_pc(lectureID, dbID)
+         $('.lectureStateChangeSelectPopup').css('display','none')
      })
-     그룹 진행완료, 재개와 겹침*/
+     /*그룹 진행완료, 재개와 겹침*/
 
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
@@ -2961,7 +2961,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
                     $('div.lectureRefundPopup.popups input[type="number"]').val('')
                     console.log('success');
 
-                    alert(userName + text)
+                    alert(text)
                 }
             },
 

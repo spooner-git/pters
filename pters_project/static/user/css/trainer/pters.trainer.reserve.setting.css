@@ -1,8 +1,15 @@
+html{
+	background:#ffffff;
+}
 body{
 	padding-top: 50px;
 	margin:0 auto;
 	background: #ffffff;
 }
+.wrap800{
+	width: 97%;
+}
+
 #ymdText{
 	z-index: 30;
 }
@@ -86,15 +93,16 @@ li a{
 }
 
 #hourSelect, #hourSelect2, #workTimehourSelect, #workTimehourSelect2{
-	display: inline-flex;
+	display: inline-block;
 	width: 50%;
+	min-width: 100px;
 	margin-top: 4px;
 }
 
 #timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect, #mstartHourSelect{
 	left: 16%;
 	max-width: 170px;
-	display: inline-flex;
+	display: inline-block;
 	margin-top: 4px;
 }
 
@@ -253,8 +261,8 @@ li a{
 	display: inline-block;
 	width: 53.5px;
 	height: 35px;
-	top: 13px;
-	right: 14.5px;
+	top: 1px;
+	right: 3px;
 }
 
 .switchback{
@@ -298,6 +306,12 @@ li a{
 	transform: translate(-50%, -50%);
 }
 
+@media(min-width: 345px){
+	.pters_switch{
+		top: 5px;
+		right: 5px;
+	}
+}
 
 @media(min-width: 600px){
 	.settingMenu{
@@ -320,4 +334,10 @@ li a{
 	.settingText2{
 		font-size: 14px;
 	}
+
+	.pters_switch{
+		top: 13px;
+		right: 14.5px;
+	}
+	
 }

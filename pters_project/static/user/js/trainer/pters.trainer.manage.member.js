@@ -630,7 +630,7 @@ $(document).ready(function(){
 
 
     $('span.connectchange').parent('div').click(function(){
-        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        var selectore_lectureStateChangeSelectPopup = $('.lectureConnectStateChangePopup');
         var stateCode =  $(this).attr('data-stat');
         var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
         var dbID =selectore_lectureStateChangeSelectPopup.attr('data-dbid');
@@ -3217,7 +3217,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
                     $('div.lectureRefundPopup.popups input[type="number"]').val('');
                     console.log('success');
 
-                    alert(userName + text);
+                    alert(text);
                 }
             },
 
