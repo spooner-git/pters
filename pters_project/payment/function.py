@@ -49,7 +49,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
             error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        price = product_price_info.sale_price * 1.1
+        price = int(product_price_info.sale_price * 1.1)
         name = product_price_info.product_tb.name + ' - ' + product_price_info.name
 
     if error is None:
@@ -170,7 +170,8 @@ def func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_pr
             error = '결제 정보를 불러오지 못했습니다.'
 
     if error is None:
-        price = product_price_info.sale_price * 1.1
+        price = int(product_price_info.sale_price * 1.1)
+
         if price != input_price:
             error = '결제금액 오류가 발생했습니다.'
 
