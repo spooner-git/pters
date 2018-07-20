@@ -965,17 +965,16 @@ $(document).ready(function(){
             var selector = $(this).siblings('ul');
             $('.pters_dropdown_custom_list').css({'top':($(window).height()-selector.outerHeight())/2-50,
                                                   'left':'50%',
-                                                  'transform':'translateX(-50%)'})
-        }
-
-        
+                                                  'transform':'translateX(-50%)'});
+            //드랍다운 씹힘현상 해결
+            selector.animate({scrollTop : selector.scrollTop()+1},10)
+            //드랍다운 씹힘현상 해결
+        }        
     });
 
     $(document).on('click','div.dropdown-backdrop', function(){
         position_absolute_addplan_if_mobile();
     })
-
-
 
 
     $(document).on('click',"#durations li a",function(){
@@ -1003,6 +1002,23 @@ $(document).ready(function(){
         }
         $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
     });
+
+
+    //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+    //드랍다운 씹힘현상 해결
+    $('.pters_dropdown_custom_list').scroll(function(){
+        var scrollHeight = $(this).prop('scrollHeight');
+        var popupHeight = $(this).height();
+        var scrollLocation = $(this).scrollTop();
+        //scrollHeight = popupHeight + scrollLocation(끝)
+        if(popupHeight + scrollLocation == scrollHeight){
+            $(this).animate({scrollTop : scrollLocation-1},10)
+        }else if(popupHeight + scrollLocation == popupHeight){
+            $(this).animate({scrollTop : scrollLocation+1},10)
+        }
+    });
+    //드랍다운 씹힘현상 해결
+    //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 
 
 
