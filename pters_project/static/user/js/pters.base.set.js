@@ -15,6 +15,7 @@ $(document).on("touchend",'html',function(e){
 });
 //플로팅 버튼 스크롤시 숨기기 End
 
+
 function beforeSend(use, callback){
     if(use == "callback"){
         callback()

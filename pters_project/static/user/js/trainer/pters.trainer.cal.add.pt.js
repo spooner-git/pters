@@ -898,10 +898,10 @@ $(document).ready(function(){
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide()
             }
-            
         }
 
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#membersSelected'));
     }); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
     $('#addpopup_pc_label_off').click(function(){
@@ -938,7 +938,7 @@ $(document).ready(function(){
         
         //진행시간 자동으로 최소 단위 시간으로 Default 셋팅
         var selector_durationsSelected_button = $('#durationsSelected button');
-        var selector_durations_li_first_child = $('#durations li:first-child a');
+        var selector_durations_li_first_child = $('#durations li:nth-of-type(1) a');
         $("#durationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
         selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
@@ -955,7 +955,28 @@ $(document).ready(function(){
 
         }
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#starttimesSelected'));
     });
+
+
+    $('button.pters_dropdown_custom').click(function(){
+        position_fixed_addplan_if_mobile();
+        if(bodywidth < 600){
+            var selector = $(this).siblings('ul');
+            $('.pters_dropdown_custom_list').css({'top':($(window).height()-selector.outerHeight())/2-50,
+                                                  'left':'50%',
+                                                  'transform':'translateX(-50%)'})
+        }
+
+        
+    });
+
+    $(document).on('click','div.dropdown-backdrop', function(){
+        position_absolute_addplan_if_mobile();
+    })
+
+
+
 
     $(document).on('click',"#durations li a",function(){
         $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
@@ -971,14 +992,17 @@ $(document).ready(function(){
             addGraphIndicator($(this).attr('data-durmin'));
         }
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#durationsSelected'));
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
-    $(document).on('click','#durationsSelected button',function(){
+    $(document).on('click','#durationsSelected button',function(e){
+        if($('#durations li').length == 0){
+            $('.dropdown-backdrop').css('display','none');
+            position_absolute_addplan_if_mobile($('#starttimesSelected'));
+        }
         $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
     });
-
-
 
 
 
@@ -1585,7 +1609,6 @@ function get_current_group_list(use, callback){
 }
 
 function set_member_dropdown_list(jsondata){
-    console.log('set_member_dropdown_list',jsondata)
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.db_id.length;
@@ -1595,8 +1618,8 @@ function set_member_dropdown_list(jsondata){
         for(var i=0; i<memberSize; i++){
             if(jsondata.groupInfoArray[i] != "그룹"){
                 if(jsondata.lesson_avail_count[i] > 0){
-                    member_array_mobile[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
-                    member_array_pc[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
+                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
+                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
                 }
             }
         }
@@ -1604,6 +1627,7 @@ function set_member_dropdown_list(jsondata){
         member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
         member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
     }
+    member_array_mobile.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>')
     var member_arraySum_mobile = member_array_mobile.join('');
     var member_arraySum_pc = member_array_pc.join('');
     memberMobileList.append(member_arraySum_mobile);
@@ -1614,13 +1638,13 @@ function set_group_dropdown_list(jsondata){
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.group_id.length;
-    var member_array_mobile = [];
+    var member_array_mobile = ['<div><a data-grouptype="personal" disabled>회원/그룹 선택</a></div>'];
     var member_array_pc = [];
 
     if(memberSize>0){
         for(var i=0; i<memberSize; i++){
-            member_array_mobile[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+ '" data-grouptypecd="'+jsondata.group_type_cd[i] +'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
-            member_array_pc[i] = '<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>';
+            member_array_mobile.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+ '" data-grouptypecd="'+jsondata.group_type_cd[i] +'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>');
+            member_array_pc.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">[그룹] '+jsondata.name[i]+'</a></li>');
         }
     }else if(memberSize == 0){
         //member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 그룹이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -3055,7 +3079,7 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkAr
     //offAddOkArray =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12.5, 13, 14, 18.5, 20, 21, 22, 23]
     var offOkLen = addOkArray.length;
     var startTimeList = $('#starttimes'+options);
-    var timeArray = [];
+    var timeArray = ['<div><a class="pointerList">시작 시간 선택</a></div>'];
     for(var i=0; i<offOkLen; i++){
         var offHour = addOkArray[i].split(':')[0];
         var offmin = addOkArray[i].split(':')[1];
@@ -3075,7 +3099,7 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkAr
             offText = text2;
         }
 
-        timeArray[i] ='<li><a data-trainingtime="'+addOkArray[i]+':00.000000" class="pointerList">'+offText+offHour+':'+offmin+'</a></li>';
+        timeArray.push('<li><a data-trainingtime="'+addOkArray[i]+':00.000000" class="pointerList">'+offText+offHour+':'+offmin+'</a></li>');
     }
     timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>';
     var timeArraySum = timeArray.join('');
@@ -3461,7 +3485,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
         }
     }
     
-    
+    durTimeList.prepend('<div><a class="pointerList">진행시간 선택</a></div>')
     durTimeList.append('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
 }
 
@@ -3549,16 +3573,15 @@ function addGraphIndicator(datadur){
 }*/
 
 function addGraphIndicator(durmin){
-    
+        console.log(durmin)
     if($('.timegraph_display .selectedplan_indi').length == 0){
         $('.timegraph_display').append('<div class="selectedplan_indi"></div>')
     }else{
 
     }
     
-
-
     var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
+    console.log(starttext)
     var daymorning = starttext[0];
     var planHour = Number(starttext[1].split(':')[0]);
     var planMinute = Number(starttext[1].split(':')[1]);
@@ -3579,9 +3602,9 @@ function addGraphIndicator(durmin){
     if(planEndHour == Options.workEndTime){
         timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
         timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
-        console.log(planEndHour-1)
     }else{
         timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
+        console.log(planEndHour)
         timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
     }
 
@@ -4071,3 +4094,19 @@ function super_ajaxClassTime(){
         ajaxClassTime_day();
     }
 }
+
+
+function position_fixed_addplan_if_mobile(scrolltoDom){
+    if(bodywidth < 600){
+        $('#page-addplan').css('position','fixed');
+        //scrollToDom(scrolltoDom);
+    };
+    
+};
+function position_absolute_addplan_if_mobile(scrolltoDom){
+    if(bodywidth < 600){
+        $('#page-addplan').css('position','absolute');
+        scrollToDom(scrolltoDom);
+    };
+    
+};

@@ -596,10 +596,14 @@ select:focus > option:checked {
 	font-size:13px;
 	width: 100%;
 	padding: 0;
-	border:1px solid #cccccc;
+	/*border:1px solid #cccccc;*/
 	margin:0 auto;
 	margin-top: 6px;
 }
+	.wraps{
+		margin-bottom: 15px;
+		border: 1px solid #cccccc;
+	}
 #memberRegHistory_info > div > div {
 	display: table;
 	width: 100%;
@@ -644,11 +648,12 @@ select:focus > option:checked {
 	color: #7d7d7d;
 	padding-left: 6px !important;
 	margin-bottom: 7px !important;
-	border-bottom: 1px solid #cccccc !important;
+	/*border-bottom: 1px solid #cccccc !important;*/
 	padding-bottom: 8px !important;
 }
 #memberRegHistory_info img{
-	width: 12px;
+	width: 16px;
+	margin: 5px;
 	cursor: pointer;
 }
 .regHistory_table_title{
@@ -788,6 +793,7 @@ select:focus > option:checked {
 	-webkit-appearance:none;
 	-moz-appearance:none;
 	appearance:none;
+	background: #ffffff;
 }
 #memberBirth_select_wrap{
 	display: inline-block;
@@ -1119,16 +1125,15 @@ span.summaryInnerBoxText_Repeatendtext{
 	color: #ffffff;
 	border-bottom: 0;
 	border-top-right-radius: 9px;
-	height: 22px;
-	width: 70px;
-	font-size: 13px;
+	height: 30px;
+	width: 80px;
+	font-size: 14px;
 	text-align: center;
 	cursor: pointer;
+	border: 1px solid #f7f7f7;
+	vertical-align: middle;
 }
-.button_shift_info:active{
-	background: #fe4e65;
-	color: #ffffff;
-}
+
 .button_active{
 	background: #fe4e65;
 	color: #ffffff;
@@ -1311,7 +1316,8 @@ span.summaryInnerBoxText_Repeatendtext{
 	width: 15px !important;
 	line-height: 15px !important;
 	text-align:center !important;
-	padding:0 !important;
+	padding:0 6px 0 6px;
+	font-size: 13px;
 	cursor: pointer !important;
 }
 
@@ -1481,6 +1487,16 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 	#infoMemberModify img{
 		width: 100%;
+	}
+
+	.button_shift_info{
+		height: 22px;
+		width: 70px;
+		font-size: 13px;
+	}
+	.button_shift_info:active{
+		background: #fe4e65;
+		color: #ffffff;
 	}
 
 }
