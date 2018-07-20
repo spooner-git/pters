@@ -35,6 +35,11 @@ body{
 	margin-left: 5px;
 }
 
+.dropdown-backdrop{
+	background: transparent !important;
+	border: 2px solid #fe4e65;
+}
+
 li a{
 	cursor: pointer;
 }

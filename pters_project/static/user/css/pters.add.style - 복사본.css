@@ -96,67 +96,6 @@ ul a{
 	-webkit-overflow-scrolling:touch;
 }
 
-
-
-.pters_dropdown_custom_list{
-	font-family: 'Noto Sans KR';
-	max-height: 300px; /*144*/
-	overflow-y: auto;
-	padding-top: 0;
-	padding-bottom: 0;
-	-webkit-overflow-scrolling:touch;
-	background: #282828;
-	
-	position: fixed;
-	/*
-	top: 38%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	*/
-	width: 90%;
-	max-width: 350px;
-	margin: 0;
-	border: 0;
-}
-	.pters_dropdown_custom_list li{
-		text-align: center;
-		font-size: 12.5px;
-		padding-top:10px;
-		padding-bottom:10px;
-		/*
-		box-shadow: 0 1px 0 0 #a2a2a2;
-		-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
-		*/
-		border-bottom: 1px solid #a2a2a2;
-		background: #ffffff;
-	}
-		.pters_dropdown_custom_list div:first-child{
-			position: sticky;
-			position: -webkit-sticky;
-			top: 0;
-			left: 0;
-			background: #282828;
-			color: #ffffff;
-			font-size: 14px;
-			width: 100%;
-		}
-		.pters_dropdown_custom_list div:first-child a{
-			color: #ffffff;
-		}
-
-	.pters_dropdown_custom_list div{
-		text-align: center;
-		height: 35px;
-		line-height: 35px;
-		vertical-align: middle;
-		background: #ffffff;
-	}
-
-.dropdown-backdrop{
-	background:black;
-	opacity: 0.7;
-}
-
 .toggleBtnWrap{
 	display: inline-block;
 	width: 40px;
@@ -284,7 +223,21 @@ ul a{
 	user-select: none;
 }
 
+.pters_dropdown_custom li{
+	text-align: center;
+	font-size: 12.5px;
+	padding-top:10px;
+	padding-bottom:10px;
+	box-shadow: 0 1px 0 0 #a2a2a2;
+	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
+}
 
+.pters_dropdown_custom div{
+	text-align: center;
+	height: 35px;
+	line-height: 35px;
+	vertical-align: middle;
+}
 
 .dropdownlist_mini div{
 	text-align: center;
@@ -725,8 +678,8 @@ ul a{
 }
 
 .dropdown-menu>li:focus, .dropdown-menu>li:active{
-	/*background: #282828;
-	color: #fe4e65;*/
+	background: #282828;
+	color: #fe4e65;
 }
 
 
@@ -1199,27 +1152,6 @@ option{
 		box-shadow: unset !important;
 	}
 
-	.pters_dropdown_custom_list{
-		position: absolute;
-		top: 100%;
-		left: 0;
-		transform: unset;
-		width: 100%;
-		max-width: unset;
-		max-height: 210px;
-	}
-	.pters_dropdown_custom_list li:first-child{
-		position: relative;
-		top: unset;
-		background: unset;
-		color: unset;
-		font-size: 12.5px;
-	}
-
-	.dropdown-backdrop{
-		background-color: unset;
-		opacity: unset;
-	}
 	.pters_input_custom input{
 		height: 100%;
 		width: 100% !important;
@@ -1395,4 +1327,5 @@ option{
 		background: #282828 !important;
 		color: #fe4e65 !important;
 	}
+
 }

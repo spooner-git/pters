@@ -670,8 +670,7 @@
                 //$('#calendar').css('display','block');
                 $('#calendar').css('height','100%')
             }
-            $('#float_btn_wrap').show();
-            $('#float_btn').removeClass('rotate_btn');
+            $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
 

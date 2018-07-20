@@ -64,17 +64,16 @@
 
 
     <!--플로팅 버튼-->
-    <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_addplan(0)">
-            <img src="{% static_url "user/res/floatbtn/btn-plus.png" %}" alt="">  <!--2017.10.2-->
-        </div>
-        <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
-            <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
-        </div>
-        <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
-            <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
-        </div>
+    <div id="float_btn" onclick="float_btn_addplan(0)">
+        
     </div>
+    <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
+        <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+    </div>
+    <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
+        <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+    </div>
+    <!--플로팅 버튼-->
 
     <!--<div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">-->
     <div id="ymdText" class="">
@@ -359,7 +358,7 @@
                     <span class="JPtext" style="color:#cccccc;">選択</span>
                     <span class="ENtext" style="color:#cccccc;">Select</span></button>
                 <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom">
+                <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom_list">
                     <!-- 회원명 DB연동 필요
             {# {% for lecture in trainer_member %}
             <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
@@ -424,7 +423,7 @@
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom_list">
                     </ul>
                 </div>
             </div>
@@ -443,7 +442,7 @@
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="durations" class="dropdown-menu pters_dropdown_custom_list">
                     </ul>
                 </div>
             </div>
@@ -511,8 +510,9 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
-                    <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="repeats" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요-->
+                        <div><a class="pointerList">반복 선택</a></div>
                         <li><a data-repeat="WW"><span class="KRtext">매주</span><span class="JPtext">毎週</span><span class="ENtext">Every Week</span></a></li>
                         <li><a data-repeat="2W"><span class="KRtext">격주</span><span class="JPtext">隔週</span><span class="ENtext">Bi-Week</span></a></li>
                         <!--<li><a data-repeat="DD">매일</a></li>-->
@@ -574,7 +574,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
-                    <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요-->
                         <!--
                         <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
@@ -618,7 +618,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
-                    <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요-->
                         <!--
                         <li><a data-dur="1">1시간</a></li>

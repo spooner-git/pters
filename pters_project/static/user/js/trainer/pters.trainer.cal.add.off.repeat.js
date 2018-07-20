@@ -101,6 +101,7 @@ $(document).ready(function(){
         }
 
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#repeattypeSelected'));
     });
 
     $(document).on('click', '#repeatstarttimes li a',function(){
@@ -127,7 +128,7 @@ $(document).ready(function(){
 
         //진행시간 자동으로 최소 단위 시간으로 Default 셋팅
         var selector_durationsSelected_button = $('#repeatdurationsSelected button');
-        var selector_durations_li_first_child = $('#repeatdurations li:first-child a');
+        var selector_durations_li_first_child = $('#repeatdurations li:nth-of-type(1) a');
         $("#repeatdurationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
         selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
         if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
@@ -139,6 +140,7 @@ $(document).ready(function(){
             //$("#id_repeat_dur_off").val(selector_durationsSelected_button.val());
         }
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#repeatstarttimesSelected'));
     })
 
     $(document).on('click',"#repeatdurations li a",function(){
@@ -149,7 +151,16 @@ $(document).ready(function(){
             $('#id_repeat_end_time_off').val($(this).attr('data-endtime') + ':00.000000')
         }
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#repeatdurationsSelected'));
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
+
+    $(document).on('click','#repeatdurationsSelected button',function(e){
+        if(!$('#repeatstarttimesSelected button').hasClass('dropdown_selected')){
+            $('.dropdown-backdrop').css('display','none');
+            position_absolute_addplan_if_mobile($('#repeatstarttimesSelected'));
+        }
+    })
+
 
 
     $('.repeatadd_time_unit').click(function(){
@@ -179,7 +190,7 @@ $(document).ready(function(){
             zz++;
         };
 
-        var semiresult = [];
+        var semiresult = ['<div><a class="pointerList">시작 시간 선택</a></div>'];
         for(var t=0; t<startTimeList.length; t++){
             if(Number(startTimeList[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
                 semiresult.push(startTimeList[t]);
@@ -197,7 +208,7 @@ $(document).ready(function(){
         //var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
         var selectedHour = selectedTime.split(':')[0];
         var selectedMin = selectedTime.split(':')[1];
-        var durTimeList = [];
+        var durTimeList = ['<div><a class="pointerList">진행 시간 선택</a></div>'];
 
         var dur = 1;
         while(add_time(selectedTime,'00:0'+dur) != add_time(end+':00','00:01')){

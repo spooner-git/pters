@@ -605,10 +605,9 @@
 
     function openNav(){
 
-        {#               $("#outer_Sidenav").css('display_block', 'block');#}
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
-        $('#float_btn_wrap, #float_btn').hide('fast');
+        $('#float_btn').hide('fast');
 
 
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
@@ -616,10 +615,9 @@
 
     function closeNav(){
 
-        {#               $("#outer_Sidenav").css('display', 'none');#}
         $("#outer_Sidenav").hide();
         $("#inner_Sidenav").css({'width':'0'});
-        $('#float_btn_wrap, #float_btn').show('fast');
+        $('#float_btn').show('fast');
 
 
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
