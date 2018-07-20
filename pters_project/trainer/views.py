@@ -1982,7 +1982,7 @@ def update_lecture_info_logic(request):
                 lecture_info.state_cd='IP'
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
-    print('test5')
+    # print('test5')
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
