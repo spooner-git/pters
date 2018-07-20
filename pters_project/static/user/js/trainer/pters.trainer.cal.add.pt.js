@@ -1415,7 +1415,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     var selector_datepicker = $('#datepicker');
     var selector_datepicker_repeat_start = $('#datepicker_repeat_start');
     if(bodywidth <= 600){
-        $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
+        $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
         selector_page_addplan.css('top',50);
         $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
@@ -2848,8 +2848,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
 function closeAddPopup(){
     //$('body').css('overflow-y','overlay');
     $('#page-addplan').hide('fast','swing');
-    $('#float_btn_wrap').css('display','block');
-    $('#float_btn').removeClass('rotate_btn');
+    $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
     $('#page-base').show();
     $('#page-base-addstyle').hide();
 }
