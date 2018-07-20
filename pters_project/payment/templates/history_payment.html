@@ -481,7 +481,7 @@
                     console.log(rsp);
 
                     $.ajax({
-                        url: "/payment/billing_finish/", // 서비스 웹서버
+                        url: "/payment/check_finish_billing/", // 서비스 웹서버
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({

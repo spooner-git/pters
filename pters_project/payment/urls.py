@@ -19,12 +19,15 @@ from payment import views
 
 urlpatterns = [
     url(r'^$', views.PaymentView.as_view(), name='index'),
+    # 이용권 구매 내역 페이지
+    url(r'^payment_history/$', views.PaymentHistoryView.as_view(), name='payment_history'),
 
     # 결제 관련 ##########################################################################################################
     # 결제 검사
-    url(r'^check_billing/$', views.check_billing_logic, name='check_billing'),
+    url(r'^check_before_billing/$', views.check_before_billing_logic, name='check_before_billing'),
+
     # 결제시 완료 검사 페이지
-    url(r'^billing_finish/$', views.billing_finish_logic, name='billing_finish'),
+    url(r'^check_finish_billing/$', views.check_finish_billing_logic, name='check_finish_billing'),
     # iamport 에서 결과 전송할때 동작하는 페이지
     url(r'^billing_check/$', views.billing_check_logic, name='billing_check'),
 
@@ -35,7 +38,7 @@ urlpatterns = [
 
     # 정기 결제 재시작 페이지
     url(r'^restart_period_billing/$', views.restart_period_billing_logic, name='restart_period_billing'),
-    # 정기 결제 재시작 페이지
+    # 정기 결제 일시 정지 해제 페이지
     url(r'^clear_pause_period_billing/$', views.clear_pause_period_billing_logic,
         name='clear_pause_period_billing'),
 
@@ -66,7 +69,5 @@ urlpatterns = [
     # 결제 완료 페이지
     url(r'^payment_complete/$', views.PaymentCompleteView.as_view(), name='payment_complete'),
 
-    # 이용권 구매 내역 페이지
-    url(r'^payment_history/$', views.PaymentHistoryView.as_view(), name='payment_history'),
     ###################################################################################################################
 ]
