@@ -4111,17 +4111,16 @@ function super_ajaxClassTime(){
 }
 
 
-function position_fixed_addplan_if_mobile(scrolltoDom){
+function position_fixed_addplan_if_mobile(){
     if(bodywidth < 600){
         $('#page-addplan').css('position','fixed');
-        //scrollToDom(scrolltoDom);
+        $('.dropdown-backdrop').css('height',$('#mshade_popup').height()+'px');
+        setTimeout(function(){$('.dropdown-backdrop').css('height',$('#mshade_popup').height()+'px');},1)
     };
-    
 };
 function position_absolute_addplan_if_mobile(scrolltoDom){
     if(bodywidth < 600){
         $('#page-addplan').css('position','absolute');
         scrollToDom(scrolltoDom);
     };
-    
 };

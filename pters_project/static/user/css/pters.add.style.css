@@ -1207,6 +1207,7 @@ option{
 		width: 100%;
 		max-width: unset;
 		max-height: 210px;
+		border-radius: 0;
 	}
 	.pters_dropdown_custom_list li:first-child{
 		position: relative;
@@ -1214,6 +1215,9 @@ option{
 		background: unset;
 		color: unset;
 		font-size: 12.5px;
+	}
+	.pters_dropdown_custom_list div:first-child{
+		display: none;
 	}
 
 	.dropdown-backdrop{

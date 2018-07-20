@@ -929,9 +929,11 @@ function hide_ajax_error_message(){
 }
 
 function scrollToDom(dom){
-    var offset = dom.offset();
-    if(offset != undefined){
-        $('body, html').animate({scrollTop : offset.top-180},10)
+    if(dom != undefined){
+        var offset = dom.offset();
+        if(offset != undefined){
+            $('body, html').animate({scrollTop : offset.top-180},10)
+        }
     }
 }
 
