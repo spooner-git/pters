@@ -73,20 +73,19 @@ def check_billing_logic(request):
 
     if error is None:
         merchandise_type_cd_list = merchandise_type_cd.split('/')
-        for merchandise_type_info in merchandise_type_cd_list:
-            period_payment_counter = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                                  payment_type_cd='PERIOD',
-                                                                  merchandise_type_cd__contains=merchandise_type_info,
-                                                                  end_date__gt=today).count()
+        for merchandise_type in merchandise_type_cd_list:
+            period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                  merchandise_type_cd__contains=merchandise_type,
+                                                                  next_payment_date__gt=today,
+                                                                  use=USE).count()
             if period_payment_counter > 0:
                 error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
                 break
 
-            if error is None:
-                single_payment_counter = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                                      payment_type_cd='SINGLE',
-                                                                      merchandise_type_cd__contains=merchandise_type_info,
-                                                                      end_date__gt=today, use=USE).count()
+            single_payment_counter = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                                  payment_type_cd='SINGLE',
+                                                                  merchandise_type_cd__contains=merchandise_type,
+                                                                  end_date__gt=today, use=USE).count()
 
     if error is None:
         try:
@@ -105,7 +104,7 @@ def check_billing_logic(request):
             context['next_end_date'] = str(func_get_end_date(payment_info.payment_type_cd,
                                                              payment_info.end_date, 1, date))
             if single_payment_counter > 0:
-                billing_info = '이미 결제중인 기능이기 때문에 '+context['next_start_date']+'부터 결제가 진행됩니다.'
+                billing_info = '이미 결제중인 기능이기 때문에 ' + context['next_start_date'] + '부터 결제가 진행됩니다.'
         else:
             context['next_start_date'] = str(today)
             if single_payment_counter > 0:
