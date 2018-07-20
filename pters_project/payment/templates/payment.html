@@ -158,7 +158,7 @@
             var error_check = true;
 
             $.ajax({
-                url: "/payment/check_billing/", // 서비스 웹서버
+                url: "/payment/check_before_billing/", // 서비스 웹서버
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
@@ -212,15 +212,15 @@
             if(day <10){
                 day = '0'+day;
             }
-            var today = date.getFullYear()+'-'+month+'-'+day;
+            var payment_date = date.getFullYear()+'-'+month+'-'+day;
 
             if(start_date != ''){
-                if(today != start_date){
+                if(payment_date != start_date){
                     if(payment_type_cd == 'PERIOD'){
                         price = 0;
                     }
                 }
-                today = start_date;
+                payment_date = start_date;
             }
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
@@ -234,7 +234,7 @@
                     "merchandise_type_cd":merchandise_type_cd,
                     "payment_type_cd":payment_type_cd,
                     "customer_uid":customer_uid_data,
-                    "start_date":  today
+                    "start_date":  payment_date
                 },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
@@ -249,7 +249,7 @@
                     "user_id":{{ request.user.id }},
                     "merchandise_type_cd":merchandise_type_cd,
                     "payment_type_cd":payment_type_cd,
-                    "start_date":  today
+                    "start_date":  payment_date
                 },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
@@ -271,14 +271,14 @@
                         console.log(rsp);
 
                         $.ajax({
-                            url: "/payment/billing_finish/", // 서비스 웹서버
+                            url: "/payment/check_finish_billing/", // 서비스 웹서버
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
                                 merchandise_type_cd : merchandise_type_cd,
                                 payment_type_cd:payment_type_cd,
                                 paid_amount: rsp.paid_amount,
-                                start_date: today
+                                start_date: payment_date
                             }),
 
                             beforeSend:function(){
@@ -295,7 +295,7 @@
                                     msg = '결제가 완료되었습니다.';
             {#                        msg += '고유ID : ' + rsp.imp_uid;#}
             {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
-                                    msg += '결제 금액 : ' + rsp.paid_amount;
+{#                                    msg += '결제 금액 : ' + rsp.paid_amount;#}
             {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
                                 }
                                 alert(msg);
