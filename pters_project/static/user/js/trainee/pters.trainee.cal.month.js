@@ -385,14 +385,15 @@ $(document).ready(function(){
     })
 
     function adjust_starttime_list_height(){
-        var windowHeight = window.innerHeight;
-        var scrollHeight = window.scrollHeight;
+        var windowHeight = $(window).innerHeight();
+        var scrollHeight = $(window).scrollTop();
         var listBottomLocation = $('#submitBtn').offset().top;
-        var list_height_to_be = windowHeight+scrollHeight - listBottomLocation - 15;
+        var list_height_to_be = windowHeight + scrollHeight - listBottomLocation - 15;
         if(list_height_to_be > 300){
             list_height_to_be = 300
+        }else if(list_height_to_be < 100){
+            list_height_to_be = 100;
         }
-
         $('#starttimes').css('height',list_height_to_be);
     }
 

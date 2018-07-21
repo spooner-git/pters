@@ -57,7 +57,6 @@ function sideGoPage(page){
 function shade_index(option){
     var initialbodywidth = window.innerWidth;
     var initialbodyheight = document.documentElement.clientHeight + 100;
-    console.log(initialbodywidth,initialbodyheight)
     if(initialbodywidth > 600){
         $('#pshade').css({'width':initialbodywidth, 'height':initialbodyheight});
     }else{
