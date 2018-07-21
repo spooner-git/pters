@@ -493,7 +493,7 @@ $(document).ready(function(){
         //timeGraphSet("off","grey")
         //startTimeSet();  //일정등록 가능한 시작시간 리스트 채우기
         ajaxTimeGraphSet($(this));
-        $('#id_training_date').val(yy+'-'+mm+'-'+dd);
+        $('#id_training_date, #id_training_end_date').val(yy+'-'+mm+'-'+dd);
     });
 
 
@@ -542,6 +542,7 @@ $(document).ready(function(){
         $("#starttimesSelected .btn:first-child").text($(this).text());
         $("#starttimesSelected .btn:first-child").val($(this).text());
         $("#id_training_time").val($(this).attr('data-trainingtime'));
+        $("#id_training_end_time").val($(this).attr('data-trainingendtime'));
         $("#id_time_duration").val(Options.timeDur);
         var arry = $(this).attr('data-trainingtime').split(':')
         //durTimeSet(arry[0]);
@@ -572,10 +573,12 @@ $(document).ready(function(){
 
         var form_date = $('#id_training_date')
         var form_time = $('#id_training_time')
+        var form_edate = $('#id_training_end_date')
+        var form_etime = $('#id_training_end_time')
         var form_dura = $('#id_time_duration')
         var form_group = $('#id_group_schedule_id')
 
-        if(form_date.val() && form_time.val() && form_dura.val()){
+        if(form_date.val() && form_time.val() && form_edate.val() && form_etime.val()){
             $("#submitBtn").addClass('submitBtnActivated');
             select_all_check=true;
         }else{
@@ -654,8 +657,10 @@ $(document).ready(function(){
     function initialize_member_form(){
         $('#id_schedule_id').val('') //delete
         $('#id_training_date').val('') //add
+        $('#id_training_end_date').val('') //add
         $('#id_time_duration').val('') //add
         $('#id_training_time').val('') //add
+        $('#id_training_end_time').val('') //add
     }
     function send_push(push_server_id, intance_id, title, message, badge_counter){
         $.ajax({
@@ -1933,6 +1938,7 @@ $(document).ready(function(){
         var offOkLen = addOkArray.length;
         var startTimeList = $('#starttimes'+options);
         var timeArray = [];
+        var classDur = Options.classDur*Options.timeDur;
         for(var i=0; i<offOkLen; i++){
             var offHour = addOkArray[i].split(':')[0];
             var offmin = addOkArray[i].split(':')[1];
@@ -1952,7 +1958,8 @@ $(document).ready(function(){
                 offText = text2;
             }
 
-            timeArray[i] ='<li><a data-trainingtime="'+addOkArray[i]+':00.000000" class="pointerList">'+offText+offHour+':'+offmin+'</a></li>';
+            var endtime = add_time(addOkArray[i],'00:'+classDur)
+            timeArray[i] ='<li><a data-trainingtime="'+addOkArray[i]+':00.000000" data-trainingendtime="'+endtime+':00.000000" class="pointerList">'+offText+offHour+':'+offmin+'</a></li>';
         }
         timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>';
         var timeArraySum = timeArray.join('');
