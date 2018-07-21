@@ -42,6 +42,7 @@ body{
 	min-width: 150px;
 	position: relative !important;
 	top: unset !important;
+	background:#ffffff !important;
 }
 
 #blank_member_popup{
@@ -1130,6 +1131,10 @@ img,a,div,span,p{
 /*미디어 쿼리*/
 
 @media(min-width: 600px){
+	.pters_dropdown_custom_list{
+		background:#ffffff;
+	}
+
 	.ptaddboxtext{
 		display: block !important;
 	}
