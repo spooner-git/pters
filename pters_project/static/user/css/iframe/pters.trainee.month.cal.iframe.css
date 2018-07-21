@@ -1104,7 +1104,7 @@ img,a,div,span,p{
 }
 
 .fixfooter{
-	display: block;
+	display: none;
 	position: fixed;
 	bottom: 0;
 	width: 100%;

@@ -315,7 +315,7 @@ $(document).ready(function(){
         if(type == 'A'){
             type_text = '매 '
             if(time == '0'){
-                type_text = '정시에'    
+                time_text = '정시에'    
             }else{
                 time_text = '시각 '+time+'분에'
             }
@@ -1841,8 +1841,8 @@ $(document).ready(function(){
             plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
             console.log(endtime)
         }
-        var workStartTime_ = time_h_m_to_hh_mm(workTimes(workTimeOption,'full').split('-')[0]);
-        var workEndTime_ = time_h_m_to_hh_mm(workTimes(workTimeOption,'full').split('-')[1]);
+        var workStartTime_ = time_h_m_to_hh_mm(time_divider(workTimeOption,'full').split('-')[0]);
+        var workEndTime_ = time_h_m_to_hh_mm(time_divider(workTimeOption,'full').split('-')[1]);
 
         plan_time.push(workEndTime_)
         if(plan_time.length==1 && plan_time[0] == Preview_Options.workEndTime){
@@ -2658,17 +2658,18 @@ function availableDateIndicator(availableStartTime,Endtime){
     // 요소설명
     // availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 시작시간'
     // availableStartTime : 강사가 설정한 '회원이 예약 가능한 시간대 마감시간'
-    console.log('currentHour',currentHour)
     if(Preview_Options.reserve == 1){
         $('td:not([schedule-id])').addClass('option_notavailable')
         $('.blackballoon').parent('td').addClass('option_notavailable')
     }else{
         if(currentHour<Endtime && currentHour>=availableStartTime){
+            console.log('availableStartTime',availableStartTime,Endtime)
             var availability = 'available'
         }else{
             var availability = 'notavailable'
         }
         for(i=currentDate;i<currentDate+Preview_Options.availDate;i++){
+            console.log(currentDate, Preview_Options.availDate, currentDate+Preview_Options.availDate)
             if(i>lastDay[oriMonth-1] && oriMonth<12){
                 $('td[data-date='+oriYear+'_'+(oriMonth+1)+'_'+(i-lastDay[oriMonth-1])+']').addClass(availability)
             }else if(i>lastDay[oriMonth-1] && oriMonth==12){

@@ -684,9 +684,16 @@
     var worktimeStart = '';
     var worktimeEnd = '';
 
-    if(stoptime.length>0){
+    if(stoptime.length>0){ //0:00-23:59
         stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0]);
         stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0]);
+        
+        if('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_member_reserve_time_available }}'.split('-')[0].split(':')[1] == '59'){
+            stoptimeStart = 24;
+        }
+        if('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0] == '23' && '{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[1] == '59'){
+            stoptimeEnd = 24;
+        }
     }else{
         stoptimeStart = '';
         stoptimeEnd = '';

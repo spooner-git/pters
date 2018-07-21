@@ -254,7 +254,7 @@
         var lt_res_enable = ['{{ lt_res_enable }}'];
 
 
-        function workTimes(time, startOrEnd){
+        function time_divider(time, startOrEnd){
             var worktime = time;
             var worktimeStart = '';
             var worktimeEnd = '';
@@ -280,19 +280,31 @@
                 return worktime
             }
         }
+
+        var parent_workTime = $('#id_setting_trainer_work_time', parent.document).val();
+        var parent_timeDur = $('#id_setting_member_reserve_time_duration', parent.document).val();
+        var parent_startTime= $('#id_setting_member_start_time', parent.document).val();
+        var parent_availTime= $('#id_setting_member_reserve_available_time', parent.document).val();
+        var parent_reserveTimeProhibit= $('#id_setting_member_reserve_time_prohibition', parent.document).val();
+        var parent_cancelTimeProhibit = $('#id_setting_member_cancel_time_prohibition', parent.document).val();
+        var parent_reserveProhibit= $('#id_setting_member_reserve_prohibition', parent.document).val();
+        var parent_availDate = $('#id_setting_member_reserve_available_date', parent.document).val();
+        var parent_classDur = parent.Options.classDur;
+
+        console.log('parent_availTime',parent_availTime)
         
         var workTimeOption = '07:00 - 23:00'
         var Preview_Options = {   
                             "hourunit" : 30, // 30 or 60 달력을 30분단위로 선택이 가능하다.
-                            "classDur" : 60, // 30 or 60  수업시간을 classDur 시간만큼 선택 가능
-                            "timeDur" : 2,               //예약 기본 시간 단위
-                            "startTime": 'A-30',
-                            "stoptimeStart": '9',             //강사가 설정한 예약불가 시간 (시작)
-                            "stoptimeEnd": '21',                //강사가 설정한 예약불가 시간 (종료)
-                            "limit":'120',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-                            "cancellimit": '2', //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
-                            "reserve":'0',    //회원 일정 기능을 enable 1/disable 0
-                            "availDate": 10,
+                            "classDur" : parent_classDur, // 30 or 60  수업시간을 classDur 시간만큼 선택 가능
+                            "timeDur" : parent_timeDur,               //예약 기본 시간 단위
+                            "startTime": parent_startTime,
+                            "stoptimeStart": time_divider(parent_availTime,'start'),             //강사가 설정한 예약불가 시간 (시작)
+                            "stoptimeEnd": time_divider(parent_availTime,'end'),                //강사가 설정한 예약불가 시간 (종료)
+                            "limit": parent_reserveTimeProhibit,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+                            "cancellimit": parent_cancelTimeProhibit/60, //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
+                            "reserve":parent_reserveProhibit,    //회원 일정 기능을 enable 1/disable 0
+                            "availDate": Number(parent_availDate),
                             "autocomplete": 1,                                 //자동 완료 처리
 
                             "firstPushToMember":'-',
@@ -301,8 +313,8 @@
                             "planChangePush":'-',
                             "regErgentPush":'-',
 
-                            "workStartTime": workTimes(workTimeOption,'start'),
-                            "workEndTime":workTimes(workTimeOption,'end'),
+                            "workStartTime": time_divider(parent_workTime,'start'),
+                            "workEndTime":time_divider(parent_workTime,'end'),
 
 
                             "language" : "KOR", //Korea, Japan, English, Chinese, Spanish
