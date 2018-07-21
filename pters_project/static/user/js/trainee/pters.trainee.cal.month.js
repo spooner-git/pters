@@ -313,7 +313,7 @@ $(document).ready(function(){
         if(type == 'A'){
             type_text = '매 '
             if(time == '0'){
-                type_text = '정시에'    
+                time_text = '정시에'    
             }else{
                 time_text = '시각 '+time+'분에'
             }
@@ -1501,7 +1501,6 @@ $(document).ready(function(){
                 break;
         }
 
-        console.log('여기',jsondata)
         var Arraylength = planStartDate.length;
         //var $tableTarget    = $('#timeGraph div.plan_indicators');
         var $tableTarget    = $('#timeGraph div.timegraph_display');

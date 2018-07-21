@@ -1828,18 +1828,21 @@ $(document).ready(function(){
             }
         }
 
+
+
         var plan_time = [];
         var plan_stime = [];
         var plan_etime = [];
         for(starttime in  plan_starttime){
             plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
+            console.log(starttime)
         }
         for(endtime in plan_endtime){
             plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
+            console.log(endtime)
         }
-
-        var workStartTime_ = time_h_m_to_hh_mm(worktime.split('-')[0]);
-        var workEndTime_ = time_h_m_to_hh_mm(worktime.split('-')[1]);
+        var workStartTime_ = time_h_m_to_hh_mm(workTimes(workTimeOption,'full').split('-')[0]);
+        var workEndTime_ = time_h_m_to_hh_mm(workTimes(workTimeOption,'full').split('-')[1]);
 
         plan_time.push(workEndTime_)
         if(plan_time.length==1 && plan_time[0] == Preview_Options.workEndTime){
@@ -1849,8 +1852,7 @@ $(document).ready(function(){
             plan_time.unshift(workStartTime_)
             plan_time.unshift('')
         } 
-
-        
+ 
         //var sortedlist = plan_time.sort(function(a,b){return a-b;})
         var sortedlist = plan_time.sort();
         //all_plans = sortedlist;
