@@ -188,7 +188,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            reg_dt=timezone.now(), mod_dt=timezone.now())
             add_schedule_info.save()
             context['schedule_id'] = add_schedule_info.schedule_id
-    except TypeError:
+    except TypeError as e:
         error = '등록 값의 형태에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
