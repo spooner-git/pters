@@ -385,15 +385,17 @@ $(document).ready(function(){
     })
 
     function adjust_starttime_list_height(){
-        var windowHeight = window.innerHeight;
-        var listBottomLocation = $('#submitBtn').offset().top;
-        console.log('listBottomLocation',listBottomLocation)
-        var list_height_to_be = windowHeight - listBottomLocation - 15;
-        if(list_height_to_be > 300){
-            list_height_to_be = 300
-        }
+        if(window.innerWidth <600){
+            var windowHeight = window.innerHeight;
+            var listBottomLocation = $('#submitBtn').offset().top;
+            var list_height_to_be = windowHeight - listBottomLocation - 15;
+            if(list_height_to_be > 300){
+                list_height_to_be = 300
+            }
 
-        $('#starttimes').css('height',list_height_to_be);
+            $('#starttimes').css('height',list_height_to_be);
+        }
+        
     }
 
 
