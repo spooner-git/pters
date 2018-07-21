@@ -115,6 +115,7 @@ $(document).ready(function(){
         if(!$(this).hasClass('disabled_button')){
             $('#id_group_schedule_id').val($(this).attr('group-schedule-id'))
             $('#id_training_time').val($(this).attr('data-time'))
+            $('#id_training_end_time').val($(this).attr('data-endtime'))
             $('#id_time_duration').val($(this).attr('data-dur'))
 
 
@@ -130,6 +131,7 @@ $(document).ready(function(){
         if(!$(this).hasClass('disabled_button')){
             $('#id_group_schedule_id').val($(this).attr('group-schedule-id'))
             $('#id_training_time').val($(this).attr('data-time'))
+            $('#id_training_end_time').val($(this).attr('data-endtime'))
             $('#id_time_duration').val($(this).attr('data-dur'))
 
 
@@ -578,7 +580,7 @@ $(document).ready(function(){
         var form_dura = $('#id_time_duration')
         var form_group = $('#id_group_schedule_id')
 
-        if(form_date.val() && form_time.val() && form_edate.val() && form_etime.val()){
+        if(form_date.val() && form_time.val() && form_edate.val() && form_etime.val() && form_dura.val()){
             $("#submitBtn").addClass('submitBtnActivated');
             select_all_check=true;
         }else{
@@ -1107,10 +1109,13 @@ $(document).ready(function(){
                         fulled = "(마감)";
                     }
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
+                    var starttime = jsondata.group_schedule_start_datetime[i].split(' ')[1];
+                    var endtime = jsondata.group_schedule_end_datetime[i].split(' ')[1];
 
                     if(targetSelected == grouptypecd){
                         htmlTojoin.push('<div style="line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
-                            '" data-time="'+jsondata.group_schedule_start_datetime[i].split(' ')[1]+'.000000'+
+                            '" data-time="'+starttime+'.000000'+
+                            '"data-endtime ="'+endtime+'.000000'+
                             '" data-dur="'+planDura+
                             '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class="'+myreservecheckbox1+myreservecheckbox2+'"></div></div><p class="plan_list_row">'+
                             jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
