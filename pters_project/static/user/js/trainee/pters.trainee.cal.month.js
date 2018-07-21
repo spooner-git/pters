@@ -352,6 +352,7 @@ $(document).ready(function(){
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
+            adjust_starttime_list_height()
         }else if($(this).hasClass('available')){
             $('#cal_popup_plancheck').css('display','block')
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
@@ -361,6 +362,7 @@ $(document).ready(function(){
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').show()
             shade_index(100)
+            adjust_starttime_list_height()
         }else{
             $('#cal_popup_plancheck').fadeIn('fast');
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
@@ -370,6 +372,7 @@ $(document).ready(function(){
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
+            adjust_starttime_list_height()
         }/*else{
          shade_index(100)
          $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
@@ -378,6 +381,20 @@ $(document).ready(function(){
          })
         }*/
     })
+
+    function adjust_starttime_list_height(){
+        var windowHeight = window.innerHeight;
+        var listBottomLocation = $('#submitBtn').offset().top;
+        console.log('listBottomLocation',listBottomLocation)
+        var list_height_to_be = windowHeight - listBottomLocation - 15;
+        if(list_height_to_be > 300){
+            list_height_to_be = 300
+        }
+
+        $('#starttimes').css('height',list_height_to_be);
+    }
+
+
 
     $(document).on('click','.plan_raw',function(){
         shade_index(150)
