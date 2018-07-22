@@ -1902,16 +1902,31 @@ $(document).ready(function(){
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
                 if(compare_time(semiresult[t], add_time(currentTime, '00:'+Options.limit))                      //업무시간
                     && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
-                    && compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){ //근접예약 금지
-                    if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
-                        addOkArrayList.push(semiresult[t])
-                    }
+                    && compare_time(semiresult[t], substract_time(Options.workStartTime+':00', '00:01')) ){ //근접예약 금지
+                    
+
+                    if(starttimeOption.split('-')[0] == "A"){
+                        if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
+                            addOkArrayList.push(semiresult[t])
+                        }
+                    }else if(starttimeOption.split('-')[0] == "E"){
+                        if(Number(semiresult[t].split(':')[1])%Number(starttimeOption.split('-')[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
+                            addOkArrayList.push(semiresult[t])
+                        }
+                    }  
                 }
             }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
                 if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false 
                     && compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
-                    if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
-                        addOkArrayList.push(semiresult[t])
+                    
+                    if(starttimeOption.split('-')[0] == "A"){
+                        if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
+                            addOkArrayList.push(semiresult[t])
+                        }
+                    }else if(starttimeOption.split('-')[0] == "E"){
+                        if(Number(semiresult[t].split(':')[1])%Number(starttimeOption.split('-')[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
+                            addOkArrayList.push(semiresult[t])
+                        }
                     }
                 }
                 
