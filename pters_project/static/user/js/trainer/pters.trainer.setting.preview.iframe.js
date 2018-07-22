@@ -1550,7 +1550,7 @@ $(document).ready(function(){
                 }
 
                 if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
-                    var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
+                    //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
 
                     var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
                     var planLoc     = timegraph_houroffset;
@@ -1601,7 +1601,6 @@ $(document).ready(function(){
 
                 if(planHour >= Preview_Options.workStartTime && planHour < Preview_Options.workEndTime){
                     var timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                    console.log('#'+planHour+'g_00')
                     var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
                     var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
 
@@ -1620,15 +1619,15 @@ $(document).ready(function(){
                     }
 
                     if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
-                        var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
+                        //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
 
-                        var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
-                        var planLoc     = timegraph_houroffset;
+                        var planWidth_   = timegraph_hourendoffset - timegraph_houroffset;
+                        var planLoc_     = timegraph_houroffset;
 
                         if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
                             
                         }else{
-                            htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
+                            htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth_+'px;left:'+planLoc_+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
                         }
                     }
                 }

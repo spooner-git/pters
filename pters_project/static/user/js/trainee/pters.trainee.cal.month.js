@@ -1577,7 +1577,7 @@ $(document).ready(function(){
                 }
 
                 if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
-                    var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
+                    //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
 
                     var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
                     var planLoc     = timegraph_houroffset;
@@ -1616,7 +1616,6 @@ $(document).ready(function(){
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
             var planLoc     = timegraph_houroffset;
 
-            
                 for(var i=0;i<Arraylength;i++){
                     var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
                     var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
@@ -1647,15 +1646,15 @@ $(document).ready(function(){
                         }
 
                         if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
-                            var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
+                            //var planDura_    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
 
-                            var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
-                            var planLoc     = timegraph_houroffset;
+                            var planWidth_   = timegraph_hourendoffset - timegraph_houroffset;
+                            var planLoc_     = timegraph_houroffset;
 
                             if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
                                 
                             }else{
-                                htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
+                                htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth_+'px;left:'+planLoc_+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
                             }
                         }
                     }
@@ -1879,7 +1878,6 @@ $(document).ready(function(){
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         //var semiresult = []
 
-        console.log('sortedlist',sortedlist)
         semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
             var zz = 0;
