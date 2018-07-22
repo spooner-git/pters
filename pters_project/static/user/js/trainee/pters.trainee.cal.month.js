@@ -1537,7 +1537,7 @@ $(document).ready(function(){
         var htmlToJoin = [];
 
         var date = date_format_to_yyyymmdd($('#popup_info4').text(),'-')
-        if(date != today_YY_MM_DD){
+        if(date != today_YY_MM_DD){  // 선택한 날짜가 오늘이 아닐 경우 일정을 뿌려준다.
             for(var i=0;i<Arraylength;i++){
                 var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
                 var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
@@ -1589,13 +1589,23 @@ $(document).ready(function(){
                     }
                 }
             }
-        }else{
+        }else{  // 선택한 날짜가 오늘일 경우 이미 지난시간은 모두 회색으로 표기하고 근접 예약방지 옵션을 적용한다.
             var limit = add_time(currentHour+':'+currentMinute,'00:'+Options.limit);
+
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무 종료 시간보다 클경우
             if(compare_time(limit,add_time(Options.workEndTime+':00','00:00'))){
                 var timegraph_hourwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
                 var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;
                 var timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
                 var timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourwidth
+
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무 시작 시간보다 작을 경우
+            }else if(compare_time(limit,add_time(Options.workStartTime+':00','00:00')) == false){
+                var timegraph_hourendoffset = 0; 
+                var timegraph_houroffset = 0;
+                var timegraph_houroffset = 0;
+
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간보다 작을 경우
             }else{
                 var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
                 var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;

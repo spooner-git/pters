@@ -336,12 +336,13 @@ li a{
 		text-align: center;
 		font-size: 13px;
 		margin-top: 10px;
-		margin-bottom: 0;
 	}
 	#close_preview_iframe_popup{
 		position: absolute;
-		right: 10px;
+		right: 3px;
+		top: -20px;
 		cursor: pointer;
+		color: #ffffff;
 		font-size: 14px;
 	}
 
@@ -357,6 +358,30 @@ li a{
 	z-index: 20
 }
 
+#preview_option_values{
+	display: none;
+	text-align: center;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+}
+	#preview_option_values div{
+		display: inline-block;
+		width: 110px;
+		height: 45px;
+		vertical-align: top;
+	}
+	#preview_option_values div p:first-child{
+		font-size: 12px;
+		line-height: 20px;
+		margin: 0;
+	}
+	#preview_option_values div p:last-child{
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 20px;
+		margin: 0;
+	}
+
 @media(min-width: 345px){
 	.pters_switch{
 		top: 5px;
@@ -365,6 +390,12 @@ li a{
 }
 
 @media(min-width: 600px){
+	#preview_option_values{
+		display: block;
+		text-align: center;
+		border-top: 1px solid #cccccc;
+		border-bottom: 1px solid #cccccc;
+	}
 	.settingMenu{
 		height: auto;
 		padding-top: 10px;

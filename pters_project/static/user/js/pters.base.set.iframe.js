@@ -770,6 +770,28 @@ function remove_front_zeros(rawData){
     }
 }
 
+
+
+function startTime_to_hangul(options_starttime){
+    var type = options_starttime.split('-')[0];
+    var time = options_starttime.split('-')[1];
+    var type_text;
+    var time_text;
+    if(type == 'A'){
+        type_text = '매 '
+        if(time == '0'){
+            time_text = '정시에'    
+        }else{
+            time_text = '시각 '+time+'분에'
+        }
+    }else if(type == "E"){
+        type_text = ''
+        time_text = time+'분 간격으로'
+    }
+
+    return type_text+time_text
+}
+
 Array.prototype.insert = function(index, item){
     this.splice(index, 0, item);
 };

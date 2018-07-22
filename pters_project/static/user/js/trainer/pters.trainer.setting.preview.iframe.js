@@ -307,25 +307,7 @@ $(document).ready(function(){
      })
      */
 
-     function startTime_to_hangul(options_starttime){
-        var type = options_starttime.split('-')[0];
-        var time = options_starttime.split('-')[1];
-        var type_text;
-        var time_text;
-        if(type == 'A'){
-            type_text = '매 '
-            if(time == '0'){
-                time_text = '정시에'    
-            }else{
-                time_text = '시각 '+time+'분에'
-            }
-        }else if(type == "E"){
-            type_text = ''
-            time_text = time+'분 간격으로'
-        }
-
-        return type_text+time_text
-     }
+     
 
     $(document).on('click','td',function(){
         var info = $(this).attr('data-date').split('_')
@@ -1528,7 +1510,8 @@ $(document).ready(function(){
         var htmlToJoin = [];
 
         var date = date_format_to_yyyymmdd($('#popup_info4').text(),'-')
-        if(date != today_YY_MM_DD){
+
+        if(date != today_YY_MM_DD){ // 선택한 날짜가 오늘이 아닐 경우 일정을 뿌려준다.
             for(var i=0;i<Arraylength;i++){
                 var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
                 var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
@@ -1579,13 +1562,23 @@ $(document).ready(function(){
                     }
                 }
             }
-        }else{
+        }else{ // 선택한 날짜가 오늘일 경우 이미 지난시간은 모두 회색으로 표기하고 근접 예약방지 옵션을 적용한다.
             var limit = add_time(currentHour+':'+currentMinute,'00:'+Preview_Options.limit);
-            if(compare_time(limit,add_time(Preview_Options.workEndTime+':00','00:00'))){
+
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무 종료 시간보다 클경우
+            if(compare_time(limit,add_time(Preview_Options.workEndTime+':00','00:00'))){ 
                 var timegraph_hourwidth = $('#'+(Preview_Options.workEndTime-1)+'g_00').width();
                 var timegraph_houroffset = $('#'+Preview_Options.workStartTime+'g_00').position().left;
                 var timegraph_houroffsetb = $('#'+Preview_Options.workStartTime+'g_00').position().top;
                 var timegraph_hourendoffset = $('#'+(Preview_Options.workEndTime-1)+'g_00').position().left + timegraph_hourwidth
+
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무 시작 시간보다 작을 경우
+            }else if(compare_time(limit,add_time(Preview_Options.workStartTime+':00','00:00')) == false){
+                var timegraph_hourendoffset = 0; 
+                var timegraph_houroffset = 0;
+                var timegraph_houroffset = 0;
+
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간보다 작을 경우
             }else{
                 var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
                 var timegraph_houroffset = $('#'+Preview_Options.workStartTime+'g_00').position().left;
