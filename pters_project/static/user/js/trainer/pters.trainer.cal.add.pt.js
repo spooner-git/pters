@@ -1730,6 +1730,7 @@ function ajaxRepeatConfirmSend(use, callback){
 }
 
 
+var ajaxJSON_cache;
 function ajaxTimeGraphSet(date, use, callback){
     var today_form = date;
     offAddOkArray = []; //OFF 등록 시작 시간 리스트
@@ -1755,6 +1756,7 @@ function ajaxTimeGraphSet(date, use, callback){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 //$('.plan_indicators').html('')
+                ajaxJSON_cache = jsondata;
                 draw_time_graph(60,'');
                 timeGraphSet("class","pink","AddClass", jsondata);  //시간 테이블 채우기
                 timeGraphSet("group","pink","AddClass", jsondata);
@@ -3442,8 +3444,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
 
 
-
-        console.log(planHour)
         var timegraph_hourwidth = $('#'+planHour+'g_00').width();
         var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
         var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
@@ -3454,7 +3454,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         if(planEndHour == Options.workEndTime){
             timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
             timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
-            console.log(planEndHour-1)
         }else{
             timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
             timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
@@ -3462,7 +3461,7 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 
 
         if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
-            var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
+            //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
 
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
             var planLoc     = timegraph_houroffset;
@@ -3475,9 +3474,9 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             
         }
     }
-
     $tableTarget.append(htmlToJoin.join(''))
 }
+
 
 function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
     var durTimeList;
@@ -3650,7 +3649,6 @@ function addGraphIndicator(durmin){
     var planLoc     = timegraph_houroffset;
 
     $('.selectedplan_indi').css({'top':timegraph_houroffsetb,'left':planLoc,'width':planWidth});
-
 }
 
 function timeGraphLimitSet(limit){ //현재시간 이전시간, 강사가 설정한 근접 예약 불가 시간 설정
@@ -4145,3 +4143,22 @@ function position_absolute_addplan_if_mobile(scrolltoDom){
         scrollToDom(scrolltoDom);
     };
 };
+
+
+$(window).resize(function(){
+    //Timegraph에 일정과 OFF표기를 반응형으로\
+    if($('#page-addplan').css('display') == 'block'){
+        $('.timegraph_plans_pink, .timegraph_plans_grey').remove();
+        timeGraphSet("class","pink","AddClass", ajaxJSON_cache);
+        timeGraphSet("group","pink","AddClass", ajaxJSON_cache);
+        timeGraphSet("off","grey","AddClass", ajaxJSON_cache);
+    }    
+    //Timegraph에 일정과 OFF표기를 반응형으로
+
+    //Timegraph에 현재 선택된 일정 깜빡이 크기를 반응형으로
+    if($('#page-addplan').css('display') == 'block' && $('.selectedplan_indi').length != 0){
+        addGraphIndicator($('#durationsSelected button').attr('data-durmin'));
+    };
+    //Timegraph에 현재 선택된 일정 깜빡이 크기를 반응형으로
+
+})

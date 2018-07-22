@@ -572,7 +572,7 @@ ul a{
 	position: absolute;
 	z-index: 1;
 	opacity: 0.8;
-	border-left: 0.5px solid #ffffff;
+	border-left: 1px solid #ffffff;
 
 	background: #fe4e65;
 	-webkit-animation-name:blink;

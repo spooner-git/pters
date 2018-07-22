@@ -886,7 +886,7 @@ img,a,div,span,p{
 
 .popup_inner span{
 	margin:0 auto;
-	line-height: 25px;
+	line-height: 50px;
 	font-size: 14px;
 	font-weight: bold;
 }

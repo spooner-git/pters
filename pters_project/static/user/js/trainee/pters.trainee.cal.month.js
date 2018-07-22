@@ -1009,26 +1009,21 @@ $(document).ready(function(){
             types = ''
         }
 
-        //var tablewidth = $('.timegraphtext').width()-10;
-        var tablewidth = width - 10;
-        //var tdwidth = (tablewidth/((Options.workEndTime-Options.workStartTime)*2))-1
-        //var tdwidth_ = (tablewidth/((Options.workEndTime-Options.workStartTime)))-2.5
-
-        var tdwidth = (tablewidth/(Options.workEndTime-Options.workStartTime));
-        var tdwidth_ = (tablewidth/(Options.workEndTime-Options.workStartTime));
+        var tdwidth = 100/(Options.workEndTime-Options.workStartTime);
+        var tdwidth_ = 100/(Options.workEndTime-Options.workStartTime);
 
         var tr1 = [];
         var tr2 = [];
         var i=Options.workStartTime;
         if(option == "30"){
             for(i; i<Options.workEndTime; i++){
-                tr1[i] = '<div colspan="2" style="width:'+tdwidth_+'px" class="colspan">'+(i)+'</div>';
-                tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
+                tr1[i] = '<div colspan="2" style="width:'+tdwidth_+'%" class="colspan">'+(i)+'</div>';
+                tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
             }
         }else if(option == "60"){
             for(i; i<Options.workEndTime; i++){
-                tr1[i] = '<div style="width:'+tdwidth+'px;" class="colspan">'+(i)+'</div>';
-                tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div>';
+                tr1[i] = '<div style="width:'+tdwidth+'%;" class="colspan">'+(i)+'</div>';
+                tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div>';
             }
         }
         var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
@@ -1273,9 +1268,9 @@ $(document).ready(function(){
                 $('.plan_raw_add').trigger('click');
             }
         }
-
     }
 
+    var ajaxJSON_cache;
     function ajaxTimeGraphSet(clicked){
         var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'),'-')
         var tablewidth = $('.timegraphtext').width();
@@ -1295,7 +1290,7 @@ $(document).ready(function(){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
                 }else{
-                    
+                    ajaxJSON_cache = jsondata
                     if($('#timeGraph').length > 0){
                         draw_time_graph(60,tablewidth,'')
                         timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
@@ -2154,7 +2149,6 @@ $(document).ready(function(){
 
         }
         
-
         var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
         var daymorning = starttext[0];
         var planHour = Number(starttext[1].split(':')[0]);
@@ -2164,9 +2158,6 @@ $(document).ready(function(){
         var planEndMin  = Number(planend.split(':')[1]);
         var planDura = durmin;
         var workstart = Options.workStartTime;
-
-        console.log(planHour, planMinute, planend)
-        
 
         var timegraph_hourwidth = $('#'+planHour+'g_00').width();
         var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
@@ -2178,23 +2169,33 @@ $(document).ready(function(){
         if(planEndHour == Options.workEndTime){
             timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
             timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
-            console.log(planEndHour-1)
         }else{
             timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
             timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
         }
 
-
-
         var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
         var planLoc     = timegraph_houroffset;
 
         $('.selectedplan_indi').css({'top':timegraph_houroffsetb,'left':planLoc,'width':planWidth});
-
     }
+
+    $(window).resize(function(){
+        if($('#addpopup').css('display') == 'block'){
+            $('.timegraph_plans_grey_trainee').remove()
+            timeGraphSet("class","grey", "AddClass", ajaxJSON_cache);  //시간 테이블 채우기
+            timeGraphSet("off","grey", "AddClass", ajaxJSON_cache);
+        }
+
+
+        if($('#addpopup').css('display') == 'block' && $('.selectedplan_indi').length != 0){
+            addGraphIndicator(Options.classDur*Options.timeDur);
+        }
+    })
 
 
 });//document(ready)
+
 
 
 

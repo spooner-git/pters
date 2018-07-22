@@ -53,14 +53,13 @@ function sideGoPage(page){
 }
 
 
-
 function shade_index(option){
     var initialbodywidth = window.innerWidth;
     var initialbodyheight = document.documentElement.clientHeight + 100;
     if(initialbodywidth > 600){
         $('#pshade').css({'width':'100%', 'height':'100%'});
     }else{
-        $('#mshade').css({'width':initialbodywidth, 'height':initialbodyheight});
+        $('#mshade').css({'width':'100%', 'height':initialbodyheight});
     }
     var bodywidth = window.innerWidth;
     if(bodywidth > 600){
