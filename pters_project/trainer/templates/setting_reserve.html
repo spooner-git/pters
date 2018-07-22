@@ -744,7 +744,8 @@
 
             var popupwidth = $('#preview_iframe_popup').width();
             if(bodywidth > 600){
-                var popupheight = $('#preview_iframe_popup').height() -$('#preview_option_values').height() - $('#preview_iframe_popup > p').height()-20;
+                var popupheight = $('#preview_iframe_popup').height() -$('#preview_option_values').height() - $('#preview_iframe_popup > p').height()-22;
+                console.log($('#preview_iframe_popup').height(), $('#preview_option_values').height() , $('#preview_iframe_popup > p').height())
             }else{
                 var popupheight = $('#preview_iframe_popup').height() - $('#preview_iframe_popup > p').height()-20;
             }
