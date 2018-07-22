@@ -3027,21 +3027,11 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
 
     
     var addOkArrayList = [];
-    /*
-    for(var t=0; t<semiresult.length; t++){
-        if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
-            addOkArrayList.push(semiresult[t])
-        }
-    }*/
-
-
-
     for(var t=0; t<semiresult.length; t++){
         //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
         if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
-            if(compare_time(semiresult[t], add_time(currentTime, '00:'+Options.limit))                      //업무시간
-                && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
-                && compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){ //근접예약 금지
+            if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false           //업무시간
+                && compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){              
                 if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
                     addOkArrayList.push(semiresult[t])
                 }
@@ -3056,8 +3046,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             
         }
     }
-
-
 
     allplans = sortedlist
     return {"addOkArray":addOkArrayList, "allplans":sortedlist}
@@ -3116,7 +3104,7 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkAr
 
         timeArray.push('<li><a data-trainingtime="'+addOkArray[i]+':00.000000" class="pointerList">'+offText+offHour+':'+offmin+'</a></li>');
     }
-    timeArray[offOkLen]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>';
+    timeArray[offOkLen+1]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>';
     var timeArraySum = timeArray.join('');
     startTimeList.html(timeArraySum);
 }
@@ -3289,6 +3277,7 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
     //timeGraphLimitSet(Options.limit)
 }*/
 
+/*
 function draw_time_graph(option, type){  //type = '' and mini
 
     var targetHTML =  '';
@@ -3321,6 +3310,41 @@ function draw_time_graph(option, type){  //type = '' and mini
         for(i; i<Options.workEndTime; i++){
             tr1[i] = '<div style="width:'+tdwidth+'px;" class="colspan">'+(i)+'</div>';
             tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div>';
+        }
+    }
+    var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
+    targetHTML.html(tbody);
+}
+*/
+
+function draw_time_graph(option, type){  //type = '' and mini
+
+    var targetHTML =  '';
+    var types = '';
+    if(type == 'mini'){
+        targetHTML =  $('#timeGraph.ptaddbox_mini table');
+        types = "_mini"
+    }else{
+        targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph .timegraphtext');
+        types = ''
+    }
+
+
+    var tdwidth = (100/(Options.workEndTime-Options.workStartTime));
+    var tdwidth_ = (100/(Options.workEndTime-Options.workStartTime));
+
+    var tr1 = [];
+    var tr2 = [];
+    var i=Options.workStartTime;
+    if(option == "30"){
+        for(i; i<Options.workEndTime; i++){
+            tr1[i] = '<div colspan="2" style="width:'+tdwidth_+'%" class="colspan">'+(i)+'</div>';
+            tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
+        }
+    }else if(option == "60"){
+        for(i; i<Options.workEndTime; i++){
+            tr1[i] = '<div style="width:'+tdwidth+'%;" class="colspan">'+(i)+'</div>';
+            tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div>';
         }
     }
     var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
@@ -3588,7 +3612,6 @@ function addGraphIndicator(datadur){
 }*/
 
 function addGraphIndicator(durmin){
-        console.log(durmin)
     if($('.timegraph_display .selectedplan_indi').length == 0){
         $('.timegraph_display').append('<div class="selectedplan_indi"></div>')
     }else{
@@ -3596,7 +3619,6 @@ function addGraphIndicator(durmin){
     }
     
     var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
-    console.log(starttext)
     var daymorning = starttext[0];
     var planHour = Number(starttext[1].split(':')[0]);
     var planMinute = Number(starttext[1].split(':')[1]);
@@ -3619,7 +3641,6 @@ function addGraphIndicator(durmin){
         timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
     }else{
         timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
-        console.log(planEndHour)
         timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
     }
 
