@@ -572,13 +572,13 @@ $(document).ready(function(){
                 send_reservation()
             }
         }else{
-            alert('시작 시간을 선택 해주세요.')
+            alert('시작 시각을 선택 해주세요.')
             //입력값 확인 메시지 출력 가능
         }
     })
 
     function send_reservation(){
-        click_check = 0
+        click_check = 0;
         $.ajax({
             url: '/trainee/add_trainee_schedule/',
             data: $('#pt-add-form').serialize(),

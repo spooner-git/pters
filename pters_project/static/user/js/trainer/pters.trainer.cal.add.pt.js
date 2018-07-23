@@ -3084,7 +3084,7 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkAr
     //offAddOkArray =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12.5, 13, 14, 18.5, 20, 21, 22, 23]
     var offOkLen = addOkArray.length;
     var startTimeList = $('#starttimes'+options);
-    var timeArray = ['<div><a class="pointerList">시작 시간 선택</a></div>'];
+    var timeArray = ['<div><a class="pointerList">시작 시각 선택</a></div>'];
     for(var i=0; i<offOkLen; i++){
         var offHour = addOkArray[i].split(':')[0];
         var offmin = addOkArray[i].split(':')[1];

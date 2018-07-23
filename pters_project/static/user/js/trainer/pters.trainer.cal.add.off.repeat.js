@@ -190,7 +190,7 @@ $(document).ready(function(){
             zz++;
         };
 
-        var semiresult = ['<div><a class="pointerList">시작 시간 선택</a></div>'];
+        var semiresult = ['<div><a class="pointerList">시작 시각 선택</a></div>'];
         for(var t=0; t<startTimeList.length; t++){
             if(Number(startTimeList[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
                 semiresult.push(startTimeList[t]);

@@ -602,18 +602,18 @@ $(document).ready(function(){
 
     var ajax_block_during_sending_send_reservation = true
     $("#submitBtn").click(function(){
-        check_dropdown_selected()
+        check_dropdown_selected();
         if(select_all_check==true){
             //document.getElementById('pt-add-form').submit();
             if(ajax_block_during_sending_send_reservation == true){
-                ajax_block_during_sending_send_reservation = false
-                send_reservation()
+                ajax_block_during_sending_send_reservation = false;
+                send_reservation();
             }
         }else{
-            alert('시작 시간을 선택 해주세요.')
+            alert('시작 시각을 선택 해주세요.');
             //입력값 확인 메시지 출력 가능
         }
-    })
+    });
 
     function send_reservation(){
         click_check = 0

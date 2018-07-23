@@ -373,7 +373,7 @@ def add_trainee_schedule_logic(request):
     # elif time_duration == '':
     #     error = '진행 시간을 선택해 주세요.'
     elif training_time == '':
-        error = '시작 시간을 선택해 주세요.'
+        error = '시작 시각을 선택해 주세요.'
 
     if error is None:
         try:
