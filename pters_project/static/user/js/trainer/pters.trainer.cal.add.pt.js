@@ -3450,14 +3450,11 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
 
-         console.log(add_date(planEndDate[i].split(' ')[0],0) , add_date(planStartDate[i].split(' ')[0],1) )
         if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1) 
             && planEndDate[i].split(' ')[1] == "00:00:00" ){
             var planEndHour = "24";
             var planEndMin = '00'
-
         }
-
 
         // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
         if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) ){
