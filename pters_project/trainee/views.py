@@ -391,7 +391,7 @@ def add_trainee_schedule_logic(request):
     if error is None:
         if group_schedule_id is None or group_schedule_id == '':
             time_duration_temp = class_info.class_hour*int(lt_res_member_time_duration)
-            start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M:%S.%f')
+            start_date = datetime.datetime.strptime(training_date+' '+training_time, '%Y-%m-%d %H:%M')
             end_date = start_date + datetime.timedelta(minutes=int(time_duration_temp))
         else:
             try:

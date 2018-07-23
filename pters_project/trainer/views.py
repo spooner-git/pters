@@ -2874,21 +2874,21 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                                     < lecture_info.lecture_tb.end_date:
                                 member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
 
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M') is None \
                                 or member_test.lecture_tb.mod_dt == '':
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                         else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
+                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M') \
                                     > lecture_info.lecture_tb.mod_dt:
                                 member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
                         if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                      '%Y-%m-%d %H:%M:%S') is None \
+                                                      '%Y-%m-%d %H:%M') is None \
                                 or member_test.lecture_tb.reg_dt == '':
                             member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                         else:
                             if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                          '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                                                          '%Y-%m-%d %H:%M') > lecture_info.lecture_tb.reg_dt:
                                 member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                         member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
                         member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count

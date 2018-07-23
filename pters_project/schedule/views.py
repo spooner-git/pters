@@ -74,7 +74,6 @@ def add_schedule_logic(request):
     push_title = []
     push_message = []
     class_info = None
-
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if en_dis_type == ON_SCHEDULE_TYPE:
@@ -111,12 +110,16 @@ def add_schedule_logic(request):
     if error is None:
         # 최초 날짜 값 셋팅
         # time_duration_temp = class_info.class_hour*int(schedule_time_duration)
+        end_time_check = 0
+        if schedule_end_time == '24:00':
+            schedule_end_time = '23:59'
+            end_time_check = 1
 
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
-                                                                 '%Y-%m-%d %H:%M:%S.%f')
+                                                                 '%Y-%m-%d %H:%M')
             schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
-                                                                 '%Y-%m-%d %H:%M:%S.%f')
+                                                               '%Y-%m-%d %H:%M')
             # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -124,6 +127,9 @@ def add_schedule_logic(request):
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
+
+        if end_time_check == 1:
+            schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
 
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
@@ -591,9 +597,9 @@ def add_repeat_schedule_logic(request):
             error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
-        repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M:%S.%f')
+        repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M')
         # temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
-        repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M:%S.%f')
+        repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M')
         # repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
         repeat_schedule_start_time = repeat_schedule_start_time.time()
         repeat_schedule_end_time = repeat_schedule_end_time.time()
@@ -627,10 +633,10 @@ def add_repeat_schedule_logic(request):
             try:
                 schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
                                                                      + ' ' + str(repeat_schedule_start_time),
-                                                                     '%Y-%m-%d %H:%M:%S')
+                                                                     '%Y-%m-%d %H:%M')
                 schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
                                                                    + ' ' + str(repeat_schedule_end_time),
-                                                                   '%Y-%m-%d %H:%M:%S')
+                                                                   '%Y-%m-%d %H:%M')
 
             except ValueError:
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -1094,9 +1100,9 @@ def add_group_schedule_logic(request):
 
         try:
             schedule_start_datetime = datetime.datetime.strptime(schedule_date + ' ' + schedule_time,
-                                                                 '%Y-%m-%d %H:%M:%S.%f')
+                                                                 '%Y-%m-%d %H:%M')
             schedule_end_datetime = datetime.datetime.strptime(schedule_end_date + ' ' + schedule_end_time,
-                                                               '%Y-%m-%d %H:%M:%S.%f')
+                                                               '%Y-%m-%d %H:%M')
             # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -1763,9 +1769,9 @@ def add_group_repeat_schedule_logic(request):
                 group_schedule_reg_counter = group_lecture_info.lecture_tb.lecture_avail_count
 
     if error is None:
-        repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M:%S.%f')
+        repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M')
         # temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
-        repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M:%S.%f')
+        repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M')
         # repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
         repeat_schedule_start_time = repeat_schedule_start_time.time()
         repeat_schedule_end_time = repeat_schedule_end_time.time()
@@ -1806,10 +1812,10 @@ def add_group_repeat_schedule_logic(request):
             try:
                 schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
                                                                      + ' ' + str(repeat_schedule_start_time),
-                                                                     '%Y-%m-%d %H:%M:%S')
+                                                                     '%Y-%m-%d %H:%M')
                 schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
                                                                    + ' ' + str(repeat_schedule_end_time),
-                                                                   '%Y-%m-%d %H:%M:%S')
+                                                                   '%Y-%m-%d %H:%M')
 
             except ValueError:
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
