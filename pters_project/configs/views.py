@@ -57,6 +57,14 @@ class SiteUsePolicyView(TemplateView):
         return context
 
 
+class SiteUsePolicyChargeView(TemplateView):
+    template_name = 'policy_charge.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SiteUsePolicyChargeView, self).get_context_data(**kwargs)
+        return context
+
+
 class PrivacyView(TemplateView):
     template_name = 'privacy.html'
 

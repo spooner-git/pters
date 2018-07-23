@@ -102,7 +102,7 @@
 
             <div class="popupBtn_mini">
                 <button class="submitBtn _button_Prev">결제취소</button>
-                <button class="submitBtn _button_Next"">다음</button>
+                <button class="submitBtn _button_Next">다음</button>
             </div>
 
             <div id="purchase_caution">
@@ -149,8 +149,8 @@
                     <p class="purchase_method_name">신용/체크카드</p>
                 </div>
                 <div class="select_method_table_cell">
-                    <div class="ptersCheckbox" data-method="cash"><div></div></div>
-                    <p class="purchase_method_name">무통장 입금</p>
+                    <div class="ptersCheckbox" data-method="trans"><div></div></div>
+                    <p class="purchase_method_name">실시간 계좌이체</p>
                 </div>
             </div>
             <div class="popupBtn_mini">
@@ -318,6 +318,7 @@
                 }
                 payment_date = start_date;
             }
+            console.log(payment_date);
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
                 pay_method : pay_method,
@@ -418,51 +419,55 @@
 
         $('#purchase_popup_page1 .ptersCheckbox').click(function(){
             $(this).addClass('checked')
-            $(this).find('div').addClass('ptersCheckboxInner')
+            $(this).find('div').addClass('ptersCheckboxInner');
 
 
             if($('#purchase_appointment .ptersCheckbox').hasClass('checked') && $('#purchase_popup_page1').css('display')=='block' ){
                 $('#purchase_popup_page1 ._button_Next').addClass('appoint_checked')
             }
-        })
+        });
 
         $('#purchase_popup_page1 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ){
                 $('#purchase_popup_page1').hide();
                 $('#purchase_popup_page2').show();
             }
-        })
+        });
 
         $('#purchase_popup_page2 .ptersCheckbox').click(function(){
             $('.checked').removeClass('checked');
             $('.ptersCheckboxInner').removeClass('ptersCheckboxInner');
 
-            $(this).addClass('checked')
-            $(this).find('div').addClass('ptersCheckboxInner')
+            $(this).addClass('checked');
+            $(this).find('div').addClass('ptersCheckboxInner');
 
 
 
             if($('#purchase_popup_page2 .checked').length > 0 && $('#purchase_popup_page2').css('display')=='block' ){
-                $('#purchase_popup_page2 ._button_Next').addClass('appoint_checked')
+                $('#purchase_popup_page2 ._button_Next').addClass('appoint_checked');
             }
-        })
+        });
 
         $('#purchase_popup_page2 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page2').css('display')=='block' ){
 
                 var product = $('#purchase_popup').attr('data-product');
-                var method = $('#purchase_popup_page2 .checked').attr('data-method')
-                var type = $('#purchase_popup').attr('data-type');
+                var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
+                var payment_type_cd = $('#purchase_popup').attr('data-type');
                 var functions = $('#purchase_popup').attr('data-function');
                 var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1); 
-
-                console.log(product, method, type, functions, price)
-                //check_payment(product, method, type, functions, price);    
+                console.log(pay_method);
+{#                console.log(product, method, type, functions, price)#}
+                check_payment(product, pay_method, payment_type_cd, functions, price);
             }
-        })
+        });
+        $('#view_appointment_btn').click(function(){
+            window.open('/policy_charge/', '_blank');
+
+        });
 
         $('._button_Prev').click(function(){
-            shade_index(-100)
+            shade_index(-100);
             $('#purchase_popup, #purchase_popup_page2').hide();
             $('#purchase_popup_page1').show();
             $('.checked').removeClass('checked');
@@ -472,7 +477,7 @@
                                         'data-type':'',
                                         'data-function':'',
                                         'data-price':''})
-        })
+        });
 
 
 

@@ -107,9 +107,10 @@ def check_before_billing_logic(request):
 
         if single_payment_counter > 0:
             if payment_type_cd == 'PERIOD':
-                billing_info = '이미 결제중인 기능이기 때문에 ' + context['next_start_date'] + '부터 결제가 진행됩니다.'
+                billing_info = '이미 결제중인 기능이 포함되어 있기 때문에 ' + context['next_start_date'] + '부터 결제가 진행됩니다.'
             else:
-                billing_info = context['next_start_date'] + '~' + context['next_end_date'] + ' 이용권 결제가 진행됩니다'
+                billing_info = '이미 결제중인 기능이 포함되어 있기 때문에 ' + \
+                               context['next_start_date'] + '~' + context['next_end_date'] + ' 이용권 결제가 진행됩니다'
 
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)

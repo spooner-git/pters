@@ -482,6 +482,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
     context = {}
     error = None
     customer_uid = None
+    merchandise_type_cd = None
     today = datetime.date.today()
     empty_period_billing_check = False
     if custom_data is None:
@@ -495,6 +496,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
     else:
         try:
             payment_type_cd = custom_data['payment_type_cd']
+            merchandise_type_cd = custom_data['merchandise_type_cd']
             context['user_id'] = custom_data['user_id']
         except KeyError:
             error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
@@ -513,7 +515,9 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
             customer_uid = None
 
         try:
-            payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'], use=USE).latest('end_date')
+            payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
+                                                        merchandise_type_cd__contains=merchandise_type_cd,
+                                                        use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
 
