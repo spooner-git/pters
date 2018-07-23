@@ -1409,6 +1409,32 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     var selector_page_addplan = $('#page-addplan');
     var selector_datepicker = $('#datepicker');
     var selector_datepicker_repeat_start = $('#datepicker_repeat_start');
+
+    if(option == "ptadd"){
+        $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
+        $('#memberName').css('display','block');
+        $('#uptext2').text('레슨 일정 등록');
+        $('#id_training_date, #id_training_end_date').val(selector_datepicker.val());
+        $('#id_repeat_start_date').val(selector_datepicker_repeat_start.val());
+        if(bodywidth > 600){
+            $('#addpopup_pc_label_pt').show();
+            $('#addpopup_pc_label_off').hide();
+        }
+        $(".pt_memo_guide").css('display','block');
+    }else if(option == "offadd"){
+        $('#memberName, #remainCount, #groupInfo, #groupmembersInfo').css('display','none');
+        $('#uptext2').text('OFF 일정 등록');
+        $('#id_training_date_off, #id_training_end_date_off').val(selector_datepicker.val());
+        $('#id_repeat_start_date_off').val(selector_datepicker_repeat_start.val());
+        if(bodywidth > 600){
+            $('#addpopup_pc_label_off').show();
+            $('#addpopup_pc_label_pt').hide();
+        }
+        $(".pt_memo_guide").css('display','none');
+    }
+
+
+    
     if(bodywidth <= 600){
         $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
@@ -1435,28 +1461,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
     }
 
-    if(option == "ptadd"){
-        $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
-        $('#memberName').css('display','block');
-        $('#uptext2').text('레슨 일정 등록');
-        $('#id_training_date, #id_training_end_date').val(selector_datepicker.val());
-        $('#id_repeat_start_date').val(selector_datepicker_repeat_start.val());
-        if(bodywidth > 600){
-            $('#addpopup_pc_label_pt').show();
-            $('#addpopup_pc_label_off').hide();
-        }
-        $(".pt_memo_guide").css('display','block');
-    }else if(option == "offadd"){
-        $('#memberName, #remainCount, #groupInfo, #groupmembersInfo').css('display','none');
-        $('#uptext2').text('OFF 일정 등록');
-        $('#id_training_date_off, #id_training_end_date_off').val(selector_datepicker.val());
-        $('#id_repeat_start_date_off').val(selector_datepicker_repeat_start.val());
-        if(bodywidth > 600){
-            $('#addpopup_pc_label_off').show();
-            $('#addpopup_pc_label_pt').hide();
-        }
-        $(".pt_memo_guide").css('display','none');
-    }
+    
 
     $('#page-addplan #timeGraph').show();
 
