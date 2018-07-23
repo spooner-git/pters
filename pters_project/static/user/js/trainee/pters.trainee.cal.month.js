@@ -1179,6 +1179,11 @@ $(document).ready(function(){
                 var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
                 var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
 
+                if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1) 
+                    && planEndDate[i].split(' ')[1] == "00:00:00" ){
+                    var planEndHour = "24";
+                    var planEndMin = '00'
+                }
 
                 // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
                 if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) ){
@@ -1362,35 +1367,44 @@ $(document).ready(function(){
         }
         var plan_starttime = {};
         var plan_endtime = {};
-
         for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
             if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
                 plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
             }
-            if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate){
+            if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate && jsondata.classTimeArray_end_date[i].split(' ')[1] != "00:00:00"){
                 plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
+            }else if(jsondata.classTimeArray_end_date[i].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.classTimeArray_end_date[i].split(' ')[1] == "00:00:00"){
+                plan_endtime['24:00:00'] = ""
             }
         }
         for(var j=0; j<jsondata.group_schedule_start_datetime.length; j++){
             if(jsondata.group_schedule_start_datetime[j].split(' ')[0] == selecteddate){
                 plan_starttime[jsondata.group_schedule_start_datetime[j].split(' ')[1]] = ""
             }
-            if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate){
+            if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate && jsondata.group_schedule_end_datetime[j].split(' ')[1] != "00:00:00"){
                 plan_endtime[jsondata.group_schedule_end_datetime[j].split(' ')[1]] = ""
+            }else if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.group_schedule_end_datetime[j].split(' ')[1] == "00:00:00"){
+                plan_endtime['24:00:00'] = ""
             }
         }
         for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
             if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
                 plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
             }
-            if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate){
+            if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate && jsondata.offTimeArray_end_date[j].split(' ')[1] != "00:00:00"){
                 plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
+            }else if(jsondata.offTimeArray_end_date[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.offTimeArray_end_date[j].split(' ')[1] == "00:00:00"){
+                plan_endtime['24:00:00'] = ""
             }
         }
 
         var plan_time = [];
         var plan_stime = [];
         var plan_etime = [];
+
+        console.log(plan_starttime)
+        console.log(plan_endtime)
+
         for(starttime in  plan_starttime){
             plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
         }
@@ -1416,6 +1430,7 @@ $(document).ready(function(){
         
         //var sortedlist = plan_time.sort(function(a,b){return a-b;})
         var sortedlist = plan_time.sort();
+        console.log(sortedlist)
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         //var semiresult = []
