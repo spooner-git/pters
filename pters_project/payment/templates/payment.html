@@ -83,12 +83,84 @@
     </div>
 
 
-    <!--
-    <div class="popupBtn_mini">
-        <button class="submitBtn _button_Prev">이전</button>
-        <button class="submitBtn _button_Next" style="display: none;">등록</button>
+    <div id="purchase_popup">
+        <label style="font-size: 18px;">피터스 이용권 구매하기</label>
+
+        <div id="purchase_popup_page1">
+            <div id="purchase_price_preview">
+                <label>이용권 금액</label>
+                <div>
+                    <div><p id="price_preview"></p></div>
+                    <p id="price_preview_vat">부가세(VAT) 10% 별도</p>
+                </div>
+            </div>
+            <div id="purchase_appointment">
+                <div class="ptersCheckbox"><div></div></div>
+                <p style="display: inline-block;vertical-align: middle;">이용약관 및 하단 결제 안내사항에 동의합니다.</p>
+                <div id="view_appointment_btn">약관 보기</div>
+            </div>
+
+            <div class="popupBtn_mini">
+                <button class="submitBtn _button_Prev">결제취소</button>
+                <button class="submitBtn _button_Next"">다음</button>
+            </div>
+
+            <div id="purchase_caution">
+                <p>피터스의 모든 이용권은 국내에서만 구매 가능하며, 사용이 가능합니다.</p>
+                <p>본 이용권 구매 시 부가세 10%가 별로도 청구됩니다.</p>
+                <p>구입하신 이용권은 마이페이지의 이용권 내역에서 확인 할 수 있습니다.</p>
+                <p>본 이용권은 이용 시작일 기준 7일이내 청약철회 가능한 이용권 입니다.</p>
+                <p>단, 이용내역이 있는 경우 이용금액 공제, 이벤트등의 할인 혜택을 받으신 경우 해당금액 공제 후 환불 가능합니다.</p>
+                <p>이용 시작일 기준 7일 경과후에는 이용금액 공제 후 해지 가능합니다.</p>
+                <p>이용 금액은 결제일 이후 피터스에 접속한 기간에 상응하는 금액을 말합니다.</p>
+                <p>미성년자가 법정대리인 동의 없이 계약을 체결한 경우, 미성년자 또는 법정 대리인이 이를 취소할 수 있습니다.</p>
+                <p>이용권 구매내역을 타인에게 양도하거나 다른 아이디로 이전하는 기능은 제공하지 않습니다.</p>
+                <p>이용권은 PC, 모바일, 앱에서 이용이 가능합니다.</p>
+            </div>
+        </div>
+
+        <div id="purchase_popup_page2">
+            <div id="view_purchase_summary">
+                <div id="purchase_product" class="purchase_popup_content_wrap">
+                    <div class="purchase_popup_innerlabel">상품명</div>
+                    <div class="purchase_popup_innercontent"></div>
+                </div>
+
+                <div id="purchase_functions" class="purchase_popup_content_wrap">
+                    <div class="purchase_popup_innerlabel">상품 제공 상세 품목</div>
+                    <div class="purchase_popup_innercontent"></div>
+                </div>
+
+                <div id="purchase_type" class="purchase_popup_content_wrap">
+                    <div class="purchase_popup_innerlabel">결제유형</div>
+                    <div class="purchase_popup_innercontent"></div>
+                </div>
+
+                <div id="purchase_price" class="purchase_popup_content_wrap">
+                    <div class="purchase_popup_innerlabel">상품 가격</div>
+                    <div class="purchase_popup_innercontent"></div>
+                </div>
+            </div>
+
+            <div id="select_method_wrap">
+                <label>결제 방법</label>
+                <div class="select_method_table_cell">
+                    <div class="ptersCheckbox" data-method="card"><div></div></div>
+                    <p class="purchase_method_name">신용/체크카드</p>
+                </div>
+                <div class="select_method_table_cell">
+                    <div class="ptersCheckbox" data-method="cash"><div></div></div>
+                    <p class="purchase_method_name">무통장 입금</p>
+                </div>
+            </div>
+            <div class="popupBtn_mini">
+                <button class="submitBtn _button_Prev">결제취소</button>
+                <button class="submitBtn _button_Next"">결제하기</button>
+            </div>
+        </div>
+
     </div>
--->
+
 
     <form id="modify-member-id-form" method="post">
         {% csrf_token %}
@@ -118,41 +190,65 @@
             $('#upbutton-modify').hide();
         }
 
-        $('#upbutton-x-modify, ._button_Prev').click(function(){
+        $('#upbutton-x-modify').click(function(){
             location.href="/trainer/trainer_setting/"
         });
 
         $('#pay_class_group_function_monthly').click(function(e){
             e.preventDefault();
-            check_payment('클래스 + 그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'CLA/GRO/ADV', 13200);
+            purchase_popup_show('클래스 + 그룹 레슨 - 정기 결제', 'PERIOD', 'CLA/GRO/ADV', 12000);
+            //check_payment('클래스 + 그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'CLA/GRO/ADV', 13200);
             //클래스 + 그룹 레슨 정기결제 버튼
         });
         $('#pay_class_group_function_instant').click(function(e){
             e.preventDefault();
-            check_payment('클래스 + 그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'CLA/GRO/ADV', 16500);
+            purchase_popup_show('클래스 + 그룹 레슨 - 1개월 이용권', 'SINGLE', 'CLA/GRO/ADV', 15000);
+            //check_payment('클래스 + 그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'CLA/GRO/ADV', 16500);
             //클래스 + 그룹 레슨 1개월 결제 버튼
         });
         $('#pay_group_function_monthly').click(function(e){
             e.preventDefault();
-
-            check_payment('그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'GRO/ADV', 9900);
+            purchase_popup_show('그룹 레슨 - 정기 결제', 'PERIOD', 'GRO/ADV', 9000);
+            //check_payment('그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'GRO/ADV', 9900);
             //그룹 레슨 정기결제 버튼
         });
         $('#pay_group_function_instant').click(function(e){
             e.preventDefault();
-            check_payment('그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'GRO/ADV', 13200);
+            purchase_popup_show('그룹 레슨 - 1개월 이용권', 'SINGLE', 'GRO/ADV', 12000);
+            //check_payment('그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'GRO/ADV', 13200);
             //그룹 레슨 1개월 결제 버튼
         });
         $('#pay_ads_remove_monthly').click(function(e){
             e.preventDefault();
-            check_payment('광고 제거 - 정기 결제', 'card', 'PERIOD', 'ADV', 1100);
+            purchase_popup_show('광고 제거 - 정기 결제', 'PERIOD', 'ADV', 1000);
+            //check_payment('광고 제거 - 정기 결제', 'card', 'PERIOD', 'ADV', 1100);
             //광고 제거 정기 결제 버튼
         });
         $('#pay_ads_remove_instant').click(function(e){
             e.preventDefault();
-            check_payment('광고 제거 - 1개월 이용권', 'card', 'SINGLE', 'ADV', 2200);
+            purchase_popup_show('광고 제거 - 1개월 이용권', 'SINGLE', 'ADV', 2000);
+            //check_payment('광고 제거 - 1개월 이용권', 'card', 'SINGLE', 'ADV', 2200);
             //광고 제거 1개월 결제 버튼
         });
+
+        function purchase_popup_show(product, type, functions, price){
+            shade_index(100)
+            $('#purchase_popup').fadeIn('fast')
+                                .css({'top':(($(window).height()-$('#purchase_popup').outerHeight())/2),
+                                      'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
+                                .attr({'data-product':product,
+                                        'data-type':type,
+                                        'data-function':functions,
+                                        'data-price':price});
+            $('#purchase_product').find('.purchase_popup_innercontent').text(product);
+            $('#purchase_functions').find('.purchase_popup_innercontent').text(functions);
+            $('#purchase_type').find('.purchase_popup_innercontent').text(type);
+            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(price));
+            $('#price_preview').text(numberWithCommas(price)+' 원');
+        }
+        function numberWithCommas(x) { //천단위 콤마 찍기
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
         function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
             var error_check = true;
@@ -320,6 +416,65 @@
                 });
 
         }
+
+        $('#purchase_popup_page1 .ptersCheckbox').click(function(){
+            $(this).addClass('checked')
+            $(this).find('div').addClass('ptersCheckboxInner')
+
+
+            if($('#purchase_appointment .ptersCheckbox').hasClass('checked') && $('#purchase_popup_page1').css('display')=='block' ){
+                $('#purchase_popup_page1 ._button_Next').addClass('appoint_checked')
+            }
+        })
+
+        $('#purchase_popup_page1 ._button_Next').click(function(){
+            if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ){
+                $('#purchase_popup_page1').hide();
+                $('#purchase_popup_page2').show();
+            }
+        })
+
+        $('#purchase_popup_page2 .ptersCheckbox').click(function(){
+            $('.checked').removeClass('checked');
+            $('.ptersCheckboxInner').removeClass('ptersCheckboxInner');
+
+            $(this).addClass('checked')
+            $(this).find('div').addClass('ptersCheckboxInner')
+
+
+
+            if($('#purchase_popup_page2 .checked').length > 0 && $('#purchase_popup_page2').css('display')=='block' ){
+                $('#purchase_popup_page2 ._button_Next').addClass('appoint_checked')
+            }
+        })
+
+        $('#purchase_popup_page2 ._button_Next').click(function(){
+            if($(this).hasClass('appoint_checked') && $('#purchase_popup_page2').css('display')=='block' ){
+
+                var product = $('#purchase_popup').attr('data-product');
+                var method = $('#purchase_popup_page2 .checked').attr('data-method')
+                var type = $('#purchase_popup').attr('data-type');
+                var functions = $('#purchase_popup').attr('data-function');
+                var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1); 
+
+                console.log(product, method, type, functions, price)
+                //check_payment(product, method, type, functions, price);    
+            }
+        })
+
+        $('._button_Prev').click(function(){
+            shade_index(-100)
+            $('#purchase_popup, #purchase_popup_page2').hide();
+            $('#purchase_popup_page1').show();
+            $('.checked').removeClass('checked');
+            $('.ptersCheckboxInner').removeClass('ptersCheckboxInner');
+            $('.appoint_checked').removeClass('appoint_checked');
+            $('#purchase_popup').attr({'data-product':'',
+                                        'data-type':'',
+                                        'data-function':'',
+                                        'data-price':''})
+        })
+
 
 
     </script>
