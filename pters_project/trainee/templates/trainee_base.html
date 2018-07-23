@@ -267,6 +267,12 @@
     if(worktime.length>0){
         var worktimeStart = Number('{{ lt_res_04 }}'.split(':')[0])
         var worktimeEnd = Number('{{ lt_res_04 }}'.split('-')[1].split(':')[0])
+        if(worktime.split(':')[0] == '23' && worktime.split(':')[1] == '59'){
+            worktimeStart = 24;
+        }
+        if(worktime.split('-')[1].split(':')[0] == '23' && worktime.split('-')[1].split(':')[1] == '59' ){
+            worktimeEnd = 24;
+        }
     }else{
         var worktimeStart = ''
         var worktimeEnd = ''

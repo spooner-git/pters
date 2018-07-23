@@ -2995,6 +2995,9 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray ì±
 
     var workStartTime_ = time_h_m_to_hh_mm(worktime.split('-')[0]);
     var workEndTime_ = time_h_m_to_hh_mm(worktime.split('-')[1]);
+    if(workEndTime_ == "23:59"){
+        workEndTime_ = "24:00"
+    }
 
     plan_time.push(workEndTime_)
     if(plan_time.length==1 && plan_time[0] == Options.workEndTime){

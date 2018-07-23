@@ -1015,6 +1015,7 @@ $(document).ready(function(){
         var tr1 = [];
         var tr2 = [];
         var i=Options.workStartTime;
+        console.log(Options.workStartTime,Options.workEndTime )
         if(option == "30"){
             for(i; i<Options.workEndTime; i++){
                 tr1[i] = '<div colspan="2" style="width:'+tdwidth_+'%" class="colspan">'+(i)+'</div>';
@@ -1856,6 +1857,9 @@ $(document).ready(function(){
 
         var workStartTime_ = time_h_m_to_hh_mm(worktime.split('-')[0]);
         var workEndTime_ = time_h_m_to_hh_mm(worktime.split('-')[1]);
+        if(workEndTime_ == "23:59"){
+            workEndTime_ = "24:00"
+        }
 
         plan_time.push(workEndTime_)
         if(plan_time.length==1 && plan_time[0] == Options.workEndTime){
@@ -1872,7 +1876,7 @@ $(document).ready(function(){
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         //var semiresult = []
-
+        console.log('sortedlist',sortedlist)
         semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
             var zz = 0;
@@ -1911,7 +1915,6 @@ $(document).ready(function(){
             }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
                 if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false 
                     && compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
-                    
                     if(starttimeOption.split('-')[0] == "A"){
                         if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
                             addOkArrayList.push(semiresult[t])
