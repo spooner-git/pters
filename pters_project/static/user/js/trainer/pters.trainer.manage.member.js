@@ -3718,9 +3718,9 @@ function fill_member_info_by_ID_search(){
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true);
     }
     else{
-        dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split(' ')[0]+'"]');
-        dropdown_month_selected = $('#birth_month option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]');
-        dropdown_date_selected = $('#birth_date option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]');
+        dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split('-')[0]+'년"]');
+        dropdown_month_selected = $('#birth_month option[data-month="'+Number(id_search_memberBirth.split('-')[1])+'월"]');
+        dropdown_date_selected = $('#birth_date option[data-date="'+Number(id_search_memberBirth.split('-')[2])+'일"]');
         dropdown_year_selected.prop('selected',true);
         dropdown_month_selected.prop('selected',true);
         dropdown_date_selected.prop('selected',true);

@@ -891,7 +891,9 @@ $(document).ready(function(){
                 $('#groupmembersInfo').show()
                 get_groupmember_list(groupid, 'callback', function(jsondata){
                     draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
-                    //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},100)
+                    if(bodywidth > 600){
+                        $('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200)
+                    }
                 });
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide()
@@ -1434,7 +1436,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }
 
 
-    
+
     if(bodywidth <= 600){
         $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
