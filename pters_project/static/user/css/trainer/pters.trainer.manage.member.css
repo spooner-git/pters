@@ -1256,9 +1256,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		max-width: 500px !important;
 	}
 
-	#float_btn_wrap{
-		display: none !important;
-	}
+
 
 	._grouptype{
 		display: table-cell;
@@ -1392,9 +1390,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		color: #ffffff;
 	}
 
-	#float_btn{
-		display: none !important;
-	}
+
 
 	#infoMemberModify{
 		display: inline;

@@ -547,55 +547,94 @@ $(document).ready(function(){
         ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
 
         //minipopup 위치 보정
-        var selector_endId = $('#'+endID);
-        var toploc = selector_endId.offset().top;
-        var leftloc = selector_endId.offset().left;
-        var tdwidth = selector_endId.width();
-        var tdheight = selector_endId.height();
-        var minipopupwidth = 300;
-        var minipopupheight = 250;
-        var splitID = selector_endId.attr('id').split('_');
-        var weekID = selector_endId.attr('data-week');
-        var compensate_off = 0;
-        var selector_MINI_ptadd = $('._MINI_ptadd');
-        if(selector_MINI_ptadd.css('display')=='inline'){
-            addTypeSelect = 'ptadd';
-            compensate_off = 0;
-        }else if(selector_MINI_ptadd.css('display')=="none"){
-            addTypeSelect = 'offadd';
-            compensate_off = +30;
-        }
-        $('.typeSelected').removeClass('typeSelected');
-        $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
+            /*
+            var selector_endId = $('#'+endID);
+            var toploc = selector_endId.offset().top;
+            var leftloc = selector_endId.offset().left;
+            var tdwidth = selector_endId.width();
+            var tdheight = selector_endId.height();
+            var minipopupwidth = $('#page-addplan-pc').width();
+            var minipopupheight = $('#page-addplan-pc').height();
+            var splitID = selector_endId.attr('id').split('_');
+            var weekID = selector_endId.attr('data-week');
+            var compensate_off = 0;
+            var selector_MINI_ptadd = $('._MINI_ptadd');
+            if(selector_MINI_ptadd.css('display')=='inline'){
+                addTypeSelect = 'ptadd';
+                compensate_off = 0;
+            }else if(selector_MINI_ptadd.css('display')=="none"){
+                addTypeSelect = 'offadd';
+                compensate_off = +30;
+            }
+            $('.typeSelected').removeClass('typeSelected');
+            $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
 
-        if(splitID[3]>=(Options.workEndTime-5)){
-            //$('.dropdown_mini').addClass('dropup')
-            if(splitID[3]== (Options.workEndTime-1)){
-                if(Options.workEndTime - Options.workStartTime < 5){
+            if(splitID[3]>=(Options.workEndTime-5)){
+                //$('.dropdown_mini').addClass('dropup')
+                if(splitID[3]== (Options.workEndTime-1)){
+                    if(Options.workEndTime - Options.workStartTime < 5){
+                        // toploc = toploc;
+                    }else{
+                        toploc = toploc - minipopupheight + compensate_off;
+                    }
+                }else if(splitID[3] <= (Options.workStartTime+3)){
                     // toploc = toploc;
                 }else{
                     toploc = toploc - minipopupheight + compensate_off;
                 }
-            }else if(splitID[3] <= (Options.workStartTime+3)){
-                // toploc = toploc;
             }else{
-                toploc = toploc - minipopupheight + compensate_off;
+                $('.dropdown_mini').removeClass('dropup');
+                if(weekID==3){
+                    toploc = toploc + tdheight;
+                }else{
+                    toploc = toploc + 30;
+                }
+            }
+
+            if(weekID>=4){
+                leftloc = leftloc-300-tdwidth;
+            }else if(weekID==3){
+                // leftloc = leftloc;
+            }
+            */
+        //minipopup 위치 보정
+
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        var popupwidth = $('#page-addplan-pc').width();
+        var popupheight = $('#page-addplan-pc').height();
+        var startTopLoc = $('#'+thisID).offset().top;
+        var startLeftLoc = $('#'+thisID).offset().left;
+        var startWidth = $('#'+thisID).width();
+        var startHeight = $('#'+thisID).height()*2;
+        var endTopLoc = $('#'+endID).offset().top;
+        var endLeftLoc = $('#'+endID).offset().left;
+        var endWidth = $('#'+endID).width();
+        var scrollTop = $(window).scrollTop();
+        var weekTopLoc = $('#week').offset().top;
+        var weekHeight = $('#week').height();
+
+        var popupRightLoc = endLeftLoc+endWidth+popupwidth;
+        var popupBottomLoc = endTopLoc + popupheight;
+        if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
+            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
+            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
+            }else{ //그외
+                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
             }
         }else{
-            $('.dropdown_mini').removeClass('dropup');
-            if(weekID==3){
-                toploc = toploc + tdheight;
+            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
+            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
             }else{
-                toploc = toploc + 30;
+                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
             }
         }
 
-        if(weekID>=4){
-            leftloc = leftloc-300-tdwidth;
-        }else if(weekID==3){
-            // leftloc = leftloc;
-        }
-        //minipopup 위치 보정
+ 
 
         ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
             /*
@@ -614,7 +653,7 @@ $(document).ready(function(){
             }
         });
 
-        $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth});
+        //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth});
     }
 
     //shift키 눌러서 일정을 쭉 잡기
