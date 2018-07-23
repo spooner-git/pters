@@ -1038,6 +1038,13 @@ function groupListSet(option, jsondata){ //option : current, finished
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
     }
+    if(groupNum == 0){
+        if(option == "current"){
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 클래스가 없습니다.</div>')
+        }else if(option == "finished"){
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 클래스가 없습니다.</div>')
+        }
+    }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
     $targetHTML.html(htmlToJoin.join(''))
 }
