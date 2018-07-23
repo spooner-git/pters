@@ -882,7 +882,7 @@ a:focus, a:hover{
     
 }
 
-@media(min-width: 900px){
+@media(min-width: 975px){
     #loginInfo{
         margin-right: 70px;
     }

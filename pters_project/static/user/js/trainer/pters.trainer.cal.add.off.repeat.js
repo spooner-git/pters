@@ -132,11 +132,11 @@ $(document).ready(function(){
         $("#repeatdurationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
         selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
         if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-            $('#id_repeat_end_time').val(selector_durations_li_first_child.attr('data-endtime') + ':00.000000');
+            $('#id_repeat_end_time').val(selector_durations_li_first_child.attr('data-endtime'));
             //$("#id_repeat_dur").val(selector_durationsSelected_button.val());
 
         }else if(addTypeSelect == "repeatoffadd"){
-            $('#id_repeat_end_time_off').val(selector_durations_li_first_child.attr('data-endtime') + ':00.000000')
+            $('#id_repeat_end_time_off').val(selector_durations_li_first_child.attr('data-endtime'))
             //$("#id_repeat_dur_off").val(selector_durationsSelected_button.val());
         }
         check_dropdown_selected_addplan();
@@ -146,9 +146,9 @@ $(document).ready(function(){
     $(document).on('click',"#repeatdurations li a",function(){
         $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
         if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-            $('#id_repeat_end_time').val($(this).attr('data-endtime') + ':00.000000');
+            $('#id_repeat_end_time').val($(this).attr('data-endtime'));
         }else if(addTypeSelect == "repeatoffadd"){
-            $('#id_repeat_end_time_off').val($(this).attr('data-endtime') + ':00.000000')
+            $('#id_repeat_end_time_off').val($(this).attr('data-endtime'))
         }
         check_dropdown_selected_addplan();
         position_absolute_addplan_if_mobile($('#repeatdurationsSelected'));
@@ -186,7 +186,7 @@ $(document).ready(function(){
         while(add_time(start+':00', '00:0'+zz) < add_time(end+':00','00:00')){
             var time = add_time(start+':00', '00:0'+zz);
             var timehangul = time_format_to_hangul2(add_time(start+':00', '00:0'+zz));
-            startTimeList.push('<li><a data-trainingtime="'+time+':00.000000">'+timehangul+'</a></li>');
+            startTimeList.push('<li><a data-trainingtime="'+time+'">'+timehangul+'</a></li>');
             zz++;
         };
 

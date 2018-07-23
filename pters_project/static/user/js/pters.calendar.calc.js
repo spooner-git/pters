@@ -240,6 +240,7 @@ function add_time(starttime, addvalue){
 	return resultHour + ":" + resultMin;
 }
 
+
 function compare_time(time1, time2){
 	var hour1 = time1.split(':')[0];
 	var min1  = time1.split(':')[1];
