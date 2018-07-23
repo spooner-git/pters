@@ -2965,12 +2965,12 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
     var plan_starttime = {};
     var plan_endtime = {};
-
+    console.log(jsondata)
     for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
         if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
         }
-        if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate){
+        if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate && jsondata.classTimeArray_end_date[i].split(' ')[1] != "00:00:00"){
             plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
         }else if(jsondata.classTimeArray_end_date[i].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.classTimeArray_end_date[i].split(' ')[1] == "00:00:00"){
             plan_endtime['24:00:00'] = ""
@@ -2980,7 +2980,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         if(jsondata.group_schedule_start_datetime[j].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.group_schedule_start_datetime[j].split(' ')[1]] = ""
         }
-        if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate){
+        if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate && jsondata.group_schedule_end_datetime[j].split(' ')[1] != "00:00:00" ){
             plan_endtime[jsondata.group_schedule_end_datetime[j].split(' ')[1]] = ""
         }else if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.group_schedule_end_datetime[j].split(' ')[1] == "00:00:00"){
             plan_endtime['24:00:00'] = ""
@@ -2990,7 +2990,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
         }
-        if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate){
+        if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate && jsondata.offTimeArray_end_date[j].split(' ')[1] != "00:00:00" ){
             plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
         }else if(jsondata.offTimeArray_end_date[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.offTimeArray_end_date[j].split(' ')[1] == "00:00:00"){
             plan_endtime['24:00:00'] = ""
@@ -3000,6 +3000,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     var plan_time = [];
     var plan_stime = [];
     var plan_etime = [];
+
 
     for(starttime in  plan_starttime){
         plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
@@ -3449,6 +3450,14 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
 
+         console.log(add_date(planEndDate[i].split(' ')[0],0) , add_date(planStartDate[i].split(' ')[0],1) )
+        if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1) 
+            && planEndDate[i].split(' ')[1] == "00:00:00" ){
+            var planEndHour = "24";
+            var planEndMin = '00'
+
+        }
+
 
         // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
         if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) ){
@@ -3480,7 +3489,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 
         if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
             //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
-
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
             var planLoc     = timegraph_houroffset;
 
@@ -3489,7 +3497,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             }else{
                 htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
             }
-            
         }
     }
     $tableTarget.append(htmlToJoin.join(''))
