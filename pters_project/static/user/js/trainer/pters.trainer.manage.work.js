@@ -8,7 +8,7 @@ $('#selectBox .btn').click(function(){
     if($(this).attr('id').split('_')[0] == 'member'){
         drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom' , document.getElementById('chart_div2'));
         drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom', document.getElementById('chart_div3'));
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'));
+        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'), datas_convert_to_addRows(month_date, price, refund_price));
     }
 })
 

@@ -323,7 +323,7 @@
         var len = month_date.length;
         var htmlTarget = $('#profit_details_table');
         var htmlToJoin = [];
-        for(var i=0; i<len; i++){
+        for(var i=len-1; i>=0; i--){
             var month = month_date[i].split('-')[0]+'.'+month_date[i].split('-')[1];
             var profit = numberWithCommas(Number(price[i]) - Number(refund_price[i]) );
             htmlToJoin.push('<div class="table_row"><div>'+month+'</div><div>'+profit+'원</div></div>')
