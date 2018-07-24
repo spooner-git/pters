@@ -420,19 +420,21 @@
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
+                console.log('회원 월별',jsondata)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
                 }else{
+                    /*
                     var addRows_data = datas_convert_to_addRows(jsondata.month_date, jsondata.price, jsondata.refund_price)
+                    
                     drawChart(
                                 graph_Width_To_Be, 
                                 graph_Height_To_Be, 
                                 document.getElementById('chart_div4'), 
                                 addRows_data
                             );
-                            
+                      */      
                 }
 
             },
