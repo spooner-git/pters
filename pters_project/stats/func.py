@@ -14,6 +14,8 @@ def get_sales_data(class_id, month_first_day, finish_date):
     error = None
     if month_first_day is None or month_first_day == '':
         error = '시작 날짜를 선택해주세요.'
+    else:
+        month_first_day = month_first_day.replace(day=1)
     if finish_date is None or finish_date == '':
         error = '종료 날짜를 선택해주세요.'
 
@@ -74,6 +76,8 @@ def get_sales_info(class_id, month_first_day):
     error = None
     if month_first_day is None or month_first_day == '':
         error = '시작 날짜를 선택해주세요.'
+    else:
+        month_first_day = month_first_day.replace(day=1)
 
     if error is None:
         next_year = int(month_first_day.strftime('%Y')) + 1
