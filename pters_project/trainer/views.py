@@ -522,6 +522,11 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
 
                 if len(total_class_lecture_list) > 0:
                     total_member_num += 1
+                    for class_lecture_info in total_class_lecture_list:
+                        end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      lecture_tb_id=class_lecture_info.lecture_tb_id,
+                                                                      en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                                      use=USE).count()
 
                 if len(class_lecture_list) > 0:
                     current_total_member_num += 1
@@ -545,9 +550,9 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['current_total_member_num'] = current_total_member_num
             context['new_member_num'] = new_member_num
 
-        if error is None:
-            end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE').count()
+        # if error is None:
+        #     end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+        #                                                  en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE', use=USE).count()
         if error is None:
             if user_member_info.birthday_dt is None:
                 user_member_info.birthday_dt = '미입력'
