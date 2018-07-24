@@ -207,6 +207,15 @@ body{
 		bottom: 9px !important;
 	}
 
+	.pters_dropdown_custom_list{
+		min-width: unset;
+		background:#ffffff !important;
+	}
+	.pters_dropdown_custom_list li{
+		cursor: pointer;
+	}
+
+
 	#selectBox{
 		border:1px solid #cccccc;
 		width: 350px;
