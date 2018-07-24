@@ -18,6 +18,8 @@ from stats import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    # 배경 이미지 정보 조회
+    # 매출 통계 정보 조회
     url(r'^get_sales_list/$', views.GetSalesListViewAjax.as_view(), name='get_sales_list'),
+    # 매출 상세 내역 조회
+    url(r'^get_sales_info/$', views.GetSalesInfoViewAjax.as_view(), name='get_sales_info'),
 ]
