@@ -264,7 +264,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                 else:
                     month_all_refund_member += 1
 
-            # 강좌에 해당하는 수강/회원 정보 가져오기
+            # 완료 수강 이력 가져오기
             class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                                lecture_tb__use=USE, auth_cd='VIEW',
                                                                use=USE)
