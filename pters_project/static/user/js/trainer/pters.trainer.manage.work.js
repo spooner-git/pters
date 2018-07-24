@@ -50,6 +50,20 @@ $(document).on('click','.pters_dropdown_custom_list li',function(){
 });
 
 
+$(document).on('click','.sales_detail_view_btn',function(){
+    if($(this).attr('data-power') == "off"){
+        $(this).attr('data-power','on')
+        ajax_call_sales_detail_data(class_id, $(this).attr('data-date'));
+        $(this).find('img').css('transform','rotate(180deg)');
+    }else if($(this).attr('data-power') == "on"){
+        $(this).attr('data-power','off')
+        $('div.table_row_monthly[data-date="'+$(this).attr('data-date')+'"]').html('')
+        $(this).find('img').css('transform','rotate(0deg)');
+    }
+})
+
+
+
 
 function fill_duration_setter_dropdown(){
     var targetYear = $('.year_dropdown');
