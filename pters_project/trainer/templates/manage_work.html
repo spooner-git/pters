@@ -38,12 +38,12 @@
 <div id="profit_analytics_page" class="pages">
     <div id="date_selector_wrapper">
             <div class="duration_selector_wrapper">
-                <div class="month_sel_btn" data-month="1"><span>1개월</span></div>
-                <div class="month_sel_btn" data-month="3"><span>3개월</span></div>
-                <div class="month_sel_btn" data-month="6"><span>6개월</span></div>
-                <div class="month_sel_btn" data-month="12"><span>12개월</span></div>
+                <div class="month_sel_btn" data-month="0"><span>1개월</span></div>
+                <div class="month_sel_btn" data-month="2"><span>3개월</span></div>
+                <div class="month_sel_btn" data-month="5"><span>6개월</span></div>
+                <div class="month_sel_btn" data-month="11"><span>12개월</span></div>
                 <div class="view_duration_setter"><span>...</span></div>
-                <div id="call_sales_data_btn"><span>조회</span></div>
+                <div id="call_sales_data_btn" class="call_btn"><span>조회</span></div>
             </div>
 
             <div class="duration_setter_wrapper">
@@ -117,12 +117,12 @@
     <div class="">
         <div id="date_selector_wrapper">
             <div class="duration_selector_wrapper">
-                <div class="month_sel_btn" data-month="1"><span>1개월</span></div>
-                <div class="month_sel_btn" data-month="3"><span>3개월</span></div>
-                <div class="month_sel_btn" data-month="6"><span>6개월</span></div>
-                <div class="month_sel_btn" data-month="12"><span>12개월</span></div>
+                <div class="month_sel_btn" data-month="0"><span>1개월</span></div>
+                <div class="month_sel_btn" data-month="2"><span>3개월</span></div>
+                <div class="month_sel_btn" data-month="5"><span>6개월</span></div>
+                <div class="month_sel_btn" data-month="11"><span>12개월</span></div>
                 <div class="view_duration_setter"><span>...</span></div>
-                <div id="call_member_data_btn"><span>조회</span></div>
+                <div id="call_member_data_btn" class="call_btn"><span>조회</span></div>
             </div>
 
             <div class="duration_setter_wrapper">
@@ -273,7 +273,7 @@
                 type: 'POST',
 
                 beforeSend:function(){
-                    //beforeSend();
+                    beforeSend();
                 },
 
                 success:function(data){
@@ -290,12 +290,13 @@
                                     document.getElementById('chart_div'), 
                                     addRows_data
                                 );
+                        fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price)
                     }
 
                 },
 
                 complete:function(){
-                    //completeSend();
+                    completeSend();
                 },
 
                 error:function(){

@@ -17,6 +17,8 @@ $('.view_duration_setter').click(function(){
 })
 
 $('.month_sel_btn').click(function(){
+    $(this).addClass('month_sel_selected')
+    $(this).siblings('.month_sel_btn').removeClass('month_sel_selected')
     var thisVal = Number($(this).attr('data-month'));
     var start_date = date_format_yyyy_m_d_to_yyyy_mm_dd(substract_month(currentYear+'-'+(currentMonth+1)+'-'+1, -thisVal),'-')
     var end_date = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'-'+(currentMonth+1)+'-'+1, '-')

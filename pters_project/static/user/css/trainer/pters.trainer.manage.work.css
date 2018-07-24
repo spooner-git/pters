@@ -48,6 +48,17 @@ body{
 	text-align: center;
 	margin: 0 auto;
 }
+.month_sel_btn{
+
+}
+.month_sel_selected{
+	color: #fe4e65;
+	border-color: #fe4e65;
+}
+.call_btn:active{
+	box-shadow: 1px 1px 1px 1px #cccccc;
+	color: #cccccc;
+}
 
 .dropdown{
 	display: inline-block;
