@@ -114,6 +114,7 @@ html,body{
 #menuDescription{
     color: #ffffff;
     font-size: 14px;
+    line-height: 40px;
 }
 
 #ymdText{
@@ -793,6 +794,7 @@ a:focus, a:hover{
         width: 100%;
         text-align: center;
         position: absolute;
+        line-height: unset;
     }
 
     .beta_tag{

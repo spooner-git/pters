@@ -23,6 +23,11 @@ body{
 	display: none;
 }
 
+#ymdText{
+	position: relative;
+	margin-bottom: 0;
+}
+
 #menuDescription{
   line-height: 40px;
 }
@@ -42,6 +47,10 @@ body{
 		padding: 20px 30px 0px 30px;
 		box-shadow: 1px 1px 1px 1px #fe4e65;
 		display: none;
+	}
+	#ymdText{
+		position: relative;
+		margin-bottom: 20px;
 	}
 	#menuDescription{
 	  line-height: unset;
