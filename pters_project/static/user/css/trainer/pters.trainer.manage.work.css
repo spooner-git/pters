@@ -9,16 +9,9 @@ body{
 	font-family: 'Noto Sans KR';
 }
 
-#ymText{
-	position: fixed;
-	width: 100%;
-	background: #282828;
-	height: 50px;
-	font-size: 16px;
-	font-weight: bold;
-	color: #ffffff;
-	text-align: center;
-	cursor: pointer;
+#ymdText{
+	position: relative;
+	margin-bottom: 0;
 }
 
 .chart_wrapper{
@@ -35,6 +28,12 @@ body{
 	height: 250px;
 	margin: 0 auto;
 	margin-top: 30px;
+	margin-bottom: 30px;
+}
+.chart_wrapper p, .chart_wrapper_inline p{
+	margin-bottom: 0;
+	font-size: 15px;
+	font-weight: 500;
 }
 
 #profit_analytics_page{
@@ -55,14 +54,34 @@ body{
 	text-align: center;
 	margin: 0 auto;
 }
+.month_sel_btn{
+
+}
+.month_sel_selected{
+	color: #fe4e65;
+	border-color: #fe4e65;
+}
+.call_btn:active{
+	box-shadow: 1px 1px 1px 1px #cccccc;
+	color: #cccccc;
+}
 
 .dropdown{
+	display: inline-block;
+	border: 1px solid #8d8d8d;
+	height: 30px !important;
 	position: relative !important;
 	left: unset !important;
-	width: 10% !important;
-	min-width:80px !important; 
+	width: 19% !important;
+	min-width: 56px !important; 
 	margin-left: 5px !important;
 	margin-right: 5px !important;
+	margin-top: 0 !important;
+}
+.icondown{
+	right: 5px !important;
+	bottom: 10px !important;
+	width:10px !important;
 }
 
 .duration_selector_wrapper{
@@ -71,11 +90,14 @@ body{
 }
 .duration_selector_wrapper div{
 	display: inline-block;
-	width: 60px;
+	width: 50px;
 	border: 1px solid #cccccc;
-	padding: 2px 3px 2px 3px;
-	font-size: 13px;
+	padding: 5px 0px 5px 0px;
+	font-size: 12.5px;
 	cursor: pointer;
+	margin-bottom: 5px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 
@@ -86,25 +108,58 @@ body{
 
 #profit_details_table{
 	width: 100%;
+	text-align: center;
 }
 .table_row_title{
 	display: table;
 	background-color:#ececec;
 	width: 100%;
 	height: 35px;
+	text-align: center;
+	border-bottom: 2px solid #282828;
+	margin-top: 20px;
+}
+.table_row_sum{
+	height: 60px !important;
+	background: #ececec;
+	border-color:#fe4e65 !important;
+	font-weight: 500;
 }
 .table_row{
 	display: table;
 	width: 100%;
-	height: 35px;
+	height: 45px;
+	border-top: 1px solid #282828;
 }
+	.table_row img{
+		width: 12px;
+		margin-left: 8px;
+		margin-bottom: 1px;
+	}
+	.table_row span{
+		font-size: 13px;
+		cursor: pointer;
+	}
 	.table_row_title div, .table_row div{
 		display: table-cell;
-		width: 50%;
+		width: 33%;
 		vertical-align: middle;
-		font-size: 15px;
+		font-size: 14px;
 	}
-
+.sales_detail_monthly_row{
+	display: table;
+	width: 100%;
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+.sales_detail_monthly_row_title{
+	background-color: #282828;
+	color: #ffffff;
+}
+	.sales_detail_monthly_row div{
+		display: table-cell;
+		width: 33%;
+	}
 
 #selectBox{
 	border-top: 1px solid black;
@@ -177,10 +232,35 @@ body{
 
 
 @media(min-width: 600px){
+	#ymdText{
+		margin-bottom: 20px;
+	}
+	.dropdown{
+		width: 10% !important;
+		height: 26px !important;
+	}
+	.icondown{
+		width: 8px !important;
+		bottom: 9px !important;
+	}
+
+	.pters_dropdown_custom_list{
+		min-width: unset;
+		background:#ffffff !important;
+	}
+	.pters_dropdown_custom_list li{
+		cursor: pointer;
+	}
+
+
 	#selectBox{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+	}
+	.duration_selector_wrapper div{
+		padding: 2px 3px 2px 3px;
+		font-size: 13px;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;

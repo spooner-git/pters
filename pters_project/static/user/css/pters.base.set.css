@@ -30,6 +30,10 @@ html,body{
     transform: rotate(47deg);
 }
 
+#sidenav_wrapper_slide{
+    overflow-y: auto;
+    background: #ffffff;
+}
 
 
 #float_inner1{ /*2017.10.2*/
@@ -114,6 +118,7 @@ html,body{
 #menuDescription{
     color: #ffffff;
     font-size: 14px;
+    line-height: 40px;
 }
 
 #ymdText{
@@ -253,9 +258,15 @@ a:focus, a:hover{
     width: 100%;
 
 }
+
+.sidebar_upper{
+    height: 33%;
+    background: #282828;
+    position: relative;
+}
+
 .sidebar_upper img{
     width: 50px;
-
     margin: auto;
 }
 
@@ -285,11 +296,7 @@ a:focus, a:hover{
     text-align: center;
 }
 
-.sidebar_upper{
-    height: 33%;
-    background: transparent;
-    position: relative;
-}
+
 
 .sidebar_icon{
     position:absolute;
@@ -300,6 +307,7 @@ a:focus, a:hover{
 
 
 .sidebar_div{
+    position: relative;
     height: 40px;
     max-height: 50px;
     border-top: 0.5px solid #cccccc;
@@ -309,6 +317,10 @@ a:focus, a:hover{
 .sidebar_div:hover, .sidebar_div:active, .sidebar_div:focus, .sidebar_div_last1:hover, .sidebar_div_last2:hover,.sidebar_div_last1:active, .sidebar_div_last2:active{
     color: #fe4e65 !important;
     background: #eaeaea !important;
+}
+
+.sidebar_div:last-child{
+    border-bottom: 0.5px solid #cccccc;
 }
 
 
@@ -357,7 +369,7 @@ a:focus, a:hover{
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #282828;
+    background-color: #ffffff;
     overflow-x: hidden;
     overflow-y: hidden;
     transition: 0.15s;
@@ -525,7 +537,7 @@ a:focus, a:hover{
 }
 
 #loginInfo{
-    display: inline-block;
+    display: none;
     margin-right: 10px;
     position: absolute;
     right: 0;
@@ -793,6 +805,7 @@ a:focus, a:hover{
         width: 100%;
         text-align: center;
         position: absolute;
+        line-height: unset;
     }
 
     .beta_tag{
@@ -868,7 +881,31 @@ a:focus, a:hover{
     }
 }
 
-
+@media(min-width: 670px){
+    #loginInfo{
+        display: inline-block;
+    }
+    #alarm_button{
+        width: 20px;
+        margin-top: 22px;
+        margin-right: 0;
+    }
+    #classselect_button{
+        width: 20px;
+        margin-top: 22px;
+    }
+}
+@media(min-width: 720px ){
+    #alarm_button{
+        width: 25px;
+        margin-right: 10px;
+        margin-top: 20px;
+    }
+    #classselect_button{
+        width: 25px;
+        margin-top: 20px;
+    }
+}
 
 @media(min-width:850px){
     .centermenu_div{

@@ -12,7 +12,7 @@
 
 
 {% block content %}
-<div id="ymdText" style="position: relative;margin-bottom: 20px;">
+<div id="ymdText">
     <div id="ymdTextWrap">
         <div id="menuName">업무 통계
         </div>
@@ -38,12 +38,12 @@
 <div id="profit_analytics_page" class="pages">
     <div id="date_selector_wrapper">
             <div class="duration_selector_wrapper">
-                <div><span>1개월</span></div>
-                <div><span>3개월</span></div>
-                <div><span>6개월</span></div>
-                <div><span>12개월</span></div>
+                <div class="month_sel_btn" data-month="0"><span>1개월</span></div>
+                <div class="month_sel_btn" data-month="2"><span>3개월</span></div>
+                <div class="month_sel_btn" data-month="5"><span>6개월</span></div>
+                <div class="month_sel_btn" data-month="11"><span>12개월</span></div>
                 <div class="view_duration_setter"><span>...</span></div>
-                <div id="call_data_btn"><span>조회</span></div>
+                <div id="call_sales_data_btn" class="call_btn"><span>조회</span></div>
             </div>
 
             <div class="duration_setter_wrapper">
@@ -54,7 +54,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="startYear" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="startYear" class="dropdown-menu pters_dropdown_custom_list year_dropdown">
 
                     </ul>
                 </div>
@@ -66,7 +66,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="startMonth" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="startMonth" class="dropdown-menu pters_dropdown_custom_list month_dropdown">
 
                     </ul>
                 </div>
@@ -78,7 +78,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="endYear" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="endYear" class="dropdown-menu pters_dropdown_custom_list year_dropdown">
 
                     </ul>
                 </div>
@@ -90,21 +90,23 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="endYear" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="endMonth" class="dropdown-menu pters_dropdown_custom_list month_dropdown">
 
                     </ul>
                 </div>
             </div>
     </div>
     <div class="chart_wrapper">
+        <p>월별 매출 현황</p>
         <div id="chart_div"></div>
         
     </div>
+    <div class="table_row_title">
+        <div>기간</div>
+        <div>매출액 <span style="font-size:11.5px;">*환불포함</span></div>
+        <div></div>
+    </div>
     <div id="profit_details_table">
-        <div class="table_row_title">
-            <div>기간</div>
-            <div>매출액 <span style="font-size:11.5px;">*환불포함</span></div>
-        </div>
         <div class="table_row">
             <div>0000.00 ~ 0000.00</div>
             <div>00000000원</div>
@@ -117,12 +119,12 @@
     <div class="">
         <div id="date_selector_wrapper">
             <div class="duration_selector_wrapper">
-                <div><span>1개월</span></div>
-                <div><span>3개월</span></div>
-                <div><span>6개월</span></div>
-                <div><span>12개월</span></div>
+                <div class="month_sel_btn" data-month="0"><span>1개월</span></div>
+                <div class="month_sel_btn" data-month="2"><span>3개월</span></div>
+                <div class="month_sel_btn" data-month="5"><span>6개월</span></div>
+                <div class="month_sel_btn" data-month="11"><span>12개월</span></div>
                 <div class="view_duration_setter"><span>...</span></div>
-                <div id="call_data_btn"><span>조회</span></div>
+                <div id="call_member_data_btn" class="call_btn"><span>조회</span></div>
             </div>
 
             <div class="duration_setter_wrapper">
@@ -133,7 +135,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="startYear" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="startYear_member" class="dropdown-menu pters_dropdown_custom_list year_dropdown">
 
                     </ul>
                 </div>
@@ -145,7 +147,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="startMonth" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="startMonth_member" class="dropdown-menu pters_dropdown_custom_list month_dropdown">
 
                     </ul>
                 </div>
@@ -157,7 +159,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="endYear" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="endYear_member" class="dropdown-menu pters_dropdown_custom_list year_dropdown">
 
                     </ul>
                 </div>
@@ -169,7 +171,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span></button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="endYear" class="dropdown-menu pters_dropdown_custom_list">
+                    <ul id="endMonth_member" class="dropdown-menu pters_dropdown_custom_list month_dropdown">
 
                     </ul>
                 </div>
@@ -177,9 +179,9 @@
         </div>
     </div>
 
-    <div class="chart_wrapper_inline"><div id="chart_div2"></div></div>
-    <div class="chart_wrapper_inline"><div id="chart_div3"></div></div>
-    <div class="chart_wrapper"><div id="chart_div4"></div></div>
+    <div class="chart_wrapper_inline"><p>회원 등록 현황</p><div id="chart_div2"></div></div>
+    <div class="chart_wrapper_inline"><p>회원 환불 현황</p><div id="chart_div3"></div></div>
+    <div class="chart_wrapper"><p style="text-align: center;">월별 계약 현황</p><div id="chart_div4"></div></div>
 </div>
 
 
@@ -195,83 +197,356 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/google.chart.js" %}></script>
     <script type="text/javascript">
+    
+    $('a.__workmanage').css('color','#fe4e65;')
+    $('#uptext').text("통계")
+
+
       var graph_Width_To_Be = $('.chart_wrapper').width();
       var graph_Height_To_Be = $('.chart_wrapper').height();
       var graph_inline_Width_To_Be = $('.chart_wrapper_inline').width()*$('.chart_wrapper').width()/100;
       var graph_inline_Height_To_Be = $('.chart_wrapper_inline').height();
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
+      var month_date =  [{% for month_price_info in month_price_data %}"{{ month_price_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var new_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.new_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var re_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.re_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var all_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.all_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var part_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.part_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var finish_schedule_count = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.finish_schedule_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var month_new_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_new_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var month_re_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_re_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var month_all_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_all_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var month_part_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_part_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var total_month_new_reg_member = {{ total_month_new_reg_member }};
+      var total_month_re_reg_member = {{ total_month_re_reg_member }};
+      var total_month_all_refund_member = {{ total_month_all_refund_member }};
+      var total_month_part_refund_member = {{ total_month_part_refund_member }};
 
-      console.log(graph_inline_Width_To_Be,graph_inline_Height_To_Be)
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(function(){
+        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
+        fill_profit_details_table(month_date, price, refund_price)
+    });
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(function(){
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'));
-        /*
-        drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom' , document.getElementById('chart_div2'));
-        drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom', document.getElementById('chart_div3'));
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'));
-        */
-      });
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart(width, height, target) {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
-            data.addRows([
-                              ['1월', 3000000],
-                              ['2월', 10000000],
-                              ['3월', 12300000],
-                              ['4월', 2800000],
-                              ['5월', 6800000],
-                              ['6월', 8460000],
-                              ['7월', 10500000],
-                              ['8월', 4600000],
-                              ['9월', 9700000],
-                              ['10월', 7530000],
-                              ['11월', 6520000],
-                              ['12월', 2330000]
-                        ]);
+    function drawChart(width, height, target, addRows_data, title){
+        // Create the data table.
+        var data = new google.visualization.arrayToDataTable(addRows_data);
+        
+        // Set chart options
+        var options = {'title': title,
+                       'width':width,
+                       'height':height,
+                       'chartArea':{height:'75%'},
+                        'legend':{position:'right'},
+                        colors:['#fe4e65','#5d91f7'],
+                        isStacked: true,
+                        trendlines:{0:{
+                                        type:'linear',
+                                        color:'green',
+                                        lineWidth:3,
+                                        opacity:0.3,
+                                        showR2:true,
+                                        visibleInLegend:true
+                                        }
+                                    }
+                    };
 
-            // Set chart options
-            var options = {'title':'월별 매출',
-                           'width':width,
-                           'height':height};
+        // Instantiate and draw our chart, passing in some options.
+        //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.ColumnChart(target);
+        chart.draw(data, options);
+    }
 
-            // Instantiate and draw our chart, passing in some options.
-            //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-            var chart = new google.visualization.ColumnChart(target);
-            chart.draw(data, options);
-      }
+    function drawChart_Pie(width, height, legend, target, addRows_data, title) {
+        // Create the data table.
+        var data = new google.visualization.arrayToDataTable(addRows_data);
 
-      function drawChart_Pie(width, height, legend, target) {
-            // Create the data table.
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
-            data.addRows([
-                              ['신규', 3],
-                              ['연장', 10],
-                        ]);
+        // Set chart options
+        var options = {'title':title,
+                       'width':width,
+                       'height':height,
+                       colors:['#fe4e65','#5d91f7'],
+                       'chartArea':{width:'100%',height:'85%'},
+                      'legend':{position:legend, 'alignment':'center'},
+                        sliceVisibilityThreshold:0,
+                        pieSliceText:'value' };
 
-            // Set chart options
-            var options = {'title':'월별 매출',
-                           'width':width,
-                           'height':height,
-                           'chartArea':{width:'100%',height:'85%'},
-                          'legend':{position:legend, 'alignment':'center'}};
-
-            // Instantiate and draw our chart, passing in some options.
-            //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-            var chart = new google.visualization.PieChart(target);
-            chart.draw(data, options);
-      }
+        // Instantiate and draw our chart, passing in some options.
+        //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.PieChart(target);
+        chart.draw(data, options);
+    }
 
 
+    function ajax_call_sales_data(class_id, start_date, end_date){
+        console.log('ajaxdata', class_id, start_date, end_date)
+        $.ajax({
+            url: '/stats/get_sales_list/',
+            data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
+            dataType : 'html',
+            type: 'POST',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log(jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    var addRows_data = datas_convert_to_addRows(jsondata.month_date, jsondata.price, jsondata.refund_price)
+                    console.log('sales',addRows_data)
+                    drawChart(
+                                graph_Width_To_Be, 
+                                graph_Height_To_Be, 
+                                document.getElementById('chart_div'), 
+                                addRows_data,
+                                start_date+' ~ '+end_date+'(단위: 건)'
+                            );
+                    fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price)
+                }
+
+            },
+
+            complete:function(){
+                completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+    };
+
+
+    function ajax_call_sales_detail_data(class_id, month_date){
+        $.ajax({
+                url: '/stats/get_sales_info/',
+                data:{'class_id':class_id, 'month_date':month_date},
+                dataType : 'html',
+                type: 'POST',
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+                        fill_profit_details_monthly_table(month_date, jsondata.date, jsondata.price, jsondata.trade_info, jsondata.trade_type)
+                        
+                    }
+
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            })
+    }
+
+    function ajax_call_member_analytics_data(class_id, start_date, end_date){
+        console.log(class_id, start_date, end_date)
+        $.ajax({
+                url: '/stats/get_stats_member_list/',
+                data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
+                dataType : 'html',
+                type: 'POST',
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log('members',jsondata)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+                        var addRows_data = member_datas_convert_to_addRows(jsondata.total_month_new_reg_member, jsondata.total_month_re_reg_member, '신규회원', '재등록')
+                        drawChart_Pie(
+                                        graph_inline_Width_To_Be,
+                                        graph_inline_Height_To_Be,
+                                        'bottom', 
+                                        document.getElementById('chart_div2'),
+                                        addRows_data,
+                                        start_date+' ~ '+end_date+' (단위: 건)'
+                                      );
+
+                        var addRows_data2 = member_datas_convert_to_addRows(jsondata.total_month_all_refund_member, jsondata.total_month_part_refund_member, '전체환불', '부분환불')
+                        drawChart_Pie(
+                                        graph_inline_Width_To_Be,
+                                        graph_inline_Height_To_Be,
+                                        'bottom', 
+                                        document.getElementById('chart_div3'),
+                                        addRows_data2,
+                                        start_date+' ~ '+end_date+' (단위: 건)'
+                                      );
+                        
+                    }
+
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            })
+    }
+
+    function ajax_call_member_monthly_data(class_id, start_date, end_date){
+        console.log('ajaxdata', class_id, start_date, end_date)
+        $.ajax({
+            url: '/stats/get_stats_member_list/',
+            data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
+            dataType : 'html',
+            type: 'POST',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log('회원 월별',jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    
+                    var addRows_data = data_convert_to_addRows_dual(jsondata.month_date, jsondata.month_new_reg_member, jsondata.month_re_reg_member)
+                    console.log('addRows_data',addRows_data)
+                    drawChart(
+                                graph_Width_To_Be, 
+                                graph_Height_To_Be, 
+                                document.getElementById('chart_div4'), 
+                                addRows_data,
+                                start_date+' ~ '+end_date+'(단위: 건)'
+                            );
+                        
+                }
+
+            },
+
+            complete:function(){
+                completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+    };
+
+
+    function datas_convert_to_addRows(month_date, price, refund_price){
+        var wrapper = [];
+        var len = month_date.length;
+        for(var i=0; i<len; i++){
+            var year = month_date[i].split('-')[0];
+            var month = month_date[i].split('-')[1];
+            var monthly_data = [year+'/'+month, price[i] - refund_price[i]]
+            wrapper.push(monthly_data);
+        };
+        wrapper.unshift(['월','매출'])
+        return wrapper;
+    };
+
+    function data_convert_to_addRows_dual(month_date, data1, data2){
+        var wrapper = [];
+        var len = month_date.length;
+        for(var i=0; i<len; i++){
+            var year = month_date[i].split('-')[0];
+            var month = month_date[i].split('-')[1];
+            var monthly_data = [year+'/'+month, Number(data1[i]), Number(data2[i])]
+            wrapper.push(monthly_data);
+        }
+        wrapper.unshift(['월','신규','연장'])
+        return wrapper;
+    }
+
+    function member_datas_convert_to_addRows(row1, row2, unit1, unit2){
+        var wrapper = [['Unit','Num'],[unit1, row1], [unit2, row2]];
+
+        return wrapper;
+    }
+
+
+    function fill_profit_details_table(month_date, price, refund_price){
+        var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31]; 
+            if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+            lastDay[1] = 29;
+        }else{
+            lastDay[1] = 28;
+        }
+
+        var len = month_date.length;
+        var htmlTarget = $('#profit_details_table');
+        var htmlToJoin = [];
+        var profit_sum = 0;
+        for(var i=len-1; i>=0; i--){
+
+            var monthstart = month_date[i].split('-')[0]+' . '+Number(month_date[i].split('-')[1]) + '.1'
+            var monthend = Number(month_date[i].split('-')[1]) +'.'+ Number(lastDay[Number(month_date[i].split('-')[1])-1]);
+            var profit = numberWithCommas(Number(price[i]) - Number(refund_price[i]) );
+            htmlToJoin.push('<div class="table_row" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'"><div>'+monthstart+' ~ '+monthend+'</div>'+
+                            '<div>'+profit+' 원</div>'+
+                            '<div class="sales_detail_view_btn" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'" data-power="off"><span>상세<img src="/static/user/res/icon-down-grey.png"></span></div>'+
+                            '</div>'+
+                            '<div class="table_row_monthly" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'"></div>')
+            profit_sum = profit_sum + Number(Number(price[i]-Number(refund_price[i])));
+        }
+        htmlToJoin.push('<div class="table_row table_row_sum"><div>기간 합계<br>('+date_format_yyyy_mm_dd_to_yyyy_m_d(month_date[0],'.')+' ~ '+date_format_yyyy_mm_dd_to_yyyy_m_d(month_date[month_date.length-1],'.')+')</div>'+
+                            '<div>'+numberWithCommas(profit_sum)+' 원</div>'+
+                            '<div class=""></div>'+
+                        '</div>')
+        htmlTarget.html(htmlToJoin.join(''))
+    }
+
+    function fill_profit_details_monthly_table(selecteddate, date, price, trade_info, trade_type){
+
+        var htmlTarget = $('div.table_row_monthly[data-date="'+selecteddate+'"]');
+        var htmlToJoin = ['<div class="sales_detail_monthly_row_title sales_detail_monthly_row">'+
+                                '<div>거래 일자</div>'+
+                                '<div>거래 구분</div>'+
+                                '<div>거래 금액</div>'+
+                        '</div>']
+
+        var len = date.length;
+        for(var i=0; i<len; i++){
+            htmlToJoin.push('<div class="sales_detail_monthly_row">'+
+                                '<div>'+date[i]+'</div>'+
+                                '<div>'+trade_info[i]+'</div>'+
+                                '<div>'+numberWithCommas(price[i])+' 원</div>'+
+                            '</div>')
+        }
+        if(len == 0){
+            htmlToJoin.push('<div class="sales_detail_monthly_row">내역이 없습니다.</div>')
+        }
+        htmlTarget.html(htmlToJoin.join(''))
+    }
 
     </script>
 

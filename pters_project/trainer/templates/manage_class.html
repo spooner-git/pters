@@ -7,6 +7,15 @@
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
     <style type="text/css">
+
+        #ymdText{
+            top: 50px;
+            margin-bottom: 0;
+        }
+        #selectBox{
+            margin-top: 50px;
+        }
+
         @media(min-width: 600px){
             html{
                 background: #ffffff;
@@ -14,7 +23,21 @@
             body{
                 overflow-y: overlay;
             }
+            #ymdText{
+                position: relative;
+                margin-bottom: 0px;
+                top: unset;
+            }
+            #selectBox{
+                margin-top: 0;
+            }
         }
+        @media(min-width:1000px){
+            #ymdText{
+                margin-bottom: 20px;
+            }
+        }
+
         #notice_popup{
             display: none;
             width: 95%;
@@ -256,7 +279,7 @@
 
 
     <div id="page_managemember">
-        <div id="ymdText" style="position: relative;margin-bottom: 20px;">
+        <div id="ymdText">
             <div id="ymdTextWrap">
                 <div id="menuName">클래스 관리
                 </div>

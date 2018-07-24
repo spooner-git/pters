@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -30,7 +31,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
-    MEMBER_RESERVE_PROHIBITION_ON
+    MEMBER_RESERVE_PROHIBITION_ON, STATS_SALES
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
@@ -41,6 +42,7 @@ from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_r
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
     BackgroundImgTb
 from schedule.models import ClassTb
+from stats.func import get_sales_data, get_stats_member_data
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -131,7 +133,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
-        next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+        next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+        if next_month == 0:
+            next_month = 1
         next_month_first_day = month_first_day.replace(month=next_month)
 
         if next_month == 1:
@@ -321,79 +325,6 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-# iframe화를 위해 skkim
-class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'iframe_cal_week.html'
-
-    def get(self, request):
-        context = {}
-        # context = super(CalWeekView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        error = None
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-
-
-class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'iframe_cal_month.html'
-
-    def get(self, request):
-        context = {}
-        # context = super(CalMonthView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        error = None
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-
-
-class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'iframe_cal_preview.html'
-
-    def get(self, request):
-        context = {}
-        # context = super(CalMonthView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        error = None
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-# iframe화를 위해 skkim
-
-
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
 
@@ -409,12 +340,14 @@ class ManageGroupView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageGroupView, self).get_context_data(**kwargs)
         return context
 
+
 class ManageClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_class.html'
 
     def get_context_data(self, **kwargs):
         context = super(ManageClassView, self).get_context_data(**kwargs)
         return context
+
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
@@ -589,6 +522,11 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
 
                 if len(total_class_lecture_list) > 0:
                     total_member_num += 1
+                    for class_lecture_info in total_class_lecture_list:
+                        end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      lecture_tb_id=class_lecture_info.lecture_tb_id,
+                                                                      en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                                      use=USE).count()
 
                 if len(class_lecture_list) > 0:
                     current_total_member_num += 1
@@ -612,9 +550,9 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['current_total_member_num'] = current_total_member_num
             context['new_member_num'] = new_member_num
 
-        if error is None:
-            end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE').count()
+        # if error is None:
+        #     end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+        #                                                  en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE', use=USE).count()
         if error is None:
             if user_member_info.birthday_dt is None:
                 user_member_info.birthday_dt = '미입력'
@@ -732,15 +670,64 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'manage_work.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ManageWorkView, self).get_context_data(**kwargs)
-        # class_id = self.request.session.get('class_id', '')
-        # context = get_member_data(context, class_id, None, self.request.user.id)
+    def get(self, request):
+        context = {}
+        class_id = request.session.get('class_id', '')
+        start_date = request.session.get('sales_start_date', '')
+        end_date = request.session.get('sales_end_date', '')
 
-        return context
+        error = None
+        finish_date = None
+        month_first_day = None
+        if end_date == '' or end_date is None:
+            finish_date = timezone.now()
+        else:
+            try:
+                finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            except TypeError:
+                error = '날짜 형식에 문제 있습니다.'
+            except ValueError:
+                error = '날짜 형식에 문제 있습니다.'
+
+        if start_date == '' or start_date is None:
+            month_first_day = finish_date.replace(day=1)
+
+            for i in range(1, 3):
+                before_year = int(month_first_day.strftime('%Y')) - 1
+                before_month = (int(month_first_day.strftime('%m')) - 1) % 13
+                if before_month == 0:
+                    before_month = 12
+                before_month_first_day = month_first_day.replace(month=before_month)
+                if before_month == 12:
+                    before_month_first_day = before_month_first_day.replace(year=before_year)
+                month_first_day = before_month_first_day
+        else:
+            try:
+                month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            except TypeError:
+                error = '날짜 형식에 문제 있습니다.'
+            except ValueError:
+                error = '날짜 형식에 문제 있습니다.'
+        if error is None:
+            context = get_stats_member_data(class_id, month_first_day, finish_date)
+            error = context['error']
+
+        if error is None:
+            sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
+            if sales_data_result['error'] is None:
+                context['month_price_data'] = sales_data_result['month_price_data']
+            else:
+                error = sales_data_result['error']
+
+        if error is not None:
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
 
 
 class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
@@ -853,6 +840,78 @@ class AlarmPCView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                             log_info.time_ago = str(sec) + '초 전'
 
         return log_data
+
+
+# iframe화를 위해 skkim
+class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_week.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalWeekView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
+
+class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_month.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
+
+class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_preview.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
+        # iframe화를 위해 skkim
+
 
 # ############### ############### ############### ############### ############### ############### ##############
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1894,6 +1953,7 @@ def update_lecture_info_logic(request):
     end_date = request.POST.get('end_date', '')
     price = request.POST.get('price', '')
     refund_price = request.POST.get('refund_price', '')
+    refund_date = request.POST.get('refund_date', '')
     lecture_reg_count = request.POST.get('lecture_reg_count', '')
     note = request.POST.get('note', '')
     member_id = request.POST.get('member_id', '')
@@ -1907,6 +1967,7 @@ def update_lecture_info_logic(request):
     reserve_pt_count = 0
     member_info = None
     lecture_info = None
+    input_refund_date = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1943,6 +2004,17 @@ def update_lecture_info_logic(request):
                 input_refund_price = int(refund_price)
             except ValueError:
                 error = '환불 금액은 숫자만 입력 가능합니다.'
+
+        if refund_date is None or refund_date == '':
+            input_refund_date = lecture_info.refund_date
+        else:
+            try:
+                input_refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+            except ValueError:
+                error = '환불 날짜값에 오류가 발생했습니다.'
+            except TypeError:
+                error = '환불 날짜값에 오류가 발생했습니다.'
+
         if lecture_reg_count is None or lecture_reg_count == '':
             input_lecture_reg_count = lecture_info.lecture_reg_count
         else:
@@ -1969,6 +2041,7 @@ def update_lecture_info_logic(request):
         lecture_info.end_date = end_date
         lecture_info.price = input_price
         lecture_info.refund_price = input_refund_price
+        lecture_info.refund_date = input_refund_date
         lecture_info.note = note
         if lecture_info.state_cd == 'IP':
             lecture_info.lecture_reg_count = input_lecture_reg_count
@@ -1979,10 +2052,12 @@ def update_lecture_info_logic(request):
                 lecture_info.lecture_reg_count = input_lecture_reg_count
                 lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
                 lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
-                lecture_info.state_cd='IP'
+                lecture_info.refund_price = 0
+                lecture_info.refund_date = None
+                lecture_info.state_cd = 'IP'
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
-    # print('test5')
+
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
@@ -2131,6 +2206,7 @@ def refund_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
     refund_price = request.POST.get('refund_price', '')
+    refund_date = request.POST.get('refund_date', datetime.date.today())
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     input_refund_price = 0
@@ -2180,8 +2256,9 @@ def refund_lecture_info_logic(request):
         schedule_data.delete()
         repeat_schedule_data.delete()
         lecture_info.refund_price = input_refund_price
+        lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
-        lecture_info.lecture_rem_count = 0
+        # lecture_info.lecture_rem_count = 0
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
         lecture_info.save()
@@ -2258,6 +2335,8 @@ def progress_lecture_info_logic(request):
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
         lecture_info.mod_dt = timezone.now()
+        lecture_info.refund_price = 0
+        lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'
         lecture_info.save()
     if error is None:
@@ -3670,7 +3749,9 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         today = datetime.date.today()
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
-        next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+        next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+        if next_month == 0:
+            next_month = 1
         next_month_first_day = month_first_day.replace(month=next_month)
 
         if next_month == 1:

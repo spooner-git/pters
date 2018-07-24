@@ -18,8 +18,10 @@ from stats import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    # 강사 일정 기능 #####################################################################################################
-    # 그룹 일정 기능 #####################################################################################################
-    # 푸시 알림 기능 #####################################################################################################
-
+    # 매출 통계 정보 조회
+    url(r'^get_sales_list/$', views.GetSalesListViewAjax.as_view(), name='get_sales_list'),
+    # 매출 상세 내역 조회
+    url(r'^get_sales_info/$', views.GetSalesInfoViewAjax.as_view(), name='get_sales_info'),
+    # 회원 통계 정보 조회
+    url(r'^get_stats_member_list/$', views.GetStatsMemberListViewAjax.as_view(), name='get_stats_member_list'),
 ]

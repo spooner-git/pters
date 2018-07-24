@@ -28,6 +28,8 @@ body{
 }
 
 
+
+
 @media(min-width: 600px){
 	#how_to_add_member{
 		position: absolute;
@@ -43,6 +45,8 @@ body{
 		box-shadow: 1px 1px 1px 1px #fe4e65;
 		display: none;
 	}
+
+	
 	#menuDescription{
 	  line-height: unset;
 	}
@@ -1605,6 +1609,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+		margin-top: unset;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;
