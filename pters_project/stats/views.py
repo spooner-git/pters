@@ -104,7 +104,7 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
 class GetStatsMemberListViewAjax(LoginRequiredMixin, View):
     template_name = "ajax/summary_member_data_ajax.html"
 
-    def get(self, request):
+    def post(self, request):
         context = {}
         class_id = request.POST.get('class_id', '')
         start_date = request.POST.get('start_date', '')
