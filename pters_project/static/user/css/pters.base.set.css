@@ -30,6 +30,10 @@ html,body{
     transform: rotate(47deg);
 }
 
+#sidenav_wrapper_slide{
+    overflow-y: auto;
+    background: #ffffff;
+}
 
 
 #float_inner1{ /*2017.10.2*/
@@ -301,6 +305,7 @@ a:focus, a:hover{
 
 
 .sidebar_div{
+    position: relative;
     height: 40px;
     max-height: 50px;
     border-top: 0.5px solid #cccccc;
@@ -310,6 +315,10 @@ a:focus, a:hover{
 .sidebar_div:hover, .sidebar_div:active, .sidebar_div:focus, .sidebar_div_last1:hover, .sidebar_div_last2:hover,.sidebar_div_last1:active, .sidebar_div_last2:active{
     color: #fe4e65 !important;
     background: #eaeaea !important;
+}
+
+.sidebar_div:last-child{
+    border-bottom: 0.5px solid #cccccc;
 }
 
 
