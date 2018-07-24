@@ -233,6 +233,7 @@
             var options = {'title':'월별 매출',
                            'width':width,
                            'height':height,
+                           'chartArea':{height:'85%'},
                             'legend':{position:'none'}};
 
             // Instantiate and draw our chart, passing in some options.
@@ -266,6 +267,7 @@
 
 
       function ajax_call_sales_data(class_id, start_date, end_date){
+            console.log('ajaxdata', class_id, start_date, end_date)
             $.ajax({
                 url: '/stats/get_sales_list/',
                 data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
