@@ -28,5 +28,6 @@ $('.month_sel_btn').click(function(){
 $('#call_sales_data_btn').click(function(){
     var start_date = $(this).attr('data-startdate');
     var end_date = $(this).attr('data-enddate');
+    console.log(class_id, start_date, end_date)
     ajax_call_sales_data(class_id, start_date, end_date);
 })

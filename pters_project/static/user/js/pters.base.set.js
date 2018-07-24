@@ -1106,4 +1106,7 @@ if(class_background_img_url.length == 0){
     $('#ymdText, #upperImg').css('background-image',"url('"+class_background_img_url[2].replace(/\)/gi,"")+"')")
 }
 
+function numberWithCommas(x) { //천단위 콤마 찍기
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
