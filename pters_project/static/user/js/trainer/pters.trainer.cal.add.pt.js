@@ -1451,6 +1451,18 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     var selector_datepicker = $('#datepicker');
     var selector_datepicker_repeat_start = $('#datepicker_repeat_start');
 
+    if(date != undefined){
+        selector_datepicker.datepicker('setDate', date);
+        selector_datepicker.parent('p').addClass('dropdown_selected');
+        selector_datepicker_repeat_start.datepicker('setDate', date);
+        selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
+    }else{
+        selector_datepicker.datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate);
+        selector_datepicker.parent('p').addClass('dropdown_selected');
+        selector_datepicker_repeat_start.datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate);
+        selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
+    }
+
     if(option == "ptadd"){
         $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
         $('#memberName').css('display','block');
@@ -1474,8 +1486,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $(".pt_memo_guide").css('display','none');
     }
 
-
-
     if(bodywidth <= 600){
         $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
@@ -1489,20 +1499,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#page-addplan-pc').css('display','none');
         //disable_window_scroll();
     }
-
-    if(date != undefined){
-        selector_datepicker.datepicker('setDate', date);
-        selector_datepicker.parent('p').addClass('dropdown_selected');
-        selector_datepicker_repeat_start.datepicker('setDate', date);
-        selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
-    }else{
-        selector_datepicker.datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate);
-        selector_datepicker.parent('p').addClass('dropdown_selected');
-        selector_datepicker_repeat_start.datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate);
-        selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
-    }
-
-    
 
     $('#page-addplan #timeGraph').show();
 

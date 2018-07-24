@@ -49,7 +49,6 @@ body{
 		display: none;
 	}
 	#ymdText{
-		position: relative;
 		margin-bottom: 20px;
 		top: unset;
 	}
