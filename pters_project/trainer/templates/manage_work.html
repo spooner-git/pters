@@ -212,7 +212,11 @@
       var re_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.re_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
       var all_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.all_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
       var part_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.part_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-
+      var finish_schedule_count = [{% for schedule_finish_info in schedule_finish_data %}"{{ schedule_finish_info.finish_schedule_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var month_new_reg_member = {{ month_new_reg_member }};
+      var month_re_reg_member = {{ month_re_reg_member }};
+      var month_all_refund_member = {{ month_all_refund_member }};
+      var month_part_refund_member = {{ month_part_refund_member }};
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});

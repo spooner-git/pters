@@ -42,7 +42,7 @@ from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_r
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
     BackgroundImgTb
 from schedule.models import ClassTb
-from stats.func import get_sales_data
+from stats.func import get_sales_data, get_stats_member_data
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -711,12 +711,16 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '날짜 형식에 문제 있습니다.'
             except ValueError:
                 error = '날짜 형식에 문제 있습니다.'
+        if error is None:
+            context = get_stats_member_data(class_id, month_first_day, finish_date)
+            error = context['error']
 
-        sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
-        if sales_data_result['error'] is None:
-            context['month_price_data'] = sales_data_result['month_price_data']
-        else:
-            error = sales_data_result['error']
+        if error is None:
+            sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
+            if sales_data_result['error'] is None:
+                context['month_price_data'] = sales_data_result['month_price_data']
+            else:
+                error = sales_data_result['error']
 
         if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
