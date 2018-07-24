@@ -17,7 +17,7 @@ def get_sales_data(class_id, month_first_day, finish_date):
         error = '종료 날짜를 선택해주세요.'
 
     if error is None:
-        while finish_date > month_first_day:
+        while finish_date >= month_first_day:
             if counter > 40:
                 error = '매출 통계를 계산할수 있는 범위가 넘었습니다.'
                 break

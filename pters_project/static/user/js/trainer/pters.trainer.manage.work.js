@@ -22,7 +22,7 @@ $('.month_sel_btn').click(function(){
     var end_date = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'-'+(currentMonth+1)+'-'+1, '-')
     console.log(start_date, end_date)
 
-    $('#call_sales_data_btn').attr({'data-startdate',start_date, 'data-enddate':end_date});
+    $('#call_sales_data_btn').attr({'data-startdate':start_date, 'data-enddate':end_date});
 })
 
 $('#call_sales_data_btn').click(function(){
