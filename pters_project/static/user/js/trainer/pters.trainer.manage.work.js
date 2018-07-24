@@ -8,7 +8,7 @@ $('#selectBox .btn').click(function(){
     if($(this).attr('id').split('_')[0] == 'member'){
         drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom' , document.getElementById('chart_div2'));
         drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom', document.getElementById('chart_div3'));
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'));
+        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'), datas_convert_to_addRows(month_date, price, refund_price));
     }
 })
 
@@ -17,6 +17,8 @@ $('.view_duration_setter').click(function(){
 })
 
 $('.month_sel_btn').click(function(){
+    $(this).addClass('month_sel_selected')
+    $(this).siblings('.month_sel_btn').removeClass('month_sel_selected')
     var thisVal = Number($(this).attr('data-month'));
     var start_date = date_format_yyyy_m_d_to_yyyy_mm_dd(substract_month(currentYear+'-'+(currentMonth+1)+'-'+1, -thisVal),'-')
     var end_date = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'-'+(currentMonth+1)+'-'+1, '-')
