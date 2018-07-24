@@ -198,8 +198,7 @@ def get_sales_info(class_id, month_first_day):
 
 
 def get_stats_member_data(class_id, month_first_day, finish_date):
-
-    schedule_finish_list = []
+    member_stats_list = []
     counter = 0
     error = None
     if month_first_day is None or month_first_day == '':
@@ -210,12 +209,17 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
         error = '종료 날짜를 선택해주세요.'
 
     if error is None:
-        month_new_reg_member = 0
-        month_re_reg_member = 0
-        month_all_refund_member = 0
-        month_part_refund_member = 0
+        total_month_new_reg_member = 0
+        total_month_re_reg_member = 0
+        total_month_all_refund_member = 0
+        total_month_part_refund_member = 0
 
         while finish_date >= month_first_day:
+            month_new_reg_member = 0
+            month_re_reg_member = 0
+            month_all_refund_member = 0
+            month_part_refund_member = 0
+
             if counter > 40:
                 error = '매출 통계를 계산할수 있는 범위가 넘었습니다.'
                 break
@@ -278,14 +282,27 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                                                                  en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
                                                                  use=USE).count()
 
-            schedule_finish_info = {'month': str(month_first_day.date()), 'finish_schedule_count': finish_schedule_num}
-            schedule_finish_list.append(schedule_finish_info)
+            total_month_new_reg_member += month_new_reg_member
+            total_month_re_reg_member += month_re_reg_member
+            total_month_all_refund_member += month_all_refund_member
+            total_month_part_refund_member += month_part_refund_member
+
+            schedule_finish_info = {'month': str(month_first_day.date()),
+                                    'finish_schedule_count': finish_schedule_num,
+                                    'month_new_reg_member': month_new_reg_member,
+                                    'month_re_reg_member': month_re_reg_member,
+                                    'month_all_refund_member': month_all_refund_member,
+                                    'month_part_refund_member': month_part_refund_member}
+
+            member_stats_list.append(schedule_finish_info)
 
             month_first_day = next_month_first_day
             counter += 1
 
-    context = {'error': error, 'schedule_finish_data': schedule_finish_list,
-               'month_new_reg_member': month_new_reg_member, 'month_re_reg_member': month_re_reg_member,
-               'month_all_refund_member': month_all_refund_member, 'month_part_refund_member': month_part_refund_member}
+    context = {'error': error, 'member_stats_data': member_stats_list,
+               'total_month_new_reg_member': total_month_new_reg_member,
+               'total_month_re_reg_member': total_month_re_reg_member,
+               'total_month_all_refund_member': total_month_all_refund_member,
+               'total_month_part_refund_member': total_month_part_refund_member}
 
     return context
