@@ -73,13 +73,13 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
         context = {}
         class_id = request.POST.get('class_id', '')
         # class_id = request.session.get('class_id', '')
-        start_date = request.POST.get('start_date', '')
+        month_date = request.POST.get('month_date', '')
         error = None
-        if start_date == '' or start_date is None:
-            error = '시작 일자를 선택해주세요.'
+        if month_date == '' or month_date is None:
+            error = '조회하고자 하는 날짜를 선택해주세요.'
 
         try:
-            month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            month_first_day = datetime.datetime.strptime(month_date, '%Y-%m-%d')
         except TypeError:
             error = '날짜 형식에 문제 있습니다.'
         except ValueError:
