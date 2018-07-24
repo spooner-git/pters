@@ -38,12 +38,12 @@
 <div id="profit_analytics_page" class="pages">
     <div id="date_selector_wrapper">
             <div class="duration_selector_wrapper">
-                <div><span>1개월</span></div>
-                <div><span>3개월</span></div>
-                <div><span>6개월</span></div>
-                <div><span>12개월</span></div>
+                <div class="month_sel_btn" data-month="1"><span>1개월</span></div>
+                <div class="month_sel_btn" data-month="3"><span>3개월</span></div>
+                <div class="month_sel_btn" data-month="6"><span>6개월</span></div>
+                <div class="month_sel_btn" data-month="12"><span>12개월</span></div>
                 <div class="view_duration_setter"><span>...</span></div>
-                <div id="call_data_btn"><span>조회</span></div>
+                <div id="call_sales_data_btn"><span>조회</span></div>
             </div>
 
             <div class="duration_setter_wrapper">
@@ -117,12 +117,12 @@
     <div class="">
         <div id="date_selector_wrapper">
             <div class="duration_selector_wrapper">
-                <div><span>1개월</span></div>
-                <div><span>3개월</span></div>
-                <div><span>6개월</span></div>
-                <div><span>12개월</span></div>
+                <div class="month_sel_btn" data-month="1"><span>1개월</span></div>
+                <div class="month_sel_btn" data-month="3"><span>3개월</span></div>
+                <div class="month_sel_btn" data-month="6"><span>6개월</span></div>
+                <div class="month_sel_btn" data-month="12"><span>12개월</span></div>
                 <div class="view_duration_setter"><span>...</span></div>
-                <div id="call_data_btn"><span>조회</span></div>
+                <div id="call_member_data_btn"><span>조회</span></div>
             </div>
 
             <div class="duration_setter_wrapper">
@@ -207,43 +207,38 @@
       var month_date =  [{% for month_price_info in month_price_data %}"{{ month_price_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
       var price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
       var refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+
+      function datas_convert_to_addRows(month_date, price, refund_price){
+          var wrapper = [];
+          var len = month_date.length;
+          for(var i=0; i<len; i++){
+            var year = month_date[i].split('-')[0];
+            var month = month_date[i].split('-')[1];
+            var monthly_data = [year+'.'+month, price[i] - refund_price[i]]
+            wrapper.push(monthly_data);
+          };
+          return wrapper;
+      };
+
+
+
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
-
-
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(function(){
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'));
-        /*
-        drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom' , document.getElementById('chart_div2'));
-        drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom', document.getElementById('chart_div3'));
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'));
-        */
+        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
       });
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
-      function drawChart(width, height, target) {
+      function drawChart(width, height, target, addRows_data) {
             // Create the data table.
             var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
-            data.addRows([
-                              ['1월', 3000000],
-                              ['2월', 10000000],
-                              ['3월', 12300000],
-                              ['4월', 2800000],
-                              ['5월', 6800000],
-                              ['6월', 8460000],
-                              ['7월', 10500000],
-                              ['8월', 4600000],
-                              ['9월', 9700000],
-                              ['10월', 7530000],
-                              ['11월', 6520000],
-                              ['12월', 2330000]
-                        ]);
-
+            data.addColumn('string', '월');
+            data.addColumn('number', '원');
+            data.addRows(addRows_data)
             // Set chart options
             var options = {'title':'월별 매출',
                            'width':width,
@@ -277,6 +272,40 @@
             var chart = new google.visualization.PieChart(target);
             chart.draw(data, options);
       }
+
+
+      function ajax_call_sales_data(class_id, start_date, end_date){
+            $.ajax({
+                url: '/stats/get_sales_list/',
+                data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
+                dataType : 'html',
+                type: 'POST',
+
+                beforeSend:function(){
+                    //beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+                        
+                    }
+
+                },
+
+                complete:function(){
+                    //completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            })
+      };
 
 
 
