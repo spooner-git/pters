@@ -254,6 +254,7 @@
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
 
+    /*
     var stoptime = '{{ lt_res_01 }}'
     if(stoptime.length>0){
         var stoptimeStart = Number('{{ lt_res_01 }}'.split(':')[0])
@@ -277,6 +278,12 @@
         var worktimeStart = ''
         var worktimeEnd = ''
     }
+    */
+
+    var worktime = '{{ lt_res_04 }}'
+    var worktimeStart = time_divider(worktime, 'start');
+    var worktimeEnd = time_divider(worktime, 'end');
+
 
     var class_background_img_url = []
 
@@ -284,11 +291,11 @@
         "classDur" : {{ request.session.class_hour }},      // 30 or 60
         "timeDur" : {{ lt_res_member_time_duration }},
         "startTime": '{{ lt_res_member_start_time }}',
-        "stoptimeStart": stoptimeStart ,                    //강사가 설정한 예약불가 시간 (시작)
-        "stoptimeEnd": stoptimeEnd ,                        //강사가 설정한 예약불가 시간 (종료)
+        "stoptimeStart": time_divider('{{ lt_res_01 }}','start'),                    //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": time_divider('{{ lt_res_01 }}','end') ,                        //강사가 설정한 예약불가 시간 (종료)
         "limit":Number('{{ lt_res_enable_time }}'),      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
         "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number({{ lt_res_05 }}),
+        "availDate":Number('{{ lt_res_05 }}'),
         "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
         "firstPushToMember":'-',
         "secondPushToMember":'-',
@@ -322,6 +329,33 @@
         $('._company').css('display','none')
     }else{
 
+    }
+
+    function time_divider(time, startOrEnd){
+        var time = time;
+        var timeStart = '';
+        var timeEnd = '';
+
+        if(time.length>0){
+            timeStart = Number(time.split(':')[0]);
+            timeEnd = Number(time.split('-')[1].split(':')[0]);
+            if(time.split(':')[0] == '23' && time.split(':')[1] == '59'){
+                timeStart = 24;
+            }
+            if(time.split('-')[1].split(':')[0] == '23' && time.split('-')[1].split(':')[1] == '59' ){
+                timeEnd = 24;
+            }
+        }else{
+            timeStart = '';
+            timeEnd = '';
+        }
+        if(startOrEnd == 'start'){
+            return timeStart;
+        }else if(startOrEnd == 'end'){
+            return timeEnd;
+        }else if(startOrEnd == 'full'){
+            return time;
+        }
     }
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///

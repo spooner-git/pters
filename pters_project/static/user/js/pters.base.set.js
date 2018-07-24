@@ -278,7 +278,7 @@ $(document).ready(function(){
         $('.__membermanage').text("회원 관리");
         $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
         $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        $('.__workmanage').text("업무 통계");
+        $('.__workmanage').text("통계");
         $('.__setting').text("설정");
         $('._nameAttach').text("님");
         //$('.pcwhere').text("PTERS 트레이닝센터")

@@ -1009,7 +1009,7 @@ function groupListSet(option, jsondata){ //option : current, finished
                 manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>'
             }
 
-            var main = '<div class="_groupnum">'+(i+1)+'</div>'+
+            var main = '<div class="_groupnum">'+ordernum+'</div>'+
                 '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
                 //'<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                 '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
@@ -1021,6 +1021,13 @@ function groupListSet(option, jsondata){ //option : current, finished
                 manageimgs
                 //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
+        }
+    }
+    if(groupNum == 0){
+        if(option == "current"){
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>')
+        }else if(option == "finished"){
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>')
         }
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');

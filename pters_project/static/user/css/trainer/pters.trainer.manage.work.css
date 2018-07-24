@@ -9,16 +9,9 @@ body{
 	font-family: 'Noto Sans KR';
 }
 
-#ymText{
-	position: fixed;
-	width: 100%;
-	background: #282828;
-	height: 50px;
-	font-size: 16px;
-	font-weight: bold;
-	color: #ffffff;
-	text-align: center;
-	cursor: pointer;
+#ymdText{
+	position: relative;
+	margin-bottom: 0;
 }
 
 .chart_wrapper{
@@ -57,12 +50,21 @@ body{
 }
 
 .dropdown{
+	display: inline-block;
+	border: 1px solid #8d8d8d;
+	height: 30px !important;
 	position: relative !important;
 	left: unset !important;
-	width: 10% !important;
-	min-width:80px !important; 
+	width: 19% !important;
+	min-width: 56px !important; 
 	margin-left: 5px !important;
 	margin-right: 5px !important;
+	margin-top: 0 !important;
+}
+.icondown{
+	right: 5px !important;
+	bottom: 10px !important;
+	width:10px !important;
 }
 
 .duration_selector_wrapper{
@@ -71,11 +73,14 @@ body{
 }
 .duration_selector_wrapper div{
 	display: inline-block;
-	width: 60px;
+	width: 50px;
 	border: 1px solid #cccccc;
-	padding: 2px 3px 2px 3px;
-	font-size: 13px;
+	padding: 5px 0px 5px 0px;
+	font-size: 12.5px;
 	cursor: pointer;
+	margin-bottom: 5px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 
@@ -177,10 +182,26 @@ body{
 
 
 @media(min-width: 600px){
+	#ymdText{
+		margin-bottom: 20px;
+	}
+	.dropdown{
+		width: 10% !important;
+		height: 26px !important;
+	}
+	.icondown{
+		width: 8px !important;
+		bottom: 9px !important;
+	}
+
 	#selectBox{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+	}
+	.duration_selector_wrapper div{
+		padding: 2px 3px 2px 3px;
+		font-size: 13px;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;

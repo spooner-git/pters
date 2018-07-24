@@ -1458,7 +1458,7 @@ function pc_add_member(option){
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
@@ -1471,12 +1471,13 @@ function pc_add_member(option){
             $('#memberSearch_add').val(userID);
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+        selector_memberSearchButton.trigger('click');
 
         selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        selector_memberSearchButton.trigger('click');
+        
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
 
 
@@ -3717,9 +3718,9 @@ function fill_member_info_by_ID_search(){
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true);
     }
     else{
-        dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split(' ')[0]+'"]');
-        dropdown_month_selected = $('#birth_month option[data-month="'+id_search_memberBirth.split(' ')[1]+'"]');
-        dropdown_date_selected = $('#birth_date option[data-date="'+id_search_memberBirth.split(' ')[2]+'"]');
+        dropdown_year_selected = $('#birth_year option[data-year="'+id_search_memberBirth.split('-')[0]+'년"]');
+        dropdown_month_selected = $('#birth_month option[data-month="'+Number(id_search_memberBirth.split('-')[1])+'월"]');
+        dropdown_date_selected = $('#birth_date option[data-date="'+Number(id_search_memberBirth.split('-')[2])+'일"]');
         dropdown_year_selected.prop('selected',true);
         dropdown_month_selected.prop('selected',true);
         dropdown_date_selected.prop('selected',true);

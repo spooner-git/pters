@@ -389,8 +389,7 @@ $(document).ready(function(){
         var thisIDHour = $(this).attr('id').split('_')[3];
         var thisIDMin  = $(this).attr('id').split('_')[4];
 
-        console.log(thisID)
-        
+
         if(Options.classDur == 30){
             if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                 $('.blankSelected30').removeClass('blankSelected30');
@@ -503,6 +502,7 @@ $(document).ready(function(){
         var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
         $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
         $("#id_training_time, #id_training_time_off").val(starttime);
+
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
             $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
             $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
@@ -547,55 +547,94 @@ $(document).ready(function(){
         ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
 
         //minipopup 위치 보정
-        var selector_endId = $('#'+endID);
-        var toploc = selector_endId.offset().top;
-        var leftloc = selector_endId.offset().left;
-        var tdwidth = selector_endId.width();
-        var tdheight = selector_endId.height();
-        var minipopupwidth = 300;
-        var minipopupheight = 250;
-        var splitID = selector_endId.attr('id').split('_');
-        var weekID = selector_endId.attr('data-week');
-        var compensate_off = 0;
-        var selector_MINI_ptadd = $('._MINI_ptadd');
-        if(selector_MINI_ptadd.css('display')=='inline'){
-            addTypeSelect = 'ptadd';
-            compensate_off = 0;
-        }else if(selector_MINI_ptadd.css('display')=="none"){
-            addTypeSelect = 'offadd';
-            compensate_off = +30;
-        }
-        $('.typeSelected').removeClass('typeSelected');
-        $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
+            /*
+            var selector_endId = $('#'+endID);
+            var toploc = selector_endId.offset().top;
+            var leftloc = selector_endId.offset().left;
+            var tdwidth = selector_endId.width();
+            var tdheight = selector_endId.height();
+            var minipopupwidth = $('#page-addplan-pc').width();
+            var minipopupheight = $('#page-addplan-pc').height();
+            var splitID = selector_endId.attr('id').split('_');
+            var weekID = selector_endId.attr('data-week');
+            var compensate_off = 0;
+            var selector_MINI_ptadd = $('._MINI_ptadd');
+            if(selector_MINI_ptadd.css('display')=='inline'){
+                addTypeSelect = 'ptadd';
+                compensate_off = 0;
+            }else if(selector_MINI_ptadd.css('display')=="none"){
+                addTypeSelect = 'offadd';
+                compensate_off = +30;
+            }
+            $('.typeSelected').removeClass('typeSelected');
+            $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
 
-        if(splitID[3]>=(Options.workEndTime-5)){
-            //$('.dropdown_mini').addClass('dropup')
-            if(splitID[3]== (Options.workEndTime-1)){
-                if(Options.workEndTime - Options.workStartTime < 5){
+            if(splitID[3]>=(Options.workEndTime-5)){
+                //$('.dropdown_mini').addClass('dropup')
+                if(splitID[3]== (Options.workEndTime-1)){
+                    if(Options.workEndTime - Options.workStartTime < 5){
+                        // toploc = toploc;
+                    }else{
+                        toploc = toploc - minipopupheight + compensate_off;
+                    }
+                }else if(splitID[3] <= (Options.workStartTime+3)){
                     // toploc = toploc;
                 }else{
                     toploc = toploc - minipopupheight + compensate_off;
                 }
-            }else if(splitID[3] <= (Options.workStartTime+3)){
-                // toploc = toploc;
             }else{
-                toploc = toploc - minipopupheight + compensate_off;
+                $('.dropdown_mini').removeClass('dropup');
+                if(weekID==3){
+                    toploc = toploc + tdheight;
+                }else{
+                    toploc = toploc + 30;
+                }
+            }
+
+            if(weekID>=4){
+                leftloc = leftloc-300-tdwidth;
+            }else if(weekID==3){
+                // leftloc = leftloc;
+            }
+            */
+        //minipopup 위치 보정
+
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        var popupwidth = $('#page-addplan-pc').width();
+        var popupheight = $('#page-addplan-pc').height();
+        var startTopLoc = $('#'+thisID).offset().top;
+        var startLeftLoc = $('#'+thisID).offset().left;
+        var startWidth = $('#'+thisID).width();
+        var startHeight = $('#'+thisID).height()*2;
+        var endTopLoc = $('#'+endID).offset().top;
+        var endLeftLoc = $('#'+endID).offset().left;
+        var endWidth = $('#'+endID).width();
+        var scrollTop = $(window).scrollTop();
+        var weekTopLoc = $('#week').offset().top;
+        var weekHeight = $('#week').height();
+
+        var popupRightLoc = endLeftLoc+endWidth+popupwidth;
+        var popupBottomLoc = endTopLoc + popupheight;
+        if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
+            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
+            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
+            }else{ //그외
+                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
             }
         }else{
-            $('.dropdown_mini').removeClass('dropup');
-            if(weekID==3){
-                toploc = toploc + tdheight;
+            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
+            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
             }else{
-                toploc = toploc + 30;
+                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
             }
         }
 
-        if(weekID>=4){
-            leftloc = leftloc-300-tdwidth;
-        }else if(weekID==3){
-            // leftloc = leftloc;
-        }
-        //minipopup 위치 보정
+ 
 
         ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
             /*
@@ -614,7 +653,7 @@ $(document).ready(function(){
             }
         });
 
-        $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth});
+        //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth});
     }
 
     //shift키 눌러서 일정을 쭉 잡기
@@ -623,7 +662,6 @@ $(document).ready(function(){
     }
 
 
-    $('#datetext_mini').click(function(){console.log(addTypeSelect)});
 
     if($('#calendar').width()<=600){
         $(document).off('mouseup mouseover mousedown','.td00, .td30');
@@ -892,7 +930,9 @@ $(document).ready(function(){
                 $('#groupmembersInfo').show()
                 get_groupmember_list(groupid, 'callback', function(jsondata){
                     draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
-                    //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},100)
+                    if(bodywidth > 600){
+                        $('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200)
+                    }
                 });
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide()
@@ -903,9 +943,6 @@ $(document).ready(function(){
         position_absolute_addplan_if_mobile($('#membersSelected'));
     }); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-    $('#addpopup_pc_label_off').click(function(){
-        console.log(addTypeSelect);
-    });
 
 
     $(document).on('click', '#starttimesSelected input', function(e){
@@ -1413,19 +1450,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     var selector_page_addplan = $('#page-addplan');
     var selector_datepicker = $('#datepicker');
     var selector_datepicker_repeat_start = $('#datepicker_repeat_start');
-    if(bodywidth <= 600){
-        $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
-        $('#page-base-addstyle, #page-addplan').show();
-        selector_page_addplan.css('top',50);
-        $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#calendar').css('height','0');
-        $('#upbutton-x').attr('data-page','addplan');
-    }else{
-        selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});
-        $('#page-addplan-pc').css('display','none');
-        //disable_window_scroll();
-    }
 
     if(date != undefined){
         selector_datepicker.datepicker('setDate', date);
@@ -1460,6 +1484,20 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
             $('#addpopup_pc_label_pt').hide();
         }
         $(".pt_memo_guide").css('display','none');
+    }
+
+    if(bodywidth <= 600){
+        $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
+        $('#page-base-addstyle, #page-addplan').show();
+        selector_page_addplan.css('top',50);
+        $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#calendar').css('height','0');
+        $('#upbutton-x').attr('data-page','addplan');
+    }else{
+        selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});
+        $('#page-addplan-pc').css('display','none');
+        //disable_window_scroll();
     }
 
     $('#page-addplan #timeGraph').show();
@@ -1763,7 +1801,6 @@ function ajaxTimeGraphSet(date, use, callback){
                 //timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
                 //timeGraphSet("group","pink","mini", jsondata);
                 //timeGraphSet("off","grey","mini", jsondata);
-                console.log('today_form',today_form)
                 if($('.add_time_unit').hasClass('checked')){
                     startTimeSet('class', jsondata, today_form, 5);
                 }else{
@@ -1896,7 +1933,6 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
 }
 
 function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우기
-    console.log(jsondata);
     var len;
     var dbId;
     var repeat_id_array;
@@ -2193,6 +2229,14 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             memberName  = planMemberName[i];
         }
 
+        //24:00일경우 다음날 00:00 으로 들어오기 때문에
+        if(planEndDate[i].split(' ')[1] == "00:00:00"){
+            var planEndHour = '24'
+            var planEndMin = '00'
+        }
+        //24:00일경우 다음날 00:00 으로 들어오기 때문에
+
+
         if(compare_time(add_time(planHour+':'+planMinute, '00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin, '00:00'), add_time(Options.workStartTime+':00','00:00')) ){
             planHour = Options.workStartTime;
             planMinute = '00';
@@ -2385,6 +2429,232 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
     }
 }
 
+/*
+function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+    $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
+    $('.blankSelected30').removeClass('blankSelected30');
+    $('.blankSelected').removeClass('blankSelected');
+    var plan = '';
+    var planStartDate = '';
+    var planGroupStartDate = '';
+    var planEndDate = '';
+    var planMemberName = '';
+    var planScheduleIdArray = '';
+    var planNoteArray = '';
+    var planScheduleFinishArray = '';
+    var planColor = '';
+    var planfinished = '';
+    var planMemberNum = '';
+    var planMemberDbid = '';
+    var planGroupid = '';
+    var planCode = '';
+    switch(option){
+        case 'class':
+            plan = option;
+            planStartDate = jsondata.classTimeArray_start_date;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.classTimeArray_end_date;
+            planMemberName = jsondata.classTimeArray_member_name;
+            planMemberDbid = jsondata.classTimeArray_member_id;
+            planScheduleIdArray = jsondata.scheduleIdArray;
+            planNoteArray = jsondata.scheduleNoteArray;
+            planScheduleFinishArray = jsondata.scheduleFinishArray;
+            planColor = 'classTime';
+            planfinished = ' classTime_checked';
+            planMemberNum = '';
+            planGroupid = '';
+            planCode = '';
+            break;
+        case 'off':
+            plan = option;
+            planGroupid = '';
+            planStartDate = jsondata.offTimeArray_start_date;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.offTimeArray_end_date;
+            planScheduleIdArray = jsondata.offScheduleIdArray;
+            planScheduleFinishArray = '';
+            planNoteArray = jsondata.offScheduleNoteArray;
+            planColor = 'offTime';
+            planMemberNum = '';
+            planMemberDbid = '';
+            planCode = '';
+            console.log('scheduleTime("off")',jsondata);
+            break;
+        case 'group':
+
+            plan = option;
+            planStartDate = jsondata.group_schedule_start_datetime;
+            planGroupStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.group_schedule_end_datetime;
+            planMemberName = jsondata.group_schedule_group_name;
+            planGroupid = jsondata.group_schedule_group_id;
+            planScheduleIdArray = jsondata.group_schedule_id;
+            planNoteArray = jsondata.group_schedule_note;
+            planScheduleFinishArray = jsondata.group_schedule_finish_check;
+            planColor = 'groupTime';
+            planfinished = ' groupTime_checked';
+            planMemberNum = jsondata.group_schedule_max_member_num;
+            planMemberDbid = '';
+            planCode = '';
+            break;
+    }
+
+    //2018_4_22_8_30_2_OFF_10_30
+
+    var planheight = 60;
+    if($calendarWidth>=600){
+        planheight = 60;
+    }
+    var len = planScheduleIdArray.length;
+    for(var i=0; i<len; i++){
+        //2018-05-11 10:00:00
+        var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
+        var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
+        var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
+        var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+        var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+        var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
+        var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
+        var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+        var memberName = 'OFF';
+        var planDura = "0.5";
+        var hourType = '오전';
+        if(plan == 'off'){
+            if(planNoteArray[i].length > 0){
+                memberName = planNoteArray[i];
+            }else{
+                memberName = 'OFF';
+            }
+        }else{
+            memberName  = planMemberName[i];
+        }
+
+
+        if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
+            if(planEndHour-planHour == 0){
+                planDura = "0.5";
+            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
+                planDura = String((planEndHour-planHour-1))+'.5';
+            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
+                planDura = String((planEndHour-planHour))+'.5';
+            }
+        }else{
+            planDura = planEndHour - planHour;
+        }
+
+        //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+        if(planEDate == planDate+1 && planEndHour==planHour){
+            planDura = 24;
+        }else if(planEDate == planDate+1 && planEndHour == 0){
+            planDura = 24-planHour;
+        }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
+            planDura = 24-planHour;
+        }
+
+        if(planMinute == '00'){
+            if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
+
+                planDura = planDura - (Options.workStartTime - planHour); // 2 - (10 - 8)
+                planHour = Options.workStartTime;
+                //2018_4_22_8_30_2_OFF_10_30
+            }
+        }else if(planMinute == '30'){
+            //(10>8)  (2>=10-8)
+            if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
+
+                planDura = planDura - (Options.workStartTime - planHour)+0.5; // 2 - (10 - 8)
+                planHour = Options.workStartTime;
+                planMinute = '00';
+                //2018_4_22_8_30_2_OFF_10_30
+            }
+        }
+
+
+        if(planHour < 12){
+            hourType = '오전';
+        }else{
+            if(planHour == 24){
+                hourType = '오전';
+            }else{
+                hourType = '오후';
+            }
+        }
+
+        var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
+        var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
+        var planStart = planStartArr.join("_");
+        var tdPlanStart = $("#"+planStart+" div");
+        var tdPlan = $("#"+planStart);
+        tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
+
+        var planColor_ = planColor+planfinished;
+        var textcolor = "bluetext";
+        var hideornot = 'hideelement';
+        if(option != 'off'){
+            if(planScheduleFinishArray[i] == 1){
+                planColor_ = planColor+planfinished;
+            }else{
+                planColor_ = planColor;
+            }
+        }else{
+            planColor_ = planColor;
+        }
+
+        if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+            textcolor = "bluetext";
+        }else{
+            textcolor = "";
+        }
+
+        if(Number(planDura*planheight-1) < 59){
+            hideornot = 'hideelement';
+        }else{
+            hideornot = 'inlineelement';
+        }
+
+
+
+        if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+                .attr(option+'-schedule-id' , planScheduleIdArray[i])
+                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i], 'data-memo' : planNoteArray[i],
+                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+                .addClass(planColor_)
+                .css({'height':Number(planDura*planheight-1)+'px'})
+                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+        }else if(option == 'group'){
+            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+                .attr(option+'-schedule-id' , planScheduleIdArray[i])
+                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
+                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+                .addClass(planColor_)
+                .css({'height':Number(planDura*planheight-1)+'px'})
+                .html('<span class="memberName">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+'<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+        }else if(option == 'off'){
+            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
+                .attr(option+'-schedule-id' , planScheduleIdArray[i])
+                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
+                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
+                .addClass(planColor_)
+                .css({'height':Number(planDura*planheight-1)+'px'})
+                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+        }
+
+
+        var hhh = Number(planHour);
+        var mmm = planMinute;
+
+        for(var j=0; j<planDura/0.5; j++){
+            if(mmm == 60){
+                hhh = hhh + 1;
+                mmm = '00';
+            }
+            $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
+            mmm = Number(mmm) + 30;
+        }
+
+    }
+}*/
 
 function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     var plan = '';
@@ -2464,7 +2734,6 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planDate    = Number(planStartDate[j].split(' ')[0].split('-')[2]);
         date_sorted[planYear+'_'+planMonth+'_'+planDate] = []
     }
-    console.log(date_sorted)
 
     for(var i=0; i<len; i++){
         //2018-05-11 10:00:00
@@ -2488,6 +2757,14 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         }else{
             memberName  = planMemberName[i];
         }
+
+        //24:00일경우 다음날 00:00 으로 들어오기 때문에
+        if(planEndDate[i].split(' ')[1] == "00:00:00"){
+            var planEndHour = '24'
+            var planEndMin = '00'
+        }
+        //24:00일경우 다음날 00:00 으로 들어오기 때문에
+
 
         if(compare_time(add_time(planHour+':'+planMinute, '00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin, '00:00'), add_time(Options.workStartTime+':00','00:00')) ){
             planHour = Options.workStartTime;
@@ -2730,35 +3007,43 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
     var plan_starttime = {};
     var plan_endtime = {};
-
+    console.log(jsondata)
     for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
         if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
         }
-        if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate){
+        if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate && jsondata.classTimeArray_end_date[i].split(' ')[1] != "00:00:00"){
             plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
+        }else if(jsondata.classTimeArray_end_date[i].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.classTimeArray_end_date[i].split(' ')[1] == "00:00:00"){
+            plan_endtime['24:00:00'] = ""
         }
     }
     for(var j=0; j<jsondata.group_schedule_start_datetime.length; j++){
         if(jsondata.group_schedule_start_datetime[j].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.group_schedule_start_datetime[j].split(' ')[1]] = ""
         }
-        if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate){
+        if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate && jsondata.group_schedule_end_datetime[j].split(' ')[1] != "00:00:00" ){
             plan_endtime[jsondata.group_schedule_end_datetime[j].split(' ')[1]] = ""
+        }else if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.group_schedule_end_datetime[j].split(' ')[1] == "00:00:00"){
+            plan_endtime['24:00:00'] = ""
         }
     }
     for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
         if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
         }
-        if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate){
+        if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate && jsondata.offTimeArray_end_date[j].split(' ')[1] != "00:00:00" ){
             plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
+        }else if(jsondata.offTimeArray_end_date[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.offTimeArray_end_date[j].split(' ')[1] == "00:00:00"){
+            plan_endtime['24:00:00'] = ""
         }
     }
 
     var plan_time = [];
     var plan_stime = [];
     var plan_etime = [];
+
+
     for(starttime in  plan_starttime){
         plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
     }
@@ -2887,7 +3172,213 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkAr
     startTimeList.html(timeArraySum);
 }
 
+/*
+function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래프 채우기
+    //1. option인자 : "class", "off"
+    //2. CSS테마인자 : "grey", "pink"
+    var planStartDate = '';
+    var planEndDate = '';
+    var planMemberName = '';
+    var planScheduleIdArray = '';
+    var planNoteArray = '';
+    var cssClass = '';
+    var cssClass_border = '';
+    var datepicker = '';
+    switch(option){
+        case "class" :
+            planStartDate = jsondata.classTimeArray_start_date;
+            planEndDate = jsondata.classTimeArray_end_date;
+            planMemberName = jsondata.classTimeArray_member_name;
+            planScheduleIdArray = jsondata.scheduleIdArray;
+            planNoteArray = jsondata.scheduleNoteArray;
+            //$('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
+            break;
+        case "group" :
+            planStartDate = jsondata.group_schedule_start_datetime;
+            planEndDate = jsondata.group_schedule_end_datetime;
+            planMemberName = jsondata.group_schedule_group_name;
+            planScheduleIdArray = jsondata.group_schedule_id;
+            planNoteArray = jsondata.group_schedule_note;
+            //$('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
+            break;
+        case "off" :
+            planStartDate = jsondata.offTimeArray_start_date;
+            planEndDate = jsondata.offTimeArray_end_date;
+            planScheduleIdArray = jsondata.offScheduleIdArray;
+            planNoteArray = jsondata.offScheduleNoteArray;
+            break;
+    }
 
+    switch(CSStheme){
+        case "grey" :
+            cssClass = "greytimegraph";
+            cssClass_border = "greytimegraph_greyleft";
+            break;
+        case "pink" :
+            cssClass= "pinktimegraph";
+            cssClass_border= "pinktimegraph_pinkleft";
+            break;
+    }
+
+    switch(Page){
+        case "mini" :
+            datepicker = $('#datetext_mini');
+            option = "_mini";
+            break;
+        case "AddClass" :
+            datepicker = $("#datepicker");
+            option = "";
+            break;
+    }
+
+
+    var date = datepicker.val();
+    var Arraylength = planScheduleIdArray.length;
+    for(var i=0;i<Arraylength;i++){
+        var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
+        var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
+        var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
+        var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+        var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+        var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
+        var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
+        var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+        var planDura = "0.5";
+        if(planHour == 24){
+            planHour = 0;
+        }
+        if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
+            if(planEndHour-planHour == 0){
+                planDura = "0.5";
+            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
+                planDura = String((planEndHour-planHour-1))+'.5';
+            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
+                planDura = String((planEndHour-planHour))+'.5';
+            }
+        }else{
+            planDura = planEndHour - planHour;
+        }
+
+        //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
+        if(planEDate == planDate+1 && planEndHour==planHour){
+            planDura = 24;
+        }else if(planEDate == planDate+1 && planEndHour == 0){
+            planDura = 24-planHour;
+        }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
+            planDura = 24-planHour;
+        }
+
+        if(planMinute == '00'){
+            if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
+
+                planDura = planDura - (Options.workStartTime - planHour); // 2 - (10 - 8)
+                planHour = Options.workStartTime;
+                //2018_4_22_8_30_2_OFF_10_30
+            }
+        }else if(planMinute == '30'){
+            //(10>8)  (2>=10-8)
+            if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
+
+                planDura = planDura - (Options.workStartTime - planHour)+0.5; // 2 - (10 - 8)
+                planHour = Options.workStartTime;
+                planMinute = '00';
+                //2018_4_22_8_30_2_OFF_10_30
+            }
+        }
+        if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date && planDura>0){ //수업시간이 0.5 단위일때
+            var length = parseInt(planDura);
+            if(length == 0){
+                length = 1;
+            }
+            //for(var j=0; j<length; j++){  // 1_30_1.5
+            var time = Number(planHour);
+            var min = planMinute;
+            for(var k=0; k<planDura/0.5; k++){
+                if(min == 60){
+                    min = '00';
+                    time = time +1;
+                }
+                if(k==0){
+                    $('#'+(time)+'g_'+min+option).addClass(cssClass);
+                }else{
+                    $('#'+(time)+'g_'+min+option).addClass(cssClass_border);
+                }
+
+                min = Number(min)+30;
+            }
+        }
+    }
+
+
+    //업무시간 설정 수업시간 30분 단위일때
+    var j = 0;
+    var t = Options.workEndTime;
+    if(Options.hourunit == 30){
+        for(j=0; j<Options.workStartTime; j++){
+            $('#'+j+'g_00'+option).addClass('greytimegraph');
+            $('#'+j+'g_30'+option).addClass('greytimegraph');
+        }
+
+
+        for(t=Options.workEndTime; t<24; t++){
+            $('#'+t+'g_00'+option).addClass('greytimegraph');
+            $('#'+t+'g_30'+option).addClass('greytimegraph');
+        }
+    }else{
+        //업무시간 설정
+        for(j=0; j<Options.workStartTime; j++){
+            $('#'+j+'g'+option).addClass('greytimegraph');
+        }
+        for(t=Options.workEndTime; t<24; t++){
+            $('#'+t+'g'+option).addClass('greytimegraph');
+        }
+        //업무시간 설정
+    }
+
+        //업무시간 설정
+
+    //timeGraphLimitSet(Options.limit)
+}*/
+
+/*
+function draw_time_graph(option, type){  //type = '' and mini
+
+    var targetHTML =  '';
+    var types = '';
+    if(type == 'mini'){
+        targetHTML =  $('#timeGraph.ptaddbox_mini table');
+        types = "_mini"
+    }else{
+        targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph .timegraphtext');
+        types = ''
+    }
+
+    var tablewidth = $('.timegraphtext').width()-10;
+    //var tdwidth = (tablewidth/((Options.workEndTime-Options.workStartTime)*2))-1
+    //var tdwidth_ = (tablewidth/((Options.workEndTime-Options.workStartTime)))-2.5
+
+    var tdwidth = (tablewidth/(Options.workEndTime-Options.workStartTime));
+    var tdwidth_ = (tablewidth/(Options.workEndTime-Options.workStartTime));
+
+
+    var tr1 = [];
+    var tr2 = [];
+    var i=Options.workStartTime;
+    if(option == "30"){
+        for(i; i<Options.workEndTime; i++){
+            tr1[i] = '<div colspan="2" style="width:'+tdwidth_+'px" class="colspan">'+(i)+'</div>';
+            tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
+        }
+    }else if(option == "60"){
+        for(i; i<Options.workEndTime; i++){
+            tr1[i] = '<div style="width:'+tdwidth+'px;" class="colspan">'+(i)+'</div>';
+            tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div>';
+        }
+    }
+    var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
+    targetHTML.html(tbody);
+}
+*/
 
 function draw_time_graph(option, type){  //type = '' and mini
 
@@ -3001,6 +3492,11 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
 
+        if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1) 
+            && planEndDate[i].split(' ')[1] == "00:00:00" ){
+            var planEndHour = "24";
+            var planEndMin = '00'
+        }
 
         // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
         if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) ){
@@ -3032,7 +3528,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 
         if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
             //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
-
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
             var planLoc     = timegraph_houroffset;
 
@@ -3041,7 +3536,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             }else{
                 htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
             }
-            
         }
     }
     $tableTarget.append(htmlToJoin.join(''))

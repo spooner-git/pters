@@ -835,6 +835,13 @@ function groupListSet(option, jsondata){ //option : current, finished
             '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>';
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist);
     }
+    if(groupNum == 0){
+        if(option == "current"){
+            htmlToJoin.push('<div class="groupWrap">추가 된 그룹이 없습니다.</div>')
+        }else if(option == "finished"){
+            htmlToJoin.push('<div class="groupWrap">종료 된 그룹이 없습니다.</div>')
+        }
+    }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+groupNum+'</span>');
     $('#currentGroupList').html(htmlToJoin.join(''));
 }

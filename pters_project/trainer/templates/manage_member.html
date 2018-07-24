@@ -13,6 +13,13 @@
         body{
             height: 100%;
         }
+        #ymdText{
+            top: 50px;
+            margin-bottom: 0;
+        }
+        #selectBox{
+            margin-top: 50px;
+        }
         @media(min-width: 600px){
             html{
                 background: #ffffff;
@@ -21,6 +28,19 @@
             body{
                 overflow-y: overlay;
                 height: 100%;
+            }
+            #ymdText{
+                position: relative;
+                margin-bottom: 0px;
+                top: unset;
+            }
+            #selectBox{
+                margin-top: 0;
+            }
+        }
+        @media(min-width:1000px){
+            #ymdText{
+                margin-bottom: 20px;
             }
         }
     </style>
@@ -234,7 +254,7 @@
 
 
     <div id="page_managemember">
-        <div id="ymdText" style="position: relative;margin-bottom: 20px;">
+        <div id="ymdText">
             <div id="ymdTextWrap">
                 <div id="menuName">회원 관리
                 </div>
@@ -795,7 +815,7 @@
             <!--그룹추가 관련 Form-->
 
             <div style="padding-top:20px;">
-                <p class="icons_description _SEARCH_MEMBER_NEW">※등록하고자하는 회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
+                <p class="icons_description _SEARCH_MEMBER_NEW">※회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
                 <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
 
                     <label for="memberSearch" class="ptaddboxtext">
@@ -814,7 +834,7 @@
                     <label for="memberNameSex" class="ptaddboxtext">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
-                    <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, <br>초기 비밀번호는 0000입니다.</p>
+                    <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
                     <div id="memberName_reg" class="dropdown pters_input_custom">
                         <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10">
                         <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="이름" maxlength="10">

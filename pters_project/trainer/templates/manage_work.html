@@ -12,7 +12,7 @@
 
 
 {% block content %}
-<div id="ymdText" style="position: relative;margin-bottom: 20px;">
+<div id="ymdText">
     <div id="ymdTextWrap">
         <div id="menuName">업무 통계
         </div>
@@ -195,6 +195,11 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/google.chart.js" %}></script>
     <script type="text/javascript">
+    
+    $('a.__workmanage').css('color','#fe4e65;')
+    $('#uptext').text("통계")
+
+
       var graph_Width_To_Be = $('.chart_wrapper').width();
       var graph_Height_To_Be = $('.chart_wrapper').height();
       var graph_inline_Width_To_Be = $('.chart_wrapper_inline').width()*$('.chart_wrapper').width()/100;
@@ -205,7 +210,6 @@
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
 
-      console.log(graph_inline_Width_To_Be,graph_inline_Height_To_Be)
 
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(function(){

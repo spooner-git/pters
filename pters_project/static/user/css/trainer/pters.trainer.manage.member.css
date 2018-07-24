@@ -28,6 +28,8 @@ body{
 }
 
 
+
+
 @media(min-width: 600px){
 	#how_to_add_member{
 		position: absolute;
@@ -43,6 +45,8 @@ body{
 		box-shadow: 1px 1px 1px 1px #fe4e65;
 		display: none;
 	}
+
+	
 	#menuDescription{
 	  line-height: unset;
 	}
@@ -1253,12 +1257,10 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	#page_addmember{
 		top: unset;
-		max-width: 450px !important;
+		max-width: 500px !important;
 	}
 
-	#float_btn_wrap{
-		display: none !important;
-	}
+
 
 	._grouptype{
 		display: table-cell;
@@ -1313,6 +1315,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		left: 50%;
 		transform: translate(-50%, -50%);
 		*/
+		margin-bottom: 50px;
 	}
 
 	.ymdText-pc-add-member-wrap{
@@ -1391,9 +1394,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		color: #ffffff;
 	}
 
-	#float_btn{
-		display: none !important;
-	}
+
 
 	#infoMemberModify{
 		display: inline;
@@ -1608,6 +1609,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+		margin-top: unset;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;
