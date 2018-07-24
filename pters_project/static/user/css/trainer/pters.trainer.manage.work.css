@@ -52,17 +52,18 @@ body{
 .dropdown{
 	display: inline-block;
 	border: 1px solid #8d8d8d;
-	height: 26px;
+	height: 30px !important;
 	position: relative !important;
 	left: unset !important;
 	width: 19% !important;
 	min-width: 56px !important; 
 	margin-left: 5px !important;
 	margin-right: 5px !important;
+	margin-top: 0 !important;
 }
 .icondown{
 	right: 5px !important;
-	bottom: 15px !important;
+	bottom: 10px !important;
 	width:10px !important;
 }
 
@@ -72,12 +73,14 @@ body{
 }
 .duration_selector_wrapper div{
 	display: inline-block;
-	width: 60px;
+	width: 50px;
 	border: 1px solid #cccccc;
-	padding: 8px 0px 8px 0px;
-	font-size: 13px;
+	padding: 5px 0px 5px 0px;
+	font-size: 12.5px;
 	cursor: pointer;
 	margin-bottom: 5px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 
@@ -181,6 +184,14 @@ body{
 @media(min-width: 600px){
 	#ymdText{
 		margin-bottom: 20px;
+	}
+	.dropdown{
+		width: 10% !important;
+		height: 26px !important;
+	}
+	.icondown{
+		width: 8px !important;
+		bottom: 9px !important;
 	}
 
 	#selectBox{

@@ -607,7 +607,7 @@
     
     function adjust_sidenav_wrapper_height(){
         //var sideupper_BottomLoc = $('.sidebar_upper').offset().top + $('.sidebar_upper').height();
-        var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top + $(window).scrollTop;
+        var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top - $(window).scrollTop();
         var lastBtn_height = $('.sidebar_div_last').height() - 20;
         var inner_Sidenav_height = $('#inner_Sidenav').height();
         $('#sidenav_wrapper_slide').css({'height':inner_Sidenav_height - lastBtn_height - sidenav_wrapper_slide_TopLoc+'px'});
