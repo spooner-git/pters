@@ -1940,6 +1940,7 @@ def update_lecture_info_logic(request):
     end_date = request.POST.get('end_date', '')
     price = request.POST.get('price', '')
     refund_price = request.POST.get('refund_price', '')
+    refund_date = request.POST.get('refund_date', '')
     lecture_reg_count = request.POST.get('lecture_reg_count', '')
     note = request.POST.get('note', '')
     member_id = request.POST.get('member_id', '')
@@ -1953,6 +1954,7 @@ def update_lecture_info_logic(request):
     reserve_pt_count = 0
     member_info = None
     lecture_info = None
+    input_refund_date = None
 
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -1989,6 +1991,17 @@ def update_lecture_info_logic(request):
                 input_refund_price = int(refund_price)
             except ValueError:
                 error = '환불 금액은 숫자만 입력 가능합니다.'
+
+        if refund_date is None or refund_date == '':
+            input_refund_date = lecture_info.refund_date
+        else:
+            try:
+                input_refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
+            except ValueError:
+                error = '환불 날짜값에 오류가 발생했습니다.'
+            except TypeError:
+                error = '환불 날짜값에 오류가 발생했습니다.'
+
         if lecture_reg_count is None or lecture_reg_count == '':
             input_lecture_reg_count = lecture_info.lecture_reg_count
         else:
@@ -2015,6 +2028,7 @@ def update_lecture_info_logic(request):
         lecture_info.end_date = end_date
         lecture_info.price = input_price
         lecture_info.refund_price = input_refund_price
+        lecture_info.refund_date = input_refund_date
         lecture_info.note = note
         if lecture_info.state_cd == 'IP':
             lecture_info.lecture_reg_count = input_lecture_reg_count
@@ -2025,10 +2039,12 @@ def update_lecture_info_logic(request):
                 lecture_info.lecture_reg_count = input_lecture_reg_count
                 lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
                 lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
-                lecture_info.state_cd='IP'
+                lecture_info.refund_price = 0
+                lecture_info.refund_date = None
+                lecture_info.state_cd = 'IP'
         lecture_info.mod_dt = timezone.now()
         lecture_info.save()
-    # print('test5')
+
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
@@ -2177,6 +2193,7 @@ def refund_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
     refund_price = request.POST.get('refund_price', '')
+    refund_date = request.POST.get('refund_date', datetime.date.today())
     next_page = request.POST.get('next_page', '')
     class_id = request.session.get('class_id', '')
     input_refund_price = 0
@@ -2226,8 +2243,9 @@ def refund_lecture_info_logic(request):
         schedule_data.delete()
         repeat_schedule_data.delete()
         lecture_info.refund_price = input_refund_price
+        lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
-        lecture_info.lecture_rem_count = 0
+        # lecture_info.lecture_rem_count = 0
         lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
         lecture_info.save()
@@ -2304,6 +2322,8 @@ def progress_lecture_info_logic(request):
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
         lecture_info.mod_dt = timezone.now()
+        lecture_info.refund_price = 0
+        lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'
         lecture_info.save()
     if error is None:
