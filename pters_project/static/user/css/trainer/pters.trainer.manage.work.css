@@ -15,36 +15,64 @@ body{
 }
 
 .chart_wrapper{
+	position: relative;
 	text-align: center;
 	width: 100%;
 	max-width: 800px;
 	height: 300px;
 	margin: 0 auto;
-	margin-top: 30px;
 }
-.chart_wrapper_inline{
+.chart_wrapper_inline_wrap{
 	display: inline-block;
 	width: 49%;
-	height: 250px;
+	height: auto;
 	margin: 0 auto;
-	margin-top: 30px;
 	margin-bottom: 30px;
 }
-.chart_wrapper p, .chart_wrapper_inline p{
+	.chart_wrapper_inline{
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 250px;
+
+	}
+	.no_data{
+		position: absolute;
+		text-align: center;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
+	}
+
+.chart_maintitle{
 	margin-bottom: 0;
+	margin-top: 10px;
 	font-size: 15px;
 	font-weight: 500;
+	text-align: center;
+}
+.piechart_subtitle{
+	margin-bottom: 0;
+	text-align: center;
+	font-size: 11.5px !important;
+}
+.columnchart_subtitle{
+	margin-bottom: 0;
+	text-align: center;
+	font-size: 11.5px !important;
 }
 
 #profit_analytics_page{
 	display: block;
 	max-width: 800px;
 	margin: 0 auto;
+	padding: 0 10px 30px 10px;
 }
 #member_analytics_page{
 	display: none;
 	max-width: 800px;
 	margin: 0 auto;
+	padding: 0 10px 30px 10px;
 }
 
 #date_selector_wrapper{
@@ -107,16 +135,18 @@ body{
 }
 
 #profit_details_table{
-	width: 100%;
+	width: 95%;
+	margin: 0 auto;
 	text-align: center;
 }
 .table_row_title{
 	display: table;
 	background-color:#ececec;
-	width: 100%;
+	width: 95%;
 	height: 35px;
 	text-align: center;
 	border-bottom: 2px solid #282828;
+	margin: 0 auto;
 	margin-top: 20px;
 }
 .table_row_sum{
@@ -142,10 +172,20 @@ body{
 	}
 	.table_row_title div, .table_row div{
 		display: table-cell;
-		width: 33%;
 		vertical-align: middle;
 		font-size: 14px;
 	}
+	.table_row_title div:nth-child(1), .table_row div:nth-child(1){
+		width: 40%;
+	}
+	.table_row_title div:nth-child(2), .table_row div:nth-child(2){
+		width: 40%;
+	}
+	.table_row_title div:nth-child(3), .table_row div:nth-child(3){
+		width: 20%;
+	}
+
+
 .sales_detail_monthly_row{
 	display: table;
 	width: 100%;
@@ -250,6 +290,13 @@ body{
 	}
 	.pters_dropdown_custom_list li{
 		cursor: pointer;
+	}
+
+	.table_row_title{
+		width: 100%;
+	}
+	#profit_details_table{
+		width: 100%;
 	}
 
 

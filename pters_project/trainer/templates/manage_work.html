@@ -96,10 +96,10 @@
                 </div>
             </div>
     </div>
+    <p class="chart_maintitle">월별 매출 현황</p>
+    <p class="columnchart_subtitle"></p>
     <div class="chart_wrapper">
-        <p>월별 매출 현황</p>
         <div id="chart_div"></div>
-        
     </div>
     <div class="table_row_title">
         <div>기간</div>
@@ -179,9 +179,26 @@
         </div>
     </div>
 
-    <div class="chart_wrapper_inline"><p>회원 등록 현황</p><div id="chart_div2"></div></div>
-    <div class="chart_wrapper_inline"><p>회원 환불 현황</p><div id="chart_div3"></div></div>
-    <div class="chart_wrapper"><p style="text-align: center;">월별 계약 현황</p><div id="chart_div4"></div></div>
+    <div class="chart_wrapper_inline_wrap">
+        <p class="chart_maintitle">회원 등록 현황</p>
+        <p class="piechart_subtitle"></p>
+        <div class="chart_wrapper_inline">
+            
+            <div id="chart_div2"></div>
+        </div>
+    </div>
+    <div class="chart_wrapper_inline_wrap">
+        <p class="chart_maintitle">회원 환불 현황</p>
+        <p class="piechart_subtitle"></p>
+        <div class="chart_wrapper_inline">
+            <div id="chart_div3"></div>
+        </div>
+    </div>
+    <p class="chart_maintitle">월별 계약 현황</p>
+    <p class="columnchart_subtitle"></p>
+    <div class="chart_wrapper">
+        <div id="chart_div4"></div>
+    </div>
 </div>
 
 
@@ -204,7 +221,7 @@
 
       var graph_Width_To_Be = $('.chart_wrapper').width();
       var graph_Height_To_Be = $('.chart_wrapper').height();
-      var graph_inline_Width_To_Be = $('.chart_wrapper_inline').width()*$('.chart_wrapper').width()/100;
+      var graph_inline_Width_To_Be = $('.chart_wrapper_inline_wrap').width()*$('.chart_wrapper').width()/100-2;
       var graph_inline_Height_To_Be = $('.chart_wrapper_inline').height();
       var month_date =  [{% for month_price_info in month_price_data %}"{{ month_price_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
       var price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
@@ -228,6 +245,7 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function(){
         drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
+        $('#profit_analytics_page .columnchart_subtitle').text(month_date[0]+' ~ '+month_date[month_date.length-1]+' (단위: 건)')
         fill_profit_details_table(month_date, price, refund_price)
     });
 
@@ -245,6 +263,7 @@
                        'height':height,
                        'chartArea':{height:'75%'},
                         'legend':{position:'right'},
+                        titlePosition:'none',
                         colors:['#fe4e65','#5d91f7'],
                         isStacked: true,
                         trendlines:{0:{
@@ -273,7 +292,8 @@
                        'width':width,
                        'height':height,
                        colors:['#fe4e65','#5d91f7'],
-                       'chartArea':{width:'100%',height:'85%'},
+                       titlePosition:'none',
+                       'chartArea':{width:'85%',height:'85%'},
                       'legend':{position:legend, 'alignment':'center'},
                         sliceVisibilityThreshold:0,
                         pieSliceText:'value' };
@@ -313,7 +333,8 @@
                                 addRows_data,
                                 start_date+' ~ '+end_date+'(단위: 건)'
                             );
-                    fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price)
+                    fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price);
+                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+end_date+' (단위: 건)')
                 }
 
             },
@@ -382,25 +403,38 @@
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                     }else{
-                        var addRows_data = member_datas_convert_to_addRows(jsondata.total_month_new_reg_member, jsondata.total_month_re_reg_member, '신규회원', '재등록')
-                        drawChart_Pie(
-                                        graph_inline_Width_To_Be,
-                                        graph_inline_Height_To_Be,
-                                        'bottom', 
-                                        document.getElementById('chart_div2'),
-                                        addRows_data,
-                                        start_date+' ~ '+end_date+' (단위: 건)'
-                                      );
+                        $('#member_analytics_page .piechart_subtitle').text(start_date+' ~ '+end_date+' (단위: 건)')
 
+                        //회원 등록현황 파이 차트 그리기
+                        var addRows_data = member_datas_convert_to_addRows(jsondata.total_month_new_reg_member, jsondata.total_month_re_reg_member, '신규등록', '재등록')
+                        if(addRows_data != false){
+                            drawChart_Pie(
+                                            graph_inline_Width_To_Be,
+                                            graph_inline_Height_To_Be,
+                                            'bottom', 
+                                            document.getElementById('chart_div2'),
+                                            addRows_data,
+                                            start_date+' ~ '+end_date+' (단위: 건)'
+                                          );
+                        }else{
+                            $('#chart_div2').parent('.chart_wrapper_inline').html('<div class="no_data">자료가 없습니다.</div>');
+                        }
+                        
+                        //회원 환불현황 파이 차트 그리기
                         var addRows_data2 = member_datas_convert_to_addRows(jsondata.total_month_all_refund_member, jsondata.total_month_part_refund_member, '전체환불', '부분환불')
-                        drawChart_Pie(
-                                        graph_inline_Width_To_Be,
-                                        graph_inline_Height_To_Be,
-                                        'bottom', 
-                                        document.getElementById('chart_div3'),
-                                        addRows_data2,
-                                        start_date+' ~ '+end_date+' (단위: 건)'
-                                      );
+                        if(addRows_data2 != false){
+                            drawChart_Pie(
+                                            graph_inline_Width_To_Be,
+                                            graph_inline_Height_To_Be,
+                                            'bottom', 
+                                            document.getElementById('chart_div3'),
+                                            addRows_data2,
+                                            start_date+' ~ '+end_date+' (단위: 건)'
+                                          );
+                        }else{
+                            $('#chart_div3').parent('.chart_wrapper_inline').html('<div class="no_data">자료가 없습니다.</div>')
+                        }
+                        
                         
                     }
 
@@ -445,7 +479,7 @@
                                 addRows_data,
                                 start_date+' ~ '+end_date+'(단위: 건)'
                             );
-                        
+                    $('#member_analytics_page .columnchart_subtitle').text(start_date+' ~ '+end_date+' (단위: 건)')
                 }
 
             },
@@ -489,8 +523,11 @@
 
     function member_datas_convert_to_addRows(row1, row2, unit1, unit2){
         var wrapper = [['Unit','Num'],[unit1, row1], [unit2, row2]];
-
-        return wrapper;
+        if(Number(row1) == 0 && Number(row2) == 0){
+            return false
+        }else{
+            return wrapper;
+        }
     }
 
 
