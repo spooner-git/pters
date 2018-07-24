@@ -133,7 +133,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
-        next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+        next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+        if next_month == 0:
+            next_month = 1
         next_month_first_day = month_first_day.replace(month=next_month)
 
         if next_month == 1:
@@ -690,7 +692,9 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
 
             for i in range(1, 3):
                 before_year = int(month_first_day.strftime('%Y')) - 1
-                before_month = (int(month_first_day.strftime('%m')) - 1) % 12
+                before_month = (int(month_first_day.strftime('%m')) - 1) % 13
+                if before_month == 0:
+                    before_month = 12
                 before_month_first_day = month_first_day.replace(month=before_month)
                 if before_month == 12:
                     before_month_first_day = before_month_first_day.replace(year=before_year)
@@ -3736,7 +3740,9 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         today = datetime.date.today()
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
-        next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+        next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+        if next_month == 0:
+            next_month = 1
         next_month_first_day = month_first_day.replace(month=next_month)
 
         if next_month == 1:

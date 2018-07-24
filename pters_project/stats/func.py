@@ -22,7 +22,9 @@ def get_sales_data(class_id, month_first_day, finish_date):
                 error = '매출 통계를 계산할수 있는 범위가 넘었습니다.'
                 break
             next_year = int(month_first_day.strftime('%Y')) + 1
-            next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+            next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+            if next_month == 0:
+                next_month = 1
             next_month_first_day = month_first_day.replace(month=next_month)
 
             if next_month == 1:
