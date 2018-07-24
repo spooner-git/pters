@@ -41,7 +41,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
                 next_month_first_day = next_month_first_day.replace(year=next_year)
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
-            # 결제 정보 가져오기
             # try:
             #     price_info = ClassLectureTb.objects.filter(
             #                             Q(lecture_tb__start_date__gte=month_first_day)

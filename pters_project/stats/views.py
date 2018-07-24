@@ -72,7 +72,6 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
     def post(self, request):
         context = {}
         class_id = request.POST.get('class_id', '')
-        # class_id = request.session.get('class_id', '')
         month_date = request.POST.get('month_date', '')
         error = None
         if month_date == '' or month_date is None:
@@ -130,8 +129,4 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, View):
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + error)
             messages.error(request, error)
-        # else:
-        #     request.session['sales_start_date'] = str(month_first_day.date())
-        #     request.session['sales_finish_date'] = str(finish_date.date())
-
         return render(request, self.template_name, context)
