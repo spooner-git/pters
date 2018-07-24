@@ -6,9 +6,10 @@ $('#selectBox .btn').click(function(){
     $('#'+$(this).attr('id').replace(/_selector/gi,'_page')).siblings('.pages').hide();
 
     if($(this).attr('id').split('_')[0] == 'member'){
-        drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom' , document.getElementById('chart_div2'));
-        drawChart_Pie(graph_inline_Width_To_Be, graph_inline_Height_To_Be,'bottom', document.getElementById('chart_div3'));
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div4'), datas_convert_to_addRows(month_date, price, refund_price));
+        ajax_call_member_analytics_data(class_id,month_date[0],month_date[month_date.length-1])
+        
+
+        ajax_call_member_monthly_data(class_id, month_date[0], month_date[month_date.length-1])
     }
 })
 
@@ -24,17 +25,21 @@ $('.month_sel_btn').click(function(){
     var thisVal = Number($(this).attr('data-month'));
     var start_date = date_format_yyyy_m_d_to_yyyy_mm_dd(substract_month(currentYear+'-'+(currentMonth+1)+'-'+1, -thisVal),'-');
     var end_date = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'-'+(currentMonth+1)+'-'+1, '-');
-
-    $('#call_sales_data_btn').attr({'data-startdate':start_date, 'data-enddate':end_date});
+    if($('#profit_analytics_page').css('display') == "block"){
+        $('#call_sales_data_btn').attr({'data-startdate':start_date, 'data-enddate':end_date});
+    }else{
+        $('#call_member_data_btn').attr({'data-startdate':start_date, 'data-enddate':end_date});
+    }
+    
 });
 
 $('#call_sales_data_btn').click(function(){
-    if($('.duration_setter_wrapper').css('display') == 'none'){
+    if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
         var start_date = $(this).attr('data-startdate');
         var end_date = $(this).attr('data-enddate');
         ajax_call_sales_data(class_id, start_date, end_date);
 
-    }else if($('.duration_setter_wrapper').css('display') == 'block'){
+    }else if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'block'){
         var start_date = $('#startYear').siblings('button').attr('data-value') + '-' + $('#startMonth').siblings('button').attr('data-value')+'-01';
         var end_date = $('#endYear').siblings('button').attr('data-value') + '-' + $('#endMonth').siblings('button').attr('data-value')+'-01';
         check_dropdown_date_validity(start_date, end_date, function(){
@@ -42,6 +47,25 @@ $('#call_sales_data_btn').click(function(){
         });
     };
 });
+
+
+$('#call_member_data_btn').click(function(){
+    if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'none'){
+        var start_date = $(this).attr('data-startdate');
+        var end_date = $(this).attr('data-enddate');
+        ajax_call_member_analytics_data(class_id,start_date, end_date)
+        console.log('여기1')
+    }else if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'block'){
+        console.log('여기2')
+        var start_date = $('#startYear_member').siblings('button').attr('data-value') + '-' + $('#startMonth_member').siblings('button').attr('data-value')+'-01';
+        var end_date = $('#endYear_member').siblings('button').attr('data-value') + '-' + $('#endMonth_member').siblings('button').attr('data-value')+'-01';
+        check_dropdown_date_validity(start_date, end_date, function(){
+            ajax_call_member_analytics_data(class_id,start_date, end_date)
+        });
+    };
+});
+
+
 
 $(document).on('click','.pters_dropdown_custom_list li',function(){
     var selectedValue = $(this).attr('data-value');
@@ -88,10 +112,18 @@ function fill_duration_setter_dropdown(){
 };
 
 function check_dropdown_date_validity(date1, date2, success_Callback){
-    var startYear = $('#startYear').siblings('button').attr('data-value');
-    var startMonth = $('#startMonth').siblings('button').attr('data-value');
-    var endYear = $('#endYear').siblings('button').attr('data-value');
-    var endMonth = $('#endMonth').siblings('button').attr('data-value');
+    if($('#profit_analytics_page').css('display') == "block"){
+        var startYear = $('#startYear').siblings('button').attr('data-value');
+        var startMonth = $('#startMonth').siblings('button').attr('data-value');
+        var endYear = $('#endYear').siblings('button').attr('data-value');
+        var endMonth = $('#endMonth').siblings('button').attr('data-value');
+    }else if($('#member_analytics_page').css('display') == "block"){
+        var startYear = $('#startYear_member').siblings('button').attr('data-value');
+        var startMonth = $('#startMonth_member').siblings('button').attr('data-value');
+        var endYear = $('#endYear_member').siblings('button').attr('data-value');
+        var endMonth = $('#endMonth_member').siblings('button').attr('data-value');
+    }
+    
 
     if(startYear && startMonth && endYear && endMonth){
         if(compare_date(date2, date1) == true ){
