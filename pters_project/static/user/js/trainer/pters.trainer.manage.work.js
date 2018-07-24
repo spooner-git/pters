@@ -54,13 +54,13 @@ $('#call_member_data_btn').click(function(){
         var start_date = $(this).attr('data-startdate');
         var end_date = $(this).attr('data-enddate');
         ajax_call_member_analytics_data(class_id,start_date, end_date)
-        console.log('여기1')
+        ajax_call_member_monthly_data(class_id, start_date, end_date)
     }else if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'block'){
-        console.log('여기2')
         var start_date = $('#startYear_member').siblings('button').attr('data-value') + '-' + $('#startMonth_member').siblings('button').attr('data-value')+'-01';
         var end_date = $('#endYear_member').siblings('button').attr('data-value') + '-' + $('#endMonth_member').siblings('button').attr('data-value')+'-01';
         check_dropdown_date_validity(start_date, end_date, function(){
             ajax_call_member_analytics_data(class_id,start_date, end_date)
+            ajax_call_member_monthly_data(class_id, start_date, end_date)
         });
     };
 });
