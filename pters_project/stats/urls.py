@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^get_sales_list/$', views.GetSalesListViewAjax.as_view(), name='get_sales_list'),
     # 매출 상세 내역 조회
     url(r'^get_sales_info/$', views.GetSalesInfoViewAjax.as_view(), name='get_sales_info'),
+    # 매출 상세 내역 조회
+    url(r'^get_stats_member_list/$', views.GetStatsMemberListViewAjax.as_view(), name='get_stats_member_list'),
 ]

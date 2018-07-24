@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from configs.const import STATS_SALES
-from stats.func import get_sales_data, get_sales_info
+from stats.func import get_sales_data, get_sales_info, get_stats_member_data
 
 logger = logging.getLogger(__name__)
 
@@ -96,5 +96,42 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + error)
             messages.error(request, error)
+
+        return render(request, self.template_name, context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetStatsMemberListViewAjax(LoginRequiredMixin, View):
+    template_name = "ajax/summary_member_data_ajax.html"
+
+    def get(self, request):
+        context = {}
+        class_id = request.POST.get('class_id', '')
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+
+        error = None
+        if start_date == '' or start_date is None:
+            error = '시작 일자를 선택해주세요.'
+        elif end_date == '' or end_date is None:
+            error = '종료 일자를 선택해주세요.'
+        try:
+            finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        except TypeError:
+            error = '날짜 형식에 문제 있습니다.'
+        except ValueError:
+            error = '날짜 형식에 문제 있습니다.'
+
+        if error is None:
+            context = get_stats_member_data(class_id, month_first_day, finish_date)
+
+        if error is not None:
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+        else:
+            request.session['sales_start_date'] = str(month_first_day.date())
+            request.session['sales_finish_date'] = str(finish_date.date())
 
         return render(request, self.template_name, context)

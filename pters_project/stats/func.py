@@ -3,8 +3,8 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, Sum
 
-from configs.const import USE
-from schedule.models import ClassLectureTb
+from configs.const import USE, ON_SCHEDULE_TYPE
+from schedule.models import ClassLectureTb, ScheduleTb
 
 
 def get_sales_data(class_id, month_first_day, finish_date):
@@ -21,6 +21,13 @@ def get_sales_data(class_id, month_first_day, finish_date):
 
     if error is None:
         while finish_date >= month_first_day:
+            price = 0
+            new_reg_price = 0
+            re_reg_price = 0
+            all_refund_price = 0
+            part_refund_price = 0
+            refund_price = 0
+
             if counter > 40:
                 error = '매출 통계를 계산할수 있는 범위가 넘었습니다.'
                 break
@@ -35,30 +42,70 @@ def get_sales_data(class_id, month_first_day, finish_date):
             month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
             # 결제 정보 가져오기
-            try:
-                price_info = ClassLectureTb.objects.filter(
-                                        Q(lecture_tb__start_date__gte=month_first_day)
-                                        & Q(lecture_tb__start_date__lte=month_last_day),
-                                        class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
-                                        use=USE).aggregate(Sum('lecture_tb__price'))
-                price = int(price_info['lecture_tb__price__sum'])
-            except TypeError:
-                price = 0
+            # try:
+            #     price_info = ClassLectureTb.objects.filter(
+            #                             Q(lecture_tb__start_date__gte=month_first_day)
+            #                             & Q(lecture_tb__start_date__lte=month_last_day),
+            #                             class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+            #                             use=USE).aggregate(Sum('lecture_tb__price'))
+            #     new_reg_price = int(price_info['lecture_tb__price__sum'])
+            # except TypeError:
+            #     new_reg_price = 0
+
+            # 결제 정보 가져오기
+            price_data = ClassLectureTb.objects.filter(Q(lecture_tb__start_date__gte=month_first_day)
+                                                       & Q(lecture_tb__start_date__lte=month_last_day),
+                                                       class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+                                                       use=USE).order_by('lecture_tb__start_date', 'reg_dt')
+
+            for price_info in price_data:
+                try:
+                    price_lecture_info = ClassLectureTb.objects.filter(~Q(lecture_tb_id=price_info.lecture_tb_id),
+                                                                       class_tb_id=class_id,
+                                                                       lecture_tb__member_id
+                                                                       =price_info.lecture_tb.member_id,
+                                                                       lecture_tb__start_date__gte
+                                                                       =price_info.lecture_tb.start_date,
+                                                                       lecture_tb__use=USE, auth_cd='VIEW',
+                                                                       use=USE).latest('reg_dt')
+                    if price_lecture_info.reg_dt < price_info.lecture_tb.reg_dt:
+                        re_reg_price += price_info.lecture_tb.price
+                    else:
+                        new_reg_price += price_info.lecture_tb.price
+                except ObjectDoesNotExist:
+                    new_reg_price += price_info.lecture_tb.price
+                price += price_info.lecture_tb.price
 
             # 환불 정보 가져오기
-            try:
-                refund_price_info = ClassLectureTb.objects.filter(
-                                        Q(lecture_tb__refund_date__gte=month_first_day)
-                                        & Q(lecture_tb__refund_date__lte=month_last_day),
-                                        class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
-                                        use=USE).aggregate(Sum('lecture_tb__refund_price'))
-                refund_price = int(refund_price_info['lecture_tb__refund_price__sum'])
-            except TypeError:
-                refund_price = 0
+            # try:
+            #     refund_price_info = ClassLectureTb.objects.filter(
+            #                             Q(lecture_tb__refund_date__gte=month_first_day)
+            #                             & Q(lecture_tb__refund_date__lte=month_last_day),
+            #                             class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+            #                             use=USE).aggregate(Sum('lecture_tb__refund_price'))
+            #     all_refund_price = int(refund_price_info['lecture_tb__refund_price__sum'])
+            # except TypeError:
+            #     all_refund_price = 0
+            refund_price_data = ClassLectureTb.objects.filter(
+                                    Q(lecture_tb__refund_date__gte=month_first_day)
+                                    & Q(lecture_tb__refund_date__lte=month_last_day),
+                                    class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+                                    use=USE).order_by('lecture_tb__refund_date')
+
+            for refund_price_info in refund_price_data:
+                if refund_price_info.lecture_tb.price != refund_price_info.lecture_tb.refund_price:
+                    part_refund_price += refund_price_info.lecture_tb.refund_price
+                else:
+                    all_refund_price += refund_price_info.lecture_tb.refund_price
+                refund_price += refund_price_info.lecture_tb.refund_price
 
             month_price_info = {'month': str(month_first_day.date()),
                                 'price': price,
-                                'refund_price': refund_price}
+                                'refund_price': refund_price,
+                                'new_reg_price': new_reg_price,
+                                're_reg_price': re_reg_price,
+                                'all_refund_price': all_refund_price,
+                                'part_refund_price': part_refund_price}
 
             month_price_list.append(month_price_info)
 
@@ -146,5 +193,99 @@ def get_sales_info(class_id, month_first_day):
         price_list.sort(key=lambda x: x['date'])
 
     context = {'error': error, 'price_data': price_list}
+
+    return context
+
+
+def get_stats_member_data(class_id, month_first_day, finish_date):
+
+    schedule_finish_list = []
+    counter = 0
+    error = None
+    if month_first_day is None or month_first_day == '':
+        error = '시작 날짜를 선택해주세요.'
+    else:
+        month_first_day = month_first_day.replace(day=1)
+    if finish_date is None or finish_date == '':
+        error = '종료 날짜를 선택해주세요.'
+
+    if error is None:
+        month_new_reg_member = 0
+        month_re_reg_member = 0
+        month_all_refund_member = 0
+        month_part_refund_member = 0
+
+        while finish_date >= month_first_day:
+            if counter > 40:
+                error = '매출 통계를 계산할수 있는 범위가 넘었습니다.'
+                break
+            next_year = int(month_first_day.strftime('%Y')) + 1
+            next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+            if next_month == 0:
+                next_month = 1
+            next_month_first_day = month_first_day.replace(month=next_month)
+
+            if next_month == 1:
+                next_month_first_day = next_month_first_day.replace(year=next_year)
+            month_last_day = next_month_first_day - datetime.timedelta(days=1)
+
+            # 결제 정보 가져오기
+            price_data = ClassLectureTb.objects.filter(Q(lecture_tb__start_date__gte=month_first_day)
+                                                       & Q(lecture_tb__start_date__lte=month_last_day),
+                                                       class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+                                                       use=USE).order_by('lecture_tb__start_date', 'reg_dt')
+
+            for price_info in price_data:
+                try:
+                    price_lecture_info = ClassLectureTb.objects.filter(~Q(lecture_tb_id=price_info.lecture_tb_id),
+                                                                       class_tb_id=class_id,
+                                                                       lecture_tb__member_id
+                                                                       =price_info.lecture_tb.member_id,
+                                                                       lecture_tb__start_date__gte
+                                                                       =price_info.lecture_tb.start_date,
+                                                                       lecture_tb__use=USE, auth_cd='VIEW',
+                                                                       use=USE).latest('reg_dt')
+                    if price_lecture_info.reg_dt < price_info.lecture_tb.reg_dt:
+                        month_re_reg_member += 1
+                    else:
+                        month_new_reg_member += 1
+                except ObjectDoesNotExist:
+                    month_new_reg_member += 1
+
+            # 환불 정보 가져오기
+            refund_price_data = ClassLectureTb.objects.filter(Q(lecture_tb__refund_date__gte=month_first_day)
+                                                              & Q(lecture_tb__refund_date__lte=month_last_day),
+                                                              class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
+                                                              use=USE).order_by('lecture_tb__refund_date')
+
+            for refund_price_info in refund_price_data:
+                if refund_price_info.lecture_tb.price != refund_price_info.lecture_tb.refund_price:
+                    month_part_refund_member += 1
+                else:
+                    month_all_refund_member += 1
+
+            # 완료 수강 이력 가져오기
+            class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                               lecture_tb__use=USE, auth_cd='VIEW',
+                                                               use=USE)
+            finish_schedule_num = 0
+            for class_lecture_info in class_lecture_list:
+                finish_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                 lecture_tb_id=class_lecture_info.lecture_tb_id,
+                                                                 start_dt__gte=month_first_day,
+                                                                 start_dt__lt
+                                                                 =month_last_day + datetime.timedelta(days=1),
+                                                                 en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                                 use=USE).count()
+
+            schedule_finish_info = {'month': str(month_first_day.date()), 'finish_schedule_count': finish_schedule_num}
+            schedule_finish_list.append(schedule_finish_info)
+
+            month_first_day = next_month_first_day
+            counter += 1
+
+    context = {'error': error, 'schedule_finish_data': schedule_finish_list,
+               'month_new_reg_member': month_new_reg_member, 'month_re_reg_member': month_re_reg_member,
+               'month_all_refund_member': month_all_refund_member, 'month_part_refund_member': month_part_refund_member}
 
     return context

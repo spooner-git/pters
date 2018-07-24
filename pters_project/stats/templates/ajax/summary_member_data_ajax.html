@@ -1,0 +1,16 @@
+    {
+        "month_date":
+      [{% for schedule_finish_info in schedule_finish_data %}"{{ schedule_finish_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "finish_schedule_count":
+      [{% for schedule_finish_info in schedule_finish_data %}"{{ schedule_finish_info.finish_schedule_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "month_new_reg_member":
+        {{ month_new_reg_member }},
+        "month_re_reg_member":
+        {{ month_re_reg_member }},
+        "month_all_refund_member":
+        {{ month_all_refund_member }},
+        "month_part_refund_member":
+        {{ month_part_refund_member }},
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }
