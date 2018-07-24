@@ -31,7 +31,7 @@ from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, Sett
 
 from django.utils import timezone
 
-from trainee.function import func_get_class_lecture_count, func_get_lecture_list, \
+from .function import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
     func_get_lecture_connection_list

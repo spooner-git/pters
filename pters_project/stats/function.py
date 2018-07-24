@@ -1,7 +1,7 @@
 import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, Sum
+from django.db.models import Q
 
 from configs.const import USE, ON_SCHEDULE_TYPE
 from schedule.models import ClassLectureTb, ScheduleTb

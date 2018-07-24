@@ -14,7 +14,6 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
-from django.db.models import Q
 from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -31,7 +30,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
-    MEMBER_RESERVE_PROHIBITION_ON, STATS_SALES
+    MEMBER_RESERVE_PROHIBITION_ON
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
@@ -42,11 +41,11 @@ from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_r
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
     BackgroundImgTb
 from schedule.models import ClassTb
-from stats.func import get_sales_data, get_stats_member_data
+from stats.function import get_sales_data, get_stats_member_data
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
-from trainer.function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
+from .function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list
 

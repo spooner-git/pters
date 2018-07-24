@@ -24,16 +24,14 @@ from django.views.generic import TemplateView
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, GROUP_SCHEDULE_TYPE, AUTO_FINISH_OFF
 from login.models import LogTb, MemberTb
-from schedule.functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
+from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
     func_get_available_group_member_list, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, \
     func_send_push_trainer, func_get_not_available_group_member_list, func_send_push_trainee, func_delete_schedule, \
     func_delete_repeat_schedule, func_update_repeat_schedule, func_get_repeat_schedule_date_list, \
     func_add_repeat_schedule, func_refresh_group_status
-from schedule.models import LectureTb, MemberLectureTb, GroupLectureTb, GroupTb
-from schedule.models import ClassTb
-from schedule.models import ScheduleTb, RepeatScheduleTb
+from .models import ClassTb, LectureTb, MemberLectureTb, GroupLectureTb, GroupTb, ScheduleTb, RepeatScheduleTb
 
 from django.core.files.base import ContentFile
 
