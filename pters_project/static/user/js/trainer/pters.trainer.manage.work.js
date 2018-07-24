@@ -61,6 +61,7 @@ $('#call_member_data_btn').click(function(){
         var end_date = $('#endYear_member').siblings('button').attr('data-value') + '-' + $('#endMonth_member').siblings('button').attr('data-value')+'-01';
         check_dropdown_date_validity(start_date, end_date, function(){
             ajax_call_member_analytics_data(class_id,start_date, end_date)
+            ajax_call_member_monthly_data(class_id, start_date, end_date)
         });
     };
 });
