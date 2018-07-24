@@ -72,7 +72,6 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
     def post(self, request):
         context = {}
         class_id = request.POST.get('class_id', '')
-        # class_id = request.session.get('class_id', '')
         month_date = request.POST.get('month_date', '')
         error = None
         if month_date == '' or month_date is None:
