@@ -258,9 +258,15 @@ a:focus, a:hover{
     width: 100%;
 
 }
+
+.sidebar_upper{
+    height: 33%;
+    background: #282828;
+    position: relative;
+}
+
 .sidebar_upper img{
     width: 50px;
-
     margin: auto;
 }
 
@@ -290,11 +296,7 @@ a:focus, a:hover{
     text-align: center;
 }
 
-.sidebar_upper{
-    height: 33%;
-    background: transparent;
-    position: relative;
-}
+
 
 .sidebar_icon{
     position:absolute;
@@ -367,7 +369,7 @@ a:focus, a:hover{
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #282828;
+    background-color: #ffffff;
     overflow-x: hidden;
     overflow-y: hidden;
     transition: 0.15s;

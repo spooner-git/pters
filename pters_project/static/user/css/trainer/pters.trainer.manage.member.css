@@ -28,7 +28,7 @@ body{
 }
 
 #ymdText{
-	position: relative;
+	top: 50px;
 	margin-bottom: 0;
 }
 
@@ -52,6 +52,7 @@ body{
 	#ymdText{
 		position: relative;
 		margin-bottom: 20px;
+		top: unset;
 	}
 	#menuDescription{
 	  line-height: unset;
@@ -184,6 +185,7 @@ body{
 	max-width: 800px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 50px;
 }
 
 #selectBox_type.list_switch_wrap{
@@ -1615,6 +1617,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+		margin-top: unset;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;

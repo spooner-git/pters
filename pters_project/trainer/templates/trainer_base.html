@@ -248,8 +248,7 @@
                 <div id="inner_Sidenav" class="sidenav">
 
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
-                        <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
-                        <div style="z-index: -1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
+                        <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
                         <div id="user_name">{{user.last_name}} {{user.first_name}}
                             <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                         </div>
@@ -308,7 +307,7 @@
                             </a>
                         </div>
                     </div>
-                    <div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>
+                    <!--<div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>-->
                     <div class="sidebar_div_last">
                         <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
                             <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
@@ -605,21 +604,23 @@
         window.location.reload();
     });
 
-    adjust_sidenav_wrapper_height();
+    
     function adjust_sidenav_wrapper_height(){
         //var sideupper_BottomLoc = $('.sidebar_upper').offset().top + $('.sidebar_upper').height();
-        var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top;
-        var sidenavLastBtn_TopLoc = $('.sidebar_div_last').offset().top;
-        $('#sidenav_wrapper_slide').css({'height':sidenavLastBtn_TopLoc - sidenav_wrapper_slide_TopLoc- 20 +'px'});
+        var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top + $(window).scrollTop;
+        var lastBtn_height = $('.sidebar_div_last').height() - 20;
+        var inner_Sidenav_height = $('#inner_Sidenav').height();
+        $('#sidenav_wrapper_slide').css({'height':inner_Sidenav_height - lastBtn_height - sidenav_wrapper_slide_TopLoc+'px'});
+        //alert(sidenav_wrapper_slide_TopLoc, lastBtn_height, inner_Sidenav_height)
     };
 
 
     function openNav(){
-
+        
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
         $('#float_btn').hide('fast');
-
+        adjust_sidenav_wrapper_height();
 
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
     }
