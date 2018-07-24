@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'schedule',
     'center',
     'payment',
+    'stats',
     'el_pagination',
 ]
 

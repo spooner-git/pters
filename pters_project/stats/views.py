@@ -59,8 +59,8 @@ class GetSalesListViewAjax(LoginRequiredMixin, View):
                          + str(request.user.id) + ']' + error)
             messages.error(request, error)
         else:
-            request.session['sales_start_date'] = month_first_day
-            request.session['sales_finish_date'] = finish_date
+            request.session['sales_start_date'] = str(month_first_day.date())
+            request.session['sales_finish_date'] = str(finish_date.date())
 
         return render(request, self.template_name, context)
 
@@ -74,7 +74,6 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
         class_id = request.POST.get('class_id', '')
         start_date = request.POST.get('start_date', '')
         end_date = request.POST.get('end_date', '')
-
         error = None
         if start_date == '' or start_date is None:
             error = '시작 일자를 선택해주세요.'
