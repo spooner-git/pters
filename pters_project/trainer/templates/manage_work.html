@@ -245,7 +245,7 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function(){
         drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
-        $('#profit_analytics_page .columnchart_subtitle').text(month_date[0]+' ~ '+month_date[month_date.length-1]+' (단위: 건)')
+        $('#profit_analytics_page .columnchart_subtitle').text(month_date[0]+' ~ '+month_date[month_date.length-1]+' (단위: 원)')
         fill_profit_details_table(month_date, price, refund_price)
     });
 
@@ -334,7 +334,7 @@
                                 start_date+' ~ '+end_date+'(단위: 건)'
                             );
                     fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price);
-                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+end_date+' (단위: 건)')
+                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+end_date+' (단위: 원)')
                 }
 
             },
