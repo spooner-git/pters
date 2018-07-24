@@ -20,11 +20,10 @@ from django.utils import timezone
 from configs import settings
 from configs.const import USE, UN_USE
 from login.models import MemberTb
-from payment.function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
-    func_check_payment_price_info, func_get_end_date, func_send_refund_payment, func_add_billing_logic, \
-    func_update_billing_logic, func_cancel_period_billing_schedule, \
+from .function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
+    func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
     func_iamport_webhook_customer_billing_logic
-from payment.models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb
 
 logger = logging.getLogger(__name__)
 
