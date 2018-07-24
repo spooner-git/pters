@@ -555,7 +555,14 @@
                             '<div class="table_row_monthly" data-date="'+month_date[i].split('-')[0]+'-'+month_date[i].split('-')[1] + '-01'+'"></div>')
             profit_sum = profit_sum + Number(Number(price[i]-Number(refund_price[i])));
         }
-        htmlToJoin.push('<div class="table_row table_row_sum"><div>기간 합계<br>('+date_format_yyyy_mm_dd_to_yyyy_m_d(month_date[0],'.')+' ~ '+date_format_yyyy_mm_dd_to_yyyy_m_d(month_date[month_date.length-1],'.')+')</div>'+
+        var endDate = month_date[month_date.length-1].split('-')[0]+'-'+
+                      month_date[month_date.length-1].split('-')[1]+'-'+
+                      lastDay[Number(month_date[month_date.length-1].split('-')[1]-1)];
+        htmlToJoin.push('<div class="table_row table_row_sum"><div>기간 합계<br>('+
+                            date_format_yyyy_mm_dd_to_yyyy_m_d(month_date[0],'.')+
+                            ' ~ '+
+                            date_format_yyyy_mm_dd_to_yyyy_m_d(endDate,'.')+
+                            ')</div>'+
                             '<div>'+numberWithCommas(profit_sum)+' 원</div>'+
                             '<div class=""></div>'+
                         '</div>')
