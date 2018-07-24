@@ -239,7 +239,17 @@
                        'width':width,
                        'height':height,
                        'chartArea':{height:'75%'},
-                        'legend':{position:'none'}};
+                        'legend':{position:'none'},
+                        trendlines:{0:{
+                                        type:'linear',
+                                        color:'green',
+                                        lineWidth:3,
+                                        opacity:0.3,
+                                        showR2:true,
+                                        visibleInLegend:true
+                                        }
+                                    }
+                    };
 
         // Instantiate and draw our chart, passing in some options.
         //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -346,7 +356,40 @@
                 }
             })
     }
+    ajax_call_member_analytics_data(97,'2018-05-01','2018-07-01')
+    function ajax_call_member_analytics_data(class_id, start_date, end_date){
+        $.ajax({
+                url: '/stats/get_stats_member_list/',
+                data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
+                dataType : 'html',
+                type: 'POST',
 
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata)
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+                        
+                        
+                    }
+
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            })
+    }
 
 
     function datas_convert_to_addRows(month_date, price, refund_price){
@@ -355,7 +398,7 @@
         for(var i=0; i<len; i++){
             var year = month_date[i].split('-')[0];
             var month = month_date[i].split('-')[1];
-            var monthly_data = [year+'.'+month, price[i] - refund_price[i], 'color:#fe4e65']
+            var monthly_data = [year+'/'+month, price[i] - refund_price[i], 'color:#fe4e65']
             wrapper.push(monthly_data);
         };
         wrapper.unshift(['월','원',{role:'style'}])
