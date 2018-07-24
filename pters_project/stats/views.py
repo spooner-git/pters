@@ -130,8 +130,4 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, View):
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + error)
             messages.error(request, error)
-        # else:
-        #     request.session['sales_start_date'] = str(month_first_day.date())
-        #     request.session['sales_finish_date'] = str(finish_date.date())
-
         return render(request, self.template_name, context)
