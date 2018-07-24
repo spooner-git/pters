@@ -204,6 +204,9 @@
       var graph_Height_To_Be = $('.chart_wrapper').height();
       var graph_inline_Width_To_Be = $('.chart_wrapper_inline').width()*$('.chart_wrapper').width()/100;
       var graph_inline_Height_To_Be = $('.chart_wrapper_inline').height();
+      var month_date =  [{% for month_price_info in month_price_data %}"{{ month_price_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+      var refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
 

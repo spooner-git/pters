@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -30,7 +31,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from center.models import CenterTrainerTb
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
-    MEMBER_RESERVE_PROHIBITION_ON
+    MEMBER_RESERVE_PROHIBITION_ON, STATS_SALES
 from configs.views import AccessTestMixin
 from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
 from login.views import add_member_no_email_func
@@ -41,6 +42,7 @@ from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_r
 from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
     BackgroundImgTb
 from schedule.models import ClassTb
+from stats.func import get_sales_data
 from trainee.views import get_trainee_repeat_schedule_data_func
 from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
@@ -321,79 +323,6 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-# iframe화를 위해 skkim
-class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'iframe_cal_week.html'
-
-    def get(self, request):
-        context = {}
-        # context = super(CalWeekView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        error = None
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-
-
-class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'iframe_cal_month.html'
-
-    def get(self, request):
-        context = {}
-        # context = super(CalMonthView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        error = None
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-
-
-class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
-    template_name = 'iframe_cal_preview.html'
-
-    def get(self, request):
-        context = {}
-        # context = super(CalMonthView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        class_info = None
-        error = None
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-
-        holiday = HolidayTb.objects.filter(use=USE)
-        context['holiday'] = holiday
-
-        return render(request, self.template_name, context)
-# iframe화를 위해 skkim
-
-
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
 
@@ -409,12 +338,14 @@ class ManageGroupView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageGroupView, self).get_context_data(**kwargs)
         return context
 
+
 class ManageClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_class.html'
 
     def get_context_data(self, **kwargs):
         context = super(ManageClassView, self).get_context_data(**kwargs)
         return context
+
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
@@ -732,15 +663,58 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class ManageWorkView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'manage_work.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ManageWorkView, self).get_context_data(**kwargs)
-        # class_id = self.request.session.get('class_id', '')
-        # context = get_member_data(context, class_id, None, self.request.user.id)
+    def get(self, request):
+        context = {}
+        class_id = request.session.get('class_id', '')
+        start_date = request.session.get('sales_start_date', '')
+        end_date = request.session.get('sales_end_date', '')
 
-        return context
+        error = None
+        finish_date = None
+        month_first_day = None
+        if end_date == '' or end_date is None:
+            finish_date = timezone.now()
+        else:
+            try:
+                finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+            except TypeError:
+                error = '날짜 형식에 문제 있습니다.'
+            except ValueError:
+                error = '날짜 형식에 문제 있습니다.'
+
+        if start_date == '' or start_date is None:
+            month_first_day = finish_date.replace(day=1)
+
+            for i in range(1, 3):
+                before_year = int(month_first_day.strftime('%Y')) - 1
+                before_month = (int(month_first_day.strftime('%m')) - 1) % 12
+                before_month_first_day = month_first_day.replace(month=before_month)
+                if before_month == 12:
+                    before_month_first_day = before_month_first_day.replace(year=before_year)
+                month_first_day = before_month_first_day
+        else:
+            try:
+                month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+            except TypeError:
+                error = '날짜 형식에 문제 있습니다.'
+            except ValueError:
+                error = '날짜 형식에 문제 있습니다.'
+
+        sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
+        if sales_data_result['error'] is None:
+            context['month_price_data'] = sales_data_result['month_price_data']
+        else:
+            error = sales_data_result['error']
+
+        if error is not None:
+            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                         + str(request.user.id) + ']' + error)
+            messages.error(request, error)
+
+        return render(request, self.template_name, context)
 
 
 class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
@@ -853,6 +827,78 @@ class AlarmPCView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
                             log_info.time_ago = str(sec) + '초 전'
 
         return log_data
+
+
+# iframe화를 위해 skkim
+class CalWeekIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_week.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalWeekView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
+
+class CalMonthIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_month.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
+
+class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
+    template_name = 'iframe_cal_preview.html'
+
+    def get(self, request):
+        context = {}
+        # context = super(CalMonthView, self).get_context_data(**kwargs)
+        class_id = request.session.get('class_id', '')
+        class_info = None
+        error = None
+
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '강사 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            request.session['class_hour'] = class_info.class_hour
+
+        holiday = HolidayTb.objects.filter(use=USE)
+        context['holiday'] = holiday
+
+        return render(request, self.template_name, context)
+        # iframe화를 위해 skkim
+
 
 # ############### ############### ############### ############### ############### ############### ##############
 @method_decorator(csrf_exempt, name='dispatch')
