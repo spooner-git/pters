@@ -135,6 +135,28 @@ function substract_month(startdate, addvalue){
 	return result
 }
 
+function compare_date(date1, date2){
+	var year1 = date1.split('-')[0];
+	var month1  = date1.split('-')[1];
+	var year2 = date2.split('-')[0];
+	var month2  = date2.split('-')[1];
+
+	if(year1.length<2){year1 = '0'+ year1;};
+	if(month1.length<2){month1 = '0'+ month1;};
+	if(year2.length<2){year2 = '0'+ year2;};
+	if(month2.length<2){month2 = '0'+ month2;};
+
+	var date1_num = year1+month1;
+	var date2_num = year2+month2;
+
+	console.log(date1_num, date2_num)
+	if(date1_num > date2_num){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 
 function find_max_date(dateArray){ //어레이 안에서 가장 최근 날짜를 찾아낸다.
 	var len = dateArray.length;
