@@ -28,6 +28,12 @@ body{
 	height: 250px;
 	margin: 0 auto;
 	margin-top: 30px;
+	margin-bottom: 30px;
+}
+.chart_wrapper p, .chart_wrapper_inline p{
+	margin-bottom: 0;
+	font-size: 15px;
+	font-weight: 500;
 }
 
 #profit_analytics_page{
@@ -138,7 +144,7 @@ body{
 		display: table-cell;
 		width: 33%;
 		vertical-align: middle;
-		font-size: 15px;
+		font-size: 14px;
 	}
 .sales_detail_monthly_row{
 	display: table;
