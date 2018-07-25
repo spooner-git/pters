@@ -732,14 +732,14 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
     for group_schedule_info in group_schedule_data:
         # lecture schedule id 셋팅
         idx += 1
-        group_schedule_info = group_schedule_info
-        if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
-            schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                    group_tb_id=group_schedule_info.group_tb.group_id,
-                                                                    lecture_tb__isnull=False,
-                                                                    group_schedule_id=group_schedule_info.schedule_id,
-                                                                    use=USE).count()
-            group_schedule_info.current_member_num = schedule_current_member_num
+        # group_schedule_info = group_schedule_info
+        # if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
+        #     schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
+        #                                                             group_tb_id=group_schedule_info.group_tb.group_id,
+        #                                                             lecture_tb__isnull=False,
+        #                                                             group_schedule_id=group_schedule_info.schedule_id,
+        #                                                             use=USE).count()
+        #     group_schedule_info.current_member_num = schedule_current_member_num
 
         # group_schedule_info.start_dt = str(group_schedule_info.start_dt)
         # group_schedule_info.end_dt = str(group_schedule_info.end_dt)

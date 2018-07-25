@@ -130,7 +130,7 @@ def func_get_member_ing_list(class_id, user_id):
                             member_data.lecture_reg_count += lecture_info.lecture_reg_count
                             member_data.lecture_rem_count += lecture_info.lecture_rem_count
                             member_data.lecture_avail_count += lecture_info.lecture_avail_count
-                            member_data.end_date = lecture_info.end_date
+                            # member_data.end_date = lecture_info.end_date
                             # if member_data.lecture_available_id == '':
                             #     if lecture_info.lecture_avail_count > 0:
                             #         member_data.lecture_available_id = lecture_info.lecture_id
@@ -293,7 +293,7 @@ def func_get_member_end_list(class_id, user_id):
                         member_data.lecture_reg_count += lecture_info.lecture_reg_count
                         member_data.lecture_rem_count += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count += lecture_info.lecture_avail_count
-                        member_data.end_date = lecture_info.end_date
+                        # member_data.end_date = lecture_info.end_date
 
                         # if member_data.lecture_available_id == '':
                         #     if lecture_info.lecture_avail_count > 0:
@@ -865,3 +865,13 @@ def func_get_lecture_list(context, class_id, member_id):
         context['error'] = error
 
     return context
+
+
+def func_test_test_test(class_id):
+    #
+    lecture_data = LectureTb.objects.filter(use=USE)
+    #
+    lecture_data = LectureTb.objects.check_authorized(class_id).filter(use=USE)
+    for lecture_info in lecture_data:
+        print(str(lecture_info.lecture_id)+'::'+str(lecture_info.check_authorized(class_id)))
+
