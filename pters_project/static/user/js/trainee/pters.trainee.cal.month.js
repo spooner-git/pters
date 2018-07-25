@@ -1469,11 +1469,11 @@ $(document).ready(function(){
         var sortedlist = plan_time.sort();
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
-        //var semiresult = []
-        semiresult = []
+        var semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
             var zz = 0;
-            if(compare_time(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+2],'0:01'))==false){
+            if(compare_time(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+2],'0:01'))==false &&
+                compare_time(add_time(Options.workEndTime+':00','0:00'), add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)) )  ){
                 while(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+2],'0:01')){
                     semiresult.push(add_time(sortedlist[p*2+1],'0:'+zz))
                     zz++
