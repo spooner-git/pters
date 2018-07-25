@@ -63,14 +63,18 @@ def get_sales_data(class_id, month_first_day, finish_date):
                                                                        class_tb_id=class_id,
                                                                        lecture_tb__member_id
                                                                        =price_info.lecture_tb.member_id,
-                                                                       lecture_tb__start_date__gte
+                                                                       lecture_tb__start_date__lte
                                                                        =price_info.lecture_tb.start_date,
                                                                        lecture_tb__use=USE, auth_cd='VIEW',
                                                                        use=USE).latest('reg_dt')
-                    if price_lecture_info.reg_dt < price_info.lecture_tb.reg_dt:
+                    print(str(price_lecture_info))
+                    if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
                         re_reg_price += price_info.lecture_tb.price
                     else:
-                        new_reg_price += price_info.lecture_tb.price
+                        if price_lecture_info.lecture_tb.reg_dt > price_info.lecture_tb.reg_dt:
+                            re_reg_price += price_info.lecture_tb.price
+                        else:
+                            new_reg_price += price_info.lecture_tb.price
                 except ObjectDoesNotExist:
                     new_reg_price += price_info.lecture_tb.price
                 price += price_info.lecture_tb.price
@@ -149,16 +153,20 @@ def get_sales_info(class_id, month_first_day):
                                                                    class_tb_id=class_id,
                                                                    lecture_tb__member_id
                                                                    =price_info.lecture_tb.member_id,
-                                                                   lecture_tb__start_date__gte
+                                                                   lecture_tb__start_date__lte
                                                                    =price_info.lecture_tb.start_date,
                                                                    lecture_tb__use=USE, auth_cd='VIEW',
                                                                    use=USE).latest('reg_dt')
-                if price_lecture_info.reg_dt < price_info.lecture_tb.reg_dt:
+                if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
                     trade_info = '연장 결제'
                     trade_type = 1
                 else:
-                    trade_info = '신규 결제'
-                    trade_type = 0
+                    if price_lecture_info.lecture_tb.reg_dt > price_info.lecture_tb.reg_dt:
+                        trade_info = '연장 결제'
+                        trade_type = 1
+                    else:
+                        trade_info = '신규 결제'
+                        trade_type = 0
             except ObjectDoesNotExist:
                 trade_info = '신규 결제'
                 trade_type = 0
