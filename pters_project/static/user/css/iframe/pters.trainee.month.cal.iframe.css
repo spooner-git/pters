@@ -59,6 +59,11 @@ body{
 	cursor: pointer;
 }
 
+.pters_dropdown_custom_list li{
+	padding-top: 5px !important;
+	padding-bottom: 5px !important;
+}
+
 .swiper-container{
 	overflow-y: auto;
 	height: 100%;
