@@ -557,7 +557,7 @@
 	    bottom: -10px;
 	    left: 4px;
 	}
-	@media(min-width:900px){
+	@media(min-width:975px){
 		#popup_triangle:after{
 			content: '';
 		    position: absolute;
