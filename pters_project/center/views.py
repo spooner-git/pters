@@ -7,6 +7,7 @@ from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
 from center.models import CenterTb, CenterTrainerTb
+from configs.const import USE
 from configs.views import AccessTestMixin
 from login.models import CommonCdTb
 from schedule.models import ClassTb

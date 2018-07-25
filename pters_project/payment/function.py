@@ -20,7 +20,6 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         billing_info = BillingInfoTb.objects.get(member_id=payment_user_info.member.member_id,
                                                  customer_uid=customer_uid, use=USE)
         billing_info.next_payment_date = payment_user_info.end_date
-        billing_info.mod_dt = timezone.now()
         billing_info.save()
     except ObjectDoesNotExist:
         error = '정기 결제 등록에 실패했습니다.'
@@ -63,8 +62,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                      price=price,
                                      status='reserve',
                                      pay_method=payment_user_info.pay_method,
-                                     card_name=payment_user_info.card_name,
-                                     mod_dt=timezone.now(), reg_dt=timezone.now(), use=UN_USE)
+                                     card_name=payment_user_info.card_name, use=UN_USE)
         # payment_info.save()
         payment_info.save()
         merchant_uid = merchant_uid + '_' + str(payment_info.payment_info_id)
@@ -353,7 +351,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              receipt_url=payment_result['receipt_url'],
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
-                                             mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                                             use=USE)
                 # merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
                 # for merchandise_type_cd_info in merchandise_type_cd_list:
                 #     try:
@@ -380,8 +378,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  payment_reg_date=datetime.date.today(),
                                                  next_payment_date=end_date,
                                                  payed_date=date,
-                                                 state_cd='IP',
-                                                 mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                                                 state_cd='IP', use=USE)
                     billing_info.save()
                 payment_info.save()
 
@@ -419,7 +416,6 @@ def func_update_billing_logic(payment_result):
                 payment_info.pg_provider = payment_result['pg_provider']
                 payment_info.receipt_url = payment_result['receipt_url']
                 payment_info.buyer_name = payment_result['buyer_name']
-                payment_info.mod_dt = timezone.now()
                 payment_info.use = USE
                 payment_info.save()
                 context['payment_user_info'] = payment_info
@@ -435,7 +431,6 @@ def func_update_billing_logic(payment_result):
                                                          customer_uid=payment_info.customer_uid,
                                                          use=USE)
                 billing_info.state_cd = 'ERR'
-                billing_info.mod_dt = timezone.now()
                 billing_info.save()
             except ObjectDoesNotExist:
                 error = '정기 결제 정보를 불러오지 못했습니다.'

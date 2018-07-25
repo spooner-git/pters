@@ -436,9 +436,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                                          lecture_avail_count=counts, price=price, option_cd='DC',
                                          state_cd=state_cd,
                                          start_date=start_date, end_date=end_date,
-                                         note=contents,
-                                         mod_dt=timezone.now(),
-                                         reg_dt=timezone.now(), use=USE)
+                                         note=contents, use=USE)
                 lecture_info.save()
                 auth_cd = 'DELETE'
                 if group_id != '' and group_id is not None:
@@ -450,15 +448,11 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                     auth_cd = 'VIEW'
 
                 member_lecture_info = MemberLectureTb(member_id=member_id, lecture_tb_id=lecture_info.lecture_id,
-                                                      auth_cd=auth_cd, mod_member_id=user_id,
-                                                      reg_dt=timezone.now(), mod_dt=timezone.now(),
-                                                      use=USE)
+                                                      auth_cd=auth_cd, mod_member_id=user_id, use=USE)
 
                 member_lecture_info.save()
                 class_lecture_info = ClassLectureTb(class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                                                    auth_cd='VIEW', mod_member_id=user_id,
-                                                    reg_dt=timezone.now(), mod_dt=timezone.now(),
-                                                    use=USE)
+                                                    auth_cd='VIEW', mod_member_id=user_id, use=USE)
                 class_lecture_info.save()
 
                 if group_id != '' and group_id is not None:
@@ -484,8 +478,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
 
         log_data = LogTb(log_type='LB01', auth_member_id=user_id, from_member_name=user_last_name+user_first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='등록',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='등록', use=USE)
 
         log_data.save()
 
@@ -571,18 +564,16 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             else:
                 if len(group_data) > 0:
                     group_data.update(use=UN_USE)
-                schedule_data.update(mod_dt=timezone.now(), use=UN_USE)
-                schedule_data_finish.update(mod_dt=timezone.now(), use=UN_USE)
+                schedule_data.update(use=UN_USE)
+                schedule_data_finish.update(use=UN_USE)
                 class_lecture_info.auth_cd = 'DELETE'
                 # lecture_info.use = 0
                 # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
-                class_lecture_info.mod_dt = timezone.now()
                 # if lecture_info.state_cd == 'IP':
                 #    lecture_info.state_cd = 'PE'
                 class_lecture_info.save()
                 if lecture_info.state_cd == 'IP':
                     lecture_info.state_cd = 'PE'
-                    lecture_info.mod_dt = timezone.now()
                     lecture_info.save()
 
                 if len(group_data) > 0:

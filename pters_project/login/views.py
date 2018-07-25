@@ -357,10 +357,10 @@ def add_member_info_logic_test(request):
                 user.save()
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
+                                      user_id=user.id, use=USE)
                 else:
-                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, mod_dt=timezone.now(),
-                                      reg_dt=timezone.now(), birthday_dt=birthday_dt, user_id=user.id, use=USE)
+                    member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
+                                      birthday_dt=birthday_dt, user_id=user.id, use=USE)
                 member.save()
                 # if group_type == 'trainer':
                 #     class_info = ClassTb(member_id=user.id, class_type_cd='PT',
@@ -432,13 +432,11 @@ class AddMemberView(RegistrationView, View):
                         user.save()
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                              country=country, address=address,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
+                                              country=country, address=address, user_id=user.id, use=USE)
                         else:
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
                                               country=country, address=address,
-                                              birthday_dt=birthday_dt,
-                                              mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id, use=USE)
+                                              birthday_dt=birthday_dt, user_id=user.id, use=USE)
                         member.save()
                         # if group_type == 'trainer':
                         #    class_info = ClassTb(member_id=user.id, subject_cd='WP',
@@ -682,7 +680,6 @@ def out_member_logic(request):
                 user.is_active = 0
                 user.save()
                 member.use = 0
-                member.mod_dt = timezone.now()
                 member.save()
 
         except ValueError:
@@ -811,7 +808,7 @@ def question_reg_logic(request):
 
     if error is None:
         qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
-                       status='0', mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                       status='0', use=USE)
         qa_info.save()
 
     if error is None:
@@ -892,11 +889,10 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
                 user.groups.add(group)
                 if birthday_dt == '':
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
-                                      mod_dt=timezone.now(), reg_dt=timezone.now(), user_id=user.id)
+                                      user_id=user.id)
                 else:
                     member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex, reg_info=user_id,
-                                      birthday_dt=birthday_dt, mod_dt=timezone.now(), reg_dt=timezone.now(),
-                                      user_id=user.id)
+                                      birthday_dt=birthday_dt, user_id=user.id)
                 member.save()
                 context['username'] = username
                 context['user_db_id'] = user.id

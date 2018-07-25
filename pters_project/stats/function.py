@@ -3,7 +3,7 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from configs.const import USE, ON_SCHEDULE_TYPE
+from configs.const import USE, ON_SCHEDULE_TYPE, STATS_RE_REG, STATS_NEW_REG, STATS_PART_REFUND, STATS_ALL_REFUND
 from schedule.models import ClassLectureTb, ScheduleTb
 
 
@@ -158,17 +158,17 @@ def get_sales_info(class_id, month_first_day):
                                                                    use=USE).latest('reg_dt')
                 if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
                     trade_info = '연장 결제'
-                    trade_type = 1
+                    trade_type = STATS_RE_REG
                 else:
                     if price_lecture_info.lecture_tb.reg_dt > price_info.lecture_tb.reg_dt:
                         trade_info = '연장 결제'
-                        trade_type = 1
+                        trade_type = STATS_RE_REG
                     else:
                         trade_info = '신규 결제'
-                        trade_type = 0
+                        trade_type = STATS_NEW_REG
             except ObjectDoesNotExist:
                 trade_info = '신규 결제'
-                trade_type = 0
+                trade_type = STATS_NEW_REG
 
             price_info = {'date': str(price_info.lecture_tb.start_date),
                           'trade_type': trade_type,
@@ -186,10 +186,10 @@ def get_sales_info(class_id, month_first_day):
         for refund_price_info in refund_price_data:
             if refund_price_info.lecture_tb.price != refund_price_info.lecture_tb.refund_price:
                 trade_info = '부분 환불'
-                trade_type = 3
+                trade_type = STATS_PART_REFUND
             else:
                 trade_info = '전체 환불'
-                trade_type = 2
+                trade_type = STATS_ALL_REFUND
             price_info = {'date': str(refund_price_info.lecture_tb.refund_date),
                           'trade_type': trade_type,
                           'trade_info': trade_info,
@@ -251,14 +251,17 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                                                                        class_tb_id=class_id,
                                                                        lecture_tb__member_id
                                                                        =price_info.lecture_tb.member_id,
-                                                                       lecture_tb__start_date__gte
+                                                                       lecture_tb__start_date__lte
                                                                        =price_info.lecture_tb.start_date,
                                                                        lecture_tb__use=USE, auth_cd='VIEW',
                                                                        use=USE).latest('reg_dt')
-                    if price_lecture_info.reg_dt < price_info.lecture_tb.reg_dt:
+                    if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
                         month_re_reg_member += 1
                     else:
-                        month_new_reg_member += 1
+                        if price_lecture_info.lecture_tb.reg_dt > price_info.lecture_tb.reg_dt:
+                            month_re_reg_member += 1
+                        else:
+                            month_new_reg_member += 1
                 except ObjectDoesNotExist:
                     month_new_reg_member += 1
 

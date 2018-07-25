@@ -299,17 +299,14 @@ def cancel_period_billing_logic(request):
                                                   member_id=request.user.id,
                                                   cancel_type=cancel_type,
                                                   cancel_reason=cancel_reason,
-                                                  mod_dt=timezone.now(),
-                                                  reg_dt=timezone.now(),
                                                   use=USE)
         billing_cancel_info.save()
         billing_info.state_cd = 'ST'
-        billing_info.mod_dt = timezone.now()
         billing_info.save()
 
     if error is None:
         if len(payment_data) > 0:
-            payment_data.update(mod_dt=timezone.now(), status='cancelled', use=UN_USE)
+            payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -339,7 +336,6 @@ def restart_period_billing_logic(request):
             if date != billing_info.payed_date:
                 billing_info.payed_date = date
             billing_info.state_cd = 'IP'
-            billing_info.mod_dt = timezone.now()
             billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
@@ -395,7 +391,6 @@ def clear_pause_period_billing_logic(request):
             if date != billing_info.payed_date:
                 billing_info.payed_date = date
             billing_info.state_cd = 'IP'
-            billing_info.mod_dt = timezone.now()
             billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
@@ -467,13 +462,12 @@ def update_period_billing_logic(request):
 
     if error is None:
         billing_info.state_cd = 'DEL'
-        billing_info.mod_dt = timezone.now()
         billing_info.use = UN_USE
         billing_info.save()
 
     if error is None:
         if len(payment_data) > 0:
-            payment_data.update(mod_dt=timezone.now(), status='cancelled', use=UN_USE)
+            payment_data.update(status='cancelled', use=UN_USE)
 
     if error is not None:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -654,7 +648,6 @@ def delete_billing_info_logic(request):
     if error is None:
         if payment_user_info is not None:
             payment_user_info.use = UN_USE
-            payment_user_info.mod_dt = timezone.now()
             payment_user_info.save()
 
     if error is not None:
