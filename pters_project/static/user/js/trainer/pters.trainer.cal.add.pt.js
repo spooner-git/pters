@@ -548,6 +548,17 @@ $(document).ready(function(){
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
         ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
 
+        $('.typeSelected').removeClass('typeSelected')
+        $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
+        if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
+            $('._MINI_ptadd').css('display','inline')
+            //$('._MINI_offadd').hide()
+        }else if(addTypeSelect == "offadd"){
+            //$('._MINI_offadd').show()
+            $('._MINI_ptadd').css('display','none')
+        }
+
+
         //미니 팝업 위치 보정
         var windowWidth = $(window).width();
         var windowHeight = $(window).height();
@@ -600,6 +611,7 @@ $(document).ready(function(){
         });
 
         //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth});
+        check_dropdown_selected_addplan()
     }
 
     //shift키 눌러서 일정을 쭉 잡기
@@ -4060,7 +4072,7 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
 
     if(addTypeSelect == "ptadd"){
 
-        if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
+        if($('#page-addplan-pc').css('display')!='block' && (memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
@@ -4088,11 +4100,15 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "offadd"){
-        if((dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true && (startSelect).hasClass("dropdown_selected")==true){
+        
+        console.log($('#page-addplan-pc').css('display')=='block', durSelect_mini.hasClass("dropdown_selected"))
+
+        if($('#page-addplan-pc').css('display')!='block' && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true && (startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
         }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
+            console.log("$('#submitBtn_mini').css('background','#fe4e65');")
             $('#submitBtn_mini').css('background','#fe4e65');
             select_all_check=true;
         }else{
