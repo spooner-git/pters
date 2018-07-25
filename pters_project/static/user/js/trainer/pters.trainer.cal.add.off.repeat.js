@@ -183,20 +183,22 @@ $(document).ready(function(){
         var startTimeList = [];
 
         var zz = 0;
-        while(add_time(start+':00', '00:0'+zz) < add_time(end+':00','00:00')){
+        console.log(Number(add_time(start+':00', '00:0'+zz).replace(/:/gi,'')) , Number(add_time(end+':00','00:00').replace(/:/gi,'')))
+        while(Number(add_time(start+':00', '00:0'+zz).replace(/:/gi,'')) < Number(add_time(end+':00','00:00').replace(/:/gi,'')) ){
             var time = add_time(start+':00', '00:0'+zz);
-            var timehangul = time_format_to_hangul2(add_time(start+':00', '00:0'+zz));
-            startTimeList.push('<li><a data-trainingtime="'+time+'">'+timehangul+'</a></li>');
+            //var timehangul = time_format_to_hangul2(add_time(start+':00', '00:0'+zz));
+            //startTimeList.push('<li><a data-trainingtime="'+time+'">'+timehangul+'</a></li>');
+            startTimeList.push(time);
             zz++;
         };
 
         var semiresult = ['<div><a class="pointerList">시작 시각 선택</a></div>'];
         for(var t=0; t<startTimeList.length; t++){
             if(Number(startTimeList[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
-                semiresult.push(startTimeList[t]);
+                semiresult.push(('<li><a data-trainingtime="'+startTimeList[t]+'">'+time_format_to_hangul2(startTimeList[t])+'</a></li>'));
             };
         };
-        
+        console.log(semiresult.join(''))
         $('#repeatstarttimes').html(semiresult.join(''));
         $('#repeatdurations').html('');
     };
