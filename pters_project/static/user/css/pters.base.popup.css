@@ -308,6 +308,30 @@
 	color: #fe4e65;
 }
 
+#base_popup_check_finished_member_notice{
+	display: none;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	width: 300px;
+	height: auto;
+	z-index: 300;
+	text-align: center;
+	background: #ffffff;
+	border:1px solid #cccccc;
+}
+	#base_popup_check_finished_member_notice .caution_img{
+		height: 50px;
+		padding: 10px;
+	}
+	#base_popup_check_finished_member_notice .caution_img img{
+		height: 100%;
+	}
+	#base_popup_check_finished_member_notice .caution_message{
+		font-size: 13px;
+	}
+
 
 /*월간달력 팝업*/
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/

@@ -816,6 +816,14 @@ $(document).ready(function(){
             $("#id_lecture_id").val($(this).attr('data-lectureid'));
             $("#id_member_id").val($(this).attr('data-dbid'));
             $("#id_member_name").val($(this).text());
+            var memberEnddate = $(this).attr('data-enddate');
+            if(compare_date2(today_YY_MM_DD, memberEnddate) == true){
+                $('#base_popup_check_finished_member_notice .caution_message').html(
+                                                                                        '<p style="color:#fe4e65;margin-bottom:0">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
+                                                                                        '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
+                                                                                    )
+                $('#base_popup_check_finished_member_notice').show();
+            }
         }else if($(this).attr('data-grouptype') == "group"){
             addTypeSelect = "groupptadd";
             $('#remainCount_mini, #remainCount_mini_text, #countsSelected_mini').hide();
@@ -865,9 +873,12 @@ $(document).ready(function(){
             }
 
             var memberEnddate = $(this).attr('data-enddate');
-            console.log('compare_date2(today_YY_MM_DD, memberEnddate)',compare_date2(today_YY_MM_DD, memberEnddate))
             if(compare_date2(today_YY_MM_DD, memberEnddate) == true){
-                alert($(this).text()+'님은 '+memberEnddate+'종료일자가 지난 회원입니다.\n 종료일자 변경 및 확인은 회원관리를 이용해주세요.')
+                $('#base_popup_check_finished_member_notice .caution_message').html(
+                                                                                        '<p style="color:#fe4e65;margin-bottom:0">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
+                                                                                        '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
+                                                                                    )
+                $('#base_popup_check_finished_member_notice').show();
             }
 
 
@@ -908,8 +919,6 @@ $(document).ready(function(){
         check_dropdown_selected_addplan();
         position_absolute_addplan_if_mobile($('#membersSelected'));
     }); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
-
-
 
     $(document).on('click', '#starttimesSelected input', function(e){
         e.stopPropagation();
