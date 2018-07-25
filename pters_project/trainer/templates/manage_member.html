@@ -138,7 +138,7 @@
             <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
-        <div class="KRtext confirmText">등록 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
+        <div class="KRtext confirmText">수강 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
         <div class="KRtext confirmText _explain" style="font-size: 12px;height: 50px;color:#fe4e65;font-weight: normal"></div>
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
@@ -174,7 +174,7 @@
             <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
-        <div class="KRtext confirmText">회원 등록 환불<br>환불 금액을 입력해 주세요.</div>
+        <div class="KRtext confirmText">회원 수강 환불<br>환불 금액을 입력해 주세요.</div>
         <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
         <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
         <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
@@ -365,7 +365,7 @@
                     <span class="KRtext">회원명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
                 </th>
                 <th class="_grouptype">
-                    <span class="KRtext">등록유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
+                    <span class="KRtext">수강유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
                 </th>
                 <th class="_id">
                     <span class="KRtext">회원 ID</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
@@ -979,7 +979,7 @@
 
                 <div class="_ADD_MEMBER_REG">
                     <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 등록 정보 <span style="color: #fe4e65;">*</span>
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 수강 정보 <span style="color: #fe4e65;">*</span>
                     </label>
                     <div id="selectBox2" class="selectbox ">
                         <div id="btnCallSimple" href="#" class="btnCallSimple selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
@@ -989,7 +989,7 @@
                     <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 그룹 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
@@ -1047,7 +1047,7 @@
                     <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 그룹 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
