@@ -106,6 +106,7 @@ function shade_index(option){
 function close_caution_popup(){
     $('#base_popup_check_finished_member_notice').hide();
     $('#shade_caution').hide();
+    enable_window_scroll();
 }
 
 function close_info_popup(option){
@@ -962,9 +963,11 @@ function scrollToDom(dom){
 }
 
 function disable_window_scroll(){
+    /*
     if(bodywidth < 600){
        $('#calendar').css('position','fixed'); 
     }
+    */
     
     $('body, #calendar').on('scroll touchmove mousewheel',function(e){
         e.preventDefault();
@@ -974,9 +977,11 @@ function disable_window_scroll(){
 }
 
 function enable_window_scroll(){
+    /*
     if(bodywidth < 600){
        $('#calendar').css('position','relative'); 
     }
+    */
 
     $('body, #calendar').off('scroll touchmove mousewheel');
 }

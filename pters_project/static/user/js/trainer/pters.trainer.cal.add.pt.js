@@ -821,6 +821,7 @@ $(document).ready(function(){
                                                                             )
             $('#base_popup_check_finished_member_notice').show();
             $('#shade_caution').show();
+            disable_window_scroll();
         }
     }
 
