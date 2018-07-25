@@ -2858,9 +2858,11 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
 function closeAddPopup(){
     //$('body').css('overflow-y','overlay');
     $('#page-addplan').hide('fast','swing');
-    $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
-    $('#page-base').show();
-    $('#page-base-addstyle').hide();
+    if(bodywidth<=600){
+        $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
+        $('#page-base').show();
+        $('#page-base-addstyle').hide();
+    }
 }
 
 function closeAddPopup_mini(){
