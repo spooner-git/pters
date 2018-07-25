@@ -187,6 +187,7 @@
             <div id="chart_div2"></div>
         </div>
     </div>
+
     <div class="chart_wrapper_inline_wrap">
         <p class="chart_maintitle">회원 환불 현황</p>
         <p class="piechart_subtitle"></p>
@@ -194,10 +195,17 @@
             <div id="chart_div3"></div>
         </div>
     </div>
+    <div class="gap_between_graph"></div>
     <p class="chart_maintitle">월별 계약 현황</p>
     <p class="columnchart_subtitle"></p>
     <div class="chart_wrapper">
         <div id="chart_div4"></div>
+    </div>
+    <div class="gap_between_graph"></div>
+    <p class="chart_maintitle">월별 레슨 완료 현황</p>
+    <p class="columnchart_subtitle"></p>
+    <div class="chart_wrapper">
+        <div id="chart_div5"></div>
     </div>
 </div>
 
@@ -211,35 +219,34 @@
     <!-- Bootstrap core JavaScript
         ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>
-    <script type="text/javascript" src={% static_url "common/js/google.chart.js" %}></script>
-    <script type="text/javascript">
+<script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.work.js" %}></script>
+<script type="text/javascript" src={% static_url "common/js/google.chart.js" %}></script>
+<script type="text/javascript">
     
     $('a.__workmanage').css('color','#fe4e65;')
     $('#uptext').text("통계")
 
 
-      var graph_Width_To_Be = $('.chart_wrapper').width();
-      var graph_Height_To_Be = $('.chart_wrapper').height();
-      var graph_inline_Width_To_Be = $('.chart_wrapper_inline_wrap').width()*$('.chart_wrapper').width()/100-2;
-      var graph_inline_Height_To_Be = $('.chart_wrapper_inline').height();
-      var month_date =  [{% for month_price_info in month_price_data %}"{{ month_price_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var new_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.new_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var re_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.re_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var all_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.all_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var part_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.part_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var finish_schedule_count = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.finish_schedule_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var month_new_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_new_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var month_re_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_re_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var month_all_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_all_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var month_part_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_part_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-      var total_month_new_reg_member = {{ total_month_new_reg_member }};
-      var total_month_re_reg_member = {{ total_month_re_reg_member }};
-      var total_month_all_refund_member = {{ total_month_all_refund_member }};
-      var total_month_part_refund_member = {{ total_month_part_refund_member }};
-
+    var graph_Width_To_Be = $('.chart_wrapper').width();
+    var graph_Height_To_Be = $('.chart_wrapper').height();
+    var graph_inline_Width_To_Be = $('.chart_wrapper_inline_wrap').width()*$('.chart_wrapper').width()/100-2;
+    var graph_inline_Height_To_Be = $('.chart_wrapper_inline').height();
+    var month_date =  [{% for month_price_info in month_price_data %}"{{ month_price_info.month }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var new_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.new_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var re_reg_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.re_reg_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var all_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.all_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var part_refund_price =  [{% for month_price_info in month_price_data %}"{{ month_price_info.part_refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var finish_schedule_count = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.finish_schedule_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var month_new_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_new_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var month_re_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_re_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var month_all_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_all_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var month_part_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_part_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+    var total_month_new_reg_member = {{ total_month_new_reg_member }};
+    var total_month_re_reg_member = {{ total_month_re_reg_member }};
+    var total_month_all_refund_member = {{ total_month_all_refund_member }};
+    var total_month_part_refund_member = {{ total_month_part_refund_member }};
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
     // Set a callback to run when the Google Visualization API is loaded.
@@ -348,6 +355,7 @@
         })
     };
 
+    /*
     function ajax_call_sales_data_onemonth(class_id, month_date){
         $.ajax({
             url: '/stats/get_sales_info/',
@@ -366,16 +374,15 @@
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
                 }else{
-                    var addRows_data = datas_convert_to_addRows(jsondata.date, jsondata.price, jsondata.refund_price)
+                    var addRows_data = datas_convert_to_addRows_onemonth(jsondata.date, jsondata.price, jsondata.trade_type)
                     drawChart(
                                 graph_Width_To_Be, 
                                 graph_Height_To_Be, 
                                 document.getElementById('chart_div'), 
                                 addRows_data,
-                                start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
+                                month_date.split('-')[0]+'-'+month_date.split('-')[1]+'(단위: 건)'
                             );
-                    fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price);
-                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+get_month_enddate(end_date)+' (단위: 원)')
+                    $('#profit_analytics_page .columnchart_subtitle').text(month_date.split('-')[0]+'-'+month_date.split('-')[1]+' (단위: 원)')
                 }
 
             },
@@ -390,6 +397,41 @@
         })
     };
 
+    function datas_convert_to_addRows_onemonth(date, price, type){
+        var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31]; 
+            if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+            lastDay[1] = 29;
+        }else{
+            lastDay[1] = 28;
+        }
+
+        var len1 = lastDay[Number(date[0].split('-')[1])-1]
+        var datelist = {};
+        for(var i=0; i<len1; i++){
+            datelist[i] = [];
+        }
+        console.log(datelist)
+
+        var len2 = date.length;
+        for(var j=0; j<len2; j++){
+            var thisDate = Number(date[j].split('-')[2]);
+            console.log('thisDate',thisDate)
+            if(type[j]<2){ //신규결제 연장결제
+                datelist[thisDate].push(Number(price[j]))
+            }else{ //전체환불 부분환불
+                datelist[thisDate].push(0-Number(price[j]))
+            }
+        }
+
+        var result = [];
+        for(dates in datelist){
+            result.push([dates,sumarray(datelist[dates])])
+        }
+        result.unshift(['일','매출'])
+
+        return result;
+    }
+    */
 
     function ajax_call_sales_detail_data(class_id, month_date){
         $.ajax({
@@ -426,7 +468,6 @@
     }
 
     function ajax_call_member_analytics_data(class_id, start_date, end_date){
-        console.log(class_id, start_date, end_date)
         $.ajax({
                 url: '/stats/get_stats_member_list/',
                 data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
@@ -492,7 +533,6 @@
     }
 
     function ajax_call_member_monthly_data(class_id, start_date, end_date){
-        console.log('ajaxdata123123', class_id, start_date, end_date)
         $.ajax({
             url: '/stats/get_stats_member_list/',
             data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
@@ -535,6 +575,47 @@
         })
     };
 
+    function ajax_call_complete_monthly_data(class_id, start_date, end_date){
+        $.ajax({
+            url: '/stats/get_stats_member_list/',
+            data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
+            dataType : 'html',
+            type: 'POST',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    
+                    var addRows_data = data_convert_to_addRows_complete_count(jsondata.month_date, jsondata.finish_schedule_count)
+                    drawChart(
+                                graph_Width_To_Be, 
+                                graph_Height_To_Be, 
+                                document.getElementById('chart_div5'), 
+                                addRows_data,
+                                start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
+                            );
+                    $('#member_analytics_page .columnchart_subtitle').text(start_date+' ~ '+get_month_enddate(end_date)+' (단위: 건)')
+                }
+
+            },
+
+            complete:function(){
+                completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+    };
+
 
     function datas_convert_to_addRows(month_date, price, refund_price){
         var wrapper = [];
@@ -542,11 +623,13 @@
         for(var i=0; i<len; i++){
             var year = month_date[i].split('-')[0];
             var month = month_date[i].split('-')[1];
-            var monthly_data = [year+'/'+month, price[i] - refund_price[i]]
+            var monthly_data = [year+'.'+month, price[i] - refund_price[i]]
             wrapper.push(monthly_data);
         };
         wrapper.unshift(['월','매출'])
+        console.log('wrapper',wrapper)
         return wrapper;
+        
     };
 
     function data_convert_to_addRows_dual(month_date, data1, data2){
@@ -555,10 +638,23 @@
         for(var i=0; i<len; i++){
             var year = month_date[i].split('-')[0];
             var month = month_date[i].split('-')[1];
-            var monthly_data = [year+'/'+month, Number(data1[i]), Number(data2[i])]
+            var monthly_data = [year+'.'+month, Number(data1[i]), Number(data2[i])]
             wrapper.push(monthly_data);
         }
         wrapper.unshift(['월','신규등록','재등록'])
+        return wrapper;
+    }
+
+    function data_convert_to_addRows_complete_count(month_date, data1){
+        var wrapper = [];
+        var len = month_date.length;
+        for(var i=0; i<len; i++){
+            var year = month_date[i].split('-')[0];
+            var month = month_date[i].split('-')[1];
+            var monthly_data = [year+'.'+month, Number(data1[i])]
+            wrapper.push(monthly_data);
+        }
+        wrapper.unshift(['월','완료횟수'])
         return wrapper;
     }
 
@@ -661,6 +757,6 @@
         return endDate;
     }
 
-    </script>
+</script>
 
 {% endblock %}

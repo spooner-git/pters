@@ -976,6 +976,13 @@ function enable_window_scroll(){
     $('body, #calendar').off('scroll touchmove mousewheel');
 }
 
+function sumarray(array){
+    var result = 0;
+    for(var i=0; i<array.length; i++){
+        result = result+Number(array[i])
+    }
+    return result;
+}
 
 //알림창에 얼마전에 뜬 알람인지 계산
 function date_calculator(yyyy_mm_dd_hh_mm_ss){

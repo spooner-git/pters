@@ -13,6 +13,9 @@ body{
 	position: relative;
 	margin-bottom: 0;
 }
+.gap_between_graph{
+	margin-top: 25px;
+}
 
 .chart_wrapper{
 	position: relative;

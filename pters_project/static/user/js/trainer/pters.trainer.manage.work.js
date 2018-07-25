@@ -7,9 +7,8 @@ $('#selectBox .btn').click(function(){
 
     if($(this).attr('id').split('_')[0] == 'member'){
         ajax_call_member_analytics_data(class_id,month_date[0],month_date[month_date.length-1])
-        
-
         ajax_call_member_monthly_data(class_id, month_date[0], month_date[month_date.length-1])
+        ajax_call_complete_monthly_data(class_id, month_date[0], month_date[month_date.length-1])
     }
 })
 
@@ -39,22 +38,22 @@ $('#call_sales_data_btn').click(function(){
         if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
             var start_date = $(this).attr('data-startdate');
             var end_date = $(this).attr('data-enddate');
-            if(diff_month(start_date, end_date) > 0){
+            //if(diff_month(start_date, end_date) > 0){
                 ajax_call_sales_data(class_id, start_date, end_date);
-            }else{
-                ajax_call_sales_data_onemonth(class_id, start_date)
-            }
+            //}else{
+                //ajax_call_sales_data_onemonth(class_id, start_date)
+            //}
             
 
         }else if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'block'){
             var start_date = $('#startYear').siblings('button').attr('data-value') + '-' + $('#startMonth').siblings('button').attr('data-value')+'-01';
             var end_date = $('#endYear').siblings('button').attr('data-value') + '-' + $('#endMonth').siblings('button').attr('data-value')+'-01';
             check_dropdown_date_validity(start_date, end_date, function(){
-                if(diff_month(start_date, end_date) > 0 ){
+                //if(diff_month(start_date, end_date) > 0 ){
                     ajax_call_sales_data(class_id, start_date, end_date);
-                }else{
-                    ajax_call_sales_data_onemonth(class_id, start_date)
-                }
+                //}else{
+                    //ajax_call_sales_data_onemonth(class_id, start_date)
+                //}
             });
         };
     }else{
@@ -71,12 +70,14 @@ $('#call_member_data_btn').click(function(){
             var end_date = $(this).attr('data-enddate');
             ajax_call_member_analytics_data(class_id,start_date, end_date)
             ajax_call_member_monthly_data(class_id, start_date, end_date)
+            ajax_call_complete_monthly_data(class_id, start_date, end_date)
         }else if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'block'){
             var start_date = $('#startYear_member').siblings('button').attr('data-value') + '-' + $('#startMonth_member').siblings('button').attr('data-value')+'-01';
             var end_date = $('#endYear_member').siblings('button').attr('data-value') + '-' + $('#endMonth_member').siblings('button').attr('data-value')+'-01';
             check_dropdown_date_validity(start_date, end_date, function(){
                 ajax_call_member_analytics_data(class_id,start_date, end_date)
                 ajax_call_member_monthly_data(class_id, start_date, end_date)
+                ajax_call_complete_monthly_data(class_id, start_date, end_date)
             });
         };
     }else{
