@@ -1,10 +1,12 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import transaction
 from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF
+from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
 from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.models import ClassLectureTb, ClassTb, GroupLectureTb, MemberLectureTb, GroupTb, LectureTb, ScheduleTb, \
     SettingTb, RepeatScheduleTb
@@ -402,11 +404,13 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
 
 
 def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, group_id, counts, price,
-                          start_date, end_date, contents, member_id):
+                          start_date, end_date, contents, member_id, setting_lecture_auto_finish):
 
     error = None
     lecture_info = None
     group_info = None
+    state_cd = 'IP'
+    lecture_rem_count = counts
     if price is None or price == '':
         error = '금액 정보를 입력해주세요.'
 
@@ -425,15 +429,20 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
             if group_info.group_type_cd == 'NORMAL':
                 if group_counter >= group_info.member_num:
                     error = '그룹 정원을 초과했습니다.'
+    if error is None:
+        if setting_lecture_auto_finish == AUTO_FINISH_ON:
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+            if end_date < datetime.date.today():
+                state_cd = 'PE'
+                lecture_rem_count = 0
 
     if error is None:
         try:
             with transaction.atomic():
 
-                state_cd = 'IP'
                 lecture_info = LectureTb(member_id=member_id,
-                                         lecture_reg_count=counts, lecture_rem_count=counts,
-                                         lecture_avail_count=counts, price=price, option_cd='DC',
+                                         lecture_reg_count=counts, lecture_rem_count=lecture_rem_count,
+                                         lecture_avail_count=lecture_rem_count, price=price, option_cd='DC',
                                          state_cd=state_cd,
                                          start_date=start_date, end_date=end_date,
                                          note=contents, use=USE)
@@ -689,10 +698,16 @@ def func_get_trainer_setting_list(context, user_id, class_id):
         lt_res_member_start_time = 'A-0'
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
-                                             setting_type_cd='LT_RES_MEMBER_AUTO_FINISH', use=USE)
-        lt_res_member_auto_finish = int(setting_data.setting_info)
+                                             setting_type_cd='LT_SCHEDULE_AUTO_FINISH', use=USE)
+        lt_schedule_auto_finish = int(setting_data.setting_info)
     except ObjectDoesNotExist:
-        lt_res_member_auto_finish = AUTO_FINISH_OFF
+        lt_schedule_auto_finish = AUTO_FINISH_OFF
+    try:
+        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
+                                             setting_type_cd='LT_LECTURE_AUTO_FINISH', use=USE)
+        lt_lecture_auto_finish = int(setting_data.setting_info)
+    except ObjectDoesNotExist:
+        lt_lecture_auto_finish = AUTO_FINISH_OFF
 
     try:
         setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
@@ -745,7 +760,8 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['lt_res_cancel_time'] = lt_res_cancel_time
     context['lt_res_member_time_duration'] = lt_res_member_time_duration
     context['lt_res_member_start_time'] = lt_res_member_start_time
-    context['lt_res_member_auto_finish'] = lt_res_member_auto_finish
+    context['lt_schedule_auto_finish'] = lt_schedule_auto_finish
+    context['lt_lecture_auto_finish'] = lt_lecture_auto_finish
     context['lt_pus_01'] = lt_pus_01
     context['lt_pus_02'] = lt_pus_02
     context['lt_pus_03'] = lt_pus_03

@@ -2,12 +2,13 @@ import datetime
 import html.parser as parser
 import logging
 from django import template
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from payment.models import BillingInfoTb
-from schedule.functions import func_refresh_lecture_count
-from schedule.models import BackgroundImgTb, ScheduleTb
+from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
+from schedule.models import BackgroundImgTb, ScheduleTb, ClassLectureTb, LectureTb, GroupLectureTb, RepeatScheduleTb
 from trainer.function import func_get_trainer_setting_list
 
 register = template.Library()
@@ -52,7 +53,8 @@ def get_setting_info(request):
     request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
     request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
     request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-    request.session['setting_member_auto_finish'] = context['lt_res_member_auto_finish']
+    request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
+    request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
     request.session['setting_language'] = context['lt_lan_01']
 
     request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
@@ -62,7 +64,7 @@ def get_setting_info(request):
     request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
     request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
-    if context['lt_res_member_auto_finish'] == AUTO_FINISH_ON:
+    if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
         not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                              end_dt__lt=now, state_cd='NP',
                                                              en_dis_type=ON_SCHEDULE_TYPE, use=USE)
@@ -70,6 +72,35 @@ def get_setting_info(request):
             not_finish_schedule_info.state_cd = 'PE'
             not_finish_schedule_info.save()
             func_refresh_lecture_count(not_finish_schedule_info.lecture_tb_id)
+
+    if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
+        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                           lecture_tb__end_date__lt=datetime.date.today(),
+                                                           lecture_tb__state_cd='IP',
+                                                           lecture_tb__use=USE,
+                                                           use=USE)
+
+        for class_lecture_info in class_lecture_data:
+            lecture_info = class_lecture_info.lecture_tb
+
+            try:
+                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+            except ObjectDoesNotExist:
+                group_info = None
+
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+            repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+            if len(schedule_data) > 0:
+                schedule_data.delete()
+            if len(repeat_schedule_data) > 0:
+                repeat_schedule_data.delete()
+            lecture_info.lecture_avail_count = 0
+            lecture_info.lecture_rem_count = 0
+            lecture_info.state_cd = 'PE'
+            lecture_info.save()
+
+            if group_info is not None:
+                func_refresh_group_status(group_info.group_tb_id, None, None)
 
     return context
 

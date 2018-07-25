@@ -60,7 +60,7 @@ def add_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
-    setting_member_auto_finish = request.session.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     error = None
     schedule_start_datetime = None
@@ -142,7 +142,7 @@ def add_schedule_logic(request):
                 if error is None:
                     schedule_result = func_add_schedule(class_id, lecture_id, None, None, None, schedule_start_datetime,
                                                         schedule_end_datetime, note, en_dis_type, request.user.id,
-                                                        setting_member_auto_finish)
+                                                        setting_schedule_auto_finish)
                     error = schedule_result['error']
 
                 if error is None:
@@ -523,7 +523,7 @@ def add_repeat_schedule_logic(request):
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
-    setting_member_auto_finish = request.session.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     error = None
     error_date_message = None
@@ -661,7 +661,7 @@ def add_repeat_schedule_logic(request):
                                                                     None, None,
                                                                     schedule_start_datetime, schedule_end_datetime, '',
                                                                     en_dis_type, request.user.id,
-                                                                    setting_member_auto_finish)
+                                                                    setting_schedule_auto_finish)
 
                                 if schedule_result['error'] is not None:
                                     error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -1039,7 +1039,7 @@ def add_group_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
-    setting_member_auto_finish = request.session.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     error = None
     info_message = None
@@ -1121,7 +1121,7 @@ def add_group_schedule_logic(request):
                                                         group_id, None,
                                                         schedule_start_datetime, schedule_end_datetime,
                                                         note, ON_SCHEDULE_TYPE, request.user.id,
-                                                        setting_member_auto_finish)
+                                                        setting_schedule_auto_finish)
                     error = schedule_result['error']
 
                 if error is None:
@@ -1174,7 +1174,7 @@ def add_group_schedule_logic(request):
                                                                     group_id, group_schedule_id,
                                                                     schedule_start_datetime, schedule_end_datetime,
                                                                     note, ON_SCHEDULE_TYPE, request.user.id,
-                                                                    setting_member_auto_finish)
+                                                                    setting_schedule_auto_finish)
                                 error_temp = schedule_result['error']
 
                             if error_temp is None:
@@ -1548,7 +1548,7 @@ def add_member_group_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
-    setting_member_auto_finish = request.session.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     error = None
     group_info = None
@@ -1617,7 +1617,7 @@ def add_member_group_schedule_logic(request):
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         note, ON_SCHEDULE_TYPE,
-                                                        request.user.id, setting_member_auto_finish)
+                                                        request.user.id, setting_schedule_auto_finish)
                     error = schedule_result['error']
 
                 if error is None:
@@ -1682,7 +1682,7 @@ def add_group_repeat_schedule_logic(request):
     repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
-    setting_member_auto_finish = request.session.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     error = None
     error_date_message = None
@@ -1830,7 +1830,7 @@ def add_group_repeat_schedule_logic(request):
                                                                 group_id, None,
                                                                 schedule_start_datetime, schedule_end_datetime,
                                                                 '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                setting_member_auto_finish)
+                                                                setting_schedule_auto_finish)
                             error_date = schedule_result['error']
 
                         if error_date is None:
@@ -1908,7 +1908,7 @@ def add_group_repeat_schedule_confirm(request):
     request.session['day'] = day
     error_message = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-    setting_member_auto_finish = request.session.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     if repeat_schedule_id == '':
         error = '확인할 반복일정을 선택해주세요.'
@@ -1997,7 +1997,7 @@ def add_group_repeat_schedule_confirm(request):
                                                                       group_info.group_id, schedule_info.schedule_id,
                                                                       schedule_info.start_dt, schedule_info.end_dt,
                                                                       '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                      setting_member_auto_finish)
+                                                                      setting_schedule_auto_finish)
                                                 error_temp = schedule_result['error']
 
                                             if error_temp is None:

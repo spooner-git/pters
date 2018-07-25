@@ -1206,7 +1206,7 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         context['member_data'] = func_get_member_end_list(class_id, request.user.id)
         end_dt = timezone.now()
 
-        print('EndList::'+str(end_dt-start_dt))
+        # print('EndList::'+str(end_dt-start_dt))
         # return context
         return render(request, self.template_name, context)
 
@@ -1855,6 +1855,7 @@ def add_lecture_info_logic(request):
     search_confirm = request.POST.get('search_confirm', '0')
     class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
+    setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     next_page = request.POST.get('next_page')
 
     error = None
@@ -1935,7 +1936,8 @@ def add_lecture_info_logic(request):
     if error is None:
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
                                       class_id, group_id, input_counts, input_price,
-                                      input_start_date, input_end_date, input_contents, user.id)
+                                      input_start_date, input_end_date, input_contents,
+                                      user.id, setting_lecture_auto_finish)
     if error is None:
         return redirect(next_page)
 
@@ -2585,6 +2587,7 @@ def add_group_member_logic(request):
     user_name_list = []
     group_info = None
     group_id = None
+    setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
 
     try:
         json_loading_data = json.loads(json_data)
@@ -2668,7 +2671,7 @@ def add_group_member_logic(request):
                                                       json_loading_data['lecture_info']['start_date'],
                                                       json_loading_data['lecture_info']['end_date'],
                                                       json_loading_data['lecture_info']['memo'],
-                                                      user_info)
+                                                      user_info, setting_lecture_auto_finish)
                 if error is not None:
                     raise InternalError
         except InternalError:
@@ -4099,7 +4102,8 @@ def update_setting_reserve_logic(request):
     # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
     setting_member_reserve_time_duration = request.POST.get('setting_member_reserve_time_duration', '1')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
-    setting_member_auto_finish = request.POST.get('setting_member_auto_finish', AUTO_FINISH_OFF)
+    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     class_id = request.session.get('class_id', '')
 
     next_page = request.POST.get('next_page')
@@ -4131,8 +4135,10 @@ def update_setting_reserve_logic(request):
             setting_member_reserve_time_duration = '1'
         if setting_member_start_time is None or setting_member_start_time == '':
             setting_member_start_time = 'A-0'
-        if setting_member_auto_finish is None or setting_member_auto_finish == '':
-            setting_member_auto_finish = AUTO_FINISH_OFF
+        if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
+            setting_schedule_auto_finish = AUTO_FINISH_OFF
+        if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
+            setting_lecture_auto_finish = AUTO_FINISH_OFF
 
     if error is None:
         try:
@@ -4188,13 +4194,20 @@ def update_setting_reserve_logic(request):
                                                  class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_START_TIME',
                                                  use=USE)
         try:
-            lt_res_member_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                              class_tb_id=class_id,
-                                                              setting_type_cd='LT_RES_MEMBER_AUTO_FINISH')
+            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                            class_tb_id=class_id,
+                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
         except ObjectDoesNotExist:
-            lt_res_member_auto_finish = SettingTb(member_id=request.user.id,
-                                                  class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_AUTO_FINISH',
-                                                  use=USE)
+            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
+                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
+                                                use=USE)
+        try:
+            lt_lecture_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                           class_tb_id=class_id,
+                                                           setting_type_cd='LT_LECTURE_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH', use=USE)
 
     if error is None:
         try:
@@ -4223,8 +4236,11 @@ def update_setting_reserve_logic(request):
                 lt_res_member_start_time.setting_info = setting_member_start_time
                 lt_res_member_start_time.save()
 
-                lt_res_member_auto_finish.setting_info = setting_member_auto_finish
-                lt_res_member_auto_finish.save()
+                lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
+                lt_schedule_auto_finish.save()
+
+                lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
+                lt_lecture_auto_finish.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
