@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from center.models import CenterTb
-from configs.const import USE
+from configs.const import USE, SCHEDULE_NOT_FINISH, SCHEDULE_FINISH
 from configs.models import TimeStampedModel
 from login.models import MemberTb
 
@@ -238,15 +238,27 @@ class ScheduleTb(TimeStampedModel):
     def get_str_end_dt(self):
         return str(self.end_dt)
 
+    def get_str_mod_dt(self):
+        return str(self.mod_dt)
+
+    def get_str_reg_dt(self):
+        return str(self.reg_dt)
+
+    def finish_check(self):
+        if self.state_cd == 'PE':
+            return SCHEDULE_FINISH
+        else:
+            return SCHEDULE_NOT_FINISH
+
     def get_group_current_member_num(self):
         if self.group_tb is not None and self.group_tb != '':
-            schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=self.class_tb_id,
-                                                                    group_tb_id=self.group_tb.group_id,
-                                                                    lecture_tb__isnull=False,
-                                                                    group_schedule_id=self.schedule_id,
-                                                                    use=USE).count()
+            group_current_member_num = ScheduleTb.objects.filter(class_tb_id=self.class_tb_id,
+                                                                 group_tb_id=self.group_tb.group_id,
+                                                                 lecture_tb__isnull=False,
+                                                                 group_schedule_id=self.schedule_id,
+                                                                 use=USE).count()
 
-        return schedule_current_member_num
+        return group_current_member_num
 
 
 class SettingTb(TimeStampedModel):

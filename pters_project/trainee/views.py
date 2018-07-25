@@ -1434,12 +1434,12 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
-        pt_repeat_schedule_data = RepeatScheduleTb
+        pt_repeat_schedule_data = None
 
         if len(lecture_list) > 0:
-            for idx, lecture_list_info in enumerate(lecture_list):
+            for lecture_list_info in lecture_list:
                 lecture_info = lecture_list_info.lecture_tb
-                if idx == 0:
+                if pt_repeat_schedule_data is None:
                     pt_repeat_schedule_data = \
                         RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                         en_dis_type=ON_SCHEDULE_TYPE).order_by('-reg_dt')
