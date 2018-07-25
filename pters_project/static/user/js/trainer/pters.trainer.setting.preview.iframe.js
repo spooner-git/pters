@@ -1537,7 +1537,7 @@ $(document).ready(function(){
                 }else if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Preview_Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Preview_Options.workStartTime+':00','00:00')) == false ){
                     continue;
                 }else if(compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Preview_Options.workEndTime+':00','00:00'))){
-                    continue;
+                    
                 }
                 // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
 
@@ -1552,6 +1552,9 @@ $(document).ready(function(){
                 if(planEndHour == Preview_Options.workEndTime){
                     timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
                     timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
+                }else if(planEndHour > Preview_Options.workEndTime){
+                    timegraph_hourendwidth = $('#'+(Preview_Options.workEndTime-1)+'g_00').width();
+                    timegraph_hourendoffset = $('#'+(Preview_Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
                 }else{
                     timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
                     timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
@@ -1606,6 +1609,13 @@ $(document).ready(function(){
                 var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
                 var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
                 var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+
+                //24:00일경우 다음날 00:00 으로 들어오기 때문에
+                if(planEndDate[i].split(' ')[1] == "00:00:00"){
+                    var planEndHour = '24'
+                    var planEndMin = '00'
+                }
+                //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
                 if(planHour >= Preview_Options.workStartTime && planHour < Preview_Options.workEndTime){
                     var timegraph_hourwidth = $('#'+planHour+'g_00').width();
