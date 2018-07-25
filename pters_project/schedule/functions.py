@@ -701,17 +701,17 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
         # pt_schedule_info.member_id = pt_schedule_info.lecture_tb.member.member_id
         # if pt_schedule_info.note is None:
         #     pt_schedule_info.note = ''
-        if pt_schedule_info.state_cd == 'PE':
-            pt_schedule_info.finish_check = 1
-        else:
-            pt_schedule_info.finish_check = 0
+        # if pt_schedule_info.state_cd == 'PE':
+        #     pt_schedule_info.finish_check = 1
+        # else:
+        #     pt_schedule_info.finish_check = 0
         pt_schedule_list.append(pt_schedule_info)
 
     context['pt_schedule_data'] = pt_schedule_list
 
 
 def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
-    group_schedule_list = []
+    # group_schedule_list = []
     # 강좌별로 연결된 그룹 스케쥴 가져오기
     if group_id is None or group_id == '':
         group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
@@ -728,10 +728,10 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
                                                         start_dt__gte=start_date,
                                                         start_dt__lt=end_date, use=USE).order_by('start_dt')
 
-    idx = 0
-    for group_schedule_info in group_schedule_data:
+    # idx = 0
+    # for group_schedule_info in group_schedule_data:
         # lecture schedule id 셋팅
-        idx += 1
+        # idx += 1
         # group_schedule_info = group_schedule_info
         # if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
         #     schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
@@ -746,13 +746,12 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
         # if group_schedule_info.note is None:
         #     group_schedule_info.note = ''
         # 끝난 스케쥴인지 확인
-        if group_schedule_info.state_cd == 'PE':
-            group_schedule_info.finish_check = 1
-        else:
-            group_schedule_info.finish_check = 0
-        group_schedule_list.append(group_schedule_info)
-
-    context['group_schedule_data'] = group_schedule_list
+        # if group_schedule_info.state_cd == 'PE':
+        #     group_schedule_info.finish_check = 1
+        # else:
+        #     group_schedule_info.finish_check = 0
+        # group_schedule_list.append(group_schedule_info)
+    context['group_schedule_data'] = group_schedule_data
 
 
 def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
