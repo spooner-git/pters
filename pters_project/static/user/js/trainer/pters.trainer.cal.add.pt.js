@@ -443,7 +443,9 @@ $(document).ready(function(){
                 next30IDMin  = '00';
             }
             var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
-            if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+            console.log(thisIDHour+'-'+thisIDMin , (Options.workEndTime-1)+'-30')
+            if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime') 
+                && thisIDHour+'-'+thisIDMin != (Options.workEndTime-1)+'-30'){
                 $('.blankSelected').removeClass('blankSelected');
                 $(this).find('div').addClass('blankSelected');
 
@@ -546,59 +548,7 @@ $(document).ready(function(){
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
         ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
 
-        //minipopup 위치 보정
-            /*
-            var selector_endId = $('#'+endID);
-            var toploc = selector_endId.offset().top;
-            var leftloc = selector_endId.offset().left;
-            var tdwidth = selector_endId.width();
-            var tdheight = selector_endId.height();
-            var minipopupwidth = $('#page-addplan-pc').width();
-            var minipopupheight = $('#page-addplan-pc').height();
-            var splitID = selector_endId.attr('id').split('_');
-            var weekID = selector_endId.attr('data-week');
-            var compensate_off = 0;
-            var selector_MINI_ptadd = $('._MINI_ptadd');
-            if(selector_MINI_ptadd.css('display')=='inline'){
-                addTypeSelect = 'ptadd';
-                compensate_off = 0;
-            }else if(selector_MINI_ptadd.css('display')=="none"){
-                addTypeSelect = 'offadd';
-                compensate_off = +30;
-            }
-            $('.typeSelected').removeClass('typeSelected');
-            $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
-
-            if(splitID[3]>=(Options.workEndTime-5)){
-                //$('.dropdown_mini').addClass('dropup')
-                if(splitID[3]== (Options.workEndTime-1)){
-                    if(Options.workEndTime - Options.workStartTime < 5){
-                        // toploc = toploc;
-                    }else{
-                        toploc = toploc - minipopupheight + compensate_off;
-                    }
-                }else if(splitID[3] <= (Options.workStartTime+3)){
-                    // toploc = toploc;
-                }else{
-                    toploc = toploc - minipopupheight + compensate_off;
-                }
-            }else{
-                $('.dropdown_mini').removeClass('dropup');
-                if(weekID==3){
-                    toploc = toploc + tdheight;
-                }else{
-                    toploc = toploc + 30;
-                }
-            }
-
-            if(weekID>=4){
-                leftloc = leftloc-300-tdwidth;
-            }else if(weekID==3){
-                // leftloc = leftloc;
-            }
-            */
-        //minipopup 위치 보정
-
+        //미니 팝업 위치 보정
         var windowWidth = $(window).width();
         var windowHeight = $(window).height();
         var popupwidth = $('#page-addplan-pc').width();
@@ -606,7 +556,11 @@ $(document).ready(function(){
         var startTopLoc = $('#'+thisID).offset().top;
         var startLeftLoc = $('#'+thisID).offset().left;
         var startWidth = $('#'+thisID).width();
-        var startHeight = $('#'+thisID).height()*2;
+        if(Options.classDur == 60){
+            var startHeight = $('#'+thisID).height()*2;
+        }else if(Options.classDur == 30){
+            var startHeight = 0;
+        };
         var endTopLoc = $('#'+endID).offset().top;
         var endLeftLoc = $('#'+endID).offset().left;
         var endWidth = $('#'+endID).width();
@@ -633,19 +587,11 @@ $(document).ready(function(){
                 $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
             }
         }
+        //미니 팝업 위치 보정
 
  
 
         ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
-            /*
-            $('.plan_indicators').html('')
-            timeGraphSet("class","pink","mini", jsondata);  //시간 테이블 채우기
-            timeGraphSet("group","pink","mini", jsondata);
-            timeGraphSet("off","grey","mini", jsondata);
-            */
-
-            //startTimeSet('class');
-             //진행시간 드랍다운리스트 채움
             if($('.add_time_unit').hasClass('checked')){
                 durTimeSet(thisID.split('_')[3], thisID.split('_')[4],"mini", 5);
             }else{
