@@ -193,6 +193,8 @@ urlpatterns = [
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     # 예약 관련 Setting 페이지
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
+    # 예약 관련 Setting 페이지
+    url(r'^basic_setting/$', views.BasicSettingView.as_view(), name='basic_setting'),
     # 금액 Setting 페이지
     url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
     # 클래스 Setting 페이지

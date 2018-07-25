@@ -20,7 +20,8 @@ body{
 #menuDescription{
     line-height: 40px;
 }
-#trainerWorkTimeSettingText{
+
+#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText{
 	margin-top: 70px;
 }
 
@@ -411,7 +412,7 @@ li a{
 	#menuDescription{
 	    line-height: unset;
 	}
-	#trainerWorkTimeSettingText{
+	#trainerWorkTimeSettingText ,#memberReserveBasicHourSettingText{
 		margin-top: 120px;
 	}
 	.settingText{

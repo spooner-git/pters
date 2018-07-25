@@ -641,6 +641,13 @@ class ReserveSettingView(AccessTestMixin, View):
 
         return render(request, self.template_name, context)
 
+class BasicSettingView(AccessTestMixin, View):
+    template_name = 'setting_basic.html'
+
+    def get(self, request):
+        context = {}
+
+        return render(request, self.template_name, context)
 
 class SalesSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
