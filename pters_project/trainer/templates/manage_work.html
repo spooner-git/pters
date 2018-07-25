@@ -245,7 +245,7 @@
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function(){
         drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
-        $('#profit_analytics_page .columnchart_subtitle').text(month_date[0]+' ~ '+month_date[month_date.length-1]+' (단위: 원)')
+        $('#profit_analytics_page .columnchart_subtitle').text(month_date[0]+' ~ '+get_month_enddate(month_date[month_date.length-1])+' (단위: 원)')
         fill_profit_details_table(month_date, price, refund_price)
     });
 
@@ -331,10 +331,10 @@
                                 graph_Height_To_Be, 
                                 document.getElementById('chart_div'), 
                                 addRows_data,
-                                start_date+' ~ '+end_date+'(단위: 건)'
+                                start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
                             );
                     fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price);
-                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+end_date+' (단위: 원)')
+                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+get_month_enddate(end_date)+' (단위: 원)')
                 }
 
             },
@@ -403,7 +403,7 @@
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                     }else{
-                        $('#member_analytics_page .piechart_subtitle').text(start_date+' ~ '+end_date+' (단위: 건)')
+                        $('#member_analytics_page .piechart_subtitle').text(start_date+' ~ '+get_month_enddate(end_date)+' (단위: 건)')
 
                         //회원 등록현황 파이 차트 그리기
                         var addRows_data = member_datas_convert_to_addRows(jsondata.total_month_new_reg_member, jsondata.total_month_re_reg_member, '신규등록', '재등록')
@@ -414,7 +414,7 @@
                                             'bottom', 
                                             document.getElementById('chart_div2'),
                                             addRows_data,
-                                            start_date+' ~ '+end_date+' (단위: 건)'
+                                            start_date+' ~ '+get_month_enddate(end_date)+' (단위: 건)'
                                           );
                         }else{
                             $('#chart_div2').parent('.chart_wrapper_inline').html('<div class="no_data">자료가 없습니다.</div>');
@@ -429,7 +429,7 @@
                                             'bottom', 
                                             document.getElementById('chart_div3'),
                                             addRows_data2,
-                                            start_date+' ~ '+end_date+' (단위: 건)'
+                                            start_date+' ~ '+get_month_enddate(end_date)+' (단위: 건)'
                                           );
                         }else{
                             $('#chart_div3').parent('.chart_wrapper_inline').html('<div class="no_data">자료가 없습니다.</div>')
@@ -477,9 +477,9 @@
                                 graph_Height_To_Be, 
                                 document.getElementById('chart_div4'), 
                                 addRows_data,
-                                start_date+' ~ '+end_date+'(단위: 건)'
+                                start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
                             );
-                    $('#member_analytics_page .columnchart_subtitle').text(start_date+' ~ '+end_date+' (단위: 건)')
+                    $('#member_analytics_page .columnchart_subtitle').text(start_date+' ~ '+get_month_enddate(end_date)+' (단위: 건)')
                 }
 
             },
@@ -590,6 +590,26 @@
             htmlToJoin.push('<div class="sales_detail_monthly_row">내역이 없습니다.</div>')
         }
         htmlTarget.html(htmlToJoin.join(''))
+    }
+
+
+    function get_month_enddate(date){
+        var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+        if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+            lastDay[1] = 29;
+        }else{
+            lastDay[1] = 28;
+        }
+
+        var year= date.split('-')[0];
+        var month = date.split('-')[1];
+        var date = date.split('-')[2];
+        var endDate = year+'-'+
+                      month+'-'+
+                      lastDay[Number(month)-1];
+
+
+        return endDate;
     }
 
     </script>
