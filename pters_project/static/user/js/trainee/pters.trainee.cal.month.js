@@ -855,11 +855,10 @@ $(document).ready(function(){
                     var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(jsondata.group_schedule_start_datetime[i].split(' ')[0],'')
                     var today = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'_'+oriMonth+'_'+oriDate,'');
 
-                    var todayandlimitSum = Number(today)+parseInt(Options.limit/24);
-                    if(Number(oriDate)+parseInt(Options.limit/24) > lastDay[Number(oriMonth)-1]){
-                        todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/24),'')
+                    var todayandlimitSum = Number(today)+parseInt(Options.limit/(24*60) );
+                    if(Number(oriDate)+parseInt(Options.limit/(24*60)) > lastDay[Number(oriMonth)-1]){
+                        todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/(24*60) ),'')
                     }
-
 
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
                     var fulled = "";
