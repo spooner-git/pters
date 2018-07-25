@@ -1449,8 +1449,8 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                                                         en_dis_type=ON_SCHEDULE_TYPE).order_by('-reg_dt')
 
             for pt_repeat_schedule_info in pt_repeat_schedule_data:
-                pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
-                pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
+                # pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
+                # pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
                 state_cd_name = None
                 try:
                     state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)

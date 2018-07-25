@@ -1181,11 +1181,14 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/member_list_ajax.html'
 
     def get(self, request):
+        start_dt = timezone.now()
         context = {}
         # context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         context['member_data'] = func_get_member_ing_list(class_id, request.user.id)
+        end_dt = timezone.now()
 
+        print('IngList::'+str(end_dt-start_dt))
         # return context
         return render(request, self.template_name, context)
 
@@ -1194,12 +1197,15 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/member_list_ajax.html'
 
     def get(self, request):
+        start_dt = timezone.now()
         context = {}
         # context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
 
         context['member_data'] = func_get_member_end_list(class_id, request.user.id)
+        end_dt = timezone.now()
 
+        print('EndList::'+str(end_dt-start_dt))
         # return context
         return render(request, self.template_name, context)
 

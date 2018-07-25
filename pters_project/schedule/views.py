@@ -533,11 +533,10 @@ def add_repeat_schedule_logic(request):
     repeat_schedule_end_date_info = None
     repeat_schedule_info = None
     pt_schedule_input_counter = 0
-    repeat_schedule_start_time = None
-    repeat_schedule_end_time = None
     repeat_schedule_date_list = []
     success_start_date = None
     success_end_date = None
+    end_time_check = 0
 
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
@@ -593,30 +592,6 @@ def add_repeat_schedule_logic(request):
             error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
-        end_time_check = 0
-        if repeat_end_time == '24:00':
-            repeat_end_time = '23:59'
-            end_time_check = 1
-
-        try:
-            repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M')
-            # temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
-            repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M')
-            # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값의 형태에 문제가 있습니다.'
-
-        if end_time_check == 1:
-            repeat_schedule_end_time = repeat_schedule_end_time + datetime.timedelta(minutes=1)
-
-        # repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
-        repeat_schedule_start_time = repeat_schedule_start_time.time()
-        repeat_schedule_end_time = repeat_schedule_end_time.time()
-    if error is None:
         repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_type, repeat_week_type,
                                                                        repeat_schedule_start_date_info,
                                                                        repeat_schedule_end_date_info)
@@ -628,8 +603,8 @@ def add_repeat_schedule_logic(request):
         repeat_schedule_result = func_add_repeat_schedule(class_id, lecture_id, None, None, repeat_type,
                                                           repeat_week_type,
                                                           repeat_schedule_start_date, repeat_schedule_end_date,
-                                                          str(repeat_schedule_start_time),
-                                                          str(repeat_schedule_end_time),
+                                                          repeat_start_time,
+                                                          repeat_end_time,
                                                           repeat_schedule_time_duration, en_dis_type,
                                                           request.user.id)
         if repeat_schedule_result['error'] is None:
@@ -643,12 +618,16 @@ def add_repeat_schedule_logic(request):
         for repeat_schedule_date_info in repeat_schedule_date_list:
             error_date = None
             # 데이터 넣을 날짜 setting
+            if repeat_end_time == '24:00':
+                repeat_end_time = '23:59'
+                end_time_check = 1
+
             try:
                 schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
-                                                                     + ' ' + str(repeat_schedule_start_time),
+                                                                     + ' ' + repeat_start_time,
                                                                      '%Y-%m-%d %H:%M')
                 schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
-                                                                   + ' ' + str(repeat_schedule_end_time),
+                                                                   + ' ' + repeat_end_time,
                                                                    '%Y-%m-%d %H:%M')
 
             except ValueError:
@@ -657,6 +636,8 @@ def add_repeat_schedule_logic(request):
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
             except TypeError:
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
+            if end_time_check == 1:
+                schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
 
             if error_date is None:
                 try:
@@ -1711,12 +1692,13 @@ def add_group_repeat_schedule_logic(request):
     group_info = None
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
-    repeat_schedule_start_time = None
-    repeat_schedule_end_time = None
+    # repeat_schedule_start_time = None
+    # repeat_schedule_end_time = None
     repeat_schedule_info = None
     repeat_schedule_date_list = None
     pt_schedule_input_counter = 0
     group_schedule_reg_counter = 0
+    end_time_check = 0
 
     if repeat_type == '':
         error = '반복 빈도를 선택해주세요.'
@@ -1783,33 +1765,6 @@ def add_group_repeat_schedule_logic(request):
                 group_schedule_reg_counter = group_lecture_info.lecture_tb.lecture_avail_count
 
     if error is None:
-
-
-        end_time_check = 0
-        if repeat_end_time == '24:00':
-            repeat_end_time = '23:59'
-            end_time_check = 1
-
-        try:
-            repeat_schedule_start_time = datetime.datetime.strptime(repeat_start_time, '%H:%M')
-            # temp_time_duration = class_info.class_hour*int(repeat_schedule_time_duration)
-            repeat_schedule_end_time = datetime.datetime.strptime(repeat_end_time, '%H:%M')
-            # schedule_end_datetime = schedule_start_datetime + datetime.timedelta(minutes=int(time_duration_temp))
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
-        except TypeError:
-            error = '등록 값의 형태에 문제가 있습니다.'
-
-        if end_time_check == 1:
-            repeat_schedule_end_time = repeat_schedule_end_time + datetime.timedelta(minutes=1)
-
-        # repeat_schedule_end_time = repeat_schedule_start_time + datetime.timedelta(minutes=int(temp_time_duration))
-        repeat_schedule_start_time = repeat_schedule_start_time.time()
-        repeat_schedule_end_time = repeat_schedule_end_time.time()
-
-    if error is None:
         repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_type, repeat_week_type,
                                                                        repeat_schedule_start_date_info,
                                                                        repeat_schedule_end_date_info)
@@ -1821,8 +1776,8 @@ def add_group_repeat_schedule_logic(request):
         repeat_schedule_result = func_add_repeat_schedule(class_id, None, group_id, None, repeat_type,
                                                           repeat_week_type,
                                                           repeat_schedule_start_date, repeat_schedule_end_date,
-                                                          str(repeat_schedule_start_time),
-                                                          str(repeat_schedule_end_time),
+                                                          repeat_start_time,
+                                                          repeat_end_time,
                                                           repeat_schedule_time_duration, ON_SCHEDULE_TYPE,
                                                           request.user.id)
         if repeat_schedule_result['error'] is None:
@@ -1842,20 +1797,26 @@ def add_group_repeat_schedule_logic(request):
 
             error_date = None
             # 데이터 넣을 날짜 setting
+            if repeat_end_time == '24:00':
+                repeat_end_time = '23:59'
+                end_time_check = 1
+
             try:
                 schedule_start_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
-                                                                     + ' ' + str(repeat_schedule_start_time),
+                                                                     + ' ' + repeat_start_time,
                                                                      '%Y-%m-%d %H:%M')
                 schedule_end_datetime = datetime.datetime.strptime(str(repeat_schedule_date_info).split(' ')[0]
-                                                                   + ' ' + str(repeat_schedule_end_time),
+                                                                   + ' ' + repeat_end_time,
                                                                    '%Y-%m-%d %H:%M')
-
             except ValueError:
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
             except IntegrityError:
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
             except TypeError:
                 error_date = str(repeat_schedule_date_info).split(' ')[0]
+
+            if end_time_check == 1:
+                schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
 
             if error_date is None:
 

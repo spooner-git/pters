@@ -8,6 +8,7 @@
 from django.db import models
 
 from center.models import CenterTb
+from configs.const import USE
 from configs.models import TimeStampedModel
 from login.models import MemberTb
 
@@ -115,6 +116,12 @@ class RepeatScheduleTb(TimeStampedModel):
     def __str__(self):
         return self.class_tb.__str__()
 
+    def get_str_start_date(self):
+        return str(self.start_date)
+
+    def get_str_end_date(self):
+        return str(self.end_date)
+
 
 class DeleteRepeatScheduleTb(models.Model):
     delete_repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -190,11 +197,17 @@ class ScheduleTb(TimeStampedModel):
     member_note = models.CharField(db_column='MEMBER_NOTE', max_length=255, blank=True, default='')
     en_dis_type = models.CharField(db_column='EN_DIS_TYPE', max_length=10, blank=True, default='')
     reg_member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=USE)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'SCHEDULE_TB'
+
+    def get_str_start_dt(self):
+        return str(self.start_dt)
+
+    def get_str_end_dt(self):
+        return str(self.end_dt)
 
 
 class SettingTb(TimeStampedModel):
@@ -275,3 +288,4 @@ class BackgroundImgTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'BACKGROUND_IMG_TB'
+

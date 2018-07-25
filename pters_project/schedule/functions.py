@@ -688,8 +688,8 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
     for pt_schedule_info in pt_schedule_data:
         # lecture schedule id 셋팅
         idx += 1
-        pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
-        pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
+        # pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
+        # pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
         pt_schedule_info.idx = idx
         # try:
         #     member_info = LectureTb.objects.get(lecture_id=pt_schedule_info.lecture_tb_id)
@@ -699,8 +699,8 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
         # pt_schedule_info.member_id = member_info.member.member_id
         # pt_schedule_info.member_name = pt_schedule_info.lecture_tb.member.name
         # pt_schedule_info.member_id = pt_schedule_info.lecture_tb.member.member_id
-        if pt_schedule_info.note is None:
-            pt_schedule_info.note = ''
+        # if pt_schedule_info.note is None:
+        #     pt_schedule_info.note = ''
         if pt_schedule_info.state_cd == 'PE':
             pt_schedule_info.finish_check = 1
         else:
@@ -741,10 +741,10 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
                                                                     use=USE).count()
             group_schedule_info.current_member_num = schedule_current_member_num
 
-        group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-        group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-        if group_schedule_info.note is None:
-            group_schedule_info.note = ''
+        # group_schedule_info.start_dt = str(group_schedule_info.start_dt)
+        # group_schedule_info.end_dt = str(group_schedule_info.end_dt)
+        # if group_schedule_info.note is None:
+        #     group_schedule_info.note = ''
         # 끝난 스케쥴인지 확인
         if group_schedule_info.state_cd == 'PE':
             group_schedule_info.finish_check = 1
@@ -756,21 +756,11 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
 
 
 def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
-
-    off_schedule_list = []
-
     # OFF 일정 조회
     off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                   en_dis_type=OFF_SCHEDULE_TYPE, start_dt__gte=start_date,
                                                   start_dt__lt=end_date)
-    for off_schedule_datum in off_schedule_data:
-        off_schedule_info = off_schedule_datum
-        off_schedule_info.start_dt = (str(off_schedule_info.start_dt))
-        off_schedule_info.end_dt = (str(off_schedule_info.end_dt))
-        if off_schedule_info.note is None:
-            off_schedule_info.note = ''
-        off_schedule_list.append(off_schedule_info)
-    context['off_schedule_data'] = off_schedule_list
+    context['off_schedule_data'] = off_schedule_data
 
 
 def func_get_trainer_off_repeat_schedule(context, class_id):
@@ -782,8 +772,8 @@ def func_get_trainer_off_repeat_schedule(context, class_id):
                                                                en_dis_type=OFF_SCHEDULE_TYPE)
 
     for off_repeat_schedule_info in off_repeat_schedule_data:
-        off_repeat_schedule_info.start_date = str(off_repeat_schedule_info.start_date)
-        off_repeat_schedule_info.end_date = str(off_repeat_schedule_info.end_date)
+        # off_repeat_schedule_info.start_date = str(off_repeat_schedule_info.start_date)
+        # off_repeat_schedule_info.end_date = str(off_repeat_schedule_info.end_date)
         state_cd_name = None
         try:
             state_cd_name = CommonCdTb.objects.get(common_cd=off_repeat_schedule_info.state_cd)
