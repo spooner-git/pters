@@ -10,8 +10,8 @@ from django.db import models
 
 
 class TimeStampedModel(models.Model):
-    reg_dt = models.DateTimeField(db_column='REG_DT', auto_now_add=True)  # Field name made lowercase.
-    mod_dt = models.DateTimeField(db_column='MOD_DT', auto_now=True)  # Field name made lowercase.
+    reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True, auto_now_add=True)
+    mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True, auto_now=True)
 
     class Meta:
         abstract = True
