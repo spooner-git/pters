@@ -830,6 +830,7 @@ $(document).ready(function(){
 
     $(document).on('click',"#members_mobile li a",function(){
         //$('.tdgraph').removeClass('graphindicator')
+
         if($(this).attr("data-grouptype") == "personal"){
             if($('._NORMAL_ADD_wrap').css('display') == 'block'){
                 addTypeSelect = "ptadd";
@@ -862,6 +863,13 @@ $(document).ready(function(){
                 $("#id_repeat_lecture_id").val($(this).attr('data-lectureid'));
                 $("#id_repeat_member_name").val($(this).text());
             }
+
+            var memberEnddate = $(this).attr('data-enddate');
+            console.log('compare_date2(today_YY_MM_DD, memberEnddate)',compare_date2(today_YY_MM_DD, memberEnddate))
+            if(compare_date2(today_YY_MM_DD, memberEnddate) == true){
+                alert($(this).text()+'님은 '+memberEnddate+'종료일자가 지난 회원입니다.\n 종료일자 변경 및 확인은 회원관리를 이용해주세요.')
+            }
+
 
         }else if($(this).attr("data-grouptype") == "group"){
             var grouptypecd = $(this).attr('data-grouptypecd');
@@ -1553,6 +1561,7 @@ function get_current_member_list(use, callback){
         success:function(data){
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -1629,8 +1638,8 @@ function set_member_dropdown_list(jsondata){
         for(var i=0; i<memberSize; i++){
             if(jsondata.groupInfoArray[i] != "그룹"){
                 if(jsondata.lesson_avail_count[i] > 0){
-                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
-                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
+                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'" data-enddate="'+jsondata.end_date[i]+'">'+jsondata.name[i]+'</a></li>');
+                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'" data-enddate="'+jsondata.end_date[i]+'">'+jsondata.name[i]+'</a></li>');
                 }
             }
         }

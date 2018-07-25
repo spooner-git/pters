@@ -930,7 +930,7 @@ $(document).ready(function(){
                 $('#'+$(this).attr('data-type').replace(/lec_/gi,'form_')).val($(this).val());
                 var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date');
                 var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date');
-                $("input.lec_end_date").datepicker('option','minDate',startDatepicker.val());
+                //$("input.lec_end_date").datepicker('option','minDate',startDatepicker.val());
                 //$("input.lec_start_date").datepicker('option','maxDate',endDatepicker.val());
             }
         });

@@ -169,6 +169,31 @@ function compare_date(date1, date2){
 	}
 }
 
+function compare_date2(date1, date2){
+	var yy1 = date1.split('-')[0];
+	var mm1  = date1.split('-')[1];
+	var dd1 = date1.split('-')[2];
+	var yy2 = date2.split('-')[0];
+	var mm2  = date2.split('-')[1];
+	var dd2 = date2.split('-')[2];
+
+	if(yy1.length<2){yy1 = '0'+ yy1;};
+	if(mm1.length<2){mm1 = '0'+ mm1;};
+	if(dd1.length<2){dd1 = '0'+ dd1;};
+	if(yy2.length<2){yy2 = '0'+ yy2;};
+	if(mm2.length<2){mm2 = '0'+ mm2;};
+	if(dd2.length<2){dd2 = '0' + dd2}
+
+
+	var date1_num = yy1+mm1+dd1;
+	var date2_num = yy2+mm2+dd2;
+	if(date1_num > date2_num){
+		return true;
+	}else{
+		return false;
+	}
+}
+
 
 function find_max_date(dateArray){ //어레이 안에서 가장 최근 날짜를 찾아낸다.
 	var len = dateArray.length;
