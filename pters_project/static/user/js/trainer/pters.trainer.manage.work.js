@@ -39,13 +39,22 @@ $('#call_sales_data_btn').click(function(){
         if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
             var start_date = $(this).attr('data-startdate');
             var end_date = $(this).attr('data-enddate');
-            ajax_call_sales_data(class_id, start_date, end_date);
+            if(diff_month(start_date, end_date) > 0){
+                ajax_call_sales_data(class_id, start_date, end_date);
+            }else{
+                ajax_call_sales_data_onemonth(class_id, start_date)
+            }
+            
 
         }else if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'block'){
             var start_date = $('#startYear').siblings('button').attr('data-value') + '-' + $('#startMonth').siblings('button').attr('data-value')+'-01';
             var end_date = $('#endYear').siblings('button').attr('data-value') + '-' + $('#endMonth').siblings('button').attr('data-value')+'-01';
             check_dropdown_date_validity(start_date, end_date, function(){
-                ajax_call_sales_data(class_id, start_date, end_date);
+                if(diff_month(start_date, end_date) > 0 ){
+                    ajax_call_sales_data(class_id, start_date, end_date);
+                }else{
+                    ajax_call_sales_data_onemonth(class_id, start_date)
+                }
             });
         };
     }else{

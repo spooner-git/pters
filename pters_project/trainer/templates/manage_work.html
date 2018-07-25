@@ -306,7 +306,6 @@
 
 
     function ajax_call_sales_data(class_id, start_date, end_date){
-        console.log('ajaxdata', class_id, start_date, end_date)
         $.ajax({
             url: '/stats/get_sales_list/',
             data:{'class_id':class_id, 'start_date':start_date, 'end_date':end_date},
@@ -326,6 +325,48 @@
                 }else{
                     var addRows_data = datas_convert_to_addRows(jsondata.month_date, jsondata.price, jsondata.refund_price)
                     console.log('sales',addRows_data)
+                    drawChart(
+                                graph_Width_To_Be, 
+                                graph_Height_To_Be, 
+                                document.getElementById('chart_div'), 
+                                addRows_data,
+                                start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
+                            );
+                    fill_profit_details_table(jsondata.month_date, jsondata.price, jsondata.refund_price);
+                    $('#profit_analytics_page .columnchart_subtitle').text(start_date+' ~ '+get_month_enddate(end_date)+' (단위: 원)')
+                }
+
+            },
+
+            complete:function(){
+                completeSend();
+            },
+
+            error:function(){
+                console.log('server error');
+            }
+        })
+    };
+
+    function ajax_call_sales_data_onemonth(class_id, month_date){
+        $.ajax({
+            url: '/stats/get_sales_info/',
+            data:{'class_id':class_id, 'month_date':month_date},
+            dataType : 'html',
+            type: 'POST',
+
+            beforeSend:function(){
+                beforeSend();
+            },
+
+            success:function(data){
+                var jsondata = JSON.parse(data);
+                console.log(jsondata)
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
+                }else{
+                    var addRows_data = datas_convert_to_addRows(jsondata.date, jsondata.price, jsondata.refund_price)
                     drawChart(
                                 graph_Width_To_Be, 
                                 graph_Height_To_Be, 
@@ -544,7 +585,6 @@
         var htmlToJoin = [];
         var profit_sum = 0;
         for(var i=len-1; i>=0; i--){
-
             var monthstart = month_date[i].split('-')[0]+' . '+Number(month_date[i].split('-')[1]) + '.1'
             var monthend = Number(month_date[i].split('-')[1]) +'.'+ Number(lastDay[Number(month_date[i].split('-')[1])-1]);
             var profit = numberWithCommas(Number(price[i]) - Number(refund_price[i]) );
@@ -570,20 +610,29 @@
     }
 
     function fill_profit_details_monthly_table(selecteddate, date, price, trade_info, trade_type){
-
+        var len = date.length;
         var htmlTarget = $('div.table_row_monthly[data-date="'+selecteddate+'"]');
         var htmlToJoin = ['<div class="sales_detail_monthly_row_title sales_detail_monthly_row">'+
                                 '<div>거래 일자</div>'+
                                 '<div>거래 구분</div>'+
                                 '<div>거래 금액</div>'+
-                        '</div>']
+                        '</div>'+
+                        '<div class="sales_detail_monthly_row">'+
+                            '총 '+len +'건' +
+                        '</div>'
+                        ]
 
-        var len = date.length;
+        
         for(var i=0; i<len; i++){
+            if(trade_type[i] >=2){
+                var pricetag = '-'+numberWithCommas(price[i])
+            }else{
+                var pricetag = numberWithCommas(price[i])
+            }
             htmlToJoin.push('<div class="sales_detail_monthly_row">'+
                                 '<div>'+date[i]+'</div>'+
                                 '<div>'+trade_info[i]+'</div>'+
-                                '<div>'+numberWithCommas(price[i])+' 원</div>'+
+                                '<div>'+pricetag+' 원</div>'+
                             '</div>')
         }
         if(len == 0){
