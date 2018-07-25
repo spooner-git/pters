@@ -140,6 +140,8 @@ urlpatterns = [
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
     # 푸시 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
+    # 일반 설정 관련 Setting 수정
+    url(r'^update_setting_basic/$', views.update_setting_basic_logic, name='update_setting_basic'),
     # 예약관련 Setting 수정
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
     # 금액 Setting 정보 수정

@@ -756,8 +756,8 @@
         "cancellimit": '{{ request.session.setting_member_reserve_cancel_time }}', //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
         "reserve":'{{ request.session.setting_member_reserve_prohibition }}',    //회원 일정 기능을 enable 1/disable 0
         "availDate":Number('{{ request.session.setting_member_reserve_date_available }}'),
-        "autocomplete":{{ request.session.setting_schedule_auto_finish }},                                                        //자동 완료 처리
-        "lecture_autocomplete":{{ request.session.setting_lecture_auto_finish }},                                                        //자동 완료 처리
+        "autocomplete":{{ request.session.setting_schedule_auto_finish }},           //자동 완료 처리
+        "lecture_autocomplete":{{ request.session.setting_lecture_auto_finish }},    //자동 완료 처리
 
         "firstPushToMember":'-',
         "secondPushToMember":'-',

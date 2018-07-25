@@ -4098,19 +4098,99 @@ def update_setting_push_logic(request):
 
 
 # 강사 예약허용시간 setting 업데이트 api
+def update_setting_basic_logic(request):
+    setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
+    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+    class_id = request.session.get('class_id', '')
+    next_page = request.POST.get('next_page')
+
+    error = None
+    if error is None:
+        if setting_trainer_work_time_available is None or setting_trainer_work_time_available == '':
+            setting_trainer_work_time_available = '00:00-23:59'
+        if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
+            setting_schedule_auto_finish = AUTO_FINISH_OFF
+        if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
+            setting_lecture_auto_finish = AUTO_FINISH_OFF
+
+    if error is None:
+        try:
+            lt_res_04 = SettingTb.objects.get(member_id=request.user.id,
+                                              class_tb_id=class_id, setting_type_cd='LT_RES_04')
+        except ObjectDoesNotExist:
+            lt_res_04 = SettingTb(member_id=request.user.id,
+                                  class_tb_id=class_id, setting_type_cd='LT_RES_04', use=USE)
+        try:
+            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                            class_tb_id=class_id,
+                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
+                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
+                                                use=USE)
+        try:
+            lt_lecture_auto_finish = SettingTb.objects.get(member_id=request.user.id,
+                                                           class_tb_id=class_id,
+                                                           setting_type_cd='LT_LECTURE_AUTO_FINISH')
+        except ObjectDoesNotExist:
+            lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH',
+                                               use=USE)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                lt_res_04.setting_info = setting_trainer_work_time_available
+                lt_res_04.save()
+
+                lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
+                lt_schedule_auto_finish.save()
+
+                lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
+                lt_lecture_auto_finish.save()
+
+        except ValueError:
+            error = '등록 값에 문제가 있습니다.'
+        except IntegrityError:
+            error = '등록 값에 문제가 있습니다.'
+        except TypeError:
+            error = '등록 값의 형태가 문제 있습니다.'
+        except ValidationError:
+            error = '등록 값의 형태가 문제 있습니다'
+        except InternalError:
+            error = '등록 값에 문제가 있습니다.'
+
+    if error is None:
+        # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
+        #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
+
+        log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id, log_info='설정 정보', log_how='수정', use=USE)
+        log_data.save()
+
+        return redirect(next_page)
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
+
+# 강사 예약허용시간 setting 업데이트 api
 def update_setting_reserve_logic(request):
     setting_member_reserve_time_available = request.POST.get('setting_member_reserve_time_available', '00:00-23:59')
     setting_member_reserve_time_prohibition = request.POST.get('setting_member_reserve_time_prohibition', '60')
     setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
                                                           MEMBER_RESERVE_PROHIBITION_ON)
-    setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
     setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '14')
     # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
     setting_member_reserve_time_duration = request.POST.get('setting_member_reserve_time_duration', '1')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
-    setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     class_id = request.session.get('class_id', '')
 
     next_page = request.POST.get('next_page')
@@ -4134,18 +4214,12 @@ def update_setting_reserve_logic(request):
             setting_member_cancel_time = '60'
         if setting_member_reserve_prohibition is None or setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = MEMBER_RESERVE_PROHIBITION_ON
-        if setting_trainer_work_time_available is None or setting_trainer_work_time_available == '':
-            setting_trainer_work_time_available = '00:00-23:59'
         if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
             setting_member_reserve_date_available = '14'
         if setting_member_reserve_time_duration is None or setting_member_reserve_time_duration == '':
             setting_member_reserve_time_duration = '1'
         if setting_member_start_time is None or setting_member_start_time == '':
             setting_member_start_time = 'A-0'
-        if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
-            setting_schedule_auto_finish = AUTO_FINISH_OFF
-        if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
-            setting_lecture_auto_finish = AUTO_FINISH_OFF
 
     if error is None:
         try:
@@ -4160,12 +4234,6 @@ def update_setting_reserve_logic(request):
         except ObjectDoesNotExist:
             lt_res_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
                                   setting_type_cd='LT_RES_03', use=USE)
-        try:
-            lt_res_04 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_RES_04')
-        except ObjectDoesNotExist:
-            lt_res_04 = SettingTb(member_id=request.user.id,
-                                  class_tb_id=class_id, setting_type_cd='LT_RES_04', use=USE)
         try:
             lt_res_05 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_RES_05')
@@ -4200,21 +4268,6 @@ def update_setting_reserve_logic(request):
             lt_res_member_start_time = SettingTb(member_id=request.user.id,
                                                  class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_START_TIME',
                                                  use=USE)
-        try:
-            lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                            class_tb_id=class_id,
-                                                            setting_type_cd='LT_SCHEDULE_AUTO_FINISH')
-        except ObjectDoesNotExist:
-            lt_schedule_auto_finish = SettingTb(member_id=request.user.id,
-                                                class_tb_id=class_id, setting_type_cd='LT_SCHEDULE_AUTO_FINISH',
-                                                use=USE)
-        try:
-            lt_lecture_auto_finish = SettingTb.objects.get(member_id=request.user.id,
-                                                           class_tb_id=class_id,
-                                                           setting_type_cd='LT_LECTURE_AUTO_FINISH')
-        except ObjectDoesNotExist:
-            lt_lecture_auto_finish = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_LECTURE_AUTO_FINISH', use=USE)
 
     if error is None:
         try:
@@ -4224,9 +4277,6 @@ def update_setting_reserve_logic(request):
 
                 lt_res_03.setting_info = setting_member_reserve_prohibition
                 lt_res_03.save()
-
-                lt_res_04.setting_info = setting_trainer_work_time_available
-                lt_res_04.save()
 
                 lt_res_05.setting_info = setting_member_reserve_date_available
                 lt_res_05.save()
@@ -4242,12 +4292,6 @@ def update_setting_reserve_logic(request):
 
                 lt_res_member_start_time.setting_info = setting_member_start_time
                 lt_res_member_start_time.save()
-
-                lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
-                lt_schedule_auto_finish.save()
-
-                lt_lecture_auto_finish.setting_info = setting_lecture_auto_finish
-                lt_lecture_auto_finish.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
