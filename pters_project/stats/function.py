@@ -67,7 +67,6 @@ def get_sales_data(class_id, month_first_day, finish_date):
                                                                        =price_info.lecture_tb.start_date,
                                                                        lecture_tb__use=USE, auth_cd='VIEW',
                                                                        use=USE).latest('reg_dt')
-                    print(str(price_lecture_info))
                     if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
                         re_reg_price += price_info.lecture_tb.price
                     else:
