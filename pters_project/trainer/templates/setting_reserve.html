@@ -12,12 +12,9 @@
 
     <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
         {% csrf_token %}
-        <input type="hidden" name="setting_trainer_work_time_available"       id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
+
         <input type="hidden" name="setting_member_reserve_time_duration"      id="id_setting_member_reserve_time_duration" value=""> <!--timeDur 설정 (수업 시간 단위를 얼마로 할지)-->
         <input type="hidden" name="setting_member_start_time"                 id="id_setting_member_start_time" value=""> <!--회원이 예약 시작시간을 매정시, 매30분에 어떻게 할지.-->
-        <input type="hidden" name="setting_schedule_auto_finish"                id="id_setting_schedule_auto_finish" value=""> <!--시간이 지나면 일정을 자동으로 완료-->
-        <input type="hidden" name="setting_lecture_auto_finish"                id="id_setting_lecture_auto_finish" value=""> <!--시간이 지나면 수강정보를 자동으로 완료-->
-
         <input type="hidden" name="setting_member_reserve_time_available"     id="id_setting_member_reserve_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
         <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자 (분단위)-->
         <input type="hidden" name="setting_member_cancel_time_prohibition"    id="id_setting_member_cancel_time_prohibition" value=""> <!--시간 숫자 (분단위)-->
@@ -717,16 +714,19 @@
             var basicTimeDur = $('#id_setting_member_reserve_time_duration').val();
             var startTime = $('#id_setting_member_start_time').val();
             var autocomplete = $('#id_setting_schedule_auto_finish').val();
+            var autofinish = $('#id_setting_lecture_auto_finish').val();
 
             if(availableTime == stoptime && 
                 limit == Options.limit && 
                 reservedisable == Options.reserve && 
-                workTime == worktime && 
+                //workTime == worktime && 
                 availDate == Options.availDate && 
                 cancellimit == Options.cancellimit && 
                 basicTimeDur == Options.timeDur && 
                 startTime == Options.startTime && 
-                autocomplete == Options.autocomplete ){
+                //autocomplete == Options.autocomplete 
+                //autofinish == Options.lecture_autocomplete
+                ){
                     $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                     select_all_check=false;
                     console.log('false')
