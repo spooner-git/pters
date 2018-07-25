@@ -2231,11 +2231,12 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
-
+        //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
         if(compare_time(add_time(planHour+':'+planMinute, '00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin, '00:00'), add_time(Options.workStartTime+':00','00:00')) ){
             planHour = Options.workStartTime;
             planMinute = '00';
         }
+        //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
 
         var planDuraMin = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], add_time(planHour+':'+planMinute,'00:00'), planEndDate[i].split(' ')[0], add_time(planEndHour+':'+planEndMin,'00:00') )
         var planDura = planDuraMin/60;
@@ -2298,6 +2299,19 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         if(timeoffset >=30){
             planLocation = Number(planArray[4])*size-30*size
         }
+        var planHeight = Number(planDura*planheight-1);
+
+        //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
+        if(planStartDiv.length>0){
+            var timLocation = planStartDiv.offset().top + planLocation;
+            var calBottomLoc = $('.swiper-slide-active').offset().top + $('.swiper-slide-active').height();
+            if(timLocation + planHeight > calBottomLoc){
+                var planHeight = calBottomLoc - timLocation;
+            }
+        }
+        //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
+
+
         if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
             if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 planStartDiv.append('<div class-time="'+planArray.join('_')+
@@ -2311,7 +2325,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" data-dbid="'+planMemberDbid[i]+
                                        '" data-memberName="'+memberName+
                                        '" class="'+planColor_+
-                                       '" style="height:'+Number(planDura*planheight-1)+'px;'+
+                                       '" style="height:'+planHeight+'px;'+
                                                  'top:'+planLocation+'px;'+
                                        '">'+
                                             '<span class="memberName '+hideornot+'">'+planCode+memberName+' </span>'+
@@ -2337,7 +2351,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" data-dbid="'+planMemberDbid[i]+
                                        '" data-memberName="'+memberName+
                                        '" class="'+planColor_+
-                                       '" style="height:'+Number(planDura*planheight-1)+'px;'+
+                                       '" style="height:'+planHeight+'px;'+
                                                  'top:'+planLocation+'px;'+
                                        '">'+
                                             '<span class="memberName '+hideornot+'">'+
@@ -2364,7 +2378,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" data-dbid="'+planMemberDbid[i]+
                                        '" data-memberName="'+memberName+
                                        '" class="'+planColor_+
-                                       '" style="height:'+Number(planDura*planheight-1)+'px;'+
+                                       '" style="height:'+planHeight+'px;'+
                                                  'top:'+planLocation+'px;'+
                                        '">'+
                                             '<span class="memberName '+hideornot+'">'+planCode+memberName+' </span>'+
@@ -2377,6 +2391,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             }
         }
 
+
+        // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
         var sMinute;
         var eMinute;
         if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
@@ -2425,7 +2441,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
             mmm = Number(mmm) + 30;
         }
-
+        // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
 }
 
