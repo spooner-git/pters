@@ -20,13 +20,13 @@ class MemberTb(TimeStampedModel):
     phone = models.CharField(db_column='PHONE', max_length=20, blank=True, default='')  # Field name made lowercase.
     age = models.IntegerField(db_column='AGE', blank=True, null=True)  # Field name made lowercase.
     sex = models.CharField(db_column='SEX', max_length=2, blank=True, default='')  # Field name made lowercase.
-    birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True)  # Field name made lowercase.
+    birthday_dt = models.DateField(db_column='BIRTHDAY_DT', blank=True, null=True)  # Field name made lowercase.
     country = models.CharField(db_column='COUNTRY', max_length=255, blank=True, default='')  # Field name made lowercase.
     address = models.CharField(db_column='ADDRESS', max_length=255, blank=True, default='')  # Field name made lowercase.
     job = models.CharField(db_column='JOB', max_length=20, blank=True, default='')  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, default='')
     reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, default='')  # Field name made lowercase
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -45,8 +45,8 @@ class CommonCdTb(models.Model):
     upper_common_cd = models.CharField(db_column='UPPER_COMMON_CD', max_length=45, blank=True, default='')
     upper_group_cd = models.CharField(db_column='UPPER_GROUP_CD', max_length=45, blank=True, default='')
     attribute1 = models.CharField(db_column='ATTRIBUTE1', max_length=255, blank=True, default='')
-    order = models.IntegerField(db_column='ORDER', blank=True, null=True)  # Field name made lowercase.
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    order = models.IntegerField(db_column='ORDER', default=1)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -65,9 +65,9 @@ class LogTb(TimeStampedModel):
     log_how = models.CharField(db_column='LOG_HOW', max_length=255, blank=True, default='')
     log_detail = models.CharField(db_column='LOG_DETAIL', max_length=255, blank=True, default='')
     ip = models.CharField(db_column='IP', max_length=255, blank=True, default='')
-    read = models.IntegerField(db_column='READ', blank=True, null=True, default='0')  # Field name made lowercase.
-    push_check = models.IntegerField(db_column='PUSH_CHECK', blank=True, null=True, default='0')
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    read = models.IntegerField(db_column='READ', default=0)  # Field name made lowercase.
+    push_check = models.IntegerField(db_column='PUSH_CHECK', default=0)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -78,7 +78,7 @@ class HolidayTb(models.Model):
     holiday_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     holiday_dt = models.CharField(db_column='HOLIDAY_DT', max_length=10, blank=True, default='')
     holiday_name = models.CharField(db_column='HOLIDAY_NAME', max_length=20, blank=True, default='')
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -87,13 +87,13 @@ class HolidayTb(models.Model):
 
 class PushInfoTb(TimeStampedModel):
     push_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     token = models.CharField(db_column='TOKEN', max_length=255, blank=True, default='')
-    badge_counter = models.IntegerField(db_column='BADGE_COUNTER', blank=True, null=True, default='0')
+    badge_counter = models.IntegerField(db_column='BADGE_COUNTER', default=0)
     last_login = models.DateTimeField(db_column='LAST_LOGIN', blank=True, null=True)  # Field name made lowercase.
     session_info = models.CharField(db_column='SESSION_INFO', max_length=255, blank=True, default='')
     device_info = models.CharField(db_column='DEVICE_INFO', max_length=255, blank=True, default='')
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -102,12 +102,12 @@ class PushInfoTb(TimeStampedModel):
 
 class QATb(TimeStampedModel):
     qa_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    qa_type_cd = models.CharField(db_column='QA_TYPE_CD', max_length=45, blank=True, null=True, default='')
-    title = models.CharField(db_column='TITLE', max_length=255, blank=True, null=True, default='')
-    contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, null=True, default='')
-    status = models.CharField(db_column='STATUS', max_length=45, blank=True, null=True, default='')
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    qa_type_cd = models.CharField(db_column='QA_TYPE_CD', max_length=45, blank=True, default='')
+    title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
+    contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, default='')
+    status = models.CharField(db_column='STATUS', max_length=45, blank=True, default='')
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -116,15 +116,14 @@ class QATb(TimeStampedModel):
 
 class BoardTb(TimeStampedModel):
     board_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    board_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=45, blank=True,default='NOTICE')
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    board_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=45, blank=True, default='NOTICE')
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=3000, blank=True, default='')
-    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45,
-                                         blank=True, default='ALL')  # Field name made lowercase.
-    hits = models.IntegerField(db_column='HITS', blank=True, null=True, default='0')  # Field name made lowercase.
-    get = models.IntegerField(db_column='GET', blank=True, null=True, default='0')  # Field name made lowercase
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    to_member_type_cd = models.CharField(db_column='TO_MEMBER_TYPE_CD', max_length=45, blank=True, default='ALL')
+    hits = models.IntegerField(db_column='HITS', default=0)  # Field name made lowercase.
+    get = models.IntegerField(db_column='GET', default=0)  # Field name made lowercase
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -133,11 +132,11 @@ class BoardTb(TimeStampedModel):
 
 class CommentTb(TimeStampedModel):
     comment_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     board_type_cd = models.CharField(db_column='BOARD_TYPE_CD', max_length=45, blank=True, default='')
-    board = models.ForeignKey(BoardTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    board = models.ForeignKey(BoardTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, default='')
-    use = models.IntegerField(db_column='USE', blank=True, null=True, default='1')  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
