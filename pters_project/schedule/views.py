@@ -371,7 +371,6 @@ def finish_schedule_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                schedule_info.mod_dt = timezone.now()
                 schedule_info.state_cd = 'PE'
                 schedule_info.save()
                 # 남은 횟수 차감
@@ -501,7 +500,6 @@ def update_memo_schedule_logic(request):
 
     if error is None:
         schedule_info.note = note
-        schedule_info.mod_dt = timezone.now()
         schedule_info.save()
 
     if error is None:
@@ -1169,8 +1167,7 @@ def add_group_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info='그룹 레슨 일정', log_how='등록',
-                         log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
         log_data.save()
 
     if error is None:
@@ -1215,8 +1212,7 @@ def add_group_schedule_logic(request):
                                                  class_tb_id=class_id,
                                                  log_info=group_info.name + ' 그룹 레슨 일정', log_how='등록',
                                                  log_detail=str(schedule_start_datetime) + '/' + str(
-                                                     schedule_end_datetime),
-                                                 reg_dt=timezone.now(), use=USE)
+                                                     schedule_end_datetime), use=USE)
                                 log_data.save()
 
                                 push_info_schedule_start_date = str(schedule_start_datetime).split(':')
@@ -1375,8 +1371,7 @@ def delete_group_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 그룹 레슨 일정', log_how='취소',
-                         log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
         return render(request, 'ajax/schedule_error_info.html', context)
@@ -1425,7 +1420,6 @@ def finish_group_schedule_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                schedule_info.mod_dt = timezone.now()
                 schedule_info.state_cd = 'PE'
                 schedule_info.save()
 
@@ -1476,7 +1470,6 @@ def finish_group_schedule_logic(request):
             if temp_error is None:
                 try:
                     with transaction.atomic():
-                        member_group_schedule_info.mod_dt = timezone.now()
                         member_group_schedule_info.state_cd = 'PE'
                         member_group_schedule_info.save()
                         # 남은 횟수 차감
@@ -1548,8 +1541,7 @@ def finish_group_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 그룹 레슨 일정', log_how='완료',
-                         log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     if error is None:
 
@@ -1672,8 +1664,7 @@ def add_member_group_schedule_logic(request):
                          to_member_name=member_info.name,
                          class_tb_id=class_id,
                          log_info=group_info.name+' 그룹 레슨 일정', log_how='등록',
-                         log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
     if error is None:
@@ -2005,8 +1996,7 @@ def add_group_repeat_schedule_confirm(request):
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
                              log_info=group_info.name + ' 그룹 반복 일정', log_how='등록',
-                             log_detail=str(start_date) + '/' + str(end_date),
-                             reg_dt=timezone.now(), use=USE)
+                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
 
             schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, use=USE)
@@ -2078,8 +2068,7 @@ def add_group_repeat_schedule_confirm(request):
                                          to_member_name=member_info.name,
                                          class_tb_id=class_id,
                                          log_info='그룹 반복 일정', log_how='등록',
-                                         log_detail=str(start_date) + '/' + str(end_date),
-                                         reg_dt=timezone.now(), use=USE)
+                                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
                         log_data.save()
                         push_lecture_id.append(lecture_id)
                         push_title.append(class_type_name + ' 수업 - 일정 알림')
@@ -2251,8 +2240,7 @@ def delete_group_repeat_schedule_logic(request):
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
                          log_info=group_info.name + ' 그룹 반복 일정', log_how='취소',
-                         log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
         context['push_lecture_id'] = push_lecture_id
         context['push_title'] = push_title

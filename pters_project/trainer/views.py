@@ -1305,7 +1305,6 @@ def update_member_info_logic(request):
                 member.sex = input_sex
                 if input_birthday_dt is not None and input_birthday_dt != '':
                     member.birthday_dt = input_birthday_dt
-                member.mod_dt = timezone.now()
                 member.save()
 
         except ValueError:
@@ -1323,8 +1322,7 @@ def update_member_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=user.last_name + user.first_name,
-                         log_info='회원 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='회원 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -1401,12 +1399,11 @@ def delete_member_info_logic(request):
                             if len(schedule_data) > 0:
                                 schedule_data.delete()
                             if len(schedule_data_finish) > 0:
-                                schedule_data_finish.update(mod_dt=timezone.now(), use=UN_USE)
+                                schedule_data_finish.update(use=UN_USE)
                             # lecture_info.use = 0
                             # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                             if lecture_info.state_cd == 'IP':
                                 lecture_info.state_cd = 'PE'
-                                lecture_info.mod_dt = timezone.now()
                                 lecture_info.save()
 
                             if len(group_data) > 0:
@@ -1428,9 +1425,8 @@ def delete_member_info_logic(request):
                                         group_info_data.save()
 
                                 group_data.update(use=UN_USE)
-                                # lecture_info.mod_dt = timezone.now()
                                 # lecture_info.save()
-                    class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id, mod_dt=timezone.now())
+                    class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id)
                 else:
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
@@ -1469,7 +1465,6 @@ def delete_member_info_logic(request):
                                     group_info_data.save()
                         group_data.delete()
 
-                        # lecture_info.mod_dt = timezone.now()
                         # lecture_info.save()
                         member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                         if len(member_lecture_list) > 0:
@@ -1502,8 +1497,7 @@ def delete_member_info_logic(request):
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id,
-                         log_info='수강 정보', log_how='삭제',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='삭제', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -2054,15 +2048,13 @@ def update_lecture_info_logic(request):
                 lecture_info.refund_price = 0
                 lecture_info.refund_date = None
                 lecture_info.state_cd = 'IP'
-        lecture_info.mod_dt = timezone.now()
         lecture_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -2105,8 +2097,7 @@ def delete_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보', log_how='삭제',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='삭제', use=USE)
 
         log_data.save()
 
@@ -2161,7 +2152,6 @@ def finish_lecture_info_logic(request):
             repeat_schedule_data.delete()
         lecture_info.lecture_avail_count = 0
         lecture_info.lecture_rem_count = 0
-        lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'PE'
         lecture_info.save()
 
@@ -2187,8 +2177,7 @@ def finish_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='완료 처리',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='완료 처리', use=USE)
 
         log_data.save()
 
@@ -2258,7 +2247,6 @@ def refund_lecture_info_logic(request):
         lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
         # lecture_info.lecture_rem_count = 0
-        lecture_info.mod_dt = timezone.now()
         lecture_info.state_cd = 'RF'
         lecture_info.save()
 
@@ -2283,8 +2271,7 @@ def refund_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='환불 처리',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='환불 처리', use=USE)
 
         log_data.save()
 
@@ -2333,7 +2320,6 @@ def progress_lecture_info_logic(request):
         schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
-        lecture_info.mod_dt = timezone.now()
         lecture_info.refund_price = 0
         lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'
@@ -2359,8 +2345,7 @@ def progress_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='진행중 처리',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보', log_how='진행중 처리', use=USE)
 
         log_data.save()
 
@@ -2419,15 +2404,13 @@ def update_lecture_connection_info_logic(request):
             if auth_cd == 'WAIT':
                 auth_cd = 'VIEW'
         member_lecture_info.auth_cd = auth_cd
-        member_lecture_info.mod_dt = timezone.now()
         member_lecture_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보 연동', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='수강 정보 연동', log_how='수정', use=USE)
 
         log_data.save()
 
@@ -2452,8 +2435,7 @@ def add_group_info_logic(request):
     try:
         with transaction.atomic():
             group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
-                                 name=name, note=note, state_cd='IP',
-                                 mod_dt=timezone.now(), reg_dt=timezone.now(), use=USE)
+                                 name=name, note=note, state_cd='IP', use=USE)
 
             group_info.save()
     except ValueError:
@@ -2471,8 +2453,7 @@ def add_group_info_logic(request):
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 정보', log_how='등록',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info=group_info.name + ' 그룹 정보', log_how='등록', use=USE)
         log_data.save()
 
     else:
@@ -2508,14 +2489,12 @@ def delete_group_info_logic(request):
     if error is None:
         group_info.state_cd = 'PE'
         group_info.use = 0
-        group_info.mod_dt = timezone.now()
         group_info.save()
 
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 정보', log_how='삭제',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info=group_info.name + ' 그룹 정보', log_how='삭제', use=USE)
         log_data.save()
     else:
 
@@ -2571,15 +2550,13 @@ def update_group_info_logic(request):
         group_info.member_num = member_num
         group_info.name = name
         group_info.note = note
-        group_info.mod_dt = timezone.now()
         group_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info=group_info.name + ' 그룹 정보', log_how='수정', use=USE)
         log_data.save()
 
     else:
@@ -2694,8 +2671,7 @@ def add_group_member_logic(request):
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹에 회원 정보', log_how='등록',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info=group_info.name + ' 그룹에 회원 정보', log_how='등록', use=USE)
         log_data.save()
 
     else:
@@ -2770,8 +2746,7 @@ def delete_group_member_info_logic(request):
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_name, class_tb_id=class_id,
-                             log_info='그룹 수강 정보', log_how='삭제',
-                             reg_dt=timezone.now(), use=USE)
+                             log_info='그룹 수강 정보', log_how='삭제', use=USE)
             log_data.save()
 
     if error is None:
@@ -3027,7 +3002,6 @@ def finish_group_info_logic(request):
                     repeat_schedule_data.delete()
                 lecture_info.lecture_avail_count = 0
                 lecture_info.lecture_rem_count = 0
-                lecture_info.mod_dt = timezone.now()
                 lecture_info.state_cd = 'PE'
                 lecture_info.save()
         group_info.state_cd = 'PE'
@@ -3037,8 +3011,7 @@ def finish_group_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 수강 정보', log_how='완료 처리',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info=group_info.name + ' 그룹 수강 정보', log_how='완료 처리', use=USE)
 
         log_data.save()
 
@@ -3074,7 +3047,6 @@ def progress_group_info_logic(request):
                 schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
                 lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
                 lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
-                lecture_info.mod_dt = timezone.now()
                 lecture_info.state_cd = 'IP'
                 lecture_info.save()
         group_info.state_cd = 'IP'
@@ -3084,8 +3056,7 @@ def progress_group_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 수강 정보', log_how='재개 처리',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info=group_info.name + ' 그룹 수강 정보', log_how='재개 처리', use=USE)
 
         log_data.save()
 
@@ -3325,8 +3296,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                              class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
                                              # member_view_state_cd='VIEW',
                                              subject_detail_nm=subject_detail_nm,
-                                             class_member_num=int(class_member_num), state_cd='IP',
-                                             reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
+                                             class_member_num=int(class_member_num), state_cd='IP', use=USE)
 
                     else:
                         class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
@@ -3334,13 +3304,11 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                              class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
                                              # member_view_state_cd='VIEW',
                                              subject_detail_nm=subject_detail_nm,
-                                             class_member_num=int(class_member_num), state_cd='IP',
-                                             reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
+                                             class_member_num=int(class_member_num), state_cd='IP', use=USE)
 
                     class_info.save()
                     member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
-                                                      auth_cd='VIEW', mod_member_id=request.user.id,
-                                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
+                                                      auth_cd='VIEW', mod_member_id=request.user.id, use=USE)
                     member_class_info.save()
 
             except ValueError:
@@ -3385,8 +3353,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
-                             log_info='강좌 정보', log_how='등록',
-                             reg_dt=timezone.now(), use=USE)
+                             log_info='강좌 정보', log_how='등록', use=USE)
 
             log_data.save()
 
@@ -3420,7 +3387,6 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             class_info.auth_cd = 'DELETE'
-            class_info.mod_dt = timezone.now()
             class_info.save()
             # class_info.member_view_state_cd = 'DELETE'
             # class_info.mod_dt = timezone.now()
@@ -3437,8 +3403,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='강좌 정보', log_how='연동 해제',
-                             reg_dt=timezone.now(), use=USE)
+                             log_info='강좌 정보', log_how='연동 해제', use=USE)
 
             log_data.save()
 
@@ -3498,16 +3463,13 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             if class_member_num is not None and class_member_num != '':
                 class_info.class_member_num = class_member_num
 
-        if error is None:
-            class_info.mod_dt = timezone.now()
             class_info.save()
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='강좌 정보', log_how='수정',
-                             reg_dt=timezone.now(), use=USE)
+                             log_info='강좌 정보', log_how='수정', use=USE)
 
             log_data.save()
 
@@ -3649,8 +3611,7 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             if background_img_info is None:
                 background_img_info = BackgroundImgTb(class_tb_id=class_id,
                                                       background_img_type_cd=background_img_type_cd,
-                                                      url=url, reg_info_id=request.user.id,
-                                                      reg_dt=timezone.now(), mod_dt=timezone.now(), use=USE)
+                                                      url=url, reg_info_id=request.user.id, use=USE)
                 background_img_info.save()
                 log_how_info = '추가'
             else:
@@ -3659,7 +3620,6 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                 if url is not None and url != '':
                     background_img_info.url = url
 
-                background_img_info.mod_dt = timezone.now()
                 background_img_info.save()
                 log_how_info = '수정'
         else:
@@ -3674,7 +3634,6 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                 if url is not None and url != '':
                     background_img_info.url = url
 
-                background_img_info.mod_dt = timezone.now()
                 background_img_info.save()
                 log_how_info = '수정'
 
@@ -3719,8 +3678,7 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='배경 화면 정보', log_how='삭제',
-                             reg_dt=timezone.now(), use=USE)
+                             log_info='배경 화면 정보', log_how='삭제', use=USE)
 
             log_data.save()
 
@@ -4001,7 +3959,6 @@ def update_trainer_info_logic(request):
                     member.birthday_dt = input_birthday_dt
                 member.country = input_country
                 member.address = input_address
-                member.mod_dt = timezone.now()
                 member.save()
 
         except ValueError:
@@ -4018,8 +3975,7 @@ def update_trainer_info_logic(request):
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         log_info='본인 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='본인 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4053,46 +4009,38 @@ def update_setting_push_logic(request):
                                               class_tb_id=class_id, setting_type_cd='LT_PUS_01')
         except ObjectDoesNotExist:
             lt_pus_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_01', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_PUS_01', use=USE)
         try:
             lt_pus_02 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_PUS_02')
         except ObjectDoesNotExist:
             lt_pus_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_02', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_PUS_02', use=USE)
         try:
             lt_pus_03 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_PUS_03')
         except ObjectDoesNotExist:
             lt_pus_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_03', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_PUS_03', use=USE)
         try:
             lt_pus_04 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_PUS_04')
         except ObjectDoesNotExist:
             lt_pus_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_04', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_PUS_04', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-                lt_pus_01.mod_dt = timezone.now()
                 lt_pus_01.setting_info = setting_trainee_schedule_confirm1 + '/' + setting_trainee_schedule_confirm2
                 lt_pus_01.save()
 
-                lt_pus_02.mod_dt = timezone.now()
                 lt_pus_02.setting_info = setting_trainee_no_schedule_confirm
                 lt_pus_02.save()
 
-                lt_pus_03.mod_dt = timezone.now()
                 lt_pus_03.setting_info = setting_trainer_schedule_confirm
                 lt_pus_03.save()
 
-                lt_pus_04.mod_dt = timezone.now()
                 lt_pus_04.setting_info = \
                     setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
                 lt_pus_04.save()
@@ -4123,8 +4071,7 @@ def update_setting_push_logic(request):
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='PUSH 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='PUSH 설정 정보', log_how='수정', use=USE)
         log_data.save()
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -4186,39 +4133,37 @@ def update_setting_reserve_logic(request):
                                               class_tb_id=class_id, setting_type_cd='LT_RES_01')
         except ObjectDoesNotExist:
             lt_res_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_RES_01', reg_dt=timezone.now(), use=USE)
+                                  setting_type_cd='LT_RES_01', use=USE)
         try:
             lt_res_03 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_RES_03')
         except ObjectDoesNotExist:
             lt_res_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_RES_03', reg_dt=timezone.now(), use=USE)
+                                  setting_type_cd='LT_RES_03', use=USE)
         try:
             lt_res_04 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_RES_04')
         except ObjectDoesNotExist:
             lt_res_04 = SettingTb(member_id=request.user.id,
-                                  class_tb_id=class_id, setting_type_cd='LT_RES_04', reg_dt=timezone.now(), use=USE)
+                                  class_tb_id=class_id, setting_type_cd='LT_RES_04', use=USE)
         try:
             lt_res_05 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_RES_05')
         except ObjectDoesNotExist:
             lt_res_05 = SettingTb(member_id=request.user.id,
-                                  class_tb_id=class_id, setting_type_cd='LT_RES_05', reg_dt=timezone.now(), use=USE)
+                                  class_tb_id=class_id, setting_type_cd='LT_RES_05', use=USE)
         try:
             lt_res_cancel_time = SettingTb.objects.get(member_id=request.user.id,
                                                        class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME')
         except ObjectDoesNotExist:
             lt_res_cancel_time = SettingTb(member_id=request.user.id,
-                                           class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME',
-                                           reg_dt=timezone.now(), use=USE)
+                                           class_tb_id=class_id, setting_type_cd='LT_RES_CANCEL_TIME', use=USE)
         try:
             lt_res_enable_time = SettingTb.objects.get(member_id=request.user.id,
                                                        class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME')
         except ObjectDoesNotExist:
             lt_res_enable_time = SettingTb(member_id=request.user.id,
-                                           class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME',
-                                           reg_dt=timezone.now(), use=USE)
+                                           class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE_TIME', use=USE)
         try:
             lt_res_member_time_duration = SettingTb.objects.get(member_id=request.user.id,
                                                                 class_tb_id=class_id,
@@ -4226,7 +4171,7 @@ def update_setting_reserve_logic(request):
         except ObjectDoesNotExist:
             lt_res_member_time_duration = SettingTb(member_id=request.user.id,
                                                     class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_TIME_DURATION',
-                                                    reg_dt=timezone.now(), use=USE)
+                                                    use=USE)
         try:
             lt_res_member_start_time = SettingTb.objects.get(member_id=request.user.id,
                                                              class_tb_id=class_id,
@@ -4234,7 +4179,7 @@ def update_setting_reserve_logic(request):
         except ObjectDoesNotExist:
             lt_res_member_start_time = SettingTb(member_id=request.user.id,
                                                  class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_START_TIME',
-                                                 reg_dt=timezone.now(), use=USE)
+                                                 use=USE)
         try:
             lt_res_member_auto_finish = SettingTb.objects.get(member_id=request.user.id,
                                                               class_tb_id=class_id,
@@ -4242,44 +4187,35 @@ def update_setting_reserve_logic(request):
         except ObjectDoesNotExist:
             lt_res_member_auto_finish = SettingTb(member_id=request.user.id,
                                                   class_tb_id=class_id, setting_type_cd='LT_RES_MEMBER_AUTO_FINISH',
-                                                  reg_dt=timezone.now(), use=USE)
+                                                  use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-                lt_res_01.mod_dt = timezone.now()
                 lt_res_01.setting_info = setting_member_reserve_time_available
                 lt_res_01.save()
 
-                lt_res_03.mod_dt = timezone.now()
                 lt_res_03.setting_info = setting_member_reserve_prohibition
                 lt_res_03.save()
 
-                lt_res_04.mod_dt = timezone.now()
                 lt_res_04.setting_info = setting_trainer_work_time_available
                 lt_res_04.save()
 
-                lt_res_05.mod_dt = timezone.now()
                 lt_res_05.setting_info = setting_member_reserve_date_available
                 lt_res_05.save()
 
-                lt_res_cancel_time.mod_dt = timezone.now()
                 lt_res_cancel_time.setting_info = setting_member_cancel_time
                 lt_res_cancel_time.save()
 
-                lt_res_enable_time.mod_dt = timezone.now()
                 lt_res_enable_time.setting_info = setting_member_reserve_time_prohibition
                 lt_res_enable_time.save()
 
-                lt_res_member_time_duration.mod_dt = timezone.now()
                 lt_res_member_time_duration.setting_info = setting_member_reserve_time_duration
                 lt_res_member_time_duration.save()
 
-                lt_res_member_start_time.mod_dt = timezone.now()
                 lt_res_member_start_time.setting_info = setting_member_start_time
                 lt_res_member_start_time.save()
 
-                lt_res_member_auto_finish.mod_dt = timezone.now()
                 lt_res_member_auto_finish.setting_info = setting_member_auto_finish
                 lt_res_member_auto_finish.save()
 
@@ -4300,9 +4236,7 @@ def update_setting_reserve_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info='예약 관련 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         class_tb_id=class_id, log_info='예약 관련 설정 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4356,93 +4290,75 @@ def update_setting_sales_logic(request):
                                               class_tb_id=class_id, setting_type_cd='LT_SAL_01', use=USE)
         except ObjectDoesNotExist:
             lt_sal_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_01', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_SAL_01', use=USE)
         try:
             lt_sal_02 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_SAL_02', use=USE)
         except ObjectDoesNotExist:
             lt_sal_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_02', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_SAL_02', use=USE)
         try:
             lt_sal_03 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_SAL_03', use=USE)
         except ObjectDoesNotExist:
             lt_sal_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_03', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_SAL_03', use=USE)
         try:
             lt_sal_04 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_SAL_04', use=USE)
         except ObjectDoesNotExist:
             lt_sal_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_04', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_SAL_04', use=USE)
         try:
             lt_sal_05 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_SAL_05', use=USE)
         except ObjectDoesNotExist:
             lt_sal_05 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_05', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_SAL_05', use=USE)
         try:
             lt_sal_00 = SettingTb.objects.get(member_id=request.user.id,
                                               class_tb_id=class_id, setting_type_cd='LT_SAL_00', use=USE)
         except ObjectDoesNotExist:
             lt_sal_00 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_SAL_00', reg_dt=timezone.now(),
-                                  use=USE)
+                                  setting_type_cd='LT_SAL_00', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
                 if setting_sales_type == '0':
-                    lt_sal_01.mod_dt = timezone.now()
                     lt_sal_01.setting_info = setting_sal_01
                     lt_sal_01.save()
 
-                    lt_sal_02.mod_dt = timezone.now()
                     lt_sal_02.setting_info = setting_sal_02
                     lt_sal_02.save()
 
-                    lt_sal_03.mod_dt = timezone.now()
                     lt_sal_03.setting_info = setting_sal_03
                     lt_sal_03.save()
 
-                    lt_sal_04.mod_dt = timezone.now()
                     lt_sal_04.setting_info = setting_sal_04
                     lt_sal_04.save()
 
-                    lt_sal_05.mod_dt = timezone.now()
                     lt_sal_05.setting_info = setting_sal_05
                     lt_sal_05.save()
 
-                    lt_sal_00.mod_dt = timezone.now()
                     lt_sal_00.setting_info = ''
                     lt_sal_00.save()
                 else:
-                    lt_sal_01.mod_dt = timezone.now()
                     lt_sal_01.setting_info = ''
                     lt_sal_01.save()
 
-                    lt_sal_02.mod_dt = timezone.now()
                     lt_sal_02.setting_info = ''
                     lt_sal_02.save()
 
-                    lt_sal_03.mod_dt = timezone.now()
                     lt_sal_03.setting_info = ''
                     lt_sal_03.save()
 
-                    lt_sal_04.mod_dt = timezone.now()
                     lt_sal_04.setting_info = ''
                     lt_sal_04.save()
 
-                    lt_sal_05.mod_dt = timezone.now()
                     lt_sal_05.setting_info = ''
                     lt_sal_05.save()
 
-                    lt_sal_00.mod_dt = timezone.now()
                     lt_sal_00.setting_info = setting_sal_00
                     lt_sal_00.save()
 
@@ -4462,8 +4378,7 @@ def update_setting_sales_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='강의 금액 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='강의 금액 설정 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4492,12 +4407,11 @@ def update_setting_language_logic(request):
                                               class_tb_id=class_id, setting_type_cd='LT_LAN_01')
         except ObjectDoesNotExist:
             lt_lan_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_LAN_01', reg_dt=timezone.now(), use=USE)
+                                  setting_type_cd='LT_LAN_01', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-                lt_lan_01.mod_dt = timezone.now()
                 lt_lan_01.setting_info = setting_member_language
                 lt_lan_01.save()
 
@@ -4516,8 +4430,7 @@ def update_setting_language_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='언어 설정 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         class_tb_id=class_id, log_info='언어 설정 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4547,7 +4460,6 @@ def alarm_delete_logic(request):
                 error = '로그를 불러오지 못했습니다.'
             if error is None:
                 log_info.use = 0
-                log_info.mod_dt = timezone.now()
                 log_info.save()
 
         return redirect(next_page)

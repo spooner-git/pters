@@ -574,8 +574,7 @@ def delete_trainee_schedule_logic(request):
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
                          class_tb_id=class_info.class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='레슨 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='레슨 일정', log_how='삭제', log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
 
         push_info_schedule_start_date = str(start_date).split(':')
@@ -1059,7 +1058,6 @@ def update_trainee_info_logic(request):
                     member.birthday_dt = birthday_dt
                 member.country = country
                 member.address = address
-                member.mod_dt = timezone.now()
                 member.save()
 
         except ValueError:
@@ -1076,8 +1074,7 @@ def update_trainee_info_logic(request):
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         log_info='회원 정보', log_how='수정',
-                         reg_dt=timezone.now(), use=USE)
+                         log_info='회원 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -1398,15 +1395,14 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                              class_tb_id=class_id,
                              lecture_tb_id=lecture_id,
                              log_info=group_schedule_info.group_tb.name + ' 레슨 일정', log_how='등록',
-                             log_detail=str(start_date) + '/' + str(end_date),
-                             reg_dt=timezone.now(), use=USE)
+                             log_detail=str(start_date) + '/' + str(end_date),  use=USE)
             log_data.save()
         else:
             log_data = LogTb(log_type='LS01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              class_tb_id=class_id, lecture_tb_id=lecture_id,
                              log_info='1:1 레슨 일정', log_how='등록', log_detail=str(start_date) + '/' + str(end_date),
-                             reg_dt=timezone.now(), use=USE)
+                             use=USE)
             log_data.save()
 
     else:

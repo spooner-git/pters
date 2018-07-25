@@ -72,7 +72,6 @@ def func_refresh_lecture_count(lecture_id):
         if lecture_info.lecture_reg_count >= reg_schedule_counter:
             lecture_info.lecture_avail_count = lecture_info.lecture_reg_count\
                                                - reg_schedule_counter
-            lecture_info.mod_dt = timezone.now()
             lecture_info.save()
         else:
             error = '오류가 발생했습니다.'
@@ -86,7 +85,6 @@ def func_refresh_lecture_count(lecture_id):
                 lecture_info.state_cd = 'PE'
             else:
                 lecture_info.state_cd = 'IP'
-            lecture_info.mod_dt = timezone.now()
             lecture_info.save()
         else:
             error = '오류가 발생했습니다.'
@@ -184,8 +182,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            start_dt=start_datetime, end_dt=end_datetime,
                                            state_cd=state_cd, permission_state_cd='AP',
                                            note=note, member_note='', en_dis_type=en_dis_type,
-                                           reg_member_id=user_id,
-                                           reg_dt=timezone.now(), mod_dt=timezone.now())
+                                           reg_member_id=user_id)
             add_schedule_info.save()
             context['schedule_id'] = add_schedule_info.schedule_id
     except TypeError as e:
@@ -218,8 +215,7 @@ def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, 
                                                     end_time=end_time,
                                                     time_duration=time_duration,
                                                     state_cd='NP', en_dis_type=en_dis_type,
-                                                    reg_member_id=user_id,
-                                                    reg_dt=timezone.now(), mod_dt=timezone.now())
+                                                    reg_member_id=user_id)
 
             repeat_schedule_info.save()
             context['schedule_info'] = repeat_schedule_info
@@ -460,24 +456,21 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='1:1 레슨 '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     elif en_dis_type == OFF_SCHEDULE_TYPE:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name,
                          class_tb_id=class_id,
                          log_info='OFF '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     else:
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
                          log_info='그룹 레슨 '+log_type_name, log_how=log_type_detail,
-                         log_detail=str(start_date) + '/' + str(end_date),
-                         reg_dt=timezone.now(), use=USE)
+                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
 
 
