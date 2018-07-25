@@ -2285,8 +2285,13 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
         if(Number(planDura*planheight-1) < 29){
             hideornot = 'hideelement';
+            var groupstatus=""
+        }else if(Number(planDura*planheight-1) < 47){
+            hideornot = 'inlineelement';
+            var groupstatus=""
         }else{
             hideornot = 'inlineelement';
+            var groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'
         }
 
         var planLocation = Number(planArray[4])*size;
@@ -2337,7 +2342,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '">'+
                                             '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
-                                                    '<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span> '+
+                                                    groupstatus+
                                                     '</span>'+'<span class="memberTime">'+ 
                                                         '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                             '</span>'+
@@ -2809,9 +2814,15 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
 
         if(Number(planDura*planheight-1) < 29){
             hideornot = 'hideelement';
+            var groupstatus=""
+        }else if(Number(planDura*planheight-1) < 47){
+            hideornot = 'inlineelement';
+            var groupstatus=""
         }else{
             hideornot = 'inlineelement';
+            var groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'
         }
+
 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
@@ -2834,7 +2845,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                        '</div>'
             date_sorted[planStart].push(planhtml)
         }else if(option == 'group'){
-            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+'<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
             planhtml = '<div group-time="'+planArray.join('_')+
                         '" group-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+

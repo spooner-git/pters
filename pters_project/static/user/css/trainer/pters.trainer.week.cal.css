@@ -705,7 +705,6 @@ img,a,div,span,p{
 	}
 
 	.memberName{
-		position: absolute;
 		width: 78%;
 		text-align: center;
 		right:  0;
@@ -721,11 +720,7 @@ img,a,div,span,p{
 	}
 
 
-	.hourType{
-		display: block;
-		margin:0;
-		margin-bottom: -3px;
-	}
+	
 
 
 	.td00, .td30{
@@ -836,6 +831,7 @@ img,a,div,span,p{
 @media(min-width: 730px){
 
 	.memberName{
+		position: absolute;
 		text-align: right;
 	}
 
@@ -850,6 +846,11 @@ img,a,div,span,p{
 		color: black;
 		cursor: pointer;
 		text-align: left;
+	}
+	.hourType{
+		display: block;
+		margin:0;
+		margin-bottom: -3px;
 	}
 
 	.ymdText-pc-refresh{
