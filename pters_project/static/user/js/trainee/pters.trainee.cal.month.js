@@ -1187,39 +1187,63 @@ $(document).ready(function(){
                 }
                 //종료 시간이 24:00일경우 서버에서 다음날 00:00으로 보내오기 때문에 포맷을 오늘 24:00로 수정
 
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-                if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false 
-                && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) ){
-                    planHour = Options.workStartTime;
-                    planMinute = 0;
-
-                }else if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false 
-                      && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workStartTime+':00','00:00')) == false ){
-                    continue;
-
-                }else if(compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Options.workEndTime+':00','00:00'))){
-                    
-                }
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-
-                var timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-
+                var timegraph_hourwidth;
+                var timegraph_houroffset;
+                var timegraph_houroffsetb;
                 var timegraph_hourendwidth;
                 var timegraph_hourendoffset;
 
-                //일정 끝 시간이 업무 종료시간 밖에 있을 경우
-                if(planEndHour == Options.workEndTime){
-                    timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
-                    timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
-                }else if(planEndHour > Options.workEndTime){
-                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
-                }else{
+                var work_start = add_time(Options.workStartTime+':00','00:00');
+                var work_end = add_time(Options.workEndTime+':00','00:00');
+                var plan_start = add_time(planHour+':'+planMinute,'00:00');
+                var plan_end = add_time(planEndHour+':'+planEndMin,'00:00');
+                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
+                if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간 전에 있고, 종료시간이 업무시간내에 위치
+                  && compare_time(plan_end, work_start) 
+                  && compare_time(plan_end, work_end) ==false)
+                { 
+                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
+                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
                     timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
                     timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
-                }//일정 끝 시간이 업무 종료시간 밖에 있을 경우
+
+                }else if(compare_time(plan_start, work_start) == false  //시작시간이 업무시간 전에 있고, 종료시간도 업무시간 전
+                       && compare_time(plan_end, work_start) == false ){
+                    continue;
+
+                }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
+                       && compare_time(plan_start, work_end) == false
+                       && compare_time(work_end, plan_end) == false){
+                    
+                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
+
+                }else if( compare_time(plan_start, work_end) == false   // 시작시간이 업무시간 전에 있고, 종료시간이 업무시간 밖에 위치
+                       && compare_time(plan_end, work_end)){
+                    
+                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
+                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
+                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
+
+                }else if( compare_time(plan_start, work_end)            // 시작시간이 업무종료 후에 있고, 종료시간이 업무시간 후에 위치
+                       && compare_time(plan_end, work_end) ){
+
+                }else{                                                   //시작시간과 종료시간 모두 업무시간에 위치
+                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                    timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
+                    timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
+                }
+                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
+
+
 
                 if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
                     //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
