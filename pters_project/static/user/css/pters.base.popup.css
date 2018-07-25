@@ -20,6 +20,16 @@
 	height: 100%;
 	top: 0;
 }
+
+#shade_caution{
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	z-index: 299;
+	background: black;
+	opacity: 0.5;
+}
 /*
 	#pshade{
 		z-index: 100;

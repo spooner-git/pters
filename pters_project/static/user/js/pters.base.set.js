@@ -105,6 +105,7 @@ function shade_index(option){
 
 function close_caution_popup(){
     $('#base_popup_check_finished_member_notice').hide();
+    $('#shade_caution').hide();
 }
 
 function close_info_popup(option){
