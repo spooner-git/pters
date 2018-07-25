@@ -89,9 +89,14 @@ body{
 	color: #fe4e65;
 	border-color: #fe4e65;
 }
+.call_btn{
+	background: #282828;
+	color: #ffffff;
+	border-color: transparent !important;
+}
 .call_btn:active{
-	box-shadow: 1px 1px 1px 1px #cccccc;
-	color: #cccccc;
+	box-shadow: 1px 1px 2px 1px #cccccc;
+	color: #ffffff;
 }
 
 .dropdown{
