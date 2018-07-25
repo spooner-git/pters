@@ -855,17 +855,18 @@ $(document).ready(function(){
                     var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(jsondata.group_schedule_start_datetime[i].split(' ')[0],'')
                     var today = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'_'+oriMonth+'_'+oriDate,'');
 
-                    var todayandlimitSum = Number(today)+parseInt(Options.limit/(24*60) );
-                    if(Number(oriDate)+parseInt(Options.limit/(24*60)) > lastDay[Number(oriMonth)-1]){
-                        todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/(24*60) ),'')
+                    var todayandlimitSum = Number(today)+parseInt(Options.limit/24);
+                    if(Number(oriDate)+parseInt(Options.limit/24) > lastDay[Number(oriMonth)-1]){
+                        todayandlimitSum = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'-'+(Number(oriMonth)+1)+'-'+parseInt(Options.limit/24),'')
                     }
+
 
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
                     var fulled = "";
                     if(selecteddate > today && selecteddate < todayandlimitSum){
                         disable = "disabled_button";
                     }else if(selecteddate == today){
-                        if(planHour < currentHour + Options.limit +1){
+                        if(planHour < currentHour + (Options.limit*60) +1){
                             disable = "disabled_button";
                         }
                     }
@@ -1227,7 +1228,7 @@ $(document).ready(function(){
                 }
             }
         }else{  // 선택한 날짜가 오늘일 경우 이미 지난시간은 모두 회색으로 표기하고 근접 예약방지 옵션을 적용한다.
-            var limit = add_time(currentHour+':'+currentMinute,'00:'+Options.limit);
+            var limit = add_time(currentHour+':'+currentMinute,'00:'+(Options.limit*60) );
 
             //근접 예약방지 시간을 현재시간에 더한 값이 업무 종료 시간보다 클경우
             if(compare_time(limit,add_time(Options.workEndTime+':00','00:00'))){
@@ -1450,7 +1451,7 @@ $(document).ready(function(){
         for(var t=0; t<semiresult.length; t++){
             //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
-                if(compare_time(semiresult[t], add_time(currentTime, '00:'+Options.limit))                      //업무시간
+                if(compare_time(semiresult[t], add_time(currentTime, '00:'+(Options.limit*60) ))                      //업무시간
                     && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
                     && compare_time(semiresult[t], substract_time(Options.workStartTime+':00', '00:01')) ){ //근접예약 금지
                     
