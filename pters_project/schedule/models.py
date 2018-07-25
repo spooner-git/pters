@@ -5,12 +5,29 @@
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from center.models import CenterTb
 from configs.const import USE
 from configs.models import TimeStampedModel
 from login.models import MemberTb
+
+
+class AuthLectureManager(models.Manager):
+    use_for_related_fields = True
+
+    def check_authorized(self, class_id):
+        print(str(self))
+        lecture_tb_info = self
+
+        try:
+            ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=self.lecture_id,
+                                       auth_cd='VIEW', use=USE)
+        except ObjectDoesNotExist:
+            lecture_tb_info = None
+
+        return lecture_tb_info
 
 
 class ClassTb(TimeStampedModel):
@@ -55,12 +72,24 @@ class LectureTb(TimeStampedModel):
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
+    objects = AuthLectureManager()
+
     class Meta:
         managed = False
         db_table = 'LECTURE_TB'
 
     def __str__(self):
         return self.member.__str__()+'_lecture'
+
+    def check_authorized(self, class_id):
+        try:
+            ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=self.lecture_id,
+                                       auth_cd='VIEW', use=USE)
+            authorized_check = True
+        except ObjectDoesNotExist:
+            authorized_check = False
+
+        return authorized_check
 
 
 class GroupTb(TimeStampedModel):
@@ -208,6 +237,16 @@ class ScheduleTb(TimeStampedModel):
 
     def get_str_end_dt(self):
         return str(self.end_dt)
+
+    def get_group_current_member_num(self):
+        if self.group_tb is not None and self.group_tb != '':
+            schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=self.class_tb_id,
+                                                                    group_tb_id=self.group_tb.group_id,
+                                                                    lecture_tb__isnull=False,
+                                                                    group_schedule_id=self.schedule_id,
+                                                                    use=USE).count()
+
+        return schedule_current_member_num
 
 
 class SettingTb(TimeStampedModel):

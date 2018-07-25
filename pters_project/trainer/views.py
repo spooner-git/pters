@@ -47,7 +47,7 @@ from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 from .function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
-    func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list
+    func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, func_test_test_test
 
 logger = logging.getLogger(__name__)
 
@@ -951,6 +951,7 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         end_date = today + datetime.timedelta(days=int(day) + 1)
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         # end_time = timezone.now()
+        # print(str(end_time-start_time))
         return render(request, self.template_name, context)
 
 
@@ -1181,14 +1182,14 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/member_list_ajax.html'
 
     def get(self, request):
-        start_dt = timezone.now()
+        start_time = timezone.now()
         context = {}
         # context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         context['member_data'] = func_get_member_ing_list(class_id, request.user.id)
-        end_dt = timezone.now()
-
-        print('IngList::'+str(end_dt-start_dt))
+        end_time = timezone.now()
+        # func_test_test_test(class_id)
+        # print('IngList::'+str(end_time-start_time))
         # return context
         return render(request, self.template_name, context)
 
