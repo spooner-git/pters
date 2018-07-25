@@ -790,6 +790,39 @@ $(document).ready(function(){
         clear_pt_off_add_popup_mini();
     }
 
+    function member_enddate_check_before_addplan(jsondata){
+        var enddateArray = jsondata.endArray;
+        var type = jsondata.groupTypeCdArray;
+        var currentStateArray = jsondata.lectureStateArray;
+        var lecname = jsondata.groupNameArray;
+        var len = enddateArray.length;
+        
+        var most_past_enddate;
+        var most_recent_enddate;
+
+        var exist_past_reg = []
+        for(var i=0; i<len; i++){
+            if(currentStateArray[i] == "IP" && enddateArray[i] != "9999-12-31"){
+                if(compare_date2(today_YY_MM_DD, enddateArray[i]) == true ){
+                //테스트용 if문 if(compare_date2("2020-12-20", enddateArray[i]) == true ){
+                    exist_past_reg.push('<p>'+lecname[i]+': '+'종료일자 '+enddateArray[i]+'</p>')
+                }
+            }
+        }
+
+        var message = exist_past_reg.join('');
+        if(exist_past_reg.length > 0){
+            $('#base_popup_check_finished_member_notice .caution_message').html(                                                                            
+                                                                                   '<p style="color:#fe4e65;">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
+                                                                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                                                                            message+
+                                                                                        '</div>'+
+                                                                                    '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
+                                                                            )
+            $('#base_popup_check_finished_member_notice').show();
+            $('#shade_caution').show();
+        }
+    }
 
 
     $(document).on('click',"#members_pc li a",function(){
@@ -809,6 +842,7 @@ $(document).ready(function(){
                     }
                 }
                 $("#countsSelected_mini").show().text(availCount_personal);
+                member_enddate_check_before_addplan(jsondata)
                 check_dropdown_selected_addplan();
             });
 
@@ -816,6 +850,7 @@ $(document).ready(function(){
             $("#id_lecture_id").val($(this).attr('data-lectureid'));
             $("#id_member_id").val($(this).attr('data-dbid'));
             $("#id_member_name").val($(this).text());
+
         }else if($(this).attr('data-grouptype') == "group"){
             addTypeSelect = "groupptadd";
             $('#remainCount_mini, #remainCount_mini_text, #countsSelected_mini').hide();
@@ -850,6 +885,7 @@ $(document).ready(function(){
                     }
                 }
                 $("#countsSelected").text(availCount_personal);
+                member_enddate_check_before_addplan(jsondata)
             })
 
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')});
@@ -863,13 +899,6 @@ $(document).ready(function(){
                 $("#id_repeat_lecture_id").val($(this).attr('data-lectureid'));
                 $("#id_repeat_member_name").val($(this).text());
             }
-
-            var memberEnddate = $(this).attr('data-enddate');
-            console.log('compare_date2(today_YY_MM_DD, memberEnddate)',compare_date2(today_YY_MM_DD, memberEnddate))
-            if(compare_date2(today_YY_MM_DD, memberEnddate) == true){
-                alert($(this).text()+'님은 '+memberEnddate+'종료일자가 지난 회원입니다.\n 종료일자 변경 및 확인은 회원관리를 이용해주세요.')
-            }
-
 
         }else if($(this).attr("data-grouptype") == "group"){
             var grouptypecd = $(this).attr('data-grouptypecd');
@@ -908,8 +937,6 @@ $(document).ready(function(){
         check_dropdown_selected_addplan();
         position_absolute_addplan_if_mobile($('#membersSelected'));
     }); //회원명 드랍다운 박스 - 선택시 선택한 아이템이 표시
-
-
 
     $(document).on('click', '#starttimesSelected input', function(e){
         e.stopPropagation();
@@ -1638,8 +1665,8 @@ function set_member_dropdown_list(jsondata){
         for(var i=0; i<memberSize; i++){
             if(jsondata.groupInfoArray[i] != "그룹"){
                 if(jsondata.lesson_avail_count[i] > 0){
-                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'" data-enddate="'+jsondata.end_date[i]+'">'+jsondata.name[i]+'</a></li>');
-                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'" data-enddate="'+jsondata.end_date[i]+'">'+jsondata.name[i]+'</a></li>');
+                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
+                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
                 }
             }
         }
