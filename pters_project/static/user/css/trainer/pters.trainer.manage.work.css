@@ -14,7 +14,7 @@ body{
 	margin-bottom: 0;
 }
 .gap_between_graph{
-	margin-top: 25px;
+	margin-top: 50px;
 }
 
 .chart_wrapper{
@@ -30,7 +30,6 @@ body{
 	width: 49%;
 	height: auto;
 	margin: 0 auto;
-	margin-bottom: 30px;
 }
 	.chart_wrapper_inline{
 		position: relative;
