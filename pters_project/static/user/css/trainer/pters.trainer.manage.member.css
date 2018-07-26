@@ -1264,11 +1264,12 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	._grouptype{
 		display: table-cell;
-		width: 17%;
+		width: 25%;
 	}
 
-	._regcount{
+	._regcount, ._remaincount{
 		display: table-cell;
+		width: 20%;
 	}
 
 	.phonenum{
@@ -1496,7 +1497,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._grouptype{
-		width: 40px;
+		width: 60px;
 	}
 
 	._tdname,._tdnamee{
@@ -1504,7 +1505,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._id{
-		width: 90px;
+		width: 65px;
 	}
 
 	._email{
@@ -1536,10 +1537,11 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._manage{
-		width: 50px;
+		width: 55px;
 	}
 
-	#page_managemember table,#page_managemember td{
+	#page_managemember table, #page_managemember td{
+		vertical-align: middle;
 		border:0 !important;
 	}
 
@@ -1549,6 +1551,9 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	#page_managemember td{
 		font-size : 13px;
+		overflow:hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	#page_managemember th{
