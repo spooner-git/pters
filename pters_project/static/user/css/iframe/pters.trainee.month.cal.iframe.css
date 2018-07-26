@@ -59,6 +59,10 @@ body{
 	cursor: pointer;
 }
 
+.dropdown-backdrop{
+	background-color: transparent !important;
+}
+
 .pters_dropdown_custom_list li{
 	padding-top: 5px !important;
 	padding-bottom: 5px !important;

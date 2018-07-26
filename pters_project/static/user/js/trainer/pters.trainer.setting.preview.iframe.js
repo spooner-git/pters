@@ -505,6 +505,17 @@ $(document).ready(function(){
     //달력 선택된 날짜
     //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
+    $('#starttimesSelected button').click(function(e){
+        
+        //e.preventDefault();
+        if($('#starttimes').find('li').length == 0){
+            e.stopPropagation();
+            alert('예약 가능한 시간이 없습니다.')
+        }else{
+
+        }
+    })
+
     $(document).on('click','#starttimes li a',function(){
         $("#starttimesSelected button").addClass("dropdown_selected");
         $("#starttimesSelected .btn:first-child").text($(this).text());
