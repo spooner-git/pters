@@ -1530,32 +1530,62 @@ $(document).ready(function(){
                 }
                 //종료 시간이 24:00일경우 서버에서 다음날 00:00으로 보내오기 때문에 포맷을 오늘 24:00로 수정
 
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-                if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Preview_Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Preview_Options.workStartTime+':00','00:00')) ){
-                    planHour = Preview_Options.workStartTime;
-                    planMinute = 0;
-                }else if(compare_time(add_time(planHour+':'+planMinute,'00:00'), add_time(Preview_Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Preview_Options.workStartTime+':00','00:00')) == false ){
-                    continue;
-                }else if(compare_time(add_time(planEndHour+':'+planEndMin,'00:00'), add_time(Preview_Options.workEndTime+':00','00:00'))){
-                    continue;
-                }
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-
-
-                var timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-
+                var timegraph_hourwidth;
+                var timegraph_houroffset;
+                var timegraph_houroffsetb;
                 var timegraph_hourendwidth;
                 var timegraph_hourendoffset;
 
-                if(planEndHour == Preview_Options.workEndTime){
-                    timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
-                    timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
-                }else{
+                var work_start = add_time(Options.workStartTime+':00','00:00');
+                var work_end = add_time(Options.workEndTime+':00','00:00');
+                var plan_start = add_time(planHour+':'+planMinute,'00:00');
+                var plan_end = add_time(planEndHour+':'+planEndMin,'00:00');
+                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
+                if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간 전에 있고, 종료시간이 업무시간내에 위치
+                  && compare_time(plan_end, work_start) 
+                  && compare_time(plan_end, work_end) ==false)
+                { 
+                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
+                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
+                    timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
+                    timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
+
+                }else if(compare_time(plan_start, work_start) == false  //시작시간이 업무시간 전에 있고, 종료시간도 업무시간 전
+                       && compare_time(plan_end, work_start) == false ){
+                    continue;
+
+                }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
+                       && compare_time(plan_start, work_end) == false
+                       && compare_time(work_end, plan_end) == false){
+                    
+                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
+
+                }else if( compare_time(plan_start, work_end) == false   // 시작시간이 업무시간 전에 있고, 종료시간이 업무시간 밖에 위치
+                       && compare_time(plan_end, work_end)){
+                    
+                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
+                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
+                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
+
+                }else if( compare_time(plan_start, work_end)            // 시작시간이 업무종료 후에 있고, 종료시간이 업무시간 후에 위치
+                       && compare_time(plan_end, work_end) ){
+
+                }else{                                                   //시작시간과 종료시간 모두 업무시간에 위치
+                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
                     timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
                     timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
                 }
+                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
+
 
                 if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
                     //var planDura    = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planStartDate[i].split(' ')[1], planEndDate[i].split(' ')[0], planEndDate[i].split(' ')[1])
@@ -1606,6 +1636,13 @@ $(document).ready(function(){
                 var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
                 var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
                 var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+
+                //24:00일경우 다음날 00:00 으로 들어오기 때문에
+                if(planEndDate[i].split(' ')[1] == "00:00:00"){
+                    var planEndHour = '24'
+                    var planEndMin = '00'
+                }
+                //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
                 if(planHour >= Preview_Options.workStartTime && planHour < Preview_Options.workEndTime){
                     var timegraph_hourwidth = $('#'+planHour+'g_00').width();
@@ -1865,10 +1902,11 @@ $(document).ready(function(){
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         //var semiresult = []
-        semiresult = []
+        var semiresult = []
         for(var p=0; p<(sortedlist.length-1)/2; p++){
             var zz = 0;
-            if(compare_time(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+2],'0:01'))==false){
+            if(compare_time(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+2],'0:01'))==false &&
+                compare_time(add_time(Options.workEndTime+':00','0:00'), add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)) )  ){
                 while(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+2],'0:01')){
                     semiresult.push(add_time(sortedlist[p*2+1],'0:'+zz))
                     zz++

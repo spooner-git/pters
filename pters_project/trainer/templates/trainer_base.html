@@ -81,7 +81,7 @@
         </form>
         <!--<label>클래스 선택</label>-->
         <p>
-            <span class="KRtext">이동할 캘린더를 선택 해주세요.</span>
+            <span class="KRtext">프로그램을 선택하면 이동합니다.</span>
             <span class="JPtext">クラスを選択してください。</span>
             <span class="ENtext">Choose class</span>
             <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
@@ -431,6 +431,7 @@
             </div>
             <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
+            
             <div class="pcver-slide-menu_class">
                 <div id="myInfo">
                     <span id="myInfo_center_name">{{ request.session.class_center_name }}</span>&nbsp
@@ -438,7 +439,7 @@
                     
                     <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
                     <img src="/static/user/res/ptadd/btn-x.png" onclick="" hidden>
-                    <p> 선택시 해당 캘린더로 이동합니다.</p>
+                    <p> 선택시 해당 프로그램으로 이동합니다.</p>
                 </div>
                 <!--
                 <div class="pters_table">
@@ -665,11 +666,13 @@
             $('.pcver-slide-menu_class').css('display','block')
             open_lecture_select_popup_pc()
 
-            if(bodywidth > 900){
+
+            if(bodywidth > 974){
                 $('#popup_triangle').css({'display':'block', 'top':$('#classselect_button').position().top+31, 'left':$('#classselect_button').position().left-7})
             }else{
                 $('#popup_triangle').css({'display':'block', 'top':$('#classselect_button').position().top+53, 'left':$('#classselect_button').position().left+7})
             }
+            
             
         }
         else if(option == 'alarm'){
@@ -677,11 +680,12 @@
             $('.pcver-slide-menu_alarm').css('display','block')
             $("#alarm-iframe-div-pc").html('<iframe id="alarm-iframe" src="/trainer/alarm_pc/" width="100%" height="300" frameborder="0"></iframe>')
 
-            if(bodywidth > 900){
+            if(bodywidth > 974){
                 $('#popup_triangle').css({'display':'block', 'top':$('#alarm_button').position().top+30, 'left':$('#alarm_button').position().left-7})
             }else{
                 $('#popup_triangle').css({'display':'block', 'top':$('#alarm_button').position().top+53, 'left':$('#alarm_button').position().left-3})
             }
+            
             
         }
     }

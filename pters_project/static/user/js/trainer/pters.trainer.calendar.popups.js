@@ -20,6 +20,7 @@
         var thisHeight = $(this).height();
         var thisZindex = $(this).css('z-index');
 
+        /*
         var zoomV = 1.05;
         var zoomH = 1.05;
         if(thisHeight < 35){
@@ -28,9 +29,23 @@
 
         var thisOffsetleft = $(this).position().left;
         var offSet = thisOffsetleft - (thisWidth*zoomH - thisWidth)/2;
+        */
+        //$(this).css({'height':thisHeight*zoomV, 'width':thisWidth*zoomH, 'z-index':150, 'border':'2px solid #fe4e65', 'left':offSet});
 
-        $(this).css({'height':thisHeight*zoomV, 'width':thisWidth*zoomH, 'z-index':150, 'border':'2px solid #fe4e65', 'left':offSet});
+        
+        var hoverHeight;
+        var hoverWidth = thisWidth+2;
+        if(thisHeight < 30){
+            var hoverHeight = 32;
+        }else{
+            var hoverHeight = thisHeight + 2;
+        }
 
+        $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':1});
+    
+
+        
+    
         var $memberName = $(this).find('.memberName');
         var $memberTime = $(this).find('.memberTime');
         if($memberName.hasClass('hideelement')){
@@ -40,7 +55,7 @@
 
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
-            $(this).css({'height':thisHeight+2, 'width':'98.5%', 'z-index':thisZindex, 'border':'1px solid #e4e4e4', 'left':thisOffsetleft});
+            $(this).css({'height':thisHeight+2, 'width':'98.5%', 'z-index':thisZindex, 'border':'1px solid #e4e4e4', 'left':1});
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
                 $memberTime.removeClass('_hided').addClass('hideelement');

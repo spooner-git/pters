@@ -177,15 +177,15 @@
     </form>
 
     <div id="myClassCreate" class="classSettingBox">
-        <label>1. 새로운 캘린더 만들기</label>
+        <label>1. 새로운 프로그램 만들기</label>
         <div>
-            <p>나의 캘린더를 추가합니다. <br>
+            <p>나의 프로그램을 추가합니다. <br>
                 (예: 웨이트 트레이닝, 요가, 필라테스, 발레, 미술, 과외 등)
             </p>
-            <p>캘린더는 설정에서 언제든지 더 추가 할 수 있습니다.</p>
+            <p>프로그램은 설정에서 언제든지 더 추가 할 수 있습니다.</p>
         </div>
         <div>
-            <label>만들고 하는 캘린더명을 입력 해주세요.</label>
+            <label>만들고자 하는 프로그램명을 입력 해주세요.</label>
         </div>
 
         {% if center_list %}
@@ -233,9 +233,9 @@
     </div>
 
     <div id="myClassSetting" class="classSettingBox">
-        <label>2. 캘린더 설정</label>
+        <label>2. 프로그램 설정</label>
         <div>
-            <p>캘린더의 초기 정보를 설정합니다. <br>
+            <p>프로그램의 초기 정보를 설정합니다. <br>
             </p>
             <p>설정에서 언제든 변경할 수 있습니다.</p>
         </div>
@@ -380,7 +380,7 @@
     <div id="myClassHourSetting" class="classSettingBox">
         <label>3. 시간 단위 설정</label>
         <div>
-            <p>캘린더의 기본 시간 단위를 설정합니다. <br>
+            <p>프로그램의 기본 시간 단위를 설정합니다. <br>
             </p>
             <p>설정한 단위에 맞춰 달력이 변경 됩니다.</p>
         </div>
@@ -393,7 +393,7 @@
         </div>
         <div class="detailSelectBox class_hour_explain" id="class_hour_30">
             <img src="/static/user/res/class_hour_30.png">
-            <p>클래스를 30분 단위로 입력합니다.</p>
+            <p>레슨을 30분 단위로 입력합니다.</p>
             <span>※횟수 차감 기준</span>
             <p>30분을 개별로 2번 입력하면 횟수가 2회 차감됩니다.</p>
             <p>'진행시간'을 1시간으로 입력해도 횟수는 1회 차감됩니다.</p>
@@ -401,7 +401,7 @@
         </div>
         <div class="detailSelectBox class_hour_explain" id="class_hour_60">
             <img src="/static/user/res/class_hour_60.png">
-            <p>클래스를 1시간 단위로 입력합니다.</p>
+            <p>레슨을 1시간 단위로 입력합니다.</p>
             <span>※횟수 차감 기준</span>
             <p>1시간을 개별로 2번 입력하면 횟수가 2회 차감됩니다.</p>
             <p>'진행시간'을 2시간으로 입력해도 횟수는 1회 차감됩니다.</p>
@@ -419,7 +419,7 @@
 {% block local_js_footer %}
     <!-- for db by hk.kim 170805-->
     <script>
-        $('#uptext').text('클래스 추가')
+        $('#uptext').text('프로그램 추가')
         /*
          $('#popup_lecture_select').show().css('top','40%')
          ajax_read_lecture_info_from_db()
@@ -587,7 +587,7 @@
                     $('#myClassCreate').css('display','none')
                     $('#myClassSetting').css('display','block')
                 }else{
-                    alert('클래스를 선택 해주세요.')
+                    alert('프로그램을 선택 해주세요.')
                 }
             }else if(option == "1"){
                 if($('#id_setting_trainer_work_time').val().length>0){
@@ -696,7 +696,7 @@
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                     }else{
-                        alert('새로운 강의가 등록 되었습니다.')
+                        alert('새로운 프로그램이 등록 되었습니다.')
                         location.href="{% url 'trainer:trainer_main' %}"
                     }
                 },
