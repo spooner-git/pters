@@ -447,7 +447,6 @@
                 var groupOrMember = $('#popup_btn_sign_complete').attr('data-signtype');
                 $('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'));
                 if(groupOrMember == 'group'){
-                    console.log('!!!!!!')
                     send_group_plan_complete('callback', function(json, senddata){
                         send_memo("blank");
                         signImageSend(senddata);
@@ -455,7 +454,6 @@
                         super_ajaxClassTime();
                         close_info_popup('cal_popup_planinfo');
                         enable_popup_btns_after_ajax();
-                        console.log('lllll')
                     });
 
                 }else if(groupOrMember == 'groupmember'){

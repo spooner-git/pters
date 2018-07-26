@@ -35,14 +35,12 @@ function completeSend(use, callback){
 }
 
 function upTouchEvent(){
-    console.log('up')
     if($('#mshade').css('z-index')<0){
         $("#float_btn").fadeIn('fast')
     }
 
 }
 function downTouchEvent(){
-    console.log('up')
     $("#float_btn").fadeOut('fast')
 
 }
@@ -128,7 +126,6 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        console.log($('._calweek').length,$('._calweek').length,"$('._calweek').length",$('._calweek').length);
         if($('._calweek').length != 0){
             enable_window_scroll();
         }
@@ -136,7 +133,6 @@ function close_info_popup(option){
     }
     else if(option =="cal_popup_plandelete"){
         $("#"+option).css({'display':'none'});
-        console.log('1');
         if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
             shade_index(100);
         }else{
@@ -1069,7 +1065,6 @@ function get_trainee_participate_group(use, callback){
 
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_trainee_group_ing_list',jsondata);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
