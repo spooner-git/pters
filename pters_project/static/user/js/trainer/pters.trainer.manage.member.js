@@ -2261,6 +2261,7 @@ function memberListSet (type,option,Reverse, jsondata){
     var yetCounts;
     var groupType;
     var groupType2;
+    var groupType3;
 
     for(var i=0; i<len; i++){
         if(option == "count"){
@@ -2288,6 +2289,11 @@ function memberListSet (type,option,Reverse, jsondata){
             }else{
                 groupType2 = '';
             }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
+            }
         }else if(option == "name"){
             array = nameLists[i].split('/');
             email = array[8];
@@ -2312,6 +2318,11 @@ function memberListSet (type,option,Reverse, jsondata){
                 groupType2 = '/'+array[15];
             }else{
                 groupType2 = '';
+            }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
             }
         }else if(option == "date"){
             array = dateLists[i].split('/');
@@ -2338,6 +2349,11 @@ function memberListSet (type,option,Reverse, jsondata){
                 groupType2 = '/'+array[15];
             }else{
                 groupType2 = '';
+            }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
             }
         }
 
@@ -2390,7 +2406,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+'">'+groupType+groupType2+'</td>';
+        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
         var emailtd = '<td class="_email">'+email+'</td>';
@@ -3385,8 +3401,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
 
             var yourgroup;
+                yourgroup = jsondata.groupNameArray[i];
             if(jsondata.groupNameArray[i] != '1:1'){
-                yourgroup = '[그룹] '+jsondata.groupNameArray[i];
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push('G'+jsondata.regCountArray[i]);
                     remCount_group_personal.push('G'+jsondata.remCountArray[i]);
@@ -3395,7 +3411,6 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                 }
 
             }else if(jsondata.groupNameArray[i] == '1:1'){
-                yourgroup = jsondata.groupNameArray[i] + ' 레슨';
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push(jsondata.regCountArray[i]);
                     remCount_group_personal.push(jsondata.remCountArray[i]);

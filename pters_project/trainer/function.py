@@ -17,7 +17,9 @@ def func_get_class_member_id_list(class_id):
     class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
                                                        use=USE).order_by('lecture_tb__member__name')
     class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
+    # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     for class_lecture_info in class_lecture_data:
+        # print(str(class_lecture_info['lecture_tb__member']))
         all_member.append(class_lecture_info['lecture_tb__member'])
 
     return all_member
@@ -91,21 +93,13 @@ def func_get_member_ing_list(class_id, user_id):
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
 
-                    group_check = 0
-                    try:
-                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    except ObjectDoesNotExist:
-                        group_check = 1
-
+                    # group_check = 0
+                    group_check = lecture_info_data.get_group_lecture_check()
+                    # try:
+                    #     GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                    # except ObjectDoesNotExist:
+                    #     group_check = 1
                     if group_check == 0:
-                        if member_data.group_info == '':
-                            member_data.group_info = '그룹'
-                        else:
-                            if '그룹' in member_data.group_info:
-                                member_data.group_info = member_data.group_info
-                            else:
-                                member_data.group_info += '/그룹'
-                    else:
                         if member_data.group_info == '':
                             member_data.group_info = '1:1'
                         else:
@@ -113,11 +107,34 @@ def func_get_member_ing_list(class_id, user_id):
                                 member_data.group_info = member_data.group_info
                             else:
                                 member_data.group_info = '1:1/' + member_data.group_info
+                    elif group_check == 1:
+                        if member_data.group_info == '':
+                            member_data.group_info = '그룹'
+                        else:
+                            if '그룹' in member_data.group_info:
+                                member_data.group_info = member_data.group_info
+                            elif '클래스' in member_data.group_info:
+                                if '1:1' in member_data.group_info:
+                                    member_data.group_info = '1:1/그룹/클래스'
+                                else:
+                                    member_data.group_info = '그룹/클래스'
+                            else:
+                                member_data.group_info += '/그룹'
+                    else:
+                        if member_data.group_info == '':
+                            member_data.group_info = '클래스'
+                        else:
+                            if '클래스' in member_data.group_info:
+                                member_data.group_info = member_data.group_info
+                            else:
+                                member_data.group_info += '/클래스'
 
-                    lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                                                                    lecture_tb=lecture_info.lecture_id,
-                                                                    auth_cd='VIEW', lecture_tb__use=USE,
-                                                                    use=USE).count()
+                    # print(str(lecture_info_data.get_member_lecture_auth_check))
+                    lecture_count += lecture_info_data.get_member_lecture_auth_check()
+                    # lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                    #                                                 lecture_tb=lecture_info.lecture_id,
+                    #                                                 auth_cd='VIEW', lecture_tb__use=USE,
+                    #                                                 use=USE).count()
 
                     if lecture_info.use != 0:
                         if lecture_info.state_cd == 'IP':
@@ -255,21 +272,14 @@ def func_get_member_end_list(class_id, user_id):
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
 
-                    group_check = 0
-                    try:
-                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    except ObjectDoesNotExist:
-                        group_check = 1
+                    # group_check = 0
+                    group_check = lecture_info_data.get_group_lecture_check()
+                    # try:
+                    #     GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                    # except ObjectDoesNotExist:
+                    #     group_check = 1
 
                     if group_check == 0:
-                        if member_data.group_info == '':
-                            member_data.group_info = '그룹'
-                        else:
-                            if '그룹' in member_data.group_info:
-                                member_data.group_info = member_data.group_info
-                            else:
-                                member_data.group_info += '/그룹'
-                    else:
                         if member_data.group_info == '':
                             member_data.group_info = '1:1'
                         else:
@@ -277,11 +287,33 @@ def func_get_member_end_list(class_id, user_id):
                                 member_data.group_info = member_data.group_info
                             else:
                                 member_data.group_info = '1:1/' + member_data.group_info
+                    elif group_check == 1:
+                        if member_data.group_info == '':
+                            member_data.group_info = '그룹'
+                        else:
+                            if '그룹' in member_data.group_info:
+                                member_data.group_info = member_data.group_info
+                            elif '클래스' in member_data.group_info:
+                                if '1:1' in member_data.group_info:
+                                    member_data.group_info = '1:1/그룹/클래스'
+                                else:
+                                    member_data.group_info = '그룹/클래스'
+                            else:
+                                member_data.group_info += '/그룹'
+                    else:
+                        if member_data.group_info == '':
+                            member_data.group_info = '클래스'
+                        else:
+                            if '클래스' in member_data.group_info:
+                                member_data.group_info = member_data.group_info
+                            else:
+                                member_data.group_info += '/클래스'
 
-                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                                                                           lecture_tb=lecture_info.lecture_id,
-                                                                           auth_cd='VIEW', lecture_tb__use=USE,
-                                                                           use=USE).count()
+                    lecture_finish_count += lecture_info_data.get_member_lecture_auth_check()
+                    # lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                    #                                                        lecture_tb=lecture_info.lecture_id,
+                    #                                                        auth_cd='VIEW', lecture_tb__use=USE,
+                    #                                                        use=USE).count()
 
                     if lecture_info.use != 0:
                         if group_check == 0:
@@ -816,13 +848,13 @@ def func_get_lecture_list(context, class_id, member_id):
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
 
-            lecture_info.group_name = '1:1'
+            lecture_info.group_name = '1:1 레슨'
             lecture_info.group_type_cd = ''
             lecture_info.group_member_num = ''
             lecture_info.group_state_cd = ''
             lecture_info.group_state_cd_nm = ''
             lecture_info.group_note = ''
-            group_check = 0
+            # group_check = 0
             group_info = None
             lecture_test = None
 
@@ -830,13 +862,17 @@ def func_get_lecture_list(context, class_id, member_id):
                                                                           lecture_tb_id=lecture_info.lecture_id,
                                                                           state_cd='PE').count()
 
-            try:
-                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-            except ObjectDoesNotExist:
-                group_check = 1
-
-            if group_check == 0:
-                lecture_info.group_name = group_info.group_tb.name
+            # try:
+            #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+            # except ObjectDoesNotExist:
+            #     group_check = 1
+            group_check = lecture_info_data.get_group_lecture_check()
+            group_info = lecture_info_data.get_group_lecture_info()
+            if group_check != 0:
+                if group_check == 1:
+                    lecture_info.group_name = '[그룹] ' + group_info.group_tb.name
+                else:
+                    lecture_info.group_name = '[클래스] ' + group_info.group_tb.name
                 lecture_info.group_type_cd = group_info.group_tb.group_type_cd
                 lecture_info.group_member_num = group_info.group_tb.member_num
                 lecture_info.group_note = group_info.group_tb.note
