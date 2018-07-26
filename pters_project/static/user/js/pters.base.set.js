@@ -120,7 +120,7 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        console.log($('._calweek').length,$('._calweek').length,"$('._calweek').length",$('._calweek').length,)
+        console.log($('._calweek').length,$('._calweek').length,"$('._calweek').length",$('._calweek').length)
         if($('._calweek').length != 0){
             enable_window_scroll();
         }

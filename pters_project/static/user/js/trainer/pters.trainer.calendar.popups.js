@@ -362,12 +362,12 @@
 
         $('#popup_info3_memo,#popup_info3_memo_modify').show();
         var schedule_finish_check = $(this).attr('data-schedule-check');
-
+        var group_class_type_name = $(this).attr('data-group-type-cd-name');
 
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
         var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
         var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
-        var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">[그룹]'+info[6]+'</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+        var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">['+group_class_type_name+']'+info[6]+'</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
         var infoText3 = $(this).attr('data-memo');
         if($(this).attr('data-memo') == undefined){
             infoText3 = "";
@@ -689,10 +689,10 @@
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
 
-            var text1 = '회원/그룹 선택';
+            var text1 = '회원/그룹/클래스 선택';
             var text2 = '선택';
             if(Options.language == "KOR"){
-                text1 = '회원/그룹 선택';
+                text1 = '회원/그룹/클래스 선택';
                 text2 = '선택';
             }else if(Options.language == "JPN"){
                 text1 = '「会員選択」';
@@ -739,10 +739,10 @@
             $('#memo_mini').val("");
 
             $("#membersSelected button").removeClass("dropdown_selected");
-            var text1 = '회원/그룹 선택';
+            var text1 = '회원/그룹/클래스 선택';
             var text2 = '선택';
             if(Options.language == "KOR"){
-                text1 = '회원/그룹 선택';
+                text1 = '회원/그룹/클래스 선택';
                 text2 = '선택';
             }else if(Options.language == "JPN"){
                 text1 = '「会員選択」';

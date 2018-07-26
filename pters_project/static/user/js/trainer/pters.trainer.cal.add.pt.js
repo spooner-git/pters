@@ -2155,6 +2155,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
     var planMemberDbid = '';
     var planGroupid = '';
     var planCode = '';
+    var planGroupClassName = '';
     switch(option){
         case 'class':
             plan = option;
@@ -2202,6 +2203,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
+            planGroupClassName = jsondata.group_schedule_group_type_cd_name;
             break;
     }
 
@@ -2357,6 +2359,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
                                        '" data-dbid="'+planMemberDbid[i]+
                                        '" data-memberName="'+memberName+
+                                       '" data-group-type-cd-name="'+planGroupClassName[i]+
                                        '" class="'+planColor_+
                                        '" style="height:'+planHeight+'px;'+
                                                  'top:'+planLocation+'px;'+
@@ -2694,6 +2697,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
     var planMemberDbid = '';
     var planGroupid = '';
     var planCode = '';
+    var planGroupClassName = '';
     switch(option){
         case 'class':
             plan = option;
@@ -2741,6 +2745,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
+            planGroupClassName = jsondata.group_schedule_group_type_cd_name;
             break;
     }
 
@@ -2879,6 +2884,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                         '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
                         '" data-dbid="'+planMemberDbid[i]+
                         '" data-memberName="'+memberName+
+                        '" data-group-type-cd-name="'+planGroupClassName[i]+
                         '" class="'+planColor_+
                         '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
                         '">'+
