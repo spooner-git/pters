@@ -761,7 +761,6 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
 
     var sum = textToAppend+toAppend1
-    console.log(sum)
     tableHTML.push(sum)
 
 

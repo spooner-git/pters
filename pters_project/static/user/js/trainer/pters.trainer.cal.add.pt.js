@@ -443,7 +443,6 @@ $(document).ready(function(){
                 next30IDMin  = '00';
             }
             var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
-            console.log(thisIDHour+'-'+thisIDMin , (Options.workEndTime-1)+'-30')
             if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime') 
                 && thisIDHour+'-'+thisIDMin != (Options.workEndTime-1)+'-30'){
                 $('.blankSelected').removeClass('blankSelected');
@@ -997,7 +996,7 @@ $(document).ready(function(){
         position_fixed_addplan_if_mobile();
         if(bodywidth < 600){
             var selector = $(this).siblings('ul');
-            $('.pters_dropdown_custom_list').css({'top':($(window).height()-selector.outerHeight())/2-50,
+            $('.pters_dropdown_custom_list').css({'top':($(window).height()-selector.height())/2,
                                                   'left':'50%',
                                                   'transform':'translateX(-50%)'});
             //드랍다운 씹힘현상 해결
@@ -1132,7 +1131,6 @@ $(document).ready(function(){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray);
                         }else{
-                            console.log(jsondata)
                             var repeat_info;
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray[0].split('/').length;
@@ -3049,7 +3047,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
     var plan_starttime = {};
     var plan_endtime = {};
-    console.log(jsondata)
     for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
         if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
             plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
@@ -4222,15 +4219,11 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "offadd"){
-        
-        console.log($('#page-addplan-pc').css('display')=='block', durSelect_mini.hasClass("dropdown_selected"))
-
         if($('#page-addplan-pc').css('display')!='block' && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true && (startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
         }else if($('#page-addplan-pc').css('display')=='block' && durSelect_mini.hasClass("dropdown_selected")==true){
-            console.log("$('#submitBtn_mini').css('background','#fe4e65');")
             $('#submitBtn_mini').css('background','#fe4e65');
             select_all_check=true;
         }else{

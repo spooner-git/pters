@@ -35,14 +35,12 @@ function completeSend(use, callback){
 }
 
 function upTouchEvent(){
-    console.log('up')
     if($('#mshade').css('z-index')<0){
         $("#float_btn").fadeIn('fast')
     }
 
 }
 function downTouchEvent(){
-    console.log('up')
     $("#float_btn").fadeOut('fast')
 
 }
@@ -103,6 +101,14 @@ function shade_index(option){
     }
 }
 
+function show_caution_popup(messageHtml){
+    $('#base_popup_check_finished_member_notice .caution_message').html(                                                                            
+                                                                            messageHtml
+                                                                         )
+    $('#base_popup_check_finished_member_notice').show();
+    $('#shade_caution').show();
+}
+
 function close_caution_popup(){
     $('#base_popup_check_finished_member_notice').hide();
     $('#shade_caution').hide();
@@ -120,7 +126,6 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        console.log($('._calweek').length,$('._calweek').length,"$('._calweek').length",$('._calweek').length);
         if($('._calweek').length != 0){
             enable_window_scroll();
         }
@@ -128,7 +133,6 @@ function close_info_popup(option){
     }
     else if(option =="cal_popup_plandelete"){
         $("#"+option).css({'display':'none'});
-        console.log('1');
         if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
             shade_index(100);
         }else{
@@ -1061,7 +1065,6 @@ function get_trainee_participate_group(use, callback){
 
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log('get_trainee_group_ing_list',jsondata);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -1127,3 +1130,52 @@ function numberWithCommas(x) { //천단위 콤마 찍기
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+
+
+
+set_drag_drop_action_to_DOM('#page-addplan');
+set_drag_drop_action_to_DOM('#cal_popup_planinfo');
+set_drag_drop_action_to_DOM('#cal_popup_plancheck');
+///////////////skkim test//////////////////드래그앤 드랍 함수
+function set_drag_drop_action_to_DOM(targetSelector){
+    if(bodywidth > 600){
+        $(targetSelector).mousedown(function(event){
+            $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
+
+            $(this).mouseup(function(event){
+                $(this).css({'box-shadow':'unset'});
+            });
+
+            $(this).mouseleave(function(){
+                $(this).css({'box-shadow':'unset'});
+            });
+
+            var thisOriX = $(this).offset().left;
+            var thisOriY = $(this).offset().top;
+
+            var oriX = event.pageX;
+            var oriY = event.pageY;
+
+            $(document).on('mousemove', 'body', function(e){
+                var moveX = e.pageX;
+                var moveY = e.pageY;
+
+                var diffX = oriX - moveX;
+                var diffY = oriY - moveY;
+
+                var resultX;
+                var resultY;
+
+                var resultX = thisOriX - diffX;
+                var resultY = thisOriY - diffY;
+
+                $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
+
+                $(document).on('mouseup click', targetSelector, function(){
+                    $(document).off('mousemove');
+                });
+            });
+        });
+    };
+};
+///////////////skkim test//////////////////드래그앤 드랍 함수
