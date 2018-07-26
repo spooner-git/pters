@@ -888,12 +888,13 @@ img,a,div,span,p{
 	}
 
 	.ymdText-pc-add-off{
-		display: inline;
+		display: inline-block;
 		margin-right: 5px;
 		padding:5px;
 		font-size: 13px;
 		border:1px solid #282828;
 		cursor: pointer;
+		line-height: 19px !important;
 	}
 	.ymdText-pc-add-off:hover{
 		background-color: #282828;
@@ -901,13 +902,14 @@ img,a,div,span,p{
 	}
 
 	.ymdText-pc-add-pt{
-		display: inline;
+		display: inline-block;
 		margin-left: 5px;
 		padding:5px;
 		color: #fe4e65;
 		font-size: 13px;
 		border:1px solid #fe4e65;
 		cursor: pointer;
+		line-height: 19px !important;
 	}
 	.ymdText-pc-add-pt:hover{
 		background-color: #fe4e65;

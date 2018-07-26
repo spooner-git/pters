@@ -1589,7 +1589,6 @@ function get_current_member_list(use, callback){
         success:function(data){
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
