@@ -339,6 +339,13 @@ class ClassLectureTb(TimeStampedModel):
                                                                 use=USE).count()
         return lecture_auth_count
 
+    def get_group_lecture_info(self):
+
+        try:
+            group_info = GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id, lecture_tb__use=USE, use=USE)
+        except ObjectDoesNotExist:
+            group_info = None
+        return group_info
 
 class MemberClassTb(TimeStampedModel):
     member_class_id = models.AutoField(db_column='ID', primary_key=True, null=False)

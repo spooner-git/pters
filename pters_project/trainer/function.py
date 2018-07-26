@@ -848,13 +848,13 @@ def func_get_lecture_list(context, class_id, member_id):
             lecture_info.mod_dt = str(lecture_info.mod_dt)
             lecture_info.reg_dt = str(lecture_info.reg_dt)
 
-            lecture_info.group_name = '1:1'
+            lecture_info.group_name = '1:1 레슨'
             lecture_info.group_type_cd = ''
             lecture_info.group_member_num = ''
             lecture_info.group_state_cd = ''
             lecture_info.group_state_cd_nm = ''
             lecture_info.group_note = ''
-            group_check = 0
+            # group_check = 0
             group_info = None
             lecture_test = None
 
@@ -862,13 +862,17 @@ def func_get_lecture_list(context, class_id, member_id):
                                                                           lecture_tb_id=lecture_info.lecture_id,
                                                                           state_cd='PE').count()
 
-            try:
-                group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-            except ObjectDoesNotExist:
-                group_check = 1
-
-            if group_check == 0:
-                lecture_info.group_name = group_info.group_tb.name
+            # try:
+            #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+            # except ObjectDoesNotExist:
+            #     group_check = 1
+            group_check = lecture_info_data.get_group_lecture_check()
+            group_info = lecture_info_data.get_group_lecture_info()
+            if group_check != 0:
+                if group_check == 1:
+                    lecture_info.group_name = '[그룹] ' + group_info.group_tb.name
+                else:
+                    lecture_info.group_name = '[클래스] ' + group_info.group_tb.name
                 lecture_info.group_type_cd = group_info.group_tb.group_type_cd
                 lecture_info.group_member_num = group_info.group_tb.member_num
                 lecture_info.group_note = group_info.group_tb.note
