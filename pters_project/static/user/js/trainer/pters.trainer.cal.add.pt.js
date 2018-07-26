@@ -1998,13 +1998,13 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
     };
     var schedulesHTML = [];
     for(var i=0; i<len; i++){
-        if(repeat_group_name[i] != 0 && option != "off") {
-            // if(option != "off"){
+        // if(repeat_group_name[i] != 0 && option != "off") {
+        if(option != "off"){
             repeat_title = "[" + repeat_title_array[i] + "]";
         }
-        else{
-            repeat_title = "";
-        }
+        // else{
+        //     repeat_title = "";
+        // }
         var repeat_id = repeat_id_array[i];
         var repeat_type = repeat_info_dict['KOR'][repeat_type_array[i]];
         var repeat_start = repeat_start_array[i].replace(/-/gi,".");
