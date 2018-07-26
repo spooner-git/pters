@@ -271,7 +271,7 @@
     </div>
 
 
-    <div id="page-addplan" class="wrap popups">
+    <div id="page-addplan" class="popups">
         <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
             {% csrf_token %}
             <input type="hidden" name="member_id"         id="id_member_id">
