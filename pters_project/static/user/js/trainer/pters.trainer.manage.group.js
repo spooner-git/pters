@@ -1614,7 +1614,7 @@ function grouptype_dropdown_set(grouplistJSON){
 
     var optionsToJoin = ['<option value="">1:1 레슨</option>']
     for(var i=0; i<len; i++){
-        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">'+grouplistJSON.name[i]+'</option>')
+        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.name[i]+'</option>')
     }
     $('.grouptypeselect').html(optionsToJoin.join(''))
 }
