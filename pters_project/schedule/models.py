@@ -18,7 +18,6 @@ class AuthLectureManager(models.Manager):
     use_for_related_fields = True
 
     def check_authorized(self, class_id):
-        print(str(self))
         lecture_tb_info = self
 
         try:
@@ -28,6 +27,18 @@ class AuthLectureManager(models.Manager):
             lecture_tb_info = None
 
         return lecture_tb_info
+
+
+class ClassMemberListManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_member_list(self, class_id):
+        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                           lecture_tb__use=USE,
+                                                           use=USE).order_by('lecture_tb__member__name')
+        class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
+
+        return class_lecture_data
 
 
 class ClassTb(TimeStampedModel):
@@ -300,6 +311,21 @@ class ClassLectureTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'CLASS_LECTURE_TB'
+
+    def get_group_lecture_check(self):
+        group_check = 0
+        try:
+            GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id, use=USE)
+        except ObjectDoesNotExist:
+            group_check = 1
+        return group_check
+
+    def get_member_lecture_auth_check(self):
+        if self.lecture_tb is not None and self.lecture_tb != '':
+            lecture_auth_count = MemberLectureTb.objects.filter(lecture_tb=self.lecture_tb_id,
+                                                                auth_cd='VIEW', lecture_tb__use=USE,
+                                                                use=USE).count()
+        return lecture_auth_count
 
 
 class MemberClassTb(TimeStampedModel):

@@ -17,7 +17,9 @@ def func_get_class_member_id_list(class_id):
     class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
                                                        use=USE).order_by('lecture_tb__member__name')
     class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
+    # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     for class_lecture_info in class_lecture_data:
+        # print(str(class_lecture_info['lecture_tb__member']))
         all_member.append(class_lecture_info['lecture_tb__member'])
 
     return all_member
@@ -91,11 +93,12 @@ def func_get_member_ing_list(class_id, user_id):
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
 
-                    group_check = 0
-                    try:
-                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    except ObjectDoesNotExist:
-                        group_check = 1
+                    # group_check = 0
+                    group_check = lecture_info_data.get_group_lecture_check()
+                    # try:
+                    #     GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                    # except ObjectDoesNotExist:
+                    #     group_check = 1
 
                     if group_check == 0:
                         if member_data.group_info == '':
@@ -113,11 +116,12 @@ def func_get_member_ing_list(class_id, user_id):
                                 member_data.group_info = member_data.group_info
                             else:
                                 member_data.group_info = '1:1/' + member_data.group_info
-
-                    lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                                                                    lecture_tb=lecture_info.lecture_id,
-                                                                    auth_cd='VIEW', lecture_tb__use=USE,
-                                                                    use=USE).count()
+                    # print(str(lecture_info_data.get_member_lecture_auth_check))
+                    lecture_count += lecture_info_data.get_member_lecture_auth_check()
+                    # lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                    #                                                 lecture_tb=lecture_info.lecture_id,
+                    #                                                 auth_cd='VIEW', lecture_tb__use=USE,
+                    #                                                 use=USE).count()
 
                     if lecture_info.use != 0:
                         if lecture_info.state_cd == 'IP':
@@ -255,11 +259,12 @@ def func_get_member_end_list(class_id, user_id):
                     if lecture_info_data.auth_cd == 'WAIT':
                         member_data.np_lecture_counts += 1
 
-                    group_check = 0
-                    try:
-                        GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    except ObjectDoesNotExist:
-                        group_check = 1
+                    # group_check = 0
+                    group_check = lecture_info_data.get_group_lecture_check()
+                    # try:
+                    #     GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                    # except ObjectDoesNotExist:
+                    #     group_check = 1
 
                     if group_check == 0:
                         if member_data.group_info == '':
@@ -278,10 +283,11 @@ def func_get_member_end_list(class_id, user_id):
                             else:
                                 member_data.group_info = '1:1/' + member_data.group_info
 
-                    lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                                                                           lecture_tb=lecture_info.lecture_id,
-                                                                           auth_cd='VIEW', lecture_tb__use=USE,
-                                                                           use=USE).count()
+                    lecture_finish_count += lecture_info_data.get_member_lecture_auth_check()
+                    # lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
+                    #                                                        lecture_tb=lecture_info.lecture_id,
+                    #                                                        auth_cd='VIEW', lecture_tb__use=USE,
+                    #                                                        use=USE).count()
 
                     if lecture_info.use != 0:
                         if group_check == 0:
