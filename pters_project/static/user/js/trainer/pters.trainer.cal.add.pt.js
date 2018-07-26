@@ -4067,8 +4067,8 @@ function send_add_groupmember_plan(use, callback){
             $('#errorMessageBar').show();
             $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.");
         }
-    })
-}
+    });
+};
 
 
 $(document).on('click','.group_member_cancel',function(){
@@ -4084,11 +4084,11 @@ $(document).on('click','.group_member_cancel',function(){
             shade_index(150);
         }else if($('._calweek').length > 0){
             shade_index(100);
-        }
+        };
         get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
             draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
-        })
-    })
+        });
+    });
 });
 
 
@@ -4259,9 +4259,9 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             $('#submitBtn_mini').css('background','#282828');
             $('#page-addplan .submitBtn:first-child').removeClass('submitBtnActivated');
             select_all_check=false;
-        }
-    }
-}
+        };
+    };
+};
 
 
 
@@ -4273,8 +4273,8 @@ function super_ajaxClassTime(){
         ajaxClassTime();
     }else if(selector_calendar.hasClass('_calday')){
         ajaxClassTime_day();
-    }
-}
+    };
+};
 
 
 function position_fixed_addplan_if_mobile(){
@@ -4308,59 +4308,10 @@ $(window).resize(function(){
     };
     //Timegraph에 현재 선택된 일정 깜빡이 크기를 반응형으로
 
-})
+});
 
 
 
 
 
-set_drag_drop_action_to_DOM('#page-addplan');
-set_drag_drop_action_to_DOM('#cal_popup_planinfo');
-set_drag_drop_action_to_DOM('#cal_popup_plancheck');
-///////////////skkim test//////////////////
-function set_drag_drop_action_to_DOM(targetSelector){
-    if(bodywidth > 600){
-        $(targetSelector).mousedown(function(event){
-            $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'})    
 
-            $(this).mouseup(function(event){
-                $(this).css({'box-shadow':'unset'}) 
-            })
-
-            $(this).mouseleave(function(){
-                $(this).css({'box-shadow':'unset'})
-            })
-
-            var thisOriX = $(this).offset().left;
-            var thisOriY = $(this).offset().top;
-
-            var oriX = event.pageX;
-            var oriY = event.pageY;
-
-            $(document).on('mousemove', 'body', function(e){
-                var moveX = e.pageX;
-                var moveY = e.pageY;
-
-                var diffX = oriX - moveX;
-                var diffY = oriY - moveY;
-
-                var resultX;
-                var resultY;
-
-                var resultX = thisOriX - diffX
-                var resultY = thisOriY - diffY
-
-                $(targetSelector).css({'top':resultY+'px','left':resultX+'px'})
-
-                $(document).on('mouseup click', targetSelector, function(){
-                    $(document).off('mousemove')
-                })
-            })
-        })
-    }
-}
-
-
-
-
-///////////////skkim test//////////////////
