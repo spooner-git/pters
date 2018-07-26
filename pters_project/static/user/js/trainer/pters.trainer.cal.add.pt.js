@@ -1986,7 +1986,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
             repeat_time_array = jsondata.repeatScheduleStartTimeArray;
             repeat_endTime_array = jsondata.repeatScheduleEndTimeArray;
             repeat_dur_array = jsondata.repeatScheduleTimeDurationArray;
-            repeat_group_name_array = [];
+            repeat_group_name_array = jsondata.repeatScheduleGroupNameArray;
             repeat_title_array = jsondata.repeatScheduleGroupTypeNameArray;
             break;
     }
