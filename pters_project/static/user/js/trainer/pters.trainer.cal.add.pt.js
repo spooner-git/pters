@@ -505,10 +505,14 @@ $(document).ready(function(){
         $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
         $("#id_training_time, #id_training_time_off").val(starttime);
 
-        if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
+        if(addTypeSelect == "ptadd"){ //Form 셋팅
             $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
             $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
         }else if(addTypeSelect == "offadd"){
+            $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
+            $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
+        }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatgroupptadd"){
+            addTypeSelect = 'ptadd'
             $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
             $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
         }
