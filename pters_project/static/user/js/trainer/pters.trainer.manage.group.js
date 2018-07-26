@@ -3218,8 +3218,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
 
+            var yourgroup = jsondata.groupNameArray[i];
             if(jsondata.groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push('G'+jsondata.regCountArray[i])
                     remCount_group_personal.push('G'+jsondata.remCountArray[i])
@@ -3228,7 +3228,6 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                 }
 
             }else if(jsondata.groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push(jsondata.regCountArray[i])
                     remCount_group_personal.push(jsondata.remCountArray[i])
