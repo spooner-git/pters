@@ -807,7 +807,8 @@
 
 	/*완료 사인 창*/
 	#canvasWrap{
-		top: 159px;
+		position: fixed;
+
 		background: #ffffff;
 	}
 
