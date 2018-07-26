@@ -90,6 +90,11 @@ def login_trainer(request):
                                             session_info=request.session.session_key,
                                             device_info=str(user_agent), use=USE)
                     token_info.save()
+                else:
+                    token_info = PushInfoTb(member_id=user.id, last_login=timezone.now(),
+                                            session_info=request.session.session_key,
+                                            device_info=str(user_agent), use=USE)
+                    token_info.save()
 
             request.session['push_token'] = keyword
 
