@@ -459,20 +459,57 @@ $(document).ready(function(){
         show_shadow_reponsively();
     });
 
-    //진행완료, 환불
-    $(document).on('click','div.lecConnectType_PE, div.lecConnectType_RF',function(){
+    //진행완료 텍스트를 클릭했을때
+    $(document).on('click','div.lecConnectType_PE',function(){
+        var bodywidth = window.innerWidth;
+        var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        selector_lectureStateChangeSelectPopup.fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
-        $('._complete, ._refund').css('display','none')
-        if($('body').width()>600){
-            $('._resume, ._delete').css('display','inline-block')
+        $('._complete, ._refund').css('display','none');
+        if(bodywidth > 600){
+            $('._resume, ._delete').css('display','inline-block');
         }else{
-            $('._resume, ._delete').css('display','block')
+            $('._resume, ._delete').css('display','block');
         }
-        $('.lectureStateChangeSelectPopup').find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.')
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
+        
+        //수강자동 완료처리가 ON일떄 재개 버튼을 막는다.
+        var enddate_thislect = $(this).siblings('div').find('.lec_end_date').val().replace(/\./gi,'-')
+        if(Options.lecture_autocomplete == 0){                  //수강 자동완료 기능 OFF
+            $('div._resume').removeClass('disabled_button');
+        }else if(Options.lecture_autocomplete == 1 ){           //수강 자동완료 기능 ON
+            if(compare_date2(enddate_thislect, today_YY_MM_DD) == true){
+                $('div._resume').removeClass('disabled_button');
+            }else{
+                $('div._resume').addClass('disabled_button');
+            }
+        }
+        show_shadow_reponsively();
+    });
+
+
+    //환불 텍스트를 클릭했을때
+    $(document).on('click','div.lecConnectType_RF',function(){
+        var bodywidth = window.innerWidth;
+        var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        selector_lectureStateChangeSelectPopup.fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+        $('._complete, ._refund').css('display','none');
+        if(bodywidth > 600){
+            $('._resume, ._delete').css('display','inline-block');
+        }else{
+            $('._resume, ._delete').css('display','block');
+        }
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
+
+        $('div._resume').removeClass('disabled_button');
+
         show_shadow_reponsively();
     });
 
@@ -522,10 +559,21 @@ $(document).ready(function(){
      //재개 처리 버튼
      $('.lectureStateChangeSelectPopup ._resume').click(function(){
         if($('.lectureStateChangeSelectPopup').attr('data-grouptype') !='group'){
-            var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-            var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-            resume_member_reg_data_pc(lectureID, dbID)
-         $('.lectureStateChangeSelectPopup').css('display','none')
+            if(!$(this).hasClass('disabled_button')){
+                var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+                var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+                var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
+                resume_member_reg_data_pc(lectureID, dbID);
+                selectore_lectureStateChangeSelectPopup.css('display','none');
+            }else{
+                show_caution_popup(
+                                    '<p style="color:#fe4e65;">수강 자동 완료 기능이 활성화 상태입니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>- 옵션에서 수강 자동완료 해제 혹은<br>- 종료일자를 오늘 이후 날짜로 설정해주세요.</p>'+
+                                        '</div>'+
+                                    '<p>확인 후 다시 시도해주세요.</p>'
+                                    )
+            }
         }
      })
      /*그룹 진행완료, 재개와 겹침*/

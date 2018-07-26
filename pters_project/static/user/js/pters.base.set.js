@@ -103,6 +103,14 @@ function shade_index(option){
     }
 }
 
+function show_caution_popup(messageHtml){
+    $('#base_popup_check_finished_member_notice .caution_message').html(                                                                            
+                                                                            messageHtml
+                                                                         )
+    $('#base_popup_check_finished_member_notice').show();
+    $('#shade_caution').show();
+}
+
 function close_caution_popup(){
     $('#base_popup_check_finished_member_notice').hide();
     $('#shade_caution').hide();
