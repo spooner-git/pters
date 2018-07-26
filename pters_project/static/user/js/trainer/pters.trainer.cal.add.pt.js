@@ -997,7 +997,7 @@ $(document).ready(function(){
         position_fixed_addplan_if_mobile();
         if(bodywidth < 600){
             var selector = $(this).siblings('ul');
-            $('.pters_dropdown_custom_list').css({'top':($(window).height()-selector.outerHeight())/2-50,
+            $('.pters_dropdown_custom_list').css({'top':($(window).height()-selector.height())/2,
                                                   'left':'50%',
                                                   'transform':'translateX(-50%)'});
             //드랍다운 씹힘현상 해결
