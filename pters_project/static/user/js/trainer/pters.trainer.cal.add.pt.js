@@ -2009,7 +2009,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
         // else{
         //     repeat_title = "";
         // }
-        if(option != "class") {
+        if(option == "class") {
             repeat_title += ' ' + repeat_group_name_array[i];
         }
         var repeat_id = repeat_id_array[i];
