@@ -967,11 +967,9 @@ function scrollToDom(dom){
 }
 
 function disable_window_scroll(){
-    /*
     if(bodywidth < 600){
        $('#calendar').css('position','fixed'); 
     }
-    */
     
     $('body, #calendar').on('scroll touchmove mousewheel',function(e){
         e.preventDefault();
@@ -981,11 +979,9 @@ function disable_window_scroll(){
 }
 
 function enable_window_scroll(){
-    /*
     if(bodywidth < 600){
        $('#calendar').css('position','relative'); 
     }
-    */
 
     $('body, #calendar').off('scroll touchmove mousewheel');
 }
