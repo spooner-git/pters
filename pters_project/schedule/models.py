@@ -291,6 +291,18 @@ class ScheduleTb(TimeStampedModel):
 
         return group_current_member_num
 
+    def get_group_type_name(self):
+
+        if self.group_tb is not None and self.group_tb != '':
+            try:
+                group_type_name = CommonCdTb.objects.get(common_cd=self.group_tb.group_type_cd).common_cd_nm
+            except ObjectDoesNotExist:
+                group_type_name = '1:1 레슨'
+        else:
+            group_type_name = '1:1 레슨'
+
+        return group_type_name
+
 
 class SettingTb(TimeStampedModel):
     setting_id = models.AutoField(db_column='ID', primary_key=True, null=False)
