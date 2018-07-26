@@ -183,7 +183,12 @@ $(document).ready(function(){
             $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
             $('.startTime_time').text(startTime_to_hangul(Options.startTime))
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-            $('.plan_raw_add').show()
+            if(lecture_enable_test == 1){
+                $('.plan_raw_add').hide()
+            }
+            else{
+                $('.plan_raw_add').show()
+            }
             shade_index(100)
             adjust_starttime_list_height()
         }else{
@@ -1051,7 +1056,7 @@ $(document).ready(function(){
         var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(oriYear+'-'+oriMonth+'-'+oriDate, Options.availDate),'')
         if(date_format_yyyy_m_d_to_yyyymmdd(dateinfo) >= date_format_yyyy_m_d_to_yyyymmdd(oriYear+'_'+oriMonth+'_'+oriDate) && date_format_yyyy_m_d_to_yyyymmdd(dateinfo) < limitdate){
             // if(dateplans.length==0 && click_check == 0) {
-            if(dateplans.length==0 && click_check == 0 && Options.reserve != 1){
+            if(dateplans.length==0 && click_check == 0 && Options.reserve != 1 && lecture_enable_test==0){
                 //close_info_popup('cal_popup_plancheck');
                 $('.plan_raw_add').trigger('click');
             }
@@ -1669,7 +1674,8 @@ var oriDate = date.getDate();
 
 var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
 var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
-var reserveOption = Options.reserve
+var reserveOption = Options.reserve;
+var lecture_enable_test = 0;
 
 function ajaxClassTime(referencedate, howmanydates, use, callback){
     if(referencedate == "this"){
@@ -1706,28 +1712,35 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
                 var temp_count_text = '';
                 var temp_text = '';
                 if(jsondata.lecture_reg_count[0] != 0){
-                    temp_text +='1:1'
+                    temp_text +='1:1';
                     temp_count_text += jsondata.lecture_avail_count;
                 }
                 if(jsondata.group_lecture_reg_count[0] != 0){
                     if(temp_text == ''){
-                        temp_text += '그룹'
+                        temp_text += '그룹';
                         temp_count_text += jsondata.group_lecture_avail_count;
 
                     }else {
-                        temp_text += '/그룹'
+                        temp_text += '/그룹';
                         temp_count_text = temp_count_text+'/'+jsondata.group_lecture_avail_count;
                     }
                 }
                 if(jsondata.class_lecture_reg_count[0] != 0){
                     if(temp_text == ''){
-                        temp_text += '클래스'
+                        temp_text += '클래스';
                         temp_count_text += jsondata.class_lecture_avail_count;
 
                     }else {
-                        temp_text += '/클래스'
+                        temp_text += '/클래스';
                         temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
                     }
+                }
+
+                if(temp_text == ''){
+                    temp_count_text = '0'
+                    lecture_enable_test = 1;
+                }else{
+                    lecture_enable_test = 0;
                 }
 
                 // if(jsondata.group_lecture_reg_count[0] != 0 && jsondata.lecture_reg_count[0] != 0 && jsondata.class_lecture_reg_count[0] != 0){
