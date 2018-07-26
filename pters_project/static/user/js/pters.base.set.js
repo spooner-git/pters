@@ -1153,6 +1153,11 @@ function set_drag_drop_action_to_DOM(targetSelector){
             var oriY = event.pageY;
 
             $(document).on('mousemove', 'body', function(e){
+
+                $(document).on('mouseup', targetSelector, function(){
+                    $(document).off('mousemove');
+                });
+
                 var moveX = e.pageX;
                 var moveY = e.pageY;
 
@@ -1166,14 +1171,10 @@ function set_drag_drop_action_to_DOM(targetSelector){
                 var resultY = thisOriY - diffY;
 
                 $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
-
-                $(document).on('mouseup click', targetSelector, function(){
-                    $(document).off('mousemove');
-                });
-                $(document).on('mousedown click', '#canvasWrap', function(){
-                    $(document).off('mousemove');
-                })
             });
+            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete', function(){
+                    $(document).off('mousemove');
+            })
         });
     };
 };
