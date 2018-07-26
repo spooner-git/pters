@@ -3537,7 +3537,7 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간과 같거나 전에 있고, 종료시간이 업무종료시간과 같거나 업무시간 내에 위치
           && compare_time(plan_end, work_start) 
           && compare_time(plan_end, work_end) ==false)
-        { console.log(plan_start, plan_end, work_start, work_end)
+        { 
             timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
             timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
             timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
