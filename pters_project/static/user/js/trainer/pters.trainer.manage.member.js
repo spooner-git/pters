@@ -3402,9 +3402,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>';
 
 
-            var yourgroup;
-                yourgroup = jsondata.groupNameArray[i];
-            if(jsondata.groupNameArray[i] != '1:1'){
+            var yourgroup = jsondata.groupNameArray[i];
+            if(jsondata.groupNameArray[i] == '그룹'){
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push('G'+jsondata.regCountArray[i]);
                     remCount_group_personal.push('G'+jsondata.remCountArray[i]);
@@ -3412,7 +3411,16 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     finishCount_group_personal.push('G'+jsondata.finishCountArray[i]);
                 }
 
-            }else if(jsondata.groupNameArray[i] == '1:1'){
+            }
+            else if(jsondata.groupNameArray[i] == '클래스'){
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push('C'+jsondata.regCountArray[i]);
+                    remCount_group_personal.push('C'+jsondata.remCountArray[i]);
+                    availCount_group_personal.push('C'+jsondata.availCountArray[i]);
+                    finishCount_group_personal.push('C'+jsondata.finishCountArray[i]);
+                }
+            }
+            else if(jsondata.groupNameArray[i] == '1:1 레슨'){
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push(jsondata.regCountArray[i]);
                     remCount_group_personal.push(jsondata.remCountArray[i]);
@@ -3508,9 +3516,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" class="regHistoryModifyBtn" data-type="view" data-leid="'+jsondata_lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>';
             var howManyReg = '<div class="howManyReg">'+(jsonlen-i)+'회차 등록 '+'</div>';
 
-            var yourgroup;
-            if(jsondata_groupNameArray[i] != '1:1'){
-                yourgroup = '[그룹] '+jsondata_groupNameArray[i];
+            var yourgroup = jsondata_groupNameArray[i];
+            if(jsondata_groupNameArray[i] == '그룹'){
                 if(jsondata.lectureStateArray[i] == "IP"){
                     regCount_group_personal.push('G'+jsondata_regCountArray[i]);
                     remCount_group_personal.push('G'+jsondata_remCountArray[i]);
@@ -3518,8 +3525,16 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     finishCount_group_personal.push('G'+jsondata_finishCountArray[i]);
                 }
 
-            }else if(jsondata_groupNameArray[i] == '1:1'){
-                yourgroup = jsondata_groupNameArray[i] + ' 레슨';
+            }
+            else if(jsondata_groupNameArray[i] == '클래스'){
+                if(jsondata_lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push('C'+jsondata_regCountArray[i]);
+                    remCount_group_personal.push('C'+jsondata_remCountArray[i]);
+                    availCount_group_personal.push('C'+jsondata_availCountArray[i]);
+                    finishCount_group_personal.push('C'+jsondata_finishCountArray[i]);
+                }
+            }
+            else if(jsondata_groupNameArray[i] == '1:1 레슨'){
                 if(jsondata_lectureStateArray[i] == "IP"){
                     regCount_group_personal.push(jsondata_regCountArray[i]);
                     remCount_group_personal.push(jsondata_remCountArray[i]);
@@ -4398,13 +4413,11 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
     var schedulesHTML = [];
     for(var i=0; i<jsondata.ptRepeatScheduleIdArray.length; i++){
         var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i];
-        var repeat_group_type = "[그룹레슨]";
+        var repeat_group_type = "["+jsondata.ptRepeatScheduleGroupTypeCdNameArray[i]+"]";
         if(repeat_group_name.length == 0 ){
             repeat_group_name = "";
-            repeat_group_type = "[1:1레슨]";
         }
         var repeat_title = repeat_group_type+' '+repeat_group_name;
-
 
         var repeat_id = repeat_id_array[i];
         var repeat_type = repeat_info_dict[Options.language][repeat_type_array[i]];

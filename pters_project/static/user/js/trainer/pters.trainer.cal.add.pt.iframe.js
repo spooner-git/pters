@@ -814,7 +814,7 @@ $(document).ready(function(){
             get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                 var availCount_personal = 0;
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
-                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
                         availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                     }
                 }
@@ -854,7 +854,7 @@ $(document).ready(function(){
             get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                 var availCount_personal = 0;
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
-                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
                         availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                     }
                 }
@@ -1179,7 +1179,7 @@ $(document).ready(function(){
                     get_member_lecture_list(id, 'callback', function(jsondata){
                         var availCount_personal = 0;
                         for(var i= 0; i<jsondata.availCountArray.length; i++){
-                            if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                            if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
                                 availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                             }
                         }
@@ -1578,7 +1578,7 @@ function set_member_dropdown_list(jsondata){
     var member_array_pc = [];
     if(memberSize>0){
         for(var i=0; i<memberSize; i++){
-            if(jsondata.groupInfoArray[i] != "그룹"){
+            if((jsondata.groupInfoArray[i] != "그룹") && (jsondata.groupInfoArray[i] != "클래스") && (jsondata.groupInfoArray[i] != "그룹/클래스")){
                 if(jsondata.lesson_avail_count[i] > 0){
                     member_array_mobile[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
                     member_array_pc[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
@@ -1828,7 +1828,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
 }
 
 function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우기
-    console.log(jsondata);
+
     var len;
     var dbId;
     var repeat_id_array;
@@ -1840,7 +1840,9 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
     var repeat_endTime_array;
     var repeat_dur_array;
     var repeat_group_name;
+    var repeat_title_array;
     var repeat_title;
+
     switch(option){
         case 'class':
             len = jsondata.ptRepeatScheduleIdArray.length;
@@ -1854,7 +1856,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
             repeat_endTime_array = jsondata.ptRepeatScheduleEndTimeArray;
             repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray;
             repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray;
-            repeat_title = "";
+            repeat_title_array = jsondata.ptRepeatScheduleGroupTypeCdNameArray;
             break;
         case 'off':
             len = jsondata.offRepeatScheduleIdArray.length;
@@ -1868,7 +1870,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
             repeat_endTime_array = jsondata.offRepeatScheduleEndTimeArray;
             repeat_dur_array = jsondata.offRepeatScheduleTimeDurationArray;
             repeat_group_name = [];
-            repeat_title = "";
+            repeat_title_array = "";
             break;
         case 'group':
             len = jsondata.repeatScheduleIdArray.length;
@@ -1882,7 +1884,7 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
             repeat_endTime_array = jsondata.repeatScheduleEndTimeArray;
             repeat_dur_array = jsondata.repeatScheduleTimeDurationArray;
             repeat_group_name = [];
-            repeat_title = "[그룹]";
+            repeat_title_array = jsondata.repeatScheduleGroupTypeNameArray;
             break;
     }
     var repeat_info_dict= { 'KOR':
@@ -1897,8 +1899,12 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
     };
     var schedulesHTML = [];
     for(var i=0; i<len; i++){
-        if(repeat_group_name[i] != 0 && option != "off"){
-            repeat_title = "[그룹]";
+        if(repeat_group_name[i] != 0 && option != "off") {
+            // if(option != "off"){
+            repeat_title = "[" + repeat_title_array[i] + "]";
+        }
+        else{
+            repeat_title = "";
         }
 
         var repeat_id = repeat_id_array[i];

@@ -1295,7 +1295,7 @@ function float_btn_managemember(option){
         $('#form_grouptype').val('EMPTY')
         $('#addgrouptypename').text('신규 클래스')
 
-        $('#uptext2, #uptext2_PC').text('신규 클래스 생성');
+        $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -1452,7 +1452,7 @@ function pc_add_member(option){
         $('#form_grouptype').val('EMPTY')
         $('#addgrouptypename').text('신규 클래스')
 
-        $('#uptext2, #uptext2_PC').text('신규 클래스 생성');
+        $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();

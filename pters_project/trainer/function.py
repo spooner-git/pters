@@ -138,7 +138,7 @@ def func_get_member_ing_list(class_id, user_id):
 
                     if lecture_info.use != 0:
                         if lecture_info.state_cd == 'IP':
-                            if group_check == 0:
+                            if group_check != 0:
                                 member_data.group_reg_count += lecture_info.lecture_reg_count
                                 member_data.group_rem_count += lecture_info.lecture_rem_count
                                 member_data.group_avail_count += lecture_info.lecture_avail_count
@@ -316,7 +316,7 @@ def func_get_member_end_list(class_id, user_id):
                     #                                                        use=USE).count()
 
                     if lecture_info.use != 0:
-                        if group_check == 0:
+                        if group_check != 0:
                             member_data.group_reg_count += lecture_info.lecture_reg_count
                             member_data.group_rem_count += lecture_info.lecture_rem_count
                             member_data.group_avail_count += lecture_info.lecture_avail_count
