@@ -3082,35 +3082,29 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
 
     plan_time.push(workEndTime_)
-    if(plan_time.length==1 && plan_time[0] == Options.workEndTime){
-        plan_time.push(workStartTime_)
-        plan_time.push(0)
-    }else{
-        plan_time.unshift(workStartTime_)
-        plan_time.unshift('')
-    } 
+    plan_time.unshift(workStartTime_)
 
-    
     //var sortedlist = plan_time.sort(function(a,b){return a-b;})
     var sortedlist = plan_time.sort();
     //all_plans = sortedlist;
     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
-    //var semiresult = []
-
     var semiresult = []
-
-    for(var p=0; p<(sortedlist.length-1)/2; p++){
+    for(var p=0; p<sortedlist.length/2; p++){
         var zz = 0;
-        if(compare_time(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+2],'0:01'))==false &&
-            compare_time(add_time(Options.workEndTime+':00','0:00'), add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)) )  ){
-            while(add_time(sortedlist[p*2+1],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+2],'0:01')){
-                semiresult.push(add_time(sortedlist[p*2+1],'0:'+zz))
+        //일정 시작시간이 일정 종료시간보다 작으면,
+        if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false && 
+            compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
+            while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
+                semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
                 zz++
+                if(zz>1450){ //하루 24시간 --> 1440분
+                    break;
+                }
             }
-        }else{
-            
+
         }
     }
+    
 
     //offAddOkArray = []
 
@@ -3137,6 +3131,10 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     allplans = sortedlist
     return {"addOkArray":addOkArrayList, "allplans":sortedlist}
 }
+
+
+
+
 
 var allplans = [];
 function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
@@ -3533,13 +3531,20 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         var plan_start = add_time(planHour+':'+planMinute,'00:00');
         var plan_end = add_time(planEndHour+':'+planEndMin,'00:00');
         // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-        if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간 전에 있고, 종료시간이 업무시간내에 위치
+        if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간과 같거나 전에 있고, 종료시간이 업무종료시간과 같거나 업무시간 내에 위치
           && compare_time(plan_end, work_start) 
           && compare_time(plan_end, work_end) ==false)
-        { 
+        { console.log(plan_start, plan_end, work_start, work_end)
             timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
             timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
             timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
+            if(planEndHour == Options.workEndTime){
+                var planEndHour = Options.workEndTime -1;
+                var planEndMin = 60;
+            }else{
+                var planEndHour = planEndHour;
+            }
+
             timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
             timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
 

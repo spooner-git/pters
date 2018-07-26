@@ -254,6 +254,8 @@ function substract_time(starttime, subvalue){
 	return resultHour + ":" + resultMin;
 }
 
+console.log(add_time('24:00','00:60'))
+
 function add_time(starttime, addvalue){
 	var shour = Number(starttime.split(':')[0]);
 	var smin = Number(starttime.split(':')[1]);
@@ -263,7 +265,7 @@ function add_time(starttime, addvalue){
 	if(smin + addmin >= 60){
 		if(shour + addhour >= 24){  // 23 + 4 --> 3
 			if(shour + addhour == 24){
-				var resultHour = 24
+				var resultHour = 25
 			}else{
 				var resultHour = addhour - (24-shour);
 			}
