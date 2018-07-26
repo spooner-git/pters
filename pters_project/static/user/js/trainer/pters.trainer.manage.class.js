@@ -2117,6 +2117,11 @@ function memberListSet (type,option,Reverse, jsondata){
             }else{
                 var groupType2 = ''
             }
+            if(array[16]){
+                var groupType3 = '/'+array[16];
+            }else{
+                var groupType3 = ''
+            }
         }else if(option == "name"){
             var array = nameLists[i].split('/');
             var email = array[8];
@@ -2141,6 +2146,11 @@ function memberListSet (type,option,Reverse, jsondata){
                 var groupType2 = '/'+array[15];
             }else{
                 var groupType2 = ''
+            }
+            if(array[16]){
+                var groupType3 = '/'+array[16];
+            }else{
+                var groupType3 = ''
             }
         }else if(option == "date"){
             var array = dateLists[i].split('/');
@@ -2167,6 +2177,11 @@ function memberListSet (type,option,Reverse, jsondata){
                 var groupType2 = '/'+array[15];
             }else{
                 var groupType2 = ''
+            }
+            if(array[16]){
+                var groupType3 = '/'+array[16];
+            }else{
+                var groupType3 = ''
             }
         }
 
@@ -2219,7 +2234,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+'">'+groupType+groupType2+'</td>';
+        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
         var emailtd = '<td class="_email">'+email+'</td>';

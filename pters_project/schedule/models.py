@@ -313,11 +313,23 @@ class ClassLectureTb(TimeStampedModel):
         db_table = 'CLASS_LECTURE_TB'
 
     def get_group_lecture_check(self):
-        group_check = 0
+
         try:
-            GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id, use=USE)
-        except ObjectDoesNotExist:
+            GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id,
+                                       lecture_tb__use=USE,
+                                       group_tb__group_type_cd='NORMAL',
+                                       use=USE)
             group_check = 1
+        except ObjectDoesNotExist:
+            group_check = 0
+
+        try:
+            GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id,
+                                       lecture_tb__use=USE, group_tb__group_type_cd='EMPTY', use=USE)
+            group_check = 2
+        except ObjectDoesNotExist:
+            group_check = group_check
+
         return group_check
 
     def get_member_lecture_auth_check(self):
