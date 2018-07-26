@@ -4352,7 +4352,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
 
                 $(targetSelector).css({'top':resultY+'px','left':resultX+'px'})
 
-                $(document).on('mouseup', targetSelector, function(){
+                $(document).on('mouseup click', targetSelector, function(){
                     $(document).off('mousemove')
                 })
             })
