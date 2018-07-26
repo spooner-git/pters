@@ -502,7 +502,7 @@ $(document).ready(function(){
                 var availCount_personal = 0
                 console.log('get_member_lecture_list',jsondata)
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
-                  if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                  if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
                     availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
                   }
                 }
@@ -541,7 +541,7 @@ $(document).ready(function(){
               get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                   var availCount_personal = 0
                   for(var i= 0; i<jsondata.availCountArray.length; i++){
-                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
                       availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
                     }
                   }
@@ -843,7 +843,7 @@ $(document).ready(function(){
                 get_member_lecture_list(id, 'callback', function(jsondata){
                     var availCount_personal = 0
                     for(var i= 0; i<jsondata.availCountArray.length; i++){
-                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1"){
+                      if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
                         availCount_personal = availCount_personal + Number(jsondata.availCountArray[i])
                       }
                     }
@@ -1212,7 +1212,7 @@ function set_member_dropdown_list(jsondata){
     var member_array_pc = [];
     if(memberSize>0){
       for(var i=0; i<memberSize; i++){
-        if(jsondata.groupInfoArray[i] != "그룹"){
+        if((jsondata.groupInfoArray[i] != "그룹") && (jsondata.groupInfoArray[i] != "클래스") && (jsondata.groupInfoArray[i] != "그룹/클래스")){
           member_array_mobile[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
           member_array_pc[i] = '<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>';
         }
