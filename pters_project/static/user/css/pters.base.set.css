@@ -705,6 +705,12 @@ a:focus, a:hover{
     margin-top:23px;
     margin-left: 10px;
 }
+    #alarm_button:hover{
+        filter: brightness(1.5);
+    }
+    #classselect_button:hover{
+        filter: brightness(3);
+    }
 
 .pcwho{
     color:#282828;
@@ -928,7 +934,7 @@ a:focus, a:hover{
 
     #alarm_button{
         width: 16px;
-        margin-bottom:3px;
+        margin-bottom:4px;
         margin-right: 10px;
         margin-top: unset;
     }
