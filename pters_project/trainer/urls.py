@@ -157,7 +157,7 @@ urlpatterns = [
 
     # 공지 기능 ##########################################################################################################
     # 공지사항 조회
-    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_off_repeat_schedule_ajax'),
+    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
 
 

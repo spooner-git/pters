@@ -3155,9 +3155,9 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
                                                                      group_schedule_id__isnull=True
                                                                      ).order_by('start_date')
 
-        for group_repeat_schedule_info in group_repeat_schedule_data:
-            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
-            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
+        # for group_repeat_schedule_info in group_repeat_schedule_data:
+        #     group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
+        #     group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
         context['repeat_schedule_data'] = group_repeat_schedule_data
 
         return render(request, self.template_name, context)
@@ -3171,9 +3171,9 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
                                                                      group_schedule_id__isnull=True
                                                                      ).order_by('start_date')
 
-        for group_repeat_schedule_info in group_repeat_schedule_data:
-            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
-            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
+        # for group_repeat_schedule_info in group_repeat_schedule_data:
+        #     group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
+        #     group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
 
         context['repeat_schedule_data'] = group_repeat_schedule_data
 

@@ -11,7 +11,7 @@ from django.db import models
 from center.models import CenterTb
 from configs.const import USE, SCHEDULE_NOT_FINISH, SCHEDULE_FINISH
 from configs.models import TimeStampedModel
-from login.models import MemberTb
+from login.models import MemberTb, CommonCdTb
 
 
 class AuthLectureManager(models.Manager):
@@ -120,6 +120,14 @@ class GroupTb(TimeStampedModel):
     def __str__(self):
         return self.name.__str__()+'_group'
 
+    def get_group_type_cd_name(self):
+        try:
+            state_cd_name = CommonCdTb.objects.get(common_cd=self.group_type_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            state_cd_name = ''
+
+        return state_cd_name
+
 
 class GroupLectureTb(TimeStampedModel):
     group_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -161,6 +169,18 @@ class RepeatScheduleTb(TimeStampedModel):
 
     def get_str_end_date(self):
         return str(self.end_date)
+
+    def get_group_type_name(self):
+
+        if self.group_tb is not None and self.group_tb != '':
+            try:
+                group_type_name = CommonCdTb.objects.get(common_cd=self.group_tb.group_type_cd).common_cd_nm
+            except ObjectDoesNotExist:
+                group_type_name = '1:1 레슨'
+        else:
+            group_type_name = '1:1 레슨'
+
+        return group_type_name
 
 
 class DeleteRepeatScheduleTb(models.Model):
@@ -346,6 +366,7 @@ class ClassLectureTb(TimeStampedModel):
         except ObjectDoesNotExist:
             group_info = None
         return group_info
+
 
 class MemberClassTb(TimeStampedModel):
     member_class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
