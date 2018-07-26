@@ -3107,6 +3107,9 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray ì±
     
 
     //offAddOkArray = []
+    if(Timeunit == 60){
+        Timeunit = 30;
+    }
 
     var addOkArrayList = [];
     for(var t=0; t<semiresult.length; t++){
