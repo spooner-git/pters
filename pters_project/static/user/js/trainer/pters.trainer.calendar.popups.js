@@ -39,7 +39,7 @@
 
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
-            $(this).css({'height':thisHeight+2, 'width':'98.5%', 'z-index':thisZindex, 'border':'1px solid #e4e4e4', 'left':1});
+            $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0', 'left':1});
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
                 $memberTime.removeClass('_hided').addClass('hideelement');
@@ -988,3 +988,52 @@
     }
 /////////////////////////////////////////////////////////////////////////////////////////////함수 모음
 
+
+
+
+set_drag_drop_action_to_DOM('#page-addplan');
+set_drag_drop_action_to_DOM('#cal_popup_planinfo');
+set_drag_drop_action_to_DOM('#cal_popup_plancheck');
+///////////////skkim test//////////////////드래그앤 드랍 함수
+function set_drag_drop_action_to_DOM(targetSelector){
+    if(bodywidth > 600){
+        $(targetSelector).mousedown(function(event){
+            $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
+
+            $(this).mouseup(function(event){
+                $(this).css({'box-shadow':'unset'});
+            });
+
+            $(this).mouseleave(function(){
+                $(this).css({'box-shadow':'unset'});
+            });
+
+            var thisOriX = $(this).offset().left;
+            var thisOriY = $(this).offset().top;
+
+            var oriX = event.pageX;
+            var oriY = event.pageY;
+
+            $(document).on('mousemove', 'body', function(e){
+                var moveX = e.pageX;
+                var moveY = e.pageY;
+
+                var diffX = oriX - moveX;
+                var diffY = oriY - moveY;
+
+                var resultX;
+                var resultY;
+
+                var resultX = thisOriX - diffX;
+                var resultY = thisOriY - diffY;
+
+                $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
+
+                $(document).on('mouseup click', targetSelector, function(){
+                    $(document).off('mousemove');
+                });
+            });
+        });
+    };
+};
+///////////////skkim test//////////////////드래그앤 드랍 함수
