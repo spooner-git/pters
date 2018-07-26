@@ -105,7 +105,7 @@
         </div>
     </div>
 
-    <div id="hidetoggle" class="wrap" data-type = '0'>
+    <div id="hidetoggle" class="" data-type = '0'>
         <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)">
         <span class="KRtext">일정 넓게 보기</span>
         <span class="JPtext">隠す</span>
@@ -1293,7 +1293,7 @@
 
             }else{
                 calendarSize = 1;
-                $('#hidetoggle span').text('일정 축소 보기');
+                $('#hidetoggle span').text('일정 넓게 보기');
                 if(bodywidth > 600){
                     $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
                     $(this).find('img').css('-webkit-transform','rotate(90deg)');

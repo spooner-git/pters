@@ -257,6 +257,8 @@ img,a,div,span,p{
 	position: fixed;
 	background:transparent;
 	bottom: 20px;
+	left: 0;
+	width: 50%;
 	z-index: 5;
 	color: #444444;
 	font-size: 12px;
@@ -266,7 +268,7 @@ img,a,div,span,p{
 		margin-right: 7px;
 		margin-left: 50px;
 		margin-bottom: 4px;
-		width: 10px;
+		width: 7px;
 	}
 
 #gapbox{
@@ -582,13 +584,17 @@ img,a,div,span,p{
 		z-index: 10;
 		bottom: unset;
 		cursor: pointer;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100%;
+		max-width: 1080px;
 	}
-	#hidetoggle img{
-		width: 7px;
-		margin-bottom: 2px;
-		margin-right: 8px;
-		margin-left: 10px;
-	}
+		#hidetoggle img{
+			width: 7px;
+			margin-bottom: 2px;
+			margin-right: 8px;
+			margin-left: 10px;
+		}
 
 	#ymdText-pc{
 		display: block;
