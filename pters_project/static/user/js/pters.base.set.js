@@ -1154,9 +1154,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
 
             $(document).on('mousemove', 'body', function(e){
 
-                $(document).on('mouseup', targetSelector, function(){
-                    $(document).off('mousemove');
-                });
+                
 
                 var moveX = e.pageX;
                 var moveY = e.pageY;
@@ -1173,8 +1171,11 @@ function set_drag_drop_action_to_DOM(targetSelector){
                 $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
             });
             $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete', function(){
-                    $(document).off('mousemove');
+                $(document).off('mousemove');
             })
+            $(document).on('mouseup click', targetSelector, function(){
+                $(document).off('mousemove');
+            });
         });
     };
 };
