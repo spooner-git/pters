@@ -40,25 +40,25 @@ body{
 	width: 100%;
 	margin-top: 80px;
 }
-	.background_wrap{
-		display: inline-table;
-		width: 95%;
-		height: 600px;
-		max-width: 440px;
-		background: #ffffff;
-		padding: 10px;
-		margin: 5px;
-		background-size: cover;
-		background-position: center;
-	}
-	.background_wrap label{
-		color: #ffffff;
-	}
-	.bg_wrapper{
-		width: 100%;
-		height: 90%;
-		background-size: cover;
-	}
+.background_wrap{
+	display: inline-table;
+	width: 95%;
+	height: 600px;
+	max-width: 440px;
+	background: #ffffff;
+	padding: 10px;
+	margin: 5px;
+	background-size: cover;
+	background-position: center;
+}
+.background_wrap label{
+	color: #ffffff;
+}
+.bg_wrapper{
+	width: 100%;
+	height: 90%;
+	background-size: cover;
+}
 
 .bg_weight{
 	background-image: url("/static/user/res/main/bg-image-weight-mobile.jpg")
@@ -99,13 +99,13 @@ body{
 	margin-top: 12px;
 	cursor: pointer;
 }
-	.bg_select_button span{
-		line-height: 26px;
-	}
-	.bg_select_button:hover, .bg_select_button:active{
-		background: #fe4e65;
-		color: #ffffff;
-	}
+.bg_select_button span{
+	line-height: 26px;
+}
+.bg_select_button:hover, .bg_select_button:active{
+	background: #fe4e65;
+	color: #ffffff;
+}
 
 
 
@@ -117,21 +117,21 @@ body{
 
 @media(min-width: 600px){
 
-	
+
 
 	#background_contents_wrap{
 		margin-top: 130px;
 	}
-		.background_wrap{
-			height: 300px;
-			background-size: cover;
-			background-position: center;
-		}
-		.bg_wrapper{
-			width: 100%;
-			height: 80%;
-			background-size: cover;
-		}
+	.background_wrap{
+		height: 300px;
+		background-size: cover;
+		background-position: center;
+	}
+	.bg_wrapper{
+		width: 100%;
+		height: 80%;
+		background-size: cover;
+	}
 
 	#ymdText{
 		height: 100px;
