@@ -182,6 +182,14 @@ class RepeatScheduleTb(TimeStampedModel):
 
         return group_type_name
 
+    def get_group_name(self):
+
+        if self.group_tb is not None and self.group_tb != '':
+            group_name = self.group_tb.name
+        else:
+            group_name = ''
+
+        return group_name
 
 class DeleteRepeatScheduleTb(models.Model):
     delete_repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
