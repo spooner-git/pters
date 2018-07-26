@@ -375,8 +375,6 @@ img,a,div,span,p{
 	background: #fbf3bd;
 	z-index: 100;
 	cursor: pointer;
-
-	border: 1px solid #e4e4e4;
 }
 
 .classTime_checked{
