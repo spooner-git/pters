@@ -3276,8 +3276,8 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         subject_detail_nm = request.POST.get('subject_detail_nm', '')
         start_date = request.POST.get('start_date', '')
         end_date = request.POST.get('end_date', '')
-        class_hour = request.POST.get('class_hour', '')
-        start_hour_unit = request.POST.get('start_hour_unit', '')
+        class_hour = request.POST.get('class_hour', 60)
+        start_hour_unit = request.POST.get('start_hour_unit', 1.0)
         class_member_num = request.POST.get('class_member_num', '')
 
         error = None
