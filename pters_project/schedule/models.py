@@ -111,7 +111,7 @@ class GroupTb(TimeStampedModel):
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
-    use = models.IntegerField(db_co ㅅlumn='USE', default=1)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
