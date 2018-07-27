@@ -468,7 +468,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
     if($(this).css('opacity') == 1){
         deleteTypeSelect = 'groupdelete';
         $('#cal_popup_plandelete').fadeIn('fast')
-        $('#popup_delete_question').text('정말 이 그룹을 삭제하시겠습니까?')
+        $('#popup_delete_question').text('정말 이 클래스를 삭제하시겠습니까?')
         //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
         var group_id = $(this).attr('data-groupid')
         var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
@@ -479,7 +479,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
         }
         group_delete_JSON.group_id = group_id
     }else{
-        alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.')
+        alert('클래스 리스트를 펼쳐 확인 후 삭제 해주세요.')
     }
 
 })
@@ -624,7 +624,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
     }else{
         pc_add_member('groupmember')
     }
-    $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    $('#uptext2, #uptext2_PC').text('클래스원 추가'+' ('+group_name+')');
     $('#form_member_groupid').val(group_id)
 })
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
@@ -1154,7 +1154,7 @@ function groupMemberListSet(group_id, jsondata){
 
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
-        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 소속인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>"
+        var EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>"
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         var EMPTY_EXPLAIN = ""
@@ -1174,7 +1174,7 @@ function groupMemberListSet(group_id, jsondata){
 
     var html = htmlToJoin.join('') + addButton
     if(jsondata.db_id.length == 0){
-        var html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>'
+        var html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>'
     }
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html)
