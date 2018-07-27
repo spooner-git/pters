@@ -702,9 +702,7 @@ img,a,div,span,p{
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	text-align: center;
-	top: 50%;
-	left:50%;
-	transform: translate(-50%,-50%);
+
 	z-index: 125;
 }
 

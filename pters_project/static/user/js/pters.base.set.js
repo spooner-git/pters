@@ -1180,3 +1180,13 @@ function set_drag_drop_action_to_DOM(targetSelector){
     };
 };
 ///////////////skkim test//////////////////드래그앤 드랍 함수
+
+
+function popup_locate_center_of_display(targetSelector){
+    var $targetSelector = $(targetSelector)
+    if(bodywidth > 600){
+        $targetSelector.css({'display':'block','top':(($(window).height()-$targetSelector.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$targetSelector.outerWidth())/2+$(window).scrollLeft())});
+    }else{
+        $targetSelector.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+    }
+}
