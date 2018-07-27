@@ -1046,18 +1046,20 @@ $(document).ready(function(){
         //scrollHeight = popupHeight + scrollLocation(끝)
         if(popupHeight + scrollLocation == scrollHeight){
             $(this).animate({scrollTop : scrollLocation-1},10)
-            $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
         }else if(popupHeight + scrollLocation == popupHeight){
             $(this).animate({scrollTop : scrollLocation+1},10)
-            $('.dropdown_scroll_arrow_top').css('visibility','hidden')
         }
 
         // 좌측 스크롤 애로우 보이기
-        if(popupHeight + scrollLocation < scrollHeight-50){
+        if(popupHeight + scrollLocation < scrollHeight-30){
             $('.dropdown_scroll_arrow_bottom').css('visibility','visible')
+        }else{
+            $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
         }
-        if(scrollLocation > 50){
+        if(scrollLocation > 30){
             $('.dropdown_scroll_arrow_top').css('visibility','visible')
+        }else{
+            $('.dropdown_scroll_arrow_top').css('visibility','hidden')
         }
         //좌측 스크롤 애로우 보이기
     });
@@ -1070,21 +1072,42 @@ $(document).ready(function(){
         var $ul = $(this).siblings('ul');
         var $li = $(this).siblings('ul').find('li');
         var dropdown_list_visible_height = $ul.height();
-        var dropdown_list_total_height = $li.length*$li.outerHeight();
+        var dropdown_list_total_height = $li.length*$li.outerHeight() + $ul.find('div:nth-of-type(1)').height();
 
         if(dropdown_list_total_height > dropdown_list_visible_height*2){
             $ul.animate({scrollTop: dropdown_list_total_height/2.5},200)
         }
-        if(dropdown_list_total_height > dropdown_list_visible_height+50){
-            $ul.find('div:nth-of-type(1)').append(
+        if(dropdown_list_total_height > dropdown_list_visible_height + 30){
+            if($ul.find('div:nth-of-type(1)').find('img').length == 0){
+                $ul.find('div:nth-of-type(1)').append(
                                                     '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top">'+
                                                     '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom">'
                                                  )
+            }
         }
-        if($('.pters_dropdown_custom_list').scrollTop() < 50 ){
+        if($('.pters_dropdown_custom_list').scrollTop() < 30 ){
             $('.dropdown_scroll_arrow_top').css('visibility','hidden');
         };
     })
+
+    $(document).on('click','img.dropdown_scroll_arrow_top',function(e){
+        e.stopPropagation();
+        var $thisul = $(this).parents('ul');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: 0},200)
+        }
+    });
+    $(document).on('click','img.dropdown_scroll_arrow_bottom',function(e){
+        e.stopPropagation();
+        var $thisul = $(this).parents('ul');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+        }
+    });
 
 
     var ajax_block_during_submit = true;
