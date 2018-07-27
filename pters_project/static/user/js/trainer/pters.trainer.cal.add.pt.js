@@ -946,6 +946,9 @@ $(document).ready(function(){
         e.stopPropagation();
     })
 
+
+    
+
     $(document).on('click','#starttimes li a',function(){
         $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
         $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
@@ -1002,6 +1005,9 @@ $(document).ready(function(){
             //드랍다운 씹힘현상 해결
             selector.animate({scrollTop : selector.scrollTop()+1},10)
             //드랍다운 씹힘현상 해결
+
+            dropdownlist_auto_scroll_to_middle($('#starttimesSelected button'));
+            add_scroll_arrow_to_dropdown_list($(this))
         }        
     });
 
@@ -1009,6 +1015,8 @@ $(document).ready(function(){
         position_absolute_addplan_if_mobile();
     })
 
+
+    
 
     $(document).on('click',"#durations li a",function(){
         $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
@@ -1066,17 +1074,55 @@ $(document).ready(function(){
     //드랍다운 씹힘현상 해결
     //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 
+    
 
-    $('button.pters_dropdown_custom').click(function(){
-        var $button = $(this);
-        var $ul = $(this).siblings('ul');
-        var $li = $(this).siblings('ul').find('li');
+    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+    $(document).on('click','img.dropdown_scroll_arrow_top',function(e){
+        e.stopPropagation();
+        var $thisul = $(this).parents('ul');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: 0},200)
+        }
+    });
+    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+    $(document).on('click','img.dropdown_scroll_arrow_bottom',function(e){
+        e.stopPropagation();
+        var $thisul = $(this).parents('ul');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+        }
+    });
+    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+
+    //드랍다운 리스트가 창길이보다 2배이상 길면 중간지점으로 이동한다.
+    function dropdownlist_auto_scroll_to_middle($dropdown_Button_Selector){
+        var $button = $dropdown_Button_Selector;
+        var $ul = $dropdown_Button_Selector.siblings('ul');
+        var $li = $dropdown_Button_Selector.siblings('ul').find('li');
         var dropdown_list_visible_height = $ul.height();
         var dropdown_list_total_height = $li.length*$li.outerHeight() + $ul.find('div:nth-of-type(1)').height();
+
+        console.log(dropdown_list_total_height, dropdown_list_visible_height)
 
         if(dropdown_list_total_height > dropdown_list_visible_height*2){
             $ul.animate({scrollTop: dropdown_list_total_height/2.5},200)
         }
+    }
+    //드랍다운 리스트가 창길이보다 2배이상 길면 중간지점으로 이동한다.
+
+    //드랍다운을 위해 눌렀을때 드랍다운의 사이즈를 파악해서 arrow를 넣는다.
+    function add_scroll_arrow_to_dropdown_list($dropdown_Button_Selector){
+        var $button = $dropdown_Button_Selector;
+        var $ul = $dropdown_Button_Selector.siblings('ul');
+        var $li = $dropdown_Button_Selector.siblings('ul').find('li');
+        var dropdown_list_visible_height = $ul.height();
+        var dropdown_list_total_height = $li.length*$li.outerHeight() + $ul.find('div:nth-of-type(1)').height();
+
         if(dropdown_list_total_height > dropdown_list_visible_height + 30){
             if($ul.find('div:nth-of-type(1)').find('img').length == 0){
                 $ul.find('div:nth-of-type(1)').append(
@@ -1088,26 +1134,8 @@ $(document).ready(function(){
         if($('.pters_dropdown_custom_list').scrollTop() < 30 ){
             $('.dropdown_scroll_arrow_top').css('visibility','hidden');
         };
-    })
-
-    $(document).on('click','img.dropdown_scroll_arrow_top',function(e){
-        e.stopPropagation();
-        var $thisul = $(this).parents('ul');
-        var $thisul_scroll_height = $thisul.prop('scrollHeight');
-        var $thisul_display_height = $thisul.height();
-        if($(this).css('visibility') == 'visible'){
-            $thisul.animate({scrollTop: 0},200)
-        }
-    });
-    $(document).on('click','img.dropdown_scroll_arrow_bottom',function(e){
-        e.stopPropagation();
-        var $thisul = $(this).parents('ul');
-        var $thisul_scroll_height = $thisul.prop('scrollHeight');
-        var $thisul_display_height = $thisul.height();
-        if($(this).css('visibility') == 'visible'){
-            $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
-        }
-    });
+    }
+    //드랍다운을 위해 눌렀을때 드랍다운의 사이즈를 파악해서 arrow를 넣는다.
 
 
     var ajax_block_during_submit = true;

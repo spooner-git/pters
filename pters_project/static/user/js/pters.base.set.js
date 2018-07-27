@@ -1306,7 +1306,6 @@ function set_hover_behavior_to_drag_drop_target(drag_drop_target){
 
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
-
 function popup_locate_center_of_display(targetSelector){
     var $targetSelector = $(targetSelector)
     if(bodywidth > 600){
