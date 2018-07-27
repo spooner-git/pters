@@ -338,6 +338,8 @@ var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 var currentDate = date.getDate();
 var currentHour = date.getHours();
 var currentMinute = date.getMinutes();
+
+
 var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
 var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate,'-')
 var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate;

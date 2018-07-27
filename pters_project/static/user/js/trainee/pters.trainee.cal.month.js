@@ -1287,12 +1287,12 @@ $(document).ready(function(){
                 var timegraph_houroffset = 0;
                 var timegraph_houroffset = 0;
 
-            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간보다 작을 경우
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간 내에 있을 경우
             }else{
-                var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
+                var timegraph_hourwidth = $('#'+Number(limit.split(':')[0])+'g_00').width();
                 var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;
                 var timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-                var timegraph_hourendoffset = $('#'+limit.split(':')[0]+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
+                var timegraph_hourendoffset = $('#'+Number(limit.split(':')[0])+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
             }
 
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
@@ -1502,7 +1502,7 @@ $(document).ready(function(){
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
                 if(compare_time(semiresult[t], add_time(currentTime, '00:'+(Options.limit*60) ))                      //업무시간
                     && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
-                    && compare_time(substract_time(Options.workStartTime+':00', '00:00'), semiresult[t]) == false ){ //근접예약 금지
+                    && compare_time(add_time(Options.workStartTime+':00', '00:00'), semiresult[t]) == false ){ //근접예약 금지
                     
                     if(starttimeOption.split('-')[0] == "A"){
                         if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
