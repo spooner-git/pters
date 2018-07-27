@@ -3020,7 +3020,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
         }
     }
     if(len == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>그룹에 소속된 회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
     }
     if(addedCount == 0){
         htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>");

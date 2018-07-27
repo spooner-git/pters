@@ -356,7 +356,7 @@
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
         var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
         var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
-        var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">['+group_class_type_name+']'+info[6]+'</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+        var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_class_type_name+'">['+group_class_type_name+']'+info[6]+'</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
         var infoText3 = $(this).attr('data-memo');
         if($(this).attr('data-memo') == undefined){
             infoText3 = "";
@@ -364,6 +364,7 @@
         $('#popup_info').text(infoText);
         //$('#popup_info2').html(infoText2);
         $('#popup_info2').html(infoText2);
+
         selector_popup_info3_memo.text(infoText3).val(infoText3);
 
         $("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
