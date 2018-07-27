@@ -1314,3 +1314,36 @@ function popup_locate_center_of_display(targetSelector){
         $targetSelector.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
     }
 }
+
+
+function clear_badge_counter(){
+    $.ajax({
+        url:'/login/clear_badge_counter/',
+        type:'POST',
+        //dataType : 'html',
+
+        beforeSend:function(){
+            //alert('before clear_badge_counter afsavf')
+            console.log('before');
+        },
+
+        //통신성공시 처리
+        success:function(){
+            //alert('test')
+            console.log('sucess');
+
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            console.log('error');
+            //alert('error clear_badge_counter')
+            //console.log('error:clear_badge_counter')
+        }
+    })
+}

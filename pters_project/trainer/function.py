@@ -99,35 +99,38 @@ def func_get_member_ing_list(class_id, user_id):
                     #     GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
                     # except ObjectDoesNotExist:
                     #     group_check = 1
-                    if group_check == 0:
-                        if member_data.group_info == '':
-                            member_data.group_info = '1:1'
-                        else:
-                            if '1:1' in member_data.group_info:
-                                member_data.group_info = member_data.group_info
-                            else:
-                                member_data.group_info = '1:1/' + member_data.group_info
-                    elif group_check == 1:
-                        if member_data.group_info == '':
-                            member_data.group_info = '그룹'
-                        else:
-                            if '그룹' in member_data.group_info:
-                                member_data.group_info = member_data.group_info
-                            elif '클래스' in member_data.group_info:
-                                if '1:1' in member_data.group_info:
-                                    member_data.group_info = '1:1/그룹/클래스'
+
+                    if lecture_info.use != UN_USE:
+                        if lecture_info.state_cd == 'IP':
+                            if group_check == 0:
+                                if member_data.group_info == '':
+                                    member_data.group_info = '1:1'
                                 else:
-                                    member_data.group_info = '그룹/클래스'
+                                    if '1:1' in member_data.group_info:
+                                        member_data.group_info = member_data.group_info
+                                    else:
+                                        member_data.group_info = '1:1/' + member_data.group_info
+                            elif group_check == 1:
+                                if member_data.group_info == '':
+                                    member_data.group_info = '그룹'
+                                else:
+                                    if '그룹' in member_data.group_info:
+                                        member_data.group_info = member_data.group_info
+                                    elif '클래스' in member_data.group_info:
+                                        if '1:1' in member_data.group_info:
+                                            member_data.group_info = '1:1/그룹/클래스'
+                                        else:
+                                            member_data.group_info = '그룹/클래스'
+                                    else:
+                                        member_data.group_info += '/그룹'
                             else:
-                                member_data.group_info += '/그룹'
-                    else:
-                        if member_data.group_info == '':
-                            member_data.group_info = '클래스'
-                        else:
-                            if '클래스' in member_data.group_info:
-                                member_data.group_info = member_data.group_info
-                            else:
-                                member_data.group_info += '/클래스'
+                                if member_data.group_info == '':
+                                    member_data.group_info = '클래스'
+                                else:
+                                    if '클래스' in member_data.group_info:
+                                        member_data.group_info = member_data.group_info
+                                    else:
+                                        member_data.group_info += '/클래스'
 
                     # print(str(lecture_info_data.get_member_lecture_auth_check))
                     lecture_count += lecture_info_data.get_member_lecture_auth_check()
@@ -136,7 +139,7 @@ def func_get_member_ing_list(class_id, user_id):
                     #                                                 auth_cd='VIEW', lecture_tb__use=USE,
                     #                                                 use=USE).count()
 
-                    if lecture_info.use != 0:
+                    if lecture_info.use != UN_USE:
                         if lecture_info.state_cd == 'IP':
                             if group_check != 0:
                                 member_data.group_reg_count += lecture_info.lecture_reg_count
@@ -315,7 +318,7 @@ def func_get_member_end_list(class_id, user_id):
                     #                                                        auth_cd='VIEW', lecture_tb__use=USE,
                     #                                                        use=USE).count()
 
-                    if lecture_info.use != 0:
+                    if lecture_info.use != UN_USE:
                         if group_check != 0:
                             member_data.group_reg_count += lecture_info.lecture_reg_count
                             member_data.group_rem_count += lecture_info.lecture_rem_count
