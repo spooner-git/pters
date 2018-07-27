@@ -1178,7 +1178,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
                     $(document).off('mousemove');
                 });
             });
-            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete, .plan_raw_add', function(){
+            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete, .plan_raw_add, .plan_raw', function(){
                 $(document).off('mousemove');
             })
             $(document).on('mouseup click', targetSelector+' body', function(){

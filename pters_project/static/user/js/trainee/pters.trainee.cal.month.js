@@ -225,7 +225,6 @@ $(document).ready(function(){
     }
 
 
-
     $(document).on('click','.plan_raw',function(){
         shade_index(150)
         $('#popup_planinfo_title').text('레슨 일정')
@@ -238,8 +237,7 @@ $(document).ready(function(){
         var selectedDate = $('.popup_ymdText').text()
         var selectedDateyyyymmdd = date_format_yyyy_m_d_to_yyyymmdd($('.popup_ymdText').attr('data-date'))
         var todayYYYYMMDD = date_format_yyyy_m_d_to_yyyymmdd(String(oriYear)+'_'+String(oriMonth)+'_'+String(oriDate))
-        var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
-        var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
+        var selectedTime = $(this).find('.planchecktime').text()
         var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+$(this).attr('data-dbid')+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
         var selectedMemo = $(this).attr('data-memo')
         if($(this).attr('data-memo') == undefined){
@@ -249,12 +247,8 @@ $(document).ready(function(){
         $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
         $('#popup_info').text(selectedDate);
-        $('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
+        $('#popup_info2').html('['+selectedPerson+']'+'<br>'+ selectedTime);
         $('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
-
-        $('#canvas').hide().css({'border-color':'#282828'})
-        $('#canvasWrap').css({'height':'0px'})
-        $('#canvasWrap span').hide();
 
         $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
         $("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
@@ -270,7 +264,7 @@ $(document).ready(function(){
             $("#popup_sign_img").css("display","none")
             if(selectedDateyyyymmdd < todayYYYYMMDD){
                 $("#popup_text1").css("display","none")
-            };
+            }
         }
         else{
             $("#popup_btn_complete").hide()
@@ -282,9 +276,6 @@ $(document).ready(function(){
             myImage.onerror = function() {
                 //this.src="";
                 $("#popup_sign_img").css("display","none");
-            };
-            if(selectedDateyyyymmdd < todayYYYYMMDD){
-                $("#popup_text1").css("display","none");
             };
         };
         schedule_on_off = 1;
