@@ -75,7 +75,7 @@
             <div class="pters_table_cell_head table_center_name">센터</div>
             <div class="pters_table_cell_head table_lecture_name">프로그램</div>
             <div class="pters_table_cell_head table_trainee_num">수강생</div>
-            <div class="pters_table_cell_head table_start_date">개강일</div>
+            <div class="pters_table_cell_head table_start_date">개설일</div>
             <div class="pters_table_cell_head table_lecture_status">상태</div>
             <div class="pters_table_cell_head table_class_unit">달력 시간 단위</div>
             <div class="pters_table_cell_head lecture_delete">관리</div>
@@ -133,7 +133,7 @@
                     $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
                     $('#shade').show()
                 }else{
-                    alert('현재 활성화 되어있는 강의는 삭제 불가능합니다.\n 다른 강의로 이동후 현재 강의가 삭제 가능합니다.')
+                    alert('현재 활성화 되어있는 프로그램은 삭제 불가능합니다.\n 다른 프로그램으로 이동후 현재 프로그램이 삭제 가능합니다.')
                 }
 
                 $('#popup_delete_btn_yes').click(function(){
@@ -411,7 +411,7 @@
 
                     var additionalRow = '<div class="pters_table_row">'+
                                             '프로그램 단위 ' + classUnitDropdown+
-                                            '&nbsp;  | &nbsp; ' + '개강일 '+ date_format_to_yyyymmdd(startDt,'.') +
+                                            '&nbsp;  | &nbsp; ' + '개설일 '+ date_format_to_yyyymmdd(startDt,'.') +
                                             '&nbsp;  | &nbsp; ' + '수강생 '+ classIPNumber+' 명'  + 
                                         '</div>'
 
