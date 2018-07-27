@@ -1053,6 +1053,17 @@ $(document).ready(function(){
     //드랍다운 씹힘현상 해결
     //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 
+    $('button.pters_dropdown_custom').click(function(){
+        var $button = $(this);
+        var $ul = $(this).siblings('ul');
+        var $li = $(this).siblings('ul').find('li');
+        var dropdown_list_visible_height = $ul.height();
+        var dropdown_list_total_height = $li.length*$li.outerHeight();
+
+        if(dropdown_list_total_height > dropdown_list_visible_height*2){
+            $ul.animate({scrollTop: dropdown_list_total_height/2.5},200)
+        }
+    })
 
 
     var ajax_block_during_submit = true;
