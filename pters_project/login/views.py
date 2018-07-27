@@ -1,4 +1,6 @@
 import logging
+import random
+
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
@@ -863,27 +865,22 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
             error = '연락처는 숫자만 입력 가능합니다.'
 
     if error is None:
-        username = name
 
-    if error is None:
+        test = True
+        i = 0
 
-        count = MemberTb.objects.filter(name=username).count()
-        if count != 0:
-            # username += str(count + 1)
-            test = False
-            i = count + 1
+        while test:
+            username = name + str(random.randrange(0, 9999)).zfill(4)
+            try:
+                User.objects.get(username=username)
+                test = True
+            except ObjectDoesNotExist:
+                test = False
 
-            while True:
-                username = last_name + first_name + str(i)
-                try:
-                    User.objects.get(username=username)
-                except ObjectDoesNotExist:
-                    test = True
-
-                if test:
-                    break
-                else:
-                    i += 1
+            i += 1
+            if i > 100:
+                error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
+                break
 
     if error is None:
         try:

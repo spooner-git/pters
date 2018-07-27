@@ -3910,6 +3910,8 @@ $(document).on('click','img.add_groupmember_plan',function(){
     $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id'));
     $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid')) ;
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum')) ;
+    var test_val = $(this).attr('data-group-type-cd-name');
+    console.log(test_val);
     $('#subpopup_addByList_plan').show();
     get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))});//특정그룹회원 목록 조회
@@ -4001,6 +4003,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var addedCount = 0;
+
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
@@ -4018,7 +4021,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
         }
     }
     if(len == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>그룹에 소속된 회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
     }
     if(addedCount == 0){
         htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>");
@@ -4053,7 +4056,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
         }
     }
     if(len == 0){
-        htmlToJoin.push("<div class='list_viewByList' style='margin-top:30px;margin-bottom:30px;border:0'>그룹에 소속된 회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_viewByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
     }
     if(addedCount == 0){
         htmlToJoin.push("<div class='list_viewByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>");
