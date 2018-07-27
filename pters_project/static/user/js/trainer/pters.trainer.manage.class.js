@@ -1480,9 +1480,9 @@ function pc_add_member(option){
         $('#explain_open_lesson').hide()
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 고정 그룹')
+        $('#addgrouptypename').text('신규 고정 클래스')
 
-        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
+        $('#uptext2, #uptext2_PC').text('신규 고정 클래스 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
@@ -3256,22 +3256,30 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
             var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
 
-            if(jsondata.groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+            var yourgroup = jsondata.groupNameArray[i];
+            if(jsondata.groupNameArray[i] == '그룹'){
                 if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push('G'+jsondata.regCountArray[i])
-                    remCount_group_personal.push('G'+jsondata.remCountArray[i])
-                    availCount_group_personal.push('G'+jsondata.availCountArray[i])
-                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
+                    regCount_group_personal.push('G'+jsondata.regCountArray[i]);
+                    remCount_group_personal.push('G'+jsondata.remCountArray[i]);
+                    availCount_group_personal.push('G'+jsondata.availCountArray[i]);
+                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i]);
                 }
 
-            }else if(jsondata.groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
+            }
+            else if(jsondata.groupNameArray[i] == '클래스'){
                 if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push(jsondata.regCountArray[i])
-                    remCount_group_personal.push(jsondata.remCountArray[i])
-                    availCount_group_personal.push(jsondata.availCountArray[i])
-                    finishCount_group_personal.push(jsondata.finishCountArray[i])
+                    regCount_group_personal.push('C'+jsondata.regCountArray[i]);
+                    remCount_group_personal.push('C'+jsondata.remCountArray[i]);
+                    availCount_group_personal.push('C'+jsondata.availCountArray[i]);
+                    finishCount_group_personal.push('C'+jsondata.finishCountArray[i]);
+                }
+            }
+            else if(jsondata.groupNameArray[i] == '1:1 레슨'){
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push(jsondata.regCountArray[i]);
+                    remCount_group_personal.push(jsondata.remCountArray[i]);
+                    availCount_group_personal.push(jsondata.availCountArray[i]);
+                    finishCount_group_personal.push(jsondata.finishCountArray[i]);
                 }
             }
             var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
@@ -4056,13 +4064,12 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
 
     var schedulesHTML = []
     for(var i=0; i<jsondata.ptRepeatScheduleIdArray.length; i++){
-        var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i]
-        var repeat_group_type = "[그룹레슨]"
+        var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i];
+        var repeat_group_type = "["+jsondata.ptRepeatScheduleGroupTypeCdNameArray[i]+"]";
         if(repeat_group_name.length == 0 ){
-            var repeat_group_name = ""
-            var repeat_group_type = "[1:1레슨]"
+            repeat_group_name = "";
         }
-        var repeat_title = repeat_group_type+' '+repeat_group_name
+        var repeat_title = repeat_group_type+' '+repeat_group_name;
 
 
         var repeat_id = repeat_id_array[i]
