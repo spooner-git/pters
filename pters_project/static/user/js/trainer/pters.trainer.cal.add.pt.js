@@ -1046,12 +1046,24 @@ $(document).ready(function(){
         //scrollHeight = popupHeight + scrollLocation(끝)
         if(popupHeight + scrollLocation == scrollHeight){
             $(this).animate({scrollTop : scrollLocation-1},10)
+            $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
         }else if(popupHeight + scrollLocation == popupHeight){
             $(this).animate({scrollTop : scrollLocation+1},10)
+            $('.dropdown_scroll_arrow_top').css('visibility','hidden')
         }
+
+        // 좌측 스크롤 애로우 보이기
+        if(popupHeight + scrollLocation < scrollHeight-50){
+            $('.dropdown_scroll_arrow_bottom').css('visibility','visible')
+        }
+        if(scrollLocation > 50){
+            $('.dropdown_scroll_arrow_top').css('visibility','visible')
+        }
+        //좌측 스크롤 애로우 보이기
     });
     //드랍다운 씹힘현상 해결
     //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+
 
     $('button.pters_dropdown_custom').click(function(){
         var $button = $(this);
@@ -1063,6 +1075,15 @@ $(document).ready(function(){
         if(dropdown_list_total_height > dropdown_list_visible_height*2){
             $ul.animate({scrollTop: dropdown_list_total_height/2.5},200)
         }
+        if(dropdown_list_total_height > dropdown_list_visible_height+50){
+            $ul.find('div:nth-of-type(1)').append(
+                                                    '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top">'+
+                                                    '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom">'
+                                                 )
+        }
+        if($('.pters_dropdown_custom_list').scrollTop() < 50 ){
+            $('.dropdown_scroll_arrow_top').css('visibility','hidden');
+        };
     })
 
 
