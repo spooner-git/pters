@@ -868,9 +868,11 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
 
         test = True
         i = 0
+        count = MemberTb.objects.filter(name=name).count()
+        max_range = (100 * (10 ** len(str(count)))) - 1
 
         while test:
-            username = name + str(random.randrange(0, 9999)).zfill(4)
+            username = name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
             try:
                 User.objects.get(username=username)
                 test = True
