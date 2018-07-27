@@ -1190,7 +1190,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
                 $(document).off('mousemove');
             })*/
 
-             $(document).on('mousedown click mouseup', 
+             $(document).on('click mouseup', 
                             targetSelector+ ' textarea,'+
                             targetSelector+ ' button,'+
                             targetSelector+ ' input,'+
@@ -1204,10 +1204,12 @@ function set_drag_drop_action_to_DOM(targetSelector){
                             , function(){
                 $(document).off('mousemove');
             })
-
-            $(document).on('mouseup click', targetSelector+' body', function(){
+             $(document).on('mousedown', 
+                            targetSelector+ ' canvas'
+                            , function(){
                 $(document).off('mousemove');
-            });
+            })
+
             
         });
     };
