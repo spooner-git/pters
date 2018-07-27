@@ -1051,12 +1051,12 @@ $(document).ready(function(){
         }
 
         // 좌측 스크롤 애로우 보이기
-        if(popupHeight + scrollLocation < scrollHeight-50){
+        if(popupHeight + scrollLocation < scrollHeight-30){
             $('.dropdown_scroll_arrow_bottom').css('visibility','visible')
         }else{
             $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
         }
-        if(scrollLocation > 50){
+        if(scrollLocation > 30){
             $('.dropdown_scroll_arrow_top').css('visibility','visible')
         }else{
             $('.dropdown_scroll_arrow_top').css('visibility','hidden')
@@ -1072,18 +1072,20 @@ $(document).ready(function(){
         var $ul = $(this).siblings('ul');
         var $li = $(this).siblings('ul').find('li');
         var dropdown_list_visible_height = $ul.height();
-        var dropdown_list_total_height = $li.length*$li.outerHeight();
+        var dropdown_list_total_height = $li.length*$li.outerHeight() + $ul.find('div:nth-of-type(1)').height();
 
         if(dropdown_list_total_height > dropdown_list_visible_height*2){
             $ul.animate({scrollTop: dropdown_list_total_height/2.5},200)
         }
-        if(dropdown_list_total_height > dropdown_list_visible_height+50){
-            $ul.find('div:nth-of-type(1)').append(
+        if(dropdown_list_total_height > dropdown_list_visible_height + 30){
+            if($ul.find('div:nth-of-type(1)').find('img').length == 0){
+                $ul.find('div:nth-of-type(1)').append(
                                                     '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top">'+
                                                     '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom">'
                                                  )
+            }
         }
-        if($('.pters_dropdown_custom_list').scrollTop() < 50 ){
+        if($('.pters_dropdown_custom_list').scrollTop() < 30 ){
             $('.dropdown_scroll_arrow_top').css('visibility','hidden');
         };
     })
