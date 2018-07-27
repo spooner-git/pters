@@ -21,6 +21,19 @@
             .explaintype{
                 height: auto;
             }
+            .outerbox_horizontal{
+                width: 95%;
+                max-width: 380px;
+                margin: 0 auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            .contractread_check{
+                padding: 5px 10px 5px 10px;
+            }
+            .registerbox_smalllabel{
+                padding: 10px 10px 0 10px;
+            }
             #submit_input{
                 overflow-y: hidden;
                 margin: 0;
@@ -68,12 +81,17 @@
                 display: block;
             }
 
+            .explaintype input{
+                height: 21px;
+            }
+
             .button_duplicate_check{
+                display: inline-block;
                 color: #f4f4f4;
                 border: 1px solid #f4f4f4;
                 margin-left: 10px;
                 font-size: 12px;
-                padding: 2px;
+                padding: 0 2px 0 2px;
                 cursor: pointer;
             }
 
@@ -93,9 +111,10 @@
             }
 
             #email_option{
-                height: 22px;
-                margin-left: 36.5%;
-                width: 39%;
+                height: 25px;
+                margin-left: 35%;
+                margin-top: 10px;
+                width: 38%;
             }
 
 
@@ -133,6 +152,7 @@
                 background:   #282828;
                 z-index: 100;
                 box-shadow: 1px 1px 1px 1px #3a3a3a;
+                padding-bottom: 30px;
             }
             @media(min-width: 600px){
                 #legal_popup{
@@ -140,6 +160,9 @@
                     top:  50%;
                     padding:  20px;
                     transform: translate(-50%,-50%);
+                }
+                .outerbox_horizontal{
+                    margin-top: 100px;
                 }
             }
 
@@ -577,8 +600,8 @@
     </div>
 
     <div id="global_error_msg"></div>
-    <div class="outerbox_horizontal" data-view="init" style="width:auto;">
-        <div class="explainbox _type_trainee" style="width: 315px;">
+    <div class="outerbox_horizontal" data-view="init">
+        <div class="explainbox _type_trainee" style="width: 100%;">
             <img src="/static/user/res/login/icon-reg-user.png">
             <p><span class="font-pink">간편한 가입으로</span></p>
             <p>PTERS를 이용해 보세요!</p>
