@@ -338,9 +338,17 @@ var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
 var currentDate = date.getDate();
 var currentHour = date.getHours();
 var currentMinute = date.getMinutes();
+
+
 var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
 var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate,'-')
-var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate
+var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate;
+var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+    lastDay[1] = 29;
+}else{
+    lastDay[1] = 28;
+};
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
@@ -967,11 +975,9 @@ function scrollToDom(dom){
 }
 
 function disable_window_scroll(){
-    /*
     if(bodywidth < 600){
        $('#calendar').css('position','fixed'); 
     }
-    */
     
     $('body, #calendar').on('scroll touchmove mousewheel',function(e){
         e.preventDefault();
@@ -981,11 +987,9 @@ function disable_window_scroll(){
 }
 
 function enable_window_scroll(){
-    /*
     if(bodywidth < 600){
        $('#calendar').css('position','relative'); 
     }
-    */
 
     $('body, #calendar').off('scroll touchmove mousewheel');
 }
@@ -1170,12 +1174,27 @@ function set_drag_drop_action_to_DOM(targetSelector){
                 var resultY = thisOriY - diffY;
 
                 $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
-
-                $(document).on('mouseup click', targetSelector, function(){
+                $(document).on('mouseup click', 'body', function(){
                     $(document).off('mousemove');
                 });
+            });
+            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete, .plan_raw_add, .plan_raw', function(){
+                $(document).off('mousemove');
+            })
+            $(document).on('mouseup click', targetSelector+' body', function(){
+                $(document).off('mousemove');
             });
         });
     };
 };
 ///////////////skkim test//////////////////드래그앤 드랍 함수
+
+
+function popup_locate_center_of_display(targetSelector){
+    var $targetSelector = $(targetSelector)
+    if(bodywidth > 600){
+        $targetSelector.css({'display':'block','top':(($(window).height()-$targetSelector.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$targetSelector.outerWidth())/2+$(window).scrollLeft())});
+    }else{
+        $targetSelector.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+    }
+}

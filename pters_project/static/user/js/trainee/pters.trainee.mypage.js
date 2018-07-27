@@ -200,7 +200,7 @@ $(document).ready(function(){
             '<div class="cell2">날짜</div>'+
             '<div class="cell3">진행시간</div>'+
             '<div class="cell4">상태</div>'+
-            '<div class="cell5">노트</div>'+
+            '<div class="cell5">강사노트</div>'+
             '</div>'
         var html = []
         for(var i=0; i<jsondata.ptScheduleStateCdArray.length; i++){

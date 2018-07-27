@@ -505,6 +505,17 @@ $(document).ready(function(){
     //달력 선택된 날짜
     //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
 
+    $('#starttimesSelected button').click(function(e){
+        
+        //e.preventDefault();
+        if($('#starttimes').find('li').length == 0){
+            e.stopPropagation();
+            alert('예약 가능한 시간이 없습니다.')
+        }else{
+
+        }
+    })
+
     $(document).on('click','#starttimes li a',function(){
         $("#starttimesSelected button").addClass("dropdown_selected");
         $("#starttimesSelected .btn:first-child").text($(this).text());
@@ -1623,12 +1634,12 @@ $(document).ready(function(){
                 var timegraph_houroffset = 0;
                 var timegraph_houroffset = 0;
 
-            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간보다 작을 경우
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간 내에 있을 경우
             }else{
-                var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
+                var timegraph_hourwidth = $('#'+Number(limit.split(':')[0])+'g_00').width();
                 var timegraph_houroffset = $('#'+Preview_Options.workStartTime+'g_00').position().left;
                 var timegraph_houroffsetb = $('#'+Preview_Options.workStartTime+'g_00').position().top;
-                var timegraph_hourendoffset = $('#'+limit.split(':')[0]+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
+                var timegraph_hourendoffset = $('#'+Number(limit.split(':')[0])+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
             }
 
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
@@ -1929,7 +1940,7 @@ $(document).ready(function(){
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
                 if(compare_time(semiresult[t], add_time(currentTime, '00:'+Preview_Options.limit))                      //업무시간
                     && compare_time(semiresult[t], add_time(Preview_Options.workEndTime+':00', '00:00')) == false
-                    && compare_time(semiresult[t], substract_time(Preview_Options.workStartTime+':00', '00:01')) ){ //근접예약 금지
+                    && compare_time(add_time(Options.workStartTime+':00', '00:00'), semiresult[t]) == false ){ //근접예약 금지
 
                     if(starttimeOption.split('-')[0] == "A"){
                         if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?

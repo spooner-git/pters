@@ -19,6 +19,7 @@
         var thisWidth = $(this).width();
         var thisHeight = $(this).height();
         var thisZindex = $(this).css('z-index');
+        console.log('thisHeight',thisHeight, 'thisWidth',thisWidth)
 
         var hoverHeight;
         var hoverWidth = thisWidth+2;
@@ -28,7 +29,7 @@
             var hoverHeight = thisHeight + 2;
         }
 
-        $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':1});
+        $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0});
     
         var $memberName = $(this).find('.memberName');
         var $memberTime = $(this).find('.memberTime');
@@ -40,6 +41,7 @@
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0', 'left':1});
+            console.log('thisHeight',thisHeight, 'thisWidth',thisWidth)
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
                 $memberTime.removeClass('_hided').addClass('hideelement');

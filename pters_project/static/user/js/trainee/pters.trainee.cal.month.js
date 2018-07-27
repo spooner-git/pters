@@ -167,7 +167,6 @@ $(document).ready(function(){
                 //$(this).fadeOut(5000)
             })
         }else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
-            $('#cal_popup_plancheck').fadeIn('fast');
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
             $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
@@ -175,9 +174,9 @@ $(document).ready(function(){
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
             $('.plan_raw_add').hide()
             shade_index(100)
+             popup_locate_center_of_display('#cal_popup_plancheck');
             adjust_starttime_list_height()
         }else if($(this).hasClass('available')){
-            $('#cal_popup_plancheck').css('display','block')
             $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
             $('.cancellimit_time').text(Options.cancellimit+"시간 전")
             $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
@@ -190,18 +189,19 @@ $(document).ready(function(){
             else{
                 $('.plan_raw_add').show()
             }
-            shade_index(100)
-            adjust_starttime_list_height()
+            shade_index(100);
+            popup_locate_center_of_display('#cal_popup_plancheck');
+            adjust_starttime_list_height();
         }else{
-            $('#cal_popup_plancheck').fadeIn('fast');
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
-            $('.cancellimit_time').text(Options.cancellimit+"시간 전")
-            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
-            $('.startTime_time').text(startTime_to_hangul(Options.startTime))
-            plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-            $('.plan_raw_add').hide()
-            shade_index(100)
-            adjust_starttime_list_height()
+            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
+            $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
+            $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+            plancheck(yy+'_'+mm+'_'+dd, initialJSON);
+            $('.plan_raw_add').hide();
+            shade_index(100);
+            popup_locate_center_of_display('#cal_popup_plancheck');
+            adjust_starttime_list_height();
         }/*else{
          shade_index(100)
          $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
@@ -225,7 +225,6 @@ $(document).ready(function(){
     }
 
 
-
     $(document).on('click','.plan_raw',function(){
         shade_index(150)
         $('#popup_planinfo_title').text('레슨 일정')
@@ -238,8 +237,7 @@ $(document).ready(function(){
         var selectedDate = $('.popup_ymdText').text()
         var selectedDateyyyymmdd = date_format_yyyy_m_d_to_yyyymmdd($('.popup_ymdText').attr('data-date'))
         var todayYYYYMMDD = date_format_yyyy_m_d_to_yyyymmdd(String(oriYear)+'_'+String(oriMonth)+'_'+String(oriDate))
-        var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
-        var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
+        var selectedTime = $(this).find('.planchecktime').text()
         var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+$(this).attr('data-dbid')+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
         var selectedMemo = $(this).attr('data-memo')
         if($(this).attr('data-memo') == undefined){
@@ -249,12 +247,8 @@ $(document).ready(function(){
         $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
         $('#popup_info').text(selectedDate);
-        $('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
+        $('#popup_info2').html('['+selectedPerson+']'+'<br>'+ selectedTime);
         $('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
-
-        $('#canvas').hide().css({'border-color':'#282828'})
-        $('#canvasWrap').css({'height':'0px'})
-        $('#canvasWrap span').hide();
 
         $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
         $("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
@@ -270,7 +264,7 @@ $(document).ready(function(){
             $("#popup_sign_img").css("display","none")
             if(selectedDateyyyymmdd < todayYYYYMMDD){
                 $("#popup_text1").css("display","none")
-            };
+            }
         }
         else{
             $("#popup_btn_complete").hide()
@@ -282,9 +276,6 @@ $(document).ready(function(){
             myImage.onerror = function() {
                 //this.src="";
                 $("#popup_sign_img").css("display","none");
-            };
-            if(selectedDateyyyymmdd < todayYYYYMMDD){
-                $("#popup_text1").css("display","none");
             };
         };
         schedule_on_off = 1;
@@ -1287,12 +1278,12 @@ $(document).ready(function(){
                 var timegraph_houroffset = 0;
                 var timegraph_houroffset = 0;
 
-            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간보다 작을 경우
+            //근접 예약방지 시간을 현재시간에 더한 값이 업무시간 내에 있을 경우
             }else{
-                var timegraph_hourwidth = $('#'+limit.split(':')[0]+'g_00').width();
+                var timegraph_hourwidth = $('#'+Number(limit.split(':')[0])+'g_00').width();
                 var timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left;
                 var timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-                var timegraph_hourendoffset = $('#'+limit.split(':')[0]+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
+                var timegraph_hourendoffset = $('#'+Number(limit.split(':')[0])+'g_00').position().left + timegraph_hourwidth*(Number(limit.split(':')[1])/60)
             }
 
             var planWidth   = timegraph_hourendoffset - timegraph_houroffset;
@@ -1502,7 +1493,7 @@ $(document).ready(function(){
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
                 if(compare_time(semiresult[t], add_time(currentTime, '00:'+(Options.limit*60) ))                      //업무시간
                     && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
-                    && compare_time(semiresult[t], substract_time(Options.workStartTime+':00', '00:01')) ){ //근접예약 금지
+                    && compare_time(add_time(Options.workStartTime+':00', '00:00'), semiresult[t]) == false ){ //근접예약 금지
                     
                     if(starttimeOption.split('-')[0] == "A"){
                         if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
@@ -1653,7 +1644,7 @@ $(document).ready(function(){
 
 
 
-
+/*
 var date = new Date();
 var currentYear = date.getFullYear(); //현재 년도
 var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -1666,6 +1657,7 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
 }else{
     lastDay[1] = 28;
 }
+*/
 var currentPageMonth = currentMonth+1; //현재 달
 var date2 = new Date();
 var oriYear = date.getFullYear();
