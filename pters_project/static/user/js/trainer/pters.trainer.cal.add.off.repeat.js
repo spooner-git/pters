@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    $('.mode_switch_button').click(function(){
+    $('.mode_switch_button').click(function(e){
         var pageSelector = $(this).attr('data-page')
         $(this).addClass('mode_active')
         $(this).siblings('.mode_switch_button').removeClass('mode_active')

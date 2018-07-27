@@ -19,7 +19,6 @@
         var thisWidth = $(this).width();
         var thisHeight = $(this).height();
         var thisZindex = $(this).css('z-index');
-        console.log('thisHeight',thisHeight, 'thisWidth',thisWidth)
 
         var hoverHeight;
         var hoverWidth = thisWidth+2;
@@ -41,7 +40,6 @@
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0', 'left':1});
-            console.log('thisHeight',thisHeight, 'thisWidth',thisWidth)
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
                 $memberTime.removeClass('_hided').addClass('hideelement');
