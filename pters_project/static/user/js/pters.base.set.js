@@ -1141,6 +1141,7 @@ set_drag_drop_action_to_DOM('#page-addplan');
 set_drag_drop_action_to_DOM('#cal_popup_planinfo');
 set_drag_drop_action_to_DOM('#cal_popup_plancheck');
 ///////////////skkim test//////////////////드래그앤 드랍 함수
+
 function set_drag_drop_action_to_DOM(targetSelector){
     if(bodywidth > 600){
         $(targetSelector).mousedown(function(event){
@@ -1178,15 +1179,131 @@ function set_drag_drop_action_to_DOM(targetSelector){
                     $(document).off('mousemove');
                 });
             });
-            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete, .plan_raw_add, .plan_raw', function(){
+            /*
+            $(document).on('mousedown click mouseup', 
+                            '#canvasWrap, #popup_btn_complete, .plan_raw_add, .plan_raw,'+
+                            targetSelector+ ' button,'+
+                            targetSelector+ ' input,'+
+                            targetSelector+ ' .datepicktext,'+
+                            targetSelector+ ' .mode_switch_button'
+                            , function(){
+                $(document).off('mousemove');
+            })*/
+
+             $(document).on('click mouseup', 
+                            targetSelector+ ' textarea,'+
+                            targetSelector+ ' button,'+
+                            targetSelector+ ' input,'+
+                            targetSelector+ ' table,'+
+                            targetSelector+ ' span,'+
+                            targetSelector+ ' div,'+
+                            targetSelector+ ' img,'+
+                            targetSelector+ ' td,'+
+                            targetSelector+ ' tr,'+
+                            targetSelector+ ' p'
+                            , function(){
                 $(document).off('mousemove');
             })
-            $(document).on('mouseup click', targetSelector+' body', function(){
+             $(document).on('mousedown', 
+                            targetSelector+ ' canvas'
+                            , function(){
                 $(document).off('mousemove');
-            });
+            })
+
+            
         });
     };
 };
+
+
+//set_drag_drop_action_to_DOM_partial('#page-addplan',{grabHeight:'40px', grabWidth:'40px'});
+//set_drag_drop_action_to_DOM_partial('#cal_popup_planinfo',{grabHeight:'40px', grabWidth:'40px'});
+//set_drag_drop_action_to_DOM_partial('#cal_popup_plancheck',{grabHeight:'40px', grabWidth:'40px'});
+function set_drag_drop_action_to_DOM_partial(targetSelector, options){
+    var $target = $(targetSelector);
+    var $drag_bar = $(targetSelector+' .drag_drop_target');
+    set_hover_behavior_to_drag_drop_target('.drag_drop_target')
+
+    if(options == undefined){
+        var options = {
+                        'grabHeight':'50px',
+                        'grabWidth': '100%',
+                        'grabZindex':'100',
+                        'grabTop':'0',
+                        'grabLeft':'0',
+                        'grabPosition':'absolute',
+                   }
+    }else{
+        if(options.grabPosition==undefined){options.grabPosition = 'absolute'};
+        if(options.grabWidth==undefined){options.grabWidth = '100%'};
+        if(options.grabHeight==undefined){options.grabHeight = '50px'};
+        if(options.grabTop==undefined){options.grabTop = '0'};
+        if(options.grabLeft==undefined){options.grabLeft = '0'};
+        if(options.grabZindex==undefined){options.grabZindex = '100'};
+    }
+    
+
+    if(bodywidth > 600){
+        $(targetSelector).append(
+                                    `<div class="drag_drop_target" 
+                                                                style="position:${options.grabPosition};
+                                                                        width:${options.grabWidth};
+                                                                        height:${options.grabHeight};
+                                                                        top:${options.grabTop};
+                                                                        left:${options.grabLeft};
+                                                                        z-index:${options.grabZindex}">
+                                    </div>`
+                                )
+
+        $(document).on('mousedown',targetSelector+' .drag_drop_target',function(event){
+            $target.css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
+
+            $(document).on('mouseup',targetSelector+' .drag_drop_target',function(event){
+                $target.css({'box-shadow':'unset'});
+            });
+
+            $(document).on('mouseleave',targetSelector+' .drag_drop_target',function(event){
+                $target.css({'box-shadow':'unset'});
+            });
+
+            var thisOriX = $(this).offset().left;
+            var thisOriY = $(this).offset().top;
+
+            var oriX = event.pageX;
+            var oriY = event.pageY;
+
+            $(document).on('mousemove', 'body', function(e){
+                var moveX = e.pageX;
+                var moveY = e.pageY;
+
+                var diffX = oriX - moveX;
+                var diffY = oriY - moveY;
+
+                var resultX;
+                var resultY;
+
+                var resultX = thisOriX - diffX;
+                var resultY = thisOriY - diffY;
+
+                $target.css({'top':resultY+'px','left':resultX+'px'});
+                $(document).on('mouseup click', 'body', function(){
+                    $(document).off('mousemove');
+                });
+            });           
+        });
+    };
+};
+
+function set_hover_behavior_to_drag_drop_target(drag_drop_target){
+    var $target = $(drag_drop_target);
+    $(document).on('mouseover',drag_drop_target,function(){
+        $(this).css({'background':'transparent','border':'1px solid #fe4e65'})
+    });
+    $(document).on('mouseout',drag_drop_target,function(){
+        $(this).css({'background':'transparent', 'border-color':'transparent'})
+    });
+}
+
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 
