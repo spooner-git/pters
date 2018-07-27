@@ -1046,18 +1046,20 @@ $(document).ready(function(){
         //scrollHeight = popupHeight + scrollLocation(끝)
         if(popupHeight + scrollLocation == scrollHeight){
             $(this).animate({scrollTop : scrollLocation-1},10)
-            $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
         }else if(popupHeight + scrollLocation == popupHeight){
             $(this).animate({scrollTop : scrollLocation+1},10)
-            $('.dropdown_scroll_arrow_top').css('visibility','hidden')
         }
 
         // 좌측 스크롤 애로우 보이기
         if(popupHeight + scrollLocation < scrollHeight-50){
             $('.dropdown_scroll_arrow_bottom').css('visibility','visible')
+        }else{
+            $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
         }
         if(scrollLocation > 50){
             $('.dropdown_scroll_arrow_top').css('visibility','visible')
+        }else{
+            $('.dropdown_scroll_arrow_top').css('visibility','hidden')
         }
         //좌측 스크롤 애로우 보이기
     });

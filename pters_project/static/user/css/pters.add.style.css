@@ -102,6 +102,7 @@ ul a{
 	font-family: 'Noto Sans KR';
 	max-height: 300px; /*144*/
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding-top: 0;
 	padding-bottom: 0;
 	-webkit-overflow-scrolling:touch;
