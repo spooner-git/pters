@@ -671,49 +671,7 @@ $(document).ready(function(){
         $('#id_memo_mini, #id_memo_mini_off').val($(this).val());
     });
 
-    /*
-     function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
-     if(Options.classDur == 60){
-     var selectedDuration = Number(duration)/2
-     var blankSelected = 'blankSelected'
-     var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
-     var mi = selectedTime[4]
-     var yy = Number(selectedTime[0])
-     var mm = Number(selectedTime[1])
-     var dd = Number(selectedTime[2])
-     var hh = Number(selectedTime[3])
 
-     $('.blankSelected_addview').removeClass(blankSelected+' blankSelected_addview')
-     for(i=hh+1; i<hh+selectedDuration; i++){
-     $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
-     }
-     }else if(Options.classDur == 30){
-     var selectedDuration = Number(duration)
-     var blankSelected = 'blankSelected30'
-     var selectedTime = $('.'+blankSelected).parent('div').attr('id').split('_')
-     if(selectedTime[4] == "00"){
-     var mi = "30"
-     var hh = Number(selectedTime[3])
-     }else if(selectedTime[4] =="30"){
-     var mi = "00"
-     var hh = Number(selectedTime[3])+1
-     }
-     var yy = Number(selectedTime[0])
-     var mm = Number(selectedTime[1])
-     var dd = Number(selectedTime[2])
-     var hh_ = Number(selectedTime[3])
-     $('.blankSelected_addview').removeClass(blankSelected+' blankSelected_addview')
-     for(i=hh; i<hh+selectedDuration-1; i++){
-     if(mi == 60 || mi == 0){
-     var mi = "00"
-     var hh_ = hh_ + 1
-     }
-     $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected+' blankSelected_addview')
-     mi = Number(mi) + 30
-     }
-     }
-     }
-     */
 
     function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
 
@@ -824,6 +782,7 @@ $(document).ready(function(){
                                                                             )
             $('#base_popup_check_finished_member_notice').show();
             $('#shade_caution').show();
+            $('#page-base-addstyle').css('z-index',151);
             disable_window_scroll();
         }
     }

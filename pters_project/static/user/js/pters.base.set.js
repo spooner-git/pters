@@ -112,6 +112,7 @@ function show_caution_popup(messageHtml){
 function close_caution_popup(){
     $('#base_popup_check_finished_member_notice').hide();
     $('#shade_caution').hide();
+    $('#page-base-addstyle').css('z-index',150);
     enable_window_scroll();
 }
 

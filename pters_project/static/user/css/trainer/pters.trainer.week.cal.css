@@ -142,7 +142,7 @@ body{
 .swiper-container{
 	overflow-y: hidden;
 	/*height: 100%;*/
-	padding-bottom:30px;
+	padding-bottom:0px;
 	height: auto;
 	background:#f7f7f7;
 }
@@ -724,7 +724,11 @@ img,a,div,span,p{
 		white-space: nowrap;
 	}
 
+	.swiper-container{
 
+		padding-bottom:30px;
+
+	}
 	
 
 

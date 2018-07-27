@@ -566,7 +566,6 @@ a:focus, a:hover{
 #page-base-addstyle{
     display: none;
     z-index: 150;
-    /*z-index: 151;*/
     background: #ffffff;
 }
 
