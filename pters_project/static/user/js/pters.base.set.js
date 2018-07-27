@@ -340,7 +340,13 @@ var currentHour = date.getHours();
 var currentMinute = date.getMinutes();
 var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
 var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate,'-')
-var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate
+var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate;
+var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+    lastDay[1] = 29;
+}else{
+    lastDay[1] = 28;
+};
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
@@ -1170,7 +1176,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
                     $(document).off('mousemove');
                 });
             });
-            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete', function(){
+            $(document).on('mousedown click', '#canvasWrap, #popup_btn_complete, .plan_raw_add', function(){
                 $(document).off('mousemove');
             })
             $(document).on('mouseup click', targetSelector+' body', function(){

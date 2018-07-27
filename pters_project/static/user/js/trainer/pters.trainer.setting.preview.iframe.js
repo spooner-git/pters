@@ -1940,7 +1940,7 @@ $(document).ready(function(){
             if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
                 if(compare_time(semiresult[t], add_time(currentTime, '00:'+Preview_Options.limit))                      //업무시간
                     && compare_time(semiresult[t], add_time(Preview_Options.workEndTime+':00', '00:00')) == false
-                    && compare_time(semiresult[t], substract_time(Preview_Options.workStartTime+':00', '00:01')) ){ //근접예약 금지
+                    && compare_time(substract_time(Options.workStartTime+':00', '00:00'), semiresult[t]) == false ){ //근접예약 금지
 
                     if(starttimeOption.split('-')[0] == "A"){
                         if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
