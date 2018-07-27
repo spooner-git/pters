@@ -406,7 +406,6 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         context = {}
         # context = super(AddClassView, self).get_context_data(**kwargs)
-
         class_type_cd_data = CommonCdTb.objects.filter(common_cd='TR', use=USE).order_by('order')
         class_type_cd_data |= CommonCdTb.objects.filter(common_cd='ETC', use=USE).order_by('order')
 
@@ -2784,7 +2783,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         context = super(GetGroupIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE)
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE).order_by('group_type_cd')
         for group_info in group_data:
             member_data = []
             try:
