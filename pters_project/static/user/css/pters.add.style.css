@@ -141,6 +141,20 @@ ul a{
 		.pters_dropdown_custom_list li a{
 			line-height: 45px;
 		}
+		img.dropdown_scroll_arrow_top{
+			position: absolute;
+			right: 0;
+			margin:15px;
+			top: 30px;
+			transform: rotate(90deg);
+		}
+		img.dropdown_scroll_arrow_bottom{
+			position: absolute;
+			right: 0;
+			margin: 15px;
+			bottom: -270px;
+			transform:rotate(270deg);
+		}
 
 	.pters_dropdown_custom_list div{
 		text-align: center;
