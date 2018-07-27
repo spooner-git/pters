@@ -1090,6 +1090,25 @@ $(document).ready(function(){
         };
     })
 
+    $(document).on('click','img.dropdown_scroll_arrow_top',function(e){
+        e.stopPropagation();
+        var $thisul = $(this).parents('ul');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: 0},200)
+        }
+    });
+    $(document).on('click','img.dropdown_scroll_arrow_bottom',function(e){
+        e.stopPropagation();
+        var $thisul = $(this).parents('ul');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+        }
+    });
+
 
     var ajax_block_during_submit = true;
     $("#upbutton-check, #submitBtn_pt, #submitBtn_mini").click(function(e){
