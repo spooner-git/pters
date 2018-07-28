@@ -2458,7 +2458,11 @@ function memberListSet (type,option,Reverse, jsondata){
         var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
         var startdatetd = '<td class="_startdate">'+start+'</td>';
         var enddatetd = '<td class="_finday">'+end+'</td>';
-        var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
+        if(phoneToEdit != ""){
+            var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
+        }else{
+            var mobiletd = '<td class="_contact">-'+'</td>';
+        }
         var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
         var scrolltd = '<td class="forscroll"></td>';
 
