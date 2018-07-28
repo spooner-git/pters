@@ -4252,17 +4252,6 @@ function closePopup(option){
         $('#memberRepeat_info').html("");
         $('#memberLectureHistory_info').html("");
 
-        /*
-         $('#memberName_info').attr('disabled',true)
-         $('#memberId').attr('disabled',true);
-
-         $('#birth_year_info, #birth_month_info, #birth_date_info').prop('disabled',true).addClass('dropdown_birth_info')
-         $('#memberMale_info, #memberFemale_info').addClass('selectbox_disable')
-
-         $('#memberPhone_info').attr('disabled',true);
-         $('#comment_info').attr('readonly',true);
-         */
-
         hide_plandelete();
         close_others();
 

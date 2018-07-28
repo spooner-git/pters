@@ -970,7 +970,6 @@ function groupListSet(option, jsondata){ //option : current, finished
             var text_membernum = "종료된 그룹 "
             break;
     }
-    console.log('groupListSet',jsondata)
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
     var ordernum = 0;
@@ -1094,17 +1093,30 @@ function get_groupmember_list(group_id, use, callback){
 
 //그룹원 목록을 그룹에 그리기 
 function groupMemberListSet(group_id, jsondata){
-    console.log('groupmemberlist',jsondata)
-    var htmlToJoin = ['<div class="groupmemberline_thead">'+
-    '<div class="_tdname">회원명</div>'+
-    '<div class="_id">회원 ID</div>'+
-    '<div class="_regcount">등록 횟수</div>'+
-    '<div class="_remaincount">남은 횟수</div>'+
-    '<div class="_startdate">시작일</div>'+
-    '<div class="_finday">종료일</div>'+
-    '<div class="_contact">연락처</div>'+
-    '<div class="_manage">관리</div>'+
-    '</div>']
+    var htmlToJoin = [];
+    if(bodywidth < 600){
+        htmlToJoin.push('<div class="groupmemberline_thead">'+
+                        '<div class="_tdname">회원명</div>'+
+                        //'<div class="_id">회원 ID</div>'+
+                        '<div class="_regcount">등록 횟수</div>'+
+                        '<div class="_remaincount">남은 횟수</div>'+
+                        //'<div class="_startdate">시작일</div>'+
+                        //'<div class="_finday">종료일</div>'+
+                        //'<div class="_contact">연락처</div>'+
+                        '<div class="_manage">관리</div>'+
+                        '</div>')
+    }else if(bodywidth >= 600){
+        htmlToJoin.push('<div class="groupmemberline_thead">'+
+                        '<div class="_tdname">회원명</div>'+
+                        '<div class="_id">회원 ID</div>'+
+                        '<div class="_regcount">등록 횟수</div>'+
+                        '<div class="_remaincount">남은 횟수</div>'+
+                        '<div class="_startdate">시작일</div>'+
+                        '<div class="_finday">종료일</div>'+
+                        '<div class="_contact">연락처</div>'+
+                        '<div class="_manage">관리</div>'+
+                        '</div>')
+    }
     var len = jsondata.db_id.length
     var groupcapacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
     var grouptype = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
@@ -1124,7 +1136,19 @@ function groupMemberListSet(group_id, jsondata){
         var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">'
         var htmlEnd = '</div>'
 
-        var memberRow = htmlStart +
+        if(bodywidth < 600){
+            var memberRow = htmlStart +
+            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
+            //'<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+            '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
+            '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
+            //'<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
+            //'<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
+            //'<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
+            '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
+            htmlEnd
+        }else if(bodywidth >= 600){
+            var memberRow = htmlStart +
             '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
             '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
             '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
@@ -1134,6 +1158,8 @@ function groupMemberListSet(group_id, jsondata){
             '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
             '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
             htmlEnd
+        }
+        
 
         htmlToJoin.push(memberRow)
     }
