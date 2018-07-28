@@ -4,7 +4,8 @@
 	top: 50%;
 	transform:translate(-50%, -50%);
 	display: none;
-	width: 320px;
+	max-width: 400px;
+	width: 90%;
 	border:1px solid #cccccc;
 	background:#ffffff;
 	z-index: 110;
@@ -32,11 +33,18 @@
 	border-left: 1px solid #ffffff;
 	font-weight: bold;
 }
+
 .pters_table_cell{
 	display: table-cell;
 	background:#ffffff;
 	border-bottom: 1px solid #f4f4f4;
+	vertical-align: middle;
+	height: 35px;
+	font-size: 14px;
 }
+
+
+
 .table_lecture_name{
 	width: 30%;
 }

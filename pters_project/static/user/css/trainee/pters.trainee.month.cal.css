@@ -23,16 +23,6 @@ body{
 	z-index: -100
 }
 
-.pters_table_cell{
-	vertical-align: middle;
-	height: 35px;
-	font-size: 14px;
-}
-#popup_lecture_select{
-	max-width: 400px;
-	width: 90%;
-}
-
 
 .dropdown-backdrop{
 	background-color: transparent !important;
