@@ -20,7 +20,18 @@
     <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
+    <style type="text/css">
+        html{
+            background-image: url("/static/user/res/main/bg-image-basic-mobile.jpg");
+            height: 100%;
+        }
+        @media(min-width:600px){
+            html{
+                background-image: url("/static/user/res/main/bg-image-basic-pc.jpg");
 
+            }
+        }
+    </style>
     {% block local_css %}
     {% endblock %}
 </head>
@@ -340,7 +351,7 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+
 <script>
 
     $('#shade, #shade3').click(function(){
@@ -351,6 +362,8 @@
         }
     })
 
+    var class_background_img_url= [];
+    var class_background_type_cd = [];
 
     function openNav(){
         $("#outer_Sidenav").show();
@@ -645,12 +658,13 @@
         $('#id_next_page').val('{% url 'trainer:index'%}');
         document.getElementById('lecture-check-form').submit();
     }
+    $('#upbutton-alarm').css('display','none')
 
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///
 
 </script>
-
+<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
 {% block local_js_footer %}
 {% endblock %}
 
