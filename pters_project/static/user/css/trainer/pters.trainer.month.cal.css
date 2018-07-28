@@ -191,6 +191,7 @@ img,a,div,span,p{
 	padding-right:20px;
 	z-index: 2;
 	top: 93px;
+	table-layout: fixed;
 }
 
 #ymdText-pc{

@@ -97,7 +97,7 @@ $(document).ready(function(){
         }
     });
 
-
+/*
     $('#upbutton-x').click(function(){
         var bodywidth = window.innerWidth;
         //$('#calendar').css('height','90%')
@@ -140,9 +140,56 @@ $(document).ready(function(){
             $('#timeGraph').css('display','none')
             shade_index(-100)
         }
-
     })
+*/
+    
+    $('#upbutton-x').click(function(){
+        var bodywidth = window.innerWidth;
+        //$('#calendar').css('height','90%')
+        if($(this).attr('data-page') == "addplan"){
+            $('#page-addplan').css('display','none');
+            if(bodywidth < 600){
+                //$('#calendar').css('display','block');
+                $('#calendar').css('height','100%')
+            }
+            $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
+            $('#page-base').css('display','block');
+            $('#page-base-addstyle').css('display','none');
 
+            var text1 = '회원/그룹/클래스 선택';
+            var text2 = '선택';
+            if(Options.language == "KOR"){
+                text1 = '회원/그룹/클래스 선택';
+                text2 = '선택';
+            }else if(Options.language == "JPN"){
+                text1 = '「会員選択」';
+                text2 = '「選択」';
+            }else if(Options.language == "ENG"){
+                text1 = 'Choose member';
+                text2 = 'Choose';
+            }
+            $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
+            $("#countsSelected,.countsSelected").text("");
+            //$("#dateSelector p").removeClass("dropdown_selected");
+            $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+            $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+            $("#starttimes, #durations").empty();
+            $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
+
+            $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
+            $('.dateButton').removeClass('dateButton_selected');
+            $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null);
+            $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
+            //$('#page-addplan form input').val('');
+            selectedDayGroup = [];
+
+            $('._NORMAL_ADD_wrap').css('display','block');
+            $('._REPEAT_ADD_wrap').css('display','none');
+            $('#timeGraph').css('display','none');
+            shade_index(-100);
+        }
+    });
 
 
     $(document).on('click','#calendar td',function(){
@@ -1318,6 +1365,26 @@ function month_calendar(referencedate){
     draw_time_graph(Options.hourunit,'')
     ajaxClassTime()
 }
+/*
+function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+    if(Month>12){
+        var Month = Month-12
+        var Year = Year+1
+    }else if(Month<1){
+        var Month = Month+12
+        var Year = Year-1
+    }
+    for(var i=1; i<=6; i++){
+        $('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">')
+    };
+
+
+    for(var i=1; i<=6; i++){
+        $('.swiper-slide:nth-child('+Index+')'+' #week'+i+'_'+Year+'_'+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
+    };
+    calendarSetting(Year,Month);
+}; //calTable_Set
+*/
 
 function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
     if(Month>12){
@@ -1328,14 +1395,15 @@ function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라�
         var Year = Year-1
     }
 
+    var $targetHTML = $('.swiper-slide:nth-child('+Index+')');
+
+    var htmltojoin = [];
     for(var i=1; i<=6; i++){
-        $('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">')
+        var child = '<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>'
+        htmltojoin.push('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">'+child+'</div>')
     };
 
-
-    for(var i=1; i<=6; i++){
-        $('.swiper-slide:nth-child('+Index+')'+' #week'+i+'_'+Year+'_'+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
-    };
+    $targetHTML.html(htmltojoin.join(''))
 
     calendarSetting(Year,Month);
 }; //calTable_Set
