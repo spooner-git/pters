@@ -4162,16 +4162,16 @@ function closePopup(option){
             shade_index(-100)
         }
     }else if(option == 'member_add'){
-        if($('body').width()<600){
+        if(bodywidth<600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
         }
-        $('#page_addmember').fadeOut('fast');
+        $('#page_addmember').hide();
 
-        $('#float_btn').fadeIn('fast');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#float_btn').show();
+        $('#page-base').show();
+        $('#page-base-addstyle').hide();
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
