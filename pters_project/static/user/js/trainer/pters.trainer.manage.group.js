@@ -1488,7 +1488,7 @@ function pc_add_member(option){
         var regEnddate = [];
         $('.wraps .lec_end_date').each(function(index){
             regEnddate.push($(this).val().replace(/\./gi,'-'))
-        });console.log(regEnddate)
+        });
         $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
