@@ -2195,7 +2195,7 @@ function closeAddPopup(){
     //$('body').css('overflow-y','overlay');
     $('#page-addplan').hide('fast','swing');
     if(bodywidth<=600){
-        $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
+        $('#float_btn').show().removeClass('rotate_btn');
         $('#page-base').show();
         $('#page-base-addstyle').hide();
     }

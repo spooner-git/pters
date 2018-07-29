@@ -473,7 +473,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
     group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
     if($(this).css('opacity') == 1){
         deleteTypeSelect = 'groupdelete';
-        $('#cal_popup_plandelete').fadeIn('fast')
+        $('#cal_popup_plandelete').show()
         $('#popup_delete_question').text('정말 이 그룹을 삭제하시겠습니까?')
         //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
         var group_id = $(this).attr('data-groupid')

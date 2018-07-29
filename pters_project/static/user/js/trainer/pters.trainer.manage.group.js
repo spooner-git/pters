@@ -293,15 +293,15 @@ $(document).ready(function(){
 
         $('#deleteMemberId').val(selectedUserId);
         //$('.confirmPopup').fadeIn('fast');
-        $('#cal_popup_plandelete').fadeIn('fast');
-        $('#shade3').fadeIn('fast');
+        $('#cal_popup_plandelete').show();
+        $('#shade3').show('fast');
     })
 
     //PC & Mobile 회원삭제버튼 (회원정보창에서)
     $(document).on('click','button._info_delete',function(){
         //$('.confirmPopup').fadeIn('fast');
         deleteTypeSelect = "memberinfodelete";
-        $('#cal_popup_plandelete').fadeIn('fast');
+        $('#cal_popup_plandelete').show();
         $('#popup_delete_question').text('정말 회원님을 삭제하시겠습니까?')
     })
 
@@ -431,7 +431,7 @@ $(document).ready(function(){
 
     //???
     $(document).on('click','div.lectureType_RJ',function(){
-        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend',
+        $('.resendPopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-name':$(this).attr('data-name')});
@@ -440,7 +440,7 @@ $(document).ready(function(){
 
     //미연결
     $(document).on('click','div.lectureType_DELETE',function(){
-        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend',
+        $('.resendPopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-name':$(this).attr('data-name')});
@@ -449,7 +449,7 @@ $(document).ready(function(){
 
     //연결됨, 대기
     $(document).on('click','div.lectureType_WAIT, div.lectureType_VIEW',function(){
-        $('.lectureConnectStateChangePopup').fadeIn('fast').attr({'data-type':'resend',
+        $('.lectureConnectStateChangePopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-name':$(this).attr('data-name')});
@@ -460,7 +460,7 @@ $(document).ready(function(){
     //진행중
     $(document).on('click','div.lecConnectType_IP',function(){
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        $('.lectureStateChangeSelectPopup').show().attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
@@ -479,7 +479,7 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        selector_lectureStateChangeSelectPopup.fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
@@ -511,7 +511,7 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        selector_lectureStateChangeSelectPopup.fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
@@ -531,7 +531,7 @@ $(document).ready(function(){
 
 
     $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
-        $(this).parents('.popups').fadeOut('fast');
+        $(this).parents('.popups').hide();
         hide_shadow_responsively();
     });
 
@@ -669,7 +669,7 @@ $(document).ready(function(){
         e.stopPropagation()
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id');
         $('#id_repeat_schedule_id_confirm').val(id_info);
-        $('#cal_popup_plandelete').fadeIn().attr({'data-repeatid':$(this).attr('data-repeatid'), 'data-dbid':$(this).attr('data-dbid'), 'data-groupid':$(this).attr('data-groupid')});
+        $('#cal_popup_plandelete').show().attr({'data-repeatid':$(this).attr('data-repeatid'), 'data-dbid':$(this).attr('data-dbid'), 'data-groupid':$(this).attr('data-groupid')});
         if($(this).attr('data-deletetype') == 'grouprepeatinfo'){
             deleteTypeSelect = 'grouprepeatinfodelete';
             shade_index(100)
@@ -810,7 +810,7 @@ $(document).ready(function(){
         var LOCTOP = $(this).offset().top;
         var LOCLEFT = $(this).offset().left;
         if($('#currentMemberList').width()>=600){
-            $('.instructPopup').fadeIn().css({'top':LOCTOP+40,'left':LOCLEFT});
+            $('.instructPopup').show().css({'top':LOCTOP+40,'left':LOCLEFT});
         };
 
         if($(this).hasClass('_regcount')){
@@ -822,7 +822,7 @@ $(document).ready(function(){
 
 
     $('#alignBox,.centeralign').mouseenter(function(){
-        $('.instructPopup').fadeOut();
+        $('.instructPopup').hide();
     });
 //#####################회원정보 도움말 팝업 //#####################
 
@@ -1282,18 +1282,18 @@ function float_btn_managemember(option){
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet()
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').show();
         $('#shade').hide();
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_btn_wrap').hide();
         $('#uptext2').text(text);
 
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
             $('#page_managemember').hide();
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').hide();
+            $('#page-base-addstyle').show();
             shade_index(100);
         }
 
@@ -1303,7 +1303,7 @@ function float_btn_managemember(option){
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         if($('._nomember').length>0){
-            $('#how_to_add_member').fadeIn()
+            $('#how_to_add_member').show()
         }else{
             $('#how_to_add_member').css('display','none')
         }
@@ -1365,17 +1365,17 @@ function float_btn_managemember(option){
         shade_index(100);
     }else if(option == "groupmember"){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').show();
         $('#shade').hide();
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_btn_wrap').hide();
 
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
             $('#page_managemember').hide();
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').hide();
+            $('#page-base-addstyle').show();
         }
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
@@ -1411,12 +1411,12 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         if($('._nomember').length>0){
-            $('#how_to_add_member').fadeIn();
+            $('#how_to_add_member').show();
         }else{
             $('#how_to_add_member').css('display','none');
         }
 
-        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
@@ -1433,7 +1433,7 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
@@ -1471,7 +1471,7 @@ function pc_add_member(option){
 
         selector_memberSearchButton.trigger('click');
 
-        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
@@ -1527,7 +1527,7 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
     }else if(option == 'openlesson'){
@@ -1545,7 +1545,7 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
     }else if(option == 'groupmember'){
@@ -1554,7 +1554,7 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
     }
     shade_index(300);
@@ -2345,9 +2345,9 @@ function memberListSet (type,option,Reverse, jsondata){
     if(type=='current' && len == 0){
         var resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
         if($('body').width()>600){
-            $('#please_add_member_pc').fadeIn()
+            $('#please_add_member_pc').show()
         }else{
-            $('#please_add_member').fadeIn()
+            $('#please_add_member').show()
         }
     }else if(type=="finished" && len ==0){
         var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>'
@@ -2370,9 +2370,9 @@ function hide_shadow_responsively(){
 
 function show_shadow_reponsively(){
     if($('body').width()>600){
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
     }else{
-        $('#shade').fadeIn('fast');
+        $('#shade').show();
     }
 }
 

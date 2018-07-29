@@ -243,7 +243,7 @@ $(document).ready(function(){
         if($(this).attr('data-memo') == undefined){
             var selectedMemo = ""
         }
-        $("#cal_popup").fadeIn('fast').attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype')})
+        $("#cal_popup").show().attr({'schedule_id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype')})
         $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
         $('#popup_info').text(selectedDate);
@@ -297,7 +297,7 @@ $(document).ready(function(){
         $('#groupTimeSelect, #classTimeSelect, .timegraphtext').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="height:23px;marign:auto;"></div>');
 
         clear_pt_add_logic_form();
-        $('#addpopup').fadeIn('fast');
+        $('#addpopup').show();
         //$('#shade2').css({'display':'block'});
         var info3 = $(this).attr('data-date').split('_');
         var yy=info3[0];
@@ -351,7 +351,7 @@ $(document).ready(function(){
 
 
     $('.button_close_popup').click(function(){
-        $(this).parents('.popups').fadeOut('fast')
+        $(this).parents('.popups').hide()
     })
 
     var select_all_check = false;
@@ -557,7 +557,7 @@ $(document).ready(function(){
             }
         }else{
             $("#cal_popup").hide()
-            $("#cal_popup3").fadeIn('fast');
+            $("#cal_popup3").show();
             $('#shade2').css({'display':'block'});
         }
     })
@@ -627,7 +627,7 @@ $(document).ready(function(){
     }
 
     function close_class_select_popup(){
-        $('#popup_lecture_select').fadeOut('fast')
+        $('#popup_lecture_select').hide()
     }
 
     /*
