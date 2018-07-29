@@ -1516,6 +1516,20 @@ function pc_add_member(option){
             $('#memberSearch_add').val(userID);
         }
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+        var regEnddate = [];
+        $('.lec_end_date').each(function(index){
+            regEnddate.push($(this).val().replace(/\./gi,'-'))
+        })
+        
+        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+
+        check_dropdown_selected();
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+
         selector_memberSearchButton.trigger('click');
 
         selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
@@ -1537,9 +1551,9 @@ function pc_add_member(option){
 
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
         var regEnddate = [];
-        for(var i=1; i<= $('.lec_end_date').length; i++){
-            regEnddate.push($('.wraps:nth-child('+i+') .lec_end_date').val().replace(/\./gi,'-'))
-        }
+        $('.wraps .lec_end_date').each(function(index){
+            regEnddate.push($(this).val().replace(/\./gi,'-'))
+        });
         $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
