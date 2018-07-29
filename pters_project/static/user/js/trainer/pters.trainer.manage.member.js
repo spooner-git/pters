@@ -1391,6 +1391,7 @@ function float_btn_managemember(option){
             $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
+            shade_index(100);
         }
 
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -1455,7 +1456,6 @@ function pc_add_member(option){
         text = 'New Contract';
         text2 = 'Re-Contract';
     }
-    shade_index(300);
     var selector_page_addmember = $('#page_addmember');
     var selector_memberSearchButton = $('#memberSearchButton');
     var userID;
@@ -1595,6 +1595,7 @@ function pc_add_member(option){
         selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
     }
+    shade_index(300);
 }
 
 

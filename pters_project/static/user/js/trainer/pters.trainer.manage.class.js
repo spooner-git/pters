@@ -1287,6 +1287,7 @@ function float_btn_managemember(option){
             $('#page_managemember').hide();
             $('#page-base').fadeOut();
             $('#page-base-addstyle').fadeIn();
+            shade_index(100);
         }
 
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -1327,6 +1328,7 @@ function float_btn_managemember(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         //$('._ADD_GROUPMEMBER_NEW').show()
         $('._ADD_GROUP_NEW').show();
+        shade_index(100);
     }else if(option == "openlesson"){
         initialize_add_member_sheet();
         $('#page_addmember').show();
@@ -1386,7 +1388,9 @@ function pc_add_member(option){
         var text = 'New Contract'
         var text2 = 'Re-Contract'
     }
-    shade_index(300)
+    var selector_page_addmember = $('#page_addmember');
+    var selector_memberSearchButton = $('#memberSearchButton');
+    var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text);
@@ -1412,7 +1416,6 @@ function pc_add_member(option){
 
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -1420,63 +1423,87 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
 
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
-        $('#memberBirthDate, #memberBirthDate_info').html('')
-        birth_dropdown_set();
-
-        $('#memberSearchButton').attr('data-type','');
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        if($('#memberInfoPopup_PC').css('display') == 'block'){
-            var userID = $('#memberId_info_PC').val();
-            $('#memberSearch_add').val(userID);
-        }
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
-
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-
-    }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        initialize_add_member_sheet();
-
-        $('#uptext2').text(text2);
-
-        if($('#memberInfoPopup').css('display') == 'block'){
-            var userID = $('#memberId').val();
-            $('#memberSearch_add').val(userID);
-        }
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        closePopup('member_info');
-        float_btn_managemember(1);
-
-
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
+        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+        if($('#memberInfoPopup_PC').css('display') == 'block'){
+            userID = $('#memberId_info_PC').val();
+            $('#memberSearch_add').val(userID);
+        }
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+        var regEnddate = [];
+        $('.lec_end_date').each(function(index){
+            regEnddate.push($(this).val().replace(/\./gi,'-'))
+        })
+
+        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+
+        check_dropdown_selected();
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+
+        selector_memberSearchButton.trigger('click');
+
+        selector_page_addmember.fadeIn('fast').css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
+
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+
+    }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
+        float_btn_managemember(1);
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+        $('#uptext2').text(text2);
+        if($('#memberInfoPopup').css('display') == 'block'){
+            userID = $('#memberId').val();
+            $('#memberSearch_add').val(userID);
+        }
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+        var regEnddate = [];
+        $('.wraps .lec_end_date').each(function(index){
+            regEnddate.push($(this).val().replace(/\./gi,'-'))
+        });
+        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+
+        check_dropdown_selected();
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+
+        
+        closePopup('member_info');
+        
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
+        $('#memberBirthDate, #memberBirthDate_info').html('');
+
+        birth_dropdown_set();
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        selector_memberSearchButton.trigger('click');
 
     }else if(option == 'group'){
         initialize_add_member_sheet();
@@ -1523,6 +1550,7 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
     }
+    shade_index(300);
 }
 
 

@@ -1294,6 +1294,7 @@ function float_btn_managemember(option){
             $('#page_managemember').hide();
             $('#page-base').fadeOut();
             $('#page-base-addstyle').fadeIn();
+            shade_index(100);
         }
 
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -1334,6 +1335,7 @@ function float_btn_managemember(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         //$('._ADD_GROUPMEMBER_NEW').show()
         $('._ADD_GROUP_NEW').show();
+        shade_index(100);
     }else if(option == "openlesson"){
         initialize_add_member_sheet();
         $('#page_addmember').show();
@@ -1360,6 +1362,7 @@ function float_btn_managemember(option){
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
+        shade_index(100);
     }else if(option == "groupmember"){
         initialize_add_member_sheet();
         $('#page_addmember').fadeIn('fast');
@@ -1393,7 +1396,6 @@ function pc_add_member(option){
         var text = 'New Contract'
         var text2 = 'Re-Contract'
     }
-    shade_index(300);
     var selector_page_addmember = $('#page_addmember');
     var selector_memberSearchButton = $('#memberSearchButton');
     var userID;
@@ -1555,6 +1557,7 @@ function pc_add_member(option){
         $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
     }
+    shade_index(300);
 }
 
 
