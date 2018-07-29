@@ -293,8 +293,9 @@ $(document).ready(function(){
                 $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
                 var myImage = document.getElementById("id_sign_img");
                 myImage.onerror = function() {
-                    this.src="";
-                    $("#popup_sign_img").css("display","none")
+                    //this.src="";
+                    //$("#popup_sign_img").css("display","none")
+                    $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
                 }
             }
 
@@ -307,6 +308,7 @@ $(document).ready(function(){
                     'data-groupid': $(this).attr('data-groupid'),
                     'group-schedule-id':$(this).attr('schedule-id'),
                 })
+                $("#popup_sign_img").css("display","none");
                 //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
                 if(bodywidth > 600){
                     toggleGroupParticipantsList('on')

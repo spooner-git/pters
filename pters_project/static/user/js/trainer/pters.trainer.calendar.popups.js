@@ -390,7 +390,7 @@
             $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('group-schedule-id')+'.png');
             var myImage = document.getElementById("id_sign_img");
             myImage.onerror = function() {
-                this.src="";
+                //this.src="";
                 $("#popup_sign_img").css("display","none");
             }
         }
