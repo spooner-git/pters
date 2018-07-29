@@ -198,6 +198,7 @@ $(document).ready(function(){
             deleteTypeSelect = ''
             var $cal_popup_plancheck = $('#cal_popup_plancheck');
             //$cal_popup_plancheck.css('display','block');
+            $('#float_btn').hide();
             shade_index(100)
             var info = $(this).attr('data-date').split('_')
             var yy=info[0]
