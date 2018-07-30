@@ -159,7 +159,7 @@ $(document).ready(function(){
         var day = dayarry[dayraw];
         var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
         clicked_td_date_info = yy+'_'+mm+'_'+dd
-        click_check = 0
+        click_check = 0;
         if(!$(this).hasClass('prevDates') && !$(this).hasClass('nextDates')){
             if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
                 $('#shade2').css({'display':'block'});
@@ -183,7 +183,6 @@ $(document).ready(function(){
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
                 $('.startTime_time').text(startTime_to_hangul(Options.startTime))
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-                console.log($('#countRemainData span:first-child').text())
                 if($('#countRemainData span:first-child').text() == '0'){
                     $('.plan_raw_add').hide()
                 }
@@ -249,7 +248,7 @@ $(document).ready(function(){
         $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
         $('#popup_info').text(selectedDate);
-        $('#popup_info2').html('['+selectedPerson+']'+'<br>'+ selectedTime);
+        $('#popup_info2').html(selectedPerson+'<br>'+ selectedTime);
         $('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
         $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
@@ -260,6 +259,8 @@ $(document).ready(function(){
         $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 
         var schedule_finish_check = $(this).attr('data-schedule-check');
+        console.log($(this))
+        console.log($('#popup_text1'))
         if(schedule_finish_check=="0"){
             $("#popup_btn_complete").show()
             $("#popup_text1").css("display","block")
@@ -963,7 +964,7 @@ $(document).ready(function(){
             var groupmax = jsondata.group_schedule_max_member_num[i]
             var groupcurrent = jsondata.group_schedule_current_member_num[i]
             var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
-            var name = jsondata.group_schedule_group_name[i]+groupParticipants
+            var name = '['+jsondata.group_schedule_group_type_cd_name[i]+']'+jsondata.group_schedule_group_name[i]+groupParticipants
             if(stime1.length<2){
                 var stime1 = '0'+stime1
             }else if(stime1 == '24'){
@@ -1001,7 +1002,7 @@ $(document).ready(function(){
             }
             var stime = stime1+'_'+sminute
             var etime = etime1+'_'+eminute
-            var name = "1:1 레슨"
+            var name = "[1:1 레슨]"
             var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
             if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
                 dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
@@ -1704,7 +1705,6 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
-            console.log(jsondata);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)

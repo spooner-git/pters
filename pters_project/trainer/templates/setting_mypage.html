@@ -435,11 +435,11 @@
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
-                <span class="menuName" style="line-height: 60px;">가입일</span><span>{{ member_info.reg_dt }}</span>
+                <span class="menuName" style="line-height: 60px;">가입일</span><span>{{ request.user.date_joined }}</span>
             </div>
         </div>
 
-        {% if center_name != '없음' %}
+        {% if center_name != '' %}
             <div class="mypage_label">
                 <img src="/static/user/res/member/icon-user.png" alt=""><span>소속 센터</span>
             </div>

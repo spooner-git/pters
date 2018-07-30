@@ -379,14 +379,16 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 if group_check == 0:
                     lecture_info_data.group_name = group_info.group_tb.name
                     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                    lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
                     lecture_info_data.group_member_num = group_info.group_tb.member_num
                     lecture_info_data.group_note = group_info.group_tb.note
                     lecture_info_data.group_state_cd = group_info.group_tb.state_cd
-                    try:
-                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
-                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
-                    except ObjectDoesNotExist:
-                        error = '그룹 정보를 불러오지 못했습니다.'
+                    lecture_info_data.group_state_cd_name = group_info.group_tb.get_state_cd_name()
+                    # try:
+                    #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                    #     lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
+                    # except ObjectDoesNotExist:
+                    #     error = '그룹 정보를 불러오지 못했습니다.'
 
                 output_lecture_list.append(lecture_info_data)
 
@@ -609,19 +611,19 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             if add_del_type == ADD_SCHEDULE:
                 error = '현재 예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.1'
+                error = '현재 예약 취소가 불가능합니다.'
 
         if error is None:
             if now_time < reserve_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
                     error = '현재 예약 등록이 불가능합니다.'
                 else:
-                    error = '현재 예약 취소가 불가능합니다.2'
+                    error = '현재 예약 취소가 불가능합니다.'
             if now_time > reserve_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
                     error = '현재 예약 등록이 불가능합니다.'
                 else:
-                    error = '현재 예약 취소가 불가능합니다.3'
+                    error = '현재 예약 취소가 불가능합니다.'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
 
@@ -630,12 +632,12 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             if add_del_type == ADD_SCHEDULE:
                 error = '현재 예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.4'
+                error = '현재 예약 취소가 불가능합니다.'
     if error is None:
         if start_date < disable_time:
             if add_del_type == ADD_SCHEDULE:
                 error = '현재 예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.5'
+                error = '현재 예약 취소가 불가능합니다.'
 
     return error

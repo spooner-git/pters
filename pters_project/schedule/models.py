@@ -146,6 +146,14 @@ class GroupTb(TimeStampedModel):
 
         return group_type_cd_name
 
+    def get_state_cd_name(self):
+        try:
+            state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            state_cd_name = ''
+
+        return state_cd_name
+
 
 class GroupLectureTb(TimeStampedModel):
     group_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)

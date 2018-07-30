@@ -40,6 +40,8 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_type_cd":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_group_type_cd_name":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.get_group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "lecture_avail_count" :
       [{{ lecture_avail_count }}],
