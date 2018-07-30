@@ -467,8 +467,9 @@ $(document).ready(function(){
     });
 
 
-    //???
+    //
     $(document).on('click','div.lectureType_RJ',function(){
+        $('#shade_caution').show();
         $('.resendPopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
@@ -478,6 +479,7 @@ $(document).ready(function(){
 
     //미연결
     $(document).on('click','div.lectureType_DELETE',function(){
+        $('#shade_caution').show();
         $('.resendPopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
@@ -487,6 +489,7 @@ $(document).ready(function(){
 
     //연결됨, 대기
     $(document).on('click','div.lectureType_WAIT, div.lectureType_VIEW',function(){
+        $('#shade_caution').show();
         $('.lectureConnectStateChangePopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
@@ -500,10 +503,11 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('#shade_caution').show();
         selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
-            'data-dbid':$(this).attr('data-dbid'),
-            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
-            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+                                                            'data-dbid':$(this).attr('data-dbid'),
+                                                            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+                                                            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._resume, ._delete').css('display','none');
         if(bodywidth > 600){
             $('._complete, ._refund').css('display','inline-block');
@@ -519,10 +523,11 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('#shade_caution').show();
         selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
-            'data-dbid':$(this).attr('data-dbid'),
-            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
-            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+                                                            'data-dbid':$(this).attr('data-dbid'),
+                                                            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+                                                            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._complete, ._refund').css('display','none');
         if(bodywidth > 600){
             $('._resume, ._delete').css('display','inline-block');
@@ -551,10 +556,11 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        $('#shade_caution').show();
         selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
-            'data-dbid':$(this).attr('data-dbid'),
-            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
-            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+                                                            'data-dbid':$(this).attr('data-dbid'),
+                                                            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+                                                            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
         $('._complete, ._refund').css('display','none');
         if(bodywidth > 600){
             $('._resume, ._delete').css('display','inline-block');
@@ -572,6 +578,7 @@ $(document).ready(function(){
 
     $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
         $(this).parents('.popups').hide();
+        $('#shade_caution').hide();
         hide_shadow_responsively();
     });
 
@@ -581,11 +588,13 @@ $(document).ready(function(){
         var dbID = selectore_resendPopup.attr('data-dbid');
         resend_member_reg_data_pc(lectureID, dbID);
         selectore_resendPopup.css('display','none');
+        $('#shade_caution').hide();
         $('#shade3').css('display','none');
     });
 
     $('span.cancel_resend').parent('div').click(function(){
         $('.resendPopup').css('display','none');
+        $('#shade_caution').hide();
         hide_shadow_responsively();
     });
 
@@ -607,6 +616,7 @@ $(document).ready(function(){
         var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         complete_member_reg_data_pc(lectureID, dbID);
         selectore_lectureStateChangeSelectPopup.css('display','none');
+        $('#shade_caution').hide();
     });
 
     //재개 처리 버튼
@@ -617,6 +627,7 @@ $(document).ready(function(){
             var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
             resume_member_reg_data_pc(lectureID, dbID);
             selectore_lectureStateChangeSelectPopup.css('display','none');
+            $('#shade_caution').hide();
         }else{
             show_caution_popup(
                                 '<p style="color:#fe4e65;">수강 자동 완료 기능이 활성화 상태입니다.</p>'+
@@ -635,20 +646,22 @@ $(document).ready(function(){
         var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         delete_member_reg_data_pc(lectureID, dbID);
         selectore_lectureStateChangeSelectPopup.css('display','none');
+        $('#shade_caution').hide();
     });
 
-    //한불 입력으로 이동 버튼
+    //환불 입력으로 이동 버튼
     $('.lectureStateChangeSelectPopup ._refund').click(function(){
         var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         selectore_lectureStateChangeSelectPopup.css('display','none');
         $('.lectureRefundPopup').css('display','block').attr({'data-leid':selectore_lectureStateChangeSelectPopup.attr('data-leid'),
-            'data-username':selectore_lectureStateChangeSelectPopup.attr('data-username'),
-            'data-dbid':selectore_lectureStateChangeSelectPopup.attr('data-dbid')
+                                                            'data-username':selectore_lectureStateChangeSelectPopup.attr('data-username'),
+                                                            'data-dbid':selectore_lectureStateChangeSelectPopup.attr('data-dbid')
         });
     });
 
     $('.lectureStateChangeSelectPopup ._cancel').click(function(){
         $('.lectureStateChangeSelectPopup').css('display','none');
+        $('#shade_caution').hide();
         hide_shadow_responsively();
     });
 
@@ -660,6 +673,7 @@ $(document).ready(function(){
         var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'');
         refund_member_lecture_data(lectureID, dbID, refund_price);
         selectore_lectureRefundPopup.css('display','none');
+        $('#shade_caution').hide();
     });
 
     $('.lectureRefundPopup input').keyup(function(){
@@ -670,6 +684,7 @@ $(document).ready(function(){
 
     $('span.cancel_refund').parent('div').click(function(){
         $('.lectureRefundPopup').css('display','none');
+        $('#shade_caution').hide();
         hide_shadow_responsively();
     });
 
@@ -681,10 +696,12 @@ $(document).ready(function(){
         var dbID =selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         disconnect_member_lecture_data(stateCode, lectureID, dbID);
         selectore_lectureStateChangeSelectPopup.css('display','none');
+        $('#shade_caution').hide();
     });
 
     $('span.cancel_connectchange').parent('div').click(function(){
         $('.lectureConnectStateChangePopup').css('display','none');
+        $('#shade_caution').hide();
         hide_shadow_responsively();
     });
 
@@ -884,7 +901,7 @@ $(document).ready(function(){
 
 
     $('#alignBox,.centeralign').mouseenter(function(){
-        $('.instructPopup').show();
+        $('.instructPopup').hide();
     });
 //#####################회원정보 도움말 팝업 //#####################
 
@@ -3496,13 +3513,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
 
 
-            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
-            }else if(jsondata.lectureStateArray[i] == "PE"){
-                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
-            }else if(jsondata.lectureStateArray[i] == "RF"){
-                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
-            }
+            
             if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
                 lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
             }else if(jsondata.memberViewStateArray[i] == "DELETE"){
@@ -3510,9 +3521,22 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             }else if(jsondata.memberViewStateArray[i] == "VIEW"){
                 lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
             }
+            
+
+            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+            }else if(jsondata.lectureStateArray[i] == "PE"){
+                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'"> - </div>';
+            }else if(jsondata.lectureStateArray[i] == "RF"){
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'"> - </div>';
+            };
+
 
             var note = '<div class="pc_member_note" data-dbid="'+dbID+'" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>';
-            result_history_html.push('<div style="border-top:1px solid #cccccc;">'+howManyReg+whatGroupType+'</div>'+'<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note);
+            var contents = start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn
+            result_history_html.push('<div style="border-top:1px solid #cccccc;">'+howManyReg+whatGroupType+'</div>'+'<div data-leid='+jsondata.lectureIdArray[i]+'>'+contents+'</div>'+note);
         }
         $('#memberRegCount_info_PC').html(sumCount(jsondata.regCountArray)+'<span style="font-size:11px;"> ('+regCount_group_personal.join(',')+')</span>');  //전체 등록횟수
         $('#memberRemainCount_info_PC').html(sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+remCount_group_personal.join(',')+')</span>');  //전체 남은횟수
@@ -3609,13 +3633,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata_lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>';
 
             //var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
-            if(jsondata_lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
-            }else if(jsondata_lectureStateArray[i] == "PE"){
-                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
-            }else if(jsondata_lectureStateArray[i] == "RF"){
-                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
-            }
+            
+
+            lectureConnectTypeName = "";
+
             if(jsondata_memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
                 lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
             }else if(jsondata_memberViewStateArray[i] == "DELETE"){
@@ -3623,6 +3644,17 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             }else if(jsondata_memberViewStateArray[i] == "VIEW"){
                 lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
             }
+
+            if(jsondata_lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+            }else if(jsondata_lectureStateArray[i] == "PE"){
+                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'"> - </div>';
+            }else if(jsondata_lectureStateArray[i] == "RF"){
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'"> - </div>';
+            }
+            
 
             var note = '<div class="mobile_member_note" data-leid="'+jsondata_lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata_noteArray[i]+'" disabled></span></div>';
 
@@ -4231,6 +4263,7 @@ function closePopup(option){
         text = 'Member Info.';
     }
     if(option == 'member_info'){
+        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')
         hide_this();
         $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
         float_btn_show();
@@ -4282,6 +4315,7 @@ function closePopup(option){
         }
 
     }else if(option == 'member_info_PC'){
+        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')
         $('#memberInfoPopup_PC').removeClass('display_block');
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
 
