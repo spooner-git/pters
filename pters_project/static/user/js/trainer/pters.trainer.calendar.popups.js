@@ -39,7 +39,12 @@
 
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
-            $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0', 'left':1});
+            if(bodywidth > 600){
+                $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+           }else{
+                $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0'}); 
+           }
+            
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
                 $memberTime.removeClass('_hided').addClass('hideelement');
