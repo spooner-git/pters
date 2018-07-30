@@ -923,6 +923,11 @@ $(document).ready(function(){
             }
         }
         $htmlTarget.html(htmlTojoin.join(''))
+
+        // 그룹에 예약 가능 일정이 있고 클래스에 예약가능 일정이 없는 경우 submitBtn hide 되는 문제 해결 - hkkim 18.07.30
+        if($('.ptersCheckbox').length > 0){
+            $('#submitBtn').show()
+        }
     }
 
 
