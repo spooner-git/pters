@@ -2260,6 +2260,21 @@ function get_member_end_list(use, callback){
 }
 
 
+//스크롤 맨 아래나 위로 올라가면 +0 or -1픽셀
+$('#page_managemember').scroll(function(){
+    var scrollHeight = $(this).prop('scrollHeight');
+    var popupHeight = $(this).height();
+    var scrollLocation = $(this).scrollTop();
+    //scrollHeight = popupHeight + scrollLocation(끝)
+    if(popupHeight + scrollLocation == scrollHeight){
+        $(this).animate({scrollTop : scrollLocation-1},10)
+    }else if(popupHeight + scrollLocation == popupHeight){
+        $(this).animate({scrollTop : scrollLocation+1},10)
+    }
+});
+//스크롤 맨 아래나 위로 올라가면 +0 or -1픽셀
+
+
 //회원목록을 테이블로 화면에 뿌리는 함수
 function memberListSet (type,option,Reverse, jsondata){
     var bodywidth = window.innerWidth;
