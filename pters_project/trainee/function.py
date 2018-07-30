@@ -46,7 +46,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
                                                       start_dt__gte=start_date,
-                                                      end_dt__lt=end_date).order_by('-start_dt')
+                                                      end_dt__lt=end_date).order_by('start_dt')
         else:
             schedule_data = \
                 ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
