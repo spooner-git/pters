@@ -1251,16 +1251,9 @@ function set_drag_drop_action_to_DOM_partial(targetSelector, options){
     
 
     if(bodywidth > 600){
-        $(targetSelector).append(
-                                    `<div class="drag_drop_target" 
-                                                                style="position:${options.grabPosition};
-                                                                        width:${options.grabWidth};
-                                                                        height:${options.grabHeight};
-                                                                        top:${options.grabTop};
-                                                                        left:${options.grabLeft};
-                                                                        z-index:${options.grabZindex}">
-                                    </div>`
-                                )
+        $(targetSelector).append('<div class="drag_drop_target" ' +
+            'style="position:${options.grabPosition}; width:${options.grabWidth}; height:${options.grabHeight}; top:${options.grabTop}; left:${options.grabLeft}; z-index:${options.grabZindex}"> ' +
+            '</div>')
 
         $(document).on('mousedown',targetSelector+' .drag_drop_target',function(event){
             $target.css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
