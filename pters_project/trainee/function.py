@@ -279,7 +279,6 @@ def func_get_class_lecture_count(context, class_id, user_id):
                                                                         lecture_tb_id=lecture_info.lecture_id, use=USE)
                     except ObjectDoesNotExist:
                         group_lecture_info = None
-
                     if group_lecture_info is None:
                         if lecture_info.state_cd == 'IP':
                             lecture_reg_count_sum += lecture_info.lecture_reg_count
@@ -295,6 +294,8 @@ def func_get_class_lecture_count(context, class_id, user_id):
                                 group_lecture_reg_count_sum += lecture_info.lecture_reg_count
                                 group_lecture_rem_count_sum += lecture_info.lecture_rem_count
                                 group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                else:
+                    error = None
 
     if lecture_reg_count_sum > 0:
         lecture_flag = True

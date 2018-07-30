@@ -1706,12 +1706,16 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
             }else{
                 var temp_count_text = '';
                 var temp_text = '';
+                console.log(jsondata.lecture_reg_count[0])
+                console.log(jsondata.group_lecture_reg_count[0])
+                console.log(jsondata.class_lecture_reg_count[0])
                 if(jsondata.lecture_reg_count[0] != 0){
                     temp_text +='1:1';
                     temp_count_text += jsondata.lecture_avail_count;
@@ -1736,7 +1740,8 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
                         temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
                     }
                 }
-
+                console.log(temp_text)
+                console.log(temp_count_text)
                 if(temp_text == '') {
                     temp_count_text = '0'
                 }
