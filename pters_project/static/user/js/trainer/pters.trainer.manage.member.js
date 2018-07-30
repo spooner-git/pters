@@ -660,6 +660,7 @@ $(document).ready(function(){
                                                             'data-username':selectore_lectureStateChangeSelectPopup.attr('data-username'),
                                                             'data-dbid':selectore_lectureStateChangeSelectPopup.attr('data-dbid')
         });
+        $('#datepicker_refund').val(today_YY_MM_DD);
     });
 
     $('.lectureStateChangeSelectPopup ._cancel').click(function(){
@@ -674,7 +675,8 @@ $(document).ready(function(){
         var lectureID = selectore_lectureRefundPopup.attr('data-leid');
         var dbID = selectore_lectureRefundPopup.attr('data-dbid');
         var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'');
-        refund_member_lecture_data(lectureID, dbID, refund_price);
+        var refund_date = $('#datepicker_refund').val();
+        refund_member_lecture_data(lectureID, dbID, refund_price, refund_date);
         selectore_lectureRefundPopup.css('display','none');
         $('#shade_caution').hide();
     });
@@ -683,6 +685,14 @@ $(document).ready(function(){
         var priceInputValue = Number($(this).val().replace(/,/g, ""));
         $(this).val(numberWithCommas(priceInputValue));
 
+    });
+
+    $("#datepicker_refund").datepicker({
+        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+               
+            }
+        }
     });
 
     $('span.cancel_refund').parent('div').click(function(){
@@ -3282,7 +3292,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
 }
 
 //회원 환불 정보를 전송한다.
-function refund_member_lecture_data(lectureID, dbID, refund_price){
+function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
     var text = ' 환불 처리 되었습니다.';
     var text2 = '환불 금액을 입력해주세요.';
     if(Options.language == "JPN"){
@@ -3297,7 +3307,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
         $.ajax({
             url:'/trainer/refund_lecture_info/',
             type:'POST',
-            data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/get_member_list/'},
+            data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price , "refund_date":refund_date, "next_page":'/trainer/get_member_list/'},
             dataType : 'html',
 
             beforeSend:function(){

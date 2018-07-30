@@ -1789,7 +1789,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
     var count_date_info = classInfoProcessed(jsondata)
     var len = jsondata.classTimeArray_start_date.length;
     var already_added = []
-    var startdate_dataArray = jsondata.classTimeArray_start_date.sort();
+    var startdate_dataArray = jsondata.classTimeArray_start_date;
     for(var i=0; i<len; i++){
         var finish = jsondata.scheduleFinishArray[i]
         var memo = jsondata.scheduleNoteArray[i]
