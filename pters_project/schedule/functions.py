@@ -94,7 +94,7 @@ def func_refresh_lecture_count(lecture_id):
 
 # 그룹정보 update
 def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule_id):
-    # 그룹 스케쥴 종료 및 그룹 반복일정 종료
+    # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
     if group_schedule_id is not None and group_schedule_id != '':
         try:
             group_schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id,
@@ -111,7 +111,7 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
                     group_schedule_info.state_cd = 'PE'
                     group_schedule_info.save()
 
-    # 그룹 반복일정 종료
+    # 그룹 반복 일정 종료
     if group_repeat_schedule_id is not None and group_repeat_schedule_id != '':
         try:
             group_repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=group_repeat_schedule_id)
@@ -185,7 +185,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            reg_member_id=user_id)
             add_schedule_info.save()
             context['schedule_id'] = add_schedule_info.schedule_id
-    except TypeError as e:
+    except TypeError:
         error = '등록 값의 형태에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
@@ -278,14 +278,14 @@ def func_delete_repeat_schedule(repeat_schedule_id):
     repeat_schedule_info = None
 
     if repeat_schedule_id is None or repeat_schedule_id == '':
-        error = '반복일정 정보를 불러오지 못했습니다.'
+        error = '반복 일정 정보를 불러오지 못했습니다.'
 
     if error is None:
 
         try:
             repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
         except ObjectDoesNotExist:
-            error = '반복일정 정보를 불러오지 못했습니다.'
+            error = '반복 일정 정보를 불러오지 못했습니다.'
     if error is None:
         try:
             with transaction.atomic():
@@ -321,13 +321,13 @@ def func_update_repeat_schedule(repeat_schedule_id):
     error = None
     repeat_schedule_info = None
     if repeat_schedule_id is None or repeat_schedule_id == '':
-        error = '반복일정 정보를 불러오지 못했습니다.'
+        error = '반복 일정 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             repeat_schedule_info = RepeatScheduleTb.objects.get(repeat_schedule_id=repeat_schedule_id)
         except ObjectDoesNotExist:
-            error = '반복일정 정보를 불러오지 못했습니다.'
+            error = '반복 일정 정보를 불러오지 못했습니다.'
 
     if error is None:
         repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id).count()
@@ -455,7 +455,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='1:1 레슨 '+log_type_name, log_how=log_type_detail,
+                         log_info='[1:1 레슨] '+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     elif en_dis_type == OFF_SCHEDULE_TYPE:
@@ -469,7 +469,7 @@ def func_save_log_data(start_date, end_date, class_id, lecture_id, user_name, me
         log_data = LogTb(log_type=log_type, auth_member_id=request.user.id,
                          from_member_name=user_name, to_member_name=member_name,
                          class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='그룹 레슨 '+log_type_name, log_how=log_type_detail,
+                         log_info='[그룹]'+log_type_name, log_how=log_type_detail,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
 
@@ -707,7 +707,7 @@ def func_get_trainer_off_repeat_schedule(context, class_id):
     error = None
     # off_repeat_schedule_list = []
 
-    # 강사 클래스의 반복일정 불러오기
+    # 강사 클래스의 반복 일정 불러오기
     off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                en_dis_type=OFF_SCHEDULE_TYPE)
 
@@ -728,13 +728,13 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
                 repeat_week_type_data.append(idx)
                 break
 
-    # 반복일정 처음 날짜 설정
+    # 반복 일정 처음 날짜 설정
     check_date = repeat_schedule_start_date
 
-    # 반복일정 종료 날짜 보다 크면 종료
+    # 반복 일정 종료 날짜 보다 크면 종료
     while check_date <= repeat_schedule_end_date:
 
-        # 반복일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
+        # 반복 일정 등록해야하는 첫번째 요일 검색 -> 자신보다 뒤에있는 요일중에 가장 가까운것
         week_idx = -1
         for week_type_info in repeat_week_type_data:
             if week_type_info >= int(check_date.strftime('%w')):
@@ -757,7 +757,7 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
         # 날짜 계산을 했는데 일정 넘어가면 멈추기
         if check_date > repeat_schedule_end_date:
             break
-        # 반복일정 추가
+        # 반복 일정 추가
         repeat_schedule_date_list.append(check_date)
         # 날짜값 입력후 날짜 증가
         check_date = check_date + datetime.timedelta(days=1)

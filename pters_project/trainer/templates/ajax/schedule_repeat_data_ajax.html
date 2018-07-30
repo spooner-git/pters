@@ -20,7 +20,7 @@
       [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "repeatScheduleGroupTypeNameArray" :
-      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.get_group_type_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.get_group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "repeatScheduleGroupNameArray" :
       [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.get_group_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
