@@ -10,7 +10,7 @@
       "lectureStateArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "lectureStateNameArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.get_state_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "priceArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -19,9 +19,9 @@
       "noteArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "startArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.get_str_start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "endArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.get_str_end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "regCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "remCountArray":
@@ -31,9 +31,9 @@
       "finishCountArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_finish_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "regDateTimeArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.get_str_reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "modDateTimeArray":
-      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.get_str_mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "groupNameArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -49,7 +49,7 @@
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "classInfoArray":
-      ["{{ class_data.class_type_name.common_cd_nm}}"],
+      ["{{ class_data.get_class_type_cd_name}}"],
       "classIdArray":
       ["{{ class_data.class_id }}"],
       "trainerNameArray":

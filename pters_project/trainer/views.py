@@ -76,31 +76,10 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 self.url = '/trainer/trainer_main/'
                 for class_info in class_auth_data:
                     request.session['class_id'] = class_info.class_tb_id
-                    class_type_name = ''
-                    class_name = None
                     request.session['class_hour'] = class_info.class_tb.class_hour
                     request.session['class_type_code'] = class_info.class_tb.subject_cd
-                    try:
-                        class_name = CommonCdTb.objects.get(common_cd=class_info.class_tb.subject_cd)
-                    except ObjectDoesNotExist:
-                        error = '강좌 과목 정보를 불러오지 못했습니다.'
-
-                    if error is None:
-                        if class_info.class_tb.subject_detail_nm is None or class_info.class_tb.subject_detail_nm == '':
-                            class_type_name = class_name.common_cd_nm
-                        else:
-                            class_type_name = class_info.class_tb.subject_detail_nm
-
-                    if error is None:
-                        request.session['class_type_name'] = class_type_name
-                    else:
-                        request.session['class_type_name'] = ''
-
-                    if error is None:
-                        if class_info.class_tb.center_tb is None or class_info.class_tb.center_tb == '':
-                            request.session['class_center_name'] = ''
-                        else:
-                            request.session['class_center_name'] = class_info.class_tb.center_tb.center_name
+                    request.session['class_type_name'] = class_info.class_tb.get_class_type_cd_name()
+                    request.session['class_center_name'] = class_info.class_tb.get_center_name()
 
             else:
                 self.url = '/trainer/class_select/'
@@ -164,21 +143,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
-            try:
-                class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-            except ObjectDoesNotExist:
-                error = '강좌 과목 정보를 불러오지 못했습니다.'
-
-            if error is None:
-                if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
-                    class_type_name = class_name.common_cd_nm
-                else:
-                    class_type_name = class_info.subject_detail_nm
-
-            if error is None:
-                request.session['class_type_name'] = class_type_name
-            else:
-                request.session['class_type_name'] = ''
+            request.session['class_type_name'] = class_info.get_class_type_cd_name()
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
@@ -480,10 +445,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '강좌 정보를 불러오지 못했습니다.'
 
         if error is None:
-            if class_info.center_tb is None or class_info.center_tb == '':
-                center_name = '없음'
-            else:
-                center_name = class_info.center_tb.center_name
+            center_name = class_info.get_center_name()
         if error is None:
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
@@ -927,8 +889,8 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
         # context = super(GetTrainerScheduleView, self).get_context_data(**kwargs)
         context = {}
         class_id = request.session.get('class_id', '')
-        date = request.session.get('date', '')
-        day = request.session.get('day', '')
+        date = request.GET.get('date', '')
+        day = request.GET.get('day', '')
         today = datetime.date.today()
 
         if date != '':
@@ -983,8 +945,8 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         context = {}
         # context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
-        date = request.session.get('date', '')
-        day = request.session.get('day', '')
+        date = request.GET.get('date', '')
+        day = request.GET.get('day', '')
         group_id = request.GET.get('group_id', None)
         today = datetime.date.today()
 
@@ -1954,7 +1916,6 @@ def add_lecture_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def update_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     start_date = request.POST.get('start_date', '')
@@ -3243,15 +3204,7 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
 
                     if len(class_lecture_list) > 0:
                         total_member_num += 1
-                try:
-                    subject_type_name_code = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-                except ObjectDoesNotExist:
-                    subject_type_name_code = None
-                if subject_type_name_code is not None:
-                    class_info.subject_type_name = subject_type_name_code.common_cd_nm
-
-                if class_info.subject_detail_nm is not None and class_info.subject_detail_nm != '':
-                    class_info.subject_type_name = class_info.subject_detail_nm
+                class_info.subject_type_name = class_info.get_class_type_cd_name()
 
                 try:
                     class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
@@ -3306,21 +3259,12 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             try:
                 with transaction.atomic():
-                    if center_id is None or center_id == '':
-                        class_info = ClassTb(member_id=request.user.id,
-                                             subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                             class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
-                                             # member_view_state_cd='VIEW',
-                                             subject_detail_nm=subject_detail_nm,
-                                             class_member_num=int(class_member_num), state_cd='IP', use=USE)
-
-                    else:
-                        class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
-                                             subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                             class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
-                                             # member_view_state_cd='VIEW',
-                                             subject_detail_nm=subject_detail_nm,
-                                             class_member_num=int(class_member_num), state_cd='IP', use=USE)
+                    class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
+                                         subject_cd=subject_cd, start_date=start_date, end_date=end_date,
+                                         class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
+                                         # member_view_state_cd='VIEW',
+                                         subject_detail_nm=subject_detail_nm,
+                                         class_member_num=int(class_member_num), state_cd='IP', use=USE)
 
                     class_info.save()
                     member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
@@ -3342,29 +3286,8 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_id'] = class_info.class_id
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
-            class_type_name = ''
-            class_name = None
-            try:
-                class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-            except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
-
-            if error is None:
-                if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
-                    class_type_name = class_name.common_cd_nm
-                else:
-                    class_type_name = class_info.subject_detail_nm
-
-            if error is None:
-                request.session['class_type_name'] = class_type_name
-            else:
-                request.session['class_type_name'] = ''
-
-            if error is None:
-                if class_info.center_tb is None or class_info.center_tb == '':
-                    request.session['class_center_name'] = ''
-                else:
-                    request.session['class_center_name'] = class_info.center_tb.center_name
+            request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            request.session['class_center_name'] = class_info.get_center_name()
 
         if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
@@ -3515,33 +3438,10 @@ def select_class_processing_logic(request):
 
     if error is None:
         request.session['class_id'] = class_id
-        class_type_name = ''
-        class_name = None
-
         request.session['class_hour'] = class_info.class_hour
         request.session['class_type_code'] = class_info.subject_cd
-
-        try:
-            class_name = CommonCdTb.objects.get(common_cd=class_info.subject_cd)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            if class_info.subject_detail_nm is None or class_info.subject_detail_nm == '':
-                class_type_name = class_name.common_cd_nm
-            else:
-                class_type_name = class_info.subject_detail_nm
-
-        if error is None:
-            request.session['class_type_name'] = class_type_name
-        else:
-            request.session['class_type_name'] = ''
-
-        if error is None:
-            if class_info.center_tb is None or class_info.center_tb == '':
-                request.session['class_center_name'] = ''
-            else:
-                request.session['class_center_name'] = class_info.center_tb.center_name
+        request.session['class_type_name'] = class_info.get_class_type_cd_name()
+        request.session['class_center_name'] = class_info.get_center_name()
 
     if error is None:
         return redirect(next_page)
@@ -3762,10 +3662,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '강좌 정보를 불러오지 못했습니다.'
 
         if error is None:
-            if class_info.center_tb is None or class_info.center_tb == '':
-                center_name = '없음'
-            else:
-                center_name = class_info.center_tb.center_name
+            center_name = class_info.get_center_name()
         if error is None:
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)

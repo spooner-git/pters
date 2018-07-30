@@ -414,19 +414,8 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
                         idx2 = len(pt_schedule_data)+1
                         for pt_schedule_info in pt_schedule_data:
                             idx2 -= 1
-                            pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
-                            pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
-                            pt_schedule_info.mod_dt = str(pt_schedule_info.mod_dt)
-                            pt_schedule_info.reg_dt = str(pt_schedule_info.reg_dt)
                             pt_schedule_info.idx = str(idx)+'-'+str(idx2)
 
-                            if pt_schedule_info.note is None:
-                                pt_schedule_info.note = ''
-                            # 끝난 스케쥴인지 확인
-                            if pt_schedule_info.state_cd == 'PE':
-                                pt_schedule_info.finish_check = 1
-                            else:
-                                pt_schedule_info.finish_check = 0
                             pt_schedule_list.append(pt_schedule_info)
                 else:
                     error = None
@@ -833,12 +822,6 @@ def func_get_lecture_list(context, class_id, member_id):
             error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
-        try:
-            class_data.class_type_name = CommonCdTb.objects.get(common_cd=class_data.subject_cd)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
-
-    if error is None:
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
                                                      lecture_tb__use=USE,
                                                      auth_cd='VIEW').order_by('-lecture_tb__start_date',
@@ -846,10 +829,10 @@ def func_get_lecture_list(context, class_id, member_id):
 
         for lecture_info_data in lecture_data:
             lecture_info = lecture_info_data.lecture_tb
-            lecture_info.start_date = str(lecture_info.start_date)
-            lecture_info.end_date = str(lecture_info.end_date)
-            lecture_info.mod_dt = str(lecture_info.mod_dt)
-            lecture_info.reg_dt = str(lecture_info.reg_dt)
+            # lecture_info.start_date = str(lecture_info.start_date)
+            # lecture_info.end_date = str(lecture_info.end_date)
+            # lecture_info.mod_dt = str(lecture_info.mod_dt)
+            # lecture_info.reg_dt = str(lecture_info.reg_dt)
 
             lecture_info.group_name = '1:1 레슨'
             lecture_info.group_type_cd = ''
@@ -858,7 +841,7 @@ def func_get_lecture_list(context, class_id, member_id):
             lecture_info.group_state_cd_nm = ''
             lecture_info.group_note = ''
             # group_check = 0
-            group_info = None
+            # group_info = None
             lecture_test = None
 
             lecture_info.lecture_finish_count = ScheduleTb.objects.filter(class_tb_id=class_id,
@@ -885,11 +868,6 @@ def func_get_lecture_list(context, class_id, member_id):
                     lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
                 except ObjectDoesNotExist:
                     error = '그룹 정보를 불러오지 못했습니다.'
-
-            try:
-                lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
 
             try:
                 lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)

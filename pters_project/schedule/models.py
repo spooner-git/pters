@@ -44,7 +44,7 @@ class ClassMemberListManager(models.Manager):
 class ClassTb(TimeStampedModel):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-    center_tb = models.ForeignKey(CenterTb, on_delete=models.SET_NULL, null=True)
+    center_tb = models.ForeignKey(CenterTb, on_delete=models.SET_NULL, blank=True, null=True)
     subject_cd = models.CharField(db_column='SUBJECT_CD', max_length=10, blank=True, default='')
     subject_detail_nm = models.CharField(db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, default='')
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
@@ -62,6 +62,33 @@ class ClassTb(TimeStampedModel):
 
     def __str__(self):
         return self.member.__str__()+'_class'
+
+    def get_class_type_cd_name(self):
+        try:
+            subject_type_name = CommonCdTb.objects.get(common_cd=self.subject_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            subject_type_name = ''
+
+        if self.subject_detail_nm is not None and self.subject_detail_nm != '':
+            subject_type_name = self.subject_detail_nm
+
+        return subject_type_name
+
+    def get_state_cd_name(self):
+        try:
+            state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            state_cd_name = ''
+
+        return state_cd_name
+
+    def get_center_name(self):
+        if self.center_tb_id is not None and self.center_tb_id != '':
+            center_name = self.center_tb.center_name
+        else:
+            center_name = ''
+
+        return center_name
 
 
 class LectureTb(TimeStampedModel):
@@ -102,6 +129,26 @@ class LectureTb(TimeStampedModel):
 
         return authorized_check
 
+    def get_str_start_date(self):
+        return str(self.start_date)
+
+    def get_str_end_date(self):
+        return str(self.end_date)
+
+    def get_str_reg_dt(self):
+        return str(self.reg_dt)
+
+    def get_str_mod_dt(self):
+        return str(self.mod_dt)
+
+    def get_state_cd_name(self):
+        try:
+            state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            state_cd_name = ''
+
+        return state_cd_name
+
 
 class GroupTb(TimeStampedModel):
     group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -122,11 +169,11 @@ class GroupTb(TimeStampedModel):
 
     def get_group_type_cd_name(self):
         try:
-            state_cd_name = CommonCdTb.objects.get(common_cd=self.group_type_cd).common_cd_nm
+            group_type_cd_name = CommonCdTb.objects.get(common_cd=self.group_type_cd).common_cd_nm
         except ObjectDoesNotExist:
-            state_cd_name = ''
+            group_type_cd_name = ''
 
-        return state_cd_name
+        return group_type_cd_name
 
 
 class GroupLectureTb(TimeStampedModel):
@@ -172,7 +219,7 @@ class RepeatScheduleTb(TimeStampedModel):
 
     def get_group_type_name(self):
 
-        if self.group_tb is not None and self.group_tb != '':
+        if self.group_tb_id is not None and self.group_tb_id != '':
             try:
                 group_type_name = CommonCdTb.objects.get(common_cd=self.group_tb.group_type_cd).common_cd_nm
             except ObjectDoesNotExist:
@@ -184,12 +231,21 @@ class RepeatScheduleTb(TimeStampedModel):
 
     def get_group_name(self):
 
-        if self.group_tb is not None and self.group_tb != '':
+        if self.group_tb_id is not None and self.group_tb_id != '':
             group_name = self.group_tb.name
         else:
             group_name = ''
 
         return group_name
+
+    def get_state_cd_name(self):
+        try:
+            state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            state_cd_name = ''
+
+        return state_cd_name
+
 
 class DeleteRepeatScheduleTb(models.Model):
     delete_repeat_schedule_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -290,7 +346,7 @@ class ScheduleTb(TimeStampedModel):
             return SCHEDULE_NOT_FINISH
 
     def get_group_current_member_num(self):
-        if self.group_tb is not None and self.group_tb != '':
+        if self.group_tb_id is not None and self.group_tb_id != '':
             group_current_member_num = ScheduleTb.objects.filter(class_tb_id=self.class_tb_id,
                                                                  group_tb_id=self.group_tb.group_id,
                                                                  lecture_tb__isnull=False,
@@ -301,7 +357,7 @@ class ScheduleTb(TimeStampedModel):
 
     def get_group_type_name(self):
 
-        if self.group_tb is not None and self.group_tb != '':
+        if self.group_tb_id is not None and self.group_tb_id != '':
             try:
                 group_type_name = CommonCdTb.objects.get(common_cd=self.group_tb.group_type_cd).common_cd_nm
             except ObjectDoesNotExist:
@@ -373,7 +429,7 @@ class ClassLectureTb(TimeStampedModel):
         return group_check
 
     def get_member_lecture_auth_check(self):
-        if self.lecture_tb is not None and self.lecture_tb != '':
+        if self.lecture_tb_id is not None and self.lecture_tb_id != '':
             lecture_auth_count = MemberLectureTb.objects.filter(lecture_tb=self.lecture_tb_id,
                                                                 auth_cd='VIEW', lecture_tb__use=USE,
                                                                 use=USE).count()

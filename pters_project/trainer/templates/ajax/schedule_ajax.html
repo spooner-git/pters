@@ -25,7 +25,7 @@
       "scheduleNoteArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleIdxArray":
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ forloop.counter }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "group_schedule_id":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
