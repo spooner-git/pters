@@ -154,7 +154,7 @@ $(document).ready(function(){
                 //     +trainee_repeat_time)
                 // $('._Repeat_Info span').text(trainee_repeat_end)
 
-                var repeatText = '<span style="color:#fe4e65;">['+trainee_repeat_group_type_name+'] </span>' +trainee_repeat_type+' '
+                var repeatText = '<span style="color:#fe4e65;">['+trainee_repeat_group_type_name+']'+ptRepeatScheduleGroupNameArray[i]+'</span> ' +trainee_repeat_type+' '
                 + trainee_repeat_day + ' ' +trainee_repeat_time +'~'+trainee_repeat_end_time+' ('+pt_dur+')'+'<br/><span>'+trainee_repeat_end +'</span><br/>';
                 repeatList.push(repeatText)
                 $('._Repeat_Info p:nth-child(2)').html(repeatList.join(''))
