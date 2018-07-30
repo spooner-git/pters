@@ -398,7 +398,7 @@
             var myImage = document.getElementById("id_sign_img");
             myImage.onerror = function() {
                 //this.src="";
-                $("#popup_sign_img").css("display","none");
+                $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
             }
         }
         schedule_on_off = 2;
