@@ -1295,6 +1295,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" group-schedule-id="'+planScheduleIdArray[i]+
                                        '" data-starttime="'+planStartDate[i]+
                                        '" data-groupid="'+planGroupid[i]+
+                                       '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
                                        '" data-membernum="'+planMemberNum[i]+
                                        '" data-memo="'+planNoteArray[i]+
                                        '" data-schedule-check="'+planScheduleFinishArray[i]+
@@ -1823,6 +1824,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                         '" group-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+
                         '" data-groupid="'+planGroupid[i]+
+                        '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
                         '" data-membernum="'+planMemberNum[i]+
                         '" data-memo="'+planNoteArray[i]+
                         '" data-schedule-check="'+planScheduleFinishArray[i]+
