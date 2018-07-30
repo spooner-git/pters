@@ -379,14 +379,16 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 if group_check == 0:
                     lecture_info_data.group_name = group_info.group_tb.name
                     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                    lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
                     lecture_info_data.group_member_num = group_info.group_tb.member_num
                     lecture_info_data.group_note = group_info.group_tb.note
                     lecture_info_data.group_state_cd = group_info.group_tb.state_cd
-                    try:
-                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
-                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
-                    except ObjectDoesNotExist:
-                        error = '그룹 정보를 불러오지 못했습니다.'
+                    lecture_info_data.group_state_cd_name = group_info.group_tb.get_state_cd_name()
+                    # try:
+                    #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                    #     lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
+                    # except ObjectDoesNotExist:
+                    #     error = '그룹 정보를 불러오지 못했습니다.'
 
                 output_lecture_list.append(lecture_info_data)
 

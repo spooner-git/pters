@@ -333,10 +333,10 @@ $(document).ready(function(){
                 var edateFormat =jsondata.endArray[i]
             }
 
-            var typename = "1:1레슨"
+            var typename = "[1:1 레슨]"
             var maxnumber = "1"
             if(jsondata.groupNameArray[i] != ""){
-                var typename = jsondata.groupNameArray[i]
+                var typename = '['+jsondata.groupTypeCdNameArray[i]+'] ' + jsondata.groupNameArray[i];
                 var maxnumber = jsondata.groupMemberNumArray[i]
             }
             var stateColor = ""
