@@ -394,7 +394,7 @@ def add_trainee_schedule_logic(request):
             push_message.append(request.user.last_name + request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' 일정을 등록했습니다')
+                                + ' [1:1 레슨] 일정을 등록했습니다')
         else:
 
             push_class_id.append(class_id)
@@ -402,7 +402,8 @@ def add_trainee_schedule_logic(request):
             push_message.append(request.user.last_name + request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' 그룹 일정을 등록했습니다')
+                                + ' ['+schedule_info.get_group_type_name()+']'
+                                + schedule_info.get_group_name() + ' 일정을 등록했습니다')
 
         context['push_class_id'] = push_class_id
         context['push_title'] = push_title
@@ -430,6 +431,8 @@ def delete_trainee_schedule_logic(request):
     push_class_id = []
     push_title = []
     push_message = []
+    group_name = ''
+    group_type_name = ''
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     lecture_id = None
 
@@ -445,6 +448,8 @@ def delete_trainee_schedule_logic(request):
     if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
+        group_name = schedule_info.get_group_name()
+        group_type_name = schedule_info.get_group_type_name()
         if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
             error = '이미 지난 일정입니다.'
 
@@ -525,7 +530,7 @@ def delete_trainee_schedule_logic(request):
         push_message.append(request.user.last_name + request.user.first_name + '님이 '
                             + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                             + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                            + ' 일정을 취소했습니다.')
+                            + ' ['+group_type_name+']'+group_name+' 일정을 취소했습니다.')
 
         context['push_class_id'] = push_class_id
         context['push_title'] = push_title

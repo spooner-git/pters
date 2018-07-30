@@ -56,19 +56,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
         for schedule_info in schedule_data:
             idx2 -= 1
-            # schedule_info.start_dt = str(schedule_info.start_dt)
-            # schedule_info.end_dt = str(schedule_info.end_dt)
-            # schedule_info.mod_dt = str(schedule_info.mod_dt)
-            # schedule_info.reg_dt = str(schedule_info.reg_dt)
             schedule_info.idx = str(idx)+'-'+str(idx2)
-            # if schedule_info.note is None:
-            #     schedule_info.note = ''
-            # 끝난 스케쥴인지 확인
-            # if schedule_info.state_cd == 'PE':
-            #     schedule_info.finish_check = 1
-            # else:
-            #     schedule_info.finish_check = 0
-            # print(str(schedule_info.start_dt)+'-'+str(schedule_info.end_dt))
             pt_schedule_list.append(schedule_info)
 
     context['pt_schedule_data'] = pt_schedule_list
@@ -636,10 +624,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
                     error = '현재 예약 취소가 불가능합니다.3'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
-    print(str(today))
-    print(str(reserve_avail_date))
-    print(str(avail_end_date))
-    print(str(start_date))
+
     if error is None:
         if start_date >= avail_end_date:
             if add_del_type == ADD_SCHEDULE:

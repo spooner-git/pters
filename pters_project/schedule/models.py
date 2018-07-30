@@ -338,6 +338,15 @@ class ScheduleTb(TimeStampedModel):
 
         return group_type_name
 
+    def get_group_name(self):
+
+        if self.group_tb_id is not None and self.group_tb_id != '':
+            group_name = self.group_tb.name
+        else:
+            group_name = ''
+
+        return group_name
+
 
 class SettingTb(TimeStampedModel):
     setting_id = models.AutoField(db_column='ID', primary_key=True, null=False)
