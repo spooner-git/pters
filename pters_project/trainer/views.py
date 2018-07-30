@@ -415,13 +415,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         current_total_member_num = 0
         center_name = '없음'
 
-        off_repeat_schedule_id = []
-        off_repeat_schedule_type = []
-        off_repeat_schedule_week_info = []
-        off_repeat_schedule_start_date = []
-        off_repeat_schedule_end_date = []
-        off_repeat_schedule_start_time = []
-        off_repeat_schedule_time_duration = []
         context['total_member_num'] = 0
         context['current_total_member_num'] = 0
         context['end_schedule_num'] = 0
@@ -449,17 +442,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
-
-        if error is None:
-            if off_repeat_schedule_data is not None:
-                for off_repeat_schedule_info in off_repeat_schedule_data:
-                    off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
-                    off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
-                    off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
-                    off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
-                    off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
-                    off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
-                    off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
@@ -552,14 +534,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context['member_info'] = user_member_info
         context['end_schedule_num'] = end_schedule_num
         context['center_name'] = center_name
-
-        context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
-        context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
-        context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
-        context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
-        context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
-        context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
-        context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
+        context['off_repeat_schedule_data'] = off_repeat_schedule_data
 
         return render(request, self.template_name, context)
 
@@ -3631,14 +3606,6 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         total_member_num = 0
         current_total_member_num = 0
         center_name = '없음'
-        off_repeat_schedule_id = []
-        off_repeat_schedule_type = []
-        off_repeat_schedule_week_info = []
-        off_repeat_schedule_start_date = []
-        off_repeat_schedule_end_date = []
-        off_repeat_schedule_start_time = []
-        off_repeat_schedule_end_time = []
-        off_repeat_schedule_time_duration = []
         context['total_member_num'] = 0
         context['current_total_member_num'] = 0
         context['end_schedule_num'] = 0
@@ -3667,18 +3634,6 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
             off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
 
-        if error is None:
-            if off_repeat_schedule_data is not None:
-                for off_repeat_schedule_info in off_repeat_schedule_data:
-                    off_repeat_schedule_id.append(off_repeat_schedule_info.repeat_schedule_id)
-                    off_repeat_schedule_type.append(off_repeat_schedule_info.repeat_type_cd)
-                    off_repeat_schedule_week_info.append(off_repeat_schedule_info.week_info)
-                    off_repeat_schedule_start_date.append(str(off_repeat_schedule_info.start_date))
-                    off_repeat_schedule_end_date.append(str(off_repeat_schedule_info.end_date))
-                    off_repeat_schedule_start_time.append(off_repeat_schedule_info.start_time)
-                    off_repeat_schedule_end_time.append(off_repeat_schedule_info.end_time)
-                    off_repeat_schedule_time_duration.append(off_repeat_schedule_info.time_duration)
-        # error = 'test'
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
             all_member = func_get_class_member_id_list(class_id)
@@ -3755,14 +3710,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         context['end_schedule_num'] = end_schedule_num
         context['center_name'] = center_name
 
-        context['off_repeat_schedule_id_data'] = off_repeat_schedule_id
-        context['off_repeat_schedule_type_data'] = off_repeat_schedule_type
-        context['off_repeat_schedule_week_info_data'] = off_repeat_schedule_week_info
-        context['off_repeat_schedule_start_date_data'] = off_repeat_schedule_start_date
-        context['off_repeat_schedule_end_date_data'] = off_repeat_schedule_end_date
-        context['off_repeat_schedule_start_time_data'] = off_repeat_schedule_start_time
-        context['off_repeat_schedule_end_time_data'] = off_repeat_schedule_end_time
-        context['off_repeat_schedule_time_duration_data'] = off_repeat_schedule_time_duration
+        context['off_repeat_schedule_data'] = off_repeat_schedule_data
 
         return render(request, self.template_name, context)
 
