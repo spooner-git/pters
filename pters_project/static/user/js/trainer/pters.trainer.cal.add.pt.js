@@ -503,6 +503,7 @@ $(document).ready(function(){
         var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
         $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
         $("#id_training_time, #id_training_time_off").val(starttime);
+        $('#id_memo_mini, #id_memo_mini_off').val('')
 
         if(addTypeSelect == "ptadd"){ //Form 셋팅
             $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
@@ -1585,6 +1586,7 @@ function clear_pt_off_add_popup(){
 
     //메모 지우기
     $('#scheduleMemo input').val('').text('');
+    $('#id_memo_mini, #id_memo_mini_off').val('')
 
     //모든 하단 핑크선 지우기
     $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
