@@ -290,7 +290,7 @@
         var ptRepeatScheduleStartTimeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.start_time }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleEndTimeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.end_time }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleTimeDurationArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.time_duration }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleGroupTypeNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_type_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleGroupTypeNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_type_cd_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleGroupNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
         var next_schedule = ['{{ next_schedule }}'];

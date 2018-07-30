@@ -188,7 +188,7 @@ class RepeatScheduleTb(TimeStampedModel):
     def get_str_end_date(self):
         return str(self.end_date)
 
-    def get_group_type_name(self):
+    def get_group_type_cd_name(self):
 
         if self.group_tb_id is not None and self.group_tb_id != '':
             try:
@@ -326,7 +326,7 @@ class ScheduleTb(TimeStampedModel):
 
         return group_current_member_num
 
-    def get_group_type_name(self):
+    def get_group_type_cd_name(self):
 
         if self.group_tb_id is not None and self.group_tb_id != '':
             try:

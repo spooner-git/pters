@@ -29,7 +29,7 @@
       "ptRepeatScheduleGroupTypeCdArray" :
       [{% for pt_repeat_schedule_info in pt_repeat_schedule_data %}"{{ pt_repeat_schedule_info.group_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptRepeatScheduleGroupTypeCdNameArray" :
-      [{% for pt_repeat_schedule_info in pt_repeat_schedule_data %}"{{ pt_repeat_schedule_info.get_group_type_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for pt_repeat_schedule_info in pt_repeat_schedule_data %}"{{ pt_repeat_schedule_info.get_group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptRepeatScheduleGroupMemberNumArray" :
       [{% for pt_repeat_schedule_info in pt_repeat_schedule_data %}"{{ pt_repeat_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "ptRepeatScheduleGroupNameArray" :

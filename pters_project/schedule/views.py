@@ -185,7 +185,7 @@ def add_schedule_logic(request):
             push_message.append(request.user.last_name+request.user.first_name+'님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] +
-                                ' 일정을 등록했습니다.')
+                                ' [1:1 레슨] 일정을 등록했습니다.')
 
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
@@ -223,6 +223,8 @@ def delete_schedule_logic(request):
     end_dt = None
     member_name = None
     schedule_info = None
+    group_type_cd_name = ''
+    group_name = ''
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if en_dis_type == ON_SCHEDULE_TYPE:
@@ -254,6 +256,9 @@ def delete_schedule_logic(request):
         start_dt = schedule_info.start_dt
         end_dt = schedule_info.end_dt
         group_id = schedule_info.group_tb_id
+        if group_id is not None and group_id != '':
+            group_type_cd_name = schedule_info.get_group_type_cd_name()
+            group_name = schedule_info.get_group_name()
 
     if error is None:
         try:
@@ -282,15 +287,27 @@ def delete_schedule_logic(request):
         func_refresh_group_status(group_id, None, None)
 
     if error is None:
-        if group_id is None or group_id == '':
-            func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
-                               member_name, en_dis_type, 'LS02', request)
-
-            func_update_member_schedule_alarm(class_id)
+        if group_id is not None and group_id != '':
+            # func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
+            #                    member_name, en_dis_type, 'LS02', request)
+            log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name+request.user.first_name, to_member_name=member_name,
+                             class_tb_id=class_id, lecture_tb_id=lecture_id,
+                             log_info='['+group_type_cd_name+'] '+group_name + ' 일정', log_how='취소',
+                             log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
+            log_data.save()
 
         else:
-            func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
-                               member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
+            # func_save_log_data(start_dt, end_dt, class_id, lecture_id, request.user.last_name+request.user.first_name,
+            #                    member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
+            log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name+request.user.first_name, to_member_name=member_name,
+                             class_tb_id=class_id, lecture_tb_id=lecture_id,
+                             log_info='[1:1 레슨] 일정', log_how='취소',
+                             log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
+            log_data.save()
+
+        func_update_member_schedule_alarm(class_id)
 
         push_info_schedule_start_date = str(start_dt).split(':')
         push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
@@ -302,12 +319,12 @@ def delete_schedule_logic(request):
                 push_message.append(request.user.last_name+request.user.first_name+'님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' 그룹 일정을 취소했습니다.')
+                                    + ' ['+group_type_cd_name+'] '+group_name + ' 일정을 취소했습니다.')
             else:
                 push_message.append(request.user.last_name+request.user.first_name+'님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                    + ' 일정을 취소했습니다.')
+                                    + ' [1:1 레슨] 일정을 취소했습니다.')
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
             context['push_message'] = push_message
@@ -407,7 +424,7 @@ def finish_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
         except InternalError:
             error = '예약 가능 횟수를 확인해주세요.'
-    # 그룹 스케쥴 종료 및 그룹 반복일정 종료
+    # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
     if error is None:
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
             group_repeat_schedule_id = None
@@ -420,19 +437,35 @@ def finish_schedule_logic(request):
 
         push_info_schedule_start_date = str(start_date).split(':')
         push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-        func_save_log_data(start_date, end_date, class_id, '', request.user.last_name+request.user.first_name,
-                           member_name, ON_SCHEDULE_TYPE, 'LS03', request)
+        # func_save_log_data(start_date, end_date, class_id, '', request.user.last_name+request.user.first_name,
+        #                    member_name, ON_SCHEDULE_TYPE, 'LS03', request)
 
         push_lecture_id.append(schedule_info.lecture_tb_id)
         push_title.append(class_type_name + ' 수업 - 일정 알림')
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
+            log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name+request.user.first_name,
+                             to_member_name=member_name,
+                             class_tb_id=class_id, lecture_tb_id='',
+                             log_info='['+schedule_info.get_group_type_cd_name()+'] '
+                                      + schedule_info.get_group_name() + ' 일정', log_how='완료',
+                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+            log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' 그룹 일정이 완료됐습니다.')
-        else:
-            push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                + ' ['+schedule_info.get_group_type_cd_name()+'] ' + schedule_info.get_group_name()
                                 + ' 일정이 완료됐습니다.')
+        else:
+            log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name+request.user.first_name,
+                             to_member_name=member_name,
+                             class_tb_id=class_id, lecture_tb_id='',
+                             log_info='[1:1 레슨] 일정', log_how='완료',
+                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+            log_data.save()
+            push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                + ' [1:1 레슨] 일정이 완료됐습니다.')
         context['push_lecture_id'] = push_lecture_id
         context['push_title'] = push_title
         context['push_message'] = push_message
@@ -547,9 +580,9 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         if repeat_schedule_start_date == '':
-            error = '반복일정 시작 날짜를 선택해 주세요.'
+            error = '반복 일정 시작 날짜를 선택해 주세요.'
         if repeat_schedule_end_date == '':
-            error = '반복일정 종료 날짜를 선택해 주세요.'
+            error = '반복 일정 종료 날짜를 선택해 주세요.'
 
     if error is None:
         try:
@@ -564,7 +597,7 @@ def add_repeat_schedule_logic(request):
 
     if error is None:
         if (repeat_schedule_end_date_info - repeat_schedule_start_date_info) > datetime.timedelta(days=365):
-            error = '1년까지만 반복일정을 등록할수 있습니다.'
+            error = '1년까지만 반복 일정을 등록할수 있습니다.'
 
     if error is None:
         if repeat_start_time == '':
@@ -584,12 +617,6 @@ def add_repeat_schedule_logic(request):
                     error = '등록할수 있는 일정이 없습니다.'
         else:
             lecture_id = None
-
-    if error is None:
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         repeat_schedule_date_list = func_get_repeat_schedule_date_list(repeat_type, repeat_week_type,
@@ -748,9 +775,9 @@ def add_repeat_schedule_confirm(request):
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if repeat_schedule_id == '':
-        error = '확인할 반복일정을 선택해주세요.'
+        error = '확인할 반복 일정을 선택해주세요.'
     if repeat_confirm == '':
-        error = '확인할 반복일정에 대한 정보를 확인해주세요.'
+        error = '확인할 반복 일정에 대한 정보를 확인해주세요.'
 
     if error is None:
         try:
@@ -790,13 +817,13 @@ def add_repeat_schedule_confirm(request):
             except ValueError:
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError:
-                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복 일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except InternalError:
-                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복 일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except ValidationError:
-                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복 일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             if error is None:
-                information = '반복일정 등록이 취소됐습니다.'
+                information = '반복 일정 등록이 취소됐습니다.'
 
         else:
 
@@ -810,7 +837,7 @@ def add_repeat_schedule_confirm(request):
                 push_lecture_id.append(lecture_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
-                                    + '~' + str(end_date) + ' 반복일정을 등록했습니다')
+                                    + '~' + str(end_date) + ' [1:1 레슨] 반복 일정을 등록했습니다')
 
                 context['push_lecture_id'] = push_lecture_id
                 context['push_title'] = push_title
@@ -820,7 +847,7 @@ def add_repeat_schedule_confirm(request):
                 context['push_title'] = ''
                 context['push_message'] = ''
 
-            information = '반복일정 등록이 완료됐습니다.'
+            information = '반복 일정 등록이 완료됐습니다.'
 
     if error is None:
         if information is None:
@@ -856,10 +883,12 @@ def delete_repeat_schedule_logic(request):
     push_title = []
     push_message = []
     group_id = None
+    group_type_cd_name = ''
+    group_name = ''
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if repeat_schedule_id == '':
-        error = '확인할 반복일정을 선택해주세요.'
+        error = '확인할 반복 일정을 선택해주세요.'
 
     if error is None:
         try:
@@ -873,6 +902,9 @@ def delete_repeat_schedule_logic(request):
         en_dis_type = repeat_schedule_info.en_dis_type
         lecture_id = repeat_schedule_info.lecture_tb_id
         group_id = repeat_schedule_info.group_tb_id
+        if group_id is not None and group_id != '':
+            group_type_cd_name = repeat_schedule_info.get_group_type_cd_name()
+            group_name = repeat_schedule_info.get_group_name()
 
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
@@ -886,7 +918,7 @@ def delete_repeat_schedule_logic(request):
                 member_name = member_info.name
 
     if error is None:
-        # 오늘 날짜 이후의 반복일정 취소 -> 전체 취소 확인 필요 hk.kim
+        # 오늘 날짜 이후의 반복 일정 취소 -> 전체 취소 확인 필요 hk.kim
         schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id,
                                                   start_dt__gt=timezone.now())
 
@@ -941,15 +973,27 @@ def delete_repeat_schedule_logic(request):
                                member_name, en_dis_type, 'LR02', request)
 
         else:
-            func_save_log_data(start_date, end_date, class_id, lecture_id,
-                               request.user.last_name+request.user.first_name,
-                               member_name, GROUP_SCHEDULE_TYPE, 'LR02', request)
+            log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             to_member_name=member_name,
+                             class_tb_id=class_id,
+                             lecture_tb_id=lecture_id,
+                             log_info='[' + group_type_cd_name + '] '
+                                      + group_name + ' 반복 일정',
+                             log_how='취소',
+                             log_detail=str(start_date) + '/' + str(end_date), use=USE)
+            log_data.save()
 
         if en_dis_type == ON_SCHEDULE_TYPE:
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
-                                + '~' + str(end_date) + ' 반복일정을 취소했습니다')
+            if group_id is None or group_id == '':
+                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                                    + '~' + str(end_date) + ' [1:1 레슨] 반복 일정을 취소했습니다')
+            else:
+                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                                    + '~' + str(end_date)
+                                    + ' ['+group_type_cd_name+']' + group_name+' 반복 일정을 취소했습니다')
 
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
@@ -1080,13 +1124,6 @@ def add_group_schedule_logic(request):
             error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
-
-    if error is None:
         error = func_check_group_schedule_enable(group_id)
     if error is None:
         # 최초 날짜 값 셋팅
@@ -1147,7 +1184,7 @@ def add_group_schedule_logic(request):
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='그룹 레슨 일정', log_how='등록',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name+' 일정', log_how='등록',
                          log_detail=str(schedule_start_datetime) + '/' + str(schedule_end_datetime), use=USE)
         log_data.save()
 
@@ -1191,7 +1228,8 @@ def add_group_schedule_logic(request):
                                                  from_member_name=request.user.last_name + request.user.first_name,
                                                  to_member_name=member_info.name,
                                                  class_tb_id=class_id,
-                                                 log_info=group_info.name + ' 그룹 레슨 일정', log_how='등록',
+                                                 log_info='['+group_info.get_group_type_cd_name()+'] '
+                                                          + group_info.name + ' 일정', log_how='등록',
                                                  log_detail=str(schedule_start_datetime) + '/' + str(
                                                      schedule_end_datetime), use=USE)
                                 log_data.save()
@@ -1204,7 +1242,9 @@ def add_group_schedule_logic(request):
                                                     + push_info_schedule_start_date[0] + ':'
                                                     + push_info_schedule_start_date[1] + '~'
                                                     + push_info_schedule_end_date[0] + ':'
-                                                    + push_info_schedule_end_date[1] + ' 그룹 일정을 등록했습니다')
+                                                    + push_info_schedule_end_date[1]
+                                                    + ' ['+group_info.get_group_type_cd_name()+'] '
+                                                    + group_info.name + ' 일정을 등록했습니다')
 
                     except TypeError:
                         error_temp = error_temp
@@ -1321,9 +1361,9 @@ def delete_group_schedule_logic(request):
                 func_refresh_group_status(group_id, None, None)
 
             if temp_error is None:
-                func_save_log_data(start_dt, end_dt, class_id, lecture_id,
-                                   request.user.last_name+request.user.first_name,
-                                   member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
+                # func_save_log_data(start_dt, end_dt, class_id, lecture_id,
+                #                    request.user.last_name+request.user.first_name,
+                #                    member_name, GROUP_SCHEDULE_TYPE, 'LS02', request)
 
                 push_info_schedule_start_date = str(start_dt).split(':')
                 push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
@@ -1331,15 +1371,24 @@ def delete_group_schedule_logic(request):
                 push_lecture_id.append(member_group_schedule_info.lecture_tb_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 if group_id is not None and group_id != '':
+                    log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                                     from_member_name=request.user.last_name + request.user.first_name,
+                                     to_member_name=member_name,
+                                     class_tb_id=class_id, lecture_tb_id='',
+                                     log_info='[' + member_group_schedule_info.get_group_type_cd_name() + '] '
+                                              + member_group_schedule_info.get_group_name() + ' 일정', log_how='취소',
+                                     log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
+                    log_data.save()
                     push_message.append(request.user.last_name+request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + ' 그룹 일정을 취소했습니다.')
+                                        + ' [' + group_info.get_group_type_cd_name()+'] '+group_info.name
+                                        + ' 일정을 취소했습니다.')
                 else:
                     push_message.append(request.user.last_name+request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + ' 일정을 취소했습니다.')
+                                        + ' [1:1 레슨] 일정을 취소했습니다.')
 
     if error is None:
 
@@ -1351,7 +1400,7 @@ def delete_group_schedule_logic(request):
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='취소',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 일정', log_how='취소',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
@@ -1488,7 +1537,7 @@ def finish_group_schedule_logic(request):
                 except InternalError:
                     temp_error = '예약 가능 횟수를 확인해주세요.'
 
-            # 그룹 스케쥴 종료 및 그룹 반복일정 종료
+            # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
             if temp_error is None:
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
                     group_repeat_schedule_id = None
@@ -1502,26 +1551,40 @@ def finish_group_schedule_logic(request):
 
                 push_info_schedule_start_date = str(start_date).split(':')
                 push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
-                func_save_log_data(start_date, end_date, class_id, '', request.user.last_name + request.user.first_name,
-                                   member_name, GROUP_SCHEDULE_TYPE, 'LS03', request)
-
                 push_lecture_id.append(member_group_schedule_info.lecture_tb_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
+
+                    log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                                     from_member_name=request.user.last_name + request.user.first_name,
+                                     to_member_name=member_name,
+                                     class_tb_id=class_id, lecture_tb_id='',
+                                     log_info='[' + member_group_schedule_info.get_group_type_cd_name() + '] '
+                                              + member_group_schedule_info.get_group_name() + ' 일정', log_how='완료',
+                                     log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                    log_data.save()
                     push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + ' 그룹 일정이 완료됐습니다.')
-                else:
-                    push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                        + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                        + ' 일정이 완료됐습니다.')
+                                        + ' [' + schedule_info.get_group_type_cd_name() + '] '
+                                        + schedule_info.get_group_name() + ' 일정이 완료됐습니다.')
+                # else:
+                #     log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
+                #                      from_member_name=request.user.last_name + request.user.first_name,
+                #                      to_member_name=member_name,
+                #                      class_tb_id=class_id, lecture_tb_id='',
+                #                      log_info='[1:1 레슨] 일정', log_how='완료',
+                #                      log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                #     log_data.save()
+                #     push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                #                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                #                         + '[1:1 레슨] 일정이 완료됐습니다.')
 
     if error is None:
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 레슨 일정', log_how='완료',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 일정', log_how='완료',
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     if error is None:
@@ -1644,7 +1707,7 @@ def add_member_group_schedule_logic(request):
                          from_member_name=request.user.last_name+request.user.first_name,
                          to_member_name=member_info.name,
                          class_tb_id=class_id,
-                         log_info=group_info.name+' 그룹 레슨 일정', log_how='등록',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name+' 일정', log_how='등록',
                          log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
         log_data.save()
 
@@ -1657,7 +1720,7 @@ def add_member_group_schedule_logic(request):
         push_message.append(request.user.last_name + request.user.first_name + '님이 '
                             + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                             + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                            + ' 그룹 일정을 등록했습니다')
+                            + ' ['+group_info.get_group_type_cd_name()+'] '+group_info.name+' 일정을 등록했습니다')
         context['push_lecture_id'] = push_lecture_id
         context['push_title'] = push_title
         context['push_message'] = push_message
@@ -1709,9 +1772,9 @@ def add_group_repeat_schedule_logic(request):
 
     if error is None:
         if repeat_schedule_start_date == '':
-            error = '반복일정 시작 날짜를 선택해 주세요.'
+            error = '반복 일정 시작 날짜를 선택해 주세요.'
         if repeat_schedule_end_date == '':
-            error = '반복일정 종료 날짜를 선택해 주세요.'
+            error = '반복 일정 종료 날짜를 선택해 주세요.'
 
     if error is None:
         try:
@@ -1726,7 +1789,7 @@ def add_group_repeat_schedule_logic(request):
 
     if error is None:
         if (repeat_schedule_end_date_info - repeat_schedule_start_date_info) > datetime.timedelta(days=365):
-            error = '1년까지만 반복일정을 등록할수 있습니다.'
+            error = '1년까지만 반복 일정을 등록할수 있습니다.'
 
     if error is None:
         if repeat_start_time == '':
@@ -1911,9 +1974,9 @@ def add_group_repeat_schedule_confirm(request):
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     if repeat_schedule_id == '':
-        error = '확인할 반복일정을 선택해주세요.'
+        error = '확인할 반복 일정을 선택해주세요.'
     if repeat_confirm == '':
-        error = '확인할 반복일정에 대한 정보를 확인해주세요.'
+        error = '확인할 반복 일정에 대한 정보를 확인해주세요.'
 
     if error is None:
         try:
@@ -1941,14 +2004,14 @@ def add_group_repeat_schedule_confirm(request):
             except ValueError:
                 error = '등록 값에 문제가 있습니다.'
             except IntegrityError:
-                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복 일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except InternalError:
-                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복 일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
             except ValidationError:
-                error = '반복일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
+                error = '반복 일정 취소중 요류가 발생했습니다. 다시 시도해주세요.'
 
             if error is None:
-                information = '반복일정 등록이 취소됐습니다.'
+                information = '반복 일정 등록이 취소됐습니다.'
 
         else:
             func_update_member_schedule_alarm(class_id)
@@ -1956,7 +2019,8 @@ def add_group_repeat_schedule_confirm(request):
             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info=group_info.name + ' 그룹 반복 일정', log_how='등록',
+                             log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 반복 일정',
+                             log_how='등록',
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
 
@@ -2028,15 +2092,18 @@ def add_group_repeat_schedule_confirm(request):
                                          from_member_name=request.user.last_name + request.user.first_name,
                                          to_member_name=member_info.name,
                                          class_tb_id=class_id,
-                                         log_info='그룹 반복 일정', log_how='등록',
+                                         log_info='['+group_info.get_group_type_cd_name()+'] '
+                                                  + group_info.name + ' 반복 일정',
+                                         log_how='등록',
                                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
                         log_data.save()
                         push_lecture_id.append(lecture_id)
                         push_title.append(class_type_name + ' 수업 - 일정 알림')
                         push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
-                                            + '~' + str(end_date) + ' 그룹 반복일정을 등록했습니다')
+                                            + '~' + str(end_date) + ' [' + group_info.get_group_type_cd_name() + '] '
+                                            + group_info.name + ' 반복 일정을 등록했습니다')
 
-            information = '반복일정 등록이 완료됐습니다.'
+            information = '반복 일정 등록이 완료됐습니다.'
     if error is None:
         if information is None:
             return redirect(next_page)
@@ -2046,7 +2113,7 @@ def add_group_repeat_schedule_confirm(request):
             context['push_message'] = push_message
             messages.info(request, information)
             logger.info(request.user.last_name + ' ' + request.user.first_name + '['
-                        + str(request.user.id) + ']' + str(error_message))
+                        + str(request.user.id) + '] ' + str(error_message))
             return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
@@ -2078,7 +2145,7 @@ def delete_group_repeat_schedule_logic(request):
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if repeat_schedule_id == '':
-        error = '확인할 반복일정을 선택해주세요.'
+        error = '확인할 반복 일정을 선택해주세요.'
 
     if error is None:
         try:
@@ -2094,7 +2161,7 @@ def delete_group_repeat_schedule_logic(request):
         end_date = group_repeat_schedule_info.end_date
 
     if error is None:
-        # 오늘 이후 날짜 반복일정만 제거 -> 전체 제거 -> 오늘 이후 날짜 반복일정만 제거
+        # 오늘 이후 날짜 반복 일정만 제거 -> 전체 제거 -> 오늘 이후 날짜 반복 일정만 제거
         schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, start_dt__gt=timezone.now())
 
     if error is None:
@@ -2144,7 +2211,7 @@ def delete_group_repeat_schedule_logic(request):
                 member_name = lecture_info.member.name
 
             if error_temp is None:
-                # 오늘 날짜 이후의 반복일정 취소 -> 전체 취소 확인 필요 hk.kim
+                # 오늘 날짜 이후의 반복 일정 취소 -> 전체 취소 확인 필요 hk.kim
                 schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=member_repeat_schedule_id,
                                                           start_dt__gt=timezone.now())
 
@@ -2184,14 +2251,25 @@ def delete_group_repeat_schedule_logic(request):
                     error_temp = '예약 가능한 횟수를 확인해주세요.'
 
             if error_temp is None:
-                func_save_log_data(start_date, end_date, class_id, lecture_id,
-                                   request.user.last_name + request.user.first_name,
-                                   member_name, GROUP_SCHEDULE_TYPE, 'LR02', request)
+                # func_save_log_data(start_date, end_date, class_id, lecture_id,
+                #                    request.user.last_name + request.user.first_name,
+                #                    member_name, GROUP_SCHEDULE_TYPE, 'LR02', request)
 
+                log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
+                                 from_member_name=request.user.last_name + request.user.first_name,
+                                 to_member_name=member_name,
+                                 class_tb_id=class_id,
+                                 lecture_tb_id=lecture_id,
+                                 log_info='[' + group_info.get_group_type_cd_name() + '] '
+                                          + group_info.name + ' 반복 일정',
+                                 log_how='취소',
+                                 log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                log_data.save()
                 push_lecture_id.append(lecture_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
-                                    + '~' + str(end_date) + ' 그룹 반복일정을 취소했습니다')
+                                    + '~' + str(end_date) + ' [' + repeat_schedule_info.get_group_type_cd_name() + '] '
+                                    + repeat_schedule_info.get_group_name() + ' 반복 일정을 취소했습니다')
 
     if error is None:
 
@@ -2200,7 +2278,8 @@ def delete_group_repeat_schedule_logic(request):
         log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 반복 일정', log_how='취소',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 반복 일정',
+                         log_how='취소',
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
         context['push_lecture_id'] = push_lecture_id

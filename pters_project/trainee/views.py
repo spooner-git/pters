@@ -402,7 +402,7 @@ def add_trainee_schedule_logic(request):
             push_message.append(request.user.last_name + request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' ['+schedule_info.get_group_type_name()+']'
+                                + ' ['+schedule_info.get_group_type_cd_name()+']'
                                 + schedule_info.get_group_name() + ' 일정을 등록했습니다')
 
         context['push_class_id'] = push_class_id
@@ -449,7 +449,7 @@ def delete_trainee_schedule_logic(request):
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
         group_name = schedule_info.get_group_name()
-        group_type_name = schedule_info.get_group_type_name()
+        group_type_name = schedule_info.get_group_type_cd_name()
         if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
             error = '이미 지난 일정입니다.'
 
@@ -1299,7 +1299,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
                              lecture_tb_id=lecture_id,
-                             log_info='['+group_schedule_info.get_group_type_name() + ']'
+                             log_info='['+group_schedule_info.get_group_type_cd_name() + ']'
                                       + group_schedule_info.get_group_name() + ' 일정', log_how='등록',
                              log_detail=str(start_date) + '/' + str(end_date),  use=USE)
             log_data.save()
@@ -1361,7 +1361,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
                 try:
                     state_cd_name = CommonCdTb.objects.get(common_cd=pt_repeat_schedule_info.state_cd)
                 except ObjectDoesNotExist:
-                    error = '반복일정의 상태를 불러오지 못했습니다.'
+                    error = '반복 일정의 상태를 불러오지 못했습니다.'
                 if error is None:
                     pt_repeat_schedule_info.state_cd_nm = state_cd_name.common_cd_nm
 

@@ -38,7 +38,7 @@
       "group_schedule_current_member_num":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_group_type_cd_name":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_group_type_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_start_datetime":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_str_start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_end_datetime":
