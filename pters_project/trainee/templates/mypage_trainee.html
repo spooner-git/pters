@@ -285,11 +285,12 @@
         var ptRepeatScheduleIdArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.repeat_schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleTypeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.repeat_type_cd }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleWeekInfoArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.week_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleStartDateArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.start_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleEndDateArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.end_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleStartDateArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_str_start_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleEndDateArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_str_end_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleStartTimeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.start_time }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleEndTimeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.end_time }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var ptRepeatScheduleTimeDurationArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.time_duration }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
+        var ptRepeatScheduleGroupTypeNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_type_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
         var next_schedule = ['{{ next_schedule }}'];
         var lt_res_01 =  ['{{ lt_res_01 }}'];

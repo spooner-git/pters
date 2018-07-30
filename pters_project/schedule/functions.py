@@ -653,7 +653,7 @@ def func_get_trainer_schedule(context, class_id, start_date, end_date):
         error = '강좌 정보를 불러오지 못했습니다.'
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
-    func_get_trainer_group_schedule(context, class_id, start_date, end_date, '')
+    func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
 
     if error is None:
         class_info.schedule_check = 0
@@ -663,19 +663,7 @@ def func_get_trainer_schedule(context, class_id, start_date, end_date):
 
 
 def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
-    pt_schedule_list = []
-    # PT 일정 조회
-    # 강사에 해당하는 강좌 정보 불러오기
-    # lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
-
-    # for lecture_datum_info in lecture_data:
-    #     lecture_datum = lecture_datum_info.lecture_tb
-    #     # 강좌별로 연결된 PT 스케쥴 가져오기
-    #     pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-    #                                                  lecture_tb=lecture_datum.lecture_id,
-    #                                                  en_dis_type=ON_SCHEDULE_TYPE,
-    #                                                  start_dt__gte=start_date,
-    #                                                  start_dt__lt=end_date, use=USE).order_by('start_dt')
+    # pt_schedule_list = []
     # PT 스케쥴 정보 셋팅
     pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                  lecture_tb__isnull=False,
@@ -684,73 +672,26 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
                                                  en_dis_type=ON_SCHEDULE_TYPE,
                                                  start_dt__gte=start_date,
                                                  start_dt__lt=end_date, use=USE).order_by('start_dt')
-    idx = 0
-    for pt_schedule_info in pt_schedule_data:
-        # lecture schedule id 셋팅
-        idx += 1
-        # pt_schedule_info.start_dt = str(pt_schedule_info.start_dt)
-        # pt_schedule_info.end_dt = str(pt_schedule_info.end_dt)
-        pt_schedule_info.idx = idx
-        # try:
-        #     member_info = LectureTb.objects.get(lecture_id=pt_schedule_info.lecture_tb_id)
-        # except ObjectDoesNotExist:
-        #     error = None
-        # pt_schedule_info.member_name = member_info.member.name
-        # pt_schedule_info.member_id = member_info.member.member_id
-        # pt_schedule_info.member_name = pt_schedule_info.lecture_tb.member.name
-        # pt_schedule_info.member_id = pt_schedule_info.lecture_tb.member.member_id
-        # if pt_schedule_info.note is None:
-        #     pt_schedule_info.note = ''
-        # if pt_schedule_info.state_cd == 'PE':
-        #     pt_schedule_info.finish_check = 1
-        # else:
-        #     pt_schedule_info.finish_check = 0
-        pt_schedule_list.append(pt_schedule_info)
+    # idx = 0
+    # for pt_schedule_info in pt_schedule_data:
+    #     idx += 1
+    #     pt_schedule_info.idx = idx
+    #     pt_schedule_list.append(pt_schedule_info)
 
-    context['pt_schedule_data'] = pt_schedule_list
+    context['pt_schedule_data'] = pt_schedule_data
 
 
 def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
-    # group_schedule_list = []
-    # 강좌별로 연결된 그룹 스케쥴 가져오기
+    group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
+                                                    lecture_tb__isnull=True,
+                                                    en_dis_type=ON_SCHEDULE_TYPE,
+                                                    start_dt__gte=start_date,
+                                                    start_dt__lt=end_date, use=USE)
     if group_id is None or group_id == '':
-        group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                        group_tb__isnull=False,
-                                                        lecture_tb__isnull=True,
-                                                        en_dis_type=ON_SCHEDULE_TYPE,
-                                                        start_dt__gte=start_date,
-                                                        start_dt__lt=end_date, use=USE).order_by('start_dt')
+        group_schedule_data = group_schedule_data.filter(group_tb__isnull=False).order_by('start_dt')
     else:
-        group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                        group_tb=group_id,
-                                                        lecture_tb__isnull=True,
-                                                        en_dis_type=ON_SCHEDULE_TYPE,
-                                                        start_dt__gte=start_date,
-                                                        start_dt__lt=end_date, use=USE).order_by('start_dt')
+        group_schedule_data = group_schedule_data.filter(group_tb_id=group_id).order_by('start_dt')
 
-    # idx = 0
-    # for group_schedule_info in group_schedule_data:
-        # lecture schedule id 셋팅
-        # idx += 1
-        # group_schedule_info = group_schedule_info
-        # if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
-        #     schedule_current_member_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-        #                                                             group_tb_id=group_schedule_info.group_tb.group_id,
-        #                                                             lecture_tb__isnull=False,
-        #                                                             group_schedule_id=group_schedule_info.schedule_id,
-        #                                                             use=USE).count()
-        #     group_schedule_info.current_member_num = schedule_current_member_num
-
-        # group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-        # group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-        # if group_schedule_info.note is None:
-        #     group_schedule_info.note = ''
-        # 끝난 스케쥴인지 확인
-        # if group_schedule_info.state_cd == 'PE':
-        #     group_schedule_info.finish_check = 1
-        # else:
-        #     group_schedule_info.finish_check = 0
-        # group_schedule_list.append(group_schedule_info)
     context['group_schedule_data'] = group_schedule_data
 
 
@@ -764,25 +705,13 @@ def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
 
 def func_get_trainer_off_repeat_schedule(context, class_id):
     error = None
-    off_repeat_schedule_list = []
+    # off_repeat_schedule_list = []
 
     # 강사 클래스의 반복일정 불러오기
     off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                en_dis_type=OFF_SCHEDULE_TYPE)
 
-    for off_repeat_schedule_info in off_repeat_schedule_data:
-        # off_repeat_schedule_info.start_date = str(off_repeat_schedule_info.start_date)
-        # off_repeat_schedule_info.end_date = str(off_repeat_schedule_info.end_date)
-        state_cd_name = None
-        try:
-            state_cd_name = CommonCdTb.objects.get(common_cd=off_repeat_schedule_info.state_cd)
-        except ObjectDoesNotExist:
-            error = '반복일정 정보를 불러오지 못했습니다.'
-        if error is None:
-            off_repeat_schedule_info.state_cd_nm = state_cd_name.common_cd_nm
-        off_repeat_schedule_list.append(off_repeat_schedule_info)
-
-    context['off_repeat_schedule_data'] = off_repeat_schedule_list
+    context['off_repeat_schedule_data'] = off_repeat_schedule_data
 
     return error
 

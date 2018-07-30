@@ -524,19 +524,6 @@
 {% endblock %}
 
 {% block local_js_footer %}
-    <!-- for db by hk.kim 170805-->
-    <script>
-        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-
-        var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-    </script>
-
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
@@ -626,8 +613,11 @@
             $('._nameInfo').text(jsondata.name)
             $('._phoneInfo').text(jsondata.phone)
             $('._birthInfo').text(jsondata.birthday_dt)
-            var countryname = $('option[value='+jsondata.country+']').text()
-            $('._regionInfo').text(countryname+' '+jsondata.address)
+            console.log(jsondata.country)
+            if(jsondata.country != ""){
+                var countryname = $('option[value='+jsondata.country+']').text()
+                $('._regionInfo').text(countryname+' '+jsondata.address)
+            }
 
             var repeat_info_dict= { 'KOR':
                 {'DD':'매일', 'WW':'매주', '2W':'격주',
@@ -640,6 +630,7 @@
                         'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
             }
             var repeatList = []
+
             if(jsondata.off_repeat_schedule_type_data.length>0){
                 for(var i=0; i<jsondata.off_repeat_schedule_type_data.length; i++){
                     var off_type = repeat_info_dict[Options.language][jsondata.off_repeat_schedule_type_data[0]]

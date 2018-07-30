@@ -196,7 +196,7 @@ def get_sales_info(class_id, month_first_day):
                           'price': refund_price_info.lecture_tb.refund_price}
             price_list.append(price_info)
 
-        price_list.sort(key=lambda x: x['date'])
+        price_list.sort(key=lambda x: x['date'], reverse=True)
 
     context = {'error': error, 'price_data': price_list}
 

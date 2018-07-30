@@ -1901,6 +1901,7 @@ function ajaxClassTime(use, callfunction){
 
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
