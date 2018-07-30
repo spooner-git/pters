@@ -2005,16 +2005,6 @@ function hide_if_dont_have_class_type(jsondata){
 
 
 
-function beforeSend(){
-    $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-    $('.ajaxloadingPC').show();
-}
-
-function completeSend(){
-    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-    $('.ajaxloadingPC').hide();
-}
-
 // function clear_badge_counter(){
 //     $.ajax({
 //         url:'/login/clear_badge_counter/',
