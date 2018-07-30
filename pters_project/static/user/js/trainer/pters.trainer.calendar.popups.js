@@ -40,9 +40,9 @@
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             if(bodywidth > 600){
-                $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+                $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
            }else{
-                $(this).css({'height':thisHeight, 'width':'98.5%', 'z-index':thisZindex, 'border':'0'}); 
+                $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
            }
             
             if($memberName.hasClass('_hided')){
