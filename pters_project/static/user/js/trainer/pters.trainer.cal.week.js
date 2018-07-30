@@ -1277,7 +1277,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" style="height:'+planHeight+'px;'+
                                                  'top:'+planLocation+'px;'+
                                        '">'+
-                                            '<span class="memberName '+hideornot+'">'+planCode+memberName+' </span>'+
+                                            '<span class="memberName '+hideornot+'">'+
+                                                '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                            ' </span>'+
                                             '<span class="memberTime '+hideornot+'">'+ 
                                                 '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                             '</span>'+
@@ -1307,8 +1309,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                             '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
                                                     groupstatus+
-                                                    '</span>'+'<span class="memberTime">'+ 
-                                                        '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+                                            '<span class="memberTime">'+ 
+                                                    '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                             '</span>'+
 
                                     '</div>'
@@ -1331,7 +1334,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                        '" style="height:'+planHeight+'px;'+
                                                  'top:'+planLocation+'px;'+
                                        '">'+
-                                            '<span class="memberName '+hideornot+'">'+planCode+memberName+' </span>'+
+                                            '<span class="memberName '+hideornot+'">'+
+                                                '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                            ' </span>'+
                                             '<span class="memberTime '+hideornot+'">'+ 
                                                 '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                             '</span>'+
@@ -1795,7 +1800,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
         if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
-            var innerNameTag = '<span class="memberName '+hideornot+'">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>'
+            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>'
             planhtml = '<div class-time="'+planArray.join('_')+
                         '" class-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+
@@ -1832,7 +1837,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                        '</div>'
             date_sorted[planStart].push(planhtml)
         }else if(option == 'off'){
-            var innerNameTag = '<span class="memberName '+hideornot+'">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
             planhtml = '<div off-time="'+planArray.join('_')+
                         '" off-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+
