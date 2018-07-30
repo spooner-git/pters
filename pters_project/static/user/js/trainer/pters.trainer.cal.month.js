@@ -252,13 +252,16 @@ $(document).ready(function(){
             var selectedDate = $('.popup_ymdText').text()
             var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
             var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
+            var selectedETime = $(this).find('.planchecktime').text().split('-')[1].split(':')[0]
+            var selectedEMinute = $(this).find('.planchecktime').text().split('-')[1].split(':')[1]
             var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
             var selectedMemo = $(this).attr('data-memo')
             if($(this).attr('data-memo') == undefined){
                 selectedMemo = ""
             }
+            var stime_text = time_format_to_hangul(add_time(selectedTime+':'+selectedMinute,'00:00'));
+            var etime_text = time_format_to_hangul(add_time(selectedETime+':'+selectedEMinute,'00:00'));
             var group_type_name = $(this).attr('data-group-type-cd-name');
-            var infoText2 = '['+group_type_name+']'+name+' '+selectedTime+':'+selectedMinute+yourplan
             //$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
             $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
             $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
@@ -303,12 +306,12 @@ $(document).ready(function(){
 
             $('#subpopup_addByList_plan').hide()
             if($(this).attr('data-grouptype') == "group"){
-                $('#popup_info2').text(infoText2);
+                $('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
                     'data-groupid': $(this).attr('data-groupid'),
                     'group-schedule-id':$(this).attr('schedule-id'),
                 })
-                $("#popup_sign_img").css("display","none");
+                //$("#popup_sign_img").css("display","none");
                 //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
                 if(bodywidth > 600){
                     toggleGroupParticipantsList('on')
@@ -317,7 +320,7 @@ $(document).ready(function(){
                 }
                 schedule_on_off = 2;
             }else{
-                $('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
+                $('#popup_info2').html(selectedPerson+' 님'+ '<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').hide()
                 toggleGroupParticipantsList('off')
                 schedule_on_off = 1;
