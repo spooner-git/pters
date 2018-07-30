@@ -259,13 +259,14 @@ $(document).ready(function(){
         $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 
         var schedule_finish_check = $(this).attr('data-schedule-check');
-        console.log($(this))
-        console.log($('#popup_text1'))
+
+        var currentDate = today_YY_MM_DD;
+        var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(currentDate, Options.availDate),'');
         if(schedule_finish_check=="0"){
             $("#popup_btn_complete").show()
             $("#popup_text1").css("display","block")
             $("#popup_sign_img").css("display","none")
-            if(selectedDateyyyymmdd < todayYYYYMMDD){
+            if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate)){
                 $("#popup_text1").css("display","none")
             }
         }
