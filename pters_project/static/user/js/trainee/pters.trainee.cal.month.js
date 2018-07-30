@@ -910,6 +910,10 @@ $(document).ready(function(){
                 //}
             }
         }
+        console.log(jsondata)
+        console.log(htmlTojoin.length)
+        console.log(jsondata.lecture_reg_count)
+        console.log(jsondata.lecture_reg_count[0])
         if(htmlTojoin.length == 0){
             htmlTojoin.push('<div style="text-align:center;margin-top:18px;margin-bottom:18px;font-weight:bold;">예약 가능한 일정이 없습니다.</div>')
             if(jsondata.lecture_reg_count[0] == 0){
