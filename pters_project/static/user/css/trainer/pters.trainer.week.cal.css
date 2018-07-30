@@ -371,7 +371,7 @@ img,a,div,span,p{
 .classTime{
 	position: absolute;
 	top: 0px;
-	width: 98.5%;
+	width: 99%;
 	background: #fbf3bd;
 	z-index: 100;
 	cursor: pointer;
@@ -398,7 +398,7 @@ img,a,div,span,p{
 .offTime{
 	position: absolute;
 	top: 0px;
-	width: 98.5%;
+	width: 99%;
 	background: #e2e2e2;
 	opacity: 0.9;
 	z-index: 100;
@@ -420,7 +420,7 @@ img,a,div,span,p{
 .groupTime{
 	position: absolute;
 	top: 0px;
-	width: 98.5%;
+	width: 99%;
 	background: #ffacb7;
 	z-index: 100;
 	cursor: pointer;
@@ -706,7 +706,7 @@ img,a,div,span,p{
 	}
 
 	.classTime,.offTime,.classTime_checked{
-		width: 98.5%;
+		width: 99%;
 	}
 
 	.memberName{
