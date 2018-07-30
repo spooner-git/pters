@@ -422,10 +422,10 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         if class_id is None or class_id == '':
             error = '강사 정보를 불러오지 못했습니다.'
 
-
         if error is None:
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
+                context['center_name'] = class_info.get_center_name()
             except ObjectDoesNotExist:
                 error = '강좌 정보를 불러오지 못했습니다.'
 
