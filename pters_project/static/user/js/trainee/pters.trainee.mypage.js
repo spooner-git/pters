@@ -107,6 +107,7 @@ $(document).ready(function(){
                 {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                     'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
         }
+        var repeatList = []
 
         if(ptRepeatScheduleTypeArray.length>0){
             for(var i=0; i<ptRepeatScheduleTypeArray.length; i++){
@@ -126,27 +127,38 @@ $(document).ready(function(){
                     }
                     return repeat_day_info
                 };
+                var trainee_repeat_group_type_name = ptRepeatScheduleGroupTypeNameArray[i];
                 var trainee_repeat_time = time_format_to_hangul(ptRepeatScheduleStartTimeArray[i])
+                var trainee_repeat_end_time = time_format_to_hangul(ptRepeatScheduleEndTimeArray[i])
                 var trainee_repeat_end = '반복종료 : '+ date_format_to_hangul(ptRepeatScheduleEndDateArray[i])
                 var trainee_repeat_day = trainee_repeat_days()
                 $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
-                $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
-                    +trainee_repeat_day + ' '
-                    +trainee_repeat_time)
-                $('._Repeat_Info span').text(trainee_repeat_end)
+                // $('._Repeat_Info p:nth-child(2)').text('['+trainee_repeat_group_type_name+']'+trainee_repeat_type+' '
+                //     +trainee_repeat_day + ' '
+                //     +trainee_repeat_time)
+                // $('._Repeat_Info span').text(trainee_repeat_end)
+
+                var repeatText = '<span style="color:#fe4e65;">['+trainee_repeat_group_type_name+']</span>' +trainee_repeat_type+' '
+                + trainee_repeat_day + ' ' +trainee_repeat_time +'~'+trainee_repeat_end_time+'<br/><span>'+trainee_repeat_end +'</span><br/>';
+                repeatList.push(repeatText)
+                $('._Repeat_Info p:nth-child(2)').html(repeatList.join(''))
             }
 
         }else{
+            var trainee_repeat_group_type_name = '';
             var trainee_repeat_type = ''
             var trainee_repeat_day = '설정된 반복일정이 없습니다.'
             var trainee_repeat_time = ''
             var trainee_repeat_end = ''
-            $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
-            $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
-                +trainee_repeat_day + ' '
-                +trainee_repeat_time)
-            $('._Repeat_Info span').text(trainee_repeat_end)
+            // $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
+            // $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_group_type_name+' '+trainee_repeat_type+' '
+            //     +trainee_repeat_day + ' '
+            //     +trainee_repeat_time)
+            // $('._Repeat_Info span').text(trainee_repeat_end)
+                var repeatText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>'
+                $('._Repeat_Info p:nth-child(2)').html(repeatText)
         }
+
     }
 
     $('.mode_switch_button').click(function(){

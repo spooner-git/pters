@@ -14,33 +14,6 @@ from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 
 
-class AuthLectureManager(models.Manager):
-    use_for_related_fields = True
-
-    def check_authorized(self, class_id):
-        lecture_tb_info = self
-
-        try:
-            ClassLectureTb.objects.get(class_tb_id=class_id, lecture_tb_id=self.lecture_id,
-                                       auth_cd='VIEW', use=USE)
-        except ObjectDoesNotExist:
-            lecture_tb_info = None
-
-        return lecture_tb_info
-
-
-class ClassMemberListManager(models.Manager):
-    use_for_related_fields = True
-
-    def get_member_list(self, class_id):
-        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                           lecture_tb__use=USE,
-                                                           use=USE).order_by('lecture_tb__member__name')
-        class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
-
-        return class_lecture_data
-
-
 class ClassTb(TimeStampedModel):
     class_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -109,8 +82,6 @@ class LectureTb(TimeStampedModel):
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', default=1)
     note = models.CharField(db_column='NOTE', max_length=255, blank=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
-
-    objects = AuthLectureManager()
 
     class Meta:
         managed = False

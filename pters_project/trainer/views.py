@@ -413,35 +413,21 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         new_member_num = 0
         total_member_num = 0
         current_total_member_num = 0
-        center_name = '없음'
 
         context['total_member_num'] = 0
         context['current_total_member_num'] = 0
         context['end_schedule_num'] = 0
         context['new_member_num'] = 0
-        off_repeat_schedule_data = None
-        user_member_info = None
 
         if class_id is None or class_id == '':
             error = '강사 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            try:
-                user_member_info = MemberTb.objects.get(member_id=request.user.id)
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
                 error = '강좌 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            center_name = class_info.get_center_name()
-        if error is None:
-            off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                       en_dis_type=OFF_SCHEDULE_TYPE)
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
@@ -492,21 +478,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['current_total_member_num'] = current_total_member_num
             context['new_member_num'] = new_member_num
 
-        # if error is None:
-        #     end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-        #                                                  en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE', use=USE).count()
-        if error is None:
-            if user_member_info.birthday_dt is None:
-                user_member_info.birthday_dt = '미입력'
-            else:
-                user_member_info.birthday_dt = str(user_member_info.birthday_dt)
-            if user_member_info.country is None:
-                user_member_info.country = '미입력'
-            if user_member_info.address is None:
-                user_member_info.address = '미입력'
-
-            user_member_info.reg_dt = str(user_member_info.reg_dt).split('.')[0]
-
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                      en_dis_type=ON_SCHEDULE_TYPE,
                                                      start_dt__gte=now, use=USE).order_by('start_dt')
@@ -531,10 +502,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context['current_payment_data'] = current_payment_data
         context['next_schedule_start_dt'] = str(next_schedule_start_dt)
         context['next_schedule_end_dt'] = str(next_schedule_end_dt)
-        context['member_info'] = user_member_info
         context['end_schedule_num'] = end_schedule_num
-        context['center_name'] = center_name
-        context['off_repeat_schedule_data'] = off_repeat_schedule_data
 
         return render(request, self.template_name, context)
 
@@ -3685,16 +3653,6 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
             # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                          start_date__gte=month_first_day,
             #                                          start_date__lt=next_month_first_day, use=USE).count()
-
-        if error is None:
-            if user_member_info.birthday_dt is None:
-                user_member_info.birthday_dt = '미입력'
-            else:
-                user_member_info.birthday_dt = str(user_member_info.birthday_dt)
-            if user_member_info.country is None:
-                user_member_info.country = '미입력'
-            if user_member_info.address is None:
-                user_member_info.address = '미입력'
 
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
                                                      en_dis_type=ON_SCHEDULE_TYPE,
