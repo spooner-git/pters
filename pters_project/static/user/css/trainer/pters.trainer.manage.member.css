@@ -921,6 +921,7 @@ select:focus > option:checked {
 	color: #282828;
 	border-bottom:1px solid #cccccc;
 	height: 55px;
+	margin-top: 1px;
 }
 #memberRepeat_info_PC p:nth-child(1), #memberRepeat_info p:nth-child(1){
 	color: #fe4e65;
