@@ -13,6 +13,9 @@ $(document).ready(function(){
     })
     //ESC키를 눌러서 팝업 닫기
 
+    $(document).on('click','.phonesms',function(e){
+        e.stopPropagation();
+    })
 
     $('form button').click(function(e){
         e.preventDefault()

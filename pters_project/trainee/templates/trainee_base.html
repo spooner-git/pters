@@ -474,8 +474,7 @@
     }
 
     function open_lecture_select_popup(){
-        $('#popup_lecture_select').fadeIn('fast')
-        $('#shade2').show()
+        $('#popup_lecture_select').show()
         ajax_read_lecture_info_from_db()
     }
 
@@ -551,8 +550,7 @@
     })
 
     $('.button_close_popup').click(function(){
-        $(this).parents('div._popup').fadeOut('fast')
-        $('#shade2').hide()
+        $(this).parents('div._popup').hide()
     })
 
     function lecture_check(lecture_id, check, class_id){

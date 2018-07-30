@@ -160,55 +160,57 @@ $(document).ready(function(){
         var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
         clicked_td_date_info = yy+'_'+mm+'_'+dd
         click_check = 0
-        if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
-            $('#shade2').css({'display':'block'});
-            $('#ng_popup_text').html('<p>현재시간은 일정 예약변경이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약변경 가능 시간대<br> '+availableStartTime+'시 ~ '+availableEndTime+'시</p>')
-            $('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
-                //$(this).fadeOut(5000)
-            })
-        }else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
-            $('.cancellimit_time').text(Options.cancellimit+"시간 전")
-            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
-            $('.startTime_time').text(startTime_to_hangul(Options.startTime))
-            plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-            $('.plan_raw_add').hide()
-            shade_index(100)
-             popup_locate_center_of_display('#cal_popup_plancheck');
-            adjust_starttime_list_height()
-        }else if($(this).hasClass('available')){
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
-            $('.cancellimit_time').text(Options.cancellimit+"시간 전")
-            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
-            $('.startTime_time').text(startTime_to_hangul(Options.startTime))
-            plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-            console.log($('#countRemainData span:first-child').text())
-            if($('#countRemainData span:first-child').text() == '0'){
+        if(!$(this).hasClass('prevDates') && !$(this).hasClass('nextDates')){
+            if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
+                $('#shade2').css({'display':'block'});
+                $('#ng_popup_text').html('<p>현재시간은 일정 예약변경이 불가한 시간입니다.</p><p style="color:#fe4e65;font-size=13px;">예약변경 가능 시간대<br> '+availableStartTime+'시 ~ '+availableEndTime+'시</p>')
+                $('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
+                    //$(this).fadeOut(5000)
+                })
+            }else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
+                $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
+                $('.cancellimit_time').text(Options.cancellimit+"시간 전")
+                $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
+                $('.startTime_time').text(startTime_to_hangul(Options.startTime))
+                plancheck(yy+'_'+mm+'_'+dd, initialJSON)
                 $('.plan_raw_add').hide()
-            }
-            else{
-                $('.plan_raw_add').show()
-            }
-            shade_index(100);
-            popup_locate_center_of_display('#cal_popup_plancheck');
-            adjust_starttime_list_height();
-        }else{
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-            $('.cancellimit_time').text(Options.cancellimit+"시간 전");
-            $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-            $('.startTime_time').text(startTime_to_hangul(Options.startTime));
-            plancheck(yy+'_'+mm+'_'+dd, initialJSON);
-            $('.plan_raw_add').hide();
-            shade_index(100);
-            popup_locate_center_of_display('#cal_popup_plancheck');
-            adjust_starttime_list_height();
-        }/*else{
-         shade_index(100)
-         $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
-         $('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
-         //$(this).fadeOut(2800)
-         })
-        }*/
+                shade_index(100)
+                 popup_locate_center_of_display('#cal_popup_plancheck');
+                adjust_starttime_list_height()
+            }else if($(this).hasClass('available')){
+                $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
+                $('.cancellimit_time').text(Options.cancellimit+"시간 전")
+                $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)))
+                $('.startTime_time').text(startTime_to_hangul(Options.startTime))
+                plancheck(yy+'_'+mm+'_'+dd, initialJSON)
+                console.log($('#countRemainData span:first-child').text())
+                if($('#countRemainData span:first-child').text() == '0'){
+                    $('.plan_raw_add').hide()
+                }
+                else{
+                    $('.plan_raw_add').show()
+                }
+                shade_index(100);
+                popup_locate_center_of_display('#cal_popup_plancheck');
+                adjust_starttime_list_height();
+            }else{
+                $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
+                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
+                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                plancheck(yy+'_'+mm+'_'+dd, initialJSON);
+                $('.plan_raw_add').hide();
+                shade_index(100);
+                popup_locate_center_of_display('#cal_popup_plancheck');
+                adjust_starttime_list_height();
+            }/*else{
+             shade_index(100)
+             $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')
+             $('#ng_popup').fadeIn(500,function(){ // 팝업[일정은 오늘 날짜 기준 2주앞만 설정 가능합니다.]
+             //$(this).fadeOut(2800)
+             })
+            }*/
+        }
     })
 
     function adjust_starttime_list_height(){
@@ -1787,10 +1789,11 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
     var count_date_info = classInfoProcessed(jsondata)
     var len = jsondata.classTimeArray_start_date.length;
     var already_added = []
+    var startdate_dataArray = jsondata.classTimeArray_start_date.sort();
     for(var i=0; i<len; i++){
         var finish = jsondata.scheduleFinishArray[i]
         var memo = jsondata.scheduleNoteArray[i]
-        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.classTimeArray_start_date[i].split(' ')[0], '_')
+        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(startdate_dataArray[i].split(' ')[0], '_')
         var arr = classDate.split('_')
         var yy = arr[0]
         var mm = arr[1]
@@ -1833,35 +1836,36 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
             var finishImg = '<div class="monthplans"><span>'+classTime+groupname+'</span></div>'
         }
 
-        if(already_added.indexOf(classDate) != -1){ //날짜 및에 일정 카운트가 여러개 출력되는 것을 방지
+        if(already_added.indexOf(classDate) != -1){ //날짜 밑에 일정 카운트가 여러개 출력되는 것을 방지
             var month_daily_planview = finishImg
         }else{
             var month_daily_planview = finishImg + mobile
         }
         already_added.push(classDate)
-
+        
+        
         if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
             $("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i]})
             $("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
             $("td[data-date="+classDate+"] div._classDate").addClass('greydateMytime')
             if($("td[data-date="+classDate+"] div._classTime div").length <3){
                 $("td[data-date="+classDate+"] div._classTime").addClass('balloon').append(month_daily_planview)
-            }else{
-                $("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
+            }else if($("td[data-date="+classDate+"] div._classTime div").length == 3 ){
+                $("td[data-date="+classDate+"] div._classTime").append('<div><span class="monthplans">…</span></div>')
             }
-
-            //$("td[data-date="+classDate+"] div.memo").addClass('greymemo').text(memo)
         }else{
             $("td[data-date="+classDate+"]").attr({'schedule-id':scheduleIdArray[i]})
             $("td[data-date="+classDate+"]").attr('data-schedule-check',scheduleFinishArray[i])
             $("td[data-date="+classDate+"] div._classDate").addClass('dateMytime')
             if($("td[data-date="+classDate+"] div._classTime div").length <3){
                 $("td[data-date="+classDate+"] div._classTime").addClass('blackballoon').append(month_daily_planview)
-            }else{
-                $("td[data-date="+classDate+"] div._classTime").append('<div><span>…</span></div>')
+            }else if($("td[data-date="+classDate+"] div._classTime div").length == 3 ){
+                $("td[data-date="+classDate+"] div._classTime").append('<div><span class="monthplans">…</span></div>')
             }
-            //$("td[data-date="+classDate+"] div.memo").text(memo)
+            
         }
+        
+
 
     }
 }
@@ -1906,7 +1910,6 @@ function groupDates(jsondata){	//그룹 PT가 있는 날짜에 표기
 }
 
 function classInfoProcessed(jsondata){ //일정 갯수 세기
-
     var len = jsondata.scheduleIdArray.length;
     var len2 = jsondata.group_schedule_id.length;
     var countResult = [];
@@ -1917,26 +1920,12 @@ function classInfoProcessed(jsondata){ //일정 갯수 세기
     var datasum = [];
     for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
         summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
-        /*if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-         */	datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
-        /*}else{
-
-         }*/
+        datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
     }
+    console.log(datasum)
     for(var i in summaryArray){ //개인일정 중복 제거된 배열
         summaryArrayResult.push(i)
     }
-
-    /*
-     for(var i=0; i<len2; i++){ //그룹 객체화로 중복 제거
-     summaryArray_group[jsondata.group_schedule_start_datetime[i].split(' ')[0]] = jsondata.group_schedule_start_datetime[i].split(' ')[0]
-     datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0])
-     }
-     for(var i in summaryArray_group){ //그룹 중복 제거된 배열
-     summaryArrayResult.push(i)
-     }
-     */
-
 
     var len2 = summaryArrayResult.length;
     for(var i=0; i<len2; i++){
@@ -1948,7 +1937,6 @@ function classInfoProcessed(jsondata){ //일정 갯수 세기
             }
         }
     }
-
     return {"countResult":countResult, "dateResult":summaryArrayResult}
 }
 
@@ -2016,16 +2004,6 @@ function hide_if_dont_have_class_type(jsondata){
 }
 
 
-
-function beforeSend(){
-    $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-    $('.ajaxloadingPC').show();
-}
-
-function completeSend(){
-    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-    $('.ajaxloadingPC').hide();
-}
 
 // function clear_badge_counter(){
 //     $.ajax({
@@ -2164,11 +2142,11 @@ function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 
     //1. 현재달에 전달 마지막 부분 채우기
     if(Month>1){ //2~12월
         for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
-            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
+            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date="'+Year+'_'+(Month-1)+'_'+j+'_past">'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
         }
     }else if(Month==1){ //1월
         for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
-            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
+            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates"'+' data-date="'+(Year-1)+'_'+(Month+11)+'_'+j+'+past">'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>');
         }
     }
 
@@ -2200,18 +2178,18 @@ function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 
     if(howmanyWeek5<=7 && howmanyWeek6==0){
         for (var i=1; i<=7-howmanyWeek5;i++){
             if(Month<12){
-                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
+                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date="'+Year+'_'+(Month+1)+'_'+i+'_next">'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
             }else if(Month==12){
-                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
+                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date="'+(Year+1)+'_'+(Month-11)+'_'+i+'_next">'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
             }
         }
         ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
     }else if(howmanyWeek6<7 && howmanyWeek6>0){
         for (var i=1; i<=7-howmanyWeek6;i++){
             if(Month<12){
-                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
+                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date="'+Year+'_'+(Month+1)+'_'+i+'_next">'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
             }else if(Month==12){
-                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
+                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates"'+' data-date="'+(Year+1)+'_'+(Month-11)+'_'+i+'_next">'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div><div class="memo"></div>'+'</td>')
             }
         }
     }
