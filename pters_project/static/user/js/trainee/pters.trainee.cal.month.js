@@ -910,10 +910,6 @@ $(document).ready(function(){
                 //}
             }
         }
-        console.log(jsondata)
-        console.log(htmlTojoin.length)
-        console.log(jsondata.lecture_reg_count)
-        console.log(jsondata.lecture_reg_count[0])
         if(htmlTojoin.length == 0){
             htmlTojoin.push('<div style="text-align:center;margin-top:18px;margin-bottom:18px;font-weight:bold;">예약 가능한 일정이 없습니다.</div>')
             if(jsondata.lecture_reg_count[0] == 0){
@@ -925,6 +921,11 @@ $(document).ready(function(){
             }
         }
         $htmlTarget.html(htmlTojoin.join(''))
+
+        // 그룹에 예약 가능 일정이 있고 클래스에 예약가능 일정이 없는 경우 submitBtn hide 되는 문제 해결 - hkkim 18.07.30
+        if($('.ptersCheckbox').length > 0){
+            $('#submitBtn').show()
+        }
     }
 
 

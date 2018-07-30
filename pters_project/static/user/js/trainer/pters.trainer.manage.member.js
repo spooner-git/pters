@@ -2472,9 +2472,9 @@ function memberListSet (type,option,Reverse, jsondata){
         count = remove_front_zeros(count);
         regcount = remove_front_zeros(regcount);
 
-        var phonenum = '<a class="phonenum" href="tel://'+phone+'">'+phone+'</a>';
-        var phoneimage = '<a href="tel://'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
-        var smsimage = '<a href="sms://'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
+        var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
+        var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
+        var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
         var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
         var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
