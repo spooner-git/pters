@@ -1114,7 +1114,8 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         }
         var stime = stime1+'_'+sminute
         var etime = etime1+'_'+eminute
-        var name = jsondata.classTimeArray_member_name[i]
+        // var name = '[1:1 레슨]'+jsondata.classTimeArray_member_name[i]
+        var name = ''+jsondata.classTimeArray_member_name[i]
         var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
         if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
             dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_/'+memoArray)
@@ -1131,7 +1132,11 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
             var sminute = splited[1]
             var etime = Number(splited[2])
             var eminute = splited[3]
-            var name = splited[4]
+            var name = splited[4];
+            // var groupo_type_cd_name = '';
+            if(splited[14] != ''){
+                name = '['+splited[14]+'] '+splited[4];
+            }
             var morningday = ""
             if(stime==0 & dateplans[i-2]==undefined){
                 var morningday = "오전"

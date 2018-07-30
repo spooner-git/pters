@@ -754,6 +754,7 @@ img,a,div,span,p{
 	font-size: 13px;
 	font-weight: bold;
 	cursor: pointer;
+	overflow: hidden;
 }
 
 .popup_inner_month{
@@ -782,6 +783,7 @@ img,a,div,span,p{
 	position: relative;
 	width: 46%;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .plancheckmorningday{

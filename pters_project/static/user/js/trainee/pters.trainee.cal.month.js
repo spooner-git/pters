@@ -964,7 +964,7 @@ $(document).ready(function(){
             var groupmax = jsondata.group_schedule_max_member_num[i]
             var groupcurrent = jsondata.group_schedule_current_member_num[i]
             var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
-            var name = '['+jsondata.group_schedule_group_type_cd_name[i]+']'+jsondata.group_schedule_group_name[i]+groupParticipants
+            var name = '['+jsondata.group_schedule_group_type_cd_name[i]+'] '+jsondata.group_schedule_group_name[i]+groupParticipants
             if(stime1.length<2){
                 var stime1 = '0'+stime1
             }else if(stime1 == '24'){
@@ -1002,7 +1002,7 @@ $(document).ready(function(){
             }
             var stime = stime1+'_'+sminute
             var etime = etime1+'_'+eminute
-            var name = "[1:1 레슨]"
+            var name = "[1:1 레슨] "
             var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
             if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
                 dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
