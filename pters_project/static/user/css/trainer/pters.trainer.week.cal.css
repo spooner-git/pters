@@ -470,7 +470,7 @@ img,a,div,span,p{
 	display: none;
 }
 
-.groupnametag{
+.memberName, .groupnametag{
 	overflow:hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

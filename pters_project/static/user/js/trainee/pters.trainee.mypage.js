@@ -154,8 +154,8 @@ $(document).ready(function(){
                 //     +trainee_repeat_time)
                 // $('._Repeat_Info span').text(trainee_repeat_end)
 
-                var repeatText = '<span style="color:#fe4e65;">['+trainee_repeat_group_type_name+']'+ptRepeatScheduleGroupNameArray[i]+'</span> ' +trainee_repeat_type+' '
-                + trainee_repeat_day + ' ' +trainee_repeat_time +'~'+trainee_repeat_end_time+' ('+pt_dur+')'+'<br/><span>'+trainee_repeat_end +'</span><br/>';
+                var repeatText = '<span style="color:#fe4e65;">['+trainee_repeat_group_type_name+']'+ptRepeatScheduleGroupNameArray[i]+'</span> ' +
+                                 '<p style="margin:0">'+trainee_repeat_type+' '+ trainee_repeat_day + ' ' +trainee_repeat_time +'~'+trainee_repeat_end_time+'</p><span>'+trainee_repeat_end +'</span><div style="height:10px"></div>';
                 repeatList.push(repeatText)
                 $('._Repeat_Info p:nth-child(2)').html(repeatList.join(''))
             }
