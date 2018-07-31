@@ -2093,14 +2093,15 @@ function fill_repeat_info(dbID, jsondata, option){ //반복일정 요약 채우�
             return repeat_day_info;
         };
 
-        var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span><br><span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+'</span></span>';
+        //var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="color:#fe4e65;">'+repeat_title+'</span><br><span>'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+'</span></span>';
+        var summaryInnerBoxText_1 = '<span class="summaryInnerBoxText">'+'<span style="line-height:40px;">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+'</span></span>';
         var summaryInnerBoxText_2 = '<span class="summaryInnerBoxText2">'+repeat_start_text+repeat_end_text_small+repeat_start+'</span>';
         var summaryInnerBoxText_3 = '<span class="summaryInnerBoxText3">'+repeat_end_text+repeat_end_text_small+repeat_end+'</span>';
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="'+option+'" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>';
         schedulesHTML[i] = '<div class="summaryInnerBox" data-id="'+repeat_id+'">'+summaryInnerBoxText_1+summaryInnerBoxText_2+summaryInnerBoxText_3+deleteButton+'</div>';
     }
 
-    var summaryText = '<span id="summaryText">일정요약</span>';
+    var summaryText = '<span id="summaryText">설정된 반복일정</span>';
     if(schedulesHTML.length>0){
         $('#offRepeatSummary').html(summaryText + schedulesHTML.join('')).show();
     }else{
