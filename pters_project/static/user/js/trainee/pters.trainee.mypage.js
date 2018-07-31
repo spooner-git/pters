@@ -136,18 +136,7 @@ $(document).ready(function(){
                 var trainee_repeat_end = ptRepeatScheduleStartDateArray[i] +'부터 ~ '+ptRepeatScheduleEndDateArray[i]+'까지';
                 var trainee_repeat_day = trainee_repeat_days()
 
-                var pt_dur = calc_duration_by_start_end(ptRepeatScheduleStartDateArray[i], trainee_repeat_time,
-                    ptRepeatScheduleEndDateArray[i], trainee_repeat_end_time)
-
-                if(pt_dur - parseInt(pt_dur) == 0.5){
-                    if(parseInt(pt_dur) != 0){
-                        pt_dur = parseInt(pt_dur)+'시간' + ' 30분'
-                    }else if(parseInt(pt_dur) == 0){
-                        pt_dur = '30분'
-                    }
-                }else{
-                    pt_dur = pt_dur + '시간'
-                }
+                
                 $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
                 // $('._Repeat_Info p:nth-child(2)').text('['+trainee_repeat_group_type_name+']'+trainee_repeat_type+' '
                 //     +trainee_repeat_day + ' '
@@ -200,7 +189,7 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
+                
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -276,7 +265,7 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
+                
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)

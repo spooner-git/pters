@@ -183,7 +183,6 @@ $(document).ready(function(){
         var startTimeList = [];
 
         var zz = 0;
-        console.log(Number(add_time(start+':00', '00:0'+zz).replace(/:/gi,'')) , Number(add_time(end+':00','00:00').replace(/:/gi,'')))
         while(Number(add_time(start+':00', '00:0'+zz).replace(/:/gi,'')) < Number(add_time(end+':00','00:00').replace(/:/gi,'')) ){
             var time = add_time(start+':00', '00:0'+zz);
             //var timehangul = time_format_to_hangul2(add_time(start+':00', '00:0'+zz));
@@ -198,7 +197,6 @@ $(document).ready(function(){
                 semiresult.push(('<li><a data-trainingtime="'+startTimeList[t]+'">'+time_format_to_hangul2(startTimeList[t])+'</a></li>'));
             };
         };
-        console.log(semiresult.join(''))
         $('#repeatstarttimes').html(semiresult.join(''));
         $('#repeatdurations').html('');
     };
@@ -242,7 +240,6 @@ $(document).ready(function(){
         }else if(addTypeSelect == "repeatoffadd"){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
         }
-        console.log($('#id_repeat_day_off').val())
         check_dropdown_selected_addplan();
     })
 
