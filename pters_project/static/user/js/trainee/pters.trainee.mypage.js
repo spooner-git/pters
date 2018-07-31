@@ -240,10 +240,7 @@ $(document).ready(function(){
             }
             var date         = '<div class="cell2">'+dateFormat+'</div>'
 
-
-
             var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
-            console.log(dur)
 
             var duration     = '<div class="cell3">'+duration_number_to_hangul_minute(dur)+'</div>'
             var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
