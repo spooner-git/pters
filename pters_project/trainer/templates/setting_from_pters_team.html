@@ -96,16 +96,7 @@
             location.href="/trainer/trainer_setting/"
         })
 
-        var varUA = navigator.userAgent.toLowerCase();
-        if(varUA.match('android') != null){
-            $('#go_to_faq').css('display','none');
-            //$('.ads_wrap').css('display','none');
-        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            $('#go_to_faq').css('display','none');
-            //$('.ads_wrap').css('display','none');
-        }else{
 
-        }
 
         var messageArray = [{% for message in messages %}{% if message.tags == "error" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
         var helpInfoArray = [{% for message in messages %}{% if message.tags == "info" %}'{{ message }}'{%if forloop.last == False%},{% endif %}{% endif %}{% endfor %}];
