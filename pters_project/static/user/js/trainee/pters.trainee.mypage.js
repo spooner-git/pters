@@ -239,23 +239,13 @@ $(document).ready(function(){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i],'minimize')
             }
             var date         = '<div class="cell2">'+dateFormat+'</div>'
-            var durationcalc = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
-            var durationcalc_minute = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])
 
 
-            if(durationcalc == 1 && durationcalc_minute == -30){
-                var durationText = Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc == 0 && durationcalc_minute == 30){
-                var durationText = Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc > 1 && durationcalc_minute == -30){
-                var durationText = (durationcalc-1)+'시간'+Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc >= 1 && durationcalc_minute == 30){
-                var durationText = durationcalc+'시간'+Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc >=1 && durationcalc_minute == 0){
-                var durationText = durationcalc+'시간'
-            }
 
-            var duration     = '<div class="cell3">'+durationText+'</div>'
+            var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
+            console.log(dur)
+
+            var duration     = '<div class="cell3">'+duration_number_to_hangul_minute(dur)+'</div>'
             var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
             var memo         = '<div class="cell5">'+jsondata.ptScheduleNoteArray[i]+'</div>'
             
