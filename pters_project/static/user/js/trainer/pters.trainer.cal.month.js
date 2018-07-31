@@ -229,9 +229,13 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         //날짜를 클릭해서 나오는 일정들을 클릭했을때
         $(document).on('click','.plan_raw',function(){
+            var group_type_name = $(this).attr('data-group-type-cd-name');
             var member = " 회원님의 ";
             var yourplan = " 일정";
-            var text = '레슨 일정';
+            var text = group_type_name+" 일정";
+            if(group_type_name == ''){
+                text = "1:1 레슨 일정"
+            }
             switch(Options.language){
                 case "JPN" :
                     member = "様の ";
@@ -245,7 +249,7 @@ $(document).ready(function(){
                     break;
             }
             shade_index(150)
-            $('#popup_planinfo_title').text('레슨 일정')
+            $('#popup_planinfo_title').text(text)
             var schedule_finish_check = $(this).attr('data-schedule-check')
             var dbid = $(this).attr('data-dbid');
             var name = $(this).attr('data-membername')
@@ -261,7 +265,6 @@ $(document).ready(function(){
             }
             var stime_text = time_format_to_hangul(add_time(selectedTime+':'+selectedMinute,'00:00'));
             var etime_text = time_format_to_hangul(add_time(selectedETime+':'+selectedEMinute,'00:00'));
-            var group_type_name = $(this).attr('data-group-type-cd-name');
             //$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
             $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
             $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
