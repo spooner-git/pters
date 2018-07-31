@@ -3023,7 +3023,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
         htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
     }
     if(addedCount == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>추가 가능한  회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>일정 등록 가능한  회원이 없습니다.</div>");
     }
     var html = htmlToJoin.join('');
     targetHTML.html(html);
