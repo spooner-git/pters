@@ -259,13 +259,20 @@ $(document).ready(function(){
         $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
 
         var schedule_finish_check = $(this).attr('data-schedule-check');
-        console.log($(this))
-        console.log($('#popup_text1'))
+
+        var currentDate = today_YY_MM_DD;
+        var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(currentDate, Options.availDate),'');
+
+        // var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
+        // var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
+        // currentHour
+        // if(currentHour>Endtime || currentHour<availableStartTime){
+
         if(schedule_finish_check=="0"){
             $("#popup_btn_complete").show()
             $("#popup_text1").css("display","block")
             $("#popup_sign_img").css("display","none")
-            if(selectedDateyyyymmdd < todayYYYYMMDD){
+            if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate) || (currentHour>availableEndTime || currentHour<availableStartTime)){
                 $("#popup_text1").css("display","none")
             }
         }
@@ -1012,7 +1019,7 @@ $(document).ready(function(){
 
         dateplans.sort();
         var htmltojoin = []
-        reg_check = dateplans.length
+        reg_check = dateplans.length;
         if(dateplans.length>0){
             for(var i=1;i<=dateplans.length;i++){
                 var splited = dateplans[i-1].split('_')
@@ -1711,6 +1718,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             }else{
                 var temp_count_text = '';
                 var temp_text = '';
+
                 if(jsondata.lecture_reg_count[0] != 0){
                     temp_text +='1:1';
                     temp_count_text += jsondata.lecture_avail_count;
@@ -1735,7 +1743,8 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
                         temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
                     }
                 }
-
+                console.log(temp_text)
+                console.log(temp_count_text)
                 if(temp_text == '') {
                     temp_count_text = '0'
                 }
