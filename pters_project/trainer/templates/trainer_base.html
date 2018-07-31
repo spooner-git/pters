@@ -322,7 +322,7 @@
                             </a>
                         </div>
                         -->
-                        <div class="sidebar_div"><img src="{% static_url "user/res/icon-pencil.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
                             <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
                             </a>
                         </div>
@@ -803,9 +803,11 @@
     if(varUA.match('android') != null){
         $('._company').css('display','none');
         $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
     }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
         $('._company').css('display','none');
         $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
     }else{
 
     }
