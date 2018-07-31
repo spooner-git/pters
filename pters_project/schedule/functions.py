@@ -154,11 +154,9 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
 def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       group_id, group_schedule_id,
                       start_datetime, end_datetime,
-                      note, en_dis_type, user_id, auto_finish_info):
+                      note, en_dis_type, user_id, state_cd):
     error = None
     context = {'error': None, 'schedule_id': ''}
-    state_cd = 'NP'
-    now = timezone.now()
 
     if lecture_id == '':
         lecture_id = None
@@ -168,9 +166,6 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
         group_schedule_id = None
     if repeat_schedule_id == '':
         repeat_schedule_id = None
-
-    if auto_finish_info == AUTO_FINISH_ON and now > end_datetime:
-        state_cd = 'PE'
 
     try:
         with transaction.atomic():
