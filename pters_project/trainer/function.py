@@ -119,9 +119,7 @@ def func_get_member_ing_list(class_id, user_id):
                             if member_data.group_info == '':
                                 member_data.group_info = '1:1'
                             else:
-                                if '1:1' in member_data.group_info:
-                                    member_data.group_info = member_data.group_info
-                                else:
+                                if '1:1' not in member_data.group_info:
                                     member_data.group_info = '1:1/' + member_data.group_info
                         elif group_check == 1:
                             if member_data.group_info == '':
@@ -140,9 +138,7 @@ def func_get_member_ing_list(class_id, user_id):
                             if member_data.group_info == '':
                                 member_data.group_info = '클래스'
                             else:
-                                if '클래스' in member_data.group_info:
-                                    member_data.group_info = member_data.group_info
-                                else:
+                                if '클래스' not in member_data.group_info:
                                     member_data.group_info += '/클래스'
 
                 # print(str(lecture_info_data.get_member_lecture_auth_check))
@@ -152,7 +148,7 @@ def func_get_member_ing_list(class_id, user_id):
                 #                                                 auth_cd='VIEW', lecture_tb__use=USE,
                 #                                                 use=USE).count()
 
-                if lecture_info.use != UN_USE:
+                if lecture_info.use == USE:
                     if lecture_info.state_cd == 'IP':
                         if group_check != 0:
                             member_data.group_reg_count += lecture_info.lecture_reg_count
@@ -195,7 +191,7 @@ def func_get_member_ing_list(class_id, user_id):
                 if lecture_count == 0:
                     member_data.sex = ''
                     member_data.birthday_dt = ''
-                    if member_data.phone is None:
+                    if member_data.phone is member_data.phone == '':
                         member_data.phone = ''
                     else:
                         member_data.phone = '***-****-' + member_data.phone[7:]
@@ -330,7 +326,7 @@ def func_get_member_end_list(class_id, user_id):
                     #                                                        auth_cd='VIEW', lecture_tb__use=USE,
                     #                                                        use=USE).count()
 
-                    if lecture_info.use != UN_USE:
+                    if lecture_info.use == USE:
                         if group_check != 0:
                             member_data.group_reg_count += lecture_info.lecture_reg_count
                             member_data.group_rem_count += lecture_info.lecture_rem_count

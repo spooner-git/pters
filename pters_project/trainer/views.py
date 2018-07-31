@@ -291,8 +291,6 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
-        class_id = self.request.session.get('class_id')
-        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
         return context
 
 
