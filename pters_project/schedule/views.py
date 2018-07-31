@@ -22,7 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from configs import settings
-from configs.const import ON_SCHEDULE_TYPE, USE, GROUP_SCHEDULE_TYPE, AUTO_FINISH_OFF
+from configs.const import ON_SCHEDULE_TYPE, USE, GROUP_SCHEDULE_TYPE, AUTO_FINISH_OFF, AUTO_FINISH_ON
 from login.models import LogTb, MemberTb
 from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
@@ -140,9 +140,12 @@ def add_schedule_logic(request):
             with transaction.atomic():
                 schedule_result = None
                 if error is None:
+                    state_cd = 'NP'
+                    if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
+                        state_cd = 'PE'
                     schedule_result = func_add_schedule(class_id, lecture_id, None, None, None, schedule_start_datetime,
                                                         schedule_end_datetime, note, en_dis_type, request.user.id,
-                                                        setting_schedule_auto_finish)
+                                                        state_cd)
                     error = schedule_result['error']
 
                 if error is None:
@@ -683,12 +686,17 @@ def add_repeat_schedule_logic(request):
                             #     error_date = str(repeat_schedule_date_info).split(' ')[0]
                         if error_date is None:
                             if schedule_check == 1:
+
+                                state_cd = 'NP'
+                                if setting_schedule_auto_finish == AUTO_FINISH_ON\
+                                        and timezone.now() > schedule_end_datetime:
+                                    state_cd = 'PE'
                                 schedule_result = func_add_schedule(class_id, lecture_id,
                                                                     repeat_schedule_info.repeat_schedule_id,
                                                                     None, None,
                                                                     schedule_start_datetime, schedule_end_datetime, '',
                                                                     en_dis_type, request.user.id,
-                                                                    setting_schedule_auto_finish)
+                                                                    state_cd)
 
                                 if schedule_result['error'] is not None:
                                     error_date = str(repeat_schedule_date_info).split(' ')[0]
@@ -1154,11 +1162,14 @@ def add_group_schedule_logic(request):
         try:
             with transaction.atomic():
                 if error is None:
+                    state_cd = 'NP'
+                    if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
+                        state_cd = 'PE'
                     schedule_result = func_add_schedule(class_id, None, None,
                                                         group_id, None,
                                                         schedule_start_datetime, schedule_end_datetime,
                                                         note, ON_SCHEDULE_TYPE, request.user.id,
-                                                        setting_schedule_auto_finish)
+                                                        state_cd)
                     error = schedule_result['error']
 
                 if error is None:
@@ -1207,11 +1218,16 @@ def add_group_schedule_logic(request):
                     try:
                         with transaction.atomic():
                             if error_temp is None:
+
+                                state_cd = 'NP'
+                                if setting_schedule_auto_finish == AUTO_FINISH_ON\
+                                        and timezone.now() > schedule_end_datetime:
+                                    state_cd = 'PE'
                                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                                     group_id, group_schedule_id,
                                                                     schedule_start_datetime, schedule_end_datetime,
                                                                     note, ON_SCHEDULE_TYPE, request.user.id,
-                                                                    setting_schedule_auto_finish)
+                                                                    state_cd)
                                 error_temp = schedule_result['error']
 
                             if error_temp is None:
@@ -1676,11 +1692,16 @@ def add_member_group_schedule_logic(request):
         try:
             with transaction.atomic():
                 if error is None:
+
+                    state_cd = schedule_info.state_cd
+                    if setting_schedule_auto_finish == AUTO_FINISH_ON \
+                            and timezone.now() > schedule_info.end_dt:
+                        state_cd = 'PE'
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         note, ON_SCHEDULE_TYPE,
-                                                        request.user.id, setting_schedule_auto_finish)
+                                                        request.user.id, state_cd)
                     error = schedule_result['error']
 
                 if error is None:
@@ -1888,12 +1909,17 @@ def add_group_repeat_schedule_logic(request):
                         # PT 일정 추가라면 일정 추가해야할 lecture id 찾기
                         schedule_result = None
                         if error_date is None:
+
+                            state_cd = 'NP'
+                            if setting_schedule_auto_finish == AUTO_FINISH_ON \
+                                    and timezone.now() > schedule_end_datetime:
+                                state_cd = 'PE'
                             schedule_result = func_add_schedule(class_id, None,
                                                                 repeat_schedule_info.repeat_schedule_id,
                                                                 group_id, None,
                                                                 schedule_start_datetime, schedule_end_datetime,
                                                                 '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                setting_schedule_auto_finish)
+                                                                state_cd)
                             error_date = schedule_result['error']
 
                         if error_date is None:
@@ -2055,13 +2081,18 @@ def add_group_repeat_schedule_confirm(request):
                                     try:
                                         with transaction.atomic():
                                             if error_temp is None:
+
+                                                state_cd = 'NP'
+                                                if setting_schedule_auto_finish == AUTO_FINISH_ON \
+                                                        and timezone.now() > schedule_info.end_dt:
+                                                    state_cd = 'PE'
                                                 schedule_result = \
                                                     func_add_schedule(class_id, lecture_id,
                                                                       member_repeat_schedule_info.repeat_schedule_id,
                                                                       group_info.group_id, schedule_info.schedule_id,
                                                                       schedule_info.start_dt, schedule_info.end_dt,
                                                                       '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                      setting_schedule_auto_finish)
+                                                                      state_cd)
                                                 error_temp = schedule_result['error']
 
                                             if error_temp is None:
