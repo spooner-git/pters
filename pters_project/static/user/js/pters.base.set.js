@@ -428,7 +428,7 @@ function date_format_to_user_hangul(yyyy_mm_dd, minimize){
     if(minimize!=undefined){
         dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[2]);
         day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = Number(yyyy_mm_dd.split(' ')[1].substr(0,2))+'시';
+        time = yyyy_mm_dd.split(' ')[1].substr(0,5);
     }else{
         dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일';
         day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';

@@ -238,6 +238,7 @@ $(document).ready(function(){
             }else if($('body').width()<=600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i],'minimize')
             }
+            
             var date         = '<div class="cell2">'+dateFormat+'</div>'
 
             var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
