@@ -331,13 +331,13 @@ img.prev_page{
 .mode_explain_button{
 	font-size: 14px !important;
 	margin-bottom: 5px !important;
-	height: 30px !important;
+	height: 35px !important;
 	background:transparent !important;
 	color: #ffffff !important;
-	border: 1px solid #ffffff !important;
 	box-shadow: unset !important;
 	display: inline-block;
 	width: 48% !important;
+	border: 1px solid #f4f4f4 !important;
 }
 .mode_explain_button:nth-child(1){
 	float: left;
@@ -481,11 +481,10 @@ img.prev_page{
 	}
 	.mode_explain_button{
 		width: 100px !important;
-		height: 35px !important;
+		height: 37px !important;
 		font-size: 13px !important;
 		margin-right: 15px;
 		background:transparent !important;
-		box-shadow: 1px 1px 1px 1px #ffffff !important;
 
 	}
 	.mode_explain_button:hover{
