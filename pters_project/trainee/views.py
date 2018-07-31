@@ -91,8 +91,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     else:
                         request.session['class_hour'] = lecture_info_data.class_tb.class_hour
                         request.session['class_type_code'] = lecture_info_data.class_tb.subject_cd
-                        request.session['class_type_name'] = lecture_info.data.class_tb.get_class_type_cd_name()
-                        request.session['class_center_name'] = lecture_info_data.class_tb.center_tb.get_center_name()
+                        request.session['class_type_name'] = lecture_info_data.class_tb.get_class_type_cd_name()
+                        request.session['class_center_name'] = lecture_info_data.class_tb.get_center_name()
                 else:
                     self.url = '/trainee/cal_month_blank/'
 

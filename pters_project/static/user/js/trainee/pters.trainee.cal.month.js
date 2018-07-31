@@ -1013,7 +1013,7 @@ $(document).ready(function(){
 
         dateplans.sort();
         var htmltojoin = []
-        reg_check = dateplans.length
+        reg_check = dateplans.length;
         if(dateplans.length>0){
             for(var i=1;i<=dateplans.length;i++){
                 var splited = dateplans[i-1].split('_')
@@ -1706,16 +1706,13 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
-            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
             }else{
                 var temp_count_text = '';
                 var temp_text = '';
-                console.log(jsondata.lecture_reg_count[0])
-                console.log(jsondata.group_lecture_reg_count[0])
-                console.log(jsondata.class_lecture_reg_count[0])
+
                 if(jsondata.lecture_reg_count[0] != 0){
                     temp_text +='1:1';
                     temp_count_text += jsondata.lecture_avail_count;
