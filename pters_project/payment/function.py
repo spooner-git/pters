@@ -181,25 +181,28 @@ def func_get_end_date(payment_type_cd, start_date, month, date):
     if payment_type_cd == 'PERIOD':
         next_month = int(end_date.strftime('%m')) % 12 + month
         # end_date = end_date + datetime.timedelta(days=1)
-        test = True
         # 다음달로 이동
-        while test:
+        for i in range(1, 32):
             try:
                 end_date = end_date.replace(month=next_month)
-                test = False
+                break
             except ValueError:
                 end_date = end_date - datetime.timedelta(days=1)
+
+            if int(end_date.strftime('%d')) <= 1:
+                break
 
         # 다음달 날짜 확인
         end_date_day = int(end_date.strftime('%d'))
         if end_date_day != date:
-            test = True
-            while test:
+            for i in range(1, 32):
                 try:
                     end_date = end_date.replace(day=date)
-                    test = False
+                    break
                 except ValueError:
                     date -= 1
+                if date <= 1:
+                    break
     else:
         end_date += datetime.timedelta(days=30)
 
