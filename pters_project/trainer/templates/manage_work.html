@@ -251,7 +251,7 @@
     google.charts.load('current', {'packages':['corechart']});
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function(){
-        drawChart(graph_Width_To_Be, graph_Height_To_Be, document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
+        drawChart(graph_Width_To_Be, graph_Height_To_Be, 'right',document.getElementById('chart_div'), datas_convert_to_addRows(month_date, price, refund_price));
         $('#profit_analytics_page .columnchart_subtitle').text(month_date[0]+' ~ '+get_month_enddate(month_date[month_date.length-1])+' (단위: 원)')
         fill_profit_details_table(month_date, price, refund_price)
     });
@@ -260,7 +260,7 @@
     // instantiates the pie chart, passes in the data and
     // draws it.
 
-    function drawChart(width, height, target, addRows_data, title){
+    function drawChart(width, height, legend,target, addRows_data, title){
         // Create the data table.
         var data = new google.visualization.arrayToDataTable(addRows_data);
         
@@ -269,7 +269,7 @@
                        'width':width,
                        'height':height,
                        'chartArea':{height:'75%'},
-                        'legend':{position:'right'},
+                        'legend':{position:legend},
                         titlePosition:'none',
                         colors:['#fe4e65','#5d91f7'],
                         isStacked: true,
@@ -334,7 +334,8 @@
                     console.log('sales',addRows_data)
                     drawChart(
                                 graph_Width_To_Be, 
-                                graph_Height_To_Be, 
+                                graph_Height_To_Be,
+                                'right', 
                                 document.getElementById('chart_div'), 
                                 addRows_data,
                                 start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
@@ -555,7 +556,8 @@
                     console.log('addRows_data',addRows_data)
                     drawChart(
                                 graph_Width_To_Be, 
-                                graph_Height_To_Be, 
+                                graph_Height_To_Be,
+                                'bottom',
                                 document.getElementById('chart_div4'), 
                                 addRows_data,
                                 start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
@@ -596,7 +598,8 @@
                     var addRows_data = data_convert_to_addRows_complete_count(jsondata.month_date, jsondata.finish_schedule_count)
                     drawChart(
                                 graph_Width_To_Be, 
-                                graph_Height_To_Be, 
+                                graph_Height_To_Be,
+                                'bottom',
                                 document.getElementById('chart_div5'), 
                                 addRows_data,
                                 start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
