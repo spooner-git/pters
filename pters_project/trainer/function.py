@@ -616,6 +616,8 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                 class_lecture_info.save()
                 if lecture_info.state_cd == 'IP':
                     lecture_info.state_cd = 'PE'
+                    lecture_info.lecture_avail_count = 0
+                    lecture_info.lecture_rem_count = 0
                     lecture_info.save()
 
                 if len(group_data) > 0:
