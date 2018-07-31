@@ -221,10 +221,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
 class CalDayView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'cal_day.html'
 
-    def get(self, request):
+    def get(self):
         context = {}
         # context = super(CalDayView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+        class_id = self.request.session.get('class_id', '')
         class_info = None
         error = None
         try:
@@ -557,12 +557,12 @@ class BasicSettingView(AccessTestMixin, View):
 
         return render(request, self.template_name, context)
 
+
 class SalesSettingView(AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
         context = super(SalesSettingView, self).get_context_data(**kwargs)
-
         return context
 
 
@@ -571,7 +571,6 @@ class ClassSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ClassSettingView, self).get_context_data(**kwargs)
-
         return context
 
 
@@ -580,7 +579,6 @@ class LanguageSettingView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LanguageSettingView, self).get_context_data(**kwargs)
-
         return context
 
 
