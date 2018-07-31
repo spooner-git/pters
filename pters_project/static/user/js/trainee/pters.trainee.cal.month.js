@@ -910,8 +910,7 @@ $(document).ready(function(){
                             '" data-dur="'+planDura+
                             '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class="'+myreservecheckbox1+myreservecheckbox2+'"></div></div><p class="plan_list_row">'+
                             jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
-                            jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' (' + 
-                            duration_number_to_hangul(planDura)+') : '+
+                            jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' : '+
                             jsondata.group_schedule_group_name[i]+' ('+
                             jsondata.group_schedule_current_member_num[i]+'/'+
                             jsondata.group_schedule_max_member_num[i]+

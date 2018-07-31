@@ -399,20 +399,15 @@ class ClassLectureTb(TimeStampedModel):
     def get_group_lecture_check(self):
 
         try:
-            GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id,
-                                       lecture_tb__use=USE,
-                                       group_tb__group_type_cd='NORMAL',
-                                       use=USE)
-            group_check = 1
+            group_lecture_info = GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id,
+                                                            lecture_tb__use=USE, use=USE)
+            if group_lecture_info.group_tb.group_type_cd == 'NORMAL':
+                group_check = 1
+            else:
+                group_check = 2
+
         except ObjectDoesNotExist:
             group_check = 0
-
-        try:
-            GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id,
-                                       lecture_tb__use=USE, group_tb__group_type_cd='EMPTY', use=USE)
-            group_check = 2
-        except ObjectDoesNotExist:
-            group_check = group_check
 
         return group_check
 
@@ -430,6 +425,14 @@ class ClassLectureTb(TimeStampedModel):
         except ObjectDoesNotExist:
             group_info = None
         return group_info
+
+    def get_auth_cd_name(self):
+
+        try:
+            auth_cd_name = CommonCdTb.objects.get(common_cd=self.auth_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            auth_cd_name = ''
+        return auth_cd_name
 
 
 class MemberClassTb(TimeStampedModel):
@@ -456,6 +459,15 @@ class MemberLectureTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'MEMBER_LECTURE_TB'
+
+    def get_auth_cd_name(self):
+
+        try:
+            auth_cd_name = CommonCdTb.objects.get(common_cd=self.auth_cd).common_cd_nm
+        except ObjectDoesNotExist:
+            auth_cd_name = ''
+        # print(str(auth_cd_name))
+        return auth_cd_name
 
 
 class BackgroundImgTb(TimeStampedModel):

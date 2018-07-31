@@ -47,7 +47,8 @@ from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 from .function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
-    func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, func_test_test_test
+    func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
+    func_get_class_member_ing_list
 
 logger = logging.getLogger(__name__)
 
@@ -146,9 +147,9 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
 
         if error is None:
-            # all_member = MemberTb.objects.filter().order_by('name')
+            all_member = func_get_class_member_ing_list(class_id)
+            total_member_num = len(all_member)
 
-            all_member = func_get_class_member_id_list(class_id)
             for member_info in all_member:
                 # member_data = member_info
 
@@ -156,15 +157,12 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                   lecture_tb__member_id=member_info,
-                                                                   lecture_tb__state_cd='IP',
-                                                                   lecture_tb__use=USE,
-                                                                   auth_cd='VIEW',
-                                                                   use=USE).order_by('-lecture_tb__start_date')
+                class_lecture_list = ClassLectureTb.objects.select_related(
+                    'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_info,
+                                         lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                         auth_cd='VIEW', use=USE ).order_by('-lecture_tb__start_date')
                 start_date = ''
                 if len(class_lecture_list) > 0:
-                    total_member_num += 1
 
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
@@ -258,7 +256,6 @@ class CalWeekView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             request.session['class_hour'] = class_info.class_hour
-
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
@@ -294,6 +291,8 @@ class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManageMemberView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id')
+        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
         return context
 
 
@@ -437,39 +436,46 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 # member_data = member_info
 
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb__member_id=member_info,
-                                                                         lecture_tb__use=USE, auth_cd='VIEW',
-                                                                         use=USE).order_by('-lecture_tb__start_date')
-                class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                   lecture_tb__member_id=member_info,
-                                                                   lecture_tb__state_cd='IP',
-                                                                   lecture_tb__use=USE,
-                                                                   auth_cd='VIEW',
-                                                                   use=USE).order_by('-lecture_tb__start_date')
+                total_class_lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
+                                                                                 ).filter(class_tb_id=class_id,
+                                                                                          lecture_tb__member_id
+                                                                                          =member_info,
+                                                                                          lecture_tb__use=USE,
+                                                                                          auth_cd='VIEW',
+                                                                                          use=USE).order_by('-lecture_tb__start_date')
+                # class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                #                                                    lecture_tb__member_id=member_info,
+                #                                                    lecture_tb__state_cd='IP',
+                #                                                    lecture_tb__use=USE,
+                #                                                    auth_cd='VIEW',
+                #                                                    use=USE).order_by('-lecture_tb__start_date')
 
                 if len(total_class_lecture_list) > 0:
                     total_member_num += 1
+                    start_date = ''
                     for class_lecture_info in total_class_lecture_list:
+                        lecture_info = class_lecture_info.lecture_tb
                         end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      group_tb__isnull=True,
                                                                       lecture_tb_id=class_lecture_info.lecture_tb_id,
                                                                       en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
                                                                       use=USE).count()
-
-                if len(class_lecture_list) > 0:
-                    current_total_member_num += 1
-                    start_date = ''
-                    for lecture_info_data in class_lecture_list:
-                        lecture_info = lecture_info_data.lecture_tb
                         if lecture_info.state_cd == 'IP':
+                            current_total_member_num += 1
+                            # for lecture_info_data in class_lecture_list:
                             if start_date == '':
                                 start_date = lecture_info.start_date
                             else:
                                 if start_date > lecture_info.start_date:
                                     start_date = lecture_info.start_date
-                    if start_date != '':
-                        if month_first_day <= start_date < next_month_first_day:
-                            new_member_num += 1
+                            if start_date != '':
+                                if month_first_day <= start_date < next_month_first_day:
+                                    new_member_num += 1
+
+            end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,  group_tb__isnull=False,
+                                                          lecture_tb__isnull=True,
+                                                          en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                          use=USE).count()
 
         if error is None:
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
@@ -2397,12 +2403,11 @@ def delete_group_info_logic(request):
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                   group_tb_id=group_id,
-                                                  lecture_tb__isnull=True,
+                                                  # lecture_tb__isnull=True,
                                                   start_dt__gte=timezone.now(),
                                                   en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                               group_tb_id=group_id,
-                                                               lecture_tb__isnull=True)
+                                                               group_tb_id=group_id)
         schedule_data.delete()
         repeat_schedule_data.delete()
     if error is None:
@@ -3123,36 +3128,22 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         context = {}
         # class_id = request.session.get('class_id', '')
-        error = None
         member_class_data = None
-
+        error = None
         if error is None:
-            member_class_data = MemberClassTb.objects.filter(member_id=request.user.id, auth_cd__contains='VIEW',
-                                                             use=USE).order_by('-reg_dt')
+            member_class_data = MemberClassTb.objects.select_related('class_tb'
+                                                                     ).filter(member_id=self.request.user.id,
+                                                                              auth_cd__contains='VIEW',
+                                                                              use=USE).order_by('-reg_dt')
 
         if error is None:
             for class_auth_info in member_class_data:
 
                 class_info = class_auth_info.class_tb
-                all_member = func_get_class_member_id_list(class_info.class_id)
-                total_member_num = 0
-                for member_info in all_member:
-                    # 강좌에 해당하는 수강/회원 정보 가져오기
-                    class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                                       lecture_tb__member_id=member_info,
-                                                                       lecture_tb__state_cd='IP',
-                                                                       lecture_tb__use=USE,
-                                                                       auth_cd='VIEW',
-                                                                       use=USE).order_by('-lecture_tb__start_date')
-
-                    if len(class_lecture_list) > 0:
-                        total_member_num += 1
+                all_member = func_get_class_member_ing_list(class_info.class_id)
+                total_member_num = len(all_member)
                 class_info.subject_type_name = class_info.get_class_type_cd_name()
-
-                try:
-                    class_info.state_cd_name = CommonCdTb.objects.get(common_cd=class_info.state_cd)
-                except ObjectDoesNotExist:
-                    class_info.state_cd_name = ''
+                class_info.state_cd_name = class_info.get_state_cd_name()
                 class_info.total_member_num = total_member_num
 
         context['class_data'] = member_class_data
@@ -3603,17 +3594,12 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
 
         if error is None:
-            # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_id_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id)
+            total_member_num = len(all_member)
             for member_info in all_member:
                 # member_data = member_info
 
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                total_class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb__member_id=member_info,
-                                                                         lecture_tb__use=USE,
-                                                                         auth_cd='VIEW',
-                                                                         use=USE).order_by('-lecture_tb__start_date')
                 class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                                    lecture_tb__member_id=member_info,
                                                                    lecture_tb__state_cd='IP',
@@ -3621,11 +3607,11 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                                    auth_cd='VIEW',
                                                                    use=USE).order_by('-lecture_tb__start_date')
 
-                if len(total_class_lecture_list) > 0:
-                    total_member_num += 1
+                # if len(total_class_lecture_list) > 0:
+                #     total_member_num += 1
 
                 if len(class_lecture_list) > 0:
-                    total_member_num += 1
+                    # total_member_num += 1
                     start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
