@@ -890,7 +890,8 @@ $(document).ready(function(){
                 get_groupmember_list(groupid, 'callback', function(jsondata){
                     draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
                     if(bodywidth > 600){
-                        $('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200)
+                        //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200);
+                        $('#page-addplan').animate({'top':($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()},250)
                     }
                 });
             }else if(grouptypecd == "EMPTY"){
