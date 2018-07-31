@@ -157,7 +157,6 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       note, en_dis_type, user_id, state_cd):
     error = None
     context = {'error': None, 'schedule_id': ''}
-    now = timezone.now()
 
     if lecture_id == '':
         lecture_id = None
