@@ -262,11 +262,17 @@ $(document).ready(function(){
 
         var currentDate = today_YY_MM_DD;
         var limitdate = date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(currentDate, Options.availDate),'');
+
+        // var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
+        // var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
+        // currentHour
+        // if(currentHour>Endtime || currentHour<availableStartTime){
+
         if(schedule_finish_check=="0"){
             $("#popup_btn_complete").show()
             $("#popup_text1").css("display","block")
             $("#popup_sign_img").css("display","none")
-            if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate)){
+            if((selectedDateyyyymmdd < todayYYYYMMDD) || (selectedDateyyyymmdd >= limitdate) || (currentHour>availableEndTime || currentHour<availableStartTime)){
                 $("#popup_text1").css("display","none")
             }
         }
