@@ -1,12 +1,10 @@
 /*달력 만들기
-
  1. 각달의 일수를 리스트로 만들어 둔다.
  [31,28,31,30,31,30,31,31,30,31,30,31]
  2. 4년마다 2월 윤달(29일)
  year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
  3. Date() 클래스의 getDay를 이용해서 무슨 요일인지 구한다.
- Sunday is 0, Monday is 1 
-
+ Sunday is 0, Monday is 1
  */
 $(document).ready(function(){
     var reg_check = 0;
@@ -99,7 +97,7 @@ $(document).ready(function(){
             clear_pt_add_logic_form()
             check_dropdown_selected()
         }
-        
+
     })
 
     function clear_pt_add_logic_form(){
@@ -336,7 +334,6 @@ $(document).ready(function(){
      var tdwidth = $(this).width();
      var tdheight = $(this).height();
      $('#cal_popup_mini_selector').fadeIn().css({'top':toploc-25,'left':leftloc+5})
-
      $('#cal_popup_mini_selector div').show()
      if($(this).hasClass('available') && !$(this).find('div').hasClass('dateMytime')){
      $('#mini_selector_del').hide()
@@ -398,7 +395,7 @@ $(document).ready(function(){
         $('#id_training_time').val('')
     }
 
-    function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화 
+    function check_dropdown_selected(){ // 회원이 PT 예약시 시간, 진행시간을 선택했을때 분홍색으로 버튼 활성화
         var durSelect = $("#durationsSelected button");
         var startSelect = $("#starttimesSelected button")
 
@@ -752,7 +749,7 @@ $(document).ready(function(){
 
     //페이지 이동에 대한 액션 클래스
     var slideControl = {
-        'append' : function(){ //다음페이지로 넘겼을때  
+        'append' : function(){ //다음페이지로 넘겼을때
             var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
             var lastdateinfo = selector_swiper_slide_last_child.find('.container-fluid').attr('id').split('_');
             var lastYY = Number(lastdateinfo[1]);
@@ -858,7 +855,7 @@ $(document).ready(function(){
                     var myreserve = ""
                     var myreservecheckbox1 = ""
                     var myreservecheckbox2 = ""
-                    
+
                     var selecteddate = date_format_yyyymmdd_to_yyyymmdd_split(jsondata.group_schedule_start_datetime[i].split(' ')[0],'')
                     var today = date_format_yyyy_m_d_to_yyyy_mm_dd(oriYear+'_'+oriMonth+'_'+oriDate,'');
 
@@ -938,7 +935,7 @@ $(document).ready(function(){
     }
 
 
-    
+
 
     function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
         var len1 = jsondata.scheduleIdArray.length;
@@ -1096,7 +1093,7 @@ $(document).ready(function(){
                         timeGraphSet("off","grey", "AddClass", jsondata);
                         startTimeSet('class', jsondata, today_form, Options.classDur*Options.timeDur, Options.startTime);  //일정등록 가능한 시작시간 리스트 채우기
                     }
-                    
+
                     draw_time_group_graph('group', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
                     draw_time_group_graph('class', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
 
@@ -1175,7 +1172,7 @@ $(document).ready(function(){
         //var $tableTarget    = $('#timeGraph div.plan_indicators');
         var $tableTarget    = $('#timeGraph div.timegraph_display');
         var workstart = Options.workStartTime;
-        
+
         var htmlToJoin = [];
 
         var date = date_format_to_yyyymmdd($('#popup_info4').text(),'-')
@@ -1191,7 +1188,7 @@ $(document).ready(function(){
                 var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
 
                 //종료 시간이 24:00일경우 서버에서 다음날 00:00으로 보내오기 때문에 포맷을 오늘 24:00로 수정
-                if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1) 
+                if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1)
                     && planEndDate[i].split(' ')[1] == "00:00:00" ){
                     var planEndHour = "24";
                     var planEndMin = '00'
@@ -1210,7 +1207,7 @@ $(document).ready(function(){
                 var plan_end = add_time(planEndHour+':'+planEndMin,'00:00');
                 // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
                 if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간과 같거나 전에 있고, 종료시간이 업무종료시간과 같거나 업무시간 내에 위치
-                  && compare_time(plan_end, work_start) 
+                  && compare_time(plan_end, work_start)
                   && compare_time(plan_end, work_end) ==false)
                 { console.log(plan_start, plan_end, work_start, work_end)
                     timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
@@ -1233,7 +1230,7 @@ $(document).ready(function(){
                 }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
                        && compare_time(plan_start, work_end) == false
                        && compare_time(work_end, plan_end) == false){
-                    
+
                     timegraph_hourwidth = $('#'+planHour+'g_00').width();
                     timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
                     timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
@@ -1242,7 +1239,7 @@ $(document).ready(function(){
 
                 }else if( compare_time(plan_start, work_end) == false   // 시작시간이 업무시간 전에 있고, 종료시간이 업무시간 밖에 위치
                        && compare_time(plan_end, work_end)){
-                    
+
                     timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
                     timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
                     timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
@@ -1270,7 +1267,7 @@ $(document).ready(function(){
                     var planLoc     = timegraph_houroffset;
 
                     if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
-                        
+
                     }else{
                         htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
                     }
@@ -1288,7 +1285,7 @@ $(document).ready(function(){
 
             //근접 예약방지 시간을 현재시간에 더한 값이 업무 시작 시간보다 작을 경우
             }else if(compare_time(limit,add_time(Options.workStartTime+':00','00:00')) == false){
-                var timegraph_hourendoffset = 0; 
+                var timegraph_hourendoffset = 0;
                 var timegraph_houroffset = 0;
                 var timegraph_houroffset = 0;
 
@@ -1319,7 +1316,7 @@ $(document).ready(function(){
                         var planEndMin = '00'
                     }
                     //24:00일경우 다음날 00:00 으로 들어오기 때문에
-                    
+
                     if(planHour >= Options.workStartTime && planHour < Options.workEndTime){
                         var timegraph_hourwidth = $('#'+planHour+'g_00').width();
                         var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
@@ -1347,14 +1344,14 @@ $(document).ready(function(){
                             var planLoc_     = timegraph_houroffset;
 
                             if(type=="class" && jsondata.group_schedule_start_datetime.indexOf(planStartDate[i]) >= 0){
-                                
+
                             }else{
                                 htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth_+'px;left:'+planLoc_+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
                             }
                         }
                     }
                 }
-            
+
 
 
             htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
@@ -1363,7 +1360,7 @@ $(document).ready(function(){
         $tableTarget.append(htmlToJoin.join(''))
     }
 
-    function timeGraphLimitSet(limit){  //회원달력 전용 timeGraphLimitSet 함수 
+    function timeGraphLimitSet(limit){  //회원달력 전용 timeGraphLimitSet 함수
         var selecteddatearry = $('#popup_info4').text().replace(/년 |월 |일 |:| /gi,"_").split("_")
         var yy_ = selecteddatearry[0];
         var mm_ = selecteddatearry[1];
@@ -1485,7 +1482,7 @@ $(document).ready(function(){
         for(var p=0; p<sortedlist.length/2; p++){
             var zz = 0;
             //일정 시작시간이 일정 종료시간보다 작으면,
-            if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false && 
+            if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
                 compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
                 while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
                     semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
@@ -1504,25 +1501,11 @@ $(document).ready(function(){
         var currentDate = today_YY_MM_DD;
         for(var t=0; t<semiresult.length; t++){
             //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
-            if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
+            if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우
                 if(compare_time(semiresult[t], add_time(currentTime, '00:'+(Options.limit*60) ))                      //업무시간
                     && compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
                     && compare_time(add_time(Options.workStartTime+':00', '00:00'), semiresult[t]) == false ){ //근접예약 금지
-                    
-                    if(starttimeOption.split('-')[0] == "A"){
-                        if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
-                            addOkArrayList.push(semiresult[t])
-                        }
-                    }else if(starttimeOption.split('-')[0] == "E"){
-                        if(Number(semiresult[t].split(':')[1])%Number(starttimeOption.split('-')[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
-                            addOkArrayList.push(semiresult[t])
-                        }
-                    }  
-                }
-            }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
-                if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false 
-                    && compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
-                    
+
                     if(starttimeOption.split('-')[0] == "A"){
                         if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
                             addOkArrayList.push(semiresult[t])
@@ -1533,7 +1516,21 @@ $(document).ready(function(){
                         }
                     }
                 }
-                
+            }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
+                if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
+                    && compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
+
+                    if(starttimeOption.split('-')[0] == "A"){
+                        if(Number(semiresult[t].split(':')[1]) == Number(starttimeOption.split('-')[1])){  //매시간의 몇분을 시작시간을 보여줄 것인지?
+                            addOkArrayList.push(semiresult[t])
+                        }
+                    }else if(starttimeOption.split('-')[0] == "E"){
+                        if(Number(semiresult[t].split(':')[1])%Number(starttimeOption.split('-')[1]) == 0){   //몇분 간격으로 시작시간을 보여줄 것인지?
+                            addOkArrayList.push(semiresult[t])
+                        }
+                    }
+                }
+
             }
         }
         allplans = sortedlist
@@ -1568,7 +1565,7 @@ $(document).ready(function(){
             text3 = ':00';
         }
 
-        //offAddOkArray =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12.5, 13, 14, 18.5, 20, 21, 22, 23]
+        //offAddOkArray =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12.5, 13, 14, 18.5, 20, 21, 22, 23]
         var offOkLen = addOkArray.length;
         var startTimeList = $('#starttimes'+options);
         var timeArray = [];

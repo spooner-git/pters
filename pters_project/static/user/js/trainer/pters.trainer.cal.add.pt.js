@@ -2341,7 +2341,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     for(var p=0; p<sortedlist.length/2; p++){
         var zz = 0;
         //일정 시작시간이 일정 종료시간보다 작으면,
-        if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false && 
+        if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
             compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
             while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
                 semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
