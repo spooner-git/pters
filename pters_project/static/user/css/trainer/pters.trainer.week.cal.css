@@ -10,9 +10,10 @@ body{
 	position: relative;
 	display: table;
 	width: 100%;
-	height: 30px;
-	border-bottom:1px solid #eaeaea;
+	height: 100%;
+	background-color:#f7f7f7;
 }
+
 .time-row30{
 	border-bottom: 1px solid #cccccc !important;
 }
@@ -24,6 +25,9 @@ body{
 	width: 	12.5%;
 	/*height: 29px;*/
 	text-align: center;
+
+	background-image: url('/static/user/res/calendar_hour.png');
+	background-size: 60px 60px;
 }
 
 .slidegap{
@@ -37,7 +41,6 @@ body{
 
 .timeindex{
 	position: absolute;
-	height: 100%;
 	width:9%;
 	z-index: 10;
 	color:white;
@@ -52,6 +55,7 @@ body{
 	line-height: 29px;
 	letter-spacing: -0.3px;
 	background-color: #f7f7f7;
+	color: #444444;
 }
 
 
@@ -138,8 +142,9 @@ body{
 .swiper-container{
 	overflow-y: hidden;
 	/*height: 100%;*/
-
+	padding-bottom:0px;
 	height: auto;
+	background:#f7f7f7;
 }
 
 
@@ -191,87 +196,6 @@ img,a,div,span,p{
 
 
 
-#id_sign_img{
-	width: 100px;
-	margin-right: 14.845px;
-	margin-left: 14.845px;
-}
-
-
-#float_btn{  /*2017.10.2*/
-	position: fixed;
-	width: 50px;
-	height: 50px;
-	bottom: 25px;
-	right: 25px;
-	border-radius: 50%;
-	z-index: 121;
-	cursor: pointer;
-}
-
-#float_btn img{ /*2017.10.2*/
-	width: 100%;
-	height: 100%;
-
-}
-
-.rotate_btn{
-	-webkit-transform: rotate(47deg);
-	transform: rotate(47deg);
-}
-
-
-
-#float_inner1{ /*2017.10.2*/
-	background-color: #fe4e65;
-}
-
-#float_inner1 a{ /*2017.10.2*/
-	color: #ffffff;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	margin: auto;
-	height: 70%;
-	font-weight: bold;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-#float_inner2{ /*2017.10.2*/
-	background-color: #ffffff;
-}
-
-#float_inner2 a{ /*2017.10.2*/
-	color: #282828;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	margin: auto;
-	height: 70%;
-	font-weight: bold;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-
-.float_inner{ /*2017.10.2*/
-	position: fixed;
-	width: 50px;
-	height: 50px;
-	bottom: 25px;
-	right: 25px;
-	background-color: grey;
-	opacity: 0;
-	border-radius: 50%;
-	z-index: 120;
-	font-size: 13px;
-	text-align: center;
-}
 
 #monthText{
 	display: block;
@@ -330,8 +254,22 @@ img,a,div,span,p{
 */
 
 #hidetoggle{
-	display: none;
+	position: fixed;
+	background:transparent;
+	bottom: 20px;
+	left: 0;
+	width: 50%;
+	z-index: 5;
+	color: #444444;
+	font-size: 12px;
+	cursor: pointer;
 }
+	#hidetoggle img{
+		margin-right: 7px;
+		margin-left: 50px;
+		margin-bottom: 4px;
+		width: 7px;
+	}
 
 #gapbox{
 	width: 100%;
@@ -416,7 +354,6 @@ img,a,div,span,p{
 }
 
 .timeindex_time{
-	color: #888888;
 	font-size: 12px;
 }
 
@@ -434,7 +371,7 @@ img,a,div,span,p{
 .classTime{
 	position: absolute;
 	top: 0px;
-	width: 98.5%;
+	width: 99%;
 	background: #fbf3bd;
 	z-index: 100;
 	cursor: pointer;
@@ -461,7 +398,7 @@ img,a,div,span,p{
 .offTime{
 	position: absolute;
 	top: 0px;
-	width: 98.5%;
+	width: 99%;
 	background: #e2e2e2;
 	opacity: 0.9;
 	z-index: 100;
@@ -483,7 +420,7 @@ img,a,div,span,p{
 .groupTime{
 	position: absolute;
 	top: 0px;
-	width: 98.5%;
+	width: 99%;
 	background: #ffacb7;
 	z-index: 100;
 	cursor: pointer;
@@ -533,7 +470,7 @@ img,a,div,span,p{
 	display: none;
 }
 
-.groupnametag{
+.memberName, .groupnametag{
 	overflow:hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -548,10 +485,10 @@ img,a,div,span,p{
 	color: blue;
 }
 .inlineelement{
-	display: inline;
+	display: inline !important;
 }
 .hideelement{
-	display: none;
+	display: none !important;
 }
 
 .hourType{
@@ -630,6 +567,10 @@ img,a,div,span,p{
 		background:#ffffff;
 	}
 
+	.timeindex{
+		height: 100%;
+	}
+
 	#hidetoggle{
 		display: block;
 		position: fixed;
@@ -639,14 +580,19 @@ img,a,div,span,p{
 		font-size: 12px;
 		font-weight: 300;
 		z-index: 10;
+		bottom: unset;
 		cursor: pointer;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100%;
+		max-width: 1080px;
 	}
-	#hidetoggle img{
-		width: 7px;
-		margin-bottom: 2px;
-		margin-right: 8px;
-		margin-left: 10px;
-	}
+		#hidetoggle img{
+			width: 7px;
+			margin-bottom: 2px;
+			margin-right: 8px;
+			margin-left: 10px;
+		}
 
 	#ymdText-pc{
 		display: block;
@@ -681,7 +627,7 @@ img,a,div,span,p{
 		display: inline-block;
 		font-size: 20px;
 		font-weight: 500;
-		width: 80px;
+		width: 90px;
 	}
 
 	.ymdText-pc-date{
@@ -700,7 +646,8 @@ img,a,div,span,p{
 
 	.time-row{
 		height: 30px;
-		border-bottom-color:#f4f4f4;
+		border-bottom:1px solid #f4f4f4;
+		background-color: unset;
 	}
 
 	.hour{
@@ -727,7 +674,7 @@ img,a,div,span,p{
 
 	.timeindex_time{
 		float: right;
-		margin-right: 10px;
+		margin-right: 6px;
 		font-size: 16px;
 	}
 
@@ -759,17 +706,18 @@ img,a,div,span,p{
 	}
 
 	.classTime,.offTime,.classTime_checked{
-		width: 98.5%;
+		width: 99%;
 	}
 
 	.memberName{
 		position: absolute;
-		width: 78%;
+		/*width: 78%;*/
+		width: 100%;
 		text-align: center;
 		right:  0;
 		font-size: 12.5px;
 		font-weight: 500;
-		padding-right: 5px;
+		/*padding-right: 5px;*/
 		letter-spacing: -0.3px;
 		color: black;
 		cursor: pointer;
@@ -777,18 +725,23 @@ img,a,div,span,p{
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-
-
-	.hourType{
-		display: block;
-		margin:0;
-		margin-bottom: -3px;
+	.memberTime{
+		display: none !important;
 	}
 
+	.swiper-container{
 
-	.td00,.td30{
+		padding-bottom:30px;
+
+	}
+	
+
+
+	.td00, .td30{
 		cursor: pointer;
 		background: #ffffff;
+		background-image: unset;
+		background-size: unset;
 	}
 
 
@@ -892,11 +845,14 @@ img,a,div,span,p{
 @media(min-width: 730px){
 
 	.memberName{
+		position: absolute;
 		text-align: right;
+		width: 78%;
+		padding-right: 5px;
 	}
 
 	.memberTime{
-		display: block;
+		display: block !important;
 		position: absolute;
 		left: 4px;
 		font-weight: 300;
@@ -906,6 +862,15 @@ img,a,div,span,p{
 		color: black;
 		cursor: pointer;
 		text-align: left;
+	}
+	.hideelement{
+		display: none !important;
+	}
+
+	.hourType{
+		display: block;
+		margin:0;
+		margin-bottom: -3px;
 	}
 
 	.ymdText-pc-refresh{
@@ -936,12 +901,13 @@ img,a,div,span,p{
 	}
 
 	.ymdText-pc-add-off{
-		display: inline;
+		display: inline-block;
 		margin-right: 5px;
 		padding:5px;
 		font-size: 13px;
 		border:1px solid #282828;
 		cursor: pointer;
+		line-height: 19px !important;
 	}
 	.ymdText-pc-add-off:hover{
 		background-color: #282828;
@@ -949,13 +915,14 @@ img,a,div,span,p{
 	}
 
 	.ymdText-pc-add-pt{
-		display: inline;
+		display: inline-block;
 		margin-left: 5px;
 		padding:5px;
 		color: #fe4e65;
 		font-size: 13px;
 		border:1px solid #fe4e65;
 		cursor: pointer;
+		line-height: 19px !important;
 	}
 	.ymdText-pc-add-pt:hover{
 		background-color: #fe4e65;
@@ -979,7 +946,7 @@ img,a,div,span,p{
 		display:inline;
 		position: absolute;
 		left: 15px;
-		color: #888888;
+		color: #444444;
 		font-size: 15px;
 		font-weight: bold;
 	}

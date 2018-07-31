@@ -107,6 +107,7 @@ $(document).ready(function(){
                 {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                     'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
         }
+        var repeatList = []
 
         if(ptRepeatScheduleTypeArray.length>0){
             for(var i=0; i<ptRepeatScheduleTypeArray.length; i++){
@@ -126,27 +127,43 @@ $(document).ready(function(){
                     }
                     return repeat_day_info
                 };
-                var trainee_repeat_time = time_format_to_hangul(ptRepeatScheduleStartTimeArray[i])
-                var trainee_repeat_end = '반복종료 : '+ date_format_to_hangul(ptRepeatScheduleEndDateArray[i])
+                var trainee_repeat_group_type_name = ptRepeatScheduleGroupTypeNameArray[i];
+                // var trainee_repeat_time = time_format_to_hangul(ptRepeatScheduleStartTimeArray[i])
+                // var trainee_repeat_end_time = time_format_to_hangul(ptRepeatScheduleEndTimeArray[i])
+                var trainee_repeat_time = ptRepeatScheduleStartTimeArray[i];
+                var trainee_repeat_end_time = ptRepeatScheduleEndTimeArray[i];
+                // var trainee_repeat_end = '반복종료 : '+ date_format_to_hangul(ptRepeatScheduleEndDateArray[i])
+                var trainee_repeat_end = ptRepeatScheduleStartDateArray[i] +'부터 ~ '+ptRepeatScheduleEndDateArray[i]+'까지';
                 var trainee_repeat_day = trainee_repeat_days()
+
+                
                 $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
-                $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
-                    +trainee_repeat_day + ' '
-                    +trainee_repeat_time)
-                $('._Repeat_Info span').text(trainee_repeat_end)
+                // $('._Repeat_Info p:nth-child(2)').text('['+trainee_repeat_group_type_name+']'+trainee_repeat_type+' '
+                //     +trainee_repeat_day + ' '
+                //     +trainee_repeat_time)
+                // $('._Repeat_Info span').text(trainee_repeat_end)
+
+                var repeatText = '<span style="color:#fe4e65;">['+trainee_repeat_group_type_name+']'+ptRepeatScheduleGroupNameArray[i]+'</span> ' +
+                                 '<p style="margin:0">'+trainee_repeat_type+' '+ trainee_repeat_day + ' ' +trainee_repeat_time +'~'+trainee_repeat_end_time+'</p><span>'+trainee_repeat_end +'</span><div style="height:10px"></div>';
+                repeatList.push(repeatText)
+                $('._Repeat_Info p:nth-child(2)').html(repeatList.join(''))
             }
 
         }else{
+            var trainee_repeat_group_type_name = '';
             var trainee_repeat_type = ''
             var trainee_repeat_day = '설정된 반복일정이 없습니다.'
             var trainee_repeat_time = ''
             var trainee_repeat_end = ''
-            $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
-            $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_type+' '
-                +trainee_repeat_day + ' '
-                +trainee_repeat_time)
-            $('._Repeat_Info span').text(trainee_repeat_end)
+            // $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
+            // $('._Repeat_Info p:nth-child(2)').text(trainee_repeat_group_type_name+' '+trainee_repeat_type+' '
+            //     +trainee_repeat_day + ' '
+            //     +trainee_repeat_time)
+            // $('._Repeat_Info span').text(trainee_repeat_end)
+                var repeatText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>'
+                $('._Repeat_Info p:nth-child(2)').html(repeatText)
         }
+
     }
 
     $('.mode_switch_button').click(function(){
@@ -172,7 +189,7 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
+                
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -200,7 +217,7 @@ $(document).ready(function(){
             '<div class="cell2">날짜</div>'+
             '<div class="cell3">진행시간</div>'+
             '<div class="cell4">상태</div>'+
-            '<div class="cell5">노트</div>'+
+            '<div class="cell5">강사노트</div>'+
             '</div>'
         var html = []
         for(var i=0; i<jsondata.ptScheduleStateCdArray.length; i++){
@@ -210,27 +227,27 @@ $(document).ready(function(){
             }else if($('body').width()<=600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i],'minimize')
             }
+            
             var date         = '<div class="cell2">'+dateFormat+'</div>'
-            var durationcalc = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0])
-            var durationcalc_minute = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])-Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])
 
+            var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
 
-            if(durationcalc == 1 && durationcalc_minute == -30){
-                var durationText = Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc == 0 && durationcalc_minute == 30){
-                var durationText = Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc > 1 && durationcalc_minute == -30){
-                var durationText = (durationcalc-1)+'시간'+Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc >= 1 && durationcalc_minute == 30){
-                var durationText = durationcalc+'시간'+Math.abs(durationcalc_minute)+'분'
-            }else if(durationcalc >=1 && durationcalc_minute == 0){
-                var durationText = durationcalc+'시간'
-            }
-
-            var duration     = '<div class="cell3">'+durationText+'</div>'
+            var duration     = '<div class="cell3">'+duration_number_to_hangul_minute(dur)+'</div>'
             var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
             var memo         = '<div class="cell5">'+jsondata.ptScheduleNoteArray[i]+'</div>'
-            html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+            
+            if(jsondata.ptScheduleIdxArray[i+1] != undefined){
+                if(jsondata.ptScheduleIdxArray[i].split('-')[0] != jsondata.ptScheduleIdxArray[i+1].split('-')[0]){
+                    html.push('<div class="lecture_history_table_row" style="border-bottom:1px solid #cccccc;padding-bottom:10px;">'+number+date+duration+state+memo+'</div>')
+                }else{
+                    html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+                }
+            }else{
+                html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+            }
+
+            //html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')
+            
         }
         $Loc.html(tableHeader+html.join(''))
     }
@@ -248,7 +265,7 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
+                
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -293,10 +310,10 @@ $(document).ready(function(){
                 var edateFormat =jsondata.endArray[i]
             }
 
-            var typename = "1:1레슨"
+            var typename = "[1:1 레슨]"
             var maxnumber = "1"
             if(jsondata.groupNameArray[i] != ""){
-                var typename = jsondata.groupNameArray[i]
+                var typename = '['+jsondata.groupTypeCdNameArray[i]+'] ' + jsondata.groupNameArray[i];
                 var maxnumber = jsondata.groupMemberNumArray[i]
             }
             var stateColor = ""

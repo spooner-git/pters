@@ -5,6 +5,10 @@ body{
 	height: 300px;
 }
 
+#ymdTextWrap{
+	padding: 0;
+}
+
 #blank_member_popup{
 	position: absolute;
 	width: 90%;
@@ -102,6 +106,7 @@ body{
 	display: none;
 	margin:0 auto;
 	border: 1px solid #cccccc;
+	background: #ffffff;
 
 }
 .label_explain{
@@ -111,7 +116,7 @@ body{
 .lecture_history_table_header{
 	display: table;
 	width: 100%;
-	background: #ffffff;
+	background: #e8e8e8;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	font-weight: bold;
@@ -124,8 +129,8 @@ body{
 .lecture_history_table_row{
 	display: table;
 	width: 100%;
-	margin-top: 10px;
-	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	font-size: 12.5px;
 }
 .lecture_history_table_row div{
@@ -436,7 +441,7 @@ body{
 	width: 100%;
 	max-width: 700px;
 	margin:0 auto;
-	border-bottom:15px solid #f4f4f4;
+	padding-bottom: 15px;
 }
 
 .countBoard{
@@ -491,6 +496,7 @@ body{
 
 .planBoard:last-child{
 	margin-bottom:10px;
+	height: auto;
 }
 
 .countBoard img,.planBoard img{
@@ -547,6 +553,7 @@ body{
 	width: 100%;
 	max-width: 700px;
 	padding-left: 16px;
+	padding-top: 10px;
 	margin-bottom: 7px;
 }
 .mypage_label img{

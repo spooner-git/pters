@@ -1,4 +1,14 @@
 {
+    "start_date" :
+    ["{{ start_date }}"],
+    "end_date" :
+    ["{{ end_date }}"],
+    "next_start_date" :
+    ["{{ next_start_date }}"],
+    "next_end_date" :
+    ["{{ next_end_date }}"],
+    "billing_info" :
+    ["{{ billing_info }}"],
     "messageArray" :
     [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
 }

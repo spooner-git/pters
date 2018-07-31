@@ -15,7 +15,7 @@ body{
 }
 
 .bg_weight{
-	background-image: url("/static/user/res/main/bg-image.jpg")
+	background-image: url("/static/user/res/main/bg-image-weight-mobile.jpg")
 }
 
 .bg_ballet{
@@ -237,7 +237,7 @@ body{
 	}
 
 	.bg_weight{
-		background-image: url("/static/user/res/main/bg-image-pc.jpg")
+		background-image: url("/static/user/res/main/bg-image-weight-pc.jpg")
 	}
 
 	.bg_ballet{

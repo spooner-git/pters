@@ -47,7 +47,7 @@ $(document).ready(function(){
     })
 
 
-    $('#loginInfo').find('img').attr('src','/static/user/res/icon-name-white.png')
+    $('#loginInfo').find('img:nth-of-type(2)').attr('src','/static/user/res/icon-name-w.png')
     $('.bottomfooter2').find('img').attr('src','/static/user/res/spooner.png')
     $('.bottomfooter3').find('img').attr('src','/static/user/res/spooner.png')
 
@@ -70,6 +70,7 @@ $(document).ready(function(){
     }
     */
 
+    /*
     if(class_code.match(/BL/)){
         $('body').addClass('bg_ballet')
     }else if(class_code.match(/YG/)){
@@ -85,6 +86,42 @@ $(document).ready(function(){
     }else{
         $('body').addClass('bg_basic')
     }
+    */
+
+    var width_size = window.outerWidth;
+    if(class_background_img_url.length == 0){
+        if(width_size > 600){
+            $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-pc.jpg)")
+        }else{
+            $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-mobile.jpg)")
+        }
+
+        $(window).resize(function(){
+            var width_size = window.outerWidth;
+            if(width_size > 600){
+                $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-pc.jpg)")
+            }else{
+                $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-mobile.jpg)")
+            }
+        })
+    }else{
+        if(width_size > 600){
+            $('body').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')")
+        }else{
+            $('body').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')")
+        }
+
+        $(window).resize(function(){
+            var width_size = window.outerWidth;
+            if(width_size > 600){
+                $('body').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')")
+            }else{
+                $('body').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')")
+            }
+        })
+    }
+    
+
 
 });
 

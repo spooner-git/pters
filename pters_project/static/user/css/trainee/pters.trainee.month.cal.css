@@ -8,6 +8,10 @@ body{
 	background-color: #ffffff;
 }
 
+#ymdTextWrap{
+	padding: 0;
+}
+
 .pshade,.mshade{
 	position: fixed;
 	display: none;
@@ -17,6 +21,18 @@ body{
 	top: 0;
 	opacity: 0.7;
 	z-index: -100
+}
+
+
+.dropdown-backdrop{
+	background-color: transparent !important;
+}
+.pters_dropdown_custom_list{
+	width: 100% !important;
+	min-width: 150px;
+	position: relative !important;
+	top: unset !important;
+	background:#ffffff !important;
 }
 
 #blank_member_popup{
@@ -258,6 +274,9 @@ img,a,div,span,p{
 	z-index: 4;
 	width: 100%;
 }
+#ymdText-pc{
+	display: none;
+}
 
 
 #ymdTextWrap{
@@ -343,14 +362,14 @@ img,a,div,span,p{
 
 
 #calendar{
-	position: fixed; /*2017.10.02*/
+	position: relative; /*2017.10.02*/
 	width: 100%;
 	height: 72.5%;
-	top: 145px;
 	background-color: #f4f4f4;
 	padding-left: 20px;
 	padding-right:20px;
-	z-index: 3;
+	z-index: 2;
+	top: 93px;
 }
 
 
@@ -655,9 +674,10 @@ img,a,div,span,p{
 	background: #ffffff;
 	z-index: 150;
 }
-.groupreserve{
+
+.groupreserve, .classreserve{
 	display: none;
-	min-height: 128px;
+	min-height: 180px;
 }
 
 
@@ -667,13 +687,12 @@ img,a,div,span,p{
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
 	display: none;
 	position: fixed;
-	width: 300px;
+	width: 90%;
+	max-width: 300px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	text-align: center;
-	top: 50%;
-	left:50%;
-	transform: translate(-50%,-50%);
+
 	z-index: 125;
 }
 
@@ -735,6 +754,7 @@ img,a,div,span,p{
 	font-size: 13px;
 	font-weight: bold;
 	cursor: pointer;
+	overflow: hidden;
 }
 
 .popup_inner_month{
@@ -763,6 +783,7 @@ img,a,div,span,p{
 	position: relative;
 	width: 46%;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .plancheckmorningday{
@@ -855,7 +876,7 @@ img,a,div,span,p{
 
 .popup_inner span{
 	margin:0 auto;
-	line-height: 55px;
+	line-height: 50px;
 	font-size: 14px;
 	font-weight: bold;
 }
@@ -876,7 +897,7 @@ img,a,div,span,p{
 
 .available{
 	background:  #ffebee;
-	z-index: -1;
+	z-index: 0;
 	/*opacity: 1;*/
 }
 
@@ -909,6 +930,13 @@ img,a,div,span,p{
 .ptersCheckbox{
 	display: inline-block;
 	margin-right: 4px !important;
+}
+
+.plan_list_row{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 18px;
+	width: 90%;
 }
 
 
@@ -982,17 +1010,14 @@ img,a,div,span,p{
 		width: 450px;
 	}
 
-	#timeGraph.personalreserve, .groupreserve{
+	#timeGraph.personalreserve, .groupreserve, .classreserve{
 		position: relative;
 		background: #f4f4f4;
 		margin : 0 auto;
 		width: 450px;
 	}
 
-	.groupreserve{
-		display: none;
-		min-height: 128px;
-	}
+	
 
 	#popup_info,#popup_info2,#popup_info3,#popup_info4, #popup_info3_memo{
 		background: #ffffff;
@@ -1096,6 +1121,10 @@ img,a,div,span,p{
 /*미디어 쿼리*/
 
 @media(min-width: 600px){
+	.pters_dropdown_custom_list{
+		background:#ffffff;
+	}
+
 	.ptaddboxtext{
 		display: block !important;
 	}
@@ -1118,7 +1147,6 @@ img,a,div,span,p{
 	}
 
 	#calendar{
-		position: relative;
 		background-color: 	#ffffff;
 		padding-left: 0;
 		padding-right: 0;
@@ -1263,8 +1291,8 @@ img,a,div,span,p{
 		display:none;
 	}
 
-	.prevDates,.nextDates{
-		opacity: 0;
+	.prevDates, .nextDates{
+		opacity: 0 !important;
 		/*opacity: 0.2;*/
 		background:grey;
 	}
@@ -1318,14 +1346,13 @@ img,a,div,span,p{
 	}
 
 	.balloon{
-		position: relative;
 		/*background: #e4e4e4;
 		width: 40px;*/
 		height: auto;
 		width: 95%;
 		font-size: 12.5px;
 		font-weight: 400;
-		padding-top: 1px;
+		padding-top: 10px;
 		z-index: -2;
 		top: 50%;
 		left: 50%;
@@ -1339,7 +1366,6 @@ img,a,div,span,p{
 	}
 
 	.blackballoon{
-		position: relative;
 		color: #ffffff;
 		/*background: #3b3d3d;
 		width: 40px;*/
@@ -1347,7 +1373,7 @@ img,a,div,span,p{
 		width: 95%;
 		font-size: 12.5px;
 		font-weight: 300;
-		padding-top: 1px;
+		padding-top: 10px;
 		z-index: -2;
 		top: 50%;
 		left: 50%;
@@ -1498,4 +1524,5 @@ img,a,div,span,p{
 	width: 100px;
 	margin-right: 14.845px;
 	margin-left: 14.845px;
+	filter: invert(100);
 }

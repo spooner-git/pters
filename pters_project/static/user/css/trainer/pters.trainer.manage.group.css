@@ -23,6 +23,15 @@ body{
 	display: none;
 }
 
+#ymdText{
+	top: 50px;
+	margin-bottom: 0;
+}
+
+#menuDescription{
+  line-height: 40px;
+}
+
 
 @media(min-width: 600px){
 	#how_to_add_member{
@@ -38,6 +47,13 @@ body{
 		padding: 20px 30px 0px 30px;
 		box-shadow: 1px 1px 1px 1px #fe4e65;
 		display: none;
+	}
+	#ymdText{
+		margin-bottom: 20px;
+		top: unset;
+	}
+	#menuDescription{
+	  line-height: unset;
 	}
 }
 
@@ -167,6 +183,7 @@ body{
 	max-width: 800px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 50px;
 }
 
 #selectBox_type.list_switch_wrap{
@@ -384,81 +401,6 @@ select:focus > option:checked {
 }
 
 
-#float_btn_wrap{
-	display: block;
-}
-
-#float_btn{  /*2017.10.2*/
-	position: fixed;
-	width: 50px;
-	height: 50px;
-	bottom: 25px;
-	right: 25px;
-	border-radius: 50%;
-	z-index: 121;
-	cursor: pointer;
-}
-
-#float_btn img{ /*2017.10.2*/
-	width: 100%;
-	height: 100%;
-}
-
-#float_inner1{ /*2017.10.2*/
-	background-color: #fe4e65;
-}
-
-#float_inner1 a{ /*2017.10.2*/
-	color: #ffffff;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	margin: auto;
-	height: 70%;
-	font-weight: bold;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-#float_inner2{ /*2017.10.2*/
-	background-color: #ffffff;
-}
-
-#float_inner2 a{ /*2017.10.2*/
-	color: #282828;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	margin: auto;
-	height: 70%;
-	font-weight: bold;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-
-.float_inner{ /*2017.10.2*/
-	position: fixed;
-	width: 50px;
-	height: 50px;
-	bottom: 25px;
-	right: 25px;
-	background-color: grey;
-	opacity: 0;
-	border-radius: 50%;
-	z-index: 120;
-	font-size: 13px;
-	text-align: center;
-}
-
-.rotate_btn{
-	-webkit-transform: rotate(47deg);
-	transform: rotate(47deg);
-}
 
 /*-----------------모바일 회원정보 팝업-----------------------*/
 .infopopup{
@@ -589,10 +531,14 @@ select:focus > option:checked {
 	font-size:13px;
 	width: 100%;
 	padding: 0;
-	border:1px solid #cccccc;
+	/*border:1px solid #cccccc;*/
 	margin:0 auto;
 	margin-top: 6px;
 }
+	.wraps{
+		margin-bottom: 15px;
+		border: 1px solid #cccccc;
+	}
 #memberRegHistory_info > div > div {
 	display: table;
 	width: 100%;
@@ -637,11 +583,12 @@ select:focus > option:checked {
 	color: #7d7d7d;
 	padding-left: 6px !important;
 	margin-bottom: 7px !important;
-	border-bottom: 1px solid #cccccc !important;
+	/*border-bottom: 1px solid #cccccc !important;*/
 	padding-bottom: 8px !important;
 }
 #memberRegHistory_info img{
-	width: 12px;
+	width: 16px;
+	margin: 5px;
 	cursor: pointer;
 }
 .regHistory_table_title{
@@ -697,9 +644,11 @@ select:focus > option:checked {
 	padding: 10px;
 	width: 600px;
 	z-index:250;
+	/*
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%,-50%);
+	*/
 	border-radius: 3px;
 	border: 1px solid #cccccc;
 }
@@ -781,6 +730,7 @@ select:focus > option:checked {
 	-webkit-appearance:none;
 	-moz-appearance:none;
 	appearance:none;
+	background: #ffffff;
 }
 #memberBirth_select_wrap{
 	display: inline-block;
@@ -914,6 +864,7 @@ select:focus > option:checked {
 	padding: 0;
 	margin: 0;
 	border: 0;
+	height: 25px;
 }
 #memberLectureHistory_info_PC > div > div:nth-child(1), #memberLectureHistory_info > div > div:nth-child(1){
 	display: table-cell;
@@ -1112,16 +1063,15 @@ span.summaryInnerBoxText_Repeatendtext{
 	color: #ffffff;
 	border-bottom: 0;
 	border-top-right-radius: 9px;
-	height: 22px;
-	width: 70px;
-	font-size: 13px;
+	height: 30px;
+	width: 80px;
+	font-size: 14px;
 	text-align: center;
 	cursor: pointer;
+	border: 1px solid #f7f7f7;
+	vertical-align: middle;
 }
-.button_shift_info:active{
-	background: #fe4e65;
-	color: #ffffff;
-}
+
 .button_active{
 	background: #fe4e65;
 	color: #ffffff;
@@ -1304,7 +1254,8 @@ span.summaryInnerBoxText_Repeatendtext{
 	width: 15px !important;
 	line-height: 15px !important;
 	text-align:center !important;
-	padding:0 !important;
+	padding:0 6px 0 6px;
+	font-size: 13px;
 	cursor: pointer !important;
 }
 
@@ -1474,6 +1425,17 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 	#infoMemberModify img{
 		width: 100%;
+	}
+
+	.button_shift_info{
+		height: 22px;
+		width: 70px;
+		font-size: 13px;
+		border: 0;
+	}
+	.button_shift_info:active{
+		background: #fe4e65;
+		color: #ffffff;
 	}
 
 }
@@ -1660,6 +1622,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+		margin-top: unset;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;

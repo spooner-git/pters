@@ -64,20 +64,14 @@
 
 
     <!--플로팅 버튼-->
-    <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_addplan(0)">
-            <img src="{% static_url "user/res/floatbtn/btn-plus.png" %}" alt="">  <!--2017.10.2-->
-        </div>
-        <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
-            <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
-        </div>
-        <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
-            <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
-        </div>
+    <div id="float_btn" onclick="float_btn_addplan(0)">
+        
     </div>
-
-    <!--shade3는 #f4f4f4 색을 가진 배경(모바일에서 팝업시 뒷배경)-->
-    <div id="shade3">
+    <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
+        <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+    </div>
+    <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
+        <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
     </div>
     <!--플로팅 버튼-->
 
@@ -111,7 +105,7 @@
         </div>
     </div>
 
-    <div id="hidetoggle" class="wrap" data-type = '0'>
+    <div id="hidetoggle" class="" data-type = '0'>
         <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)">
         <span class="KRtext">일정 넓게 보기</span>
         <span class="JPtext">隠す</span>
@@ -151,7 +145,6 @@
                 <span class="ENtext">+ Add plan</span>
             </div>
         </div>
-
     </div>
 
 
@@ -262,7 +255,6 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
-
     </div>
 
 
@@ -279,29 +271,34 @@
     </div>
 
 
-    <div id="page-addplan" class="wrap popups">
+    <div id="page-addplan" class="popups">
         <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
             {% csrf_token %}
-            <input type="hidden" name="member_id"    id="id_member_id">
-            <input type="hidden" name="lecture_id"    id="id_lecture_id">
-            <input type="hidden" name="member_name"   id="id_member_name">
-            <input type="hidden" name="training_date" id="id_training_date">
-            <input type="hidden" name="time_duration" id="id_time_duration">
-            <input type="hidden" name="training_time" id="id_training_time">
-            <input type="hidden" name="en_dis_type" id="en_dis_type" value ='1'>
+            <input type="hidden" name="member_id"         id="id_member_id">
+            <input type="hidden" name="lecture_id"        id="id_lecture_id">
+            <input type="hidden" name="member_name"       id="id_member_name">
+            <input type="hidden" name="training_date"     id="id_training_date">
+            <input type="hidden" name="training_time"     id="id_training_time">
+            <input type="hidden" name="training_end_date" id="id_training_end_date">
+            <input type="hidden" name="training_end_time" id="id_training_end_time">
+            <!--<input type="hidden" name="time_duration" id="id_time_duration">-->
+            
+            <input type="hidden" name="en_dis_type"       id="en_dis_type" value ='1'>
             <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
-            <input type="hidden" name="add_memo" id="id_memo_mini">
-            <input type="hidden" name="group_id"    id="id_group_id">
+            <input type="hidden" name="add_memo"          id="id_memo_mini">
+            <input type="hidden" name="group_id"          id="id_group_id">
         </form>
 
         <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
             {% csrf_token %}
-            <input type="hidden" name="training_date" id="id_training_date_off">
-            <input type="hidden" name="time_duration" id="id_time_duration_off">
-            <input type="hidden" name="training_time" id="id_training_time_off">
-            <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
+            <input type="hidden" name="training_date"     id="id_training_date_off">
+            <input type="hidden" name="training_time"     id="id_training_time_off">
+            <input type="hidden" name="training_end_date" id="id_training_end_date_off">
+            <input type="hidden" name="training_end_time" id="id_training_end_time_off">
+            <!--<input type="hidden" name="time_duration" id="id_time_duration_off">-->
+            <input type="hidden" name="en_dis_type"       id="en_dis_type" value ='0'>
             <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
-            <input type="hidden" name="add_memo" id="id_memo_mini_off">
+            <input type="hidden" name="add_memo"          id="id_memo_mini_off">
         </form>
 
         <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
@@ -312,10 +309,12 @@
             <input type="hidden" name="member_name"       id="id_repeat_member_name">
             <input type="hidden" name="repeat_freq"       id="id_repeat_freq">
             <input type="hidden" name="repeat_start_date" id="id_repeat_start_date">
-            <input type="hidden" name="repeat_end_date"   id="id_repeat_end_date">
-            <input type="hidden" name="repeat_day"        id="id_repeat_day">
             <input type="hidden" name="repeat_start_time" id="id_repeat_start_time">
-            <input type="hidden" name="repeat_dur"        id="id_repeat_dur">
+            <input type="hidden" name="repeat_end_date"   id="id_repeat_end_date">
+            <input type="hidden" name="repeat_end_time"   id="id_repeat_end_time">
+            
+            <input type="hidden" name="repeat_day"        id="id_repeat_day">
+            <!--<input type="hidden" name="repeat_dur"        id="id_repeat_dur">-->
             <input type="hidden" name="en_dis_type" value="1">
             <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
         </form>
@@ -324,10 +323,11 @@
             {% csrf_token %}
             <input type="hidden" name="repeat_freq"         id="id_repeat_freq_off">
             <input type="hidden" name="repeat_start_date"   id="id_repeat_start_date_off">
-            <input type="hidden" name="repeat_end_date"     id="id_repeat_end_date_off">
-            <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
             <input type="hidden" name="repeat_start_time"   id="id_repeat_start_time_off">
-            <input type="hidden" name="repeat_dur"          id="id_repeat_dur_off">
+            <input type="hidden" name="repeat_end_date"     id="id_repeat_end_date_off">
+            <input type="hidden" name="repeat_end_time"     id="id_repeat_end_time_off">
+            <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
+            <!--<input type="hidden" name="repeat_dur"      id="id_repeat_dur_off">-->
             <input type="hidden" name="en_dis_type" value="0">
             <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
         </form>
@@ -350,15 +350,15 @@
         </div>
 
         <div id="memberName" class="ptaddbox">
-            <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+            <div class="ptaddboxtext"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹/클래스명</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
             <div id="membersSelected" class="dropdown">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
                     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloading_dropdown">
-                    <span class="KRtext" style="color:#cccccc;">회원/그룹 선택</span>
+                    <span class="KRtext" style="color:#cccccc;">회원/그룹/클래스 선택</span>
                     <span class="JPtext" style="color:#cccccc;">選択</span>
                     <span class="ENtext" style="color:#cccccc;">Select</span></button>
                 <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom">
+                <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom_list">
                     <!-- 회원명 DB연동 필요
             {# {% for lecture in trainer_member %}
             <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
@@ -378,9 +378,15 @@
         </div>
 
         <div id="groupInfo" class="ptaddbox">
-            <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 그룹 정원/형식</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
+            <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 정원</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
             <!-- 남은 횟수 DB연동 필요 -->
             <div id="grouptypenumInfo" class="dropdown" placeholder="ー"></div>
+        </div>
+
+        <div id="groupmembersInfo" class="ptaddbox">
+            <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 그룹원 정보</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
+            <!-- 남은 횟수 DB연동 필요 -->
+            <div id="groupmemberInfo" class="" placeholder="ー"></div>
         </div>
 
         <div class="_NORMAL_ADD_wrap _page_shift">
@@ -391,14 +397,22 @@
 
             <div id="timeGraph" class="ptaddbox _NORMAL_ADD_timegraph" style="display: none;">
                 <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;"><span class="KRtext"> 등록 가능 시간 </span><span class="JPtext"> 登録可能時間</span><span class="ENtext">Available Time</span><div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
-                <table class="timegraphtext">
-                </table>
+                <div class="plan_indicators"></div>
+                <div class="timegraphtext">
+                </div>
             </div>
 
-            <div id="classStartTime" class="ptaddbox _NORMAL_ADD">
+            <div class="ptersCheckbox_wrapper">
+                <div class="ptersCheckbox_sm add_time_unit">
+                    <div></div>
+                </div>
+                <p>5분단위 설정</p>
+            </div>
+
+            <div id="classStartTime" class="ptaddbox _NORMAL_ADD" style="margin-top: 0;">
                 <div class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
-                    <span class="KRtext"> 시작 시간</span>
+                    <span class="KRtext"> 시작 시각</span>
                     <span class="JPtext"> 開始時間</span>
                     <span class="ENtext"> Start Time</span>
                 </div>
@@ -409,7 +423,7 @@
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom_list">
                     </ul>
                 </div>
             </div>
@@ -428,7 +442,7 @@
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
-                    <ul id="durations" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="durations" class="dropdown-menu pters_dropdown_custom_list">
                     </ul>
                 </div>
             </div>
@@ -451,16 +465,16 @@
         </div>
 
         <!--반복 일정 개요 박스
-    <div id="repeatSchedule" class="ptaddbox repeatbox">
-        <div id="repeatScheduleText" class="ptaddboxtext repeattext">
-          <img src={% static_url "user/res/icon-cal-mini.png" %} class="icons">
-          <span class="KRtext"> 반복 일정</span>
-          <span class="JPtext"> 繰り返し</span>
-          <span class="ENtext"> Repeat Schedule</span>
-          <img class="icons-next-button" src={% static_url "user/res/icon-setting-arrow.png" %}>
+        <div id="repeatSchedule" class="ptaddbox repeatbox">
+            <div id="repeatScheduleText" class="ptaddboxtext repeattext">
+              <img src={% static_url "user/res/icon-cal-mini.png" %} class="icons">
+              <span class="KRtext"> 반복 일정</span>
+              <span class="JPtext"> 繰り返し</span>
+              <span class="ENtext"> Repeat Schedule</span>
+              <img class="icons-next-button" src={% static_url "user/res/icon-setting-arrow.png" %}>
+            </div>
         </div>
-    </div>
-    반복 일정 개요 박스-->
+        반복 일정 개요 박스-->
 
         <div class="_REPEAT_ADD_wrap _page_shift">
 
@@ -496,8 +510,9 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
-                    <ul id="repeats" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="repeats" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요-->
+                        <div><a class="pointerList">반복 선택</a></div>
                         <li><a data-repeat="WW"><span class="KRtext">매주</span><span class="JPtext">毎週</span><span class="ENtext">Every Week</span></a></li>
                         <li><a data-repeat="2W"><span class="KRtext">격주</span><span class="JPtext">隔週</span><span class="ENtext">Bi-Week</span></a></li>
                         <!--<li><a data-repeat="DD">매일</a></li>-->
@@ -540,9 +555,16 @@
                 <p class="datepicktext dropdown"><input type="text" id="datepicker_repeat_end" placeholder="-" readonly></p>
             </div>
 
+            <div class="ptersCheckbox_wrapper">
+                <div class="ptersCheckbox_sm repeatadd_time_unit">
+                    <div></div>
+                </div>
+                <p>5분단위 설정</p>
+            </div>
+
             <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
                 <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
-                    <span class="KRtext">시작 시간</span>
+                    <span class="KRtext">시작 시각</span>
                     <span class="JPtext">開始時間</span>
                     <span class="ENtext">Start Time</span>
                 </div>
@@ -552,7 +574,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
-                    <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="repeatstarttimes" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요-->
                         <!--
                         <li><a data-trainingtime="00:00:00.000000">오전 0시</a></li>
@@ -596,7 +618,7 @@
                         <span class="JPtext" style="color:#cccccc;">選択</span>
                         <span class="ENtext" style="color:#cccccc;">Select</span>
                     </button>
-                    <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom">
+                    <ul id="repeatdurations" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요-->
                         <!--
                         <li><a data-dur="1">1시간</a></li>
@@ -640,11 +662,11 @@
         </div>
 
         <div id="memberName_mini" class="ptaddbox_mini _MINI_ptadd">
-            <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
+            <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹/클래스</span><span class="JPtext"> 姓名</span><span class="ENtext"> Name</span></div>
             <div id="membersSelected_mini" class="dropdown_mini">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom_mini" type="button" data-toggle="dropdown">
                     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloading_dropdown">
-                    <span class="KRtext" style="color:#cccccc;">회원/그룹 선택</span>
+                    <span class="KRtext" style="color:#cccccc;">회원/그룹/클래스 선택</span>
                     <span class="JPtext" style="color:#cccccc;">選択</span>
                     <span class="ENtext" style="color:#cccccc;">Select</span></button>
                 <ul id="members_pc" class="dropdown-menu dropdownlist_mini">
@@ -683,13 +705,14 @@
         </div>
 
         <div id="timeGraph" class="ptaddbox_mini" style="display: none;">
+            <div></div>
             <table class="timegraphtext">
             </table>
         </div>
 
         <div id="classStartTime_mini" class="ptaddbox_mini" style="display: none;">
             <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
-                <span class="KRtext"> 시작 시간</span>
+                <span class="KRtext"> 시작 시각</span>
                 <span class="JPtext"> 開始時間</span>
                 <span class="ENtext"> Start Time</span>
             </div>
@@ -775,7 +798,7 @@
             -->
             <div class="mobileinfo_wrap form-group">
                 <label for="memberName_info" class="ptaddboxtext">
-                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원/그룹명
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원/그룹/클래스명
                     <span id="npSituationPresent"></span>
                 </label>
                 <div class="mobileinfo">
@@ -1043,27 +1066,27 @@
 
     <div class="lectureStateChangeSelectPopup popups">
         <div style="height: 50px;">
-            <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px;margin-top:10px;">
+            <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
-        <div class="KRtext confirmText">등록 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
+        <div class="KRtext confirmText">수강 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
         <div class="KRtext confirmText _explain" style="font-size: 12px;height: 50px;color:#fe4e65;font-weight: normal"></div>
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
-        <div class="popup_inner _complete" data-stat="complete" style="background:#fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext">진행 완료</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+        <div class="popup_inner _complete" data-stat="complete">
+            <span style="color:#fe4e65;font-weight: bold;" class="KRtext">진행 완료</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="JPtext">はい</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="ENtext">Yes</span>
         </div>
-        <div class="popup_inner _resume" data-stat="resume" style="background:#fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext">재개</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+        <div class="popup_inner _resume" data-stat="resume">
+            <span style="color:#282828;font-weight: bold;" class="KRtext">재개</span>
+            <span style="color:#282828;font-weight: bold;" class="JPtext">はい</span>
+            <span style="color:#282828;font-weight: bold;" class="ENtext">Yes</span>
         </div>
-        <div class="popup_inner _refund" data-stat="refund" style="background:#282828">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext">환불</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+        <div class="popup_inner _refund" data-stat="refund">
+            <span style="color:#8c8763;font-weight: bold;" class="KRtext">환불</span>
+            <span style="color:#8c8763;font-weight: bold;" class="JPtext">はい</span>
+            <span style="color:#8c8763;font-weight: bold;" class="ENtext">Yes</span>
         </div>
         <div class="popup_inner _delete" data-stat="delete">
             <span style="color:#fe4e65;" class="KRtext">삭제</span>
@@ -1079,21 +1102,22 @@
 
     <div class="lectureRefundPopup popups">
         <div style="height: 50px;">
-            <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px;margin-top:10px;">
+            <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
-        <div class="KRtext confirmText">회원 등록 환불<br>환불 금액을 입력해 주세요.</div>
+        <div class="KRtext confirmText">회원 수강 환불<br>환불 금액을 입력해 주세요.</div>
         <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
         <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
         <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
         <div style="text-align: center;margin-bottom: 10px;">
-            <input type="text" name="refund_price" style="border:1px solid #fe4e65;" title="환불 금액">
+            <span>환불 날짜 </span><p class="datepicktext"><input type="text" id="datepicker_refund" placeholder="-" readonly></p>
+            <input type="" name="refund_price" style="border:1px solid #fe4e65;">
             <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
         </div>
-        <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext refund">환불</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext refund">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext refund">Yes</span>
+        <div class="popup_inner popup_inner_resend">
+            <span style="color:#8c8763;font-weight: bold;" class="KRtext refund">환불</span>
+            <span style="color:#8c8763;font-weight: bold;" class="JPtext refund">はい</span>
+            <span style="color:#8c8763;font-weight: bold;" class="ENtext refund">Yes</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_refund">취소</span>
@@ -1104,17 +1128,17 @@
 
     <div class="lectureConnectStateChangePopup popups">
         <div style="height: 50px;">
-            <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px; margin-top:10px;">
+            <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
         <div class="KRtext confirmText">회원 달력 연동상태 변경<br>변경을 원하는 상태를 선택해주세요.</div>
         <div class="KRtext confirmText" style="font-size: 11px;height: 50px;color:#fe4e65;font-weight: normal">※연결해제시 회원님께서 더이상 내 일정을 볼 수 없게 됩니다.<br>'연결' 되면 회원님이 강사님의 달력을 보고있는 상태를 의미합니다.</div>
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
-        <div class="popup_inner popup_inner_resend" data-stat="DELETE" style="background: #fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext connectchange">연결해제</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext connectchange">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext connectchange">Yes</span>
+        <div class="popup_inner popup_inner_resend" data-stat="DELETE">
+            <span style="color:#fe4e65;font-weight: bold;" class="KRtext connectchange">연결해제</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="JPtext connectchange">はい</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="ENtext connectchange">Yes</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_connectchange">취소</span>
@@ -1125,17 +1149,17 @@
 
     <div class="resendPopup popups">
         <div style="height: 40px;">
-            <img src="{% static_url "user/res/stopmark.png" %}" style="width:35px;margin-top:5px;">
+            <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:5px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_resend_PC" class="_btn_close_resend_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
         <div class="KRtext confirmText">회원님과 연결되어있지 않습니다.<br>원하는 추가 작업을 선택해주세요.<br></div>
         <p class="KRtext"><span style="font-size:11px;color:#fe4e65">※회원님께서 연동 확인을 완료 후 연결상태로 전환됩니다.<br>'연결' 되면 회원님이 강사님의 달력을 보고있는 상태를 의미합니다.</span></p>
         <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
         <div class="ENtext confirmText">The member disconnected the calendar.</div>
-        <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext resend">연결요청</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext resend">連結要請</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext resend">Send Request</span>
+        <div class="popup_inner popup_inner_resend">
+            <span style="color:#fe4e65;font-weight: bold;" class="KRtext resend">연결요청</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="JPtext resend">連結要請</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="ENtext resend">Send Request</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_resend">취소</span>
@@ -1210,8 +1234,9 @@
         var offDateData=[];
         var offTimeData = [];
 
-        var offAddOkArray = []; //OFF 등록 시작 시간 리스트
-        var durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+        //var offAddOkArray = []; //OFF 등록 시작 시간 리스트
+        //var durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+        
 
         var addTypeSelect = "ptadd"; //팝업 종류 선택 (PT or OFF)
         var deleteTypeSelect;
@@ -1220,11 +1245,9 @@
         var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.week.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
     <script>
-        function testAjaxCall(){
-            alert('test');
-        }
-
+        
         var myswiper = new Swiper('.swiper-container',{
             initialSlide : 1,
             //speed : 150,
@@ -1236,22 +1259,62 @@
             onlyExternal: true
         });
 
+        var calendarSize = 1;
+        if(bodywidth > 600){
+            week_calendar(today_YY_MM_DD)
+        }else if(bodywidth<=600){
+            week_calendar_mobile(today_YY_MM_DD)
+        }
+
 
         $('#hidetoggle').click(function(){
             if($(this).attr('data-type') == '0'){
-                $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1');
-                $(this).find('img').css('-webkit-transform','rotate(-90deg)');
-                $('#ymdText-pc').css({'margin-top':'17px'});
-                $('#week').css({'padding-top':'24px'});
-                $('#calendar').css('padding-top','19px');
-                $('#ymdText').css('display','none');
+                calendarSize = 3;
+                $('#hidetoggle span').text('일정 축소 보기');
+                if(bodywidth > 600){
+                    $(this).css({'margin-top':'0px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1');
+                    $(this).find('img').css('-webkit-transform','rotate(-90deg)');
+                    $('#ymdText-pc').css({'margin-top':'17px'});
+                    $('#week').css({'padding-top':'32px'});
+                    $('#calendar').css('padding-top','16px');
+                    $('#ymdText').css('display','none');
+                    week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'unset',
+                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                        'background-size':'60px '+$('.td00').height()+'px'})
+
+                }else if(bodywidth<=600){
+                    $(this).attr('data-type','1');
+                    $(this).find('img').css('-webkit-transform','rotate(-90deg)');
+                    week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'unset',
+                                          'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                          'background-size':'60px '+ ($('.hour').height()+1)+'px'})
+                }
+
             }else{
-                $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
-                $(this).find('img').css('-webkit-transform','rotate(90deg)');
-                $('#ymdText-pc').css({'margin-top':'100px'});
-                $('#week').css({'padding-top':'115px'});
-                $('#calendar').css('padding-top','110px');
-                $('#ymdText').css('display','block');
+                calendarSize = 1;
+                $('#hidetoggle span').text('일정 넓게 보기');
+                if(bodywidth > 600){
+                    $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
+                    $(this).find('img').css('-webkit-transform','rotate(90deg)');
+                    $('#ymdText-pc').css({'margin-top':'100px'});
+                    $('#week').css({'padding-top':'115px'});
+                    $('#calendar').css('padding-top','99px');
+                    $('#ymdText').css('display','block');
+                    week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'#ffffff',
+                                       'background-image':'unset',
+                                        'background-size':'unset'})
+                }else if(bodywidth<=600){
+                    $(this).attr('data-type','0');
+                    $(this).find('img').css('-webkit-transform','rotate(90deg)');
+                    week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    $('.td00, .td30').css({'background':'#f7f7f7',
+                                       'background-image':'url("/static/user/res/calendar_hour.png")',
+                                        'background-size':'60px 60px'})
+                }
+                
             }
         });
 
@@ -1331,6 +1394,8 @@
         var DB = {};
         var DBe = {};
         var DB_All = {};
+
+        
 
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>

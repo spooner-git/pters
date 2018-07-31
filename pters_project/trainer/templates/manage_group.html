@@ -7,6 +7,15 @@
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
     <style type="text/css">
+
+        #ymdText{
+            top: 50px;
+            margin-bottom: 0;
+        }
+        #selectBox{
+            margin-top: 50px;
+        }
+
         @media(min-width: 600px){
             html{
                 background: #ffffff;
@@ -14,7 +23,21 @@
             body{
                 overflow-y: overlay;
             }
+            #ymdText{
+                position: relative;
+                margin-bottom: 0px;
+                top: unset;
+            }
+            #selectBox{
+                margin-top: 0;
+            }
         }
+        @media(min-width:1000px){
+            #ymdText{
+                margin-bottom: 20px;
+            }
+        }
+
         #notice_popup{
             display: none;
             width: 95%;
@@ -39,17 +62,16 @@
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
     <!--플로팅 버튼-->
-    <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_managemember(0)">
-            <img src={% static_url "user/res/memberadd/float_plus_member.png" %} alt="">  <!--2017.10.2-->
-        </div>
-        <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('group')">
-            <a class="KRtext">고정<br/>그룹</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
-        </div>
-        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('openlesson')">
-            <a class="KRtext">자유<br/>그룹</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
-        </div>
+    <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
     </div>
+    <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('group')">
+        <a class="KRtext">신규<br/>그룹</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
+    </div>
+    <!--
+    <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('openlesson')">
+        <a class="KRtext">자유<br/>그룹</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
+    </div>
+    -->
     <!--플로팅 버튼-->
 
     <div id="notice_popup">
@@ -138,24 +160,24 @@
             <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
-        <div class="KRtext confirmText">등록 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
+        <div class="KRtext confirmText">수강 진행상태 변경<br>원하는 상태를 선택해주세요.</div>
         <div class="KRtext confirmText _explain" style="font-size: 12px;height: 50px;color:#fe4e65;font-weight: normal"></div>
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
-        <div class="popup_inner _complete" data-stat="complete" style="background:#fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext">진행 완료</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+        <div class="popup_inner _complete" data-stat="complete">
+            <span style="color:#fe4e65;font-weight: bold;" class="KRtext">진행 완료</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="JPtext">はい</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="ENtext">Yes</span>
         </div>
-        <div class="popup_inner _resume" data-stat="resume" style="background:#fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext">재개</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+        <div class="popup_inner _resume" data-stat="resume">
+            <span style="color:#282828;font-weight: bold;" class="KRtext">재개</span>
+            <span style="color:#282828;font-weight: bold;" class="JPtext">はい</span>
+            <span style="color:#282828;font-weight: bold;" class="ENtext">Yes</span>
         </div>
-        <div class="popup_inner _refund" data-stat="refund" style="background:#282828">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext">환불</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext">Yes</span>
+        <div class="popup_inner _refund" data-stat="refund">
+            <span style="color:#8c8763;font-weight: bold;" class="KRtext">환불</span>
+            <span style="color:#8c8763;font-weight: bold;" class="JPtext">はい</span>
+            <span style="color:#8c8763;font-weight: bold;" class="ENtext">Yes</span>
         </div>
         <div class="popup_inner _delete" data-stat="delete">
             <span style="color:#fe4e65;" class="KRtext">삭제</span>
@@ -174,18 +196,19 @@
             <img src={% static_url "user/res/stopmark.png" %} style="width:35px;margin-top:10px;">
             <img src="/static/user/res/member/icon-x-grey.png" id="_btn_close_statechange_PC" class="_btn_close_statechange_PC" title="닫기" style="position:absolute;margin:10px;right:0;cursor:pointer;">
         </div>
-        <div class="KRtext confirmText">회원 등록 환불<br>환불 금액을 입력해 주세요.</div>
+        <div class="KRtext confirmText">회원 수강 환불<br>환불 금액을 입력해 주세요.</div>
         <div class="KRtext confirmText" style="font-size: 12px;height: 55px;color:#fe4e65;font-weight: normal">※환불시 종료된 회원탭으로 회원이 이동됩니다.<br>환불 금액은 추후 매출통계 기능 추가시 반영됩니다.</div>
         <div class="JPtext confirmText">会員登録を取り消ししますか<br>払戻金額を入力してください</div>
         <div class="ENtext confirmText">Are you sure to delete this member from the list?<br>Please enter a refund</div>
         <div style="text-align: center;margin-bottom: 10px;">
+            <span>환불 날짜 </span><p class="datepicktext"><input type="text" id="datepicker_refund" placeholder="-" readonly></p>
             <input type="" name="refund_price" style="border:1px solid #fe4e65;">
             <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
         </div>
-        <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext refund">환불</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext refund">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext refund">Yes</span>
+        <div class="popup_inner popup_inner_resend">
+            <span style="color:#8c8763;font-weight: bold;" class="KRtext refund">환불</span>
+            <span style="color:#8c8763;font-weight: bold;" class="JPtext refund">はい</span>
+            <span style="color:#8c8763;font-weight: bold;" class="ENtext refund">Yes</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_refund">취소</span>
@@ -203,10 +226,10 @@
         <div class="KRtext confirmText" style="font-size: 11px;height: 50px;color:#fe4e65;font-weight: normal">※연결해제시 회원님께서 더이상 내 일정을 볼 수 없게 됩니다.<br>'연결' 되면 회원님이 강사님의 달력을 보고있는 상태를 의미합니다.</div>
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
-        <div class="popup_inner popup_inner_resend" data-stat="DELETE" style="background: #fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext connectchange">연결해제</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext connectchange">はい</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext connectchange">Yes</span>
+        <div class="popup_inner popup_inner_resend" data-stat="DELETE">
+            <span style="color:#fe4e65;font-weight: bold;" class="KRtext connectchange">연결해제</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="JPtext connectchange">はい</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="ENtext connectchange">Yes</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_connectchange">취소</span>
@@ -224,10 +247,10 @@
         <p class="KRtext"><span style="font-size:11px;color:#fe4e65">※회원님께서 연동 확인을 완료 후 연결상태로 전환됩니다.<br>'연결' 되면 회원님이 강사님의 달력을 보고있는 상태를 의미합니다.</span></p>
         <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
         <div class="ENtext confirmText">The member disconnected the calendar.</div>
-        <div class="popup_inner popup_inner_resend" style="background: #fe4e65">
-            <span style="color:#ffffff;font-weight: bold;" class="KRtext resend">연결요청</span>
-            <span style="color:#ffffff;font-weight: bold;" class="JPtext resend">連結要請</span>
-            <span style="color:#ffffff;font-weight: bold;" class="ENtext resend">Send Request</span>
+        <div class="popup_inner popup_inner_resend">
+            <span style="color:#fe4e65;font-weight: bold;" class="KRtext resend">연결요청</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="JPtext resend">連結要請</span>
+            <span style="color:#fe4e65;font-weight: bold;" class="ENtext resend">Send Request</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_resend">취소</span>
@@ -257,8 +280,13 @@
 
 
     <div id="page_managemember">
-        <div id="upperImg">
-            <span>그룹 관리</span>
+        <div id="ymdText">
+            <div id="ymdTextWrap">
+                <div id="menuName">그룹 관리
+                </div>
+                <div id="menuDescription">고정된 멤버로 짜여진 그룹을 추가합니다.
+                </div>
+            </div>
         </div>
         <div id="selectBox" class="btn-group btn-group-justified">
             <div id="btnCallCurrent" onclick="shiftMemberList('current')" class="btn btn-primary active">
@@ -290,15 +318,17 @@
                     <p>피터스의 기능들을 사용해보세요.</p>
                 </div>
                 <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
-                    <span class="KRtext">고정 그룹 추가</span>
+                    <span class="KRtext">그룹 추가</span>
                     <span class="JPtext"></span>
                     <span class="ENtext"></span>
                 </div>
+                <!--
                 <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
                     <span class="KRtext">자유 그룹 추가</span>
                     <span class="JPtext"></span>
                     <span class="ENtext"></span>
                 </div>
+                -->
             </div>
 
             <select class="alignSelect _ALIGN_DROPDOWN">
@@ -342,9 +372,11 @@
                 <th class="_groupname">
                     <span class="KRtext">그룹명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
                 </th>
+                <!--
                 <th class="_grouptypecd">
                     <span class="KRtext">유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
                 </th>
+                -->
                 <th class="_grouppartystatus">
                     <span class="KRtext">소속/정원(명)</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
                 </th>
@@ -869,17 +901,28 @@
                             <option value="13">13명</option>
                             <option value="14">14명</option>
                             <option value="15">15명</option>
+                            <option value="16">16명</option>
+                            <option value="17">17명</option>
+                            <option value="18">18명</option>
+                            <option value="19">19명</option>
+                            <option value="20">20명</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="ptaddbox _ADD_GROUP_NEW">
                     <div id="explain_group_lesson">
-                        <p style="font-size: 13px;">
-                            <span style="color:#fe4e65;font-weight: bold;">고정 그룹</span>은 <span style="color:#fe4e65;font-weight: bold;">정해진 멤버만</span> 참석이 가능한 수업 유형 입니다.
-                        </p>
+                        
                         <p style="font-size: 12.5px;">정해진 멤버들로 고정적으로 운영되는 방식입니다.</p>
+
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 그룹?</p>
+                        <p style="font-size: 14px;">그룹은 <span style="color:#fe4e65">미리 그룹과 그룹원을 구성</span>해두고, 일정표에 일정을 추가하는 방식으로 운영합니다.<br>
+                        일정표에 <span style="color:#fe4e65">그룹 일정을 추가</span>하면,<br> 해당 그룹에 속한 그룹원이 <span style="color:#fe4e65">자동으로 그 일정</span>에 <span style="color:#fe4e65">추가 </span>됩니다.</p>
+                        <p style="font-size: 13px;">
+                            <span style="color:#fe4e65;font-weight: bold;">고정 그룹</span>은 <span style="color:#fe4e65;font-weight: bold;">정해진 정원 숫자</span> 만큼만 회원을 하위에 추가 할 수 있습니다.
+                        </p>
                     </div>
+
                     <div id="explain_open_lesson">
                         <p style="font-size: 13px;">
                             <span style="color:#fe4e65;font-weight: bold;">자유 그룹</span>은 회원을 <span style="color:#fe4e65;font-weight: bold;">숫자 제한 없이</span> 추가 가능합니다. </p>
@@ -1164,7 +1207,7 @@
             $('#notice_popup').css('display','none')
             //테스트$('#notice_popup').css('display','block')
         }else{
-            $('#notice_popup').css('display','block')
+            //$('#notice_popup').css('display','block')  공지 팝업 안보이게 잠시 주석처리
         }
 
 

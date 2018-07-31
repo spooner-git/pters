@@ -160,7 +160,7 @@
         <input type="hidden" name="subject_cd" id="subject_cd" value=""> <!--강좌 코드-->
         <input type="hidden" name="start_date" id="start_date" value=""> <!--강좌 시작 일자-->
         <input type="hidden" name="end_date" id="end_date" value=""> <!--강좌 종료 일자-->
-        <input type="hidden" name="class_hour" id="class_hour" value=""> <!--강좌 진행 시간 (60:1시간, 30:30분)-->
+        <input type="hidden" name="class_hour" id="class_hour" value="60"> <!--강좌 진행 시간 (60:1시간, 30:30분)-->
         <input type="hidden" name="start_hour_unit" id="start_hour_unit" value="1"> <!--강좌 시작 시간-->
         <input type="hidden" name="class_member_num" id="class_member_num" value="1"> <!--강좌 수업별 최대 허용 인원-->
         <input type="hidden" name="subject_detail_nm" id="id_subject_detail_nm" >
@@ -168,24 +168,24 @@
 
     <form action="{% url 'trainer:update_setting_reserve' %}" id="update-setting-reserve-form" method="post">
         {% csrf_token %}
-        <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value=""> <!--min 00:00 max 23:59  업무 시간 설정 -->
-        <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value=""> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
-        <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value=""> <!--시간 숫자-->
-        <input type="hidden" name="setting_member_cancel_time_prohibition"   id="id_setting_member_cancel_time_prohibition" value=""> <!--시간 숫자-->
-        <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
+        <input type="hidden" name="setting_trainer_work_time_available" id="id_setting_trainer_work_time" value="00:00-23:59"> <!--min 00:00 max 23:59  업무 시간 설정 -->
+        <input type="hidden" name="setting_member_reserve_time_available" id="id_setting_member_available_time" value="00:00-23:59"> <!--min 00:00 max 23:59   회원 예약 허용 시간대-->
+        <input type="hidden" name="setting_member_reserve_time_prohibition"   id="id_setting_member_reserve_time_prohibition" value="60"> <!--시간 숫자-->
+        <input type="hidden" name="setting_member_cancel_time_prohibition"   id="id_setting_member_cancel_time_prohibition" value="60"> <!--시간 숫자-->
+        <input type="hidden" name="setting_member_reserve_prohibition"   id="id_setting_member_reserve_prohibition" value="1"> <!--예약금지 활성 1, 비활성 0-->
         <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
     </form>
 
     <div id="myClassCreate" class="classSettingBox">
-        <label>1. 나의 클래스 만들기</label>
+        <label>1. 새로운 프로그램 만들기</label>
         <div>
-            <p>나의 클래스를 추가합니다. <br>
-                (예: 웨이트 트레이닝, 요가, 필라테스, 발레, 미술 등)
+            <p>나의 프로그램을 추가합니다. <br>
+                (예: 웨이트 트레이닝, 요가, 필라테스, 발레, 미술, 과외 등)
             </p>
-            <p>클래스는 설정에서 언제든지 추가가 할수 있습니다.</p>
+            <p>프로그램은 설정에서 언제든지 더 추가 할 수 있습니다.</p>
         </div>
         <div>
-            <label>만들고 하는 클래스를 입력해주세요.</label>
+            <label>만들고자 하는 프로그램명을 입력 해주세요.</label>
         </div>
 
         {% if center_list %}
@@ -221,23 +221,23 @@
                 </div>
             {% else %}
                 <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
-                    <input type="text" name="input_subject_detail_nm" id="id_input_subject_detail_nm" maxlength="12" placeholder="상세 과목명">
+                    <input type="text" name="input_subject_detail_nm" id="id_input_subject_detail_nm" maxlength="12" placeholder="상세 프로그램명">
                 </div>
             {% endif %}
         {% endfor %}
         <div class="buttonsWrap">
             <button onclick="goNext('home')">취소</button>
-            <button onclick="goNext('0')">다음</button>
+            <button onclick="goNext('submit')">다음</button>
         </div>
 
     </div>
 
     <div id="myClassSetting" class="classSettingBox">
-        <label>2. 나의 클래스 설정</label>
+        <label>2. 프로그램 설정</label>
         <div>
-            <p>클래스 정보를 설정합니다. <br>
+            <p>프로그램의 초기 정보를 설정합니다. <br>
             </p>
-            <p>클래스는 설정에서 언제든지 추가가 할수 있습니다.</p>
+            <p>설정에서 언제든 변경할 수 있습니다.</p>
         </div>
         <div class="detailSelectBox">
             <label>a) 나의 업무시간 설정</label>
@@ -378,14 +378,14 @@
     </div>
 
     <div id="myClassHourSetting" class="classSettingBox">
-        <label>3. 클래스 시간과 달력 설정</label>
+        <label>3. 시간 단위 설정</label>
         <div>
-            <p>클래스 시간단위와 달력을 설정합니다. <br>
+            <p>프로그램의 기본 시간 단위를 설정합니다. <br>
             </p>
-            <p>클래스 시간에 맞춰 달력이 변경 됩니다.</p>
+            <p>설정한 단위에 맞춰 달력이 변경 됩니다.</p>
         </div>
         <div class="detailSelectBox">
-            <label>클래스 시간 단위 설정</label>
+            <label>시간 단위 선택</label>
             <div class="options_wrap">
                 <div class="options" data-unit="30"><span>30분</span></div>
                 <div class="options" data-unit="60"><span>1시간</span></div>
@@ -393,19 +393,19 @@
         </div>
         <div class="detailSelectBox class_hour_explain" id="class_hour_30">
             <img src="/static/user/res/class_hour_30.png">
-            <p>클래스를 30분 단위로 입력합니다.</p>
+            <p>레슨을 30분 단위로 입력합니다.</p>
             <span>※횟수 차감 기준</span>
             <p>30분을 개별로 2번 입력하면 횟수가 2회 차감됩니다.</p>
             <p>'진행시간'을 1시간으로 입력해도 횟수는 1회 차감됩니다.</p>
-            <p>회원님께서는 1회 30분씩만 예약이 가능합니다.</p>
+            <p>회원님께서는 1회 30분(기본값)씩만 예약이 가능합니다.<br>회원이 예약할 수 있는 기본 예약시간 단위 기본값은 설정에서 변경할 수 있습니다.</p>
         </div>
         <div class="detailSelectBox class_hour_explain" id="class_hour_60">
             <img src="/static/user/res/class_hour_60.png">
-            <p>클래스를 1시간 단위로 입력합니다.</p>
+            <p>레슨을 1시간 단위로 입력합니다.</p>
             <span>※횟수 차감 기준</span>
             <p>1시간을 개별로 2번 입력하면 횟수가 2회 차감됩니다.</p>
             <p>'진행시간'을 2시간으로 입력해도 횟수는 1회 차감됩니다.</p>
-            <p>회원님께서는 1회 1시간씩만 예약이 가능합니다.</p>
+            <p>회원님께서는 1회 1시간(기본값)씩만 예약이 가능합니다.<br>회원이 예약할 수 있는 예약시간 단위 기본값은 설정에서 변경할 수 있습니다.</p>
         </div>
         <div class="buttonsWrap">
             <button  onclick="goNext('-2')">이전</button>
@@ -419,7 +419,7 @@
 {% block local_js_footer %}
     <!-- for db by hk.kim 170805-->
     <script>
-        $('#uptext').text('클래스 추가')
+        $('#uptext').text('프로그램 추가')
         /*
          $('#popup_lecture_select').show().css('top','40%')
          ajax_read_lecture_info_from_db()
@@ -587,16 +587,16 @@
                     $('#myClassCreate').css('display','none')
                     $('#myClassSetting').css('display','block')
                 }else{
-                    alert('클래스를 선택 해주세요.')
+                    alert('프로그램을 선택 해주세요.')
                 }
             }else if(option == "1"){
                 if($('#id_setting_trainer_work_time').val().length>0){
                     var stime = $('#id_setting_trainer_work_time').val().split(':')[0]
                     var etime = $('#id_setting_trainer_work_time').val().split('-')[1].split(':')[0]
                     if(stime.length == 0){
-                        alert('업무 시작 시간을 입력해주세요.')
+                        alert('업무 시작 시각을 입력해주세요.')
                     }else if(etime.length == 0){
-                        alert('업무 종료 시간을 입력해주세요.')
+                        alert('업무 종료 시각을 입력해주세요.')
                     }else{
                         if($('#id_setting_member_reserve_prohibition').val().length==0){
                             alert('예약 기능 사용 유뮤를 선택 해주세요')
@@ -608,9 +608,9 @@
                                 if($('#id_setting_member_available_time').val().length==0){
                                     alert('예약 가능 시간대를 선택 해주세요')
                                 }else if($('#id_setting_member_available_time').val().length>0 && $('#id_setting_member_available_time').val().split(':')[0].length == 0){
-                                    alert('예약 가능 시작 시간을 입력 해주세요.')
+                                    alert('예약 가능 시작 시각을 입력 해주세요.')
                                 }else if($('#id_setting_member_available_time').val().length>0 && $('#id_setting_member_available_time').val().split('-')[1].split(':')[0].length == 0){
-                                    alert('예약 가능 종료 시간을 입력 해주세요.')
+                                    alert('예약 가능 종료 시각을 입력 해주세요.')
                                 }else{
                                     if($('#id_setting_member_reserve_time_prohibition').val().length==0){
                                         alert('근접 예약 제한 설정을 해주세요')
@@ -696,7 +696,7 @@
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                     }else{
-                        alert('새로운 강의가 등록 되었습니다.')
+                        alert('새로운 프로그램이 등록 되었습니다.')
                         location.href="{% url 'trainer:trainer_main' %}"
                     }
                 },

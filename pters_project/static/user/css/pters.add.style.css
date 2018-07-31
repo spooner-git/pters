@@ -89,10 +89,87 @@ ul a{
 .pters_dropdown_custom{
 	font-family: 'Noto Sans KR';
 	width: 100%;
-	max-height: 295px; /*144*/
+	max-height: 210px; /*144*/
 	overflow-y: auto;
 	padding-top: 0;
 	padding-bottom: 0;
+	-webkit-overflow-scrolling:touch;
+}
+
+
+
+.pters_dropdown_custom_list{
+	font-family: 'Noto Sans KR';
+	max-height: 300px; /*144*/
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-top: 0;
+	padding-bottom: 0;
+	-webkit-overflow-scrolling:touch;
+	background: #282828;
+	
+	position: fixed;
+	/*
+	top: 38%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	*/
+	width: 90%;
+	max-width: 350px;
+	margin: 0;
+	border: 0;
+}
+	.pters_dropdown_custom_list li{
+		text-align: center;
+		font-size: 12.5px;
+		height: 45px;
+		border-bottom: 1px solid #a2a2a2;
+		background: #ffffff;
+	}
+		.pters_dropdown_custom_list div:first-child{
+			position: sticky;
+			position: -webkit-sticky;
+			top: 0;
+			left: 0;
+			background: #282828;
+			color: #ffffff;
+			font-size: 14px;
+			width: 100%;
+		}
+		.pters_dropdown_custom_list div:first-child a{
+			color: #ffffff;
+		}
+		.pters_dropdown_custom_list li a{
+			line-height: 45px;
+		}
+		img.dropdown_scroll_arrow_top{
+			position: absolute;
+			right: 0;
+			margin:5px;
+			padding: 10px;
+			top: 30px;
+			transform: rotate(90deg);
+		}
+		img.dropdown_scroll_arrow_bottom{
+			position: absolute;
+			right: 0;
+			margin: 5px;
+			padding: 10px;
+			bottom: -270px;
+			transform:rotate(270deg);
+		}
+
+	.pters_dropdown_custom_list div{
+		text-align: center;
+		height: 35px;
+		line-height: 35px;
+		vertical-align: middle;
+		background: #ffffff;
+	}
+
+.dropdown-backdrop{
+	background:black;
+	opacity: 0.7;
 }
 
 .toggleBtnWrap{
@@ -126,7 +203,7 @@ ul a{
 
 #memberName_mini button{
 	position: relative;
-	width: 198px;
+	width: 160px;
 	border: 1px solid #cccccc;
 	overflow-x: hidden;
 }
@@ -182,9 +259,12 @@ ul a{
 }
 
 #members_pc{
-	left: 93px;
+	left: 0px;
 	overflow-x: hidden;
 }
+	#members_pc li{
+		border-bottom: 1px solid #eaeaea;
+	}
 
 
 
@@ -222,21 +302,7 @@ ul a{
 	user-select: none;
 }
 
-.pters_dropdown_custom li{
-	text-align: center;
-	font-size: 12.5px;
-	padding-top:10px;
-	padding-bottom:10px;
-	box-shadow: 0 1px 0 0 #a2a2a2;
-	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
-}
 
-.pters_dropdown_custom div{
-	text-align: center;
-	height: 35px;
-	line-height: 35px;
-	vertical-align: middle;
-}
 
 .dropdownlist_mini div{
 	text-align: center;
@@ -369,13 +435,70 @@ ul a{
 	display: none;
 }
 
+#groupmemberInfo{
+	background: #ffffff;
+	padding: 0 10px 4px 10px;
+	border: 1px solid #282828;
+	width: 100%;
+	max-height: 210px;
+	overflow-y: auto;
+}
+
+	.list_viewByList{
+		margin-top: 8px;
+		padding-left: 7px;
+		border-bottom: 1px solid #cccccc;
+	}
+	.listTitle_viewByList{
+		background:#ffffff;
+		font-weight:400;
+		font-size:13px;
+		margin-top:0;
+		line-height: 30px;
+		border-bottom: 2px solid #cccccc;
+	}
+	.listTitle_viewByList span{
+		cursor: pointer;
+		position: absolute;
+		right: 0;
+		font-weight: 500;
+		font-size: 13px;
+		margin-right: 10px;
+	}
+	.list_viewByList > div{
+		display: inline-block;
+	}
+
+	.list_viewByList > div:nth-child(1){
+		width: 50%;
+	}
+	.list_viewByList > div:nth-child(2){
+		width: 27%;
+		text-align: center;
+	}
+	.list_viewByList > div:nth-child(3){
+		width: 20%;
+		text-align: center;
+	}
+	.list_viewByList > div:nth-child(4){
+		width: 20%;
+	}
+
+	.list_viewByList div > img{
+		width: 15px;
+		margin-right: 5px;
+		margin-bottom: 6px;
+	}
+
+
+
 
 #remainCount div:nth-child(2), #groupInfo div:nth-child(2){
 	background-color: #eaeaea;
 	box-shadow: 0 1px 0 0 #a2a2a2;
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 	text-align: center;
-	padding-top: 2px;
+	padding-top: 10px;
 }
 
 #remainCount_mini, #groupInfo_mini{
@@ -448,22 +571,79 @@ ul a{
 	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
 }
 
+#timeGraph{
+	position: relative;
+}
 .timegraphtext{
 	font-size: 11px;
 	text-align: center;
 	width: 100%;
+	table-layout: fixed;
 }
 
+.plan_indicators{
+
+}
+
+.selectedplan_indi{
+	height: 8px;
+	position: absolute;
+	z-index: 1;
+	opacity: 0.8;
+	border-left: 1px solid #ffffff;
+
+	background: #fe4e65;
+	-webkit-animation-name:blink;
+	-webkit-animation-duration:1s;
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+
+}
+
+.timegraph_plans_pink{
+	height: 8px;
+	position: absolute;
+	background: #fe4e65;
+	z-index: 1;
+	opacity: 0.8;
+	border-left: 0.5px solid #ffffff;
+}
+
+.timegraph_plans_grey{
+	height: 8px;
+	position: absolute;
+	background: #cccccc;
+	z-index: 1;
+	opacity: 0.8;
+	border-left: 0.5px solid #ffffff;
+}
+
+.timegraph_plans_grey_trainee{
+	height: 8px;
+	position: absolute;
+	background: #cccccc;
+	z-index: 1;
+	opacity: 1;
+	border-left: 0.5px solid transparent;
+}
+
+
 .tdgraph_60{
-	width : 4.15% !important;
+	display: inline-block;
 	height: 8px;
 	/*background: #cacaca;*/
 	background: #ffffff;
 	/*background: #282828;*/
 	border-left : 0.5px solid #f4f4f4;
 }
+
+.colspan{
+	display: inline-block;
+}
+
 .tdgraph_30{
-	width : 2% !important;
+	display: inline-table;
 	height: 8px;
 	background: #ffffff;
 	border-left : 0.5px solid #f4f4f4;
@@ -474,7 +654,8 @@ ul a{
 }
 
 .tdgraph_trainee_popup{
-	height: 96px;
+	/*height: 116px;*/
+	height: 140px;
 	overflow-y: auto;
 	background: #f4f4f4;
 	border-top: 0.5px solid #3b3d3d;
@@ -562,8 +743,8 @@ ul a{
 }
 
 .dropdown-menu>li:focus, .dropdown-menu>li:active{
-	background: #282828;
-	color: #fe4e65;
+	/*background: #282828;
+	color: #fe4e65;*/
 }
 
 
@@ -749,6 +930,25 @@ button._info_baseedit_img{
 	background: #e3e3e3;
 }
 
+.ptersCheckbox_wrapper{
+	display: block;
+	padding-left: 5%;
+	padding-right: 8%;
+	height: 20px;
+	text-align: right;
+}
+	.ptersCheckbox_wrapper p{
+		display: inline-block;
+		vertical-align: middle;
+		margin-bottom: 7px;
+		font-size: 13px;
+		color: #444444;
+	}
+
+#repeatStartTime{
+	margin-top: 0;
+}
+
 .ptersCheckbox{
 	position: relative;
 	width: 18px;
@@ -759,6 +959,16 @@ button._info_baseedit_img{
 	margin: 0 auto;
 	cursor: pointer;
 }
+	.ptersCheckbox_sm{
+		position: relative;
+		width: 15px;
+		height: 15px;
+		background: #ffffff;
+		border : 1px solid #e9e9e9;
+		border-radius: 50%;
+		margin: 0 auto;
+		cursor: pointer;
+	}
 
 .ptersCheckboxInner{
 	position: absolute;
@@ -769,6 +979,19 @@ button._info_baseedit_img{
 	left: 3px;
 	top: 3px;
 }
+	.ptersCheckboxInner_sm{
+		position: absolute;
+		width: 7px;
+		height: 7px;
+		background: #fe4e65;
+		border-radius: 50%;
+		left: 2px;
+		top: 2px;
+	}
+
+	.add_time_unit, .repeatadd_time_unit{
+		display: inline-block;
+	}
 
 .checked{
 	border: 2px solid #fe4e65;
@@ -959,6 +1182,16 @@ option{
 	margin-top: 2px;
 }
 
+#starttimesSelected button{
+	overflow: hidden;
+}
+
+.starttimes_selected{
+	border: 0;
+	padding-left: 25px;
+}
+
+
 @media(min-width: 600px){
 	.ajaxloadingPC{
 		width: 40px;
@@ -978,12 +1211,37 @@ option{
 		left: 35%;
 		width: 53%;
 		height: 26px;
-		margin-left: 15px;
+		margin-left: 30px;
 		margin-top: 0;
 		border:1px solid #8d8d8d;
 		box-shadow: unset !important;
 	}
 
+	.pters_dropdown_custom_list{
+		position: absolute;
+		top: 100%;
+		left: 0;
+		transform: unset;
+		width: 100%;
+		max-width: unset;
+		max-height: 210px;
+		border-radius: 0;
+	}
+	.pters_dropdown_custom_list li:first-child{
+		position: relative;
+		top: unset;
+		background: unset;
+		color: unset;
+		font-size: 12.5px;
+	}
+	.pters_dropdown_custom_list div:first-child{
+		display: none;
+	}
+
+	.dropdown-backdrop{
+		background-color: unset;
+		opacity: unset;
+	}
 	.pters_input_custom input{
 		height: 100%;
 		width: 100% !important;
@@ -1000,13 +1258,22 @@ option{
 		height: 26px;
 	}
 
-	#membersSelected, #membersSelected_mini{
+	#membersSelected_mini{
+		position: relative;
 		margin-left: 15px;
 	}
 
 	#remainCount div:nth-child(2){
 		border-top: 1px solid #8d8d8d;
 		padding-top: 3px;
+	}
+
+	#groupInfo div:nth-child(2){
+		padding-top: 2px;
+	}
+
+	#groupmemberInfo{
+		width: 96.5%;
 	}
 
 	#memberName_mini .dropdown_mini{
@@ -1101,10 +1368,10 @@ option{
 	}
 
 
-	#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
-		font-size: 16px;
-		font-weight: bold;
-		text-align: center;
+	#addpopup_pc_label_pt ,#addpopup_pc_label_off, #addpopup_pc_label_new, #addpopup_pc_label_view{
+		font-size: 19px;
+		font-weight: 500;
+		text-align: left;
 		display: block;
 	}
 
@@ -1151,5 +1418,4 @@ option{
 		background: #282828 !important;
 		color: #fe4e65 !important;
 	}
-
 }

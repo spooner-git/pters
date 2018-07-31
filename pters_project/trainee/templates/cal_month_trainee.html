@@ -20,18 +20,20 @@
         <input type="hidden" name="class_id" id="id_class_id" value="{{ request.session.class_id }}">
         <input type="hidden" name="lecture_id" id="id_lecture_id" value="{{ request.session.lecture_id }}">
         <input type="hidden" name="group_schedule_id" id="id_group_schedule_id">
-        <input type="hidden" name="training_date" id="id_training_date">
         <input type="hidden" name="time_duration" id="id_time_duration">
-        <input type="hidden" name="training_time" id="id_training_time">
+        <input type="hidden" name="training_date"     id="id_training_date">
+        <input type="hidden" name="training_time"     id="id_training_time">
+        <input type="hidden" name="training_end_date" id="id_training_end_date">
+        <input type="hidden" name="training_end_time" id="id_training_end_time">
+
         <input type="hidden" name="next_page" value="{% url 'trainee:get_trainee_error_info' %}">
     </form>
 
-    <!--플로팅 버튼-->
+    <!--플로팅 버튼
     <div id="float_btn">
-        <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='/trainee/add_pt_logic/'"> <!--2017.10.2-->
+        <img src={% static_url "user/res/floatbtn/btn-plus.png" %} alt=""  onclick="location.href='/trainee/add_pt_logic/'">
     </div>
-
-    <!--플로팅 버튼-->
+    플로팅 버튼-->
 
     <!--추가/삭제/조회 선택 팝업-->
     <div id="cal_popup_mini_selector" class="popups">
@@ -103,7 +105,10 @@
                 <div class="mode_switch_button mode_active" data-page="personalreserve">1:1 레슨</div>
             {% endif %}
             {% if group_lecture_flag %}
-                <div class="mode_switch_button {% if not lecture_flag %}mode_active{% endif %}" data-page="groupreserve">그룹 레슨</div>
+                <div class="mode_switch_button {% if not lecture_flag %}{% if group_lecture_flag %}mode_active{% endif %}{% endif %}" data-page="groupreserve">그룹 레슨</div>
+            {% endif %}
+            {% if class_lecture_flag %}
+                <div class="mode_switch_button {% if not lecture_flag %}{% if not group_lecture_flag %}mode_active{% endif %}{% endif %}" data-page="classreserve">클래스 예약</div>
             {% endif %}
         </div>
 
@@ -112,17 +117,18 @@
                 <div class="ptaddboxtext" style="margin-top: 10px;margin-bottom:4px;">예약 가능 시간
                     <div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>
                 </div>
-                <table class="timegraphtext">
-
-                </table>
-                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+                <div class="timegraphtext">
+                </div>
+                <p style="margin-top:10px;margin-bottom:0;font-size:13px;">- <span class="timeDur_time" style="color:#fe4e65;"></span> 단위로 예약 할 수 있습니다.</p>
+                <p style="margin-top:0px;margin-bottom:0;font-size:13px;">- <span class="startTime_time" style="color:#fe4e65;"></span> 예약 할 수 있습니다.</p>
+                <p style="margin-top:0px;font-size:13px;">- <span class="cancellimit_time" style="color:#fe4e65;"></span>까지 취소 할 수 있습니다.</p>
             </div>
 
             <div id="offStartTime" class="ptaddbox_nomargin addpopupinner personalreserve" style="position:relative;">
-                <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+                <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시각</div>
                 <div id="starttimesSelected" class="dropdown_trainee_popup">
                     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
-                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
+                    <ul id="starttimes" class="dropdown-menu pters_dropdown_custom_list" style="max-height: 194px;">
 
                     </ul>
                 </div>
@@ -139,11 +145,21 @@
         {% endif %}
 
         {% if group_lecture_flag %}
-            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}style="display: block;"{% endif %}>
+            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph groupreserve" {% if not lecture_flag %}{% if group_lecture_flag %}style="display: block;"{% endif %}{% endif %}>
                 <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">그룹
                     <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
                 </div>
                 <div id="groupTimeSelect"></div>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+            </div>
+        {% endif %}
+
+        {% if class_lecture_flag %}
+            <div id="" class="paddingside15px tdgraph_trainee_popup _NORMAL_ADD_timegraph classreserve" {% if not lecture_flag %}{% if not group_lecture_flag %}style="display: block;"{% endif %}{% endif %}>
+                <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">개설된 클래스
+                    <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
+                </div>
+                <div id="classTimeSelect"></div>
                 <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
             </div>
         {% endif %}
@@ -183,15 +199,17 @@
     <div id="ymdText-pc" class="wrap">
         <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
         <div class="ymdText-pc-date">
-            <span id="ymdText-pc-year" class="ymdText-pc-year">1월</span>
-            <span id="ymdText-pc-month" class="ymdText-pc-month">17일</span>
+            <span id="ymdText-pc-year" class="ymdText-pc-year"></span>
+            <span id="ymdText-pc-month" class="ymdText-pc-month"></span>
         </div>
         <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
 
+        <!--
         <div class="ymdText-pc-add">
             <div class="ymdText-pc-add-off">+ OFF 일정등록</div>
             <div class="ymdText-pc-add-pt">+ 레슨 일정등록</div>
         </div>
+        -->
     </div>
 
 
@@ -272,9 +290,12 @@
         var lecture_avail_count = [{{ lecture_avail_count }}];
         var lecture_reg_count = [{{ lecture_reg_count }}];
         var lecture_finish_count = [{{ lecture_finish_count }}];
-        var group_lecture_avail_count = [{{ lgroup_ecture_avail_count }}];
+        var group_lecture_avail_count = [{{ group_lecture_avail_count }}];
         var group_lecture_reg_count = [{{ group_lecture_reg_count }}];
         var group_lecture_finish_count = [{{ group_lecture_finish_count }}];
+        var class_lecture_avail_count = [{{ class_lecture_avail_count }}];
+        var class_lecture_reg_count = [{{ class_lecture_reg_count }}];
+        var class_lecture_finish_count = [{{ class_lecture_finish_count }}];
         var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
         var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 

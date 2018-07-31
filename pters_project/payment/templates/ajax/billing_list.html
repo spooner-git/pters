@@ -1,0 +1,23 @@
+{
+      "pay_method" :
+      [{% for billing_info in billing_data %}"{{ billing_info.pay_method }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "payment_type_cd" :
+      [{% for billing_info in billing_data %}"{{ billing_info.payment_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "customer_uid" :
+      [{% for billing_info in billing_data %}"{{ billing_info.customer_uid }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "merchant_uid" :
+      [{% for billing_info in billing_data %}"{{ billing_info.merchant_uid }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "payment_date" :
+      [{% for billing_info in billing_data %}"{{ billing_info.payment_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "payed_date" :
+      [{% for billing_info in billing_data %}"{{ billing_info.payed_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd" :
+      [{% for billing_info in billing_data %}"{{ billing_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "mod_dt" :
+      [{% for billing_info in billing_data %}"{{ billing_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "reg_dt" :
+      [{% for billing_info in billing_data %}"{{ billing_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+    "messageArray" :
+    [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+}

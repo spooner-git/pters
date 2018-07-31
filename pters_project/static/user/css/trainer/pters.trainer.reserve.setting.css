@@ -1,7 +1,30 @@
+html{
+	background:#ffffff;
+}
 body{
 	padding-top: 50px;
 	margin:0 auto;
+	background: #ffffff;
 }
+.wrap800{
+	width: 97%;
+}
+
+#ymdText{
+	z-index: 30;
+}
+#menuName{
+
+}
+
+#menuDescription{
+    line-height: 40px;
+}
+
+#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText{
+	margin-top: 70px;
+}
+
 
 .fixfooter{
 	position: relative;
@@ -20,6 +43,11 @@ body{
 	margin-left: 5px;
 }
 
+.dropdown-backdrop{
+	background: transparent !important;
+	border: 2px solid #fe4e65;
+}
+
 li a{
 	cursor: pointer;
 }
@@ -33,6 +61,21 @@ li a{
 .dropdown button{
 
 }
+
+#memberReserveBasicHourSetting{
+	z-index: 7;
+}
+	#ulTimes_rsvHour{
+		height: auto;
+		max-height: 190px;
+	}
+
+#memberStartHourSetting{
+	z-index: 6;
+}
+	#ulTimes_mstart{
+		height: auto;
+	}
 
 #memberAvailDateSetting{
 	z-index: 5;
@@ -51,14 +94,17 @@ li a{
 }
 
 #hourSelect, #hourSelect2, #workTimehourSelect, #workTimehourSelect2{
-	display: inline-flex;
+	display: inline-block;
 	width: 50%;
+	min-width: 100px;
+	margin-top: 4px;
 }
 
-#timeSelect, #dateSelect, #timeSelect2{
+#timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect, #mstartHourSelect{
 	left: 16%;
 	max-width: 170px;
-	display: inline-flex;
+	display: inline-block;
+	margin-top: 4px;
 }
 
 #pushTimeSet{
@@ -128,21 +174,28 @@ li a{
 
 .settingMenu{
 	position: relative;
-	height: 60.5px;
+	height: auto;
 	background: #ffffff;
 	font-size: 14.9px;
 	font-weight: 500;
 	color: #282828;
-	padding-top: 15px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+
+	border: 1px solid #eaeaea;
+	margin-top: 20px;
 }
 
 .settingBox{
 	position: relative;
 	z-index: 2;
+	margin: 0;
+	background: #eaeaea;
 }
 
 
 .settingText{
+	font-size: 16.5px;
 	margin: 0;
 	margin-left: 14.5px;
 }
@@ -168,7 +221,7 @@ li a{
 	position: relative;
 	font-size: 13.9px;
 	color: #3b3d3d;
-	margin-left: 14.5px;
+	padding-left: 14.5px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
@@ -194,7 +247,11 @@ li a{
 }
 
 #trainerPushSettingText{
-	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+#trainerAutoCompleteSettingText{
+	margin-bottom: 0;
 }
 
 
@@ -205,8 +262,8 @@ li a{
 	display: inline-block;
 	width: 53.5px;
 	height: 35px;
-	top: 13px;
-	right: 14.5px;
+	top: 1px;
+	right: 3px;
 }
 
 .switchback{
@@ -239,4 +296,138 @@ li a{
 
 .switchon-back{
 	background: #ffffff;
+}
+
+#mobile_preview_btn{
+	display: block;
+	position: absolute;
+	top: 110px;
+	right: 1.5%;
+	width: 85px;
+	height: 30px;
+	background: #fe4e65;
+	color: #ffffff;
+	border: 0;
+}
+
+#preview_iframe_popup{
+	position: fixed;
+	display: none;
+	width: 95%;
+	height: 70%;
+	max-width: 590px;
+	max-height: 660px;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 100;
+	background-image: url('/static/user/res/ajax/loading.gif');
+	background-size: 40px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: #ffffff;
+
+	overflow: auto;
+	-webkit-overflow-scrolling:touch;
+
+}
+	#preview_iframe_popup iframe{
+		position: fixed;
+		
+		border: 1px solid #ffffff;
+	}
+	#preview_iframe_popup p{
+		color: #282828;
+		text-align: center;
+		font-size: 13px;
+		margin-top: 10px;
+	}
+	#close_preview_iframe_popup{
+		position: absolute;
+		right: 3px;
+		top: 8px;
+		cursor: pointer;
+		color: #282828;
+		font-size: 14px;
+	}
+
+#shade_for_preview{
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background:black;
+	opacity: 0.7;
+	z-index: 20
+}
+
+#preview_option_values{
+	display: none;
+	text-align: center;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+}
+	#preview_option_values div{
+		display: inline-block;
+		width: 110px;
+		height: 45px;
+		vertical-align: top;
+	}
+	#preview_option_values div p:first-child{
+		font-size: 12px;
+		line-height: 20px;
+		margin: 0;
+	}
+	#preview_option_values div p:last-child{
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 20px;
+		margin: 0;
+	}
+
+@media(min-width: 345px){
+	.pters_switch{
+		top: 5px;
+		right: 5px;
+	}
+}
+
+@media(min-width: 600px){
+	#preview_option_values{
+		display: block;
+		text-align: center;
+		border-top: 1px solid #cccccc;
+		border-bottom: 1px solid #cccccc;
+	}
+	.settingMenu{
+		height: auto;
+		padding-top: 10px;
+	}
+	#menuName{
+
+	}
+
+	#menuDescription{
+	    line-height: unset;
+	}
+	#trainerWorkTimeSettingText ,#memberReserveBasicHourSettingText{
+		margin-top: 120px;
+	}
+	.settingText{
+		font-size: 20px;
+	}
+	.settingText2{
+		font-size: 14px;
+	}
+
+	.pters_switch{
+		top: 13px;
+		right: 14.5px;
+	}
+	#mobile_preview_btn{
+		display: none;
+	}
+	
 }

@@ -19,7 +19,7 @@
 
         <div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:class_setting' %}'">
             <img src="/static/user/res/icon-money.png" alt="" class="settingImg">
-            <span class="settingText"><span class="KRtext">클래스 설정</span><span class="JPtext">業務設定</span><span class="ENtext">Work</span></span>
+            <span class="settingText"><span class="KRtext">프로그램 관리</span><span class="JPtext">業務設定</span><span class="ENtext">Work</span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
@@ -29,26 +29,43 @@
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
+        <div id="basicSetting" class="settingMenu" onclick="location.href='{% url 'trainer:basic_setting' %}'">
+            <img src="/static/user/res/ptadd/icon-start.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">기본 설정</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
         <div id="reserveSetting" class="settingMenu" onclick="location.href='{% url 'trainer:reserve_setting' %}'">
             <img src="/static/user/res/ptadd/icon-clock.png" alt="" class="settingImg">
             <span class="settingText"><span class="KRtext">예약 관련</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
-        <!--
-        <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'">
+        <div id="bgSetting" class="settingMenu" onclick="location.href='{% url 'trainer:background_setting' %}'">
+            <img src="/static/user/res/icon-setting.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">배경 설정</span><span class="JPtext"></span><span class="ENtext"></span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'" style="display: none;">
             <img src="/static/user/res/icon-card@3x.png" alt="" class="settingImg">
             <span class="settingText"><span class="KRtext">이용권 구매</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
-        -->
-
+        
         <!--<div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'trainer:language_setting' %}'">-->
         <div id="languageSetting" class="settingMenu" style="opacity: 0.5;">
             <img src="/static/user/res/icon-earth.png" alt="" class="settingImg">
             <span class="settingText">Language/言語/언어</span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
+
+        <div id="from_pters_team" class="settingMenu" onclick="location.href='{% url 'trainer:frompters_setting' %}'">
+            <img src="/static/user/res/PTERS_logo_pure.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">From 피터스팀</span><span class="JPtext"></span><span class="ENtext"></span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
     </div>
 
     <div id="logout">

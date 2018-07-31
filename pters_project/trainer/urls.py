@@ -115,6 +115,23 @@ urlpatterns = [
     url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
     # 강좌 정보 선택 처리
     url(r'^select_class_processing/$', views.select_class_processing_logic, name='select_class_processing'),
+    # 강좌 정보 수정
+    url(r'^update_class_info/$', views.UpdateClassInfoView.as_view(), name='update_class_info'),
+
+
+    # 배경 이미지 설정 기능 #################################################################################################
+    # 배경 이미지 타입 코드 조회
+    url(r'^get_background_img_type_list/$', views.GetBackgroundImgTypeListViewAjax.as_view(),
+        name='get_background_img_type_list'),
+    # 배경 이미지 정보 조회
+    url(r'^get_background_img_list/$', views.GetBackgroundImgListViewAjax.as_view(), name='get_background_img_list'),
+    # 배경 이미지 정보 추가/수정
+    url(r'^update_background_img_info/$', views.UpdateBackgroundImgInfoViewAjax.as_view(),
+        name='update_background_img_info'),
+    # 배경 이미지 정보 삭제
+    url(r'^delete_background_img_info/$', views.DeleteBackgroundImgInfoViewAjax.as_view(),
+        name='delete_background_img_info'),
+
 
     # Mypage/Setting 기능 ###############################################################################################
     # 강사 정보 조회
@@ -123,6 +140,8 @@ urlpatterns = [
     url(r'^update_trainer_info/$', views.update_trainer_info_logic, name='update_trainer_info'),
     # 푸시 Setting 수정
     url(r'^update_setting_push/$', views.update_setting_push_logic, name='update_setting_push'),
+    # 일반 설정 관련 Setting 수정
+    url(r'^update_setting_basic/$', views.update_setting_basic_logic, name='update_setting_basic'),
     # 예약관련 Setting 수정
     url(r'^update_setting_reserve/$', views.update_setting_reserve_logic, name='update_setting_reserve'),
     # 금액 Setting 정보 수정
@@ -130,13 +149,15 @@ urlpatterns = [
     # 언어 Setting 정보 수정
     url(r'^update_setting_language/$', views.update_setting_language_logic, name='update_setting_language'),
 
+
     # 알람 기능 ##########################################################################################################
     # 알람 삭제
     url(r'^alarm_delete/$', views.alarm_delete_logic, name='alarm_delete'),
 
+
     # 공지 기능 ##########################################################################################################
     # 공지사항 조회
-    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_off_repeat_schedule_ajax'),
+    url(r'^get_notice_info/$', views.GetNoticeInfoView.as_view(), name='get_notice_info_ajax'),
 
 
 
@@ -154,8 +175,12 @@ urlpatterns = [
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     # 그룹 관리 페이지
     url(r'^group_manage/$', views.ManageGroupView.as_view(), name='group_manage'),
+    # 클래스 관리 페이지
+    url(r'^class_manage/$', views.ManageClassView.as_view(), name='class_manage'),
     # 이용 문의 페이지
     url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
+    # From 피터스팀 페이지
+    url(r'^frompters_setting/$', views.FromPtersView.as_view(), name='frompters_setting'),
     # 강좌 선택 페이지
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
     # 강좌 추가 페이지
@@ -166,12 +191,14 @@ urlpatterns = [
     url(r'^delete_account/$', views.DeleteAccountView.as_view(), name='delete_account'),
     # Setting 페이지
     url(r'^trainer_setting/$', views.TrainerSettingView.as_view(), name='trainer_setting'),
-    # 이용권 구매 페이지
-    url(r'^payment_setting/$', views.PaymentSettingView.as_view(), name='payment_setting'),
+    # 배경 화면 선택 페이지
+    url(r'^background_setting/$', views.BGSettingView.as_view(), name='background_setting'),
     # 푸시 Setting 페이지
     url(r'^push_setting/$', views.PushSettingView.as_view(), name='push_setting'),
     # 예약 관련 Setting 페이지
     url(r'^reserve_setting/$', views.ReserveSettingView.as_view(), name='reserve_setting'),
+    # 예약 관련 Setting 페이지
+    url(r'^basic_setting/$', views.BasicSettingView.as_view(), name='basic_setting'),
     # 금액 Setting 페이지
     url(r'^sales_setting/$', views.SalesSettingView.as_view(), name='sales_setting'),
     # 클래스 Setting 페이지
@@ -182,10 +209,14 @@ urlpatterns = [
     url(r'^work_manage/$', views.ManageWorkView.as_view(), name='work_manage'),
     # 알람 조회 페이지
     url(r'^alarm/$', views.AlarmView.as_view(), name='alarm'),
+    # 알람 조회 페이지 PC
+    url(r'^alarm_pc/$', views.AlarmPCView.as_view(), name='alarm_pc'),
 
     # iframe 주간 일정 페이지
     url(r'^iframe_week/$', views.CalWeekIframeView.as_view(), name='iframe_week'),
     # iframe 월간 일정 페이지
     url(r'^iframe_month/$', views.CalMonthIframeView.as_view(), name='iframe_month'),
+    # iframe 회원 달력 미리보기 페이지
+    url(r'^iframe_preview/$', views.CalPreviewIframeView.as_view(), name='iframe_preview'),
     ######################################################################################################
 ]

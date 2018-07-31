@@ -95,7 +95,7 @@
                     <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month'%}'">달력</a>
                 </div>
                 <div class="centermenu_div">
-                    <a class="centermenu_text" onclick="open_lecture_select_popup()">클래스 선택</a>
+                    <a class="centermenu_text" onclick="open_lecture_select_popup()">캘린더 선택</a>
                 </div>
                 <div class="centermenu_div">
                     <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
@@ -125,10 +125,10 @@
             <input type="hidden" name="class_id" id="id_class_id">
             <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
         </form>
-        <label>클래스 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-        <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
+        <label>프로그램 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+        <p>이동을 원하는 프로그램을 선택해 주세요.</p>
         <div class="pters_table">
-            <div class="pters_table_cell_head table_lecture_name">클래스</div>
+            <div class="pters_table_cell_head table_lecture_name">프로그램명</div>
             <div class="pters_table_cell_head table_trainer_name">강사</div>
             <!--<div class="pters_table_cell">연락처</div>-->
             <div class="pters_table_cell_head table_selection">선택</div>
@@ -162,14 +162,17 @@
             <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
             <a class="JPtext _company">会社紹介</a>
             <a class="ENtext _company">About us</a>
+            <!--
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="">이용문의</a>
             <a class="JPtext">利用案内</a>
             <a class="ENtext">Help</a>
+
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext ">제휴제안</a>
             <a class="JPtext ">提携</a>
             <a class="ENtext ">Partnership</a>
+            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -178,17 +181,21 @@
             <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
             <a class="JPtext">個人情報処理方針</a>
             <a class="ENtext">Privacy Policy</a>
+            <!--
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext ">고객센터</a>
             <a class="JPtext ">ヘルプ</a>
             <a class="ENtext ">Customer Service</a>
+            -->
         </div>
 
         <div class="bottomfooter3">
+            <!--
             <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
             <a class="KRtext" href="">이용문의</a>
             <a class="JPtext">利用案内</a>
             <a class="ENtext">Help</a>
+            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -247,13 +254,16 @@
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
         $('#errorMessageBar').fadeOut()
+        $('.ajaxloadingPC').hide();
     })
+
 
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
 
+    /*
     var stoptime = '{{ lt_res_01 }}'
     if(stoptime.length>0){
         var stoptimeStart = Number('{{ lt_res_01 }}'.split(':')[0])
@@ -267,20 +277,35 @@
     if(worktime.length>0){
         var worktimeStart = Number('{{ lt_res_04 }}'.split(':')[0])
         var worktimeEnd = Number('{{ lt_res_04 }}'.split('-')[1].split(':')[0])
+        if(worktime.split(':')[0] == '23' && worktime.split(':')[1] == '59'){
+            worktimeStart = 24;
+        }
+        if(worktime.split('-')[1].split(':')[0] == '23' && worktime.split('-')[1].split(':')[1] == '59' ){
+            worktimeEnd = 24;
+        }
     }else{
         var worktimeStart = ''
         var worktimeEnd = ''
     }
+    */
 
-    var Options = {  "hourunit" : 30, // 30 or 60
-        "classDur" : 60, // 30 or 60
-        "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
-        "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
+    var worktime = '{{ lt_res_04 }}'
+    var worktimeStart = time_divider(worktime, 'start');
+    var worktimeEnd = time_divider(worktime, 'end');
+
+
+    var class_background_img_url = []
+
+    var Options = {  "hourunit" : 30,                       // 30 or 60
+        "classDur" : {{ request.session.class_hour }},      // 30 or 60
+        "timeDur" : {{ lt_res_member_time_duration }},
+        "startTime": '{{ lt_res_member_start_time }}',
+        "stoptimeStart": time_divider('{{ lt_res_01 }}','start'),                    //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": time_divider('{{ lt_res_01 }}','end') ,                        //강사가 설정한 예약불가 시간 (종료)
         "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-        "reserve":Number('{{ lt_res_03 }}'),    //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number({{ lt_res_05 }}),
+        "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
+        "availDate":Number('{{ lt_res_05 }}'),
         "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
-
         "firstPushToMember":'-',
         "secondPushToMember":'-',
         "regErgentPushToMember":'-',
@@ -290,8 +315,8 @@
         "workStartTime":worktimeStart,
         "workEndTime":worktimeEnd,
 
-        "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan",           //Korea, Japan, English, Chinese
+        "language" : "KOR",             //Korea, Japan, English
+        "location" : "Japan"           //Korea, Japan, English
     }
     {#            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];#}
     {#            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];#}
@@ -313,6 +338,33 @@
         $('._company').css('display','none')
     }else{
 
+    }
+
+    function time_divider(time, startOrEnd){
+        var time = time;
+        var timeStart = '';
+        var timeEnd = '';
+
+        if(time.length>0){
+            timeStart = Number(time.split(':')[0]);
+            timeEnd = Number(time.split('-')[1].split(':')[0]);
+            if(time.split(':')[0] == '23' && time.split(':')[1] == '59'){
+                timeStart = 24;
+            }
+            if(time.split('-')[1].split(':')[0] == '23' && time.split('-')[1].split(':')[1] == '59' ){
+                timeEnd = 24;
+            }
+        }else{
+            timeStart = '';
+            timeEnd = '';
+        }
+        if(startOrEnd == 'start'){
+            return timeStart;
+        }else if(startOrEnd == 'end'){
+            return timeEnd;
+        }else if(startOrEnd == 'full'){
+            return time;
+        }
     }
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///
@@ -422,8 +474,7 @@
     }
 
     function open_lecture_select_popup(){
-        $('#popup_lecture_select').fadeIn('fast')
-        $('#shade2').show()
+        $('#popup_lecture_select').show()
         ajax_read_lecture_info_from_db()
     }
 
@@ -499,8 +550,7 @@
     })
 
     $('.button_close_popup').click(function(){
-        $(this).parents('div._popup').fadeOut('fast')
-        $('#shade2').hide()
+        $(this).parents('div._popup').hide()
     })
 
     function lecture_check(lecture_id, check, class_id){
@@ -542,6 +592,7 @@
 
 </script>
 <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 
 
 {% block local_js_footer %}

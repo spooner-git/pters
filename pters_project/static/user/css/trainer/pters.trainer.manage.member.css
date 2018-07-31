@@ -5,7 +5,7 @@ body{
 }
 
 #page-base-addstyle{ /*20180426*/
-	z-index: 351;
+	/*z-index: 351; 20180727*/
 }
 
 #how_to_add_member{
@@ -23,6 +23,12 @@ body{
 	display: none;
 }
 
+#menuDescription{
+  line-height: 40px;
+}
+
+
+
 
 @media(min-width: 600px){
 	#how_to_add_member{
@@ -38,6 +44,11 @@ body{
 		padding: 20px 30px 0px 30px;
 		box-shadow: 1px 1px 1px 1px #fe4e65;
 		display: none;
+	}
+
+	
+	#menuDescription{
+	  line-height: unset;
 	}
 }
 
@@ -199,6 +210,7 @@ body{
 	border:1px solid #a2a2a2;
 	border-radius: 0;
 	-webkit-appearance:none;
+	-moz-appearance:none;
 	text-align-last:center;
 	-webkit-text-align: center;
 }
@@ -280,7 +292,7 @@ select:focus > option:checked {
 	display: none;
 }
 
-._countnum,._id,._email,._finday,._manage{
+._countnum,._id,._email,._finday,._manage,._startdate{
 	display: none;
 }
 
@@ -293,7 +305,7 @@ select:focus > option:checked {
 
 ._tdname, ._tdnamee{
 	position: relative;
-	width: 23%;
+	width: 40%;
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
@@ -319,7 +331,7 @@ select:focus > option:checked {
 }
 
 ._regcount{
-	width: 25%;
+	width: 23%;
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
@@ -327,7 +339,7 @@ select:focus > option:checked {
 }
 
 ._remaincount{
-	width: 25%;
+	width: 23%;
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
@@ -363,6 +375,7 @@ select:focus > option:checked {
 
 .memberline{
 	cursor: pointer;
+	height: 40px;
 }
 
 .memberline:hover{
@@ -381,81 +394,6 @@ select:focus > option:checked {
 }
 
 
-#float_btn_wrap{
-	display: block;
-}
-
-#float_btn{  /*2017.10.2*/
-	position: fixed;
-	width: 50px;
-	height: 50px;
-	bottom: 25px;
-	right: 25px;
-	border-radius: 50%;
-	z-index: 121;
-	cursor: pointer;
-}
-
-#float_btn img{ /*2017.10.2*/
-	width: 100%;
-	height: 100%;
-}
-
-#float_inner1{ /*2017.10.2*/
-	background-color: #fe4e65;
-}
-
-#float_inner1 a{ /*2017.10.2*/
-	color: #ffffff;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	margin: auto;
-	height: 70%;
-	font-weight: bold;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-#float_inner2{ /*2017.10.2*/
-	background-color: #ffffff;
-}
-
-#float_inner2 a{ /*2017.10.2*/
-	color: #282828;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	margin: auto;
-	height: 70%;
-	font-weight: bold;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-
-.float_inner{ /*2017.10.2*/
-	position: fixed;
-	width: 50px;
-	height: 50px;
-	bottom: 25px;
-	right: 25px;
-	background-color: grey;
-	opacity: 0;
-	border-radius: 50%;
-	z-index: 120;
-	font-size: 13px;
-	text-align: center;
-}
-
-.rotate_btn{
-	-webkit-transform: rotate(47deg);
-	transform: rotate(47deg);
-}
 
 /*-----------------모바일 회원정보 팝업-----------------------*/
 .infopopup{
@@ -586,10 +524,14 @@ select:focus > option:checked {
 	font-size:13px;
 	width: 100%;
 	padding: 0;
-	border:1px solid #cccccc;
+	/*border:1px solid #cccccc;*/
 	margin:0 auto;
 	margin-top: 6px;
 }
+	.wraps{
+		margin-bottom: 15px;
+		border: 1px solid #cccccc;
+	}
 #memberRegHistory_info > div > div {
 	display: table;
 	width: 100%;
@@ -634,11 +576,12 @@ select:focus > option:checked {
 	color: #7d7d7d;
 	padding-left: 6px !important;
 	margin-bottom: 7px !important;
-	border-bottom: 1px solid #cccccc !important;
+	/*border-bottom: 1px solid #cccccc !important;*/
 	padding-bottom: 8px !important;
 }
 #memberRegHistory_info img{
-	width: 12px;
+	width: 16px;
+	margin: 5px;
 	cursor: pointer;
 }
 .regHistory_table_title{
@@ -694,9 +637,11 @@ select:focus > option:checked {
 	padding: 10px;
 	width: 600px;
 	z-index:250;
+	/*
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%,-50%);
+	*/
 	border-radius: 3px;
 	border: 1px solid #cccccc;
 }
@@ -778,6 +723,7 @@ select:focus > option:checked {
 	-webkit-appearance:none;
 	-moz-appearance:none;
 	appearance:none;
+	background:transparent;
 }
 #memberBirth_select_wrap{
 	display: inline-block;
@@ -911,6 +857,7 @@ select:focus > option:checked {
 	padding: 0;
 	margin: 0;
 	border: 0;
+	height: 25px;
 }
 #memberLectureHistory_info_PC > div > div:nth-child(1), #memberLectureHistory_info > div > div:nth-child(1){
 	display: table-cell;
@@ -974,6 +921,7 @@ select:focus > option:checked {
 	color: #282828;
 	border-bottom:1px solid #cccccc;
 	height: 55px;
+	margin-top: 1px;
 }
 #memberRepeat_info_PC p:nth-child(1), #memberRepeat_info p:nth-child(1){
 	color: #fe4e65;
@@ -1109,16 +1057,15 @@ span.summaryInnerBoxText_Repeatendtext{
 	color: #ffffff;
 	border-bottom: 0;
 	border-top-right-radius: 9px;
-	height: 22px;
-	width: 70px;
-	font-size: 13px;
+	height: 30px;
+	width: 80px;
+	font-size: 14px;
 	text-align: center;
 	cursor: pointer;
+	border: 1px solid #f7f7f7;
+	vertical-align: middle;
 }
-.button_shift_info:active{
-	background: #fe4e65;
-	color: #ffffff;
-}
+
 .button_active{
 	background: #fe4e65;
 	color: #ffffff;
@@ -1211,8 +1158,7 @@ span.summaryInnerBoxText_Repeatendtext{
 .phonesms{
 	display: inline;
 	width: 16px;
-	margin-left: 5px;
-	margin-right: 5px;
+	margin: 7px;
 }
 
 .phonenum{
@@ -1224,9 +1170,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	color: #fe4e65;
 }
 
-.sms{
-	margin-top: 1.5px;
-}
+
 
 .nameimg{
 	width: 6px;
@@ -1297,7 +1241,8 @@ span.summaryInnerBoxText_Repeatendtext{
 	width: 15px !important;
 	line-height: 15px !important;
 	text-align:center !important;
-	padding:0 !important;
+	padding:0 6px 0 6px;
+	font-size: 13px;
 	cursor: pointer !important;
 }
 
@@ -1315,20 +1260,21 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	#page_addmember{
 		top: unset;
-		max-width: 450px !important;
+		max-width: 500px !important;
 	}
 
-	#float_btn_wrap{
-		display: none !important;
+	.memberline{
+		height: 35px;
 	}
 
 	._grouptype{
 		display: table-cell;
-		width: 17%;
+		width: 25%;
 	}
 
-	._regcount{
+	._regcount, ._remaincount{
 		display: table-cell;
+		width: 20%;
 	}
 
 	.phonenum{
@@ -1375,6 +1321,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		left: 50%;
 		transform: translate(-50%, -50%);
 		*/
+		margin-bottom: 50px;
 	}
 
 	.ymdText-pc-add-member-wrap{
@@ -1453,9 +1400,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		color: #ffffff;
 	}
 
-	#float_btn{
-		display: none !important;
-	}
+
 
 	#infoMemberModify{
 		display: inline;
@@ -1469,6 +1414,17 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 	#infoMemberModify img{
 		width: 100%;
+	}
+
+	.button_shift_info{
+		height: 22px;
+		width: 70px;
+		font-size: 13px;
+		border: 0;
+	}
+	.button_shift_info:active{
+		background: #fe4e65;
+		color: #ffffff;
 	}
 
 }
@@ -1533,7 +1489,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		margin-left:6px;
 	}
 
-	._countnum,._id,._email,._finday,._manage{
+	._countnum, ._id, ._email, ._startdate, ._finday, ._manage{
 		display: table-cell;
 	}
 
@@ -1546,7 +1502,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._grouptype{
-		width: 40px;
+		width: 60px;
 	}
 
 	._tdname,._tdnamee{
@@ -1554,7 +1510,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._id{
-		width: 90px;
+		width: 65px;
 	}
 
 	._email{
@@ -1586,10 +1542,11 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._manage{
-		width: 50px;
+		width: 55px;
 	}
 
-	#page_managemember table,#page_managemember td{
+	#page_managemember table, #page_managemember td{
+		vertical-align: middle;
 		border:0 !important;
 	}
 
@@ -1599,6 +1556,9 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	#page_managemember td{
 		font-size : 13px;
+		overflow:hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	#page_managemember th{
@@ -1659,6 +1619,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		border:1px solid #cccccc;
 		width: 350px;
 		height: 45px;
+		margin-top: unset;
 	}
 	#selectBox_type.list_switch_wrap{
 		border: 0;

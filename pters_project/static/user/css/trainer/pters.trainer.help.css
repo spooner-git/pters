@@ -7,11 +7,12 @@ body{
 	padding: 15px;
 	margin-top:10px;
 }
-#help_setting>label>img{
+#help_setting>label>img, #go_to_faq>label>img{
 	width: 20px;
 	margin-bottom: 5px;
 	margin-right: 5px;
 }
+
 
 
 .label_explain{

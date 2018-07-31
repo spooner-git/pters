@@ -17,7 +17,10 @@ pters_project/logs/login_log.log
 pters_project/logs/trainer_log.log
 pters_project/logs/trainee_log.log
 pters_project/logs/schedule_log.log
+pters_project/logs/payment_log.log
 pters_project/login/templatetags/__pycache__/
 pters_project/payment/__pycache__/
 pters_project/payment/migrations/__pycache__/
-
+pters_project/trainer/templatetags/__pycache__/
+pters_project/stats/__pycache__/
+pters_project/stats/migrations/__pycache__/

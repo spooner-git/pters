@@ -35,7 +35,7 @@ $(document).ready(function(){
     var schedule_on_off = 0;
 
 
-    setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
+    setInterval(function(){ajaxCheckSchedule()}, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 
     function ajaxCheckSchedule(){
@@ -97,6 +97,7 @@ $(document).ready(function(){
         }
     });
 
+/*
     $('#upbutton-x').click(function(){
         var bodywidth = window.innerWidth;
         //$('#calendar').css('height','90%')
@@ -106,8 +107,7 @@ $(document).ready(function(){
                 //$('#calendar').show();
                 $('#calendar').css('height','100%')
             }
-            $('#float_btn_wrap').css('display','block');
-            $('#float_btn').removeClass('rotate_btn');
+            $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
 
@@ -140,16 +140,65 @@ $(document).ready(function(){
             $('#timeGraph').css('display','none')
             shade_index(-100)
         }
-
     })
+*/
+    
+    $('#upbutton-x').click(function(){
+        var bodywidth = window.innerWidth;
+        //$('#calendar').css('height','90%')
+        if($(this).attr('data-page') == "addplan"){
+            $('#page-addplan').css('display','none');
+            if(bodywidth < 600){
+                //$('#calendar').css('display','block');
+                $('#calendar').css('height','100%')
+            }
+            $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
+            $('#page-base').css('display','block');
+            $('#page-base-addstyle').css('display','none');
 
+            var text1 = '회원/그룹/클래스 선택';
+            var text2 = '선택';
+            if(Options.language == "KOR"){
+                text1 = '회원/그룹/클래스 선택';
+                text2 = '선택';
+            }else if(Options.language == "JPN"){
+                text1 = '「会員選択」';
+                text2 = '「選択」';
+            }else if(Options.language == "ENG"){
+                text1 = 'Choose member';
+                text2 = 'Choose';
+            }
+            $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
+            $("#countsSelected,.countsSelected").text("");
+            //$("#dateSelector p").removeClass("dropdown_selected");
+            $("#starttimesSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+            $("#durationsSelected button").html("<span style='color:#cccccc;'>"+text2+"</span>").val("");
+            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+            $("#starttimes, #durations").empty();
+            $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
+
+            $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
+            $('.dateButton').removeClass('dateButton_selected');
+            $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null);
+            $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
+            //$('#page-addplan form input').val('');
+            selectedDayGroup = [];
+
+            $('._NORMAL_ADD_wrap').css('display','block');
+            $('._REPEAT_ADD_wrap').css('display','none');
+            $('#timeGraph').css('display','none');
+            shade_index(-100);
+        }
+    });
 
 
     $(document).on('click','#calendar td',function(){
         closeAlarm('pc')
         if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
             deleteTypeSelect = ''
-            $('#cal_popup_plancheck').css('display','block');
+            var $cal_popup_plancheck = $('#cal_popup_plancheck');
+            //$cal_popup_plancheck.css('display','block');
+            $('#float_btn').hide();
             shade_index(100)
             var info = $(this).attr('data-date').split('_')
             var yy=info[0]
@@ -164,6 +213,12 @@ $(document).ready(function(){
             $('#countNum').text(countNum)
             $('.popup_ymdText').html(infoText)
             plancheck(yy+'_'+mm+'_'+dd, initialJSON)
+            if(bodywidth > 600){
+                $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
+            }else{
+                $cal_popup_plancheck.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+            }
+            //disable_window_scroll();
             clicked_td_date_info = yy+'_'+mm+'_'+dd
         }
     })
@@ -174,49 +229,52 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         //날짜를 클릭해서 나오는 일정들을 클릭했을때
         $(document).on('click','.plan_raw',function(){
+            var group_type_name = $(this).attr('data-group-type-cd-name');
+            var member = " 회원님의 ";
+            var yourplan = " 일정";
+            var text = group_type_name+" 일정";
+            if(group_type_name == ''){
+                text = "1:1 레슨 일정"
+            }
             switch(Options.language){
-                case "KOR" :
-                    var member = " 회원님의 ";
-                    var yourplan = " 일정";
-                    var text = '레슨 일정'
-                    break;
                 case "JPN" :
-                    var member = "様の ";
-                    var yourplan = " 日程";
-                    var text = 'PT 日程'
+                    member = "様の ";
+                    yourplan = " 日程";
+                    text = 'PT 日程'
                     break;
                 case "ENG" :
-                    var member = "'s schedule at ";
-                    var yourplan = "";
-                    var text = 'PT Plan'
+                    member = "'s schedule at ";
+                    yourplan = "";
+                    text = 'PT Plan'
                     break;
             }
             shade_index(150)
-            $('#popup_planinfo_title').text('레슨 일정')
-            $('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
+            $('#popup_planinfo_title').text(text)
             var schedule_finish_check = $(this).attr('data-schedule-check')
             var dbid = $(this).attr('data-dbid');
             var name = $(this).attr('data-membername')
             var selectedDate = $('.popup_ymdText').text()
             var selectedTime = $(this).find('.planchecktime').text().split(':')[0]
             var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0]
+            var selectedETime = $(this).find('.planchecktime').text().split('-')[1].split(':')[0]
+            var selectedEMinute = $(this).find('.planchecktime').text().split('-')[1].split(':')[1]
             var selectedPerson = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+$(this).attr('data-membername')+'">'+$(this).find('.plancheckname').text()+'</span>'
             var selectedMemo = $(this).attr('data-memo')
             if($(this).attr('data-memo') == undefined){
-                var selectedMemo = ""
+                selectedMemo = ""
             }
-
-            var infoText2 = '[그룹]'+name+' '+selectedTime+':'+selectedMinute+yourplan
-            $("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
+            var stime_text = time_format_to_hangul(add_time(selectedTime+':'+selectedMinute,'00:00'));
+            var etime_text = time_format_to_hangul(add_time(selectedETime+':'+selectedEMinute,'00:00'));
+            //$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
             $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
             $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'})
             $('#popup_info').text(selectedDate);
 
             $('#popup_info3_memo').text(selectedMemo).val(selectedMemo)
 
-            $('#canvas').hide().css({'border-color':'#282828'});
-            $('#canvasWrap').css({'height':'0px'});
-            $('#canvasWrap span').hide();
+            $('#canvas').css({'border-color':'#282828'});
+            $('#canvasWrap').css({'display':'none'});
+            $('#inner_shade_planinfo').css('display','none');
 
             $("#id_schedule_id").val($(this).attr('schedule-id')); //shcedule 정보 저장
             $("#id_schedule_id_finish").val($(this).attr('schedule-id')); // shcedule 정보 저장
@@ -241,8 +299,9 @@ $(document).ready(function(){
                 $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('schedule-id')+'.png');
                 var myImage = document.getElementById("id_sign_img");
                 myImage.onerror = function() {
-                    this.src="";
-                    $("#popup_sign_img").css("display","none")
+                    //this.src="";
+                    //$("#popup_sign_img").css("display","none")
+                    $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
                 }
             }
 
@@ -250,11 +309,12 @@ $(document).ready(function(){
 
             $('#subpopup_addByList_plan').hide()
             if($(this).attr('data-grouptype') == "group"){
-                $('#popup_info2').text(infoText2);
+                $('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
                     'data-groupid': $(this).attr('data-groupid'),
                     'group-schedule-id':$(this).attr('schedule-id'),
                 })
+                //$("#popup_sign_img").css("display","none");
                 //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
                 if(bodywidth > 600){
                     toggleGroupParticipantsList('on')
@@ -263,11 +323,17 @@ $(document).ready(function(){
                 }
                 schedule_on_off = 2;
             }else{
-                $('#popup_info2').html(selectedPerson+'의 '+ selectedTime+':'+selectedMinute + ' 일정');
+                $('#popup_info2').html(selectedPerson+' 님'+ '<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').hide()
                 toggleGroupParticipantsList('off')
                 schedule_on_off = 1;
             }
+            if(bodywidth > 600){
+                $("#cal_popup_planinfo").css({'display':'block','top':(($(window).height()-$("#cal_popup_planinfo").outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$("#cal_popup_planinfo").outerWidth())/2+$(window).scrollLeft())}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+            }else{
+                $('#cal_popup_planinfo').css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+            }
+
         })
 
         $(document).on('click','.plan_raw_add',function(){
@@ -335,7 +401,7 @@ $(document).ready(function(){
                             get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
                                 var availCount_personal = 0;
                                 for (var i = 0; i < jsondata.availCountArray.length; i++) {
-                                    if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1") {
+                                    if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨") {
                                         availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                                     }
                                 }
@@ -388,8 +454,6 @@ $(document).ready(function(){
                     //ajax_block_during_delete_monthcal = true
                 }else if(deleteTypeSelect == "groupptdelete"){
                     var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id')
-
-                    send_plan_delete('group')
                     // send_plan_delete('group', 'callback', function(){})
                     // get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                     // 	for(var i=0; i<jsondata.scheduleIdArray.length; i++){
@@ -413,7 +477,13 @@ $(document).ready(function(){
                     // 	}
                     // })
                     //ajax_block_during_delete_monthcal = true
-                    enable_delete_btns_after_ajax()
+                    send_plan_delete('group', 'callback', function(){
+                        //ajax_block_during_delete_weekcal = true
+                        enable_delete_btns_after_ajax();
+                        $('#members_mobile, #members_pc').html('')
+                        get_current_member_list();
+                        get_current_group_list();
+                    })
                 }
             }
 
@@ -430,7 +500,23 @@ $(document).ready(function(){
 
         //일정 완료 버튼 클릭
         //var ajax_block_during_complete_monthcal = true
-        $("#popup_btn_complete").click(function(){
+        $("#popup_btn_complete").click(function(){  //일정 완료 버튼 클릭
+            $('#canvas, #canvasWrap').css('display','block');
+            $('#inner_shade_planinfo').css('display','block');
+            $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+            var $popup = $('#cal_popup_planinfo');
+            var $signcomplete_button = $('#popup_btn_sign_complete');
+            if($popup.attr('data-grouptype') == "class"){
+                $signcomplete_button.attr('data-signtype','class')
+            }else if($popup.attr('data-grouptype') == "group"){
+                $signcomplete_button.attr('data-signtype','group')
+            }
+            disable_window_scroll();
+        });
+
+
+        $("#popup_btn_sign_complete").click(function(){
+            enable_window_scroll()
             if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
                 $('#canvas').show()
                 $('#canvasWrap').animate({'height':'200px'},200)
@@ -448,15 +534,8 @@ $(document).ready(function(){
                         signImageSend(senddata);
                         close_info_popup('cal_popup_planinfo')
                         completeSend();
-                        // set_schedule_time(json)
                         ajaxClassTime()
-                        //ajax_block_during_complete_monthcal = true
                         enable_popup_btns_after_ajax()
-                        $('#popup_btn_complete').css({'color':'#282828','background':'#ffffff'}).val('')
-                        $('#canvas').hide().css({'border-color':'#282828'})
-                        $('#canvasWrap span').hide();
-                        $('#canvasWrap').css({'height':'0px'})
-                        shade_index(100)
                     })
 
                 }else if(schedule_on_off == 2){
@@ -468,10 +547,8 @@ $(document).ready(function(){
                             send_memo("blank")
                             signImageSend(senddata);
                             completeSend();
-                            // set_schedule_time(json);
                             ajaxClassTime()
                             close_info_popup('cal_popup_planinfo')
-                            //ajax_block_during_complete_monthcal = true
                             enable_popup_btns_after_ajax()
                         })
 
@@ -480,44 +557,33 @@ $(document).ready(function(){
                             send_memo("blank")
                             signImageSend(senddata);
                             completeSend();
-                            // set_schedule_time(json);
                             ajaxClassTime()
                             close_info_popup('cal_popup_planinfo')
-                            //ajax_block_during_complete_monthcal = true
                             enable_popup_btns_after_ajax()
                         })
-
-                        // send_group_plan_complete("callback", function(){
-                        // 	ajaxClassTime();
-                        // })
-                        // for(var i=0; i<len; i++){
-                        // 	$('#id_schedule_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('schedule-id'))
-                        // 	$('#id_lecture_id_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-leid'))
-                        // 	$('#id_member_dbid_finish').val($('#groupParticipants div.groupParticipantsRow:nth-of-type('+(i+1)+')').attr('data-dbid'))
-                        // 	send_plan_complete('callback', function(json, senddata){
-                        // 		z++
-                        // 		send_memo("blank")
-                        // 		signImageSend(senddata);
-                        // 		if(z==len){
-                        // 			completeSend();
-                        // 			//ajaxClassTime()
-                        // 			close_info_popup('cal_popup_planinfo')
-                        // 			ajax_block_during_complete_monthcal = true
-                        // 		}
-                        // 	})
-                        // }
-
                     }
                 }
             }
         })
 
+        $('#popup_btn_sign_close').click(function(){ //사인 창 닫기
+            close_sign_popup();
+        })
+
+        function close_sign_popup(){
+            enable_window_scroll();
+            $('#canvasWrap').css('display','none');
+            $('#canvas').css({'border-color':'#282828','display':'none'});
+            $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+            $('#inner_shade_planinfo').css('display','none');
+        }
+
         function disable_popup_btns_during_ajax(){
-            $("#popup_btn_complete, #popup_btn_delete").addClass('disabled_button')
+            $("#popup_btn_sign_complete, #popup_btn_delete").addClass('disabled_button')
         }
 
         function enable_popup_btns_after_ajax(){
-            $("#popup_btn_complete, #popup_btn_delete").removeClass('disabled_button')
+            $("#popup_btn_sign_complete, #popup_btn_delete").removeClass('disabled_button')
         }
 
 
@@ -606,30 +672,27 @@ $(document).ready(function(){
 
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /*
     calTable_Set(1,currentYear,currentPageMonth-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
     calTable_Set(2,currentYear,currentPageMonth);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
     calTable_Set(3,currentYear,currentPageMonth+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
+    */
+    month_calendar(today_YY_MM_DD)
+    $('.swiper-slide-active').css('width',$('#calendar').width())
 
-    //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateArray,'member',classStartArray)
-    //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classNameArray,'class')
-    //DBdataProcessMonthTrainer(); //트레이너 월간일정에서 날짜별 PT갯수 표기를 위함
-
-    //dateDisabled(); //PT 불가 일정에 회색 동그라미 표시
-    //classDatesTrainer(); // 트레이너 월간일정에 핑크색 동그라미 표시하고 PT 갯수 표기
-    //addPtMemberListSet()
-
-
+    /*
     monthText(); //상단에 연, 월 표시
-    //availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
     krHoliday(); //대한민국 공휴일
     draw_time_graph(Options.hourunit,'')
-
     ajaxClassTime()
+    */
+
+    
 
 
     //다음페이지로 슬라이드 했을때 액션
     myswiper.on('onSlideNextEnd',function(){
+        /*
         ++currentPageMonth;
         if(currentPageMonth+1>12){
             ++currentYear
@@ -638,10 +701,13 @@ $(document).ready(function(){
         }else{
             slideControl.append();
         };
+        */
+        slideControl.append();
     })
 
     //이전페이지로 슬라이드 했을때 액션
     myswiper.on('onSlidePrevEnd',function(){
+        /*
         --currentPageMonth;
         if(currentPageMonth-1<1){
             --currentYear
@@ -650,16 +716,23 @@ $(document).ready(function(){
         }else{
             slideControl.prepend();
         };
+        */
+        slideControl.prepend();
     })
 
 
     //페이지 이동에 대한 액션 클래스
     var slideControl = {
         'append' : function(){ //다음페이지로 넘겼을때
+            var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
+            var lastdateinfo = selector_swiper_slide_last_child.find('.container-fluid').attr('id').split('_');
+            var lastYY = Number(lastdateinfo[1]);
+            var lastMM = Number(lastdateinfo[2]);
+
             myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
             myswiper.appendSlide('<div class="swiper-slide"></div>') //마지막 슬라이드에 새슬라이드 추가
             //(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
-            calTable_Set(3,currentYear,currentPageMonth+1); //새로 추가되는 슬라이드에 달력 채우기
+            calTable_Set(3,lastYY,lastMM+1); //새로 추가되는 슬라이드에 달력 채우기
             //dateDisabled();
             monthText();
             krHoliday();
@@ -670,10 +743,15 @@ $(document).ready(function(){
         },
 
         'prepend' : function(){
+            var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
+            var firstdateinfo = selector_swiper_slide_first_child.find('.container-fluid').attr('id').split('_');
+            var firstYY = Number(firstdateinfo[1]);
+            var firstMM = Number(firstdateinfo[2]);
+
             myswiper.removeSlide(2);
             myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
             //(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
-            calTable_Set(1,currentYear,currentPageMonth-1);
+            calTable_Set(1,firstYY,firstMM-1);
             //dateDisabled();
             monthText();
             krHoliday();
@@ -685,98 +763,7 @@ $(document).ready(function(){
     };
 
 
-    function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
-        if(Month>12){
-            var Month = Month-12
-            var Year = Year+1
-        }else if(Month<1){
-            var Month = Month+12
-            var Year = Year-1
-        }
 
-        for(var i=1; i<=6; i++){
-            $('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+Year+Month+'" class="container-fluid week-style">')
-        };
-
-
-        for(var i=1; i<=6; i++){
-            $('.swiper-slide:nth-child('+Index+')'+' #week'+i+Year+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
-        };
-
-        calendarSetting(Year,Month);
-    }; //calTable_Set
-
-
-    function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
-        var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
-        var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
-
-        if( (Year % 4 == 0 && Year % 100 != 0) || Year % 400 == 0 ){  //윤년
-            lastDay[1] = 29;
-        }else{
-            lastDay[1] = 28;
-        }
-
-
-        //1. 현재달에 전달 마지막 부분 채우기
-        if(Month>1){ //2~12월
-            for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
-                $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
-            };
-        }else if(Month==1){ //1월
-            for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
-                $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
-            };
-        }
-
-        //2. 첫번째 주 채우기
-        for(var i=1; i<=7-firstDayCurrentPage; i++){
-            if(i==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표시하기
-                $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>');
-            }else{
-                $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
-            }
-        };
-
-        //3.현재달에 두번째 주부터 나머지 모두 채우기
-        var lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:nth-child(2)').text());
-        for(var i=lastOfweek1+1; i<=lastOfweek1+7; i++){
-            for(var j=0;j<=4;j++){
-                if(Number(i+j*7)==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표기
-                    $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7) +'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>')
-                }else if(Number(i+j*7<=lastDay[Month-1])){ //둘째주부터 날짜 모두
-                    $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7)+'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }
-            }
-        };
-
-        //4. 현재달 마지막에 다음달 첫주 채우기
-        var howmanyWeek6 = $('#week6'+Year+Month+' td').length;
-        var howmanyWeek5 = $('#week5'+Year+Month+' td').length;
-
-        if(howmanyWeek5<=7 && howmanyWeek6==0){
-            for (var i=1; i<=7-howmanyWeek5;i++){
-                if(Month<12){
-                    $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }else if(Month==12){
-                    $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }
-            };
-            ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
-        }else if(howmanyWeek6<7 && howmanyWeek6>0){
-            for (var i=1; i<=7-howmanyWeek6;i++){
-                if(Month<12){
-                    $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }else if(Month==12){
-                    $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
-                }
-            };
-        }
-        for(i=1;i<=6;i++){
-            $('#week'+i+Year+Month+'child td:first-child').addClass('tdsunday'); //일요일 날짜는 Red 표기
-            $('#week'+i+Year+Month+'child td:last-child').addClass('tdsaturday'); //토요일 날짜는 Blue 표기
-        }
-    }; //calendarSetting()
 
     function dateDisabled(){ //PT 불가일자를 DB로부터 받아서 disabledDates 배열에 넣으면, 날짜 회색 표시
         for(var i=0; i<disabledDates.length; i++){
@@ -821,79 +808,13 @@ $(document).ready(function(){
 
 
 
-    function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
-        for(var i=0; i<krHolidayList.length; i++){
-            $("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
-            $("td[data-date="+krHolidayList[i]+"]").find('.holidayName').text(krHolidayNameList[i])
-        };
-    };
-
-    function monthText(){
-        var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
-        //currentYMD 형식  ex : week120177
-        var textYear = currentYMD.substr(5,4); //2017
-        var textMonth = currentYMD.substr(9,2); //7
-        $('#yearText, #ymdText-pc-year').text(textYear);
-        $('#monthText, #ymdText-pc-month').text(textMonth+'월');
-        todayFinderArrow(textYear,textMonth);
-    };
+    
 
 
-    function draw_time_graph(option, type){  //type = '' and mini
-        if(type == 'mini'){
-            var targetHTML =  $('#timeGraph.ptaddbox_mini table')
-            var types = "_mini"
-        }else{
-            var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
-            var types = ''
-        }
-
-        var tr1 = []
-        var tr2 = []
-
-        if(option == "30"){
-            for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-                tr1[i] = '<td colspan="2">'+(i)+'</td>'
-                tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
-            }
-        }else if(option == "60"){
-            for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-                tr1[i] = '<td>'+(i)+'</td>'
-                tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
-            }
-        }
-        var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
-        targetHTML.html(tbody)
-    }
+    
 
 
-    function todayFinderArrow(Year,Month){
-        var currentYY = String(oriYear)
-        var pageYY = String(Year)
-        var currentMM = String(oriMonth);
-        var pageMM = String(Month)
-        if(currentMM.length<2){
-            var currentMM = '0'+currentMM
-        }
-        if(pageMM.length<2){
-            var pageMM = '0'+pageMM
-        }
-        var todayInfo = currentYY + currentMM
-        var pageInfo = pageYY + pageMM
-
-        if(todayInfo<pageInfo){
-            $('._pinkarrowafter').addClass('setunVisible')
-            $('._pinkarrowbefore').removeClass('setunVisible')
-            $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
-        }else if(todayInfo>pageInfo){
-            $('._pinkarrowafter').removeClass('setunVisible')
-            $('._pinkarrowbefore').addClass('setunVisible')
-            $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
-        }else{
-            $('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
-            $("#ymdText").addClass('todayindi').removeClass('nottodayindi')
-        }
-    }
+    
 
     //일정변경 가능 날짜에 표기 (CSS Class 붙이기)
     function availableDateIndicator(not_AvailableStartTime,Endtime){
@@ -931,9 +852,7 @@ $(document).ready(function(){
 
 
 
-    function ad_month(selector){ // 월간 달력 하단에 광고
-        selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
-    }
+
 
 
     /*
@@ -1142,27 +1061,28 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
     var len1 = jsondata.scheduleIdArray.length;
     var len2 = jsondata.group_schedule_id.length;
     var dateplans = []
-    var groupmaxarray = []
+    // var groupmaxarray = []
 
     for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
-        var grouptype = "group"
-        var dbID = ''
-        var group_id = jsondata.group_schedule_group_id[i]
-        var scheduleID = jsondata.group_schedule_id[i]
-        var classLectureID = ''
-        var scheduleFinish = jsondata.group_schedule_finish_check[i]
-        var memoArray = jsondata.group_schedule_note[i]
-        var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
-        var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
-        var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
-        var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
-        var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
-        var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
-        var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
-        var groupmax = jsondata.group_schedule_max_member_num[i]
-        var groupcurrent = jsondata.group_schedule_current_member_num[i]
-        var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
-        var name = jsondata.group_schedule_group_name[i]+groupParticipants
+        var grouptype = "group";
+        var dbID = '';
+        var group_id = jsondata.group_schedule_group_id[i];
+        var scheduleID = jsondata.group_schedule_id[i];
+        var classLectureID = '';
+        var scheduleFinish = jsondata.group_schedule_finish_check[i];
+        var memoArray = jsondata.group_schedule_note[i];
+        var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0];
+        var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1];
+        var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2];
+        var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0];
+        var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0];
+        var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1];
+        var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1];
+        var groupmax = jsondata.group_schedule_max_member_num[i];
+        var groupcurrent = jsondata.group_schedule_current_member_num[i];
+        var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')';
+        var name = jsondata.group_schedule_group_name[i]+groupParticipants;
+        var group_type_cd_name = jsondata.group_schedule_group_type_cd_name[i];
         if(stime1.length<2){
             var stime1 = '0'+stime1
         }else if(stime1 == '24'){
@@ -1172,8 +1092,8 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         var etime = etime1+'_'+eminute
         var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
         if(ymd == dateinfo){
-            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
-            groupmaxarray.push(groupmax)
+            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_'+groupmax+'_/'+memoArray)
+            // groupmaxarray.push(groupmax)
         }
     }
 
@@ -1192,6 +1112,7 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         var etime1 = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0]
         var sminute = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[1]
         var eminute = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[1]
+        var group_type_cd_name = '';
         if(stime1.length<2){
             var stime1 = '0'+stime1
         }else if(stime1 == '24'){
@@ -1199,10 +1120,12 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         }
         var stime = stime1+'_'+sminute
         var etime = etime1+'_'+eminute
-        var name = jsondata.classTimeArray_member_name[i]
+        // var name = '[1:1 레슨]'+jsondata.classTimeArray_member_name[i]
+        var name = ''+jsondata.classTimeArray_member_name[i]
         var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
         if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
+            groupmax = 1
+            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_'+groupmax+'_/'+memoArray)
         }
     }
 
@@ -1216,7 +1139,11 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
             var sminute = splited[1]
             var etime = Number(splited[2])
             var eminute = splited[3]
-            var name = splited[4]
+            var name = splited[4];
+            // var groupo_type_cd_name = '';
+            if(splited[14] != ''){
+                name = '['+splited[14]+'] '+splited[4];
+            }
             var morningday = ""
             if(stime==0 & dateplans[i-2]==undefined){
                 var morningday = "오전"
@@ -1231,10 +1158,10 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
                 var morningday = "오후"
             }
             if(splited[10]==1){
-                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmaxarray[i-1]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
 
             }else if(splited[10] == 0){
-                htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmaxarray[i-1]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
+                htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
             }
         }
     }else{
@@ -1401,52 +1328,245 @@ function signImageSend(send_data){
 }
 
 
-function clear_badge_counter(){
-    $.ajax({
-        url:'/login/clear_badge_counter/',
-        type:'POST',
-        //dataType : 'html',
+// function clear_badge_counter(){
+//     $.ajax({
+//         url:'/login/clear_badge_counter/',
+//         type:'POST',
+//         //dataType : 'html',
+//
+//         beforeSend:function(){
+//             //alert('before clear_badge_counter afsavf')
+//             console.log('before')
+//         },
+//
+//         //통신성공시 처리
+//         success:function(){
+//             //alert('test')
+//             console.log('sucess')
+//
+//         },
+//
+//         //보내기후 팝업창 닫기
+//         complete:function(){
+//
+//         },
+//
+//         //통신 실패시 처리
+//         error:function(){
+//             console.log('error')
+//             //alert('error clear_badge_counter')
+//             //console.log('error:clear_badge_counter')
+//         },
+//     })
+// }
 
-        beforeSend:function(){
-            //alert('before clear_badge_counter afsavf')
-            console.log('before')
-        },
+function month_calendar(referencedate){
+    var page1 = $('.swiper-slide:nth-of-type(1)');
+    var page2 = $('.swiper-slide:nth-of-type(2)');
+    var page3 = $('.swiper-slide:nth-of-type(3)');
 
-        //통신성공시 처리
-        success:function(){
-            //alert('test')
-            console.log('sucess')
+    page1.html('')
+    page2.html('')
+    page3.html('')
 
-        },
+    var year = Number(referencedate.split('-')[0]);
+    var month = Number(referencedate.split('-')[1]);
+    calTable_Set(1,year,month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
+    calTable_Set(2,year,month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
+    calTable_Set(3,year,month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
-        //보내기후 팝업창 닫기
-        complete:function(){
+    monthText(); //상단에 연, 월 표시
+    krHoliday(); //대한민국 공휴일
+    draw_time_graph(Options.hourunit,'')
+    ajaxClassTime()
+}
+/*
+function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+    if(Month>12){
+        var Month = Month-12
+        var Year = Year+1
+    }else if(Month<1){
+        var Month = Month+12
+        var Year = Year-1
+    }
+    for(var i=1; i<=6; i++){
+        $('.swiper-slide:nth-child('+Index+')').append('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">')
+    };
 
-        },
 
-        //통신 실패시 처리
-        error:function(){
-            console.log('error')
-            //alert('error clear_badge_counter')
-            //console.log('error:clear_badge_counter')
-        },
-    })
+    for(var i=1; i<=6; i++){
+        $('.swiper-slide:nth-child('+Index+')'+' #week'+i+'_'+Year+'_'+Month).append('<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>');
+    };
+    calendarSetting(Year,Month);
+}; //calTable_Set
+*/
+
+function calTable_Set(Index,Year,Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+    if(Month>12){
+        var Month = Month-12
+        var Year = Year+1
+    }else if(Month<1){
+        var Month = Month+12
+        var Year = Year-1
+    }
+
+    var $targetHTML = $('.swiper-slide:nth-child('+Index+')');
+
+    var htmltojoin = [];
+    for(var i=1; i<=6; i++){
+        var child = '<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>'
+        htmltojoin.push('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">'+child+'</div>')
+    };
+
+    $targetHTML.html(htmltojoin.join(''))
+
+    calendarSetting(Year,Month);
+}; //calTable_Set
+
+
+function calendarSetting(Year,Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
+    var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
+    var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
+
+    if( (Year % 4 == 0 && Year % 100 != 0) || Year % 400 == 0 ){  //윤년
+        lastDay[1] = 29;
+    }else{
+        lastDay[1] = 28;
+    }
+
+
+    //1. 현재달에 전달 마지막 부분 채우기
+    if(Month>1){ //2~12월
+        for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
+            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+        };
+    }else if(Month==1){ //1월
+        for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
+            $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+        };
+    }
+
+    //2. 첫번째 주 채우기
+    for(var i=1; i<=7-firstDayCurrentPage; i++){
+        if(i==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표시하기
+            $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>');
+        }else{
+            $('#week1'+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
+        }
+    };
+
+    //3.현재달에 두번째 주부터 나머지 모두 채우기
+    var lastOfweek1 = Number($('#week1'+Year+Month+'child td:last-child span:nth-child(2)').text());
+    for(var i=lastOfweek1+1; i<=lastOfweek1+7; i++){
+        for(var j=0;j<=4;j++){
+            if(Number(i+j*7)==currentDate && Month==date.getMonth()+1 && currentYear==date.getFullYear()){ //오늘 날짜 진하게 표기
+                $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7) +'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'<span class="today">TODAY</span>'+'</td>')
+            }else if(Number(i+j*7<=lastDay[Month-1])){ //둘째주부터 날짜 모두
+                $('#week'+Number(j+2)+Year+Month+'child tbody tr').append('<td data-date='+Year+'_'+Month+'_'+Number(i+j*7)+'>'+'<span class="holidayName"></span>'+'<span>'+Number(i+j*7)+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }
+        }
+    };
+
+    //4. 현재달 마지막에 다음달 첫주 채우기
+    var howmanyWeek6 = $('#week6'+'_'+Year+'_'+Month+' td').length;
+    var howmanyWeek5 = $('#week5'+'_'+Year+'_'+Month+' td').length;
+
+    if(howmanyWeek5<=7 && howmanyWeek6==0){
+        for (var i=1; i<=7-howmanyWeek5;i++){
+            if(Month<12){
+                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }else if(Month==12){
+                $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }
+        };
+        ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
+    }else if(howmanyWeek6<7 && howmanyWeek6>0){
+        for (var i=1; i<=7-howmanyWeek6;i++){
+            if(Month<12){
+                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }else if(Month==12){
+                $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+(Year+1)+'_'+(Month-11)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
+            }
+        };
+    }
+    for(i=1;i<=6;i++){
+        $('#week'+i+Year+Month+'child td:first-child').addClass('tdsunday'); //일요일 날짜는 Red 표기
+        $('#week'+i+Year+Month+'child td:last-child').addClass('tdsaturday'); //토요일 날짜는 Blue 표기
+    }
+}; //calendarSetting()
+
+function ad_month(selector){ // 월간 달력 하단에 광고
+    selector.html('<img src="/static/user/res/PTERS_logo.jpg" alt="logo" class="admonth">').css({'text-align':'center'})
 }
 
+function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
+    for(var i=0; i<krHolidayList.length; i++){
+        $("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
+        $("td[data-date="+krHolidayList[i]+"]").find('.holidayName').text(krHolidayNameList[i])
+    };
+};
 
-var bodywidth = $('body').width()
-if(class_name.match(/발레/)　|| class_name.match(/ballet/) ||class_name.match(/バレエ/)){
-    $('#ymdText').addClass('bg_ymdText_ballet')
-}else if(class_name.match(/요가/) || class_name.match(/Yoga/) || class_name.match(/ヨガ/)){
-    $('#ymdText').addClass('bg_ymdText_weight')
-}else if(class_name.match(/웨이트/)|| class_name.match(/PT/) || class_name.match(/피티/) ){
-    $('#ymdText').addClass('bg_ymdText_weight')
-}else if(class_name.match(/필라테스/)|| class_name.match(/pilates/) || class_name.match(/기구필라테스/) ){
-    $('#ymdText').addClass('bg_ymdText_pilates')
-}else if(class_name.match(/당구/)|| class_name.match(/billiard/) || class_name.match(/ビリヤード/) ){
-    $('#ymdText').addClass('bg_ymdText_weight')
-}else if(class_name.match(/골프/)|| class_name.match(/golf/) || class_name.match(/ゴルフ/) ){
-    $('#ymdText').addClass('bg_ymdText_golf')
-}else{
-    $('#ymdText').addClass('bg_ymdText_weight')
+function monthText(){
+    var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
+    //currentYMD 형식  ex : week120177
+    var textYear = currentYMD.split('_')[1]
+    var textMonth = currentYMD.split('_')[2] //7
+    $('#yearText, #ymdText-pc-year').text(textYear);
+    $('#monthText, #ymdText-pc-month').text(textMonth+'월');
+    todayFinderArrow(textYear,textMonth);
+};
+
+function draw_time_graph(option, type){  //type = '' and mini
+    if(type == 'mini'){
+        var targetHTML =  $('#timeGraph.ptaddbox_mini table')
+        var types = "_mini"
+    }else{
+        var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
+        var types = ''
+    }
+
+    var tr1 = []
+    var tr2 = []
+
+    if(option == "30"){
+        for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+            tr1[i] = '<td colspan="2">'+(i)+'</td>'
+            tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
+        }
+    }else if(option == "60"){
+        for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+            tr1[i] = '<td>'+(i)+'</td>'
+            tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
+        }
+    }
+    var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
+    targetHTML.html(tbody)
+}
+
+function todayFinderArrow(Year,Month){
+    var currentYY = String(oriYear)
+    var pageYY = String(Year)
+    var currentMM = String(oriMonth);
+    var pageMM = String(Month)
+    if(currentMM.length<2){
+        var currentMM = '0'+currentMM
+    }
+    if(pageMM.length<2){
+        var pageMM = '0'+pageMM
+    }
+    var todayInfo = currentYY + currentMM
+    var pageInfo = pageYY + pageMM
+
+    if(todayInfo<pageInfo){
+        $('._pinkarrowafter').addClass('setunVisible')
+        $('._pinkarrowbefore').removeClass('setunVisible')
+        $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+    }else if(todayInfo>pageInfo){
+        $('._pinkarrowafter').removeClass('setunVisible')
+        $('._pinkarrowbefore').addClass('setunVisible')
+        $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+    }else{
+        $('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
+        $("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+    }
 }

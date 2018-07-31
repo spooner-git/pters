@@ -1,12 +1,17 @@
 $(document).ready(function(){
 
-    $('.mode_switch_button').click(function(){
+    $('.mode_switch_button').click(function(e){
         var pageSelector = $(this).attr('data-page')
         $(this).addClass('mode_active')
         $(this).siblings('.mode_switch_button').removeClass('mode_active')
 
         if((addTypeSelect == "ptadd" || addTypeSelect == "groupptadd") && pageSelector == 'repeat'){
-            repeatStartTimeSet()
+            if($('.repeatadd_time_unit').hasClass('checked')){
+                repeatStartTimeSet(5)
+            }else{
+                repeatStartTimeSet(Options.classDur)
+            }
+            
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
@@ -28,7 +33,11 @@ $(document).ready(function(){
                 $('#offRepeatSummary').html('').hide()
             }
         }else if(addTypeSelect == "offadd" && pageSelector == 'repeat'){
-            repeatStartTimeSet()
+            if($('.repeatadd_time_unit').hasClass('checked')){
+                repeatStartTimeSet(5)
+            }else{
+                repeatStartTimeSet(Options.classDur)
+            }
             /*애니메이션*/
             $('._NORMAL_ADD_wrap').css('display','none')
             $('._REPEAT_ADD_wrap').css('display','block')
@@ -92,6 +101,7 @@ $(document).ready(function(){
         }
 
         check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#repeattypeSelected'));
     });
 
     $(document).on('click', '#repeatstarttimes li a',function(){
@@ -102,109 +112,115 @@ $(document).ready(function(){
         }else if(addTypeSelect == "repeatoffadd"){
             $("#id_repeat_start_time_off").val($(this).attr('data-trainingtime'));
         }
-        var time = $(this).attr('data-trainingtime').split(':')
+        var time = $(this).attr('data-trainingtime').split(':');
+        var selectedTime = time[0]+':'+time[1];
         //durTimeSet(time[0],"class");
-        $("#durationsSelected button").removeClass("dropdown_selected");
-        $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-        $("#durationsSelected .btn:first-child").val("");
+        $("#repeatdurationsSelected button").removeClass("dropdown_selected");
+        $("#repeatdurationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
+        $("#repeatdurationsSelected .btn:first-child").val("");
         check_dropdown_selected_addplan();
-        repeatDurationTimeSet()
+
+        if($('.repeatadd_time_unit').hasClass('checked')){
+            repeatDurationTimeSet(selectedTime, 5)
+        }else{
+            repeatDurationTimeSet(selectedTime, Options.classDur);
+        };
+
+        //진행시간 자동으로 최소 단위 시간으로 Default 셋팅
+        var selector_durationsSelected_button = $('#repeatdurationsSelected button');
+        var selector_durations_li_first_child = $('#repeatdurations li:nth-of-type(1) a');
+        $("#repeatdurationsSelected .btn:first-child").val("").html("<span style='color:#cccccc;'>선택</span>");
+        selector_durationsSelected_button.addClass("dropdown_selected").text(selector_durations_li_first_child.text()).val(selector_durations_li_first_child.attr('data-dur')).attr('data-durmin',selector_durations_li_first_child.attr('data-durmin'));
+        if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
+            $('#id_repeat_end_time').val(selector_durations_li_first_child.attr('data-endtime'));
+            //$("#id_repeat_dur").val(selector_durationsSelected_button.val());
+
+        }else if(addTypeSelect == "repeatoffadd"){
+            $('#id_repeat_end_time_off').val(selector_durations_li_first_child.attr('data-endtime'))
+            //$("#id_repeat_dur_off").val(selector_durationsSelected_button.val());
+        }
+        check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#repeatstarttimesSelected'));
     })
 
-    function repeatStartTimeSet(){
+    $(document).on('click',"#repeatdurations li a",function(){
+        $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur')).attr('data-durmin',$(this).attr('data-durmin'));
+        if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
+            $('#id_repeat_end_time').val($(this).attr('data-endtime'));
+        }else if(addTypeSelect == "repeatoffadd"){
+            $('#id_repeat_end_time_off').val($(this).attr('data-endtime'))
+        }
+        check_dropdown_selected_addplan();
+        position_absolute_addplan_if_mobile($('#repeatdurationsSelected'));
+    }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
+
+    $(document).on('click','#repeatdurationsSelected button',function(e){
+        if(!$('#repeatstarttimesSelected button').hasClass('dropdown_selected')){
+            $('.dropdown-backdrop').css('display','none');
+            position_absolute_addplan_if_mobile($('#repeatstarttimesSelected'));
+        }
+    })
+
+
+
+    $('.repeatadd_time_unit').click(function(){
+        clear_repeat_start_dur_dropdown();
+        var $child = $(this).find('div');
+        if($(this).hasClass('checked')){
+            $(this).removeClass('checked');
+            $child.removeClass('ptersCheckboxInner_sm');
+            repeatStartTimeSet(Options.classDur)
+        }else{
+            $(this).addClass('checked');
+            $child.addClass('ptersCheckboxInner_sm');
+            repeatStartTimeSet(5);
+        }
+    })
+
+    function repeatStartTimeSet(Timeunit){
         var start = Options.workStartTime;
         var end   = Options.workEndTime;
-        var startTimeList = []
+        var startTimeList = [];
 
-        if(Options.classDur == 30){
-            for(var i=start; i<end; i++){
-                if(i == 24){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+'12'+'시 30분</a></li>')
-                }else if(i<12){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+i+'시 30분</a></li>')
-                }else if(i>12){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+(i-12)+'시 30분</a></li>')
-                }else if(i==12){
-                    startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+'12'+'시 30분</a></li>')
-                }
-            }
-        }else if(Options.classDur == 60){
-            for(var i=start; i<end; i++){
-                /*
-                 if(i == 24){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
-                 }else if(i<12){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
-                 }else if(i>12){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
-                 }else if(i==12){
-                 startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
-                 }
-                 */
-                if(i == (end-1)){
-                    if(i == 24){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li>')
-                    }else if(i<12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li>')
-                    }else if(i>12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li>')
-                    }else if(i==12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li>')
-                    }
-                }else{
-                    if(i == 24){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+'12'+'시 30분</a></li>')
-                    }else if(i<12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오전 '+i+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오전 '+i+'시 30분</a></li>')
-                    }else if(i>12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+(i-12)+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+(i-12)+'시 30분</a></li>')
-                    }else if(i==12){
-                        startTimeList.push('<li><a data-trainingtime="'+i+':00:00.000000">오후 '+'12'+'시</a></li><li><a data-trainingtime="'+i+':30:00.000000">오후 '+'12'+'시 30분</a></li>')
-                    }
-                }
-            }
-        }
+        var zz = 0;
+        while(Number(add_time(start+':00', '00:0'+zz).replace(/:/gi,'')) < Number(add_time(end+':00','00:00').replace(/:/gi,'')) ){
+            var time = add_time(start+':00', '00:0'+zz);
+            //var timehangul = time_format_to_hangul2(add_time(start+':00', '00:0'+zz));
+            //startTimeList.push('<li><a data-trainingtime="'+time+'">'+timehangul+'</a></li>');
+            startTimeList.push(time);
+            zz++;
+        };
 
-        $('#repeatstarttimes').html(startTimeList.join(''))
-        $('#repeatdurations').html('')
-    }
+        var semiresult = ['<div><a class="pointerList">시작 시각 선택</a></div>'];
+        for(var t=0; t<startTimeList.length; t++){
+            if(Number(startTimeList[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
+                semiresult.push(('<li><a data-trainingtime="'+startTimeList[t]+'">'+time_format_to_hangul2(startTimeList[t])+'</a></li>'));
+            };
+        };
+        $('#repeatstarttimes').html(semiresult.join(''));
+        $('#repeatdurations').html('');
+    };
 
-    function repeatDurationTimeSet(){
+    function repeatDurationTimeSet(selectedTime, Timeunit){
         var start = Options.workStartTime;
         var end   = Options.workEndTime;
-        var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
-        var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
-        var durTimeList = []
+        //var selectedTime = $('#repeatstarttimesSelected button').val().split(':')[0]
+        //var selectedMin = $('#repeatstarttimesSelected button').val().split(':')[1]
+        var selectedHour = selectedTime.split(':')[0];
+        var selectedMin = selectedTime.split(':')[1];
+        var durTimeList = ['<div><a class="pointerList">진행 시간 선택</a></div>'];
 
-        if(Options.classDur == 30){
-            var tengo=0.5
-            if(selectedMin == "30"){
-                for(var i=0; i<(end-(selectedTime))*2-1; i++){
-                    durTimeList.push('<li><a data-dur="'+(i+1)+'">'+tengo+'시간</a></li>')
-                    tengo = tengo + 0.5
-                }
-            }else if(selectedMin == "00"){
-                for(var i=0; i<(end-(selectedTime))*2; i++){
-                    durTimeList.push('<li><a data-dur="'+(i+1)+'">'+tengo+'시간</a></li>')
-                    tengo = tengo + 0.5
-                }
-            }
-        }else if(Options.classDur == 60){
-            //durTimeList.push('<li><a data-dur="'+i*(60/Options.classDur)+'">'+i+'시간</a></li>')  // 9:30  ~ 12:00    10:30, 11:30
-            if(selectedMin == "30"){
-                for(var i=0; i<(end-(selectedTime))-1; i++){
-                    durTimeList.push('<li><a data-dur="'+(i*(60/Options.classDur)+1)+'">'+(i+1)+'시간</a></li>')
-                }
-            }else if(selectedMin == "00"){
-                for(var i=0; i<(end-(selectedTime)); i++){
-                    durTimeList.push('<li><a data-dur="'+(i*(60/Options.classDur)+1)+'">'+(i+1)+'시간</a></li>')
-                }
-            }
-        }
+        var dur = 1;
+        while(add_time(selectedTime,'00:0'+dur) != add_time(end+':00','00:01')){
+            var durTimes = add_time(selectedTime,'00:0'+dur);
+            if(durTimes.split(':')[1]%Timeunit == 0){
+                durTimeList.push('<li><a data-dur="'+dur/Options.classDur+'" data-endtime="'+durTimes+'" >'+duration_number_to_hangul_minute(dur)+' (~'+durTimes+')</a></li>')
+            };
+            dur++;
+        };
 
-
-        $('#repeatdurations').html(durTimeList.join(''))
-    }
+        $('#repeatdurations').html(durTimeList.join(''));
+    };
 
 
     $('.dateButton').click(function(){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
@@ -224,7 +240,6 @@ $(document).ready(function(){
         }else if(addTypeSelect == "repeatoffadd"){
             $('#id_repeat_day_off').val(selectedDayGroup.sort().join("/").replace(/[0-9]_/gi,''))
         }
-        console.log($('#id_repeat_day_off').val())
         check_dropdown_selected_addplan();
     })
 

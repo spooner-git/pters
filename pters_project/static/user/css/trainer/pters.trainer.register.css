@@ -12,6 +12,7 @@ select{
 	height: 33px;
 	width: 80px;
 	color: #282828;
+	padding-bottom: 2px;
 }
 
 .ajaxloadingPC{
@@ -27,12 +28,8 @@ select{
 body{
 	font-family: 'Noto Sans KR',sans-serif !important;
 	margin: 0;
-	background-image: url("/static/user/res/main/bg-image.jpg");
-	background-repeat: no-repeat;
-	background-position-x:center;
-	background-position-y:top;
-	background-size:100%;
-	background-color: black !important;
+	background-image: url("/static/user/res/main/bg-image-basic2-mobile.jpg");
+	background-size:cover;
 	overflow-x: hidden;
 	position: relative;
 	width: 100%;
@@ -58,16 +55,19 @@ body{
 	position: absolute;
 	max-width: 500px;
 	width: 95%;
-	padding: 30px;
-	background:#00000099;
+	padding: 0 30px 15px 30px;
+	
 	top: 0;
 	left: 50%;
 	color: #ffffff;
 	transform: translateX(250%);
+	background: rgba(40, 40, 40, 0.5803921568627451);
+
 	-webkit-transform: translateX(250%);
 	margin-top: 160px;
 	transition: 1s;
 	-webkit-transition: 1s;
+	text-align: left;
 }
 
 ._step1_label{
@@ -182,12 +182,23 @@ div._step1_label, div._step2_label, div._step3_label{
 	display: none;
 }
 .outerbox{
-	margin-top: 15px;
+	margin-top: 30px;
 }
 .outerbox input{
 	line-height: 25px;
 	width: 110px;
+	background-color: rgba(255, 255, 255, 0.0784313725490196);
+	color: #ffffff;
+	border: 0;
+	border-radius: 0;
+	border-bottom: 0;
+	border-bottom: 1px solid #ffffff;
+	-webkit-appearance:none;
 }
+.outerbox input::-webkit-input-placeholder{
+	color: #adadad;
+}
+
 .outerbox_horizontal{
 	position: absolute;
 	left: 50%;
@@ -197,7 +208,6 @@ div._step1_label, div._step2_label, div._step3_label{
 	width: 90%;
 	margin:125px 0 10px 0;
 	text-align:center;
-	background:#00000099;
 	transition: 1s;
 	-webkit-transition: 1s;
 }
@@ -229,6 +239,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	margin: 0 50px 0 50px;
 	margin: 0 auto;
 	margin-top: 5px;
+	background-color: rgba(40, 40, 40, 0.5803921568627451);
 }
 
 .selector_button{
@@ -256,9 +267,9 @@ div._step1_label, div._step2_label, div._step3_label{
 	margin-top:9px;
 	margin-left: 5px;
 	line-height: 27px;
-	background: #fe4e65;
-	color: #ffffff;
-	border:1px solid #ffffff;
+	background: #ffffff;
+	color: #282828;
+	border:1px solid #cccccc;
 }
 
 .login_dropdown{
@@ -325,7 +336,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	color: #ffffff;
 }
 .explain_subject{
-	font-weight: bold;
+	font-weight: 500;
 	font-size: 17px;
 	padding-left: 10px;
 }
@@ -346,6 +357,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	width: 75px;
 	height: 28px;
 	font-weight: bold;
+	border: 1px solid #cccccc;
 }
 .buttongroup img{
 	width: 8px;
@@ -389,9 +401,7 @@ div._step1_label, div._step2_label, div._step3_label{
 
 @media(min-width: 600px){
 	body{
-		background-image: url("/static/user/res/main/bg-image-pc-login.png");
-		background-position-y:unset;
-		background-size: auto;
+		background-image: url("/static/user/res/main/bg-image-basic2-pc.jpg");
 	}
 
 	.registerbox{
@@ -442,7 +452,7 @@ div._step1_label, div._step2_label, div._step3_label{
 		color: #ffffff;
 	}
 	.explain_subject{
-		font-weight: bold;
+		font-weight: 500;
 		font-size: 16px;
 		margin-bottom: 5px;
 		margin-top: 30px;
@@ -454,10 +464,10 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.registerbox_add{
-		margin-top: 250px;
+		margin-top: 230px;
 	}
 	.outerbox{
-		margin-top: 15px;
+		margin-top: 30px;
 	}
 	.outerbox input{
 		line-height: 28px;
@@ -466,7 +476,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.promise_wrap{
-		margin-top: 180px;
+		margin-top: 170px;
 	}
 
 	.contractread{
@@ -481,7 +491,7 @@ div._step1_label, div._step2_label, div._step3_label{
 		left: 50%;
 		transform: translateX(-50%);
 		-webkit-transform: translateX(-50%);
-		padding-bottom: 15px;
+		padding: 15px 0 15px 0;
 	}
 	.fixfooter p{
 		margin-top: 0px;
@@ -511,9 +521,15 @@ div._step1_label, div._step2_label, div._step3_label{
 	.bottomfooter2 p{
 		margin-bottom:1px;
 	}
+	.bottomfooter2 a{
+		color: #ffffff;
+		text-decoration: none;
+	}.bottomfooter2 a:hover{
+		color: #fe4e65;
+	}
 }
 
-@media(max-height: 820px){
+@media(max-height: 890px){
 	.fixfooter{
 		visibility: hidden;
 	}

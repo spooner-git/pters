@@ -57,6 +57,14 @@ class SiteUsePolicyView(TemplateView):
         return context
 
 
+class SiteUsePolicyChargeView(TemplateView):
+    template_name = 'policy_charge.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SiteUsePolicyChargeView, self).get_context_data(**kwargs)
+        return context
+
+
 class PrivacyView(TemplateView):
     template_name = 'privacy.html'
 
@@ -70,13 +78,9 @@ class AccessTestMixin(UserPassesTestMixin):
     def test_func(self):
         test_result = False
         error = None
-        user_for_group = None
+        user_for_group = self.request.user
         group = None
         url = None
-        try:
-            user_for_group = User.objects.get(id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = 'error'
 
         if error is None:
             try:

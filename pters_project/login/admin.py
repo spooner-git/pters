@@ -47,8 +47,7 @@ class HolidayTbAdmin(admin.ModelAdmin):
 
 @admin.register(PushInfoTb)
 class PushInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('push_info_id', 'member', 'token', 'badge_counter', 'session_info', 'device_info',
-                    'last_login', 'use')
+    list_display = ('push_info_id', 'member', 'device_info', 'token', 'badge_counter', 'last_login', 'use')
 
 
 @admin.register(QATb)

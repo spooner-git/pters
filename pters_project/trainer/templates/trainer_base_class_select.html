@@ -20,7 +20,18 @@
     <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
+    <style type="text/css">
+        html{
+            background-image: url("/static/user/res/main/bg-image-basic-mobile.jpg");
+            height: 100%;
+        }
+        @media(min-width:600px){
+            html{
+                background-image: url("/static/user/res/main/bg-image-basic-pc.jpg");
 
+            }
+        }
+    </style>
     {% block local_css %}
     {% endblock %}
 </head>
@@ -45,8 +56,9 @@
             <input type="hidden" name="class_id" id="id_class_id">
             <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:index' %}">
         </form>
-        <label>클래스 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-        <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
+        <label>캘린더 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+        <p>일정 확인을 원하는 캘린더를 선택해 주세요.</p>
+        <!--
         <div class="pters_table">
             <div class="pters_table_cell_head table_center_name">센터</div>
             <div class="pters_table_cell_head table_lecture_name">클래스</div>
@@ -54,6 +66,7 @@
             <div class="pters_table_cell_head table_start_date">개강일</div>
             <div class="pters_table_cell_head table_lecture_status">상태</div>
         </div>
+        -->
         <div class="lecture_select_table_list">
         </div>
     </div>
@@ -192,6 +205,7 @@
                         <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
                     </div>
 
+                    <!--
                     <div class="sidebar_div" id="cal_day"><img src={% static_url "user/res/icon-calendar-day.png" %} class="sidebar_icon" alt="#">
                         <a href="{% url 'trainer:cal_day' %}" class="sidebar_text __todayplan">
                         </a>
@@ -223,12 +237,14 @@
                             <img src={% static_url "user/res/icon-info.png" %} alt="#" class="sidebar_icon_info sidebar_icon">
                         </div>
                     </div>
+                    -->
                 </div>
 
             </div>
         </div><!-- /.container -->
     </nav><!-- /.navbar -->
 
+    <!--
     <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
         <div class="container">
             <div class="navbar-header">
@@ -242,8 +258,8 @@
                     <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
                 </button>
             </div>
-        </div><!-- /.container -->
-    </nav><!-- /.navbar -->
+        </div>
+    </nav>
 
     <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
         <div class="container">
@@ -258,13 +274,15 @@
                     <img src={% static_url "user/res/member/icon-edit.png" %} style="width:100%;">
                 </button>
             </div>
-        </div><!-- /.container -->
-    </nav><!-- /.navbar -->
+        </div>
+    </nav>
+    -->
 
     <nav class="navbar navbar-fixed-top" id="pcver">
         <div class="centermenu">
             <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
             <div class="centermenu_box">
+                <!--
                 <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
                 </div>
@@ -280,11 +298,12 @@
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
                 </div>
+                -->
             </div>
             <div id="loginInfo" class="centermenu_div" style="float:right;">
                 <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                 <span class="pcwhere"></span>
-                <span class="pcwho">{{user.last_name}} {{user.first_name}} <span></span></span>
+                <span class="pcwho">{{user.last_name}} {{user.first_name}} 님<span></span></span>
             </div>
             <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <!--
@@ -332,7 +351,7 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+
 <script>
 
     $('#shade, #shade3').click(function(){
@@ -343,6 +362,8 @@
         }
     })
 
+    var class_background_img_url= [];
+    var class_background_type_cd = [];
 
     function openNav(){
         $("#outer_Sidenav").show();
@@ -447,7 +468,7 @@
                 lec_select_stateCodeArray = jsondata.stateCodeArray;
                 lec_select_subjectCodeArray= jsondata.subjectCodeArray;
 
-                fill_lecture_select_popup()
+                fill_lecture_select_popup(jsondata, $('.lecture_select_table_list'))
             },
 
             complete:function(){
@@ -508,6 +529,7 @@
         ajax_read_lecture_info_from_db()
     }
 
+    /*
     function fill_lecture_select_popup(){
         var len = lec_select_subjectNameArray.length;
         var list_table_to_join = []
@@ -533,6 +555,93 @@
             $('.table_center_name').css('display', 'none')
         }
     }
+    */
+
+    function fill_lecture_select_popup(jsondata, HTMLselector){
+        var json = class_sort_by_center(jsondata);
+        console.log(json)
+
+        var list_table_to_join = [];
+        for(center in json){
+            var subject_join = []
+            var center_counter = 0;
+            var centers = [];
+            for(subject in json[center]){
+                var classId = json[center][subject]['classId'];
+                var classHour = json[center][subject]['classHour'];
+                var classHourUnit = json[center][subject]['classHourUnit'];
+                var classIPNumber = json[center][subject]['classInProgressMemberNum'];
+                var classMemberNum = json[center][subject]['classMemberNum'];
+                var startDt = json[center][subject]['startDate'];
+                var endDt = json[center][subject]['endDate'];
+                var modDate = json[center][subject]['modDate'];
+                var regDate = json[center][subject]['regDate'];
+                var stateCode = json[center][subject]['stateCode'];
+                var stateName = json[center][subject]['stateName'];
+                var subjectCode = json[center][subject]['subjectCode']
+
+                var currentClass = "";
+                var table = "";
+                var currentIndicator = ""
+
+                    currentClass = "";
+                    //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                    table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+classId+'" '+'onclick="lecture_check('+classId+')"'+'>';
+                
+                var centerName__ = center;
+                if(center == ""){
+                    var centerName__ = '센터 미지정'
+                }
+               
+                //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+                var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+subject+'</div>';
+                var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+classIPNumber+'명</div>';
+                var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(startDt,'.')+' ~</div>';
+                var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+stateName+'</div>';
+                //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
+                if(subject_join.length == 0){
+                    var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
+                }else{
+                    var sum = table + lectureName + traineeNum + startDate + status + '</div>';
+                }
+
+                subject_join.push(sum);
+                if(center != ''){
+                    center_counter += 1;
+                }
+            } //for2
+            list_table_to_join.push(subject_join.join(''))
+        }//for1
+        HTMLselector.html(list_table_to_join.join(''))
+    }
+
+    function class_sort_by_center(jsondata){
+        var len = jsondata.subjectNameArray.length;
+        var center_subject = {}
+        for(var i=0; i<len; i++){
+            center_subject[jsondata.centerNameArray[i]] = {}
+        }
+        for(var j=0; j<len; j++){
+            center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+        }
+        for(var k=0; k<len; k++){
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+        }
+        console.log(center_subject)
+        return center_subject
+    }
 
 
 
@@ -549,12 +658,13 @@
         $('#id_next_page').val('{% url 'trainer:index'%}');
         document.getElementById('lecture-check-form').submit();
     }
+    $('#upbutton-alarm').css('display','none')
 
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///
 
 </script>
-
+<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
 {% block local_js_footer %}
 {% endblock %}
 

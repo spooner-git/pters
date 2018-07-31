@@ -3,8 +3,11 @@
 	position: fixed;
 	display: none;
 	background: black;
+	/*
 	width: 100%;
 	height: 100%;
+	*/
+	z-index: -100;
 	top: 0;
 	opacity: 0.7;
 
@@ -16,6 +19,16 @@
 	width: 100%;
 	height: 100%;
 	top: 0;
+}
+
+#shade_caution{
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	z-index: 299;
+	background: black;
+	opacity: 0.5;
 }
 /*
 	#pshade{
@@ -69,7 +82,7 @@
 	overflow: auto;
 }
 
-.pcver-slide-menu{
+.pcver-slide-menu_alarm, .pcver-slide-menu_class{
 	display: none;
 }
 
@@ -80,39 +93,58 @@
 
 #cal_popup_planinfo{
 	display: none;
-	position: fixed;
+	position: absolute;
 	background: #ffffff;
 	border:1px solid #cccccc;
-	top: 50%;
 	width: 	100%;
 	max-width: 	330px;
+	/*
+	position: fixed;
+	top: 50%;
 	left: 50%;
 	transform:translate(-50%,-50%);
+	*/
 	z-index: 150;
 	text-align: center;
 }
+	#inner_shade_planinfo{
+		display: none;
+		position: absolute;
+		width: 101%;
+		height: 101%;
+		background: black;
+		z-index: 1;
+		opacity: 0.7;
+		top:-2px;
+		left: -1px;
+	}
 
 #popup_btn_viewGroupParticipants{
 	display: none;
 	text-align: left;
 	height: 25px;
-	margin-top: 8px;
+	margin-top: 0px;
 	cursor: pointer;
+	background: #f4f4f4;
 }
 #popup_btn_viewGroupParticipants:hover{
-	background: #f4f4f4;
+	background: #f1f1f1;
 }
 #popup_btn_viewGroupParticipants img{
 	width: 12px;
 	float: left;
-	margin: 9px 5px 0px 28px;
+	margin: 9px 5px 0px 20px;
 }
 #groupParticipants{
 	height: 0px;
+	max-height: 128px;
 	width: 100%;
 	background: #ffffff;
 	overflow-y:auto;
+	transition: 0.2s;
 }
+
+
 .groupParticipantsRow{
 	text-align: left;
 	margin-top: 3px;
@@ -132,6 +164,7 @@
 #groupParticipants img.group_member_cancel{
 	float: right;
 	cursor: pointer;
+	margin-top: 5px;
 }
 #groupParticipants img.add_groupmember_plan{
 	width: 20px;
@@ -150,6 +183,11 @@
 	display: none;
 }
 
+#datepicker_refund{
+	width: 100px;
+	height: auto;
+	border: 1px solid #fe4e65;
+}
 
 
 
@@ -168,7 +206,7 @@
 	border-bottom-color: #fe4e65;
 }
 
-#cal_popup_plandelete, #cal_popup_repeatconfirm{
+#cal_popup_plandelete, #cal_popup_repeatconfirm, #pay_cancel_confirm_popup{
 	display: none;
 	position: fixed;
 	background: #ffffff;
@@ -194,6 +232,11 @@
 	color: #3b3d3d;
 	font-size: 14px;
 	font-weight: bold;
+}
+
+.popuptimetext{
+	font-size: 13px;
+	color: #565656;
 }
 
 #popup_info3_memo{
@@ -223,14 +266,32 @@
 
 #popup_sign_img{
 	display: none;
+	height: 50px;
 	position: relative;
 	background: #ffffff;
 }
+#popup_sign_img span{
+	position: absolute;
+	left: 0;
+	margin-left: 20px;
+	margin-top: 17px;
+	color: #282828;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+#id_sign_img{
+	height:  100%;
+	margin-right: 14.845px;
+	margin-left: 14.845px;
+	filter: invert(100);
+}
+
 
 .popup_inner{
 	background: #ffffff;
 	position: relative;
-	height: 50px;
+	height: 40px;
 	border-top: 1px solid #a2a2a2;
 }
 
@@ -247,7 +308,7 @@
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	top: 30%;
+	top: 25%;
 	font-size: 14px;
 	font-weight: bold;
 	cursor: pointer;
@@ -262,19 +323,45 @@
 	color: #fe4e65;
 }
 
+#base_popup_check_finished_member_notice{
+	display: none;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	width: 300px;
+	height: auto;
+	z-index: 400;
+	text-align: center;
+	background: #ffffff;
+	border:1px solid #cccccc;
+}
+	#base_popup_check_finished_member_notice .caution_img{
+		height: 50px;
+		padding: 10px;
+	}
+	#base_popup_check_finished_member_notice .caution_img img{
+		height: 100%;
+	}
+	#base_popup_check_finished_member_notice .caution_message{
+		font-size: 13px;
+	}
+
 
 /*월간달력 팝업*/
 #cal_popup_plancheck{ /*강사 월간달력에서 날짜클릭했을때 일정 조회하는 팝업*/
 	display: none;
-	position: fixed;
+	position: absolute;
 	width: 300px;
 	background-color: #ffffff;
 	border: 1px solid #a2a2a2;
 	z-index: -2;
 	text-align: center;
+	/*
 	top: 50%;
 	left:50%;
 	transform: translate(-50%,-50%);
+	*/
 	z-index: 125;
 }
 
@@ -311,7 +398,7 @@
 	left: unset;
 	transform: unset;
 	line-height: 45px;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: bold;
 	cursor: pointer;
 
@@ -366,27 +453,33 @@
 
 
 #canvasWrap{
-	position: relative;
-	width: 100%;
-	height: 0px;
-}
-#canvasWrap span{
 	position: absolute;
 	display: none;
-	width: 100%;
-	left:50%;
-	top:10px;
-	transform: translateX(-50%);
+	/*top: 163px;*/
+	top: 50%;
+	width: 329px;
+	transform: translate(-50%,-50%);
+	left: 50%;
+	z-index: 1;
+}
+#canvasWrap p{
+	position: absolute;
+	margin-top: 5px;
+	margin-bottom: 0;
+	font-size: 13px;
+	width:100%;
 	color: #e6e6e6;
 	z-index: 1500;
 }
 
 #canvas{
 	display: none;
+	width: 100%;
 	position: relative;
-	background:#ffffff;
+	background:#282828;
 	z-index: 1400;
-	border: 3px solid #282828;
+	border: 2px solid #282828;
+	margin-bottom: 1px;
 }
 
 #ng_popup{
@@ -422,32 +515,95 @@
 		cursor: pointer;
 	}
 
-	.pcver-slide-menu{
+	.pcver-slide-menu_alarm{
 		position: absolute;
-		display: block;
 		top: 62px;
 		right: 0px;
 		width: 450px;
-		height: 0;
-		background: #f4f4f4;
+		height: auto;
+		background: #ffffff;
 		overflow: hidden;
-		transition: 1s;
+		border:1px solid #e8e8e8;
 	}
+
+	.pcver-slide-menu_class{
+		position: absolute;
+		top: 62px;
+		right: 0px;
+		width: 360px;
+		height: auto;
+		background: #ffffff;
+		overflow: hidden;
+		border:1px solid #e8e8e8;
+	}
+
+	#popup_triangle{
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	#popup_triangle:after{
+		content: '';
+	    position: absolute;
+	    border-bottom: 12px solid #ffffff;
+	    border-right: 10px solid transparent;
+	    border-left: 10px solid transparent;
+	    bottom: -10px;
+	    left: 5px;
+	}
+	#popup_triangle:before{
+		content: '';
+	    position: absolute;
+	    border-bottom: 13px solid #cccccc;
+	    border-right: 11px solid transparent;
+	    border-left: 11px solid transparent;
+	    bottom: -10px;
+	    left: 4px;
+	}
+	@media(min-width:975px){
+		#popup_triangle:after{
+			content: '';
+		    position: absolute;
+		    border-bottom: 20px solid #ffffff;
+		    border-right: 10px solid transparent;
+		    border-left: 10px solid transparent;
+		    bottom: -10px;
+		    left: 5px;
+		}
+		#popup_triangle:before{
+			content: '';
+		    position: absolute;
+		    border-bottom: 22px solid #cccccc;
+		    border-right: 11px solid transparent;
+		    border-left: 11px solid transparent;
+		    bottom: -10px;
+		    left: 4px;
+		}
+	}
+
+
 	#myInfo{
 		margin-top: 5px;
 		padding-left: 10px;
+		border-bottom: 1px solid #cccccc;
 	}
-	#myInfo>img{
-		width: 14px;
-		float: right;
-		margin-top: 3px;
-		margin-right: 10px;
-		cursor: pointer;
+	#myInfo_center_name{
+		font-size: 18px;
+		color: #444444;
+		font-weight: 500;
 	}
-	#myInfo>label>img{
-		width: 20px;
-		margin-bottom: 6px;
-		margin-right: 5px;
+	#myInfo_user_name{
+		font-size: 18px;
+		color:#444444;
+		font-weight: 500;
+	}
+	#myInfo > p{
+		font-size: 11px;
+		color:#7d7d7d;
+		margin-top:6px;
+		font-weight: 500;
 	}
 	#myPageMove{
 		border:1px solid #fe4e65;
@@ -462,14 +618,15 @@
 		color: #ffffff;
 	}
 	#alarm-notify{
+		height: 40px;
 		margin-top: 10px;
-		margin-bottom: 10px;
 		padding-left: 10px;
+		border-bottom: 1px solid #cccccc;
 		cursor: pointer;
 	}
 	#alarm-on-pc{
-		width: 22px;
-		margin-right: 10px;
+		width: 19px;
+		margin: 0 3px 6px 6px;
 		cursor: pointer;
 	}
 	#alarm-page-arrow{
@@ -479,10 +636,11 @@
 		cursor:pointer;
 	}
 	#alarm-iframe-div-pc{
-		background: #f4f4f4;
-		height: 0;
+		height: 300px;
 		overflow-y: hidden;
-		transition: 1s;
+	}
+	.alarm_delete_pc{
+		float:right;width:15px;margin:5px;margin-right:10px;
 	}
 	#alarm-close-pc {
 		width: 100%;
@@ -497,6 +655,15 @@
 		width: 25px;
 		margin-left: 10px;
 		transform: rotate(180deg);
+	}
+	#alarm_view_all, #class_view_all{
+		height: 30px;
+		font-size: 13px;
+		padding-top: 5px;
+		background: #282828;
+		color:#ffffff;
+		text-align: center;
+		cursor: pointer;
 	}
 
 	#popup_img{
@@ -636,5 +803,29 @@
 		color: #282828;
 	}
 	/**/
+
+	/*일정창내 그룹원 리스트*/
+	#groupParticipants{
+		max-height: 170px;
+	}
+	/*일정창내 그룹원 리스트*/
+
+	/*완료 사인 창*/
+	#canvasWrap{
+		position: fixed;
+
+		background: #ffffff;
+	}
+
+	#inner_shade_planinfo{
+		width: 330px;
+		left: -1px;
+	}
+
+	#popup_btn_sign_complete, #popup_btn_sign_close{
+		margin-bottom: 5px;
+		margin-top: 5px;
+	}
+	/*완료 사인 창*/
 
 }

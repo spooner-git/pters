@@ -20,11 +20,8 @@ body{
 	position: relative;
 	height: 100%;
 	/*background-image: url("/static/user/res/main/bg-image.png");*/
-	background-image: url("/static/user/res/main/bg-image-brick-mobile.jpg");
-	background-repeat: repeat-y;
-	background-position-x:center;
-	background-size:100%;
-	background-color: black !important;
+	background-image: url("/static/user/res/main/bg-image-basic2-mobile.jpg");
+	background-size:cover;
 }
 
 .pters_login_promote_box_sub{
@@ -216,6 +213,7 @@ nav.main_nav{
 	background-color: #282828;
 	opacity: 0.6;
 	z-index: -1;
+	border-radius: 2px;
 }
 
 #pterstext{
@@ -232,7 +230,7 @@ nav.main_nav{
 	display: block;
 	position: absolute;
 	width: 100%;
-	max-width: 500px;
+	max-width: 390px;
 	height: 270px;
 	padding: 23px 0px 20px 0px;
 	top: 50%;
@@ -388,9 +386,8 @@ nav.main_nav{
 	.pters_login_promote_box{
 		height: 100%;
 		/*background-image: url("/static/user/res/main/bg-image-pc-login.png");*/
-		background-image: url("/static/user/res/main/bg-image-brick-pc-dark.jpg");
-		background-position-y:unset;
-		background-size: auto;
+		background-image: url("/static/user/res/main/bg-image-basic2-pc.jpg");
+		background-size: cover;
 	}
 	.pters_login_promote_box_sub{
 		min-height: 840px;
@@ -447,9 +444,6 @@ nav.main_nav{
 		z-index: -1;
 	}
 
-	.loginboxstyle{
-		color: black !important;
-	}
 
 	.fixfooter{
 		position: fixed;
@@ -459,10 +453,11 @@ nav.main_nav{
 		left: 50%;
 		transform: translateX(-50%);
 		bottom: 0;
-		padding-bottom: 15px;
+		padding: 15px 0 15px 0;
 	}
 
 	.bottomfooter1{
+		display: none;
 		color: #7d7d7d;
 		color:#ffffff;
 		font-size: 12px;
@@ -479,12 +474,12 @@ nav.main_nav{
 	}
 
 	.bottomfooter2{
-		width: 535px;
-		max-width: 1000px;
+		width: auto;
 		margin:0 auto;
 		color: #282828;
 		color: #ffffff;
 		font-size: 10px;
+		text-align: center;
 	}
 	.bottomfooter2 p{
 		margin-bottom:1px;

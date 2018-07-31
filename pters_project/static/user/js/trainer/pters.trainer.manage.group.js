@@ -13,6 +13,9 @@ $(document).ready(function(){
     })
     //ESC키를 눌러서 팝업 닫기
 
+    $(document).on('click','.phonesms',function(e){
+        e.stopPropagation();
+    })
 
     $('form button').click(function(e){
         e.preventDefault()
@@ -66,16 +69,24 @@ $(document).ready(function(){
     })
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
-
-
-
-
-    $(document).on('click','#upbutton-x, #upbutton-x-modify',function(){
+    $(document).on('click','#upbutton-x-modify',function(){
+        var bodywidth = window.innerWidth;
+        var selector_calendar = $('#calendar');
         closePopup('member_info');
-        closePopup('member_add');
+        /*
         if($('body').width()<600){
             $('#calendar').css('display','block')
         }
+        */
+    })
+
+    $(document).on('click','#upbutton-x',function(){
+        closePopup('member_add');
+        /*
+        if($('body').width()<600){
+            $('#calendar').css('display','block')
+        }
+        */
     })
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
@@ -285,15 +296,15 @@ $(document).ready(function(){
 
         $('#deleteMemberId').val(selectedUserId);
         //$('.confirmPopup').fadeIn('fast');
-        $('#cal_popup_plandelete').fadeIn('fast');
-        $('#shade3').fadeIn('fast');
+        $('#cal_popup_plandelete').show();
+        $('#shade3').show('fast');
     })
 
     //PC & Mobile 회원삭제버튼 (회원정보창에서)
     $(document).on('click','button._info_delete',function(){
         //$('.confirmPopup').fadeIn('fast');
         deleteTypeSelect = "memberinfodelete";
-        $('#cal_popup_plandelete').fadeIn('fast');
+        $('#cal_popup_plandelete').show();
         $('#popup_delete_question').text('정말 회원님을 삭제하시겠습니까?')
     })
 
@@ -313,27 +324,34 @@ $(document).ready(function(){
         var userName = $(this).attr('data-username')
         var lectureID = $(this).attr('data-leid');
         if($(this).attr('data-type')=="view"){
+            var myRowParent;
             if($('body').width()<600){
                 var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div').find('input');
                 var myRowSelect = $(this).parent('div').siblings('div.whatGroupType').find('select');
                 var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div.mobile_member_note').find('input')
+                myRowParent = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div');
             }else if($('body').width()>=600){
                 var myRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input');
                 var myRowSelect = $('select[data-leid='+$(this).attr('data-leid')+']');
                 var myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
+                myRowParent = $(this).parent('div').siblings('div')
 
             }
             myRow.addClass('input_available').attr('disabled',false);
             myRowSelect.addClass('input_available').attr('disabled',false);
             myNoteRow.addClass('input_available').attr('disabled',false);
+            var myStartDate = myRowParent.find('.lec_start_date').val();
+            var myEndDate = myRowParent.find('.lec_end_date').val();
 
 
             $('#memberRegHistory_info_PC img[data-leid!='+$(this).attr('data-leid')+']').hide();
             $(this).text(text).attr('data-type',"modify");
             $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
-            $('#form_start_date').val($(this).parent('div').siblings('div').find('.lec_start_date').val())
-            $('#form_end_date').val($(this).parent('div').siblings('div').find('.lec_end_date').val())
+            // $('#form_start_date').val($(this).parent('div').siblings('div').find('.lec_start_date').val())
+            // $('#form_end_date').val($(this).parent('div').siblings('div').find('.lec_end_date').val())
+            $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myStartDate,'-'));
+            $('#form_end_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myEndDate,'-'));
             $('#form_price').val($(this).parent('div').siblings('div').find('#regPrice').val())
             $('#form_lecture_reg_count').val($(this).parent('div').siblings('div').find('.lec_reg_count').val())
             $('#form_note').val(myNoteRow.val())
@@ -416,7 +434,7 @@ $(document).ready(function(){
 
     //???
     $(document).on('click','div.lectureType_RJ',function(){
-        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend',
+        $('.resendPopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-name':$(this).attr('data-name')});
@@ -425,7 +443,7 @@ $(document).ready(function(){
 
     //미연결
     $(document).on('click','div.lectureType_DELETE',function(){
-        $('.resendPopup').fadeIn('fast').attr({'data-type':'resend',
+        $('.resendPopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-name':$(this).attr('data-name')});
@@ -434,7 +452,7 @@ $(document).ready(function(){
 
     //연결됨, 대기
     $(document).on('click','div.lectureType_WAIT, div.lectureType_VIEW',function(){
-        $('.lectureConnectStateChangePopup').fadeIn('fast').attr({'data-type':'resend',
+        $('.lectureConnectStateChangePopup').show().attr({'data-type':'resend',
             'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-name':$(this).attr('data-name')});
@@ -445,7 +463,7 @@ $(document).ready(function(){
     //진행중
     $(document).on('click','div.lecConnectType_IP',function(){
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        $('.lectureStateChangeSelectPopup').show().attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
@@ -459,27 +477,64 @@ $(document).ready(function(){
         show_shadow_reponsively();
     });
 
-    //진행완료, 환불
-    $(document).on('click','div.lecConnectType_PE, div.lecConnectType_RF',function(){
+    //진행완료 텍스트를 클릭했을때
+    $(document).on('click','div.lecConnectType_PE',function(){
+        var bodywidth = window.innerWidth;
+        var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
-        $('.lectureStateChangeSelectPopup').fadeIn('fast').attr({'data-leid':$(this).attr('data-leid'),
+        selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
             'data-dbid':$(this).attr('data-dbid'),
             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
-        $('._complete, ._refund').css('display','none')
-        if($('body').width()>600){
-            $('._resume, ._delete').css('display','inline-block')
+        $('._complete, ._refund').css('display','none');
+        if(bodywidth > 600){
+            $('._resume, ._delete').css('display','inline-block');
         }else{
-            $('._resume, ._delete').css('display','block')
+            $('._resume, ._delete').css('display','block');
         }
-        $('.lectureStateChangeSelectPopup').find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.')
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
+        
+        //수강자동 완료처리가 ON일떄 재개 버튼을 막는다.
+        var enddate_thislect = $(this).siblings('div').find('.lec_end_date').val().replace(/\./gi,'-')
+        if(Options.lecture_autocomplete == 0){                  //수강 자동완료 기능 OFF
+            $('div._resume').removeClass('disabled_button');
+        }else if(Options.lecture_autocomplete == 1 ){           //수강 자동완료 기능 ON
+            if(compare_date2(enddate_thislect, today_YY_MM_DD) == true){
+                $('div._resume').removeClass('disabled_button');
+            }else{
+                $('div._resume').addClass('disabled_button');
+            }
+        }
+        show_shadow_reponsively();
+    });
+
+
+    //환불 텍스트를 클릭했을때
+    $(document).on('click','div.lecConnectType_RF',function(){
+        var bodywidth = window.innerWidth;
+        var selector_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+        //$('.lectureRefundPopup').fadeIn('fast').attr({'data-type':'resend','data-leid':$(this).attr('data-leid')});
+        selector_lectureStateChangeSelectPopup.show().attr({'data-leid':$(this).attr('data-leid'),
+            'data-dbid':$(this).attr('data-dbid'),
+            'data-username':$(this).parents('._member_info_popup').attr('data-username'),
+            'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
+        $('._complete, ._refund').css('display','none');
+        if(bodywidth > 600){
+            $('._resume, ._delete').css('display','inline-block');
+        }else{
+            $('._resume, ._delete').css('display','block');
+        }
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
+
+        $('div._resume').removeClass('disabled_button');
+
         show_shadow_reponsively();
     });
 
 
 
     $('._btn_close_resend_PC, ._btn_close_statechange_PC').click(function(){
-        $(this).parents('.popups').fadeOut('fast');
+        $(this).parents('.popups').hide();
         hide_shadow_responsively();
     });
 
@@ -507,23 +562,39 @@ $(document).ready(function(){
      });
      */
 
-    /*그룹 진행완료, 재개와 겹침
+    /*그룹 진행완료, 재개와 겹침*/
      //진행 완료 처리 버튼
      $('.lectureStateChangeSelectPopup ._complete').click(function(){
-     var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-     var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-     complete_member_reg_data_pc(lectureID, dbID)
-     $('.lectureStateChangeSelectPopup').css('display','none')
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') !='group'){
+            var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+            var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+            complete_member_reg_data_pc(lectureID, dbID)
+            $('.lectureStateChangeSelectPopup').css('display','none')
+        }
+         
      })
 
      //재개 처리 버튼
      $('.lectureStateChangeSelectPopup ._resume').click(function(){
-     var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-     var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-     resume_member_reg_data_pc(lectureID, dbID)
-     $('.lectureStateChangeSelectPopup').css('display','none')
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') !='group'){
+            if(!$(this).hasClass('disabled_button')){
+                var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+                var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+                var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
+                resume_member_reg_data_pc(lectureID, dbID);
+                selectore_lectureStateChangeSelectPopup.css('display','none');
+            }else{
+                show_caution_popup(
+                                    '<p style="color:#fe4e65;">수강 자동 완료 기능이 활성화 상태입니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>- 옵션에서 수강 자동완료 해제 혹은<br>- 종료일자를 오늘 이후 날짜로 설정해주세요.</p>'+
+                                        '</div>'+
+                                    '<p>확인 후 다시 시도해주세요.</p>'
+                                    )
+            }
+        }
      })
-     그룹 진행완료, 재개와 겹침*/
+     /*그룹 진행완료, 재개와 겹침*/
 
     //삭제 처리 버튼
     $('.lectureStateChangeSelectPopup ._delete').click(function(){
@@ -533,13 +604,14 @@ $(document).ready(function(){
         $('.lectureStateChangeSelectPopup').css('display','none')
     })
 
-    //한불 입력으로 이동 버튼
+    //환불 입력으로 이동 버튼
     $('.lectureStateChangeSelectPopup ._refund').click(function(){
         $('.lectureStateChangeSelectPopup').css('display','none')
         $('.lectureRefundPopup').css('display','block').attr({'data-leid':$('.lectureStateChangeSelectPopup').attr('data-leid'),
             'data-username':$('.lectureStateChangeSelectPopup').attr('data-username'),
             'data-dbid':$('.lectureStateChangeSelectPopup').attr('data-dbid')
         })
+        $('#datepicker_refund').val(today_YY_MM_DD);
     })
 
     $('.lectureStateChangeSelectPopup ._cancel').click(function(){
@@ -552,7 +624,8 @@ $(document).ready(function(){
         var lectureID = $('.lectureRefundPopup').attr('data-leid');
         var dbID = $('.lectureRefundPopup').attr('data-dbid');
         var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'');
-        refund_member_lecture_data(lectureID, dbID, refund_price);
+        var refund_date = $('#datepicker_refund').val();
+        refund_member_lecture_data(lectureID, dbID, refund_price, refund_date);
         $('.lectureRefundPopup').css('display','none');
     });
 
@@ -561,6 +634,14 @@ $(document).ready(function(){
         $(this).val(numberWithCommas(priceInputValue));
 
     })
+
+    $("#datepicker_refund").datepicker({
+        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+               
+            }
+        }
+    });
 
     $('span.cancel_refund').parent('div').click(function(){
         $('.lectureRefundPopup').css('display','none');
@@ -601,7 +682,7 @@ $(document).ready(function(){
         e.stopPropagation()
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id');
         $('#id_repeat_schedule_id_confirm').val(id_info);
-        $('#cal_popup_plandelete').fadeIn().attr({'data-repeatid':$(this).attr('data-repeatid'), 'data-dbid':$(this).attr('data-dbid'), 'data-groupid':$(this).attr('data-groupid')});
+        $('#cal_popup_plandelete').show().attr({'data-repeatid':$(this).attr('data-repeatid'), 'data-dbid':$(this).attr('data-dbid'), 'data-groupid':$(this).attr('data-groupid')});
         if($(this).attr('data-deletetype') == 'grouprepeatinfo'){
             deleteTypeSelect = 'grouprepeatinfodelete';
             shade_index(100)
@@ -742,7 +823,7 @@ $(document).ready(function(){
         var LOCTOP = $(this).offset().top;
         var LOCLEFT = $(this).offset().left;
         if($('#currentMemberList').width()>=600){
-            $('.instructPopup').fadeIn().css({'top':LOCTOP+40,'left':LOCLEFT});
+            $('.instructPopup').show().css({'top':LOCTOP+40,'left':LOCLEFT});
         };
 
         if($(this).hasClass('_regcount')){
@@ -754,14 +835,14 @@ $(document).ready(function(){
 
 
     $('#alignBox,.centeralign').mouseenter(function(){
-        $('.instructPopup').fadeOut();
+        $('.instructPopup').hide();
     });
 //#####################회원정보 도움말 팝업 //#####################
 
 
 
     $('#memberSearchButton').click(function(e){
-        e.preventDefault()
+        e.preventDefault();
         var searchID = $('#memberSearch_add').val()
         $.ajax({
             url:'/trainer/get_member_info/',
@@ -1214,18 +1295,19 @@ function float_btn_managemember(option){
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet()
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').show();
         $('#shade').hide();
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_btn_wrap').hide();
         $('#uptext2').text(text);
 
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
             $('#page_managemember').hide();
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').hide();
+            $('#page-base-addstyle').show();
+            shade_index(100);
         }
 
         $('#memberBirthDate, #memberBirthDate_info').html('');
@@ -1234,7 +1316,7 @@ function float_btn_managemember(option){
         $('#memberSearchButton').attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         if($('._nomember').length>0){
-            $('#how_to_add_member').fadeIn()
+            $('#how_to_add_member').show()
         }else{
             $('#how_to_add_member').css('display','none')
         }
@@ -1242,17 +1324,15 @@ function float_btn_managemember(option){
         $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
     }else if(option == "group"){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
-        $('#shade').hide();
-        $('#shade3').fadeIn('fast');
+        $('#page_addmember').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_btn_wrap').hide();
 
         scrollToDom($('#page_addmember'));
-        if($('body').width()<600){
+        if(bodywidth<600){
             $('#page_managemember').hide();
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').hide();
+            $('#page-base-addstyle').show();
         }
 
         $('#grouptype').hide()
@@ -1261,26 +1341,27 @@ function float_btn_managemember(option){
 
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 고정 그룹')
+        $('#addgrouptypename').text('신규 그룹')
 
-        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
+        $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         //$('._ADD_GROUPMEMBER_NEW').show()
         $('._ADD_GROUP_NEW').show();
+        shade_index(100);
     }else if(option == "openlesson"){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').show();
         $('#shade').hide();
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_btn_wrap').hide();
 
         scrollToDom($('#page_addmember'));
-        if($('body').width()<600){
+        if(bodywidth<600){
             $('#page_managemember').hide();
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').hide();
+            $('#page-base-addstyle').show();
         }
 
         $('#grouptype').hide()
@@ -1288,25 +1369,26 @@ function float_btn_managemember(option){
         $('#explain_group_lesson').hide()
         $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('EMPTY')
-        $('#addgrouptypename').text('신규 자유 그룹')
+        $('#addgrouptypename').text('신규 클래스')
 
-        $('#uptext2, #uptext2_PC').text('신규 자유 그룹 추가');
+        $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
+        shade_index(100);
     }else if(option == "groupmember"){
         initialize_add_member_sheet();
-        $('#page_addmember').fadeIn('fast');
+        $('#page_addmember').show();
         $('#shade').hide();
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#float_btn_wrap').fadeOut();
+        $('#float_btn_wrap').hide();
 
         scrollToDom($('#page_addmember'));
         if($('body').width()<600){
             $('#page_managemember').hide();
-            $('#page-base').fadeOut();
-            $('#page-base-addstyle').fadeIn();
+            $('#page-base').hide();
+            $('#page-base-addstyle').show();
         }
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
@@ -1327,7 +1409,9 @@ function pc_add_member(option){
         var text = 'New Contract'
         var text2 = 'Re-Contract'
     }
-    shade_index(300)
+    var selector_page_addmember = $('#page_addmember');
+    var selector_memberSearchButton = $('#memberSearchButton');
+    var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text);
@@ -1337,23 +1421,21 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         if($('._nomember').length>0){
-            $('#how_to_add_member').fadeIn()
+            $('#how_to_add_member').show();
         }else{
-            $('#how_to_add_member').css('display','none')
+            $('#how_to_add_member').css('display','none');
         }
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
 
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -1361,63 +1443,87 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
 
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
-
-        $('#shade').fadeIn('fast');
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
-        $('#memberBirthDate, #memberBirthDate_info').html('')
-        birth_dropdown_set();
-
-        $('#memberSearchButton').attr('data-type','');
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        if($('#memberInfoPopup_PC').css('display') == 'block'){
-            var userID = $('#memberId_info_PC').val();
-            $('#memberSearch_add').val(userID);
-        }
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
-
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
-
-    }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        initialize_add_member_sheet();
-
-        $('#uptext2').text(text2);
-
-        if($('#memberInfoPopup').css('display') == 'block'){
-            var userID = $('#memberId').val();
-            $('#memberSearch_add').val(userID);
-        }
-        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
-        closePopup('member_info');
-        float_btn_managemember(1);
-
-
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        $('#memberSearchButton').attr('data-type','');
+        selector_memberSearchButton.attr('data-type','');
+        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+        if($('#memberInfoPopup_PC').css('display') == 'block'){
+            userID = $('#memberId_info_PC').val();
+            $('#memberSearch_add').val(userID);
+        }
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+        var regEnddate = [];
+        $('.lec_end_date').each(function(index){
+            regEnddate.push($(this).val().replace(/\./gi,'-'))
+        })
+
+        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+
+        check_dropdown_selected();
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+
+        selector_memberSearchButton.trigger('click');
+
+        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
+
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+
+    }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
+        float_btn_managemember(1);
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+        $('#uptext2').text(text2);
+        if($('#memberInfoPopup').css('display') == 'block'){
+            userID = $('#memberId').val();
+            $('#memberSearch_add').val(userID);
+        }
+        /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
+
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+        var regEnddate = [];
+        $('.wraps .lec_end_date').each(function(index){
+            regEnddate.push($(this).val().replace(/\./gi,'-'))
+        });
+        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+
+        check_dropdown_selected();
+        /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
+
+        
+        closePopup('member_info');
+        
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
+        $('#memberBirthDate, #memberBirthDate_info').html('');
+
+        birth_dropdown_set();
+        selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)})
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        selector_memberSearchButton.trigger('click');
 
     }else if(option == 'group'){
         initialize_add_member_sheet();
@@ -1427,14 +1533,14 @@ function pc_add_member(option){
         $('#explain_open_lesson').hide()
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
         $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 고정 그룹')
+        $('#addgrouptypename').text('신규 그룹')
 
-        $('#uptext2, #uptext2_PC').text('신규 고정 그룹 추가');
+        $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
     }else if(option == 'openlesson'){
@@ -1452,7 +1558,7 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
 
     }else if(option == 'groupmember'){
@@ -1461,9 +1567,10 @@ function pc_add_member(option){
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
-        $('#page_addmember').fadeIn('fast').css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
     }
+    shade_index(300);
 }
 
 
@@ -1602,7 +1709,7 @@ function grouptype_dropdown_set(grouplistJSON){
 
     var optionsToJoin = ['<option value="">1:1 레슨</option>']
     for(var i=0; i<len; i++){
-        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">'+grouplistJSON.name[i]+'</option>')
+        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.name[i]+'</option>')
     }
     $('.grouptypeselect').html(optionsToJoin.join(''))
 }
@@ -2112,6 +2219,11 @@ function memberListSet (type,option,Reverse, jsondata){
             }else{
                 var groupType2 = ''
             }
+            if(array[16]){
+                var groupType3 = '/'+array[16];
+            }else{
+                var groupType3 = ''
+            }
         }else if(option == "name"){
             var array = nameLists[i].split('/');
             var email = array[8];
@@ -2136,6 +2248,11 @@ function memberListSet (type,option,Reverse, jsondata){
                 var groupType2 = '/'+array[15];
             }else{
                 var groupType2 = ''
+            }
+            if(array[16]){
+                var groupType3 = '/'+array[16];
+            }else{
+                var groupType3 = ''
             }
         }else if(option == "date"){
             var array = dateLists[i].split('/');
@@ -2162,6 +2279,11 @@ function memberListSet (type,option,Reverse, jsondata){
                 var groupType2 = '/'+array[15];
             }else{
                 var groupType2 = ''
+            }
+            if(array[16]){
+                var groupType3 = '/'+array[16];
+            }else{
+                var groupType3 = ''
             }
         }
 
@@ -2214,7 +2336,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+'">'+groupType+groupType2+'</td>';
+        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
         var emailtd = '<td class="_email">'+email+'</td>';
@@ -2236,9 +2358,9 @@ function memberListSet (type,option,Reverse, jsondata){
     if(type=='current' && len == 0){
         var resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>'
         if($('body').width()>600){
-            $('#please_add_member_pc').fadeIn()
+            $('#please_add_member_pc').show()
         }else{
-            $('#please_add_member').fadeIn()
+            $('#please_add_member').show()
         }
     }else if(type=="finished" && len ==0){
         var resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>'
@@ -2261,9 +2383,9 @@ function hide_shadow_responsively(){
 
 function show_shadow_reponsively(){
     if($('body').width()>600){
-        $('#shade3').fadeIn('fast');
+        $('#shade3').show();
     }else{
-        $('#shade').fadeIn('fast');
+        $('#shade').show();
     }
 }
 
@@ -2477,7 +2599,9 @@ function get_indiv_member_info(dbID){
     })
 }
 
+
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
+/*
 function open_member_info_popup_pc(dbID, jsondata){
     if(Options.language == "KOR"){
         var text = ' '
@@ -2604,8 +2728,177 @@ function open_member_info_popup_pc(dbID, jsondata){
     $('._info_baseedit_img img').attr('src','/static/user/res/icon-pencil.png')
     $('#inputError_info_PC').css('display','none')
 }
+*/
+//회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
+function open_member_info_popup_pc(dbID, jsondata){
+    // var text = ' ';
+    // var text2 = '소진시까지';
+    // var text3 = '';
+    // if(Options.language == "JPN"){
+    //     text = ' ';
+    //     text2 = '残余回数終わるまで';
+    //     text3 = '';
+    // }else if(Options.language == "ENG"){
+    //     text = '';
+    //     text2 = '';
+    //     text3 = '';
+    // }
+    var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
+    var userID    = jsondata.idInfo;
+    var userBirth = jsondata.birthdayInfo;
+    var userPhone = jsondata.phoneInfo;
+    var userSex   = jsondata.sexInfo;
+    var userActivation = jsondata.emailActiveInfo;
+
+    about_member_sex();
+    about_set_birthdata();
+    about_form_set();
+    about_value_set();
+    about_etc1();
+    about_etc2();
+    about_member_window_show1();
+    about_member_window_show2();
+
+    function about_member_window_show1(){
+        if(userActivation == 'True'){
+            $('button._info_baseedit').css('visibility','hidden');
+        }else{
+            $('button._info_baseedit').css('visibility','visible');
+        }
+    }
+
+
+    function about_member_window_show2(){
+        var selector_memberInfoPopup_PC = $('#memberInfoPopup_PC');
+        selector_memberInfoPopup_PC.attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
+        //$('#memberInfoPopup_PC').show()
+        selector_memberInfoPopup_PC.addClass('display_block')
+                                    .css({'top':(($(window).height()-selector_memberInfoPopup_PC.outerHeight())/2),
+                                          'left':(($(window).width()-selector_memberInfoPopup_PC.outerWidth())/2+$(window).scrollLeft())});
+    }
+
+    $('#memberName_info_PC').val(userName);
+    $('#memberName_info_lastName_PC, #form_lastname_modify').val(jsondata.lastnameInfo);
+    $('#memberName_info_firstName_PC, #form_firstname_modify').val(jsondata.firstnameInfo);
+
+    function about_member_sex(){
+        //var member_info_PC = '\'member_info_PC\'';
+        $('#memberSex_info_PC .selectboxopt').removeClass('selectbox_checked');
+        $('#memberMale_info_PC, #memberFemale_info_PC').hide();
+        if(userSex == "M"){
+            $('#memberMale_info_PC').show();
+            $('#memberFemale_info_PC').hide();
+            $('#form_sex_modify').val('M');
+        }else if(userSex == "W"){
+            $('#memberFemale_info_PC').show();
+            $('#memberMale_info_PC').hide();
+            $('#form_sex_modify').val('W');
+        }else{
+            $('#form_sex_modify').val('');
+        }
+    }
+
+
+    $(document).on('click','#memberSex_info_PC .selectboxopt',function(){
+        if($('button._info_baseedit').attr('data-view') == "edit"){
+            $(this).addClass('selectbox_checked');
+            $(this).siblings().removeClass('selectbox_checked');
+            $('#form_sex_modify').attr('value',$(this).attr('value'));
+        }else{
+
+        }
+    });
+
+    function about_set_birthdata(){
+        var birth_year = "-";
+        var birth_month = "-";
+        var birth_date = "-";
+        // if(userBirth[0].length < 1){
+        //     var birth_year = "-";
+        //     var birth_month = "-";
+        //     var birth_date = "-";
+        // }else{
+        if(userBirth[0].length >= 1){
+            birth_year = Number(userBirth[0].split('-')[0]) + '년';
+            birth_month = Number(userBirth[0].split('-')[1]) + '월';
+            birth_date = Number(userBirth[0].split('-')[2]) + '일';
+        }
+
+        var yearoption = ['<option selected disabled hidden>'+'연도'+'</option>'];
+        var i;
+        for(i=2018; i>=1908; i--){
+            yearoption.push('<option data-year="'+i+'년'+'">'+i+'년'+'</option>');
+        }
+        var birth_year_options = yearoption.join('');
+        $('#memberBirth_Year_info_PC').html(birth_year_options);
+
+
+        var monthoption = ['<option selected disabled hidden>'+'월'+'</option>'];
+        for(i=1; i<=12; i++){
+            monthoption.push('<option data-month="'+i+'월'+'">'+i+'월'+'</option>');
+        }
+        var birth_month_options = monthoption.join('');
+        $('#memberBirth_Month_info_PC').html(birth_month_options);
+
+
+        var dateoption = ['<option selected disabled hidden>'+'일'+'</option>'];
+        for(i=1; i<=31; i++){
+            dateoption.push('<option data-date="'+i+'일'+'">'+i+'일'+'</option>');
+        }
+        var birth_date_options = dateoption.join('');
+        $('#memberBirth_Date_info_PC').html(birth_date_options);
+        if(birth_year != '-'){
+            $('#memberBirth_Year_info_PC option[data-year="'+birth_year+'"]').prop('selected',true);
+            $('#memberBirth_Month_info_PC option[data-month="'+birth_month+'"]').prop('selected',true);
+            $('#memberBirth_Date_info_PC option[data-date="'+birth_date+'"]').prop('selected',true);
+        }else{
+
+        }
+
+        if(userBirth[0] != 'None' && userBirth[0] != '' ){
+            $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'));
+        }else{
+            $('#form_birth_modify').val('');
+        }
+    }
+
+
+    function about_form_set(){
+        $('#form_name_modify').val(userName);
+        $('#form_dbid_modify').val(dbID);
+        $('#form_phone_modify').val(userPhone);
+    }
+
+    function about_value_set(){
+        $('#deleteMemberId').val(userID);
+        $('#memberName_info').val(userName);
+        $('#memberId').text(userID).val(userID).attr('data-dbid', dbID);
+        $('#memberId_info_PC').val(userID).attr('data-dbid', dbID);
+        $('#memberPhone_info, #memberPhone_info_PC').val(userPhone);
+    }
+
+
+    function about_etc1(){
+        $('#memberInfoPopup_PC input, #memberInfoPopup_PC select, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
+        $('#memberName_info_PC').css('display','inline-block');
+        $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').css('display','none');
+        //$('button._info_modify').text('수정').attr('data-type',"view");
+    }
+
+    function about_etc2(){
+        $('#memberRegHistory_info_PC img').text('수정').attr('data-type',"view");
+        $('._info_baseedit_img').attr('data-view','view');
+        $('._info_baseedit_img img').attr('src','/static/user/res/icon-pencil.png');
+        //$('#inputError_info_PC').css('display','none');
+        $('#inputError_info_PC').css('display','none');
+    }
+
+}
+
+
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. MOBILE
+/*
 function open_member_info_popup_mobile(dbID, jsondata){
     var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
     var userID    = jsondata.idInfo;
@@ -2666,6 +2959,85 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#inputError_info').css('display','none')
     $('#fast_check').val('0')
     $('#form_birth').val('')
+}
+*/
+//회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. MOBILE
+function open_member_info_popup_mobile(dbID, jsondata){
+    var bodywidth = window.innerWidth;
+    var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
+    var userID    = jsondata.idInfo;
+    var userBirth = jsondata.birthdayInfo;
+    var userPhone = jsondata.phoneInfo;
+    var userSex   = jsondata.sexInfo;
+    var userActivation = jsondata.emailActiveInfo;
+
+    if(userActivation == 'True'){
+        $('#upbutton-modify').hide();
+    }else{
+        $('#upbutton-modify').show();
+    }
+
+    birth_dropdown_set();
+    $('#float_btn_wrap').css('display','none');
+    $('#page-base').css('display','none');
+    $('#page-base-modifystyle').css('display','block');
+    $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo');
+    var selector_memberInfoPopup = $('#memberInfoPopup');
+    selector_memberInfoPopup.attr({'data-username': userName, 'data-userid' : userID});
+    selector_memberInfoPopup.addClass('display_block');
+    shade_index(100);
+    var selector_memberName_info = $('#memberName_info');
+    selector_memberName_info.val(userName);
+    $('#memberName_info_lastName, #form_lastname_modify').val(jsondata.lastnameInfo);
+    $('#memberName_info_firstName, #form_firstname_modify').val(jsondata.firstnameInfo);
+    $('#memberId').val(userID).attr('data-dbid', dbID);
+    $('#deleteMemberId').val(userID).attr('data-dbid',dbID);
+    $('#memberPhone_info').val(userPhone);
+
+    var dropdown_year_selected = $('#birth_year_info option[data-year="'+userBirth[0].split('-')[0]+'년'+'"]');
+    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Number(userBirth[0].split('-')[1])+'월'+'"]');
+    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Number(userBirth[0].split('-')[2])+'일'+'"]');
+    dropdown_year_selected.prop('selected',true);
+    dropdown_month_selected.prop('selected',true);
+    dropdown_date_selected.prop('selected',true);
+
+
+    //회원정보 수정 Form도 현재 보는 회원 정보값으로 채워두기
+    if(userBirth[0] != 'None' && userBirth[0] != '' ){
+        $('#form_birth_modify').val(date_format_yyyy_mm_dd_to_yyyy_m_d(userBirth[0], '-'));
+    }else{
+        $('#form_birth_modify').val('');
+    }
+    $('#form_name_modify').val(userName);
+    $('#form_sex_modify').val(userSex);
+    $('#form_dbid_modify').val(dbID);
+    $('#form_phone_modify').val(userPhone);
+
+
+    $('#memberSex_info .selectbox_checked').removeClass('selectbox_checked');
+    if(userSex == "M"){
+        $('#memberMale_info').addClass('selectbox_checked');
+    }else if(userSex == "W"){
+        $('#memberFemale_info').addClass('selectbox_checked');
+    }
+
+    $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
+    selector_memberName_info.css('display','block');
+    $('#memberName_info_lastName, #memberName_info_firstName').css('display','none');
+    //$('#shade3').fadeIn('fast');
+    //scrollToDom($('#page_managemember'));
+    if(bodywidth < 600){
+        //$('#page_managemember').hide();
+        $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
+        if($('._calmonth').length != 0 || $('._calweek').length != 0){
+            $('#upbutton-modify, #mobile_basic_info .member_info_tool').css('display','none');
+        }
+    }
+
+    $('#inputError_info').css('display','none');
+    $('#fast_check').val('0');
+    $('#form_birth').val('');
+    $('#id_phone').val('');
 }
 
 modify_member_lec_info_pc()
@@ -2908,7 +3280,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
 }
 
 //회원 환불 정보를 전송한다.
-function refund_member_lecture_data(lectureID, dbID, refund_price){
+function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
     if(Options.language == "KOR"){
         var text = ' 환불 처리 되었습니다.'
         var text2 = '환불 금액을 입력해주세요.'
@@ -2924,7 +3296,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
         $.ajax({
             url:'/trainer/refund_lecture_info/',
             type:'POST',
-            data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price ,"next_page":'/trainer/get_member_list/'},
+             data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price , "refund_date":refund_date, "next_page":'/trainer/get_member_list/'},
             dataType : 'html',
 
             beforeSend:function(){
@@ -2954,7 +3326,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price){
                     $('div.lectureRefundPopup.popups input[type="number"]').val('')
                     console.log('success');
 
-                    alert(userName + text)
+                    alert(text)
                 }
             },
 
@@ -3066,191 +3438,255 @@ function get_member_lecture_list(dbID, use, callback){
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
+    var bodywidth = window.innerWidth;
+    var $regHistory;
     if(PCorMobile == "pc"){
-        var $regHistory = $('#memberRegHistory_info_PC')
+        $regHistory = $('#memberRegHistory_info_PC');
     }else if(PCorMobile == "mobile"){
-        var $regHistory = $('#memberRegHistory_info')
+        $regHistory = $('#memberRegHistory_info');
     }
 
+    var result_history_html = [];
+    var result_history_html2 = [];
+    //시작, 종료, 등록횟수, 남은횟수,
+    //등록금액, 회당 금액, 전행상태, 연결상태, 수정
+    var regCount_group_personal = [];
+    var remCount_group_personal = [];
+    var availCount_group_personal = [];
+    var finishCount_group_personal = [];
     if(PCorMobile == "pc"){
-        var regCount_group_personal = []
-        var remCount_group_personal = []
-        var availCount_group_personal = []
-        var finishCount_group_personal = []
-        var result_history_html = ['<div style="background:#f5f5f5"><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>']
+        regCount_group_personal = [];
+        remCount_group_personal = [];
+        availCount_group_personal = [];
+        finishCount_group_personal = [];
+        result_history_html = ['<div style="background:#f5f5f5"><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>'];
         for(var i=0; i<jsondata.lectureIdArray.length; i++){
-            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
-            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
-            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
-            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
-            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
-            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
-            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
-            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
-            if($('body').width()>600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
-            }else if($('body').width()<=600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
+            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>';
+            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>';
+            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>';
+            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>';
+            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>';
+            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>';
+            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>';
+            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>';
+
+            var regPrice;
+            var regUnitPrice;
+            if(bodywidth > 600){
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
+            }else if(bodywidth <= 600){
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
-            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>'
-            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
-            var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
+            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>';
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>';
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>';
+            var modifyActiveBtn = '<div><img src="/static/user/res/icon-pencil.png" class="regHistoryModifyBtn" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>';
+            var howManyReg = '<div class="howManyReg_PC">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>';
 
 
-
-            if(jsondata.groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+            var yourgroup = jsondata.groupNameArray[i];
+            if(jsondata.groupNameArray[i] == '그룹'){
                 if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push('G'+jsondata.regCountArray[i])
-                    remCount_group_personal.push('G'+jsondata.remCountArray[i])
-                    availCount_group_personal.push('G'+jsondata.availCountArray[i])
-                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
+                    regCount_group_personal.push('G'+jsondata.regCountArray[i]);
+                    remCount_group_personal.push('G'+jsondata.remCountArray[i]);
+                    availCount_group_personal.push('G'+jsondata.availCountArray[i]);
+                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i]);
                 }
 
-            }else if(jsondata.groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
+            }
+            else if(jsondata.groupNameArray[i] == '클래스'){
                 if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push(jsondata.regCountArray[i])
-                    remCount_group_personal.push(jsondata.remCountArray[i])
-                    availCount_group_personal.push(jsondata.availCountArray[i])
-                    finishCount_group_personal.push(jsondata.finishCountArray[i])
+                    regCount_group_personal.push('C'+jsondata.regCountArray[i]);
+                    remCount_group_personal.push('C'+jsondata.remCountArray[i]);
+                    availCount_group_personal.push('C'+jsondata.availCountArray[i]);
+                    finishCount_group_personal.push('C'+jsondata.finishCountArray[i]);
                 }
             }
-            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
+            else if(jsondata.groupNameArray[i] == '1:1 레슨'){
+                if(jsondata.lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push(jsondata.regCountArray[i]);
+                    remCount_group_personal.push(jsondata.remCountArray[i]);
+                    availCount_group_personal.push(jsondata.availCountArray[i]);
+                    finishCount_group_personal.push(jsondata.finishCountArray[i]);
+                }
+            }
+            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>';
 
 
+
+            
+            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
+                lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
+                lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
+                lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>';
+            }
+            
 
             if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
             }else if(jsondata.lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
+                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'"> - </div>';
             }else if(jsondata.lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            }
-            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'"> - </div>';
+            };
 
-            var note = '<div class="pc_member_note" data-dbid="'+dbID+'" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
-            result_history_html.push('<div style="border-top:1px solid #cccccc;">'+howManyReg+whatGroupType+'</div>'+'<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn+'</div>'+note)
+
+            var note = '<div class="pc_member_note" data-dbid="'+dbID+'" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>';
+            var contents = start+end+regcount+remcount+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+modifyActiveBtn
+            result_history_html.push('<div style="border-top:1px solid #cccccc;">'+howManyReg+whatGroupType+'</div>'+'<div data-leid='+jsondata.lectureIdArray[i]+'>'+contents+'</div>'+note);
         }
-        $('#memberRegCount_info_PC').html(sumCount(jsondata.regCountArray)+'<span style="font-size:11px;"> ('+regCount_group_personal.join(',')+')</span>')  //전체 등록횟수
-        $('#memberRemainCount_info_PC').html(sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+remCount_group_personal.join(',')+')</span>')  //전체 남은횟수
-        $('#memberAvailCount_info_PC').html(sumCount(jsondata.availCountArray)+'<span style="font-size:11px;"> ('+availCount_group_personal.join(',')+')</span>')  //전체 예약가능횟수
-        $('#memberFinishCount_info_PC').html(sumCount(jsondata.finishCountArray)+'<span style="font-size:11px;"> ('+finishCount_group_personal.join(',')+')</span>')  //전체 완료횟수
+        $('#memberRegCount_info_PC').html(sumCount(jsondata.regCountArray)+'<span style="font-size:11px;"> ('+regCount_group_personal.join(',')+')</span>');  //전체 등록횟수
+        $('#memberRemainCount_info_PC').html(sumCount(jsondata.remCountArray)+'<span style="font-size:11px;"> ('+remCount_group_personal.join(',')+')</span>');  //전체 남은횟수
+        $('#memberAvailCount_info_PC').html(sumCount(jsondata.availCountArray)+'<span style="font-size:11px;"> ('+availCount_group_personal.join(',')+')</span>'); //전체 예약가능횟수
+        $('#memberFinishCount_info_PC').html(sumCount(jsondata.finishCountArray)+'<span style="font-size:11px;"> ('+finishCount_group_personal.join(',')+')</span>');  //전체 완료횟수
 
-        var result_history = result_history_html.join('')
-        $regHistory.html(result_history)
+        var result_history = result_history_html.join('');
+        $regHistory.html(result_history);
     }else if(PCorMobile == "mobile"){
-        var result_history_html = []
-        var result_history_html2 = []
+        result_history_html = [];
+        result_history_html2 = [];
         //시작, 종료, 등록횟수, 남은횟수, 
         //등록금액, 회당 금액, 전행상태, 연결상태, 수정
-        var regCount_group_personal = []
-        var remCount_group_personal = []
-        var availCount_group_personal = []
-        var finishCount_group_personal = []
-        for(var i=0; i<jsondata.lectureIdArray.length; i++){
-            var table_title1 = '<div><div class="regHistory_table_title">시작</div><div class="regHistory_table_title">종료</div><div class="regHistory_table_title">등록횟수</div><div class="regHistory_table_title">남은횟수</div></div>'
-            var table_title2 = '<div><div class="regHistory_table_title">등록금액</div><div class="regHistory_table_title">회당금액</div><div class="regHistory_table_title">진행상태</div><div class="regHistory_table_title">연결상태</div></div>'
+        regCount_group_personal = [];
+        remCount_group_personal = [];
+        availCount_group_personal = [];
+        finishCount_group_personal = [];
+        var jsonlen = jsondata.lectureIdArray.length;
 
-            var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>'
-            var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>'
-            var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>'
-            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateArray[i]+'</div>'
-            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            var modDateTime = '<div>'+jsondata.modDateTimeArray[i]+'</div>'
-            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>'
-            var regDateTime = '<div>'+jsondata.regDateTimeArray[i]+'</div>'
-            var remcount =    '<div class="lec_rem_count">'+jsondata.remCountArray[i]+'</div>'
-            if($('body').width()>600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
-                var regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
-            }else if($('body').width()<=600){
-                var regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>'
-                var regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>'
+        var jsondata_availCountArray = jsondata.availCountArray;
+        var jsondata_lectureIdArray = jsondata.lectureIdArray;
+        var jsondata_lectureStateArray = jsondata.lectureStateArray;
+        var jsondata_lectureStateNameArray = jsondata.lectureStateNameArray;
+        var jsondata_memberViewStateArray = jsondata.memberViewStateArray;
+        var jsondata_memberViewStateNameArray = jsondata.memberViewStateNameArray;
+        var jsondata_modDateTimeArray = jsondata.modDateTimeArray;
+        var jsondata_regDateTimeArray = jsondata.regDateTimeArray;
+        var jsondata_remCountArray = jsondata.remCountArray;
+        var jsondata_priceArray = jsondata.priceArray;
+        var jsondata_regCountArray = jsondata.regCountArray;
+        var jsondata_finishCountArray = jsondata.finishCountArray;
+        var jsondata_startArray = jsondata.startArray;
+        var jsondata_endArray = jsondata.endArray;
+        var jsondata_groupNameArray = jsondata.groupNameArray;
+        var jsondata_noteArray = jsondata.noteArray;
+
+        for(var i=0; i<jsonlen; i++){
+            var table_title1 = '<div><div class="regHistory_table_title">시작</div><div class="regHistory_table_title">종료</div><div class="regHistory_table_title">등록횟수</div><div class="regHistory_table_title">남은횟수</div></div>';
+            var table_title2 = '<div><div class="regHistory_table_title">등록금액</div><div class="regHistory_table_title">회당금액</div><div class="regHistory_table_title">진행상태</div><div class="regHistory_table_title">연결상태</div></div>';
+
+            var availcount =  '<div>'+jsondata_availCountArray[i]+'</div>';
+            var lectureId =   '<div>'+jsondata_lectureIdArray[i]+'</div>';
+            var lectureType = '<div>'+jsondata_lectureStateArray[i]+'</div>';
+            var lectureTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+            var lectureConnectType = '<div class="lectureType_IP" data-leid =" '+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateArray[i]+'</div>';
+            var lectureConnectTypeName = '<div class="lectureType_IP" data-leid =" '+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
+            var modDateTime = '<div>'+jsondata_modDateTimeArray[i]+'</div>';
+            //var regcount =    '<div>'+jsondata.regCountArray[i]+'</div>';
+            var regDateTime = '<div>'+jsondata_regDateTimeArray[i]+'</div>';
+            var remcount =    '<div class="lec_rem_count">'+jsondata_remCountArray[i]+'</div>';
+            var regPrice;
+            var regUnitPrice;
+            if(bodywidth > 600){
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
+            }else if(bodywidth <= 600){
+                regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
+                regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
             }
             //var start = '<div class="regHistoryDateInfo">'+jsondata.startArray[i]+'</div>'
             //var end = '<div class="regHistoryDateInfo">'+jsondata.endArray[i]+'</div>'
-            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata.regCountArray[i]+'" disabled></div>'
-            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.startArray[i],'.')+'" disabled readonly></div>'
-            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata.lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.endArray[i],'.')+'" disabled readonly></div>'
-            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" data-type="view" data-leid="'+jsondata.lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>'
-            var howManyReg = '<div class="howManyReg">'+(jsondata.lectureIdArray.length-i)+'회차 등록 '+'</div>'
+            var regcount =    '<div><input class="lec_reg_count" value="'+jsondata_regCountArray[i]+'" disabled></div>';
+            var start = '<div><input data-type="lec_start_date" data-leid ="'+jsondata_lectureIdArray[i]+'" class="lec_start_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata_startArray[i],'.')+'" disabled readonly></div>';
+            var end = '<div><input data-type="lec_end_date" data-leid ="'+jsondata_lectureIdArray[i]+'" class="lec_end_date regHistoryDateInfo" value="'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata_endArray[i],'.')+'" disabled readonly></div>';
+            var modifyActiveBtn = '<div style="width:10%;border:0;"><img src="/static/user/res/icon-pencil.png" class="regHistoryModifyBtn" data-type="view" data-leid="'+jsondata_lectureIdArray[i]+'" data-dbid="'+dbID+'"></div>';
+            var howManyReg = '<div class="howManyReg">'+(jsonlen-i)+'회차 등록 '+'</div>';
 
-            if(jsondata.groupNameArray[i] != '1:1'){
-                var yourgroup = '[그룹] '+jsondata.groupNameArray[i]
+            var yourgroup = jsondata_groupNameArray[i];
+            if(jsondata_groupNameArray[i] == '그룹'){
                 if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push('G'+jsondata.regCountArray[i])
-                    remCount_group_personal.push('G'+jsondata.remCountArray[i])
-                    availCount_group_personal.push('G'+jsondata.availCountArray[i])
-                    finishCount_group_personal.push('G'+jsondata.finishCountArray[i])
+                    regCount_group_personal.push('G'+jsondata_regCountArray[i]);
+                    remCount_group_personal.push('G'+jsondata_remCountArray[i]);
+                    availCount_group_personal.push('G'+jsondata_availCountArray[i]);
+                    finishCount_group_personal.push('G'+jsondata_finishCountArray[i]);
                 }
 
-            }else if(jsondata.groupNameArray[i] == '1:1'){
-                var yourgroup = jsondata.groupNameArray[i] + ' 레슨'
-                if(jsondata.lectureStateArray[i] == "IP"){
-                    regCount_group_personal.push(jsondata.regCountArray[i])
-                    remCount_group_personal.push(jsondata.remCountArray[i])
-                    availCount_group_personal.push(jsondata.availCountArray[i])
-                    finishCount_group_personal.push(jsondata.finishCountArray[i])
+            }
+            else if(jsondata_groupNameArray[i] == '클래스'){
+                if(jsondata_lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push('C'+jsondata_regCountArray[i]);
+                    remCount_group_personal.push('C'+jsondata_remCountArray[i]);
+                    availCount_group_personal.push('C'+jsondata_availCountArray[i]);
+                    finishCount_group_personal.push('C'+jsondata_finishCountArray[i]);
                 }
             }
-            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>'
+            else if(jsondata_groupNameArray[i] == '1:1 레슨'){
+                if(jsondata_lectureStateArray[i] == "IP"){
+                    regCount_group_personal.push(jsondata_regCountArray[i]);
+                    remCount_group_personal.push(jsondata_remCountArray[i]);
+                    availCount_group_personal.push(jsondata_availCountArray[i]);
+                    finishCount_group_personal.push(jsondata_finishCountArray[i]);
+                }
+            }
+            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata_lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>';
 
             //var whatGroupType = '<div class="whatGroupType"><select disabled><option value="1" selected>1:1 레슨</option><option value="2">그룹 레슨</option><option value="3">1:1 + 그룹 레슨</option></select></div>'
-            if(jsondata.lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
-                var lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            }else if(jsondata.lectureStateArray[i] == "PE"){
-                var lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            }else if(jsondata.lectureStateArray[i] == "RF"){
-                var lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>'
-            }
-            if(jsondata.memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
-                var lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }else if(jsondata.memberViewStateArray[i] == "DELETE"){
-                var lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
-            }else if(jsondata.memberViewStateArray[i] == "VIEW"){
-                var lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.memberViewStateNameArray[i]+'</div>'
+            
+
+            lectureConnectTypeName = "";
+
+            if(jsondata_memberViewStateArray[i] == "WAIT"){ // 연결안됨 WAIT, 연결됨 VIEW, 연결취소 DELETE
+                lectureConnectTypeName = '<div class="lectureType_WAIT" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
+            }else if(jsondata_memberViewStateArray[i] == "DELETE"){
+                lectureConnectTypeName = '<div class="lectureType_DELETE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
+            }else if(jsondata_memberViewStateArray[i] == "VIEW"){
+                lectureConnectTypeName = '<div class="lectureType_VIEW" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_memberViewStateNameArray[i]+'</div>';
             }
 
-            var note = '<div class="mobile_member_note" data-leid="'+jsondata.lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata.noteArray[i]+'" disabled></span></div>'
+            if(jsondata_lectureStateArray[i] == "IP"){ //진행중 IP, 완료 PE, 환불 RF
+                lectureTypeName = '<div class="lecConnectType_IP" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+            }else if(jsondata_lectureStateArray[i] == "PE"){
+                lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'"> - </div>';
+            }else if(jsondata_lectureStateArray[i] == "RF"){
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'">'+jsondata_lectureStateNameArray[i]+'</div>';
+                lectureConnectTypeName = '<div data-dbid="'+dbID+'"  data-leid ="'+jsondata_lectureIdArray[i]+'"> - </div>';
+            }
+            
 
-            result_history_html.push('<div class="wraps"><div data-leid='+jsondata.lectureIdArray[i]+' style="text-align:right;">'+howManyReg+whatGroupType+'수정: '+modifyActiveBtn+'</div>'+
+            var note = '<div class="mobile_member_note" data-leid="'+jsondata_lectureIdArray[i]+'"><span>특이사항: </span>'+'<input id="lectureNote" value="'+jsondata_noteArray[i]+'" disabled></span></div>';
+
+            result_history_html.push('<div class="wraps"><div data-leid='+jsondata_lectureIdArray[i]+' style="text-align:right;">'+howManyReg+whatGroupType+'수정: '+modifyActiveBtn+'</div>'+
                 table_title1+
-                '<div data-leid='+jsondata.lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
+                '<div data-leid='+jsondata_lectureIdArray[i]+'>'+start+end+regcount+remcount+'</div>'+
                 table_title2+
-                '<div data-leid='+jsondata.lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
-                note+'</div>')
+                '<div data-leid='+jsondata_lectureIdArray[i]+'>'+regPrice+regUnitPrice+lectureTypeName+lectureConnectTypeName+'</div>'+
+                note+'</div>');
         }
-        $('#memberRegCount_info').val(sumCount(jsondata.regCountArray)+' ('+regCount_group_personal.join(',')+')')  //전체 등록횟수
-        $('#memberRemainCount_info').val(sumCount(jsondata.remCountArray)+' ('+remCount_group_personal.join(',')+')')  //전체 남은횟수
-        $('#memberAvailCount_info').val(sumCount(jsondata.availCountArray)+' ('+availCount_group_personal.join(',')+')')  //전체 예약가능횟수
-        $('#memberFinishCount_info').val(sumCount(jsondata.finishCountArray)+' ('+finishCount_group_personal.join(',')+')')  //전체 완료횟수
+        $('#memberRegCount_info').val(sumCount(jsondata_regCountArray)+' ('+regCount_group_personal.join(',')+')');  //전체 등록횟수
+        $('#memberRemainCount_info').val(sumCount(jsondata_remCountArray)+' ('+remCount_group_personal.join(',')+')'); //전체 남은횟수
+        $('#memberAvailCount_info').val(sumCount(jsondata_availCountArray)+' ('+availCount_group_personal.join(',')+')');  //전체 예약가능횟수
+        $('#memberFinishCount_info').val(sumCount(jsondata_finishCountArray)+' ('+finishCount_group_personal.join(',')+')');  //전체 완료횟수
 
-        var result_history = result_history_html.join('')
-        $regHistory.html(result_history)
+        var result_history = result_history_html.join('');
+        $regHistory.html(result_history);
     }
 
     function sumCount(numberarray){
-        var count = 0
+        var count = 0;
         for(var i=0; i<numberarray.length; i++){
-            count = count + Number(numberarray[i])
+            count = count + Number(numberarray[i]);
         }
-        return count
+        return count;
     }
 }
 
@@ -3344,18 +3780,12 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60
         var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60
 
-        if(endDate == startDate+1 && endTime==0){
-            var duration = 24 - startTime
-        }else if(endTime==0 && endDate == 1){
-            var duration = 24 - startTime
-        }else{
-            var duration = endTime - startTime
-        }
+        var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
 
         var ptScheduleNo = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleIdxArray[i]+'</div>'
         var ptScheduleStartDt =  '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+date_format_yyyymmdd_to_yyyymmdd_split(jsondata.ptScheduleStartDtArray[i].split(' ')[0],'.')+' ('+multiLanguage[Options.language]['WeekSmpl'][day]+') '+jsondata.ptScheduleStartDtArray[i].split(' ')[1].substr(0,5)+'</div>'
         var ptScheduleStateCd =   '<div class="historyState_'+jsondata.ptScheduleStateCdArray[i]+'" data-id="'+jsondata.ptScheduleIdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
-        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration+text9+'</div>'
+        var ptScheduleDuration = '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+duration_number_to_hangul_minute(dur)+'</div>'
         var ptScheduleNote =   '<div data-id="'+jsondata.ptScheduleIdArray[i]+'">'+jsondata.ptScheduleNoteArray[i]+'</div>'
         if(jsondata.ptScheduleIdxArray[i] == "1" && i!=0){
             result_history_html.push('<div style="border-bottom:1px solid #cccccc;" data-leid='+jsondata.ptScheduleIdArray[i]+'>'+ptScheduleNo+ptScheduleStartDt+ptScheduleDuration+ptScheduleStateCd+ptScheduleNote+'</div>')
@@ -3779,11 +4209,10 @@ function closePopup(option){
 
     }
     if(option == 'member_info'){
-        //if($('body').width()<600){
+        /*
         $('#page_managemember').show();
         $('#float_btn_wrap').show();
         $('#float_btn').removeClass('rotate_btn');
-        //}
         $('#page-base').fadeIn('fast');
         $('#page-base-modifystyle').fadeOut('fast');
         $('#upbutton-modify').find('img').attr('src','/static/user/res/icon-pencil.png');
@@ -3797,13 +4226,8 @@ function closePopup(option){
         $('#birth_year_info, #birth_month_info, #birth_date_info').prop('disabled',true).addClass('dropdown_birth_info')
         $('#memberMale_info, #memberFemale_info').addClass('selectbox_disable')
 
-        //$('#memberEmail_info').attr('readonly',true);
         $('#memberPhone_info').attr('disabled',true);
         $('#comment_info').attr('readonly',true);
-        //$('#memberCount_info').attr('readonly',true);
-        //$('#datepicker_info').attr('disabled',true).addClass('input_disabled_color');
-        //$('#datepicker2_info').attr('disabled',true).addClass('input_disabled_color');
-        //$('.confirmPopup').fadeOut('fast');
         $('#cal_popup_plandelete').fadeOut('fast')
         if($('#mshade').css('z-index')==150){
             shade_index(150)
@@ -3814,24 +4238,76 @@ function closePopup(option){
             close_info_popup('cal_popup_plancheck')
             close_info_popup('cal_popup_planinfo')
         }
+        */
+        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')
+        hide_this();
+        $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
+        float_btn_show();
+        base_show();
+        base_modify_hide();
+
+        function float_btn_show(){
+            $('#float_btn_wrap').show();
+            $('#float_btn').removeClass('rotate_btn');
+        }
+
+        function base_show(){
+            $('#page-base').css('display','block');
+        }
+
+        function base_modify_hide(){
+            $('#page-base-modifystyle').css('display','none');
+        }
+        var selector_upbutton_modify = $('#upbutton-modify');
+        selector_upbutton_modify.find('img').attr({'src':'/static/user/res/icon-pencil.png'});
+        selector_upbutton_modify.attr({'data-type':'view'});
+        $('#uptext-pc-modify').text(text);
+
+        function hide_this(){
+            $('#memberInfoPopup').removeClass('display_block');
+            if($('#mshade').css('z-index')==150){
+                shade_index(150);
+            }else{
+                shade_index(-100);
+            }
+        }
+
+        $('#memberRegHistory_info').html("");
+        $('#memberRepeat_info').html("");
+        $('#memberLectureHistory_info').html("");
+
+        hide_plandelete();
+        close_others();
+
+        function hide_plandelete(){
+            $('#cal_popup_plandelete').css('display','none');
+        }
+
+        function close_others(){
+            if($('._calmonth').css('display')=="block"){
+                close_info_popup('cal_popup_plancheck');
+                close_info_popup('cal_popup_planinfo');
+            }
+        }
     }else if(option == 'member_info_PC'){
-        $('#memberInfoPopup_PC').fadeOut('fast')
+        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')
+        $('#memberInfoPopup_PC').removeClass('display_block')
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
 
         }else{
             shade_index(-100)
         }
     }else if(option == 'member_add'){
-        if($('body').width()<600){
+        if(bodywidth<600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
         }
-        $('#page_addmember').fadeOut('fast');
+        $('#page_addmember').hide();
 
-        $('#float_btn').fadeIn('fast');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#float_btn').show();
+        $('#page-base').show();
+        $('#page-base-addstyle').hide();
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         $('#birth_year, #birth_month, #birth_date').find('option:first').prop('selected', true)
@@ -3845,16 +4321,16 @@ function closePopup(option){
             shade_index(-100)
         }
     }else if(option == 'group_add'){
-        if($('body').width()<600){
+        if(bodywidth < 600){
             $('#page_managemember').show();
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
         }
-        $('#page_addgroup').fadeOut('fast');
+        $('#page_addgroup').hide();
 
-        $('#float_btn').fadeIn('fast');
-        $('#page-base').fadeIn();
-        $('#page-base-addstyle').fadeOut();
+        $('#float_btn').show();
+        $('#page-base').show();
+        $('#page-base-addstyle').hide();
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
 
@@ -3991,13 +4467,12 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
 
     var schedulesHTML = []
     for(var i=0; i<jsondata.ptRepeatScheduleIdArray.length; i++){
-        var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i]
-        var repeat_group_type = "[그룹레슨]"
+        var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i];
+        var repeat_group_type = "["+jsondata.ptRepeatScheduleGroupTypeCdNameArray[i]+"]";
         if(repeat_group_name.length == 0 ){
-            var repeat_group_name = ""
-            var repeat_group_type = "[1:1레슨]"
+            repeat_group_name = "";
         }
-        var repeat_title = repeat_group_type+' '+repeat_group_name
+        var repeat_title = repeat_group_type+' '+repeat_group_name;
 
 
         var repeat_id = repeat_id_array[i]
@@ -4010,37 +4485,8 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var repeat_time = Number(repeat_time_array[i].split(':')[0]) // 06 or 18
         var repeat_min = Number(repeat_time_array[i].split(':')[1])  // 00 or 30
 
-        if(repeat_min == "30"){
-            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
-        }
-
-        var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
-        if(repeat_dur - parseInt(repeat_dur) == 0.5){
-            if(parseInt(repeat_dur) != 0){
-                var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분'
-            }else if(parseInt(repeat_dur) == 0){
-                var repeat_dur = '30분'
-            }
-        }else{
-            var repeat_dur = repeat_dur + '시간'
-        }
-        //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
-        var repeat_sum = Number(repeat_time) + Number(repeat_dur)
-
-        var repeat_end_time_hour = parseInt(repeat_sum)
-        if(parseInt(repeat_sum)<10){
-            var repeat_end_time_hour = '0'+parseInt(repeat_sum)
-        }
-        if((repeat_sum%parseInt(repeat_sum))*60 == 0){
-            var repeat_end_time_min = '00'
-        }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
-            var repeat_end_time_min = '30'
-        }
-
         var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
         var repeat_end_time = repeat_endTime_array[i].split(':')[0] +':'+ repeat_endTime_array[i].split(':')[1]
-
-
 
         var repeat_day =  function(){
             var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
@@ -4058,7 +4504,7 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
             return repeat_day_info
         };
         var summaryInnerBoxText_title = '<p class="summaryInnerBoxText">'+repeat_title+'</p>'
-        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+' ('+repeat_dur+')'+'</p>'
+        var summaryInnerBoxText_1 = '<p class="summaryInnerBoxText">'+repeat_type +' '+repeat_day() +' '+repeat_start_time+' ~ '+repeat_end_time+'</p>'
         var summaryInnerBoxText_2 = '<p class="summaryInnerBoxText">'+repeat_start_text+repeat_start+' ~ '+repeat_end_text+repeat_end+'</p>'
         var deleteButton = '<span class="deleteBtn"><img src="/static/user/res/daycal_arrow.png" alt="" style="width: 5px;"><div class="deleteBtnBin" data-dbid="'+dbId+'" data-deletetype="repeatinfo" data-repeatid="'+repeat_id+'"><img src="/static/user/res/offadd/icon-bin.png" alt=""></div>'
         schedulesHTML[i] = '<div class="summaryInnerBox" data-repeatid="'+repeat_id+'">'+summaryInnerBoxText_title+summaryInnerBoxText_1+summaryInnerBoxText_2+deleteButton+'</div>'

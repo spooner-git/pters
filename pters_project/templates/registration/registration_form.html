@@ -37,11 +37,11 @@
         <div class="registerbox_label">
             <img src="/static/user/res/daycal_arrow.png" onclick='goPrev()' class="back_arrow">
             <p class="_step1_label"><img src="/static/user/res/PTERS_logo_pure.png">가입 유형 선택
-            <div class="registerbox_sublabel _step1_label">STEP 1<br>가입 회원 유형을 선택해주세요. <br> PTERS는 누구에게나 무료입니다!</div>
+            <div class="registerbox_sublabel _step1_label">STEP 1<br>가입 회원 유형을 선택해주세요.</div>
             <p class="_step2_label"><img src="/static/user/res/PTERS_logo_pure.png"><span></span>
-            <div class="registerbox_sublabel _step2_label">STEP 2<br>회원정보를 입력해주세요 <br> PTERS는 누구에게나 무료입니다!</div>
+            <div class="registerbox_sublabel _step2_label">STEP 2<br>회원정보를 입력해주세요.</div>
             <p class="_step3_label"><img src="/static/user/res/PTERS_logo_pure.png"><span>가입 약관</span>
-            <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다. <br> PTERS는 누구에게나 무료입니다!</div>
+            <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다.</div>
         </div>
 
 
@@ -107,7 +107,7 @@
                 <input type="text" name="email_first" placeholder="이메일"  id="email_input"> @
                 <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
                 <div style="display: inline-block;">
-                    <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:14px;margin-left:66px;opacity: 0.5;">
+                    <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:15px;margin-left:66px;opacity: 0.5;">
                     <select class="login_dropdown" id="email_option" title="email">
                         <option id="optionnone">선택</option>
                         <option id="gmail">gmail.com</option>
@@ -117,12 +117,12 @@
                     </select>
                 </div>
                 <button class="register_button" onclick="check_email();">중복 확인</button>
-                <span class="email_confirm"></span>
+                <span class="email_confirm" style="margin-top: 0;"></span>
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
             </div>
             <div class="outerbox">
                 <input type="password" name="" placeholder="새 비밀번호"  id="pw_input">
-                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re"><span class="pw_confirm"></span>
+                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"><span class="pw_confirm"></span>
                 <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
             </div>
 
@@ -874,18 +874,21 @@
 
 
     <footer class="fixfooter bottomzero">
+      <!--
         <div class="bottomfooter1">
             <span>English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             <span>한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
             <span>日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
         </div>
+      -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <span class="_company">회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href="http://www.spooner.co.kr" class="_company">회사소개</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <!--<a href="">제휴제안</a><span style="margin-left:10px;margin-right: 10px;">|</span>-->
+            <a href='{% url 'policy' %}'>이용약관</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <a href='{% url 'privacy' %}'>개인정보처리방침</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+            <!--<a href="">고객센터</a><span style="margin-left:10px;margin-right: 10px;">|</span>-->
+            <span style="line-height: 0; font-size:11px;">문의/제휴 support@pters.co.kr</span>
         </div>
     </footer>
 
@@ -1275,7 +1278,7 @@
                     }
                 })
             }else{
-                alert('약관 동의필요 : 테스트 페이지 입니다.');
+                alert('약관 동의 후 가입할 수 있습니다.');
             }
         });
 
@@ -1378,10 +1381,10 @@
                     var id_check_message = jsondata.id_check_result;
                     if(id_check_message[0].length>0){
                         var error_msg = id_check_message[0];
-                        $('.email_confirm').text(error_msg).css({'display':'inline','color':'#fe4e65'});
+                        $('.email_confirm').text(error_msg).css({'display':'block','color':'#fe4e65'});
                         $form.find('#email_duplicate_check').val(0);
                     }else{
-                        $('.email_confirm').text('사용 가능').css({'display':'inline','color':'green'});
+                        $('.email_confirm').text('사용 가능').css({'display':'block','color':'green'});
                         $form.find('#email_duplicate_check').val(1);
                     }
                 },

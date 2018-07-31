@@ -46,7 +46,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
                                                       start_dt__gte=start_date,
-                                                      end_dt__lt=end_date).order_by('-start_dt')
+                                                      end_dt__lt=end_date).order_by('start_dt')
         else:
             schedule_data = \
                 ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
@@ -56,18 +56,7 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
         for schedule_info in schedule_data:
             idx2 -= 1
-            schedule_info.start_dt = str(schedule_info.start_dt)
-            schedule_info.end_dt = str(schedule_info.end_dt)
-            schedule_info.mod_dt = str(schedule_info.mod_dt)
-            schedule_info.reg_dt = str(schedule_info.reg_dt)
             schedule_info.idx = str(idx)+'-'+str(idx2)
-            if schedule_info.note is None:
-                schedule_info.note = ''
-            # 끝난 스케쥴인지 확인
-            if schedule_info.state_cd == 'PE':
-                schedule_info.finish_check = 1
-            else:
-                schedule_info.finish_check = 0
             pt_schedule_list.append(schedule_info)
 
     context['pt_schedule_data'] = pt_schedule_list
@@ -79,77 +68,91 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
     group_schedule_list = []
     # 내가 속한 그룹 일정 조회
     group_list = func_get_trainee_group_ing_list(class_id, user_id)
+    group_schedule_data = None
 
     for group_info in group_list:
-        group_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                        group_tb_id=group_info.group_tb.group_id,
-                                                        lecture_tb__isnull=True,
-                                                        en_dis_type=ON_SCHEDULE_TYPE,
-                                                        start_dt__gte=start_date,
-                                                        start_dt__lt=end_date).order_by('start_dt')
-        for group_schedule_info in group_schedule_data:
+        if group_schedule_data is None:
+            group_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                            group_tb_id=group_info.group_tb.group_id,
+                                                            lecture_tb__isnull=True,
+                                                            en_dis_type=ON_SCHEDULE_TYPE,
+                                                            start_dt__gte=start_date,
+                                                            start_dt__lt=end_date).order_by('start_dt')
+        else:
+            group_schedule_data |= ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                             group_tb_id=group_info.group_tb.group_id,
+                                                             lecture_tb__isnull=True,
+                                                             en_dis_type=ON_SCHEDULE_TYPE,
+                                                             start_dt__gte=start_date,
+                                                             start_dt__lt=end_date).order_by('start_dt')
+
+        # for group_schedule_info in group_schedule_data:
             # lecture schedule id 셋팅
 
-            group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-            group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-
-            if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
-                schedule_current_member_num = \
-                    ScheduleTb.objects.filter(class_tb_id=class_id,
-                                              group_tb_id=group_schedule_info.group_tb.group_id,
-                                              lecture_tb__isnull=False,
-                                              group_schedule_id=group_schedule_info.schedule_id).count()
-                group_schedule_info.current_member_num = schedule_current_member_num
-
-            if group_schedule_info.note is None:
-                group_schedule_info.note = ''
+            # group_schedule_info.start_dt = str(group_schedule_info.start_dt)
+            # group_schedule_info.end_dt = str(group_schedule_info.end_dt)
+            #
+            # if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
+            #     schedule_current_member_num = \
+            #         ScheduleTb.objects.filter(class_tb_id=class_id,
+            #                                   group_tb_id=group_schedule_info.group_tb.group_id,
+            #                                   lecture_tb__isnull=False,
+            #                                   group_schedule_id=group_schedule_info.schedule_id).count()
+            #     group_schedule_info.current_member_num = schedule_current_member_num
+            #
+            # if group_schedule_info.note is None:
+            #     group_schedule_info.note = ''
             # 끝난 스케쥴인지 확인
-            if group_schedule_info.state_cd == 'PE':
-                group_schedule_info.finish_check = 1
-            else:
-                group_schedule_info.finish_check = 0
-            group_schedule_list.append(group_schedule_info)
-
-    context['group_schedule_data'] = group_schedule_list
+            # if group_schedule_info.state_cd == 'PE':
+            #     group_schedule_info.finish_check = 1
+            # else:
+            #     group_schedule_info.finish_check = 0
+            # group_schedule_list.append(group_schedule_info)
+    context['group_schedule_data'] = group_schedule_data
 
     return context
 
 
 def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
-    off_schedule_list = []
+    # off_schedule_list = []
 
     # off 스케쥴 전달
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=start_date,
                                               end_dt__lt=end_date).order_by('start_dt')
 
-    for schedule_info in schedule_data:
-        schedule_info.start_dt = str(schedule_info.start_dt)
-        schedule_info.end_dt = str(schedule_info.end_dt)
-        off_schedule_list.append(schedule_info)
+    # for schedule_info in schedule_data:
+    #     schedule_info.start_dt = str(schedule_info.start_dt)
+    #     schedule_info.end_dt = str(schedule_info.end_dt)
+    #     off_schedule_list.append(schedule_info)
 
-    context['off_schedule_data'] = off_schedule_list
+    context['off_schedule_data'] = schedule_data
 
     return context
 
 
 def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
-    repeat_schedule_list = []
-
+    # repeat_schedule_list = []
+    pt_repeat_schedule_data = None
     member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW',
                                                          member_id=user_id).order_by('lecture_tb__start_date')
 
     for member_lecture_info in member_lecture_data:
-        pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                  lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                                  en_dis_type=ON_SCHEDULE_TYPE)
+        if pt_repeat_schedule_data is None:
+            pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      lecture_tb_id=member_lecture_info.lecture_tb_id,
+                                                                      en_dis_type=ON_SCHEDULE_TYPE)
+        else:
+            pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
+                                                                       en_dis_type=ON_SCHEDULE_TYPE)
     # 강사 클래스의 반복일정 불러오기
-        for pt_repeat_schedule_info in pt_repeat_schedule_data:
-            pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
-            pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
-            repeat_schedule_list.append(pt_repeat_schedule_info)
+    #     for pt_repeat_schedule_info in pt_repeat_schedule_data:
+            # pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
+            # pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
+            # repeat_schedule_list.append(pt_repeat_schedule_info)
 
-    context['repeat_schedule_data'] = repeat_schedule_list
+    context['repeat_schedule_data'] = pt_repeat_schedule_data
 
     return context
 
@@ -243,8 +246,12 @@ def func_get_class_lecture_count(context, class_id, user_id):
     group_lecture_reg_count_sum = 0
     group_lecture_rem_count_sum = 0
     group_lecture_avail_count_sum = 0
+    class_lecture_reg_count_sum = 0
+    class_lecture_rem_count_sum = 0
+    class_lecture_avail_count_sum = 0
     lecture_flag = False
     group_lecture_flag = False
+    class_lecture_flag = False
     lecture_list = None
 
     if error is None:
@@ -265,35 +272,50 @@ def func_get_class_lecture_count(context, class_id, user_id):
 
                 if error is None:
 
-                    group_lecture_check = 0
+                    # group_lecture_check = 0
+                    group_lecture_info = None
                     try:
-                        GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                   lecture_tb_id=lecture_info.lecture_id, use=USE)
+                        group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+                                                                        lecture_tb_id=lecture_info.lecture_id, use=USE)
                     except ObjectDoesNotExist:
-                        group_lecture_check = 1
-
-                    if group_lecture_check == 1:
+                        group_lecture_info = None
+                    if group_lecture_info is None:
                         if lecture_info.state_cd == 'IP':
                             lecture_reg_count_sum += lecture_info.lecture_reg_count
                             lecture_rem_count_sum += lecture_info.lecture_rem_count
                             lecture_avail_count_sum += lecture_info.lecture_avail_count
                     else:
                         if lecture_info.state_cd == 'IP':
-                            group_lecture_reg_count_sum += lecture_info.lecture_reg_count
-                            group_lecture_rem_count_sum += lecture_info.lecture_rem_count
-                            group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                            if group_lecture_info.group_tb.group_type_cd == 'EMPTY':
+                                class_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                                class_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                                class_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                            else:
+                                group_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                                group_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                                group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                else:
+                    error = None
+
     if lecture_reg_count_sum > 0:
         lecture_flag = True
     if group_lecture_reg_count_sum > 0:
         group_lecture_flag = True
+    if class_lecture_reg_count_sum > 0:
+        class_lecture_flag = True
+
     context['lecture_flag'] = lecture_flag
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
     context['group_lecture_flag'] = group_lecture_flag
+    context['class_lecture_flag'] = class_lecture_flag
     context['group_lecture_reg_count'] = group_lecture_reg_count_sum
     context['group_lecture_finish_count'] = group_lecture_reg_count_sum - group_lecture_rem_count_sum
     context['group_lecture_avail_count'] = group_lecture_avail_count_sum
+    context['class_lecture_reg_count'] = class_lecture_reg_count_sum
+    context['class_lecture_finish_count'] = class_lecture_reg_count_sum - class_lecture_rem_count_sum
+    context['class_lecture_avail_count'] = class_lecture_avail_count_sum
 
     return context
 
@@ -358,14 +380,16 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 if group_check == 0:
                     lecture_info_data.group_name = group_info.group_tb.name
                     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                    lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
                     lecture_info_data.group_member_num = group_info.group_tb.member_num
                     lecture_info_data.group_note = group_info.group_tb.note
                     lecture_info_data.group_state_cd = group_info.group_tb.state_cd
-                    try:
-                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
-                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
-                    except ObjectDoesNotExist:
-                        error = '그룹 정보를 불러오지 못했습니다.'
+                    lecture_info_data.group_state_cd_name = group_info.group_tb.get_state_cd_name()
+                    # try:
+                    #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
+                    #     lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
+                    # except ObjectDoesNotExist:
+                    #     error = '그룹 정보를 불러오지 못했습니다.'
 
                 output_lecture_list.append(lecture_info_data)
 

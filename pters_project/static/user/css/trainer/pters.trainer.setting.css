@@ -114,6 +114,11 @@ body{
 		margin-top: 20px;
 		margin-bottom: 32px;
 	}
+	#from_pters_team img:first-child{
+		height: 50px;
+		width: 160px;
+		opacity: 0.3;
+	}
 
 	#salesSetting .settingImg{
 		height: 50px;

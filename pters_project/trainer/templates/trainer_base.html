@@ -52,6 +52,7 @@
     <div id="pshade" class="pshade _shade"></div>
     <div id="mshade" class="mshade _shade"></div>
     <div id="mshade_popup" class="mshade_popup _shade"></div>
+    <div id="shade_caution"></div>
 
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
@@ -80,11 +81,12 @@
         </form>
         <!--<label>클래스 선택</label>-->
         <p>
-            <span class="KRtext">클래스를 선택 해주세요.</span>
+            <span class="KRtext">프로그램을 선택하면 이동합니다.</span>
             <span class="JPtext">クラスを選択してください。</span>
             <span class="ENtext">Choose class</span>
             <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
         </p>
+        <!--
         <div class="pters_table">
             <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
             <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
@@ -92,12 +94,14 @@
             <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
             <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
         </div>
+        -->
         <div class="lecture_select_table_list">
         </div>
     </div>
 
     <!--일정 눌렀을때 팝업메뉴-->
     <div id="cal_popup_planinfo" class="popups">
+        <div id="inner_shade_planinfo"></div>
         <div id="popup_img">
             <span id="popup_planinfo_title" class="popup_title"></span>
             <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
@@ -119,22 +123,29 @@
             <span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Close</span>
         </div>
         <div id="canvasWrap">
-            <span class="KRtext">회원님 완료 서명을 입력해주세요.</span>
-            <span class="JPtext">完了署名を入力して下さい</span>
-            <span class="ENtext">Enter Completion Signature</span>
+            <p class="KRtext">회원님 완료 서명을 입력해주세요.</p>
+            <p class="JPtext">完了署名を入力して下さい</span>
+            <p class="ENtext">Enter Completion Signature</p>
             <canvas id="canvas"></canvas>
+            <div id="popup_btn_sign_complete" class="popup_inner popup_inner_finish popup_inner_x3">
+                <span class="KRtext">완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
+            </div>
+            <div id="popup_btn_sign_close" class="popup_inner popup_inner_delete  popup_inner_x3">
+                <span class="KRtext">닫기</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
+            </div>
         </div>
         <div id="popup_btn_viewGroupParticipants"><span>참석자</span><img src="/static/user/res/icon-down-grey.png"></div>
         <div id="groupParticipants">
 
         </div>
         <div id="popup_sign_img">
+            <span>완료 서명</span>
             <img src="" id="id_sign_img">
         </div>
 
         <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:110px;width: 100%;">
             <div class="mode_switch_button_wrap_cal" style="margin-top:5px;">
-                <div class="mode_switch_button mode_active" data-page="thisgroup" style="width: 90px;">이 그룹 회원</div>
+                <div class="mode_switch_button mode_active" data-page="thisgroup" style="width: 90px;">이 수업 회원</div>
                 <!--<div class="mode_switch_button" data-page="whole">전체 회원</div>-->
             </div>
             <div id="subpopup_addByList_whole">"<div class='list_addByList'>리스트 불러오는 중...</div>"</div>
@@ -212,6 +223,25 @@
     </div>
     [월간전용] 알림 팝업 -->
 
+    <div id="base_popup_check_finished_member_notice" class="popups">
+        <div class="caution_img"><img src="/static/user/res/stopmark.png"></div>
+        <div class="caution_message">
+
+        </div>
+        <div id="popup_btn_check_finished_member_yes" class="popup_inner" onclick="close_caution_popup()">
+            <span style="color:#282828;" class="KRtext">닫기</span>
+            <span style="color:#282828;" class="JPtext">はい</span>
+            <span style="color:#282828;" class="ENtext">Yes</span>
+        </div>
+        <!--
+        <div id="popup_btn_check_finished_member_no" class="popup_inner popup_inner_delete">
+            <span class="KRtext">아니오</span>
+            <span class="JPtext">いいえ</span>
+            <span class="ENtext">No</span>
+        </div>
+        -->
+    </div>
+
 
     <nav class="navbar navbar-fixed-top navbar-default"  id="page-base">
         <div id="navshade"></div>
@@ -226,8 +256,8 @@
                     <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
                     <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
                 {% endblock %}
-                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
-                    <a><img src="{% static_url "user/res/main/alarm-on.png" %}" style="width:20px;"></a>
+                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
+                    <a><img src="{% static_url "user/res/member/icon-repeat-white.png" %}" style="width:20px;"></a>
                 </button>
 
                 <div id="outer_Sidenav" class="outer_Sidenav">
@@ -238,8 +268,7 @@
                 <div id="inner_Sidenav" class="sidenav">
 
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
-                        <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
-                        <div style="z-index: -1"><img src="{% static_url "user/res/icon-pf.png" %}" alt="#"></div>
+                        <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
                         <div id="user_name">{{user.last_name}} {{user.first_name}}
                             <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                         </div>
@@ -252,41 +281,53 @@
                         </div>
                     </div>
 
-                    <div class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src="{% static_url "user/res/icon-calendar-day.png" %}" class="sidebar_icon" alt="#">
-                        <a class="sidebar_text __todayplan">
-                        </a>
-                    </div>
-                    <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
-                        <a class="sidebar_text __weekplan">
-                        </a>
-                    </div>
-                    <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
-                        <a class="sidebar_text __monthplan">
-                        </a>
-                    </div>
-                    <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
-                        <a class="sidebar_text __membermanage">
-                        </a>
-                    </div>
-                    <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
-                        <a class="sidebar_text __groupmanage">
-                        </a>
-                    </div>
-                    <!--
-                        <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
+                    <div id="sidenav_wrapper_slide">
+                        <div style="display: none;" class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src="{% static_url "user/res/icon-calendar-day.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __todayplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __weekplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __monthplan">
+                            </a>
+                        </div>
+                        <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __membermanage">
+                            </a>
+                        </div>
+                        <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __groupmanage">
+                            </a>
+                        </div>
+                        <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __classmanage">
+                            </a>
+                        </div>
+                        
+                            <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                                <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
+                                </a>
+                            </div>
+                            
+                        <div class="sidebar_div"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:alarm' %}" class="sidebar_text __alarm">
+                            </a>
+                        </div>
+                        <!--
+                        <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src="{% static_url "user/res/member/icon-repeat.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text __calSelect">
                             </a>
                         </div>
                         -->
-                    <div class="sidebar_div" onclick="open_lecture_select_popup()"><img src="{% static_url "user/res/member/icon-repeat.png" %}" class="sidebar_icon" alt="#">
-                        <a class="sidebar_text __calSelect">
-                        </a>
+                        <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
+                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
+                            </a>
+                        </div>
                     </div>
-                    <div class="sidebar_div"><img src="{% static_url "user/res/icon-pencil.png" %}" class="sidebar_icon" alt="#">
-                        <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
-                        </a>
-                    </div>
-                    <div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>
+                    <!--<div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>-->
                     <div class="sidebar_div_last">
                         <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
                             <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
@@ -357,15 +398,19 @@
                     <a href="{% url 'trainer:group_manage' %}" class="centermenu_text __groupmanage"></a>
                 </div>
 
-                <!--
+                <div class="centermenu_div" style="margin-right: 25px;">
+                    <a href="{% url 'trainer:class_manage' %}" class="centermenu_text __classmanage"></a>
+                </div>
+
+                
                     <div class="centermenu_div">
                         <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
                     </div>
-                    -->
+                    
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
                 </div>
-                <div class="centermenu_div">
+                <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:help_setting' %}" class="centermenu_text __help"></a>
                 </div>
                 <!--
@@ -377,39 +422,54 @@
                 </div>
                 -->
             </div>
-            <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="open_lecture_select_popup_pc(); openAlarm('pc'); ">
-                <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:4px;">
-                <span class="pcwhere">{{ request.session.class_type_name }}</span>
-                <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
+            <div id="loginInfo" class="centermenu_div" style="float:right;">
+                <img src="/static/user/res/alarm/alarm-on.png" onclick="open_slide_menu_pc('alarm');" id="alarm_button">
+                <img src="/static/user/res/icon-name-b.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
+                <div id="popup_triangle"></div>
+                <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
+                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
             </div>
             <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
-            <div class="pcver-slide-menu">
+            
+            <div class="pcver-slide-menu_class">
                 <div id="myInfo">
-                    <label><img src="/static/user/res/member/icon-user.png"><span class="KRtext">내 클래스 정보</span><span class="JPtext">My Class</span><span class="ENtext">My Classes</span></label>
-                    <span>{{ request.session.class_center_name }}</span>
-                    <span>{{user.last_name}} {{user.first_name}}</span>
-                    <span class="_nameAttach"></span>
+                    <span id="myInfo_center_name">{{ request.session.class_center_name }}</span>&nbsp
+                    <span id="myInfo_user_name">{{user.last_name}} {{user.first_name}}<span class="_nameAttach"></span></span>
+                    
                     <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
-                    <img src="/static/user/res/ptadd/btn-x.png" onclick="closeAlarm('pc')">
+                    <img src="/static/user/res/ptadd/btn-x.png" onclick="" hidden>
+                    <p> 선택시 해당 프로그램으로 이동합니다.</p>
                 </div>
+                <!--
                 <div class="pters_table">
-                    <div class="pters_table_cell_head table_center_name"><span class="KRtext">센터</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
-                    <div class="pters_table_cell_head table_lecture_name"><span class="KRtext">클래스</span><span class="JPtext">クラス</span><span class="ENtext">Class</span></div>
+                    <div class="pters_table_cell_head table_center_name"><span class="KRtext">클래스</span><span class="JPtext">センター</span><span class="ENtext">Center</span></div>
                     <div class="pters_table_cell_head table_trainee_num"><span class="KRtext">수강생</span><span class="JPtext">受講生</span><span class="ENtext">Member</span></div>
                     <div class="pters_table_cell_head table_start_date"><span class="KRtext">개강일</span><span class="JPtext">開始</span><span class="ENtext">Open Date</span></div>
-                    <div class="pters_table_cell_head table_lecture_status"><span class="KRtext">상태</span><span class="JPtext">状態</span><span class="ENtext">Status</span></div>
                 </div>
+            -->
                 <div id="subject-selector"></div>
+                <div id="class_view_all">닫기</div>
+            </div>
+            <div class="pcver-slide-menu_alarm">
                 <div id="alarm-notify">
-                    <img id="alarm-on-pc" src="/static/user/res/main/alarm-on.png">
-                    <span class="KRtext">알림</span>
+                    <span class="KRtext" style="font-size:17px;font-weight:500;margin-left:16px;">일정 알림</span>
                     <span class="JPtext">新しい通知があります</span>
                     <span class="ENtext">New notification arrived</span>
-                    <img id="alarm-page-arrow" src="/static/user/res/icon-down-grey.png">
+                    <div id="new_alarm_count" style="display:inline-block;width:19px;height:19px;background:#fe4e65;color:#ffffff;border-radius:50%;font-size:12px;text-align:center;margin-right:8px;margin-left:8px;">
+                        <div style="padding-top:3px;font-size: 10px;"></div>
+                    </div>
+                    <span id="new_alarm_count_text" style="font-size:12px;color:#7d7d7d;"></span>
+                    <img src="/static/user/res/alarm/icon-delete.png" class="alarm_delete_pc">
                 </div>
-                <div id="alarm-iframe-div-pc"></div>
-                <div id="alarm-close-pc"><img src="/static/user/res/icon-down-grey.png"></div>
+                <div id="alarm-iframe-div-pc">
+                    <!--
+                    <iframe id="alarm-iframe" src="/trainer/alarm_pc/" width="100%" height="300" frameborder="0">
+                        
+                    </iframe>
+                    -->
+                </div>
+                <div id="alarm_view_all">닫기</div>
             </div>
         </div>
     </nav>
@@ -488,39 +548,49 @@
 {#    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
 {#    <link rel="manifest" href={% static_url "manifest.json" %}>#}
-<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
-    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
-    <script>
-    function playSound() {
-          var sound = document.getElementById("audio");
-          sound.loop = false;
-          sound.play();
-      }
-    </script>
-    <script type="text/javascript">
-        
-// var requestButton = document.querySelector(".request-btn");
-
-    //});
-    //const messageChannel = new MessageChannel();
-    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
-    //navigator.serviceWorker.controller.postMessage({'hello':'test'});
-        function messageCommunicationWithWorker(){
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                registrations.forEach(function (v) {
-                    send_message_to_sw(v.active, "hello cal week").then(function (m) {
-                        playSound();
-                        ajaxClassTime();
-                        messageCommunicationWithWorker();
-                    });
-                });
-            });
-        }
-        messageCommunicationWithWorker();
-    </script>-->
+{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
+{#    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
+{#    <script>#}
+{#    function playSound() {#}
+{#          var sound = document.getElementById("audio");#}
+{#          sound.loop = false;#}
+{#          sound.play();#}
+{#      }#}
+{#    </script>#}
+{#    <script type="text/javascript">#}
+{#        #}
+{#// var requestButton = document.querySelector(".request-btn");#}
+{##}
+{#    //});#}
+{#    //const messageChannel = new MessageChannel();#}
+{#    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
+{#    //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
+{#        function messageCommunicationWithWorker(){#}
+{#            navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#                registrations.forEach(function (v) {#}
+{#                    send_message_to_sw(v.active, "hello cal week").then(function (m) {#}
+{#                        playSound();#}
+{#                        ajaxClassTime();#}
+{#                        messageCommunicationWithWorker();#}
+{#                    });#}
+{#                });#}
+{#            });#}
+{#        }#}
+{#        messageCommunicationWithWorker();#}
+{#    </script>-->#}
 <script type="text/javascript">
+    var class_id = '{{ request.session.class_id }}';
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
+    {% load background_data %}
+    {% autoescape off %}
+    var setting_info = {% get_setting_info request %};
+    var class_background_img_url= {% get_background_url request %};
+    var class_background_type_cd = {% get_background_type_cd request %};
+{#    var function_auth = {% get_function_auth request %}#}
+    {% endautoescape %}
+{#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
+
     {#            open_lecture_select_popup_pc()#}
 
     /* Shade 클릭해서 팝업 닫기
@@ -555,71 +625,90 @@
         window.location.reload();
     });
 
-    function openNav(){
+    
+    function adjust_sidenav_wrapper_height(){
+        //var sideupper_BottomLoc = $('.sidebar_upper').offset().top + $('.sidebar_upper').height();
+        var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top - $(window).scrollTop();
+        var lastBtn_height = $('.sidebar_div_last').height() - 20;
+        var inner_Sidenav_height = $('#inner_Sidenav').height();
+        $('#sidenav_wrapper_slide').css({'height':inner_Sidenav_height - lastBtn_height - sidenav_wrapper_slide_TopLoc+'px'});
+        //alert(sidenav_wrapper_slide_TopLoc, lastBtn_height, inner_Sidenav_height)
+    };
 
-        {#               $("#outer_Sidenav").css('display_block', 'block');#}
+
+    function openNav(){
+        
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
-        $('#float_btn_wrap, #float_btn').hide('fast');
-
+        $('#float_btn').hide('fast');
+        adjust_sidenav_wrapper_height();
 
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeIn('fast')
     }
 
     function closeNav(){
 
-        {#               $("#outer_Sidenav").css('display', 'none');#}
         $("#outer_Sidenav").hide();
         $("#inner_Sidenav").css({'width':'0'});
-        $('#float_btn_wrap, #float_btn').show('fast');
+        $('#float_btn').show('fast');
 
 
         //$(".sidebar_text,#user_name,#welcome,.sidebar_icon,.sidebar_upper img").fadeOut('fast')
     }
 
+    //var selector_alarm_iframe = $('#alarm-delete-form');
+    
+    function open_slide_menu_pc(option){ // pc or mobile
+        var bodywidth = window.innerWidth;
+        var selector_alarm_iframe = $('#alarm-iframe')
+        if(option == 'class'){
+            $('.pcver-slide-menu_alarm').css('display','none')
+            $('.pcver-slide-menu_class').css('display','block')
+            open_lecture_select_popup_pc()
 
-    function openAlarm(option){ // pc or mobile
-        if(option == 'mobile'){
-            if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-                $('#alarm_delete').hide();
+
+            if(bodywidth > 974){
+                $('#popup_triangle').css({'display':'block', 'top':$('#classselect_button').position().top+31, 'left':$('#classselect_button').position().left-7})
             }else{
-                $('#alarm_delete').show();
+                $('#popup_triangle').css({'display':'block', 'top':$('#classselect_button').position().top+53, 'left':$('#classselect_button').position().left+7})
             }
-            shade_index(100);
-            $('#alarm').css('height','70%');
-            $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
+            
+            
         }
-        else if(option == 'pc'){
-            //open_lecture_select_popup_pc()
-            if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-                $('#alarm_delete').hide();
+        else if(option == 'alarm'){
+            $('.pcver-slide-menu_class').css('display','none')
+            $('.pcver-slide-menu_alarm').css('display','block')
+            $("#alarm-iframe-div-pc").html('<iframe id="alarm-iframe" src="/trainer/alarm_pc/" width="100%" height="300" frameborder="0"></iframe>')
+
+            if(bodywidth > 974){
+                $('#popup_triangle').css({'display':'block', 'top':$('#alarm_button').position().top+30, 'left':$('#alarm_button').position().left-7})
             }else{
-                $('#alarm_delete').show();
+                $('#popup_triangle').css({'display':'block', 'top':$('#alarm_button').position().top+53, 'left':$('#alarm_button').position().left-3})
             }
-            $('.pcver-slide-menu').css({'height':'auto','box-shadow':'1px 1px 1px 1px #c5c5c5'});
-            $('#alarm-iframe-div-pc').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="100%" height="300" frameborder="0"></iframe>');
+            
+            
         }
     }
+
+
+    $('#alarm_view_all').click(function(){
+        $('.pcver-slide-menu_alarm, #popup_triangle').css('display','none')
+    })
+
+    $('#class_view_all').click(function(){
+        $('.pcver-slide-menu_class, #popup_triangle').css('display','none')
+    })
 
     function closeAlarm(option){
-        if(option=='pc'){
-            var selector_alarm_iframe_div_pc = $('#alarm-iframe-div-pc');
-            $('.pcver-slide-menu').css({'height':'0','box-shadow':'unset'});
-            selector_alarm_iframe_div_pc.css('height','0px');
-            $('#alarm-close-pc').fadeOut();
-            selector_alarm_iframe_div_pc.html('');
+        if(option == "pc"){
+            $('.pcver-slide-menu_alarm, .pcver-slide-menu_class, #popup_triangle').css('display','none')
+        }else if(option == "mobile"){
+
         }
     }
+    
+    
 
-    $('#alarm-notify').click(function(){
-        $('#alarm-iframe-div-pc').css('height','300px');
-        $('#alarm-close-pc').fadeIn();
-    });
-
-    $('#alarm-close-pc').click(function(){
-        $('#alarm-iframe-div-pc').css('height','0px');
-        $('#alarm-close-pc').fadeOut();
-    });
 
     var class_hour = '{{ request.session.class_hour }}';
 
@@ -631,9 +720,16 @@
     var worktimeStart = '';
     var worktimeEnd = '';
 
-    if(stoptime.length>0){
+    if(stoptime.length>0){ //0:00-23:59
         stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0]);
         stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0]);
+        
+        if('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_member_reserve_time_available }}'.split('-')[0].split(':')[1] == '59'){
+            stoptimeStart = 24;
+        }
+        if('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0] == '23' && '{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[1] == '59'){
+            stoptimeEnd = 24;
+        }
     }else{
         stoptimeStart = '';
         stoptimeEnd = '';
@@ -653,14 +749,19 @@
         worktimeEnd = '';
     }
 
-    var Options = {   "hourunit" : 30, // 30 or 60
-        "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60
+    var Options = {   
+        "hourunit" : 30, // 30 or 60 달력을 30분단위로 선택이 가능하다.
+        "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60  수업시간을 classDur 시간만큼 선택 가능
+        "timeDur" : Number('{{ request.session.setting_member_time_duration }}'),               //예약 기본 시간 단위
+        "startTime": '{{ request.session.setting_member_start_time }}',
         "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
         "limit":'{{ request.session.setting_member_reserve_enable_time }}',      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
         "cancellimit": '{{ request.session.setting_member_reserve_cancel_time }}', //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
         "reserve":'{{ request.session.setting_member_reserve_prohibition }}',    //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number({{ request.session.setting_member_reserve_date_available }}),
+        "availDate":Number('{{ request.session.setting_member_reserve_date_available }}'),
+        "autocomplete":{{ request.session.setting_schedule_auto_finish }},           //자동 완료 처리
+        "lecture_autocomplete":{{ request.session.setting_lecture_auto_finish }},    //자동 완료 처리
 
         "firstPushToMember":'-',
         "secondPushToMember":'-',
@@ -673,8 +774,19 @@
 
 
         "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan"           //Korea, Japan, English, Chinese
+        "location" : "Japan",         //Korea, Japan, English, Chinese
+
+        "auth_group":1,
+        "auth_class":1,
+        "auth_ads":1,
+
     };
+
+    //광고 제거
+    if(Options.auth_ads == 1){
+        $('.ads_wrap').empty()
+    }
+    //광고 제거
 
     if(Options.language=="JPN"){
         $(".KRtext, .ENtext").remove();
@@ -691,9 +803,11 @@
     if(varUA.match('android') != null){
         $('._company').css('display','none');
         $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
     }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
         $('._company').css('display','none');
         $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
     }else{
 
     }
@@ -753,7 +867,7 @@
                     if(lec_select_classIdArray.length == 0){
                         location.href="{% url 'trainer:add_class' %}";
                     }else{
-                        fill_lecture_select_popup(HTMLselector);
+                        fill_lecture_select_popup(jsondata,HTMLselector);
                     }
                 }
             },
@@ -821,48 +935,101 @@
 
     function open_lecture_select_popup_pc(){
         $('.popups').hide();
-        closeNav();
         ajax_read_lecture_info_from_db($('#subject-selector'));
     }
 
-    function fill_lecture_select_popup(HTMLselector){
-        var len = lec_select_subjectNameArray.length;
-        var list_table_to_join = [];
-        var center_counter = 0;
-        for(var i=0; i<len; i++){
-            //if(lec_select_npLectureCountsArray[i] == '0'){
-            var currentClass = "";
-            var table = "";
-            if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
-                currentClass = 'currentClass';
-                //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
-                table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">';
-            }else{
-                currentClass = "";
-                //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
-                table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'>';
-            }
-            //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-            var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+lec_select_centerNameArray[i]+'</div>';
-            var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+lec_select_subjectNameArray[i]+'</div>';
-            var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>';
-            var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>';
-            var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+lec_select_stateNameArray[i]+'</div>';
-            //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
-            var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
-            list_table_to_join.push(sum);
-            if(lec_select_centerNameArray[i] != ''){
-                center_counter += 1;
-            }
-        }
-        var list_table = list_table_to_join.join('');
-        HTMLselector.html(list_table);
+    function fill_lecture_select_popup(jsondata, HTMLselector){
+        var json = class_sort_by_center(jsondata);
+        console.log(json)
 
-        if(center_counter==0){
-            $('.table_center_name').css('display', 'none');
-        }
-        //$('.lecture_select_table_list').html(list_table)
+        var list_table_to_join = [];
+        for(center in json){
+            var subject_join = []
+            var center_counter = 0;
+            var centers = [];
+            for(subject in json[center]){
+                var classId = json[center][subject]['classId'];
+                var classHour = json[center][subject]['classHour'];
+                var classHourUnit = json[center][subject]['classHourUnit'];
+                var classIPNumber = json[center][subject]['classInProgressMemberNum'];
+                var classMemberNum = json[center][subject]['classMemberNum'];
+                var startDt = json[center][subject]['startDate'];
+                var endDt = json[center][subject]['endDate'];
+                var modDate = json[center][subject]['modDate'];
+                var regDate = json[center][subject]['regDate'];
+                var stateCode = json[center][subject]['stateCode'];
+                var stateName = json[center][subject]['stateName'];
+                var subjectCode = json[center][subject]['subjectCode']
+
+                var currentClass = "";
+                var table = "";
+                var currentIndicator = ""
+                if(classId == lec_select_currentClassId[0]){
+                    currentClass = 'currentClass';
+                    //var selectionText = '<a data="" '+'onclick=""'+'">-</a>'
+                    table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+classId+'">';
+                    currentIndicator = '<div class="currentIndicator"></div>'
+                }else{
+                    currentClass = "";
+                    //var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'">선택</a>'
+                    table = '<div class="pters_table lecture_row" style="margin-top:0;" id="classid" data-classid="'+classId+'" '+'onclick="lecture_check('+classId+')"'+'>';
+                }
+                var centerName__ = center;
+                if(center == ""){
+                    var centerName__ = '센터 미지정'
+                }
+               
+                //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
+                var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+subject+'</div>';
+                var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+classIPNumber+'명</div>';
+                var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(startDt,'.')+' ~</div>';
+                var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+stateName+'</div>';
+                //var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>';
+                if(subject_join.length == 0){
+                    var sum = table + centerName + lectureName + traineeNum + startDate + status + '</div>';
+                }else{
+                    var sum = table + lectureName + traineeNum + startDate + status + '</div>';
+                }
+
+                subject_join.push(sum);
+                if(center != ''){
+                    center_counter += 1;
+                }
+            } //for2
+            list_table_to_join.push(subject_join.join(''))
+        }//for1
+        HTMLselector.html(list_table_to_join.join(''))
     }
+
+    function class_sort_by_center(jsondata){
+        var len = jsondata.subjectNameArray.length;
+        var center_subject = {}
+        for(var i=0; i<len; i++){
+            center_subject[jsondata.centerNameArray[i]] = {}
+        }
+        for(var j=0; j<len; j++){
+            center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+        }
+        for(var k=0; k<len; k++){
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+        }
+        console.log(center_subject)
+        return center_subject
+    }
+
+
 
     $('#popup_lecture_select .button_close_popup').click(function(){
         $(this).parents('div.popups').fadeOut('fast');
@@ -885,6 +1052,7 @@
 </script>
 <script type="text/javascript" src={% static_url "common/js/jquery.cookie.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 
 {% block local_js_footer %}
 {% endblock %}

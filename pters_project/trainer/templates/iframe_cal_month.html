@@ -2,7 +2,7 @@
 {% load static_url %}
 
 {% block local_css %}
-    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.month.cal.iframe.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/iframe/pters.trainer.month.cal.iframe.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.group.css" %}>
@@ -147,19 +147,6 @@
         <div id="cal_box" class="cal_box"></div>
     </div>
 
-    <div class="ads_cal_side ads_wrap">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- 달력 사이드 광고 -->
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:160px;height:600px"
-             data-ad-client="ca-pub-4554121851965192"
-             data-ad-slot="2111194307"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-
-
 
     <div id="page-addplan" class="wrap popups">
         <form action="{% url 'schedule:add_schedule' %}" id="pt-add-form" method="post">
@@ -265,6 +252,12 @@
             <div id="grouptypenumInfo" class="dropdown" placeholder="ー"></div>
         </div>
 
+        <div id="groupmembersInfo" class="ptaddbox">
+            <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 그룹원 정보</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
+            <!-- 남은 횟수 DB연동 필요 -->
+            <div id="groupmemberInfo" class="" placeholder="ー"></div>
+        </div>
+
         <div class="_NORMAL_ADD_wrap">
             <div id="dateSelector" class="ptaddbox _NORMAL_ADD">
                 <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-cal.png" %}> <span class="KRtext"> 날짜</span><span class="JPtext"> 予約日</span><span class="ENtext"> Day Select</span></div>
@@ -280,7 +273,7 @@
             <div id="classStartTime" class="ptaddbox _NORMAL_ADD">
                 <div class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}>
-                    <span class="KRtext"> 시작 시간</span>
+                    <span class="KRtext"> 시작 시각</span>
                     <span class="JPtext"> 開始時間</span>
                     <span class="ENtext"> Start Time</span>
                 </div>
@@ -392,7 +385,7 @@
             </div>
 
             <div id="repeatStartTime" class="ptaddbox _REPEAT_ADD">
-                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시간</div>
+                <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시각</div>
                 <div id="repeatstarttimesSelected" class="dropdown">
                     <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">
                         <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -935,6 +928,17 @@
         var selectedDayGroup = [] //반복일정에서 요일 선택
         var select_all_check;
         var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
+        var pters_iframe_options = {"planVisibility": "G", //C, O, G, CO, OG, CG, COG
+                                    "viewMode":1,
+        }
+        
+        if(pters_iframe_options.viewMode == 1){
+            //alert('현재 뷰 모드')
+            $('div.ymdText-pc-add-off, div.ymdText-pc-add-pt').remove()
+        }else{
+            //alert('현재 편집 모드')
+            //$('div.ymdText-pc-add-off, div.ymdText-pc-add-pt').show()
+        }
     </script>
 
     <!-- Placed at the end of the document so the pages load faster -->
@@ -1010,7 +1014,7 @@
         var DBe = {};
         var DB_All = {};
     </script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.iframe.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.off.repeat.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script>
