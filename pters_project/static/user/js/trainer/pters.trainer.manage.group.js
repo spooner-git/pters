@@ -4485,37 +4485,8 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var repeat_time = Number(repeat_time_array[i].split(':')[0]) // 06 or 18
         var repeat_min = Number(repeat_time_array[i].split(':')[1])  // 00 or 30
 
-        if(repeat_min == "30"){
-            var repeat_time = Number(repeat_time_array[i].split(':')[0])+0.5
-        }
-
-        var repeat_dur = calc_duration_by_start_end(repeat_start_array[i], repeat_time_array[i], repeat_end_array[i], repeat_endTime_array[i])
-        if(repeat_dur - parseInt(repeat_dur) == 0.5){
-            if(parseInt(repeat_dur) != 0){
-                var repeat_dur = parseInt(repeat_dur)+'시간' + ' 30분'
-            }else if(parseInt(repeat_dur) == 0){
-                var repeat_dur = '30분'
-            }
-        }else{
-            var repeat_dur = repeat_dur + '시간'
-        }
-        //var repeat_dur = Number(repeat_dur_array[i])/(60/Options.classDur)
-        var repeat_sum = Number(repeat_time) + Number(repeat_dur)
-
-        var repeat_end_time_hour = parseInt(repeat_sum)
-        if(parseInt(repeat_sum)<10){
-            var repeat_end_time_hour = '0'+parseInt(repeat_sum)
-        }
-        if((repeat_sum%parseInt(repeat_sum))*60 == 0){
-            var repeat_end_time_min = '00'
-        }else if((repeat_sum%parseInt(repeat_sum))*60 == 30){
-            var repeat_end_time_min = '30'
-        }
-
         var repeat_start_time = repeat_time_array[i].split(':')[0] +':'+ repeat_time_array[i].split(':')[1]
         var repeat_end_time = repeat_endTime_array[i].split(':')[0] +':'+ repeat_endTime_array[i].split(':')[1]
-
-
 
         var repeat_day =  function(){
             var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/')
