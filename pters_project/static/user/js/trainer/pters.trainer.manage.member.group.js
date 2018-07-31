@@ -104,7 +104,6 @@ function close_addByList_popup(){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 $(document).on('click','img.add_listedMember',function(){
-    alert('asdfasdfasegaeg')
     var selected_lastname = $(this).parents('div.list_addByList').attr('data-lastname');
     var selected_firstname = $(this).parents('div.list_addByList').attr('data-firstname');
     var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid');
