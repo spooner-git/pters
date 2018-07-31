@@ -428,7 +428,7 @@ function date_format_to_user_hangul(yyyy_mm_dd, minimize){
     if(minimize!=undefined){
         dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[2]);
         day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = Number(yyyy_mm_dd.split(' ')[1].substr(0,2))+'시';
+        time = yyyy_mm_dd.split(' ')[1].substr(0,5);
     }else{
         dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일';
         day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
@@ -676,26 +676,6 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
         planDura = 24-planHour;
     }
 
-    /*
-     if(planMinute == '00'){
-     if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
-
-     var planDura = planDura - (Options.workStartTime - planHour) // 2 - (10 - 8)
-     var planHour = Options.workStartTime
-     //2018_4_22_8_30_2_OFF_10_30
-     }
-     }else if(planMinute == '30'){
-     //(10>8)  (2>=10-8)
-     if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
-
-     var planDura = planDura - (Options.workStartTime - planHour)+0.5 // 2 - (10 - 8)
-     var planHour = Options.workStartTime
-     var planMinute = '00'
-     //2018_4_22_8_30_2_OFF_10_30
-     }
-     }
-     */
-
     return planDura;//시간단위로 아웃풋
 }
 
@@ -707,21 +687,27 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
         lastDay[1] = 28;
     }
 
-    
-
     var planYear    = Number(planStartDate.split('-')[0]);
     var planMonth   = Number(planStartDate.split('-')[1]);
     var planDate    = Number(planStartDate.split('-')[2]);
     var planHour    = Number(planStartTime.split(':')[0]);
-    var planMinute  =        planStartTime.split(':')[1];
+    var planMinute  = Number(planStartTime.split(':')[1]);
 
+    var planETime = planEndTime
+    if(planEndTime == "00:00:00"){
+        planETime = "24:00"
+    }
     var planEDate   = Number(planEndDate.split('-')[2]);
-    var planEndHour = Number(planEndTime.split(':')[0]);
-    var planEndMin  =        planEndTime.split(':')[1];
+    var planEndHour = Number(planETime.split(':')[0]);
+    var planEndMin  = Number(planETime.split(':')[1]);
 
     var duraMin = 0;
-    while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planEndTime.split(':')[0]+':'+planEndTime.split(':')[1]){
-        duraMin++
+    
+    while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planETime.split(':')[0]+':'+planETime.split(':')[1]){
+        duraMin++;
+        if(duraMin > 1440){
+            break;
+        }
     }
    
     return duraMin;

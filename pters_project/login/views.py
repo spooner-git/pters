@@ -866,23 +866,20 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
 
     if error is None:
 
-        test = True
         i = 0
         count = MemberTb.objects.filter(name=name).count()
         max_range = (100 * (10 ** len(str(count)))) - 1
 
-        while test:
+        # while test:
+        for i in range(0, 100):
             username = name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
             try:
                 User.objects.get(username=username)
-                test = True
             except ObjectDoesNotExist:
-                test = False
-
-            i += 1
-            if i > 100:
-                error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
                 break
+
+        if i == 100:
+            error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
 
     if error is None:
         try:

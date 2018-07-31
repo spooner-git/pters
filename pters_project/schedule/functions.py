@@ -730,6 +730,7 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
     # 반복 일정 처음 날짜 설정
     check_date = repeat_schedule_start_date
 
+    idx = 0
     # 반복 일정 종료 날짜 보다 크면 종료
     while check_date <= repeat_schedule_end_date:
 
@@ -765,5 +766,8 @@ def func_get_repeat_schedule_date_list(repeat_type, week_type, repeat_schedule_s
         if int(check_date.strftime('%w')) == 0:
             if repeat_type == REPEAT_TYPE_2WEAK:
                 check_date = check_date + datetime.timedelta(days=7)
+        idx += 1
+        if idx > 365:
+            break
 
     return repeat_schedule_date_list

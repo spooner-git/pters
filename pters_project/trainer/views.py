@@ -3,6 +3,7 @@ import datetime
 import json
 
 import logging
+import random
 import urllib
 
 from urllib.parse import quote
@@ -1200,23 +1201,19 @@ def update_member_info_logic(request):
                     member.name = input_last_name + input_first_name
                     username = user.last_name + user.first_name
 
+                    i = 0
                     count = MemberTb.objects.filter(name=username).count()
-                    if count != 0:
-                        # username += str(count + 1)
-                        test = False
-                        i = count + 1
+                    max_range = (100 * (10 ** len(str(count)))) - 1
+                    for i in range(0, 100):
+                        username = user.last_name + user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        try:
+                            User.objects.get(username=username)
+                        except ObjectDoesNotExist:
+                            break
 
-                        while True:
-                            username = user.last_name + user.first_name + str(i)
-                            try:
-                                User.objects.get(username=username)
-                            except ObjectDoesNotExist:
-                                test = True
-
-                            if test:
-                                break
-                            else:
-                                i += 1
+                    if i == 100:
+                        error = 'ID 생성에 실패했습니다. 다시 시도해주세요.'
+                        raise InternalError
 
                     user.username = username
                     user.save()
@@ -1236,7 +1233,7 @@ def update_member_info_logic(request):
         except ValidationError:
             error = '등록 값의 형태가 문제 있습니다'
         except InternalError:
-            error = '등록 값에 문제가 있습니다.'
+            error = error
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
