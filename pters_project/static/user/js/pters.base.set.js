@@ -718,7 +718,7 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
     var planEDate   = Number(planEndDate.split('-')[2]);
     var planEndHour = Number(planEndTime.split(':')[0]);
     var planEndMin  =        planEndTime.split(':')[1];
-   
+
     var duraMin = 0;
     while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planEndTime.split(':')[0]+':'+planEndTime.split(':')[1]){
         duraMin++
