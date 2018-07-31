@@ -3287,6 +3287,7 @@ function send_add_groupmember_plan(use, callback){
                         scheduleTime_Mobile('off', jsondata, calendarSize);
                         scheduleTime_Mobile('group', jsondata, calendarSize);
                     }
+                    console.log('test::'+sendData[6]["value"])
                     get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])});
                     alert('그룹일정 참석자 정상 등록되었습니다.');
                 }
@@ -3311,6 +3312,7 @@ $(document).on('click','.group_member_cancel',function(){
     var group_id = $(this).attr('data-groupid');
     var group_schedule_id = $(this).attr('group-schedule-id');
     var max = $(this).attr('data-max');
+    console.log('max::'+max)
     send_plan_delete('pt', 'callback', function(){
         super_ajaxClassTime();
 
