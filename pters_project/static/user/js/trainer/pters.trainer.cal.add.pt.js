@@ -3116,8 +3116,6 @@ $(document).on('click','img.add_groupmember_plan',function(){
     $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id'));
     $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid')) ;
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum')) ;
-    var test_val = $(this).attr('data-group-type-cd-name');
-    console.log(test_val);
     $('#subpopup_addByList_plan').show();
     get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))});//특정그룹회원 목록 조회
@@ -3178,7 +3176,6 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     var jsondata_classArray_lecture_id = jsondata.classArray_lecture_id;
     var jsondata_scheduleFinishArray = jsondata.scheduleFinishArray;
     var jsondata_sexArray = jsondata.sexArray;
-
 
     for(var i=0; i<jsonlen; i++){
         var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata_db_id[i]+'" schedule-id="'+jsondata_scheduleIdArray[i]+'" data-leid="'+jsondata_classArray_lecture_id[i]+'">';

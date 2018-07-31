@@ -78,13 +78,9 @@ class AccessTestMixin(UserPassesTestMixin):
     def test_func(self):
         test_result = False
         error = None
-        user_for_group = None
+        user_for_group = self.request.user
         group = None
         url = None
-        try:
-            user_for_group = User.objects.get(id=self.request.user.id)
-        except ObjectDoesNotExist:
-            error = 'error'
 
         if error is None:
             try:

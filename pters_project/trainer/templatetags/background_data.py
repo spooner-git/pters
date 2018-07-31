@@ -8,7 +8,8 @@ from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
-from schedule.models import BackgroundImgTb, ScheduleTb, ClassLectureTb, LectureTb, GroupLectureTb, RepeatScheduleTb
+from schedule.models import BackgroundImgTb, ScheduleTb, ClassLectureTb, LectureTb, GroupLectureTb, RepeatScheduleTb, \
+    ClassTb
 from trainer.function import func_get_trainer_setting_list
 
 register = template.Library()
@@ -20,8 +21,8 @@ def get_background_url(request):
     class_id = request.session.get('class_id', '')
     background_url = []
     if class_id != '':
-        background_img_data = BackgroundImgTb.objects.filter(class_tb_id=class_id,
-                                                             use=USE).order_by('-class_tb_id')
+        background_img_data = BackgroundImgTb.objects.select_related('class_tb').filter(class_tb_id=class_id,
+                                                                                        use=USE).order_by('-class_tb_id')
         for background_img_info in background_img_data:
             background_url.append(parser.unescape(background_img_info.url))
     return background_url
@@ -45,6 +46,7 @@ def get_setting_info(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     if class_id != '':
+
         context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
@@ -60,12 +62,12 @@ def get_setting_info(request):
         request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
         request.session['setting_language'] = context['lt_lan_01']
 
-        request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
+        # request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
+        # request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
+        # request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
+        # request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
+        # request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
+        # request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
@@ -77,11 +79,13 @@ def get_setting_info(request):
                 func_refresh_lecture_count(not_finish_schedule_info.lecture_tb_id)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
-            class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                               lecture_tb__end_date__lt=datetime.date.today(),
-                                                               lecture_tb__state_cd='IP',
-                                                               lecture_tb__use=USE,
-                                                               use=USE)
+            class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
+                                                                                            auth_cd='VIEW',
+                                                                                            lecture_tb__end_date__lt
+                                                                                            =datetime.date.today(),
+                                                                                            lecture_tb__state_cd='IP',
+                                                                                            lecture_tb__use=USE,
+                                                                                            use=USE)
 
             for class_lecture_info in class_lecture_data:
                 lecture_info = class_lecture_info.lecture_tb

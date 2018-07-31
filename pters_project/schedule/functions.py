@@ -677,7 +677,6 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
     #     idx += 1
     #     pt_schedule_info.idx = idx
     #     pt_schedule_list.append(pt_schedule_info)
-
     context['pt_schedule_data'] = pt_schedule_data
 
 

@@ -92,7 +92,7 @@
         var member = " 님 ";
         var yourplan = " 일정";
         var day = dayarryKR[dayraw];
-        var text = '레슨 일정';
+        var text = '1:1 레슨 일정';
         switch(Options.language){
             case "JPN" :
                 member = "様の ";
@@ -273,6 +273,7 @@
     //스케쥴 클릭시 팝업 Start
     $(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
         var bodywidth = window.innerWidth;
+        var group_class_type_name = $(this).attr('data-group-type-cd-name');
         e.stopPropagation();
         $('#float_btn').hide();
         shade_index(100);
@@ -316,14 +317,8 @@
         var member = " 님의 ";
         var yourplan = " 일정";
         var day = dayarryKR[dayraw];
-        var text = '그룹 레슨 일정';
+        var text = group_class_type_name+' 일정';
         switch(Options.language){
-            case "KOR" :
-                member = " 님의 ";
-                yourplan = " 일정";
-                day = dayarryKR[dayraw];
-                text = '그룹 레슨 일정';
-                break;
             case "JPN" :
                 member = "様の ";
                 yourplan = " 日程";
@@ -354,7 +349,6 @@
 
         $('#popup_info3_memo,#popup_info3_memo_modify').show();
         var schedule_finish_check = $(this).attr('data-schedule-check');
-        var group_class_type_name = $(this).attr('data-group-type-cd-name');
         var group_current_member_num = $(this).attr('data-current-membernum');
         var group_max_member_num = $(this).attr('data-membernum');
 
