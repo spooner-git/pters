@@ -179,6 +179,8 @@ urlpatterns = [
     url(r'^class_manage/$', views.ManageClassView.as_view(), name='class_manage'),
     # 이용 문의 페이지
     url(r'^help_setting/$', views.HelpPtersView.as_view(), name='help_setting'),
+    # From 피터스팀 페이지
+    url(r'^frompters_setting/$', views.FromPtersView.as_view(), name='frompters_setting'),
     # 강좌 선택 페이지
     url(r'^class_select/$', views.ClassSelectView.as_view(), name='class_select'),
     # 강좌 추가 페이지

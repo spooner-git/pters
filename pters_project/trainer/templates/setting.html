@@ -47,22 +47,25 @@
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
-        
-        <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'">
+        <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'" style="display: none;">
             <img src="/static/user/res/icon-card@3x.png" alt="" class="settingImg">
             <span class="settingText"><span class="KRtext">이용권 구매</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
         
-
-        
-
         <!--<div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'trainer:language_setting' %}'">-->
         <div id="languageSetting" class="settingMenu" style="opacity: 0.5;">
             <img src="/static/user/res/icon-earth.png" alt="" class="settingImg">
             <span class="settingText">Language/言語/언어</span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
+
+        <div id="from_pters_team" class="settingMenu" onclick="location.href='{% url 'trainer:frompters_setting' %}'">
+            <img src="/static/user/res/PTERS_logo_pure.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">From 피터스팀</span><span class="JPtext"></span><span class="ENtext"></span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
     </div>
 
     <div id="logout">
