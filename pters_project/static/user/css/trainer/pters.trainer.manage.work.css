@@ -113,10 +113,23 @@ body{
 	margin-right: 5px !important;
 	margin-top: 0 !important;
 }
+
+.pters_dropdown_custom_list{
+	position: relative !important;
+	width: 100% !important;
+	min-width: unset !important;
+	top: 0 !important;
+}
+	.pters_dropdown_custom_list li{
+		line-height: 40px;
+		height: 40px;
+	}
+
+
 .icondown{
-	right: 5px !important;
+	right: 2px !important;
 	bottom: 10px !important;
-	width:10px !important;
+	width:8px !important;
 }
 
 .duration_selector_wrapper{

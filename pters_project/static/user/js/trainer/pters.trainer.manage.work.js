@@ -34,17 +34,18 @@ $('.month_sel_btn').click(function(){
 });
 
 $('#call_sales_data_btn').click(function(){
-    if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined ){
         if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
-            var start_date = $(this).attr('data-startdate');
-            var end_date = $(this).attr('data-enddate');
-            //if(diff_month(start_date, end_date) > 0){
-                ajax_call_sales_data(class_id, start_date, end_date);
-            //}else{
-                //ajax_call_sales_data_onemonth(class_id, start_date)
-            //}
-            
-
+            if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined){
+                var start_date = $(this).attr('data-startdate');
+                var end_date = $(this).attr('data-enddate');
+                //if(diff_month(start_date, end_date) > 0){
+                    ajax_call_sales_data(class_id, start_date, end_date);
+                //}else{
+                    //ajax_call_sales_data_onemonth(class_id, start_date)
+                //}
+            }else{
+                alert('기간을 입력 해주세요.')
+            }
         }else if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'block'){
             var start_date = $('#startYear').siblings('button').attr('data-value') + '-' + $('#startMonth').siblings('button').attr('data-value')+'-01';
             var end_date = $('#endYear').siblings('button').attr('data-value') + '-' + $('#endMonth').siblings('button').attr('data-value')+'-01';
@@ -56,21 +57,20 @@ $('#call_sales_data_btn').click(function(){
                 //}
             });
         };
-    }else{
-        alert('기간을 입력 해주세요.')
-    }
-    
 });
 
 
 $('#call_member_data_btn').click(function(){
-    if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined ){
         if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'none'){
-            var start_date = $(this).attr('data-startdate');
-            var end_date = $(this).attr('data-enddate');
-            ajax_call_member_analytics_data(class_id,start_date, end_date)
-            ajax_call_member_monthly_data(class_id, start_date, end_date)
-            ajax_call_complete_monthly_data(class_id, start_date, end_date)
+            if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined ){
+                var start_date = $(this).attr('data-startdate');
+                var end_date = $(this).attr('data-enddate');
+                ajax_call_member_analytics_data(class_id,start_date, end_date)
+                ajax_call_member_monthly_data(class_id, start_date, end_date)
+                ajax_call_complete_monthly_data(class_id, start_date, end_date)
+            }else{
+                alert('기간을 입력 해주세요.')
+            }
         }else if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'block'){
             var start_date = $('#startYear_member').siblings('button').attr('data-value') + '-' + $('#startMonth_member').siblings('button').attr('data-value')+'-01';
             var end_date = $('#endYear_member').siblings('button').attr('data-value') + '-' + $('#endMonth_member').siblings('button').attr('data-value')+'-01';
@@ -80,10 +80,6 @@ $('#call_member_data_btn').click(function(){
                 ajax_call_complete_monthly_data(class_id, start_date, end_date)
             });
         };
-    }else{
-        alert('기간을 입력 해주세요.')
-    }
-    
 });
 
 

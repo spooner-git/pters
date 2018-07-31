@@ -319,6 +319,13 @@ class HelpPtersView(AccessTestMixin, TemplateView):
 
         return context
 
+class FromPtersView(AccessTestMixin, TemplateView):
+    template_name = 'setting_from_pters_team.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FromPtersView, self).get_context_data(**kwargs)
+
+        return context
 
 class BGSettingView(AccessTestMixin, View):
     template_name = 'setting_background.html'
