@@ -842,7 +842,7 @@ $(document).ready(function(){
 
 
     $('#memberSearchButton').click(function(e){
-        e.preventDefault()
+        e.preventDefault();
         var searchID = $('#memberSearch_add').val()
         $.ajax({
             url:'/trainer/get_member_info/',
