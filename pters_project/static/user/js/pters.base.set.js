@@ -703,13 +703,14 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
 
     var duraMin = 0;
     
-    while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planETime.split(':')[0]+':'+planETime.split(':')[1]){
-        duraMin++;
-        if(duraMin > 1440){
-            break;
-        }
-    }
-   
+    // while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planETime.split(':')[0]+':'+planETime.split(':')[1]){
+    //     duraMin++;
+    //     if(duraMin > 1440){
+    //         break;
+    //     }
+    // }
+    duraMin = (planEndHour-planHour)*60 + (planEndMin-planMinute);
+
     return duraMin;
 }
 

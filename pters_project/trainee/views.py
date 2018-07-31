@@ -1263,7 +1263,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                     group_id, group_schedule_id,
                                                     start_date, end_date, '', ON_SCHEDULE_TYPE, request.user.id,
-                                                    AUTO_FINISH_OFF)
+                                                    'NP')
                 error = schedule_result['error']
 
                 if error is None:
