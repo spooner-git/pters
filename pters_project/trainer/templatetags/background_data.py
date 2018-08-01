@@ -115,12 +115,6 @@ def get_setting_info(request):
 @register.simple_tag
 def get_function_auth(request):
     today = datetime.date.today()
-    # function_auth = []
-    # function_auth_data = FunctionAuthTb.objects.filter(member_id=request.user.id,
-    #                                                    expired_date__gte=today,
-    #                                                    use=USE)
-    # for function_auth_info in function_auth_data:
-    #     function_auth.append(parser.unescape(function_auth_info.function_auth_type_cd))
 
     billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
 
