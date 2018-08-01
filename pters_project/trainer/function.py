@@ -9,8 +9,9 @@ from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
 from login.models import MemberTb, LogTb, CommonCdTb
-from schedule.models import ClassLectureTb, ClassTb, GroupLectureTb, MemberLectureTb, GroupTb, LectureTb, ScheduleTb, \
-    SettingTb, RepeatScheduleTb
+from schedule.models import ScheduleTb, RepeatScheduleTb
+from trainer.models import ClassLectureTb, GroupLectureTb, GroupTb, ClassTb, SettingTb
+from trainee.models import LectureTb, MemberLectureTb
 
 
 def func_get_class_member_id_list(class_id):

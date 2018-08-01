@@ -21,13 +21,13 @@ from el_pagination.views import AjaxListView
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, AUTO_FINISH_OFF
 from configs.views import AccessTestMixin
-from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb
+from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
     func_date_check, func_refresh_lecture_count, func_update_member_schedule_alarm
-from schedule.models import LectureTb, MemberLectureTb, ClassLectureTb, GroupLectureTb
-from schedule.models import ClassTb
-from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, SettingTb
+from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
+from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
+from .models import LectureTb, MemberLectureTb
 
 from django.utils import timezone
 

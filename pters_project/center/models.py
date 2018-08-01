@@ -31,3 +31,18 @@ class CenterTrainerTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'CENTER_TRAINER_TB'
+
+
+class CompanyTb(TimeStampedModel):
+    company_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    name = models.CharField(db_column='NAME', max_length=20, blank=True, default='')  # Field name made lowercase.
+    phone = models.CharField(db_column='PHONE', max_length=20, blank=True, default='')  # Field name made lowercase.
+    address = models.CharField(db_column='ADDRESS', max_length=100, blank=True, default='')
+    info = models.CharField(db_column='INFO', max_length=255, blank=True, default='')  # Field name made lowercase.
+    img_url = models.CharField(db_column='IMG_URL', max_length=255, blank=True, default='')
+    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'COMPANY_TB'
+

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from center.models import CenterTb, CenterTrainerTb
+from center.models import CenterTb, CenterTrainerTb, CompanyTb
 
 
 @admin.register(CenterTb)
@@ -13,4 +13,10 @@ class CenterTbAdmin(admin.ModelAdmin):
 @admin.register(CenterTrainerTb)
 class CenterTrainerTbAdmin(admin.ModelAdmin):
     list_display = ('center_trainer_id', 'member', 'center', 'reg_dt', 'mod_dt', 'use')
+
+
+@admin.register(CompanyTb)
+class CompanyTbAdmin(admin.ModelAdmin):
+    list_display = ('company_id', 'name', 'phone', 'address',
+                    'info', 'img_url', 'reg_dt', 'mod_dt', 'use')
 

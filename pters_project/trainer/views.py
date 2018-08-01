@@ -29,22 +29,22 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
+from board.models import BoardTb
 from center.models import CenterTrainerTb
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON
 from configs.views import AccessTestMixin
-from login.models import MemberTb, LogTb, HolidayTb, CommonCdTb, BoardTb
+from login.models import MemberTb, LogTb, CommonCdTb
 from login.views import add_member_no_email_func
 from payment.models import PaymentInfoTb
 from payment.models import ProductTb
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule
-from schedule.models import LectureTb, ClassLectureTb, MemberClassTb, MemberLectureTb, GroupTb, GroupLectureTb, \
-    BackgroundImgTb
-from schedule.models import ClassTb
+from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
+from trainee.models import LectureTb, MemberLectureTb
+from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
 from stats.function import get_sales_data, get_stats_member_data
 from trainee.views import get_trainee_repeat_schedule_data_func
-from schedule.models import ScheduleTb, RepeatScheduleTb, SettingTb
 
 from .function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
