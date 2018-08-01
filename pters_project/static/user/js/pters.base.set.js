@@ -25,7 +25,6 @@ function beforeSend(use, callback){
     if(use == "callback"){
         callback()
     }
-    //$('html').css("cursor","wait");
     $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
     $('.ajaxloadingPC').css('display','block')
 }
@@ -34,19 +33,18 @@ function completeSend(use, callback){
     if(use == "callback"){
         callback()
     }
-    //$('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').css('display','none');
 }
 
 function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
-        $("#float_btn").fadeIn('fast')
+        $("#float_btn_wrap").show()
     }
 
 }
 function downTouchEvent(){
-    $("#float_btn").fadeOut('fast')
+    $("#float_btn_wrap").hide()
 
 }
 
@@ -1104,7 +1102,7 @@ function TEST_CODE_FOR_AJAX_TIMER_starts(yourMessage){
     var testtimer = 0;
     var testtime = setInterval(function(){
         testtimer = testtimer+0.5;
-        console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage);
+        // console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage);
     },500);
     return {"func":testtime, "message":yourMessage};
 }

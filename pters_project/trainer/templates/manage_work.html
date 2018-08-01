@@ -273,6 +273,9 @@
                         titlePosition:'none',
                         colors:['#fe4e65','#5d91f7'],
                         isStacked: true,
+                        hAxis:{
+                                
+                        },
                         trendlines:{0:{
                                         type:'linear',
                                         color:'green',
@@ -557,7 +560,7 @@
                     drawChart(
                                 graph_Width_To_Be, 
                                 graph_Height_To_Be,
-                                'bottom',
+                                'top',
                                 document.getElementById('chart_div4'), 
                                 addRows_data,
                                 start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'
@@ -599,7 +602,7 @@
                     drawChart(
                                 graph_Width_To_Be, 
                                 graph_Height_To_Be,
-                                'bottom',
+                                'top',
                                 document.getElementById('chart_div5'), 
                                 addRows_data,
                                 start_date+' ~ '+get_month_enddate(end_date)+'(단위: 건)'

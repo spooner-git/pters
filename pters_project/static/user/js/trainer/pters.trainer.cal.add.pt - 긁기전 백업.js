@@ -1821,13 +1821,13 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
 
 
 function beforeSend(){
-  $('html').css("cursor","wait");
+  // $('html').css("cursor","wait");
   $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
   $('.ajaxloadingPC').show();
 }
 
 function completeSend(){
-  $('html').css("cursor","auto");
+  //$('html').css("cursor","auto");
   $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
   $('.ajaxloadingPC').hide();
 }

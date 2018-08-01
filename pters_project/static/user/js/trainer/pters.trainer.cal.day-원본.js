@@ -463,14 +463,14 @@ $(document).ready(function(){
     }
 
     function deleteBeforeSend(){
-        $('html').css("cursor","wait");
+        // $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
         $('#shade').css({'display':'block','z-index':'200'});
     }
 
     function deleteCompleteSend(){
-        $('html').css("cursor","auto");
+        //$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
         $('#shade').css({'display':'none','z-index':'100'});
