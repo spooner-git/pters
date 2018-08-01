@@ -1354,7 +1354,7 @@ function send_modified_member_base_data(){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
                 }
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
@@ -2121,7 +2121,7 @@ function get_member_list(use, callback){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -2133,7 +2133,7 @@ function get_member_list(use, callback){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
                 }
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
                 if(use == "callback"){
@@ -2179,7 +2179,7 @@ function get_member_ing_list(use, callback){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -2191,7 +2191,7 @@ function get_member_ing_list(use, callback){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
                 }
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
                 if(use == "callback"){
@@ -2235,7 +2235,7 @@ function get_member_end_list(use, callback){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -2247,7 +2247,7 @@ function get_member_end_list(use, callback){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
                 }
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
                 if(use == "callback"){
@@ -3907,7 +3907,7 @@ function add_member_form_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -3924,7 +3924,7 @@ function add_member_form_func(){
                  get_member_lecture_list(dbID)
                  }
                  */
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
                 $('#startR').attr('selected','selected');
@@ -3977,7 +3977,7 @@ function add_member_form_noemail_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -4025,7 +4025,7 @@ function add_group_form_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -4042,7 +4042,7 @@ function add_group_form_func(){
                  get_member_lecture_list(dbID)
                  }
                  */
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
 
@@ -4090,7 +4090,7 @@ function add_groupmember_form_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -4107,7 +4107,7 @@ function add_groupmember_form_func(){
                  get_member_lecture_list(dbID)
                  }
                  */
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
                 //get_member_list()
@@ -4146,7 +4146,7 @@ function deleteMemberAjax(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -4161,7 +4161,7 @@ function deleteMemberAjax(){
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
                 }
-                $('html').css("cursor","auto");
+                // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
 
                 $('#startR').attr('selected','selected');

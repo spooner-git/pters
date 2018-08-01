@@ -335,14 +335,14 @@ $(document).ready(function(){
      };
 
       function beforeSend_off(){
-        $('html').css("cursor","wait");
+        // $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
         $('#shade').css({'z-index':'200'});
      }
 
      function completeSend_off(){
-        $('html').css("cursor","auto");
+        //$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
         $('#shade').css({'z-index':'100'});

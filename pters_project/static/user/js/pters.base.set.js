@@ -704,15 +704,14 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
     var planEndHour = Number(planETime.split(':')[0]);
     var planEndMin  = Number(planETime.split(':')[1]);
 
-    var duraMin = 0;
-    
+    var duraMin = (planEndHour-planHour)*60 + (planEndMin-planMinute);
+
     // while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planETime.split(':')[0]+':'+planETime.split(':')[1]){
     //     duraMin++;
     //     if(duraMin > 1440){
     //         break;
     //     }
     // }
-    duraMin = (planEndHour-planHour)*60 + (planEndMin-planMinute);
 
     return duraMin;
 }
@@ -1102,7 +1101,7 @@ function TEST_CODE_FOR_AJAX_TIMER_starts(yourMessage){
     var testtimer = 0;
     var testtime = setInterval(function(){
         testtimer = testtimer+0.5;
-        console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage);
+        // console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage);
     },500);
     return {"func":testtime, "message":yourMessage};
 }

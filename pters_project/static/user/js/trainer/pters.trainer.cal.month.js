@@ -922,7 +922,6 @@ function set_schedule_time(jsondata){
 }
 
 
-
 function classDatesTrainer(jsondata){
     $('._classTime').html('')
     var planInfo = classInfoProcessed(jsondata)

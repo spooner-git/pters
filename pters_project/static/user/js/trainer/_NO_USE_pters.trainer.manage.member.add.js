@@ -374,7 +374,7 @@ $(document).ready(function(){
                     data:$form.serialize(),
 
                     beforeSend:function(){
-                      $('html').css("cursor","wait")
+                      // $('html').css("cursor","wait")
                       $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif')
                     },
 
@@ -384,7 +384,7 @@ $(document).ready(function(){
                        if($('body').width()<600){
                           $('#page_managemember').show();
                         }
-                        $('html').css("cursor","auto")
+                        // $('html').css("cursor","auto")
                         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                       //alert('complete: 회원 정상 등록')
                       },
@@ -481,14 +481,14 @@ $(document).ready(function(){
 
 
       function beforeSend(){
-        $('html').css("cursor","wait");
+        // $('html').css("cursor","wait");
         $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
         $('.ajaxloadingPC').show();
         $('#shade').css({'z-index':'200'});
       }
 
       function completeSend(){
-        $('html').css("cursor","auto");
+        //$('html').css("cursor","auto");
         $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
         $('.ajaxloadingPC').hide();
         $('#shade').css({'z-index':'100'});

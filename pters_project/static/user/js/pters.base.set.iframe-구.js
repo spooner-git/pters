@@ -924,7 +924,7 @@ function TEST_CODE_FOR_AJAX_TIMER_starts(yourMessage){
     var testtimer = 0;
     var testtime = setInterval(function(){
         testtimer = testtimer+0.5;
-        console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage);
+        // console.log('Waiting for receiving JSON Data......'+testtimer+'second from Request......'+yourMessage);
     },500);
     return {"func":testtime, "message":yourMessage};
 }

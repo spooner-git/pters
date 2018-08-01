@@ -254,7 +254,7 @@ function draw_memberlist_for_addByList(targetHTML){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -265,7 +265,7 @@ function draw_memberlist_for_addByList(targetHTML){
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 var len = jsondata.dIdArray.length;
@@ -635,7 +635,7 @@ function get_group_ing_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -646,7 +646,7 @@ function get_group_ing_list(use, callback){
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if(use == "callback"){
@@ -691,7 +691,7 @@ function get_group_end_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -702,7 +702,7 @@ function get_group_end_list(use, callback){
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if(use == "callback"){
@@ -753,7 +753,7 @@ function delete_group_from_list(group_id){
             var jsondata = JSON.parse(data);
             console.log(data)
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -764,7 +764,7 @@ function delete_group_from_list(group_id){
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if($('#currentGroupList').css('display') == "block"){
@@ -852,7 +852,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -863,7 +863,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if($('#currentGroupList').css('display') == "block"){
@@ -919,7 +919,7 @@ function modify_group_status(group_id, option){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -930,7 +930,7 @@ function modify_group_status(group_id, option){
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if($('#currentGroupList').css('display') == "block"){
@@ -1056,7 +1056,7 @@ function get_groupmember_list(group_id, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -1067,7 +1067,7 @@ function get_groupmember_list(group_id, use, callback){
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 if(use == 'callback'){
                     callback(jsondata)

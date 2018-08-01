@@ -1220,7 +1220,7 @@ function send_modified_member_base_data(){
         dataType : 'html',
 
         beforeSend:function(){
-            $('html').css("cursor","wait");
+            // $('html').css("cursor","wait");
             $('#upbutton-modify img').attr('src','/static/user/res/ajax/loading.gif');
         },
 
@@ -1233,7 +1233,7 @@ function send_modified_member_base_data(){
         success:function(data){
             var jsondata = JSON.parse(data)
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                //$('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -1246,7 +1246,7 @@ function send_modified_member_base_data(){
                     closePopup('member_info');
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto");
+                //$('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','date','yes',jsondata);
@@ -2000,7 +2000,7 @@ function get_member_list(use, callback){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -2011,7 +2011,7 @@ function get_member_list(use, callback){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if(use == "callback"){
@@ -2056,7 +2056,7 @@ function get_member_ing_list(use, callback){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -2067,7 +2067,7 @@ function get_member_ing_list(use, callback){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if(use == "callback"){
@@ -2110,7 +2110,7 @@ function get_member_end_list(use, callback){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -2121,7 +2121,7 @@ function get_member_end_list(use, callback){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 if(use == "callback"){
@@ -3872,7 +3872,7 @@ function add_member_form_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -3888,7 +3888,7 @@ function add_member_form_func(){
                  get_member_lecture_list(dbID)
                  }
                  */
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 $('#startR').attr('selected','selected')
@@ -3928,7 +3928,7 @@ function add_member_form_noemail_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
+                //$('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
@@ -3975,7 +3975,7 @@ function add_group_form_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -3991,7 +3991,7 @@ function add_group_form_func(){
                  get_member_lecture_list(dbID)
                  }
                  */
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
 
@@ -4040,7 +4040,7 @@ function add_groupmember_form_func(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -4056,7 +4056,7 @@ function add_groupmember_form_func(){
                  get_member_lecture_list(dbID)
                  }
                  */
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
 
                 get_member_list()
@@ -4097,7 +4097,7 @@ function deleteMemberAjax(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
@@ -4111,7 +4111,7 @@ function deleteMemberAjax(){
                 if($('body').width()<600){
                     $('#page_managemember').show();
                 }
-                $('html').css("cursor","auto")
+                // $('html').css("cursor","auto")
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png')
 
                 $('#startR').attr('selected','selected')
@@ -4634,14 +4634,14 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
 
 //ajax 로딩이미지 표기
 function beforeSend(){
-    $('html').css("cursor","wait");
+    // $('html').css("cursor","wait");
     $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
     $('.ajaxloadingPC').show();
 }
 
 //ajax 로딩이미지 숨기기
 function completeSend(){
-    $('html').css("cursor","auto");
+    //$('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').hide();
     //alert('complete: 일정 정상 등록')
