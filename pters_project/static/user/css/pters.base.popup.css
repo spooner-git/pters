@@ -389,12 +389,15 @@
 	height: 45px;
 	vertical-align: middle;
 	border-bottom: 1px solid #a2a2a2;
+	display: table;
+	table-layout: fixed;
+	width: 100%;
 }
 .plan_raw:active{
 	background: #f4f4f4;
 }
 
-.plan_raw span{
+.plan_raw > div{
 	position: relative;
 	top: unset;
 	left: unset;
@@ -403,7 +406,6 @@
 	font-size: 13px;
 	font-weight: bold;
 	cursor: pointer;
-
 	overflow:hidden;
 }
 
@@ -420,35 +422,40 @@
 	font-weight: bold;
 }
 
-.planchecktime, .plancheckname{
-	display: inline-grid;
-	text-align: left;
+.plancheckmorningday{
+	display: table-cell;
+	width: 14%;
+	font-weight: bold;
 }
 
 .planchecktime{
-	width: 34%;
+	display: table-cell;
+	width: 30%;
+	text-align: left;
 }
 
 .plancheckname{
+	display: table-cell;
 	position: relative;
-	width: 46%;
-	text-overflow: ellipsis;
-	overflow:hidden;
-	white-space: nowrap;
+	width: 55%;
+	text-align: left;
+	
 }
+	.plancheckname > p{
+		text-overflow: ellipsis;
+		overflow:hidden;
+		white-space: nowrap;
+		width: 90%;
+		margin: 0;
+		padding-left:15px;
+	}
 
-.plancheckmorningday{
-	display: inline-grid;
-	width: 20%;
-	font-weight: bold;
-}
 
 .plancheckname img{
 	width: 12px;
 	position: absolute;
-	right: 10px;
-	top: 50%;
-	transform: translateY(-50%);
+	left: 0;
+	margin-top: 18px;
 }
 
 /*월간달력 팝업*/

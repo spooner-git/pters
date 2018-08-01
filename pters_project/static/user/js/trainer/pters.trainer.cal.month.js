@@ -97,52 +97,7 @@ $(document).ready(function(){
         }
     });
 
-/*
-    $('#upbutton-x').click(function(){
-        var bodywidth = window.innerWidth;
-        //$('#calendar').css('height','90%')
-        if($(this).attr('data-page') == "addplan"){
-            $('#page-addplan').css('display','none');
-            if(bodywidth < 600){
-                //$('#calendar').show();
-                $('#calendar').css('height','100%')
-            }
-            $('#float_btn').fadeIn('fast').removeClass('rotate_btn');
-            $('#page-base').css('display','block');
-            $('#page-base-addstyle').css('display','none');
-
-            $("#membersSelected button").removeClass("dropdown_selected");
-            $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>회원명 선택</span>");
-            $("#membersSelected .btn:first-child").val("");
-            $("#countsSelected,.countsSelected").text("")
-            $("#dateSelector p").removeClass("dropdown_selected");
-            $('#timeGraph').hide();
-            $("#starttimesSelected button").removeClass("dropdown_selected");
-            $("#starttimesSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-            $("#starttimesSelected .btn:first-child").val("");
-            $("#durationsSelected button").removeClass("dropdown_selected");
-            $("#durationsSelected .btn:first-child").html("<span style='color:#cccccc;'>선택</span>");
-            $("#durationsSelected .btn:first-child").val("");
-            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
-            $("#starttimes").empty();
-            $("#durations").empty();
-            $('.tdgraph').removeClass('graphindicator')
-
-            $('#page-addplan .dropdown_selected').removeClass('dropdown_selected')
-            $('.dateButton').removeClass('dateButton_selected')
-            $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null)
-            $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>선택</span>");
-            //$('#page-addplan form input').val('')
-            selectedDayGroup = []
-
-            $('._NORMAL_ADD_wrap').css('display','block')
-            $('._REPEAT_ADD_wrap').css('display','none')
-            $('#timeGraph').css('display','none')
-            shade_index(-100)
-        }
-    })
-*/
-    
+   
     $('#upbutton-x').click(function(){
         var bodywidth = window.innerWidth;
         //$('#calendar').css('height','90%')
@@ -221,6 +176,9 @@ $(document).ready(function(){
             //disable_window_scroll();
             clicked_td_date_info = yy+'_'+mm+'_'+dd
         }
+        
+
+
     })
 
     mini_popup_event()
@@ -1127,9 +1085,17 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
             var eminute = splited[3]
             var name = splited[4];
             // var groupo_type_cd_name = '';
+            var textsize = ""
             if(splited[14] != ''){
                 name = '['+splited[14]+'] '+splited[4];
             }
+
+            if(name.length > 12 ){
+                textsize = 'style="font-size:11.5px"'
+            }else if(name.length > 9){
+                textsize = 'style="font-size:12px"'
+            }
+
             var morningday = ""
             if(stime==0 & dateplans[i-2]==undefined){
                 var morningday = "오전"
@@ -1144,10 +1110,18 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
                 var morningday = "오후"
             }
             if(splited[10]==1){
-                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                    '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                    '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                    '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
+                                '</div>')
 
             }else if(splited[10] == 0){
-                htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
+                htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                    '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                    '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                    '<div class="plancheckname"><p '+textsize+'>'+name+'</p></div>'+
+                                '</div>')
             }
         }
     }else{
