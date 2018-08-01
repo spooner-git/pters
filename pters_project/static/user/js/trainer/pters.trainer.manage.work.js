@@ -112,7 +112,7 @@ function fill_duration_setter_dropdown(){
 
     var year = [];
     for(var i=2018; i<=currentYear; i++){
-        year.push('<li data-value="'+i+'">'+i+'년</li>')
+        year.push('<li data-value="'+i+'"><a>'+i+'년</a></li>')
     };
 
     var month = [];
@@ -121,7 +121,7 @@ function fill_duration_setter_dropdown(){
         if(j<10){
             var mdata = '0'+j
         }
-        month.push('<li data-value="'+mdata+'">'+j+'월</li>')
+        month.push('<li data-value="'+mdata+'"><a>'+j+'월</a></li>')
     }
 
     targetYear.html(year.join(''));
