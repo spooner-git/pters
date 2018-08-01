@@ -3396,7 +3396,6 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
                 $('#shade3').css('display','none');
                 $('div.lectureRefundPopup.popups input[type="number"]').val('');
                 console.log('success');
-
             }
         },
 
@@ -3423,13 +3422,13 @@ function get_member_lecture_list(dbID, use, callback){
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend();
+            
         },
 
         //통신성공시 처리
         success:function(data){
+            completeSend();
             var jsondata = JSON.parse(data);
-            console.log('여기',jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -3445,15 +3444,14 @@ function get_member_lecture_list(dbID, use, callback){
                         draw_member_lecture_list_table(jsondata, dbID, 'pc');
                     }
                 }
-
             }
-
         },
 
         //통신 실패시 처리
         error:function(){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
+            completeSend();
         }
     })
 }

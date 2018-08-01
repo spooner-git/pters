@@ -964,20 +964,6 @@ function set_schedule_time(jsondata){
 }
 
 
-function beforeSend(){
-    $('html').css("cursor","wait");
-    //$('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-    $('.ajaxloadingPC').show();
-
-}
-
-function completeSend(){
-    $('html').css("cursor","auto");
-    //$('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-    $('.ajaxloadingPC').hide();
-
-}
-
 
 function classDatesTrainer(jsondata){
     $('._classTime').html('')
