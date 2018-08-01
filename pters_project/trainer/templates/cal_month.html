@@ -57,15 +57,18 @@
 
 
     <!--플로팅 버튼-->
-    <div id="float_btn" onclick="float_btn_addplan(0)">
+    <div id="float_btn_wrap">
+        <div id="float_btn" onclick="float_btn_addplan(0)">
         
+        </div>
+        <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
+            <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+        </div>
+        <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
+            <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+        </div>
     </div>
-    <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
-        <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
-    </div>
-    <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
-        <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
-    </div>
+    
     <!--플로팅 버튼-->
 
     <!--shade3는 #f4f4f4 색을 가진 배경(모바일에서 팝업시 뒷배경)-->

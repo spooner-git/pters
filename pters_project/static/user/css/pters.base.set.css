@@ -6,6 +6,11 @@ html,body{
 }
 
 /*플로트 버튼*/
+#float_btn_wrap{
+    position: fixed;
+    z-index: 121;
+}
+
 #float_btn{  /*2017.10.2*/
     position: fixed;
     width: 50px;
