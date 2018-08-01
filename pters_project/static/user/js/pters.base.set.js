@@ -41,12 +41,12 @@ function completeSend(use, callback){
 
 function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
-        $("#float_btn").fadeIn('fast')
+        $("#float_btn_wrap").show()
     }
 
 }
 function downTouchEvent(){
-    $("#float_btn").fadeOut('fast')
+    $("#float_btn_wrap").hide()
 
 }
 
