@@ -850,6 +850,7 @@ $(document).ready(function(){
                 }
                 $("#countsSelected").text(availCount_personal);
                 member_enddate_check_before_addplan(jsondata)
+                check_dropdown_selected_addplan();
             })
 
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-dbid':$(this).attr('data-dbid')});
