@@ -366,6 +366,7 @@
 	height: auto;
 	max-height: 400px;
 	overflow-y: hidden;
+	overflow-x: hidden;
 }
 
 #cal_popup_plancheck .popup_inner:hover{
