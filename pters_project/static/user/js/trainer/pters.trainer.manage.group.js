@@ -1513,6 +1513,7 @@ function pc_add_member(option){
 
         
         closePopup('member_info');
+        $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
         
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
