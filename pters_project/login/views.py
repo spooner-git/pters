@@ -7,7 +7,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_done
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth import authenticate, logout, login
-from django.core.mail import EmailMessage
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -28,7 +27,7 @@ from registration.forms import RegistrationForm
 from configs import settings
 from configs.const import USE
 from login.forms import MyPasswordResetForm
-from login.models import MemberTb, PushInfoTb, QATb
+from login.models import MemberTb, PushInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -799,39 +798,6 @@ def clear_badge_counter_logic(request):
         # messages.error(request, error)
 
         return render(request, 'ajax/token_check_ajax.html', {'token_check': error})
-
-
-@csrf_exempt
-def question_reg_logic(request):
-
-    qa_type_cd = request.POST.get('inquire_type', '')
-    title = request.POST.get('inquire_subject', '')
-    contents = request.POST.get('inquire_body', '')
-    next_page = request.POST.get('next_page')
-    error = None
-
-    if qa_type_cd == '' or qa_type_cd is None:
-        error = '문의 유형을 선택해주세요.'
-
-    if error is None:
-        qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
-                       status='0', use=USE)
-        qa_info.save()
-
-    if error is None:
-        email = EmailMessage('[PTERS 질문]'+request.user.last_name+request.user.first_name+'회원-'+title,
-                             '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
-                             '\n\n' + str(timezone.now()),
-                             to=['support@pters.co.kr'])
-        email.send()
-
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-        messages.info(request, qa_type_cd+'/'+title+'/'+contents)
-
-        return redirect(next_page)
 
 
 def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):

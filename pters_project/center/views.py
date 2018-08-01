@@ -10,7 +10,7 @@ from center.models import CenterTb, CenterTrainerTb
 from configs.const import USE
 from configs.views import AccessTestMixin
 from login.models import CommonCdTb
-from schedule.models import ClassTb
+from trainer.models import ClassTb
 
 logger = logging.getLogger(__name__)
 

@@ -39,15 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'el_pagination',
+    'debug_toolbar',
     'login',
+    'schedule',
     'trainee',
     'trainer',
-    'schedule',
     'center',
     'payment',
     'stats',
-    'el_pagination',
-    'debug_toolbar',
+    'board',
 ]
 
 MIDDLEWARE = [

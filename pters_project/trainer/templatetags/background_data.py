@@ -8,8 +8,8 @@ from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
-from schedule.models import BackgroundImgTb, ScheduleTb, ClassLectureTb, LectureTb, GroupLectureTb, RepeatScheduleTb, \
-    ClassTb
+from schedule.models import ScheduleTb, RepeatScheduleTb
+from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb
 from trainer.function import func_get_trainer_setting_list
 
 register = template.Library()
