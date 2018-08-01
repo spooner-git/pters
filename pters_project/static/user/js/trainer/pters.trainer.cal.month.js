@@ -176,10 +176,71 @@ $(document).ready(function(){
             //disable_window_scroll();
             clicked_td_date_info = yy+'_'+mm+'_'+dd
         }
-        
 
 
+        if($('.plan_raw').height()*$('.plan_raw').length > $('#cal_popup_plancheck').height() ){
+            if($('#cal_popup_plancheck > div:first-child').find('.scroll_arrow_top').length == 0){
+                $('#cal_popup_plancheck > div:first-child').append(
+                                                    '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_top">'+
+                                                    '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_bottom">'
+                                                 )
+            }
+            if($('.popup_inner_month').scrollTop() < 30 ){
+                $('.scroll_arrow_top').css('visibility','hidden');
+            };
+        }
     })
+
+    $('.popup_inner_month').scroll(function(e){
+        e.stopPropagation();
+        var scrollHeight = $(this).prop('scrollHeight');
+        var popupHeight = $(this).height();
+        var scrollLocation = $(this).scrollTop();
+
+        if(popupHeight + scrollLocation == scrollHeight){
+            $(this).animate({scrollTop : scrollLocation-1},10)
+        }else if(popupHeight + scrollLocation == popupHeight){
+            $(this).animate({scrollTop : scrollLocation+1},10)
+        }
+
+        // 좌측 스크롤 애로우 보이기
+        if(popupHeight + scrollLocation < scrollHeight-30){
+            $('.scroll_arrow_bottom').css('visibility','visible')
+        }else{
+            $('.scroll_arrow_bottom').css('visibility','hidden')
+        }
+        if(scrollLocation > 30){
+            $('.scroll_arrow_top').css('visibility','visible')
+        }else{
+            $('.scroll_arrow_top').css('visibility','hidden')
+        }
+        //좌측 스크롤 애로우 보이기
+    })
+
+    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+    $(document).on('click','img.scroll_arrow_top',function(e){
+        e.stopPropagation();
+        var $thisul = $('.popup_inner_month');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: 0},200)
+        }
+    });
+    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+    $(document).on('click','img.scroll_arrow_bottom',function(e){
+        e.stopPropagation();
+        var $thisul = $('.popup_inner_month');
+        var $thisul_scroll_height = $thisul.prop('scrollHeight');
+        var $thisul_display_height = $thisul.height();
+        if($(this).css('visibility') == 'visible'){
+            $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+        }
+    });
+    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+
+
 
     mini_popup_event()
     //일정을 클릭해서 나오는 미니 팝업의 이벤트 모음
