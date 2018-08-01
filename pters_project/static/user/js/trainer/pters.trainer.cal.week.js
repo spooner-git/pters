@@ -1311,7 +1311,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
                                                     groupstatus+
                                             '</span>'+
-                                            '<span class="memberTime">'+ 
+                                            '<span class="memberTime '+hideornot+'">'+ 
                                                     '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                             '</span>'+
 
