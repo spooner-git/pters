@@ -8,7 +8,7 @@ from schedule.models import RepeatScheduleTb, ScheduleTb, DeleteRepeatScheduleTb
 @admin.register(RepeatScheduleTb)
 class RepeatScheduleTbAdmin(admin.ModelAdmin):
     list_display = ('repeat_schedule_id', 'class_tb', 'lecture_tb', 'repeat_type_cd', 'group_tb', 'group_schedule_id',
-                    'week_info', 'start_date', 'end_date', 'start_time', 'time_duration',
+                    'week_info', 'start_date', 'end_date', 'start_time', 'end_time', 'time_duration',
                     'state_cd', 'en_dis_type', 'reg_member', 'reg_dt', 'mod_dt')
 
 
@@ -54,7 +54,7 @@ class ClassTbAdmin(admin.ModelAdmin):
 class LectureTbAdmin(admin.ModelAdmin):
     list_display = ('lecture_id', 'member', 'lecture_reg_count', 'lecture_rem_count', 'lecture_avail_count',
                     'day_count', 'start_date', 'end_date',
-                    'price', 'refund_price', 'option_cd', 'state_cd', 'schedule_check',
+                    'price', 'refund_price', 'refund_date', 'option_cd', 'state_cd', 'schedule_check',
                     'note', 'reg_dt', 'mod_dt', 'use')
 
 
