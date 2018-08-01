@@ -7,10 +7,11 @@ from django.utils import timezone
 
 from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
+
 from login.models import LogTb, PushInfoTb
-from schedule.models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 from trainer.models import ClassTb, MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb
 from trainee.models import LectureTb, MemberLectureTb
+from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
 # 1:1 Lecture Id 조회

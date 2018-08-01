@@ -1,15 +1,14 @@
 import logging
+from django.utils import timezone
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect
-
-# Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
-from board.models import QATb
-from django.utils import timezone
-
+# Create your views here.
 from configs.const import USE
+
+from board.models import QATb
 
 logger = logging.getLogger(__name__)
 

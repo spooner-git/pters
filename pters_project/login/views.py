@@ -16,18 +16,19 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
+from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from registration.backends.hmac.views import RegistrationView
 
 # Create your views here.
-from django.views.generic import TemplateView
 
 from registration.forms import RegistrationForm
 
 from configs import settings
 from configs.const import USE
-from login.forms import MyPasswordResetForm
-from login.models import MemberTb, PushInfoTb
+
+from .forms import MyPasswordResetForm
+from .models import MemberTb, PushInfoTb
 
 logger = logging.getLogger(__name__)
 

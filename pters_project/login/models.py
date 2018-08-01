@@ -8,10 +8,8 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import USE
 from configs.models import TimeStampedModel
 
 

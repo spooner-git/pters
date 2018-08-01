@@ -9,28 +9,29 @@ from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
-
-# Create your views here.
-from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.views import View
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin
 from el_pagination.views import AjaxListView
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, AUTO_FINISH_OFF
+# Create your views here.
+
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE
+
 from configs.views import AccessTestMixin
+
 from login.models import MemberTb, LogTb, CommonCdTb
-from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
-    func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
-    func_date_check, func_refresh_lecture_count, func_update_member_schedule_alarm
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
 from .models import LectureTb, MemberLectureTb
 
-from django.utils import timezone
-
+from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
+    func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
+    func_date_check, func_refresh_lecture_count, func_update_member_schedule_alarm
 from .function import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \

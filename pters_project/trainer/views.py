@@ -1,7 +1,6 @@
 # Create your views here.
 import datetime
 import json
-
 import logging
 import random
 import urllib
@@ -21,7 +20,6 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
 from django.views.generic import TemplateView
 from django.views.generic.base import ContextMixin, RedirectView
 from el_pagination.views import AjaxListView
@@ -29,23 +27,24 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
-from board.models import BoardTb
-from center.models import CenterTrainerTb
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON
+
 from configs.views import AccessTestMixin
-from login.models import MemberTb, LogTb, CommonCdTb
+from trainee.views import get_trainee_repeat_schedule_data_func
 from login.views import add_member_no_email_func
-from payment.models import PaymentInfoTb
-from payment.models import ProductTb
-from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule
+
+from board.models import BoardTb
+from center.models import CenterTrainerTb
+from login.models import MemberTb, LogTb, CommonCdTb
+from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
-from stats.function import get_sales_data, get_stats_member_data
-from trainee.views import get_trainee_repeat_schedule_data_func
 
+from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
+    func_refresh_group_status, func_get_trainer_group_schedule
+from stats.function import get_sales_data, get_stats_member_data
 from .function import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
