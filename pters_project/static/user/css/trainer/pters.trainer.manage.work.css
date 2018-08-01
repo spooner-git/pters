@@ -122,7 +122,10 @@ body{
 }
 	.pters_dropdown_custom_list li{
 		line-height: 40px;
-		height: 40px;
+		height: auto !important;
+	}
+	.pters_dropdown_custom_list li a{
+		text-align: center;
 	}
 
 
