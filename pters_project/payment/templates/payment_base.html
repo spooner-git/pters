@@ -536,7 +536,7 @@
         //window.location.reload()
         $('#errorMessageBar').fadeOut();
         $('#errorMessageText').text('');
-        $('html').css("cursor","auto");
+        //$('html').css("cursor","auto");
         $('.ajaxloadingPC').hide();
 
         if($('body').width()>600){
@@ -717,7 +717,7 @@
             dataType : 'html',
 
             beforeSend:function(){
-                $('html').css("cursor","wait");
+{#                $('html').css("cursor","wait");#}
             },
 
             success:function(data){
@@ -753,7 +753,7 @@
             },
 
             complete:function(){
-                $('html').css("cursor","auto");
+                //$('html').css("cursor","auto");
             },
 
             error:function(){
