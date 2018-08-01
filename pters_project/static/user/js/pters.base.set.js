@@ -25,7 +25,6 @@ function beforeSend(use, callback){
     if(use == "callback"){
         callback()
     }
-    //$('html').css("cursor","wait");
     $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
     $('.ajaxloadingPC').css('display','block')
 }
@@ -34,7 +33,6 @@ function completeSend(use, callback){
     if(use == "callback"){
         callback()
     }
-    //$('html').css("cursor","auto");
     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
     $('.ajaxloadingPC').css('display','none');
 }

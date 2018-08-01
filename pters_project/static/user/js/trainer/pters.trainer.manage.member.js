@@ -1329,7 +1329,6 @@ function send_modified_member_base_data(){
         dataType : 'html',
 
         beforeSend:function(){
-            $('html').css("cursor","wait");
             $('#upbutton-modify img').attr('src','/static/user/res/ajax/loading.gif');
         },
 
@@ -1342,7 +1341,6 @@ function send_modified_member_base_data(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
