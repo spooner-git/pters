@@ -60,7 +60,12 @@
                     $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
                 }
            }else{
-                $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
+                if(small_plan == 1){
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'top':cssthisTop}); 
+                }else{
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
+                }
+                
            }
             
             if($memberName.hasClass('_hided')){
