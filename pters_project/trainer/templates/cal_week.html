@@ -1263,7 +1263,11 @@
 
         var calendarSize = 1;
         if(bodywidth > 600){
-            week_calendar(today_YY_MM_DD)
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                week_calendar_mobile(today_YY_MM_DD)
+            }else{
+                week_calendar(today_YY_MM_DD)
+            }
         }else if(bodywidth<=600){
             week_calendar_mobile(today_YY_MM_DD)
         }

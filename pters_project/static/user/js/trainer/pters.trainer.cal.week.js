@@ -646,29 +646,30 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
     //for(var i=0; i<=23; i++){
 
     var tableHTML = []
-    var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row">';
+    var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row" style="height:100%;border:unset;background-color:#f7f7f7;">';
     var divToAppend = $(textToAppend);
     var td1_1;
     var td1 = [];
     var z = 0;
     var i = Options.workStartTime;
+    var td_style = ' style="background:#f7f7f7;background-size:60px 60px;background-image:url(/static/user/res/calendar_hour.png);cursor:default" '
     switch(currentDay_){
         case 0 :
             td1 = [];
             for(z=0; z<=6; z++){
                 if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
-                    td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
+                    td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
+                    td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[monthdata]){
-                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
+                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00'+td_style+'" data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
-                    td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
+                    td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
                     if(Month-1<1){
-                        td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                     }else{
-                        td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                     }
                 }
             }
@@ -679,15 +680,15 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
             td1 = [];
             for(z=-1; z<=5; z++){
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -697,15 +698,15 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
             td1 = [];
             for(z=-2; z<=4; z++){
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -715,15 +716,15 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
             td1 = [];
             for(z=-3; z<=3; z++){
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -733,15 +734,15 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
             td1 = [];
             for(z=-4; z<=2; z++){
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -751,15 +752,15 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
             td1 = [];
             for(z=-5; z<=1; z++){
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -769,15 +770,15 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
             td1 = [];
             for(z=-6; z<=0; z++){
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -810,6 +811,7 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
     //slideIndex.append(fakeElementForBlankPage);
     //weekNum_Set(Index);
     time_index_set(calendarSize);
+    $('div.timeindex').css('height','auto')
     $('.swiper-slide').css('height',$('div.timeindex').height())
 } //calTable_Set
 
@@ -2151,12 +2153,16 @@ function set_schedule_time(jsondata){
     $('._on').removeClass('_on');
     initialJSON = jsondata;
     if(bodywidth > 600){
-        
-        scheduleTime('class', jsondata, calendarSize);
-        scheduleTime('off', jsondata, calendarSize);
-        scheduleTime('group', jsondata, calendarSize);
-        
-        fake_show();
+        if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+            scheduleTime_Mobile('class', jsondata, calendarSize);
+            scheduleTime_Mobile('off', jsondata, calendarSize);
+            scheduleTime_Mobile('group', jsondata, calendarSize);
+        }else{
+            scheduleTime('class', jsondata, calendarSize);
+            scheduleTime('off', jsondata, calendarSize);
+            scheduleTime('group', jsondata, calendarSize);
+            fake_show();
+        }
     }else if(bodywidth <= 600){
         scheduleTime_Mobile('class', jsondata, calendarSize);
         scheduleTime_Mobile('off', jsondata, calendarSize);
