@@ -10,7 +10,7 @@ from django.views.generic import TemplateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .function import get_sales_data, get_sales_info, get_stats_member_data
+from .functions import get_sales_data, get_sales_info, get_stats_member_data
 
 logger = logging.getLogger(__name__)
 

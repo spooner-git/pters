@@ -56,7 +56,7 @@ def add_schedule_logic(request):
     schedule_time = request.POST.get('training_time')
     schedule_end_date = request.POST.get('training_end_date')
     schedule_end_time = request.POST.get('training_end_time')
-    schedule_time_duration = request.POST.get('time_duration', '')
+    # schedule_time_duration = request.POST.get('time_duration', '')
     en_dis_type = request.POST.get('en_dis_type')
     note = request.POST.get('add_memo', '')
     class_id = request.session.get('class_id', '')
@@ -73,9 +73,7 @@ def add_schedule_logic(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    class_info = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-
     if en_dis_type == ON_SCHEDULE_TYPE:
         if member_id == '':
             error = '회원을 선택해 주세요.'
@@ -91,13 +89,6 @@ def add_schedule_logic(request):
 
     if note is None:
         note = ''
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사 정보 가져오기

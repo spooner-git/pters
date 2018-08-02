@@ -286,7 +286,7 @@ $(document).ready(function(){
         var today_form = date_format_yyyy_m_d_to_yyyy_mm_dd(activedate[1]+'-'+activedate[2]+'-'+activedate[3],'-')
         $.ajax({
             url: '/trainer/get_trainer_schedule/',
-            type : 'POST',
+            type : 'GET',
             data : {"date":today_form, "day":5},
             dataType : 'html',
 

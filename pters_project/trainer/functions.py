@@ -21,7 +21,6 @@ def func_get_class_member_id_list(class_id):
     class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     for class_lecture_info in class_lecture_data:
-        # print(str(class_lecture_info['lecture_tb__member']))
         all_member.append(class_lecture_info['lecture_tb__member'])
 
     return all_member
@@ -34,9 +33,7 @@ def func_get_class_member_ing_list(class_id):
                                                        lecture_tb__use=USE,
                                                        use=USE).order_by('lecture_tb__member__name')
     class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
-    # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     for class_lecture_info in class_lecture_data:
-        # print(str(class_lecture_info['lecture_tb__member']))
         all_member.append(class_lecture_info['lecture_tb__member'])
 
     return all_member
@@ -108,10 +105,6 @@ def func_get_member_ing_list(class_id, user_id):
 
                 # group_check = 0
                 group_check = lecture_info_data.get_group_lecture_check()
-                # try:
-                #     GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                # except ObjectDoesNotExist:
-                #     group_check = 1
 
                 if lecture_info.use != UN_USE:
                     if lecture_info.state_cd == 'IP':
@@ -141,12 +134,7 @@ def func_get_member_ing_list(class_id, user_id):
                                 if '클래스' not in member_data.group_info:
                                     member_data.group_info += '/클래스'
 
-                # print(str(lecture_info_data.get_member_lecture_auth_check))
                 lecture_count += lecture_info_data.get_member_lecture_auth_check()
-                # lecture_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                #                                                 lecture_tb=lecture_info.lecture_id,
-                #                                                 auth_cd='VIEW', lecture_tb__use=USE,
-                #                                                 use=USE).count()
 
                 if lecture_info.use == USE:
                     if lecture_info.state_cd == 'IP':
@@ -161,18 +149,12 @@ def func_get_member_ing_list(class_id, user_id):
                         member_data.lecture_reg_count += lecture_info.lecture_reg_count
                         member_data.lecture_rem_count += lecture_info.lecture_rem_count
                         member_data.lecture_avail_count += lecture_info.lecture_avail_count
-                        # member_data.end_date = lecture_info.end_date
-                        # if member_data.lecture_available_id == '':
-                        #     if lecture_info.lecture_avail_count > 0:
-                        #         member_data.lecture_available_id = lecture_info.lecture_id
 
                         if member_data.start_date is None or member_data.start_date == '':
                             member_data.start_date = lecture_info.start_date
                         else:
                             if member_data.start_date > lecture_info.start_date:
                                 member_data.start_date = lecture_info.start_date
-                                # if lecture_info.lecture_avail_count > 0:
-                                #     member_data.lecture_available_id = lecture_info.lecture_id
 
                         if member_data.end_date is None or member_data.end_date == '':
                             member_data.end_date = lecture_info.end_date

@@ -35,13 +35,6 @@ class MemberTb(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def get_str_birthday_dt(self):
-        if self.birthday_dt is not None and self.birthday_dt != '':
-            str_birthday_dt = str(self.birthday_dt)
-        else:
-            str_birthday_dt = ''
-        return str_birthday_dt
-
 
 class CommonCdTb(models.Model):
     common_cd_id = models.AutoField(db_column='ID', primary_key=True, null=False)

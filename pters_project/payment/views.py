@@ -21,7 +21,7 @@ from configs.const import USE, UN_USE
 from login.models import MemberTb
 from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb
 
-from .function import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
+from .functions import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
     func_iamport_webhook_customer_billing_logic
 
