@@ -1078,6 +1078,7 @@ function fake_show(){
 }
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+    console.log('scheduleTime',option)
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
     $('.blankSelected').removeClass('blankSelected');
@@ -1286,9 +1287,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
                                     '</div>'
                                     )
-            }
-
-            
+            } 
         }else if(option == 'group'){
             if(planStartDiv.find('div['+'group-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 planStartDiv.append('<div group-time="'+planArray.join('_')+
@@ -1317,7 +1316,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
                                     '</div>'
                                     )
- 
             }
         }else if(option == 'off'){
             if(planStartDiv.find('div['+'off-schedule-id='+planScheduleIdArray[i]+']').length == 0){
@@ -1343,7 +1341,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                             '</span>'+
                                     '</div>'
                                     )
- 
             }
         }
 
@@ -1908,7 +1905,6 @@ function ajaxClassTime(use, callfunction){
 
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata)
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
