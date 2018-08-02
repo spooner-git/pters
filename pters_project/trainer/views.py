@@ -419,7 +419,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 total_class_lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
                                                                                  ).filter(class_tb_id=class_id,
                                                                                           lecture_tb__member_id
-                                                                                          =member_info,
+                                                                                          =member_info.member_id,
                                                                                           lecture_tb__use=USE,
                                                                                           auth_cd='VIEW',
                                                                                           use=USE).order_by('-lecture_tb__start_date')
@@ -1031,37 +1031,36 @@ class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/member_list_ajax.html'
 
-    def get(self, request):
-        start_time = timezone.now()
-        context = {}
-        # context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        context['member_data'] = func_get_member_ing_list(class_id, request.user.id)
-        end_time = timezone.now()
+    def get_context_data(self, **kwargs):
+        # start_time = timezone.now()
+        # context = {}
+        context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
+        # end_time = timezone.now()
         # func_test_test_test(class_id)
         # print('IngList::'+str(end_time-start_time))
         # return context
-        return render(request, self.template_name, context)
+        return context
 
 
-class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/member_list_ajax.html'
 
-    def get(self, request):
-        start_dt = timezone.now()
-        context = {}
-        # context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+    def get_context_data(self, **kwargs):
+        # start_dt = timezone.now()
+        # context = {}
+        context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
 
-        context['member_data'] = func_get_member_end_list(class_id, request.user.id)
-        end_dt = timezone.now()
+        context['member_data'] = func_get_member_end_list(class_id, self.request.user.id)
+        # end_dt = timezone.now()
 
         # print('EndList::'+str(end_dt-start_dt))
-        # return context
-        return render(request, self.template_name, context)
+        return context
 
 
 # 회원수정
