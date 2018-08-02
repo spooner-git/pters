@@ -894,8 +894,6 @@ function dateText(){
         var yy2 = yymmarry[1].substr(0,4);
         var mm2 = Number(yymmarry[1].substr(4,2));
 
-        console.log($('#weekNum_1').attr('data-date'), $('#weekNum_7').attr('data-date'))
-        console.log(yy1,yy2,mm1,mm2)
 
         if(yy1==yy2){
             $('#yearText').text(yy1+'년');

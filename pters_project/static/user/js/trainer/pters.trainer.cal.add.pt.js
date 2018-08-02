@@ -380,122 +380,124 @@ $(document).ready(function(){
      */
 
     //긁어서 일정 추가
-    $(document).on('mousedown','.td00, .td30', function(e){
-        e.stopPropagation();
-        closeAddPopup_mini();
-        $(document).off('mouseup');
-        var thisID     = $(this).attr('id');
-        var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-        var thisIDHour = $(this).attr('id').split('_')[3];
-        var thisIDMin  = $(this).attr('id').split('_')[4];
+    if(bodywidth > 600 && (varUA.match('iphone') ==null && varUA.match('ipad')==null && varUA.match('ipod')==null && varUA.match('android') == null) ){
+        $(document).on('mousedown','.td00, .td30', function(e){
+            e.stopPropagation();
+            closeAddPopup_mini();
+            $(document).off('mouseup');
+            var thisID     = $(this).attr('id');
+            var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
+            var thisIDHour = $(this).attr('id').split('_')[3];
+            var thisIDMin  = $(this).attr('id').split('_')[4];
 
 
-        if(Options.classDur == 30){
-            if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                $('.blankSelected30').removeClass('blankSelected30');
-                $(this).find('div').addClass('blankSelected30');
-                $(document).on('mouseover','.td00, .td30', function(){
-                    var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-                    var overIDHour = $(this).attr('id').split('_')[3];
-                    var overIDMin  = $(this).attr('id').split('_')[4];
-                    var prevIDHour = overIDHour;
-                    var prevIDMin  = '00';
-                    var selector_blankSelected30 = $('.blankSelected30');
-                    if(overIDMin == '30'){
-                        prevIDHour = overIDHour;
-                        prevIDMin  = '00';
-                    }else if(overIDMin == '00'){
-                        prevIDHour = Number(overIDHour)-1;
-                        prevIDMin  = '30';
-                    }
-                    var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
-
-                    if(selector_blankSelected30.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected30') && !$(this).hasClass('_on')){
-                        $(this).find('div').addClass('blankSelected30')
-                    }else if($(this).hasClass('_on')){
-                        $(document).off('mouseover');
-                        show_mini_plan_add_popup(thisID, selector_blankSelected30.length);
-                        check_dropdown_selected_addplan();
-                    }
-                });
-
-                $(document).on('mouseup', '.td00, .td30', function(){
-                    $(document).off('mouseover');
-                    if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                        show_mini_plan_add_popup(thisID, $('.blankSelected30').length);
-                    }
-                    check_dropdown_selected_addplan();
-                });
-
-                $(document).on('mouseup','#gap',function(){
-                    closeAddPopup_mini();
+            if(Options.classDur == 30){
+                if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                     $('.blankSelected30').removeClass('blankSelected30');
-                });
-            }
-        }else if(Options.classDur == 60){
-            var next30IDHour = Number(thisIDHour);
-            var next30IDMin  = '30';
-            if(thisIDMin == '00'){
-                next30IDHour = Number(thisIDHour);
-                next30IDMin  = '30';
-            }else if(thisIDMin == '30'){
-                next30IDHour = Number(thisIDHour) + 1;
-                next30IDMin  = '00';
-            }
-            var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
-            if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime') 
-                && thisIDHour+'-'+thisIDMin != (Options.workEndTime-1)+'-30'){
-                $('.blankSelected').removeClass('blankSelected');
-                $(this).find('div').addClass('blankSelected');
+                    $(this).find('div').addClass('blankSelected30');
+                    $(document).on('mouseover','.td00, .td30', function(){
+                        var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
+                        var overIDHour = $(this).attr('id').split('_')[3];
+                        var overIDMin  = $(this).attr('id').split('_')[4];
+                        var prevIDHour = overIDHour;
+                        var prevIDMin  = '00';
+                        var selector_blankSelected30 = $('.blankSelected30');
+                        if(overIDMin == '30'){
+                            prevIDHour = overIDHour;
+                            prevIDMin  = '00';
+                        }else if(overIDMin == '00'){
+                            prevIDHour = Number(overIDHour)-1;
+                            prevIDMin  = '30';
+                        }
+                        var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
 
-                $(document).on('mouseover','.td00, .td30', function(){
-                    var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-                    var overIDHour = $(this).attr('id').split('_')[3];
-                    var overIDMin  = $(this).attr('id').split('_')[4];
-                    var prevIDHour = Number(overIDHour)-1;
-                    var prevIDMin  = '30';
-                    var nextIDHour = Number(overIDHour)+1;
-                    var nextIDMin  = '00';
-                    if(overIDMin == '30'){
-                        prevIDHour = Number(overIDHour)-1;
-                        prevIDMin  = '30';
-                        nextIDHour = Number(overIDHour)+1;
-                        nextIDMin  = '00';
-                    }else if(overIDMin == '00'){
-                        prevIDHour = Number(overIDHour)-1;
-                        prevIDMin  = '00';
-                        nextIDHour = Number(overIDHour);
-                        nextIDMin  = '30';
-                    }
-                    var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
-                    var $nextOvered = $('#'+overIDDate+'_'+nextIDHour+'_'+nextIDMin);
-                    var selector_blankSelected = $('.blankSelected');
-                    if(selector_blankSelected.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected') && !$(this).hasClass('_on') && !$nextOvered.hasClass('_on')){
-                        $(this).find('div').addClass('blankSelected');
-                    }else if($(this).hasClass('_on')){
+                        if(selector_blankSelected30.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected30') && !$(this).hasClass('_on')){
+                            $(this).find('div').addClass('blankSelected30')
+                        }else if($(this).hasClass('_on')){
+                            $(document).off('mouseover');
+                            show_mini_plan_add_popup(thisID, selector_blankSelected30.length);
+                            check_dropdown_selected_addplan();
+                        }
+                    });
+
+                    $(document).on('mouseup', '.td00, .td30', function(){
                         $(document).off('mouseover');
-                        show_mini_plan_add_popup(thisID, selector_blankSelected.length);
+                        if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                            show_mini_plan_add_popup(thisID, $('.blankSelected30').length);
+                        }
                         check_dropdown_selected_addplan();
-                    }
-                });
+                    });
 
-                $(document).on('mouseup', '.td00, .td30', function(){
-                    $(document).off('mouseover');
-                    if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                        show_mini_plan_add_popup(thisID, $('.blankSelected').length);
-                    }
-                    check_dropdown_selected_addplan();
-                });
-
-
-                $(document).on('mouseup','#gap',function(){
-                    closeAddPopup_mini();
+                    $(document).on('mouseup','#gap',function(){
+                        closeAddPopup_mini();
+                        $('.blankSelected30').removeClass('blankSelected30');
+                    });
+                }
+            }else if(Options.classDur == 60){
+                var next30IDHour = Number(thisIDHour);
+                var next30IDMin  = '30';
+                if(thisIDMin == '00'){
+                    next30IDHour = Number(thisIDHour);
+                    next30IDMin  = '30';
+                }else if(thisIDMin == '30'){
+                    next30IDHour = Number(thisIDHour) + 1;
+                    next30IDMin  = '00';
+                }
+                var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
+                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime') 
+                    && thisIDHour+'-'+thisIDMin != (Options.workEndTime-1)+'-30'){
                     $('.blankSelected').removeClass('blankSelected');
-                });
+                    $(this).find('div').addClass('blankSelected');
 
+                    $(document).on('mouseover','.td00, .td30', function(){
+                        var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
+                        var overIDHour = $(this).attr('id').split('_')[3];
+                        var overIDMin  = $(this).attr('id').split('_')[4];
+                        var prevIDHour = Number(overIDHour)-1;
+                        var prevIDMin  = '30';
+                        var nextIDHour = Number(overIDHour)+1;
+                        var nextIDMin  = '00';
+                        if(overIDMin == '30'){
+                            prevIDHour = Number(overIDHour)-1;
+                            prevIDMin  = '30';
+                            nextIDHour = Number(overIDHour)+1;
+                            nextIDMin  = '00';
+                        }else if(overIDMin == '00'){
+                            prevIDHour = Number(overIDHour)-1;
+                            prevIDMin  = '00';
+                            nextIDHour = Number(overIDHour);
+                            nextIDMin  = '30';
+                        }
+                        var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
+                        var $nextOvered = $('#'+overIDDate+'_'+nextIDHour+'_'+nextIDMin);
+                        var selector_blankSelected = $('.blankSelected');
+                        if(selector_blankSelected.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected') && !$(this).hasClass('_on') && !$nextOvered.hasClass('_on')){
+                            $(this).find('div').addClass('blankSelected');
+                        }else if($(this).hasClass('_on')){
+                            $(document).off('mouseover');
+                            show_mini_plan_add_popup(thisID, selector_blankSelected.length);
+                            check_dropdown_selected_addplan();
+                        }
+                    });
+
+                    $(document).on('mouseup', '.td00, .td30', function(){
+                        $(document).off('mouseover');
+                        if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                            show_mini_plan_add_popup(thisID, $('.blankSelected').length);
+                        }
+                        check_dropdown_selected_addplan();
+                    });
+
+
+                    $(document).on('mouseup','#gap',function(){
+                        closeAddPopup_mini();
+                        $('.blankSelected').removeClass('blankSelected');
+                    });
+
+                }
             }
-        }
-    });
+        });
+    }
     //긁어서 일정 추가
 
     function show_mini_plan_add_popup(thisID, dur){
@@ -3289,7 +3291,6 @@ function send_add_groupmember_plan(use, callback){
                         scheduleTime_Mobile('off', jsondata, calendarSize);
                         scheduleTime_Mobile('group', jsondata, calendarSize);
                     }
-                    console.log('test::'+sendData[6]["value"])
                     get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])});
                     alert('그룹일정 참석자 정상 등록되었습니다.');
                 }
@@ -3314,7 +3315,6 @@ $(document).on('click','.group_member_cancel',function(){
     var group_id = $(this).attr('data-groupid');
     var group_schedule_id = $(this).attr('group-schedule-id');
     var max = $(this).attr('data-max');
-    console.log('max::'+max)
     send_plan_delete('pt', 'callback', function(){
         super_ajaxClassTime();
 
