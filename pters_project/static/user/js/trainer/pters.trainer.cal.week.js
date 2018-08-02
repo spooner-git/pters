@@ -153,7 +153,7 @@ $(document).ready(function(){
         dateText();
         reserveAvailable();
         todayFinderArrow();
-        krHoliday();
+        //krHoliday();
 
     });
 
@@ -167,7 +167,7 @@ $(document).ready(function(){
         dateText();
         reserveAvailable();
         todayFinderArrow();
-        krHoliday();
+        //krHoliday();
 
     });
 
@@ -278,7 +278,7 @@ function week_calendar(referencedate){
     $('.swiper-slide-active').css('width',$('#week').width())
     weekNum_Set_fixed();
     dateText();
-    krHoliday();
+    //krHoliday();
     reserveAvailable();
     toDay();
     addcurrentTimeIndicator_blackbox();
@@ -309,13 +309,14 @@ function week_calendar_mobile(referencedate){
     $('.swiper-slide-active').css('width',$('#week').width())
     weekNum_Set_fixed();
     dateText();
-    krHoliday();
+    //krHoliday();
     reserveAvailable();
     toDay();
     addcurrentTimeIndicator_blackbox();
     todayFinderArrow();
     ajaxClassTime();
 }
+
 
 function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
     //Week 선택자 2E, 1E, 0W, 1L, 2L
@@ -349,6 +350,10 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
     //for(var i=0; i<=23; i++){
 
     var tableHTML = []
+    var yy = String(currentYear);
+    var mm = String(currentPageMonth);
+    var dd = String(currentDate);
+    var today_date = yy+'_'+mm+'_'+dd;
     for(var i=Options.workStartTime; i<Options.workEndTime; i++){
         var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row" style="height:'+(30*calendarSize)+'px;">';
         var textToAppend_ = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_30M'+'" class="time-row time-row30" style="height:'+(30*calendarSize)+'px;">';
@@ -365,24 +370,30 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=0; z<=6; z++){
                     if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
-                        td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30" data-week='+z+'>'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+z+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[monthdata]){
-                        td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30" data-week='+z+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
-                        td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+z+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if(Month-1<1){
-                            td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
-                            td2[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+z+'>'+'<div></div>'+'</div>';
+                            if( (Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                            td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td2[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
                         }else{
-                            td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'00'+' class="td00" data-week='+z+'>'+'<div></div>'+'</div>';
-                            td2[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30" data-week='+z+'>'+'<div></div>'+'</div>';
+                            if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                            td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td2[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
                         }
                     }
                 }
@@ -395,20 +406,25 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=-1; z<=5; z++){
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                        td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
-                        td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                        td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -420,20 +436,25 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=-2; z<=4; z++){
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                        td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
-                        td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                        td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -445,20 +466,25 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=-3; z<=3; z++){
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                        td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
-                        td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                        td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -470,20 +496,25 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=-4; z<=2; z++){
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                        td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30">'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'">'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
-                        td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                        td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -495,20 +526,25 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=-5; z<=1; z++){
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                        td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
-                        td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        if( ear+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                        td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -520,20 +556,25 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td2 = [];
                 for(z=-6; z<=0; z++){
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                        td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
-                        td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
-                        td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                        td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
+                        td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -568,7 +609,7 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
     }
     slideIndex.html(tableHTML.join(''))
     slideIndex.append(fakeElementForBlankPage);
-    weekNum_Set(Index);
+    //weekNum_Set(Index);
     time_index_set(calendarSize);
 } //calTable_Set
 
@@ -803,6 +844,7 @@ function time_index_set(size){
 function dateText(){
     var yymm = {};
     var yymmarry = [];
+    /*
     for(var i=2; i<=8; i++){
         var dataID = $('.swiper-slide-active div:nth-child(1)').find('.td00:nth-child('+i+')').attr('id').split('_');
         var yy = dataID[0];
@@ -811,16 +853,29 @@ function dateText(){
     }
     for(i in yymm){
         yymmarry.push(i);
-    }
+    }*/
+
+    yymmarry = [$('#weekNum_1').attr('data-date'), $('#weekNum_7').attr('data-date')];
 
     //연도, 월 셋팅
     if(yymmarry.length>1){  // [2017_12, 2018_1] ,,  [2018_1, 2018_2]
+        /*
         var yymm1 = yymmarry[0].split('_');
         var yymm2 = yymmarry[1].split('_');
         var yy1 = yymm1[0];
         var mm1 = yymm1[1];
         var yy2 = yymm2[0];
         var mm2 = yymm2[1];
+        */
+
+        var yy1 = yymmarry[0].substr(0,4);
+        var mm1 = Number(yymmarry[0].substr(4,2));
+        var yy2 = yymmarry[1].substr(0,4);
+        var mm2 = Number(yymmarry[1].substr(4,2));
+
+        console.log($('#weekNum_1').attr('data-date'), $('#weekNum_7').attr('data-date'))
+        console.log(yy1,yy2,mm1,mm2)
+
         if(yy1==yy2){
             $('#yearText').text(yy1+'년');
             $('#monthText').text(mm1+'/'+mm2+'월');
@@ -829,6 +884,8 @@ function dateText(){
         }else if(yy1!=yy2){
             $('#yearText').text(yy1+'/'+yy2+'년');
             $('#monthText').text(mm1+'/'+mm2+'월');
+            $('#ymdText-pc-month-start').text(mm1+'월');
+            $('#ymdText-pc-month-end').text(mm2+'월');
         }
     }else{
         yymm = yymmarry[0].split('_');
@@ -912,18 +969,28 @@ function weekNum_Set_fixed(){
     var friday = $('#friDate');
     var saturday = $('#satDate');
 
-    var Sunday_date = $('.swiper-slide-active'+' div.td00:nth-child(2)').attr('id').split('_')[2];
-    var Monday_date = $('.swiper-slide-active'+' div.td00:nth-child(3)').attr('id').split('_')[2];
-    var Tuesday_date = $('.swiper-slide-active'+' div.td00:nth-child(4)').attr('id').split('_')[2];
-    var Wednesday_date = $('.swiper-slide-active'+' div.td00:nth-child(5)').attr('id').split('_')[2];
-    var Thursday_date = $('.swiper-slide-active'+' div.td00:nth-child(6)').attr('id').split('_')[2];
-    var Friday_date = $('.swiper-slide-active'+' div.td00:nth-child(7)').attr('id').split('_')[2];
-    var Saturday_date = $('.swiper-slide-active'+' div.td00:nth-child(8)').attr('id').split('_')[2];
+    var $sunday = $('.swiper-slide-active'+' div.td00:nth-child(2)');
+    var $monday = $('.swiper-slide-active'+' div.td00:nth-child(3)');
+    var $tuesday = $('.swiper-slide-active'+' div.td00:nth-child(4)');
+    var $wednesday = $('.swiper-slide-active'+' div.td00:nth-child(5)');
+    var $thursday = $('.swiper-slide-active'+' div.td00:nth-child(6)');
+    var $friday = $('.swiper-slide-active'+' div.td00:nth-child(7)');
+    var $saturday = $('.swiper-slide-active'+' div.td00:nth-child(8)');
+
+    var selectorArry = [$sunday, $monday, $tuesday, $wednesday, $thursday, $friday, $saturday];
+
+    var Sunday_date = $sunday.attr('id').split('_')[2];
+    var Monday_date = $monday.attr('id').split('_')[2];
+    var Tuesday_date = $tuesday.attr('id').split('_')[2];
+    var Wednesday_date = $wednesday.attr('id').split('_')[2];
+    var Thursday_date = $thursday.attr('id').split('_')[2];
+    var Friday_date = $friday.attr('id').split('_')[2];
+    var Saturday_date = $saturday.attr('id').split('_')[2];
 
     var currentPageDateInfo = [];
     var i;
-    for (i=2; i<=8; i++){
-        var selector_swiper_slide_active_div = $('.swiper-slide-active'+' div.td00:nth-child('+i+')');
+    for (i=0; i<=6; i++){
+        var selector_swiper_slide_active_div = selectorArry[i]
         var yy = selector_swiper_slide_active_div.attr('id').split('_')[0];
         var mm = selector_swiper_slide_active_div.attr('id').split('_')[1];
         var dd = selector_swiper_slide_active_div.attr('id').split('_')[2];
@@ -933,9 +1000,7 @@ function weekNum_Set_fixed(){
         if(dd.length<2){
             dd = '0' + dd;
         }
-        // var yymmdd = yy+mm+dd;
-        // currentPageDateInfo[i-2] = yymmdd;
-        currentPageDateInfo[i-2] = yy+mm+dd;
+        currentPageDateInfo[i] = yy+mm+dd;
     }
 
     var WeekArry = [sunday,monday,tuesday,wednesday,thursday,friday,saturday];
@@ -950,7 +1015,15 @@ function weekNum_Set_fixed(){
             text1 = '';
         }
         WeekArry[i].html(WeekArryTarget[i]+text1);
-        WeekNum[i].attr('data-date', currentPageDateInfo[i]);
+
+        var date_yyyy_m_d = date_format_yyyy_mm_dd_to_yyyy_m_d(date_format_yyyymmdd_to_split(currentPageDateInfo[i],'_'),'_')
+
+        if(krHolidayList.indexOf(date_yyyy_m_d) != -1){
+            WeekNum[i].attr('data-date', currentPageDateInfo[i]).addClass('holiday');
+            WeekNum[i].find('.holidayName').text( krHolidayNameList[krHolidayList.indexOf(date_yyyy_m_d)]  )
+        }else{
+            WeekNum[i].attr('data-date', currentPageDateInfo[i]);
+        }
     }
 }
 
@@ -1000,10 +1073,10 @@ function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
             realTimeHour = '0' + realTimeHour;
         }
 
-        selector_timeIndicatorBar.fadeIn('fast').html('<span class="timeindicator_rightfloat">'+realTimeHour+':'+realTimeMin+'</span>');
+        selector_timeIndicatorBar.css('visibility','visible').html('<span class="timeindicator_rightfloat">'+realTimeHour+':'+realTimeMin+'</span>');
     }else{
         $('.hour').removeClass('currentTimeBlackBox');
-        selector_timeIndicatorBar.fadeOut('fast');
+        selector_timeIndicatorBar.css('visibility','hidden');
     }
 }
 
@@ -1012,9 +1085,10 @@ function toDay(){
     var dd = String(currentDate);
     var mm = String(currentPageMonth);
     var i;
+    /*
     for(i=0;i<=23;i++){
         $("#"+yy+'_'+mm+'_'+dd+'_'+i+'_00' + ",#"+yy+'_'+mm+'_'+dd+'_'+i+'_30').addClass('todaywide');
-    }
+    }*/
 
     for(i=1;i<=7;i++){
         var scan = $('#weekNum_'+i).attr('data-date');
@@ -1077,8 +1151,9 @@ function fake_show(){
      }*/
 }
 
+
+
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-    console.log('scheduleTime',option)
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
     $('.blankSelected').removeClass('blankSelected');
@@ -1174,6 +1249,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             memberName  = planMemberName[i];
         }
 
+
+
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
         if(planEndDate[i].split(' ')[1] == "00:00:00"){
             var planEndHour = '24'
@@ -1182,13 +1259,13 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
         //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
-        if(compare_time(add_time(planHour+':'+planMinute, '00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin, '00:00'), add_time(Options.workStartTime+':00','00:00')) ){
+        if(compare_time(planHour+':'+planMinute, Options.workStartTime+':00') == false && compare_time(planEndHour+':'+planEndMin, Options.workStartTime+':00') ){
             planHour = Options.workStartTime;
             planMinute = '00';
         }
         //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
 
-        var planDuraMin = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], add_time(planHour+':'+planMinute,'00:00'), planEndDate[i].split(' ')[0], add_time(planEndHour+':'+planEndMin,'00:00') )
+        var planDuraMin = calc_duration_by_start_end_2(planYear+'-'+planMonth+'-'+planDate, planHour+':'+planMinute, planEndDate[i].split(' ')[0], planEndHour+':'+planEndMin )
         var planDura = planDuraMin/60;
 
         if(planHour < 12){
@@ -1202,6 +1279,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }
 
 
+
         var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
         //var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
         var timeoffset = '00';
@@ -1211,6 +1289,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var planStartArr = [planYear, planMonth, planDate, planHour, timeoffset];
         var planStart = planStartArr.join("_");
         var planStartDiv = $("#"+planStart);
+
+        //var planStartDiv = $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+Options.workStartTime+'_00') //2018_8_5_0_00
+
         var tdPlanStart = $("#"+planStart+" div");
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
@@ -1252,13 +1333,14 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var planHeight = Number(planDura*planheight-1);
 
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
-        if(planStartDiv.length>0){
-            var timLocation = planStartDiv.offset().top + planLocation;
-            var calBottomLoc = $('.swiper-slide-active').offset().top + $('.swiper-slide-active').height();
-            if(timLocation + planHeight > calBottomLoc){
-                var planHeight = calBottomLoc - timLocation;
-            }
-        }
+        
+        //if(planStartDiv.length>0){
+          //  var timLocation = planStartDiv.offset().top + planLocation;
+            //var calBottomLoc = $('.swiper-slide-active').offset().top + $('.swiper-slide-active').height();
+            //if(timLocation + planHeight > calBottomLoc){
+              //  var planHeight = calBottomLoc - timLocation;
+            //}
+        //}
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
 
 
@@ -1346,60 +1428,47 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
 
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
-        var sMinute;
-        var eMinute;
-        if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
-            sMinute = '30';
-            eMinute = planEndMin;
-        }else if(planMinute < 30 && planEndMin >= 30){ // 7:15 ~ 8:40
-            sMinute = '00';
-            eMinute =  planEndMin;
-        }else if(planMinute >= 30 && planEndMin < 30 && planEndMin > 0){ // 7:40 ~ 8:15
-            sMinute = '30'
-            eMinute = '01';
-        }else if(planMinute >= 30 && planEndMin < 30 && planEndMin == 0){ // 7:40 ~ 8:15
-            sMinute = '30'
-            eMinute = '00';
-        }else if(planMinute < 30 && planEndMin < 30 && planEndMin > 0){ // 7:15 ~ 8:15
-            sMinute = '00'
-            eMinute = '01'
-        }else if(planMinute < 30 && planEndMin < 30 && planEndMin == 0){ // 7:15 ~ 8:15
-            sMinute = '00'
-            eMinute = '00'
-        }
+            
+            var diffHour = planEndHour - planHour;  // 13:30 - 11:00  = 2/30    13:00 - 11:30 = 1/30
+            var diffMin = planEndMin - planMinute;
 
-        var zz = 0;
-        var lenn = 0;
-        while(add_time(planHour+':'+sMinute, '00:'+zz) != add_time(planEndHour+':'+eMinute, '00:00')){
-            if(add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '30' || add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '00'){
-                lenn++
+            var diff = diff_time(planHour+':'+planMinute, planEndHour+':'+planEndMin) 
+            var lenn = Math.round(diff/30);
+            
+            if(Number(planEndMin) !=0 && Number(planEndMin)%30 ){
+                lenn = lenn +1;
             }
-            zz++
-        }
+            
+
+            var hhh = Number(planHour);
+            var mmm;
+            if(planMinute < 30){
+                mmm = '00'
+            }else{
+                mmm = '30'
+            }
+
+            for(var j=0; j<lenn; j++){
+                if(mmm == 60){
+                    hhh = hhh+1;
+                    mmm = '00';
+                }
+                $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
+                mmm = Number(mmm) + 30;
+            }
         
-
-        var hhh = Number(planHour);
-        var mmm;
-        if(planMinute < 30){
-            mmm = '00'
-        }else{
-            mmm = '30'
-        }
-
-        for(var j=0; j<lenn; j++){
-            if(mmm == 60){
-                hhh = hhh+1;
-                mmm = '00';
-            }
-            $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
-            mmm = Number(mmm) + 30;
-        }
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
 }
+$(document).on('click','._on',function(){
+    alert('5분단위 상세 시간 설정은 우측 레슨 일정 등록에서')
+})
 
-/*
-function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+
+
+
+/* 모바일과 같은 로직
+function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
     $('.blankSelected').removeClass('blankSelected');
@@ -1417,6 +1486,7 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
     var planMemberDbid = '';
     var planGroupid = '';
     var planCode = '';
+    var planGroupClassName = '';
     switch(option){
         case 'class':
             plan = option;
@@ -1447,7 +1517,6 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
-            console.log('scheduleTime("off")',jsondata);
             break;
         case 'group':
 
@@ -1465,16 +1534,24 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
+            planGroupClassName = jsondata.group_schedule_group_type_cd_name;
             break;
     }
 
+    var date_sorted = {};
     //2018_4_22_8_30_2_OFF_10_30
-
-    var planheight = 60;
-    if($calendarWidth>=600){
-        planheight = 60;
-    }
     var len = planScheduleIdArray.length;
+    for(var j=0; j<len; j++){
+        var planYear    = Number(planStartDate[j].split(' ')[0].split('-')[0]);
+        var planMonth   = Number(planStartDate[j].split(' ')[0].split('-')[1]);
+        var planDate    = Number(planStartDate[j].split(' ')[0].split('-')[2]);
+        date_sorted[planYear+'_'+planMonth+'_'+planDate+'_'+Options.workStartTime+'_00'] = []
+    }
+
+    console.log('date_sorted',date_sorted)
+
+    var planheight = 60*size;
+    
     for(var i=0; i<len; i++){
         //2018-05-11 10:00:00
         var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
@@ -1486,7 +1563,6 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
         var memberName = 'OFF';
-        var planDura = "0.5";
         var hourType = '오전';
         if(plan == 'off'){
             if(planNoteArray[i].length > 0){
@@ -1498,46 +1574,22 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
             memberName  = planMemberName[i];
         }
 
-
-        if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
-            if(planEndHour-planHour == 0){
-                planDura = "0.5";
-            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
-                planDura = String((planEndHour-planHour-1))+'.5';
-            }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == 30){
-                planDura = String((planEndHour-planHour))+'.5';
-            }
-        }else{
-            planDura = planEndHour - planHour;
+        //24:00일경우 다음날 00:00 으로 들어오기 때문에
+        if(planEndDate[i].split(' ')[1] == "00:00:00"){
+            var planEndHour = '24'
+            var planEndMin = '00'
         }
+        //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
-        //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
-        if(planEDate == planDate+1 && planEndHour==planHour){
-            planDura = 24;
-        }else if(planEDate == planDate+1 && planEndHour == 0){
-            planDura = 24-planHour;
-        }else if(planDate == lastDay[planMonth-1] && planEDate == 1 && planEndHour == 0){ //달넘어갈때 -23시 표기되던 문제
-            planDura = 24-planHour;
+        //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
+        if(compare_time(planHour+':'+planMinute, Options.workStartTime+':00') == false && compare_time(planEndHour+':'+planEndMin, Options.workStartTime+':00') ){
+            planHour = Options.workStartTime;
+            planMinute = '00';
         }
+        //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
 
-        if(planMinute == '00'){
-            if(Options.workStartTime>planHour && planDura > Options.workStartTime - planHour){
-
-                planDura = planDura - (Options.workStartTime - planHour); // 2 - (10 - 8)
-                planHour = Options.workStartTime;
-                //2018_4_22_8_30_2_OFF_10_30
-            }
-        }else if(planMinute == '30'){
-            //(10>8)  (2>=10-8)
-            if(Options.workStartTime>planHour && planDura >= Options.workStartTime - planHour){
-
-                planDura = planDura - (Options.workStartTime - planHour)+0.5; // 2 - (10 - 8)
-                planHour = Options.workStartTime;
-                planMinute = '00';
-                //2018_4_22_8_30_2_OFF_10_30
-            }
-        }
-
+        var planDuraMin = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], planHour+':'+planMinute, planEndDate[i].split(' ')[0], planEndHour+':'+planEndMin)
+        var planDura = planDuraMin/60;
 
         if(planHour < 12){
             hourType = '오전';
@@ -1549,9 +1601,20 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
             }
         }
 
+
+
         var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
-        var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
+        //var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
+        var timeoffset = '00';
+        if(planMinute>=30){
+            timeoffset = '30'
+        }
+        var planStartArr = [planYear, planMonth, planDate, planHour, timeoffset];
         var planStart = planStartArr.join("_");
+        var planStartDiv = $("#"+planStart);
+
+        //var planStartDiv = $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+Options.workStartTime+'_00') //2018_8_5_0_00
+
         var tdPlanStart = $("#"+planStart+" div");
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
@@ -1575,55 +1638,182 @@ function scheduleTime(option, jsondata){ // 그룹 수업정보를 DB로 부터 
             textcolor = "";
         }
 
-        if(Number(planDura*planheight-1) < 59){
+        if(Number(planDura*planheight-1) < 29){
             hideornot = 'hideelement';
+            var groupstatus=""
+        }else if(Number(planDura*planheight-1) < 47){
+            hideornot = 'inlineelement';
+            var groupstatus=""
         }else{
             hideornot = 'inlineelement';
+            var groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'
         }
 
+        var planLocation = Number(planArray[4])*size;
+        if(timeoffset >=30){
+            planLocation = Number(planArray[4])*size-30*size
+        }
+        var planHeight = Number(planDura*planheight-1);
 
+        //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
+        
+        //if(planStartDiv.length>0){
+          //  var timLocation = planStartDiv.offset().top + planLocation;
+            //var calBottomLoc = $('.swiper-slide-active').offset().top + $('.swiper-slide-active').height();
+            //if(timLocation + planHeight > calBottomLoc){
+              //  var planHeight = calBottomLoc - timLocation;
+            //}
+        //}
+        //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
 
+        var thisPlanDate = planYear+'_'+planMonth+'_'+planDate+'_'+Options.workStartTime+'_00';
         if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
-            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i], 'data-memo' : planNoteArray[i],
-                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px'})
-                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+            
+            var planhtml = '<div class-time="'+planArray.join('_')+
+                                       '" class-schedule-id="'+planScheduleIdArray[i]+
+                                       '" data-starttime="'+planStartDate[i]+
+                                       '" data-groupid="'+planGroupid[i]+
+                                       '" data-membernum="'+planMemberNum[i]+
+                                       '" data-memo="'+planNoteArray[i]+
+                                       '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                       '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                       '" data-dbid="'+planMemberDbid[i]+
+                                       '" data-memberName="'+memberName+
+                                       '" class="'+planColor_+
+                                       '" style="height:'+planHeight+'px;'+
+                                                 'top:'+planLocation+'px;'+
+                                       '">'+
+                                            '<span class="memberName '+hideornot+'">'+
+                                                '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                            ' </span>'+
+                                            '<span class="memberTime '+hideornot+'">'+ 
+                                                '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+
+                            '</div>'
+            date_sorted[thisPlanDate].push(planhtml)
+
         }else if(option == 'group'){
-            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
-                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px'})
-                .html('<span class="memberName">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+'<span class="groupnumstatus '+textcolor+' '+hideornot+'">('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+            
+            var planhtml = '<div group-time="'+planArray.join('_')+
+                                       '" group-schedule-id="'+planScheduleIdArray[i]+
+                                       '" data-starttime="'+planStartDate[i]+
+                                       '" data-groupid="'+planGroupid[i]+
+                                       '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
+                                       '" data-membernum="'+planMemberNum[i]+
+                                       '" data-memo="'+planNoteArray[i]+
+                                       '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                       '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                       '" data-dbid="'+planMemberDbid[i]+
+                                       '" data-memberName="'+memberName+
+                                       '" data-group-type-cd-name="'+planGroupClassName[i]+
+                                       '" class="'+planColor_+
+                                       '" style="height:'+planHeight+'px;'+
+                                                 'top:'+planLocation+'px;'+
+                                       '">'+
+                                            '<span class="memberName '+hideornot+'">'+
+                                                    '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                                    groupstatus+
+                                            '</span>'+
+                                            '<span class="memberTime '+hideornot+'">'+ 
+                                                    '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+
+                            '</div>'
+            date_sorted[thisPlanDate].push(planhtml)
         }else if(option == 'off'){
-            tdPlanStart.attr(option + '-time' , planArray.join('_')) //planArray 2018_5_25_10_00_1_스노우_11_00
-                .attr(option+'-schedule-id' , planScheduleIdArray[i])
-                .attr({'data-starttime':planStartDate[i], 'data-groupid':planGroupid[i],'data-membernum':planMemberNum[i],'data-memo' : planNoteArray[i],
-                    'data-schedule-check' : planScheduleFinishArray[i], 'data-lectureId' : jsondata.classArray_lecture_id[i], 'data-dbid' : planMemberDbid[i], 'data-memberName' : memberName, })
-                .addClass(planColor_)
-                .css({'height':Number(planDura*planheight-1)+'px'})
-                .html('<span class="memberName">'+planCode+memberName+' </span>'+'<span class="memberTime">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>');
+            
+            var planhtml = '<div off-time="'+planArray.join('_')+
+                                       '" off-schedule-id="'+planScheduleIdArray[i]+
+                                       '" data-starttime="'+planStartDate[i]+
+                                       '" data-groupid="'+planGroupid[i]+
+                                       '" data-membernum="'+planMemberNum[i]+
+                                       '" data-memo="'+planNoteArray[i]+
+                                       '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                       '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                       '" data-dbid="'+planMemberDbid[i]+
+                                       '" data-memberName="'+memberName+
+                                       '" class="'+planColor_+
+                                       '" style="height:'+planHeight+'px;'+
+                                                 'top:'+planLocation+'px;'+
+                                       '">'+
+                                            '<span class="memberName '+hideornot+'">'+
+                                                '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                            ' </span>'+
+                                            '<span class="memberTime '+hideornot+'">'+ 
+                                                '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                            '</span>'+
+                            '</div>'
+            date_sorted[thisPlanDate].push(planhtml)
+        }
+
+        for(date in date_sorted){
+            $('#'+date).append(date_sorted[date].join(''))
         }
 
 
-        var hhh = Number(planHour);
-        var mmm = planMinute;
-
-        for(var j=0; j<planDura/0.5; j++){
-            if(mmm == 60){
-                hhh = hhh + 1;
-                mmm = '00';
+        // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
+        
+            var sMinute;
+            var eMinute;
+            if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
+                sMinute = '30';
+                eMinute = planEndMin;
+            }else if(planMinute < 30 && planEndMin >= 30){ // 7:15 ~ 8:40
+                sMinute = '00';
+                eMinute =  planEndMin;
+            }else if(planMinute >= 30 && planEndMin < 30 && planEndMin > 0){ // 7:40 ~ 8:15
+                sMinute = '30'
+                eMinute = '01';
+            }else if(planMinute >= 30 && planEndMin < 30 && planEndMin == 0){ // 7:40 ~ 8:15
+                sMinute = '30'
+                eMinute = '00';
+            }else if(planMinute < 30 && planEndMin < 30 && planEndMin > 0){ // 7:15 ~ 8:15
+                sMinute = '00'
+                eMinute = '01'
+            }else if(planMinute < 30 && planEndMin < 30 && planEndMin == 0){ // 7:15 ~ 8:15
+                sMinute = '00'
+                eMinute = '00'
             }
-            $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
-            mmm = Number(mmm) + 30;
-        }
 
+            var zz = 0;
+            var lenn = 0;
+            while(add_time(planHour+':'+sMinute, '00:'+zz) != add_time(planEndHour+':'+eMinute, '00:00')){
+                console.log( add_time(planHour+':'+sMinute, '00:'+zz) , add_time(planEndHour+':'+eMinute, '00:00') )
+                if(add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '30' || add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '00'){
+                    lenn++
+                }
+                console.log('zz',zz)
+                if(zz > 1440){
+                    alert('while에러')
+                    break;
+                }
+                zz++
+            }
+            
+
+            var hhh = Number(planHour);
+            var mmm;
+            if(planMinute < 30){
+                mmm = '00'
+            }else{
+                mmm = '30'
+            }
+
+            for(var j=0; j<lenn; j++){
+                if(mmm == 60){
+                    hhh = hhh+1;
+                    mmm = '00';
+                }
+                $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
+                mmm = Number(mmm) + 30;
+            }
+
+        // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
-}*/
+}
+*/
+
 
 function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     var plan = '';
@@ -1906,10 +2096,6 @@ function ajaxClassTime(use, callfunction){
 
         success:function(data){
             var jsondata = JSON.parse(data);
-            // var jsondata = data;
-            // console.log(jsondata)
-            // console.log(getTimeStamp());
-            //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -1965,9 +2151,11 @@ function set_schedule_time(jsondata){
     $('._on').removeClass('_on');
     initialJSON = jsondata;
     if(bodywidth > 600){
+        
         scheduleTime('class', jsondata, calendarSize);
         scheduleTime('off', jsondata, calendarSize);
         scheduleTime('group', jsondata, calendarSize);
+        
         fake_show();
     }else if(bodywidth <= 600){
         scheduleTime_Mobile('class', jsondata, calendarSize);
