@@ -185,6 +185,7 @@ $(document).ready(function(){
                                                     '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_bottom">'
                                                  )
             }
+            $('.scroll_arrow_top, .scroll_arrow_bottom').css('visibility','visible');
             if($('.popup_inner_month').scrollTop() < 30 ){
                 $('.scroll_arrow_top').css('visibility','hidden');
             };
