@@ -14,16 +14,21 @@ from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.shortcuts import redirect, render
-
-# Create your views here.
 from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.core.files.base import ContentFile
 
+# Create your views here.
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
+
 from login.models import LogTb, MemberTb
+from trainer.models import GroupLectureTb, GroupTb, ClassTb
+from trainee.models import LectureTb, MemberLectureTb
+from .models import ScheduleTb, RepeatScheduleTb
+
 from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lecture_count, func_date_check, \
     func_update_member_schedule_alarm, func_save_log_data, func_check_group_schedule_enable, \
     func_get_available_group_member_list, func_get_group_lecture_id, \
@@ -31,11 +36,6 @@ from .functions import func_get_lecture_id, func_add_schedule, func_refresh_lect
     func_send_push_trainer, func_get_not_available_group_member_list, func_send_push_trainee, func_delete_schedule, \
     func_delete_repeat_schedule, func_update_repeat_schedule, func_get_repeat_schedule_date_list, \
     func_add_repeat_schedule, func_refresh_group_status
-from .models import ScheduleTb, RepeatScheduleTb
-from trainer.models import GroupLectureTb, GroupTb, ClassTb
-from trainee.models import LectureTb, MemberLectureTb
-
-from django.core.files.base import ContentFile
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ def add_schedule_logic(request):
     schedule_time = request.POST.get('training_time')
     schedule_end_date = request.POST.get('training_end_date')
     schedule_end_time = request.POST.get('training_end_time')
-    schedule_time_duration = request.POST.get('time_duration', '')
+    # schedule_time_duration = request.POST.get('time_duration', '')
     en_dis_type = request.POST.get('en_dis_type')
     note = request.POST.get('add_memo', '')
     class_id = request.session.get('class_id', '')
@@ -73,9 +73,7 @@ def add_schedule_logic(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    class_info = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-
     if en_dis_type == ON_SCHEDULE_TYPE:
         if member_id == '':
             error = '회원을 선택해 주세요.'
@@ -91,13 +89,6 @@ def add_schedule_logic(request):
 
     if note is None:
         note = ''
-
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사 정보 가져오기

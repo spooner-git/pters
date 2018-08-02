@@ -47,18 +47,6 @@ class LectureTb(TimeStampedModel):
 
         return authorized_check
 
-    def get_str_start_date(self):
-        return str(self.start_date)
-
-    def get_str_end_date(self):
-        return str(self.end_date)
-
-    def get_str_reg_dt(self):
-        return str(self.reg_dt)
-
-    def get_str_mod_dt(self):
-        return str(self.mod_dt)
-
     def get_state_cd_name(self):
         try:
             state_cd_name = CommonCdTb.objects.get(common_cd=self.state_cd).common_cd_nm

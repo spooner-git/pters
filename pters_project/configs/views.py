@@ -1,13 +1,13 @@
 import logging
 
 from django.contrib.auth.models import User
-
-# Create your views here.
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
+
+# Create your views here.
 
 logger = logging.getLogger(__name__)
 
