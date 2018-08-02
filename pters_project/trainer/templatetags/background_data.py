@@ -10,7 +10,7 @@ from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb
-from trainer.function import func_get_trainer_setting_list
+from trainer.functions import func_get_trainer_setting_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)

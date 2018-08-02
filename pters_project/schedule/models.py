@@ -39,12 +39,6 @@ class RepeatScheduleTb(TimeStampedModel):
     def __str__(self):
         return self.class_tb.__str__()
 
-    def get_str_start_date(self):
-        return str(self.start_date)
-
-    def get_str_end_date(self):
-        return str(self.end_date)
-
     def get_group_type_cd_name(self):
 
         if self.group_tb_id is not None and self.group_tb_id != '':
@@ -98,24 +92,13 @@ class ScheduleTb(TimeStampedModel):
         managed = False
         db_table = 'SCHEDULE_TB'
 
-    def get_str_start_dt(self):
-        return str(self.start_dt)
-
-    def get_str_end_dt(self):
-        return str(self.end_dt)
-
-    def get_str_mod_dt(self):
-        return str(self.mod_dt)
-
-    def get_str_reg_dt(self):
-        return str(self.reg_dt)
-
     def finish_check(self):
         if self.state_cd == 'PE':
             return SCHEDULE_FINISH
         else:
             return SCHEDULE_NOT_FINISH
 
+    @property
     def get_group_current_member_num(self):
         if self.group_tb_id is not None and self.group_tb_id != '':
             group_current_member_num = ScheduleTb.objects.filter(class_tb_id=self.class_tb_id,
@@ -126,6 +109,7 @@ class ScheduleTb(TimeStampedModel):
 
         return group_current_member_num
 
+    @property
     def get_group_type_cd_name(self):
 
         if self.group_tb_id is not None and self.group_tb_id != '':

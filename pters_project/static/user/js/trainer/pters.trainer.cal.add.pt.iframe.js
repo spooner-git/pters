@@ -1684,7 +1684,7 @@ function ajaxTimeGraphSet(date, use, callback){
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule')
     $.ajax({
         url: '/trainer/get_trainer_schedule/',
-        type : 'POST',
+        type : 'GET',
         data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',
 

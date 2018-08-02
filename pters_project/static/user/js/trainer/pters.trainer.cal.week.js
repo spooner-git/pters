@@ -1894,17 +1894,26 @@ function ajaxClassTime(use, callfunction){
     //=var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
     $.ajax({
         url: '/trainer/get_trainer_schedule/',
-        type : 'POST',
+        type : 'GET',
         data : {"date":today_form, "day":18},
         dataType : 'html',
+        // dataType : 'json',
 
         beforeSend:function(){
             beforeSend_();
+            // console.log(getTimeStamp());
             $('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','');
         },
 
         success:function(data){
+            // console.log(data)
             var jsondata = JSON.parse(data);
+<<<<<<< HEAD
+=======
+            // var jsondata = data;
+            // console.log(jsondata)
+            // console.log(getTimeStamp());
+>>>>>>> 43b8668252d8d5e04fc6ebd646300709db4aa67a
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
@@ -1919,6 +1928,7 @@ function ajaxClassTime(use, callfunction){
             $('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)');
             $('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)');
 
+            // console.log(getTimeStamp());
         },
 
         complete:function(){
@@ -1930,6 +1940,31 @@ function ajaxClassTime(use, callfunction){
         }
     })
 }
+// function getTimeStamp() {
+//   var d = new Date();
+//   var s =
+//     leadingZeros(d.getFullYear(), 4) + '-' +
+//     leadingZeros(d.getMonth() + 1, 2) + '-' +
+//     leadingZeros(d.getDate(), 2) + ' ' +
+//
+//     leadingZeros(d.getHours(), 2) + ':' +
+//     leadingZeros(d.getMinutes(), 2) + ':' +
+//     leadingZeros(d.getSeconds(), 2);
+//
+//   return s;
+// }
+//
+// function leadingZeros(n, digits) {
+//   var zero = '';
+//   n = n.toString();
+//
+//   if (n.length < digits) {
+//     for (i = 0; i < digits - n.length; i++)
+//       zero += '0';
+//   }
+//   return zero + n;
+// }
+
 
 function set_schedule_time(jsondata){
     $('.classTime, .offTime, .groupTime').parent().html('<div></div>');

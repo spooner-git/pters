@@ -1,9 +1,11 @@
+import datetime
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.utils import timezone
-import datetime
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE
+
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb
