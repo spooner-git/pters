@@ -12,12 +12,6 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
     lastDay[1] = 28;
 }
 
-console.log('일 더하기 계산 : ', add_date('2017-7-3', 368))
-console.log('일 뺴기 계산 : ', substract_date('2018-7-5', -45))
-console.log('날짜 차이 계산 : ', diff_date('2017-12-5', '2018-7-5'))
-
-console.log('달 더하기 계산', add_month('2018-7-31', 10))
-console.log('달 빼기 계산', substract_month('2018-7-31',-17))
 
 
 //날짜 더하기 계산 : 2018-7-5에서 10일 후는 언제?
@@ -254,13 +248,24 @@ function substract_time(starttime, subvalue){
 	return resultHour + ":" + resultMin;
 }
 
-console.log(add_time('24:00','00:60'))
+function diff_time(starttime, endtime){
+	var starttimeSplit = starttime.split(':');
+	var endtimeSplit = endtime.split(':');
+	var sHour = Number(starttimeSplit[0]);
+	var sMin = Number(starttimeSplit[1]);
+	var eHour = Number(endtimeSplit[0]);
+	var eMin = Number(endtimeSplit[1]);
+
+	return (eHour - sHour)*60 + (eMin - sMin);
+}
 
 function add_time(starttime, addvalue){
-	var shour = Number(starttime.split(':')[0]);
-	var smin = Number(starttime.split(':')[1]);
-	var addhour = Number(addvalue.split(':')[0]);
-	var addmin = Number(addvalue.split(':')[1]);
+	var starttimeSplit = starttime.split(':');
+	var addvalueSplit = addvalue.split(':');
+	var shour = Number(starttimeSplit[0]);
+	var smin = Number(starttimeSplit[1]);
+	var addhour = Number(addvalueSplit[0]);
+	var addmin = Number(addvalueSplit[1]);
 
 	if(smin + addmin >= 60){
 		if(shour + addhour >= 24){  // 23 + 4 --> 3

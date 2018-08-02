@@ -1428,36 +1428,15 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
 
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
-        /*
-            var sMinute;
-            var eMinute;
-            if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
-                sMinute = '30';
-                eMinute = planEndMin;
-            }else if(planMinute < 30 && planEndMin >= 30){ // 7:15 ~ 8:40
-                sMinute = '00';
-                eMinute =  planEndMin;
-            }else if(planMinute >= 30 && planEndMin < 30 && planEndMin > 0){ // 7:40 ~ 8:15
-                sMinute = '30'
-                eMinute = '01';
-            }else if(planMinute >= 30 && planEndMin < 30 && planEndMin == 0){ // 7:40 ~ 8:15
-                sMinute = '30'
-                eMinute = '00';
-            }else if(planMinute < 30 && planEndMin < 30 && planEndMin > 0){ // 7:15 ~ 8:15
-                sMinute = '00'
-                eMinute = '01'
-            }else if(planMinute < 30 && planEndMin < 30 && planEndMin == 0){ // 7:15 ~ 8:15
-                sMinute = '00'
-                eMinute = '00'
-            }
+            
+            var diffHour = planEndHour - planHour;  // 13:30 - 11:00  = 2/30    13:00 - 11:30 = 1/30
+            var diffMin = planEndMin - planMinute;
 
-            var zz = 0;
-            var lenn = 0;
-            while(add_time(planHour+':'+sMinute, '00:'+zz) != add_time(planEndHour+':'+eMinute, '00:00')){
-                if(add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '30' || add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '00'){
-                    lenn++
-                }
-                zz++
+            var diff = diff_time(planHour+':'+planMinute, planEndHour+':'+planEndMin) 
+            var lenn = Math.round(diff/30);
+            
+            if(Number(planEndMin) !=0 && Number(planEndMin)%30 ){
+                lenn = lenn +1;
             }
             
 
@@ -1477,10 +1456,14 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                 $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
                 mmm = Number(mmm) + 30;
             }
-            */
+        
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
 }
+$(document).on('click','._on',function(){
+    alert('5분단위 상세 시간 설정은 우측 레슨 일정 등록에서')
+})
+
 
 
 
@@ -1770,6 +1753,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
 
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
+        
             var sMinute;
             var eMinute;
             if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
@@ -1795,8 +1779,14 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             var zz = 0;
             var lenn = 0;
             while(add_time(planHour+':'+sMinute, '00:'+zz) != add_time(planEndHour+':'+eMinute, '00:00')){
+                console.log( add_time(planHour+':'+sMinute, '00:'+zz) , add_time(planEndHour+':'+eMinute, '00:00') )
                 if(add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '30' || add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '00'){
                     lenn++
+                }
+                console.log('zz',zz)
+                if(zz > 1440){
+                    alert('while에러')
+                    break;
                 }
                 zz++
             }
@@ -1818,10 +1808,12 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                 $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
                 mmm = Number(mmm) + 30;
             }
+
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
 }
 */
+
 
 function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     var plan = '';
