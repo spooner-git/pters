@@ -5,6 +5,12 @@ html,body{
     background: #f7f7f7;
 }
 
+input{
+    -webkit-appearance:none;
+    -webkit-border-radius:0;
+    -webkit-text-fill-color:#282828;
+}
+
 /*플로트 버튼*/
 #float_btn_wrap{
     position: fixed;
