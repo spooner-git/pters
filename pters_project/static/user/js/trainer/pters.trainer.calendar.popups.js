@@ -18,6 +18,8 @@
         e.preventDefault();
         var thisWidth = $(this).width();
         var thisHeight = $(this).height();
+        var thisTop = $(this).offset().top;
+        var cssthisTop = Number($(this).css('top').replace(/px/gi,""))
         var thisZindex = $(this).css('z-index');
 
         var hoverHeight;
@@ -28,8 +30,17 @@
             var hoverHeight = thisHeight + 2;
         }
 
-        $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0});
-    
+        var hoveredBottomLoc = thisTop + hoverHeight;
+        var calbottom = $('.timeindex .hour:last-child').offset().top + $('.timeindex .hour:last-child').height();
+
+        var small_plan = 0;
+        if(calbottom - thisTop < 25 ){
+            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0, 'top': cssthisTop + calbottom - hoveredBottomLoc });
+            small_plan = 1;
+        }else{
+            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0});
+        }
+
         var $memberName = $(this).find('.memberName');
         var $memberTime = $(this).find('.memberTime');
         if($memberName.hasClass('hideelement')){
@@ -40,7 +51,14 @@
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             if(bodywidth > 600){
-                $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+                if(small_plan == 1){
+                    console.log('small_plan',small_plan)
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1, 'top':cssthisTop});
+                    small_plan = 0;
+                }else{
+                    console.log('small_plan',small_plan)
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+                }
            }else{
                 $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
            }

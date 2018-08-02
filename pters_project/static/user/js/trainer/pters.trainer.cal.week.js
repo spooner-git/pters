@@ -1154,7 +1154,6 @@ function fake_show(){
 }
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-    console.log('scheduleTime',option)
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
     $('.blankSelected').removeClass('blankSelected');
@@ -1250,6 +1249,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             memberName  = planMemberName[i];
         }
 
+
+
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
         if(planEndDate[i].split(' ')[1] == "00:00:00"){
             var planEndHour = '24'
@@ -1278,6 +1279,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }
 
 
+
         var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
         //var planStartArr = [planYear, planMonth, planDate, planHour, planMinute];
         var timeoffset = '00';
@@ -1287,6 +1289,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var planStartArr = [planYear, planMonth, planDate, planHour, timeoffset];
         var planStart = planStartArr.join("_");
         var planStartDiv = $("#"+planStart);
+
+        //var planStartDiv = $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+Options.workStartTime+'_00') //2018_8_5_0_00
+
         var tdPlanStart = $("#"+planStart+" div");
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
@@ -1328,13 +1333,14 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var planHeight = Number(planDura*planheight-1);
 
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
+        /*
         if(planStartDiv.length>0){
             var timLocation = planStartDiv.offset().top + planLocation;
             var calBottomLoc = $('.swiper-slide-active').offset().top + $('.swiper-slide-active').height();
             if(timLocation + planHeight > calBottomLoc){
                 var planHeight = calBottomLoc - timLocation;
             }
-        }
+        }*/
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
 
 
@@ -1422,54 +1428,54 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
 
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
-        var sMinute;
-        var eMinute;
-        if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
-            sMinute = '30';
-            eMinute = planEndMin;
-        }else if(planMinute < 30 && planEndMin >= 30){ // 7:15 ~ 8:40
-            sMinute = '00';
-            eMinute =  planEndMin;
-        }else if(planMinute >= 30 && planEndMin < 30 && planEndMin > 0){ // 7:40 ~ 8:15
-            sMinute = '30'
-            eMinute = '01';
-        }else if(planMinute >= 30 && planEndMin < 30 && planEndMin == 0){ // 7:40 ~ 8:15
-            sMinute = '30'
-            eMinute = '00';
-        }else if(planMinute < 30 && planEndMin < 30 && planEndMin > 0){ // 7:15 ~ 8:15
-            sMinute = '00'
-            eMinute = '01'
-        }else if(planMinute < 30 && planEndMin < 30 && planEndMin == 0){ // 7:15 ~ 8:15
-            sMinute = '00'
-            eMinute = '00'
-        }
-
-        var zz = 0;
-        var lenn = 0;
-        while(add_time(planHour+':'+sMinute, '00:'+zz) != add_time(planEndHour+':'+eMinute, '00:00')){
-            if(add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '30' || add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '00'){
-                lenn++
+            var sMinute;
+            var eMinute;
+            if(planMinute >= 30 && planEndMin >= 30){ // 7:40 ~ 8:40
+                sMinute = '30';
+                eMinute = planEndMin;
+            }else if(planMinute < 30 && planEndMin >= 30){ // 7:15 ~ 8:40
+                sMinute = '00';
+                eMinute =  planEndMin;
+            }else if(planMinute >= 30 && planEndMin < 30 && planEndMin > 0){ // 7:40 ~ 8:15
+                sMinute = '30'
+                eMinute = '01';
+            }else if(planMinute >= 30 && planEndMin < 30 && planEndMin == 0){ // 7:40 ~ 8:15
+                sMinute = '30'
+                eMinute = '00';
+            }else if(planMinute < 30 && planEndMin < 30 && planEndMin > 0){ // 7:15 ~ 8:15
+                sMinute = '00'
+                eMinute = '01'
+            }else if(planMinute < 30 && planEndMin < 30 && planEndMin == 0){ // 7:15 ~ 8:15
+                sMinute = '00'
+                eMinute = '00'
             }
-            zz++
-        }
-        
 
-        var hhh = Number(planHour);
-        var mmm;
-        if(planMinute < 30){
-            mmm = '00'
-        }else{
-            mmm = '30'
-        }
-
-        for(var j=0; j<lenn; j++){
-            if(mmm == 60){
-                hhh = hhh+1;
-                mmm = '00';
+            var zz = 0;
+            var lenn = 0;
+            while(add_time(planHour+':'+sMinute, '00:'+zz) != add_time(planEndHour+':'+eMinute, '00:00')){
+                if(add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '30' || add_time(planHour+':'+sMinute, '00:'+zz).split(':')[1] == '00'){
+                    lenn++
+                }
+                zz++
             }
-            $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
-            mmm = Number(mmm) + 30;
-        }
+            
+
+            var hhh = Number(planHour);
+            var mmm;
+            if(planMinute < 30){
+                mmm = '00'
+            }else{
+                mmm = '30'
+            }
+
+            for(var j=0; j<lenn; j++){
+                if(mmm == 60){
+                    hhh = hhh+1;
+                    mmm = '00';
+                }
+                $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
+                mmm = Number(mmm) + 30;
+            }
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
 }
