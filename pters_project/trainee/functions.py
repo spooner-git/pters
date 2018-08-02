@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE
@@ -28,13 +29,16 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
     if start_date is None and end_date is None:
         all_schedule_check = 1
 
-    lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_tb__member_id=user_id,
-                                                 use=USE).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+    lecture_list = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
+                                                                              lecture_tb__member_id=user_id,
+                                                                              use=USE
+                                                                              ).order_by('-lecture_tb__start_date',
+                                                                                         '-lecture_tb__reg_dt')
     for lecture_info in lecture_list:
         try:
-            member_lecture = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
-                                                         lecture_tb_id=lecture_info.lecture_tb_id)
+            member_lecture = MemberLectureTb.objects.select_related('lecture_tb').get(auth_cd='VIEW', member_id=user_id,
+                                                                                      lecture_tb_id
+                                                                                      =lecture_info.lecture_tb_id)
         except ObjectDoesNotExist:
             member_lecture = None
         if member_lecture is not None:
@@ -46,14 +50,18 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         member_lecture_info.save()
         idx -= 1
         if all_schedule_check == 0:
-            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                      lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                      start_dt__gte=start_date,
-                                                      end_dt__lt=end_date).order_by('start_dt')
+            schedule_data = ScheduleTb.objects.select_related('lecture_tb__member'
+                                                              ).filter(class_tb_id=class_id,
+                                                                       en_dis_type=ON_SCHEDULE_TYPE,
+                                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
+                                                                       start_dt__gte=start_date,
+                                                                       end_dt__lt=end_date).order_by('start_dt')
         else:
             schedule_data = \
-                ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                          lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('-start_dt')
+                ScheduleTb.objects.select_related('lecture_tb__member'
+                                                  ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                                           lecture_tb_id=member_lecture_info.lecture_tb_id
+                                                           ).order_by('-start_dt')
 
         idx2 = len(schedule_data)+1
 
@@ -68,49 +76,29 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
 
 def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_date):
-    group_schedule_list = []
     # 내가 속한 그룹 일정 조회
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     group_list = func_get_trainee_group_ing_list(class_id, user_id)
     group_schedule_data = None
 
     for group_info in group_list:
         if group_schedule_data is None:
-            group_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                            group_tb_id=group_info.group_tb.group_id,
-                                                            lecture_tb__isnull=True,
-                                                            en_dis_type=ON_SCHEDULE_TYPE,
-                                                            start_dt__gte=start_date,
-                                                            start_dt__lt=end_date).order_by('start_dt')
+            group_schedule_data = ScheduleTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb_id=group_info.group_tb.group_id,
+                                   lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
+                                   start_dt__gte=start_date,
+                                   start_dt__lt=end_date
+                                   ).annotate(group_current_member_num=RawSQL(query, []),
+                                              group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
         else:
-            group_schedule_data |= ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                             group_tb_id=group_info.group_tb.group_id,
-                                                             lecture_tb__isnull=True,
-                                                             en_dis_type=ON_SCHEDULE_TYPE,
-                                                             start_dt__gte=start_date,
-                                                             start_dt__lt=end_date).order_by('start_dt')
-
-        # for group_schedule_info in group_schedule_data:
-            # lecture schedule id 셋팅
-
-            # group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-            # group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-            #
-            # if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
-            #     schedule_current_member_num = \
-            #         ScheduleTb.objects.filter(class_tb_id=class_id,
-            #                                   group_tb_id=group_schedule_info.group_tb.group_id,
-            #                                   lecture_tb__isnull=False,
-            #                                   group_schedule_id=group_schedule_info.schedule_id).count()
-            #     group_schedule_info.current_member_num = schedule_current_member_num
-            #
-            # if group_schedule_info.note is None:
-            #     group_schedule_info.note = ''
-            # 끝난 스케쥴인지 확인
-            # if group_schedule_info.state_cd == 'PE':
-            #     group_schedule_info.finish_check = 1
-            # else:
-            #     group_schedule_info.finish_check = 0
-            # group_schedule_list.append(group_schedule_info)
+            group_schedule_data |= ScheduleTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb_id=group_info.group_tb.group_id,
+                                   lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
+                                   start_dt__gte=start_date,
+                                   start_dt__lt=end_date
+                                   ).annotate(group_current_member_num=RawSQL(query, []),
+                                              group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
     context['group_schedule_data'] = group_schedule_data
 
     return context
@@ -123,11 +111,6 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=start_date,
                                               end_dt__lt=end_date).order_by('start_dt')
-
-    # for schedule_info in schedule_data:
-    #     schedule_info.start_dt = str(schedule_info.start_dt)
-    #     schedule_info.end_dt = str(schedule_info.end_dt)
-    #     off_schedule_list.append(schedule_info)
 
     context['off_schedule_data'] = schedule_data
 

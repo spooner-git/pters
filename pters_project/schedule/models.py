@@ -98,18 +98,6 @@ class ScheduleTb(TimeStampedModel):
         else:
             return SCHEDULE_NOT_FINISH
 
-    @property
-    def get_group_current_member_num(self):
-        if self.group_tb_id is not None and self.group_tb_id != '':
-            group_current_member_num = ScheduleTb.objects.filter(class_tb_id=self.class_tb_id,
-                                                                 group_tb_id=self.group_tb.group_id,
-                                                                 lecture_tb__isnull=False,
-                                                                 group_schedule_id=self.schedule_id,
-                                                                 use=USE).count()
-
-        return group_current_member_num
-
-    @property
     def get_group_type_cd_name(self):
 
         if self.group_tb_id is not None and self.group_tb_id != '':

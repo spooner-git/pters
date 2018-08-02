@@ -1900,20 +1900,14 @@ function ajaxClassTime(use, callfunction){
         type : 'GET',
         data : {"date":today_form, "day":18},
         dataType : 'html',
-        // dataType : 'json',
 
         beforeSend:function(){
             beforeSend_();
-            // console.log(getTimeStamp());
             $('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','');
         },
 
         success:function(data){
-            // console.log(data)
             var jsondata = JSON.parse(data);
-            // var jsondata = data;
-            // console.log(jsondata)
-            // console.log(getTimeStamp());
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
@@ -1927,8 +1921,6 @@ function ajaxClassTime(use, callfunction){
             $('.ymdText-pc-add div').removeClass('disabled_button');
             $('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)');
             $('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)');
-
-            // console.log(getTimeStamp());
         },
 
         complete:function(){
@@ -1949,7 +1941,8 @@ function ajaxClassTime(use, callfunction){
 //
 //     leadingZeros(d.getHours(), 2) + ':' +
 //     leadingZeros(d.getMinutes(), 2) + ':' +
-//     leadingZeros(d.getSeconds(), 2);
+//     leadingZeros(d.getSeconds(), 2)+ ':' +
+//         d.getMilliseconds();
 //
 //   return s;
 // }
