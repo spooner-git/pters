@@ -186,11 +186,20 @@ $(document).ready(function(){
             myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
             myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
             if(bodywidth > 600){
-                calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기
-                if($('#hidetoggle').attr('data-type') == '1'){
-                    $('.td00, .td30').css({'background':'unset',
-                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
-                                        'background-size':'60px '+$('.td00').height()+'px'})
+                if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                    calTable_Set_Mobile(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기
+                    if($('#hidetoggle').attr('data-type') == '1'){
+                        $('.td00, .td30').css({'background':'unset',
+                                              'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                              'background-size':'60px '+ ($('.hour').height()+1)+'px'})
+                    }
+                }else{
+                    calTable_Set(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기
+                    if($('#hidetoggle').attr('data-type') == '1'){
+                        $('.td00, .td30').css({'background':'unset',
+                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                            'background-size':'60px '+$('.td00').height()+'px'})
+                    }
                 }
             }else if(bodywidth<=600){
                 calTable_Set_Mobile(last+1,lastYY,lastMM,lastDD,7,0); //새로 추가되는 슬라이드에 달력 채우기
@@ -214,12 +223,22 @@ $(document).ready(function(){
             myswiper.removeSlide(4);
             myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
             if(bodywidth > 600){
-                calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
-                if($('#hidetoggle').attr('data-type') == '1'){
-                    $('.td00, .td30').css({'background':'unset',
-                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
-                                        'background-size':'60px '+$('.td00').height()+'px'})
+                if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                    calTable_Set_Mobile(first-1,firstYY,firstMM,firstDD,-7,0);
+                    if($('#hidetoggle').attr('data-type') == '1'){
+                        $('.td00, .td30').css({'background':'unset',
+                                              'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                              'background-size':'60px '+ ($('.hour').height()+1)+'px'})
+                    }
+                }else{
+                    calTable_Set(first-1,firstYY,firstMM,firstDD,-7,0);
+                    if($('#hidetoggle').attr('data-type') == '1'){
+                        $('.td00, .td30').css({'background':'unset',
+                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                            'background-size':'60px '+$('.td00').height()+'px'})
+                    }
                 }
+                
             }else if(bodywidth<=600){
                 calTable_Set_Mobile(first-1,firstYY,firstMM,firstDD,-7,0);
                 if($('#hidetoggle').attr('data-type') == '1'){
@@ -811,8 +830,8 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
     //slideIndex.append(fakeElementForBlankPage);
     //weekNum_Set(Index);
     time_index_set(calendarSize);
-    $('div.timeindex').css('height','auto')
-    $('.swiper-slide').css('height',$('div.timeindex').height())
+    $('div.timeindex').css('height','auto');
+    $('.swiper-slide').css('height',$('div.timeindex').height());
 } //calTable_Set
 
 function time_index_set(size){
@@ -1101,11 +1120,18 @@ function toDay(){
             dd = '0'+dd;
         }
         if(scan == yy+mm+dd){
-            $('#weekNum_'+i).addClass('todaywide');
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+            }else{
+                $('#weekNum_'+i).addClass('todaywide');
+            }
             $('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY');
             $('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number');
+            
         }else{
-            $('#weekNum_'+i).removeClass('todaywide');
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+            }else{
+                $('#weekNum_'+i).removeClass('todaywide');
+            }
             $('#weekNum_'+i+' span:nth-child(1)').removeClass('today').html('');
             $('#weekNum_'+i+' span:nth-child(3)').removeClass('today-Number');
         }
