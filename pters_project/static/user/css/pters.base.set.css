@@ -9,6 +9,7 @@ input{
     -webkit-appearance:none;
     -webkit-border-radius:0;
     -webkit-text-fill-color:#282828;
+    -webkit-opacity:1;
 }
 
 /*플로트 버튼*/
