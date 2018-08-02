@@ -9,6 +9,7 @@ from django.db.models import F
 from django.db.models import Q
 from django.db.models import Value
 from django.db.models import When, Sum
+from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
 from configs import settings
@@ -667,16 +668,20 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
 
 
 def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(class_tb=class_id,
                                                                                lecture_tb__isnull=True,
                                                                                en_dis_type=ON_SCHEDULE_TYPE,
                                                                                start_dt__gte=start_date,
                                                                                start_dt__lt=end_date, use=USE)
     if group_id is None or group_id == '':
-        group_schedule_data = group_schedule_data.filter(group_tb__isnull=False).order_by('start_dt')
+        group_schedule_data = group_schedule_data.filter(
+            group_tb__isnull=False).annotate(group_current_member_num=RawSQL(query, []), group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     else:
-        group_schedule_data = group_schedule_data.filter(group_tb_id=group_id).order_by('start_dt')
+        group_schedule_data = group_schedule_data.filter(
+            group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []), group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     context['group_schedule_data'] = group_schedule_data
 

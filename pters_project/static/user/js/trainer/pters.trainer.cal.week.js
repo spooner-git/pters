@@ -1973,7 +1973,6 @@ function ajaxClassTime(use, callfunction){
         type : 'GET',
         data : {"date":today_form, "day":18},
         dataType : 'html',
-        // dataType : 'json',
 
         beforeSend:function(){
             beforeSend_();
@@ -1982,9 +1981,7 @@ function ajaxClassTime(use, callfunction){
         },
 
         success:function(data){
-
             var jsondata = JSON.parse(data);
-
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -1997,8 +1994,6 @@ function ajaxClassTime(use, callfunction){
             $('.ymdText-pc-add div').removeClass('disabled_button');
             $('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)');
             $('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)');
-
-            // console.log(getTimeStamp());
         },
 
         complete:function(){
@@ -2019,7 +2014,8 @@ function ajaxClassTime(use, callfunction){
 //
 //     leadingZeros(d.getHours(), 2) + ':' +
 //     leadingZeros(d.getMinutes(), 2) + ':' +
-//     leadingZeros(d.getSeconds(), 2);
+//     leadingZeros(d.getSeconds(), 2)+ ':' +
+//         d.getMilliseconds();
 //
 //   return s;
 // }
