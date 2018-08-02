@@ -681,7 +681,7 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                 }else if(currentDates+z<=0 && Month==1){
                     td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z>lastDay[monthdata]){
-                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00'+td_style+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
                     td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+z+'>'+'<div></div>'+'</div>';
                 }else if(currentDates+z<=0){
@@ -1027,6 +1027,9 @@ function weekNum_Set_fixed(){
     var WeekArry = [sunday,monday,tuesday,wednesday,thursday,friday,saturday];
     var WeekArryTarget = [Sunday_date,Monday_date,Tuesday_date,Wednesday_date,Thursday_date,Friday_date,Saturday_date];
     var WeekNum = [weekNum_1,weekNum_2,weekNum_3,weekNum_4,weekNum_5,weekNum_6,weekNum_7];
+
+    $('.holidayName').text('');
+    $('.holiday').removeClass('holiday')
 
     for(i=0; i<7;i++){
         var text1 = '일';
