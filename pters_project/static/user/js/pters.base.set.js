@@ -1139,7 +1139,7 @@ set_drag_drop_action_to_DOM('#cal_popup_plancheck');
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 function set_drag_drop_action_to_DOM(targetSelector){
-    if(bodywidth > 600 && (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null ) ){
+    if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
         $(targetSelector).mousedown(function(event){
             $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
 
