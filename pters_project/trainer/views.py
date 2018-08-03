@@ -1642,7 +1642,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
         context = {}
         # context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
-        member_id = request.POST.get('member_id', '')
+        member_id = request.GET.get('member_id', '')
         context['error'] = None
 
         context = func_get_lecture_list(context, class_id, member_id)
@@ -1656,6 +1656,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
 
     def post(self, request):
         context = {}
+        start_dt = timezone.now()
         # context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
@@ -1666,7 +1667,8 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + context['error'])
             messages.error(request, context['error'])
-
+        end_dt = timezone.now()
+        print(str(end_dt-start_dt))
         return render(request, self.template_name, context)
 
 

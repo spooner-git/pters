@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from payment.models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb
 
 
 @admin.register(PaymentInfoTb)

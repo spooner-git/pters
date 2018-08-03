@@ -777,18 +777,36 @@ def func_get_lecture_list(context, class_id, member_id):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=USE,
-                                                     auth_cd='VIEW').order_by('-lecture_tb__start_date',
-                                                                              '-lecture_tb__reg_dt')
+
+        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+        #                       " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
+        #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+        query_schedule_count = "select count(*) from SCHEDULE_TB as B where B.CLASS_TB_ID =" \
+                               "`CLASS_LECTURE_TB`.`CLASS_TB_ID` and B.LECTURE_TB_ID =" \
+                               "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.STATE_CD=\'PE\' and " \
+                               "B.USE=1"
+
+        lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                 lecture_tb__member_id=member_id,
+                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
+                                                                        lecture_finish_count
+                                                                        =RawSQL(query_schedule_count, [])
+                                                                        ).order_by('-lecture_tb__start_date',
+                                                                                   '-lecture_tb__reg_dt')
+        # lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
+        #                                                                           lecture_tb__member_id=member_id,
+        #                                                                           lecture_tb__use=USE,
+        #                                                                           auth_cd='VIEW'
+        #                                                                           ).order_by('-lecture_tb__start_date',
+        #                                                                                      '-lecture_tb__reg_dt')
 
         for lecture_info_data in lecture_data:
             lecture_info = lecture_info_data.lecture_tb
-            # lecture_info.start_date = str(lecture_info.start_date)
-            # lecture_info.end_date = str(lecture_info.end_date)
-            # lecture_info.mod_dt = str(lecture_info.mod_dt)
-            # lecture_info.reg_dt = str(lecture_info.reg_dt)
-
             lecture_info.group_name = '1:1 레슨'
             lecture_info.group_type_cd = ''
             lecture_info.group_member_num = ''
@@ -799,15 +817,16 @@ def func_get_lecture_list(context, class_id, member_id):
             # group_info = None
             lecture_test = None
 
-            lecture_info.lecture_finish_count = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                          lecture_tb_id=lecture_info.lecture_id,
-                                                                          state_cd='PE').count()
+            # lecture_info.lecture_finish_count = ScheduleTb.objects.filter(class_tb_id=class_id,
+            #                                                               lecture_tb_id=lecture_info.lecture_id,
+            #                                                               state_cd='PE').count()
 
-            # try:
-            #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-            # except ObjectDoesNotExist:
-            #     group_check = 1
-            group_check = lecture_info_data.get_group_lecture_check()
+            if lecture_info_data.group_check == 'NORMAL':
+                group_check = 1
+            elif lecture_info_data.group_check == 'EMPTY':
+                group_check = 2
+            else:
+                group_check = 0
             group_info = lecture_info_data.get_group_lecture_info()
             if group_check != 0:
                 if group_check == 1:

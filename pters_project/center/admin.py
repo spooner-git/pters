@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from center.models import CenterTb, CenterTrainerTb, CompanyTb
+from .models import CenterTb, CenterTrainerTb, CompanyTb
 
 
 @admin.register(CenterTb)

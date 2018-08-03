@@ -112,7 +112,8 @@ class ClassLectureTb(TimeStampedModel):
     def get_group_lecture_info(self):
 
         try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=self.lecture_tb_id, lecture_tb__use=USE, use=USE)
+            group_info = GroupLectureTb.objects.select_related('group_tb').get(lecture_tb_id=self.lecture_tb_id,
+                                                                               lecture_tb__use=USE, use=USE)
         except ObjectDoesNotExist:
             group_info = None
         return group_info

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from payment import views
+from . import views
 
 urlpatterns = [
     url(r'^$', views.PaymentView.as_view(), name='index'),

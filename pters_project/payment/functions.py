@@ -8,7 +8,7 @@ from django.db import transaction
 
 from configs.const import USE, UN_USE
 
-from payment.models import PaymentInfoTb, ProductPriceTb, BillingInfoTb
+from .models import PaymentInfoTb, ProductPriceTb, BillingInfoTb
 
 logger = logging.getLogger(__name__)
 

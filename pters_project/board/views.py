@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from configs.const import USE
 
-from board.models import QATb
+from .models import QATb
 
 logger = logging.getLogger(__name__)
 
