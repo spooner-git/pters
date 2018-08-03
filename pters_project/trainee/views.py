@@ -133,7 +133,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     try:
                         class_info = ClassTb.objects.get(class_id=class_id_comp)
                     except ObjectDoesNotExist:
-                        error = '강좌 정보를 불러오지 못했습니다.'
+                        error = '수강 정보를 불러오지 못했습니다.'
                     if error is None:
                         request.session['class_hour'] = class_info.class_hour
                         request.session['class_type_code'] = class_info.subject_cd
@@ -194,7 +194,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '수강 정보를 불러오지 못했습니다.'
 
         today = datetime.date.today()
         start_date = today - datetime.timedelta(days=46)
@@ -237,7 +237,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '수강 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -308,7 +308,7 @@ def add_trainee_schedule_logic(request):
     lt_res_member_time_duration = 1
 
     if class_id is None or class_id == '':
-        error = '강좌 정보를 불러오지 못했습니다.'
+        error = '수강 정보를 불러오지 못했습니다.'
     if training_date == '':
         error = '날짜를 선택해 주세요.'
     # elif time_duration == '':
@@ -320,7 +320,7 @@ def add_trainee_schedule_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '수강 정보를 불러오지 못했습니다.'
     if error is None:
         try:
             setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
@@ -338,12 +338,12 @@ def add_trainee_schedule_logic(request):
             try:
                 schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
             except ObjectDoesNotExist:
-                error = '그룹 스케쥴 정보를 불러오지 못했습니다.'
+                error = '스케쥴 정보를 불러오지 못했습니다.'
             if error is None:
                 start_date = schedule_info.start_dt
                 end_date = schedule_info.end_dt
                 if schedule_info.state_cd == 'PE':
-                    error = '이미 완료된 그룹 일정입니다.'
+                    error = '이미 완료된 일정입니다.'
 
     if error is None:
         error = func_check_schedule_setting(class_id, start_date, ADD_SCHEDULE)
@@ -360,7 +360,7 @@ def add_trainee_schedule_logic(request):
 
             if group_schedule_info is not None:
                 if group_schedule_info.state_cd == 'PE':
-                    error = '이미 완료된 그룹 일정입니다.'
+                    error = '이미 완료된 일정입니다.'
 
                 if error is None:
                     group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_schedule_info.group_tb_id,
@@ -370,7 +370,7 @@ def add_trainee_schedule_logic(request):
                         lecture_id = func_get_group_lecture_id(group_schedule_info.group_tb_id, request.user.id)
                     else:
                         lecture_id = None
-                        error = '이미 그룹 일정에 포함되어있습니다.'
+                        error = '이미 일정에 포함되어있습니다.'
 
     if error is None:
         if lecture_id is None:
@@ -438,7 +438,7 @@ def delete_trainee_schedule_logic(request):
     lecture_id = None
 
     if schedule_id == '':
-        error = '스케쥴을 선택하세요.'
+        error = '스케쥴 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -452,11 +452,11 @@ def delete_trainee_schedule_logic(request):
         group_name = schedule_info.get_group_name()
         group_type_name = schedule_info.get_group_type_cd_name()
         if start_date < timezone.now():  # 강사 설정 시간으로 변경필요
-            error = '이미 지난 일정입니다.'
+            error = '지난 일정입니다.'
 
     if error is None:
         if schedule_info.state_cd == 'PE':
-            error = '이미 종료된 일정입니다.'
+            error = '종료된 일정입니다.'
 
     if error is None:
         lecture_info = schedule_info.lecture_tb
@@ -466,11 +466,11 @@ def delete_trainee_schedule_logic(request):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '수강 정보를 불러오지 못했습니다.'
 
     if error is None:
         if lecture_info.member_id != str(request.user.id):
-            error = '회원 정보가 일치하지 않습니다.'
+            error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         if error is None:
@@ -506,9 +506,9 @@ def delete_trainee_schedule_logic(request):
         except TypeError:
             error = '등록 값의 형태에 문제가 있습니다.'
         except IntegrityError:
-            error = '이미 삭제된 일정입니다.'
+            error = '삭제된 일정입니다.'
         except InternalError:
-            error = '이미 삭제된 일정입니다.'
+            error = '삭제된 일정입니다.'
         except ValidationError:
             error = '예약 가능한 횟수를 확인해주세요.'
 
@@ -766,16 +766,10 @@ def lecture_processing(request):
     member_lecture_wait_list = []
 
     if lecture_id == '':
-        error = '수강정보를 선택해 주세요.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if check == '':
-        error = '수강정보를 선택해 주세요.'
-
-    # if error is None:
-    #     try:
-    #         lecture_info = MemberLectureTb.objects.get(member=request.user.id, lecture_tb=lecture_id)
-    #     except ObjectDoesNotExist:
-    #         error = '수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
@@ -805,7 +799,7 @@ def lecture_processing(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '수강정보를 불러오지 못했습니다.'
 
             if error is None:
                 request.session['class_hour'] = class_info.class_hour
@@ -826,7 +820,7 @@ def lecture_processing(request):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '수강정보를 불러오지 못했습니다.'
 
             if error is None:
                 request.session['class_hour'] = class_info.class_hour
@@ -859,7 +853,7 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -908,18 +902,18 @@ def update_trainee_info_logic(request):
     member = None
 
     if member_id == '':
-        error = '회원 ID를 확인해 주세요.'
+        error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+            error = '회원 정보를 불러오지 못했습니다.'
 
         try:
             member = MemberTb.objects.get(user_id=user.id)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+            error = '회원 정보를 불러오지 못했습니다.'
 
     if first_name is None or first_name == '':
         first_name = user.first_name
@@ -971,9 +965,9 @@ def update_trainee_info_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -1020,7 +1014,7 @@ class GetTraineeGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
                     state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
                     group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
                 except ObjectDoesNotExist:
-                    error = '그룹 정보를 불러오지 못했습니다.'
+                    error = '회원 정보를 불러오지 못했습니다.'
 
                 if len(group_list) == 0:
                     group_list.append(group_lecture_info)
@@ -1071,7 +1065,7 @@ class GetTraineeGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
                     state_cd_nm = CommonCdTb.objects.get(common_cd=group_lecture_info.group_tb.state_cd)
                     group_lecture_info.group_tb.state_cd_nm = state_cd_nm.common_cd_nm
                 except ObjectDoesNotExist:
-                    error = '그룹 정보를 불러오지 못했습니다.'
+                    error = '회원 정보를 불러오지 못했습니다.'
 
                 if len(group_list) == 0:
                     group_list.append(group_lecture_info)
@@ -1221,9 +1215,13 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                 group_schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
                 group_id = group_schedule_info.group_tb_id
             except ObjectDoesNotExist:
-                error = '그룹 일정 정보를 불러오지 못했습니다.'
+                error = '회원 정보를 불러오지 못했습니다.'
         else:
             group_schedule_id = None
+
+    if error is None:
+        if lecture_info.member_id != str(user_id):
+            error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -1235,19 +1233,16 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
 
     if error is None:
         if lecture_info.state_cd != 'IP':
-            error = '등록할수 있는 수강 정보가 없습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         if start_date >= fifteen_days_after:
-            error = '입력할 수 없는 날짜입니다.'
+            error = '등록할 수 없는 날짜입니다.'
 
     if error is None:
         if start_date < timezone.now():
-            error = '입력할 수 없는 날짜입니다.'
+            error = '등록할 수 없는 날짜입니다.'
 
-    if error is None:
-        if lecture_info.member_id != str(user_id):
-            error = '회원 정보가 일치하지 않습니다.'
 
     if error is None:
         if lecture_info.lecture_avail_count == 0:
@@ -1278,13 +1273,13 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                                                 pt_schedule_date, start_date, end_date)
 
                         if error is not None:
-                            error += ' 일정이 중복되었습니다.'
+                            error += ' 일정이 중복됐습니다.'
 
                         if error is not None:
                             raise InternalError()
 
         except TypeError:
-            error = '등록 값의 형태에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -1327,7 +1322,7 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
@@ -1478,20 +1473,20 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     lecture_list = None
 
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사 정보 가져오기
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기

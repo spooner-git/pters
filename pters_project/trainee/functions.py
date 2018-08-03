@@ -224,7 +224,7 @@ def func_get_trainee_lecture_ing_list(class_id, user_id):
 def func_get_class_lecture_count(context, class_id, user_id):
     error = None
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     lecture_reg_count_sum = 0
     lecture_rem_count_sum = 0
@@ -313,7 +313,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     output_lecture_list = []
 
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -394,7 +394,7 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
     output_lecture_list = []
 
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -454,7 +454,7 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
                         state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
                         lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
                     except ObjectDoesNotExist:
-                        error = '그룹 정보를 불러오지 못했습니다.'
+                        error = '회원 정보를 불러오지 못했습니다.'
 
                 output_lecture_list.append(lecture_info_data)
 
@@ -482,7 +482,7 @@ def func_get_class_list(context, member_id):
                 try:
                     pt_type_name = CommonCdTb.objects.get(common_cd=class_lecture_info.class_tb.subject_cd)
                 except ObjectDoesNotExist:
-                    error = '강좌 정보를 불러오지 못했습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
 
             lecture_list_data = ClassLectureTb.objects.filter(class_tb_id=class_lecture_info.class_tb_id,
                                                               lecture_tb__member_id=member_id)
@@ -496,7 +496,7 @@ def func_get_class_list(context, member_id):
                     member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
                                                                       lecture_tb_id=lecture_list_info.lecture_tb_id)
                 except ObjectDoesNotExist:
-                    error = '수강 정보를 불러오지 못했습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
 
                 if error is None:
                     class_lecture_info.lecture_counts += 1
@@ -538,7 +538,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
     if error is None:
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
@@ -555,7 +555,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             lt_res_02 = int(setting_data_info.setting_info)
         except ObjectDoesNotExist:
             lt_res_02 = 0
-        # reserve_prohibition_time = lt_res_02
+
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
                                                       setting_type_cd='LT_RES_03', use=USE)
@@ -596,35 +596,35 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
 
         if reserve_stop == '1':
             if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록이 불가능합니다.'
+                error = '예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.'
+                error = '예약 취소가 불가능합니다.'
 
         if error is None:
             if now_time < reserve_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '현재 예약 등록이 불가능합니다.'
+                    error = '예약 등록이 불가능합니다.'
                 else:
-                    error = '현재 예약 취소가 불가능합니다.'
+                    error = '예약 취소가 불가능합니다.'
             if now_time > reserve_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '현재 예약 등록이 불가능합니다.'
+                    error = '예약 등록이 불가능합니다.'
                 else:
-                    error = '현재 예약 취소가 불가능합니다.'
+                    error = '예약 취소가 불가능합니다.'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
 
     if error is None:
         if start_date >= avail_end_date:
             if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록이 불가능합니다.'
+                error = '예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.'
+                error = '예약 취소가 불가능합니다.'
     if error is None:
         if start_date < disable_time:
             if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록이 불가능합니다.'
+                error = '예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.'
+                error = '예약 취소가 불가능합니다.'
 
     return error

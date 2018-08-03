@@ -90,7 +90,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                   headers={'Content-Type': 'application/json;',
                                            'Authorization': access_token})
         if resp['status'] != '200':
-            error = '통신중 에러가 발생했습니다.'
+            error = '오류가 발생했습니다.'
     return error
 
 
@@ -115,9 +115,9 @@ def func_get_payment_token():
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        error = '오류가 발생했습니다.'
     except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        error = '오류가 발생했습니다.'
 
     if error is None:
         if resp['status'] == '200':
@@ -152,7 +152,7 @@ def func_resend_payment_info(customer_uid, merchant_uid, price):
                                   headers={'Content-Type': 'application/json;',
                                            'Authorization': access_token})
         if resp['status'] != '200':
-            error = '통신중 에러가 발생했습니다.'
+            error = '오류가 발생했습니다.'
 
     return error
 
@@ -165,7 +165,7 @@ def func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_pr
             product_price_info = ProductPriceTb.objects.get(product_tb__merchandise_type_cd=merchandise_type_cd,
                                                             payment_type_cd=payment_type_cd, use=USE)
         except ObjectDoesNotExist:
-            error = '결제 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         price = int(product_price_info.sale_price * 1.1)
@@ -217,16 +217,16 @@ def func_get_payment_result(imp_uid, access_token):
     resp, content = h.request("https://api.iamport.kr/payments/" + imp_uid, method="GET",
                               headers={'Authorization': access_token})
     if resp['status'] != '200':
-        error = '통신중 에러가 발생했습니다.'
+        error = '오류가 발생했습니다.'
 
     if error is None:
         json_data = content.decode('utf-8')
         try:
             json_loading_data = json.loads(json_data)
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.5'
+            error = '오류가 발생했습니다.'
         except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.6'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         if resp['status'] == '200':
@@ -261,9 +261,9 @@ def func_send_refund_payment(imp_uid, merchant_uid, access_token):
             # json_loading_data = json.loads(json_data)
             json.loads(json_data)
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다.'
         except TypeError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다.'
 
     if error is not None:
         context['error'] = error
@@ -325,11 +325,11 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
         if payment_info_check > 0:
-            error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.:'+str(payment_result['merchant_uid'])
+            error = '이미 등록된 결제 정보입니다.'
         if custom_data['payment_type_cd'] == 'PERIOD':
             billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
             if billing_info_check > 0:
-                error = '이미 등록된 결제 정보입니다. 다시 확인해주세요.:'+str(customer_uid)
+                error = '이미 등록된 결제 정보입니다.'
 
     if error is None:
         try:
@@ -386,10 +386,10 @@ def func_add_billing_logic(custom_data, payment_result):
                 payment_info.save()
 
                 context['payment_user_info'] = payment_info
-        except TypeError as e:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.1:'+str(e)
+        except TypeError:
+            error = '오류가 발생했습니다.'
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.2'
+            error = '오류가 발생했습니다.'
 
     context['error'] = error
     return context
@@ -403,7 +403,7 @@ def func_update_billing_logic(payment_result):
         try:
             payment_info = PaymentInfoTb.objects.get(merchant_uid=payment_result['merchant_uid'])
         except ObjectDoesNotExist:
-            error = '결제 정보를 update 하는데 실패했습니다.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         try:
@@ -422,10 +422,10 @@ def func_update_billing_logic(payment_result):
                 payment_info.use = USE
                 payment_info.save()
                 context['payment_user_info'] = payment_info
-        except TypeError as e:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.:'+str(e)
+        except TypeError:
+            error = '오류가 발생했습니다.'
         except ValueError:
-            error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         if payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
@@ -471,7 +471,7 @@ def func_cancel_period_billing_schedule(customer_uid):
                                   headers={'Content-Type': 'application/json;',
                                            'Authorization': access_token})
         if resp['status'] != '200':
-            error = '통신중 에러가 발생했습니다.'
+            error = '오류가 발생했습니다.'
 
     return error
 
@@ -490,18 +490,19 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
             customer_uid = payment_user_info.customer_uid
             context['user_id'] = payment_user_info.member_id
         except ObjectDoesNotExist:
-            error = '결제 정보 [정기결제 예약 스케쥴] 세부 사항 조회 에러'
+            error = '오류가 발생했습니다.'
+            # error = '결제 정보 [정기결제 예약 스케쥴] 세부 사항 조회 에러'
     else:
         try:
             payment_type_cd = custom_data['payment_type_cd']
             merchandise_type_cd = custom_data['merchandise_type_cd']
             context['user_id'] = custom_data['user_id']
         except KeyError:
-            error = '결제 정보 [custom_data] 세부사항 json data parsing KeyError'
+            error = '오류가 발생했습니다.'
         except TypeError:
-            error = '결제 정보 [custom_data] 세부사항 json data parsing TypeError'
+            error = '오류가 발생했습니다.'
         except ValueError:
-            error = '결제 정보 [custom_data] 세부사항 json data parsing ValueError'
+            error = '오류가 발생했습니다.'
 
         try:
             customer_uid = custom_data['customer_uid']
