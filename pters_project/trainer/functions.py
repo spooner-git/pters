@@ -106,7 +106,6 @@ def func_get_member_ing_list(class_id, user_id):
                              lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
                                                                     lecture_count=RawSQL(query_lecture_count, []))
     for member_data in all_member:
-        error = None
 
         if member_data.user.is_active:
             member_data.is_active = True
@@ -186,10 +185,6 @@ def func_get_member_ing_list(class_id, user_id):
                                 if '클래스' not in member_data.group_info:
                                     member_data.group_info += '/클래스'
 
-                # lecture_count += lecture_info_data.get_member_lecture_auth_check()
-                # lecture_count += MemberLectureTb.objects.filter(lecture_tb=lecture_info.lecture_id,
-                #                                                 auth_cd='VIEW', lecture_tb__use=USE,
-                #                                                 use=USE).count()
                 lecture_count += lecture_info_data.lecture_count
 
                 if lecture_info.use == USE:
@@ -275,8 +270,6 @@ def func_get_member_end_list(class_id, user_id):
                              lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
                                                                     lecture_count=RawSQL(query_lecture_count, []))
     for member_data in all_member:
-        error = None
-        # lecture_finish_check = 0
 
         if member_data.user.is_active:
             member_data.is_active = True
@@ -286,13 +279,6 @@ def func_get_member_end_list(class_id, user_id):
             else:
                 member_data.is_active = True
 
-        # 강좌에 해당하는 수강/회원 정보 가져오기
-
-        # lecture_list = all_lecture_list.filter(lecture_tb__member_id=member_data.member_id)
-        # lecture_count = all_lecture_list.filter(lecture_tb__state_cd='IP').count()
-        #
-        # if lecture_count == 0 and len(lecture_list) > 0:
-        #     lecture_finish_check = 1
         member_data.rj_lecture_counts = 0
         member_data.np_lecture_counts = 0
 
@@ -314,7 +300,6 @@ def func_get_member_end_list(class_id, user_id):
         member_data.end_date = None
         member_data.mod_dt = None
         member_data.group_info = ''
-        # member_data.lecture_available_id = ''
         class_lecture_count = 0
         lecture_finish_count = 0
 
@@ -366,11 +351,6 @@ def func_get_member_end_list(class_id, user_id):
                             member_data.group_info += '/클래스'
 
                 lecture_finish_count += lecture_info_data.lecture_count
-                # lecture_finish_count += lecture_info_data.get_member_lecture_auth_check()
-                # lecture_finish_count += MemberLectureTb.objects.filter(member_id=member_data.member_id,
-                #                                                        lecture_tb=lecture_info.lecture_id,
-                #                                                        auth_cd='VIEW', lecture_tb__use=USE,
-                #                                                        use=USE).count()
 
                 if lecture_info.use == USE:
                     if group_check != 0:
@@ -384,11 +364,7 @@ def func_get_member_end_list(class_id, user_id):
                     member_data.lecture_reg_count += lecture_info.lecture_reg_count
                     member_data.lecture_rem_count += lecture_info.lecture_rem_count
                     member_data.lecture_avail_count += lecture_info.lecture_avail_count
-                    # member_data.end_date = lecture_info.end_date
 
-                    # if member_data.lecture_available_id == '':
-                    #     if lecture_info.lecture_avail_count > 0:
-                    #         member_data.lecture_available_id = lecture_info.lecture_id
                     if member_data.start_date is None or member_data.start_date == '':
                         member_data.start_date = lecture_info.start_date
                     else:
@@ -496,13 +472,13 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
 
     if error is None:
         if counts is None or counts == '':
-            error = '레슨 횟수 입력해주세요.'
+            error = '등록 횟수 입력해주세요.'
 
     if group_id != '' and group_id is not None:
         try:
             group_info = GroupTb.objects.get(group_id=group_id)
         except ObjectDoesNotExist:
-            error = '그룹 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
         if error is None:
             group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
@@ -549,13 +525,13 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                     group_info.save()
 
         except ValueError:
-            error = '오류가 발생했습니다. 다시 시도해주세요.'
+            error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
 
     if error is None:
         member_name = ''
@@ -783,7 +759,7 @@ def func_get_lecture_list(context, class_id, member_id):
     np_lecture_counts = 0
     lecture_data = None
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -792,13 +768,13 @@ def func_get_lecture_list(context, class_id, member_id):
         try:
             class_data = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         try:
             class_data.trainer_info = MemberTb.objects.get(member_id=class_data.member_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
@@ -846,7 +822,7 @@ def func_get_lecture_list(context, class_id, member_id):
                     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
                     lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
                 except ObjectDoesNotExist:
-                    error = '그룹 정보를 불러오지 못했습니다.'
+                    error = '오류가 발생했습니다.'
 
             try:
                 lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
@@ -868,18 +844,8 @@ def func_get_lecture_list(context, class_id, member_id):
     context['class_data'] = class_data
     context['lecture_data'] = lecture_data
 
-    # print(error)
     if error is not None:
         context['error'] = error
 
     return context
-
-
-def func_test_test_test(class_id):
-    #
-    lecture_data = LectureTb.objects.filter(use=USE)
-    #
-    lecture_data = LectureTb.objects.check_authorized(class_id).filter(use=USE)
-    for lecture_info in lecture_data:
-        print(str(lecture_info.lecture_id)+'::'+str(lecture_info.check_authorized(class_id)))
 

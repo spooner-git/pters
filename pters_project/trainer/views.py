@@ -4,7 +4,6 @@ import json
 import logging
 import random
 import urllib
-from html import parser
 
 from urllib.parse import quote
 
@@ -16,7 +15,6 @@ from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponse, request
-from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -136,12 +134,12 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         context['new_member_num'] = 0
 
         if class_id is None or class_id == '':
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '프로그램 정보를 불러오지 못했습니다.'
 
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             request.session['class_hour'] = class_info.class_hour
@@ -232,7 +230,7 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, View):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             request.session['class_hour'] = class_info.class_hour
@@ -399,14 +397,14 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context['new_member_num'] = 0
 
         if class_id is None or class_id == '':
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
                 context['center_name'] = class_info.get_center_name()
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
@@ -772,7 +770,7 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             request.session['class_hour'] = class_info.class_hour
@@ -945,7 +943,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
         if int(id_flag) == 1:
             if user_id == '':
-                error = '회원 ID를 입력해주세요.'
+                error = '회원 ID를 확인해 주세요.'
             if error is None:
                 try:
                     user = User.objects.get(username=user_id)
@@ -963,7 +961,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                         error = '회원 ID를 확인해 주세요.'
         else:
             if member_id == '':
-                error = '회원 ID를 입력해주세요.'
+                error = '회원 ID를 확인해 주세요.'
             if error is None:
                 try:
                     user = User.objects.get(id=member_id)
@@ -1016,34 +1014,30 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
         return render(request, self.template_name, context)
 
 
-class GetMemberListView(LoginRequiredMixin, AccessTestMixin, View):
+class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/member_list_all_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetMemberListView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+    def get_context_data(self, **kwargs):
+        context = super(GetMemberListView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
         # context = get_member_data(context, class_id, None, self.request.user.id)
 
-        context['member_data'] = func_get_member_ing_list(class_id, request.user.id)
-        context['member_finish_data'] = func_get_member_end_list(class_id, request.user.id)
+        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
+        context['member_finish_data'] = func_get_member_end_list(class_id, self.request.user.id)
         # return context
-        return render(request, self.template_name, context)
+        return context
 
 
 class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/member_list_ajax.html'
 
     def get_context_data(self, **kwargs):
-        # start_time = timezone.now()
-        # context = {}
+        # start_dt = timezone.now()
         context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
-        # end_time = timezone.now()
-        # func_test_test_test(class_id)
-        # print('IngList::'+str(end_time-start_time))
-        # return context
+        # end_dt = timezone.now()
+        # print(str(end_dt-start_dt))
         return context
 
 
@@ -1052,14 +1046,11 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
 
     def get_context_data(self, **kwargs):
         # start_dt = timezone.now()
-        # context = {}
         context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-
         context['member_data'] = func_get_member_end_list(class_id, self.request.user.id)
         # end_dt = timezone.now()
-
-        # print('EndList::'+str(end_dt-start_dt))
+        # print(str(end_dt-start_dt))
         return context
 
 
@@ -1167,9 +1158,9 @@ def update_member_info_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = error
 
@@ -1464,12 +1455,10 @@ def export_excel_member_list_logic(request):
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
 
-    if error is None:
-
-        return response
-    else:
-
-        return response
+    if error is not None:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                     + str(request.user.id) + ']' + error)
+    return response
 
 
 @csrf_exempt
@@ -1485,7 +1474,7 @@ def export_excel_member_info_logic(request):
     lecture_list = None
 
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -1496,13 +1485,13 @@ def export_excel_member_info_logic(request):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     if error is None:
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
         except ObjectDoesNotExist:
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
     # 수강 정보 불러 오기
     if error is None:
@@ -1639,12 +1628,10 @@ def export_excel_member_info_logic(request):
     # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     # response['Content-Disposition'] = 'attachment; filename=.xlsx'
 
-    if error is None:
-
-        return response
-    else:
-
-        return response
+    if error is not None:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '['
+                     + str(request.user.id) + ']' + error)
+    return response
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -1717,11 +1704,11 @@ def add_lecture_info_logic(request):
     # username = name
 
     if user_id is None or user_id == '':
-        error = '오류가 발생했습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다.'
 
     if search_confirm == '0':
         if name == '':
-            error = '이름을 입력해 주세요.'
+            error = '회원 이름을 입력해 주세요.'
 
     if error is None:
         # username = name.replace(' ', '')
@@ -1773,7 +1760,7 @@ def add_lecture_info_logic(request):
             try:
                 group_info = GroupTb.objects.get(group_id=group_id)
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                error = '수강 정보를 불러오지 못했습니다.'
 
             if error is None:
                 group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
@@ -1860,9 +1847,9 @@ def update_lecture_info_logic(request):
             try:
                 input_refund_date = datetime.datetime.strptime(refund_date, '%Y-%m-%d')
             except ValueError:
-                error = '환불 날짜값에 오류가 발생했습니다.'
+                error = '환불 날짜 오류가 발생했습니다.'
             except TypeError:
-                error = '환불 날짜값에 오류가 발생했습니다.'
+                error = '환불 날짜 오류가 발생했습니다.'
 
         if lecture_reg_count is None or lecture_reg_count == '':
             input_lecture_reg_count = lecture_info.lecture_reg_count
@@ -1877,7 +1864,7 @@ def update_lecture_info_logic(request):
 
     if error is None:
         if input_lecture_reg_count < lecture_info.lecture_reg_count - lecture_info.lecture_avail_count:
-            error = '등록 횟수가 이미 등록한 스케쥴보다 작습니다.'
+            error = '등록 횟수가 이미 등록한 스케쥴보다 적습니다.'
 
     if error is None:
         schedule_list = ScheduleTb.objects.filter(lecture_tb=lecture_id)
@@ -2014,20 +2001,6 @@ def finish_lecture_info_logic(request):
     if error is None:
         if group_info is not None:
             func_refresh_group_status(group_info.group_tb_id, None, None)
-            # if len(group_data) > 0:
-            #     for group_info in group_data:
-            #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-            #                                                               use=USE).count()
-            #         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-            #                                                             use=USE).exclude(lecture_tb__state_cd='IP').count()
-            #         group_info_data = group_info.group_tb
-            #
-            #         if group_data_total_size == group_data_end_size:
-            #             group_info_data.state_cd = 'PE'
-            #             group_info_data.save()
-            #         else:
-            #             group_info_data.state_cd = 'IP'
-            #             group_info_data.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
@@ -2109,20 +2082,7 @@ def refund_lecture_info_logic(request):
     if error is None:
         if group_info is not None:
             func_refresh_group_status(group_info.group_tb_id, None, None)
-            # if len(group_data) > 0:
-            #     for group_info in group_data:
-            #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-            #                                                               use=USE).count()
-            #         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-            #                                                             use=USE).exclude(lecture_tb__state_cd='IP').count()
-            #         group_info_data = group_info.group_tb
-            #
-            #         if group_data_total_size == group_data_end_size:
-            #             group_info_data.state_cd = 'PE'
-            #             group_info_data.save()
-            #         else:
-            #             group_info_data.state_cd = 'IP'
-            #             group_info_data.save()
+
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
@@ -2183,19 +2143,6 @@ def progress_lecture_info_logic(request):
     if error is None:
         if group_info is not None:
             func_refresh_group_status(group_info.group_tb_id, None, None)
-            # if len(group_data) > 0:
-            #     for group_info in group_data:
-            #         group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-            #                                                               use=USE).count()
-            #         group_data_end_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-            #                                                             use=USE).exclude(lecture_tb__state_cd='IP').count()
-            #         group_info_data = group_info.group_tb
-            #         if group_data_total_size == group_data_end_size:
-            #             group_info_data.state_cd = 'PE'
-            #             group_info_data.save()
-            #         else:
-            #             group_info_data.state_cd = 'IP'
-            #             group_info_data.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
@@ -2229,7 +2176,7 @@ def update_lecture_connection_info_logic(request):
 
     if error is None:
         if auth_cd != 'VIEW' and auth_cd != 'WAIT' and auth_cd != 'DELETE':
-            error = '수강정보 연결 상태를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -2295,21 +2242,21 @@ def add_group_info_logic(request):
 
             group_info.save()
     except ValueError:
-        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
     except IntegrityError:
-        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
     except TypeError:
-        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
     except ValidationError:
-        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
     except InternalError:
-        error = '등록 중 오류가 생겼습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
 
     if error is None:
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 정보', log_how='등록', use=USE)
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보', log_how='등록', use=USE)
         log_data.save()
 
     else:
@@ -2329,7 +2276,7 @@ def delete_group_info_logic(request):
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
-        error = '그룹 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
@@ -2345,11 +2292,11 @@ def delete_group_info_logic(request):
         group_info.state_cd = 'PE'
         group_info.use = 0
         group_info.save()
-
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 정보', log_how='삭제', use=USE)
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_how='삭제', use=USE)
         log_data.save()
     else:
 
@@ -2375,7 +2322,7 @@ def update_group_info_logic(request):
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
-        error = '그룹 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     if error is None:
 
@@ -2392,7 +2339,7 @@ def update_group_info_logic(request):
             note = group_info.note
     if error is None:
         if int(member_num) <= 0:
-            error = '그룹의 정원은 1명 이상이어야 합니다.'
+            error = '정원은 1명 이상이어야 합니다.'
 
     if error is None:
         if group_type_cd == 'NORMAL':
@@ -2411,7 +2358,8 @@ def update_group_info_logic(request):
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 정보', log_how='수정', use=USE)
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_how='수정', use=USE)
         log_data.save()
 
     else:
@@ -2438,9 +2386,9 @@ def add_group_member_logic(request):
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        error = '오류가 발생했습니다.'
     except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        error = '오류가 발생했습니다.'
 
     if error is None:
         group_id = json_loading_data['lecture_info']['group_id']
@@ -2450,7 +2398,7 @@ def add_group_member_logic(request):
             try:
                 group_info = GroupTb.objects.get(group_id=group_id, use=USE)
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
 
             if error is None:
                 group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
@@ -2527,7 +2475,8 @@ def add_group_member_logic(request):
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹에 회원 정보', log_how='등록', use=USE)
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원 정보',
+                         log_how='등록', use=USE)
         log_data.save()
 
     else:
@@ -2550,9 +2499,9 @@ def delete_group_member_info_logic(request):
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        error = '오류가 발생했습니다.'
     except TypeError:
-        error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+        error = '오류가 발생했습니다.'
 
     group_id = json_loading_data['group_id']
 
@@ -2572,8 +2521,10 @@ def delete_group_member_info_logic(request):
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
             if error is None:
-                group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                   lecture_tb__member_id=user.id, use=USE)
+                group_lecture_data = GroupLectureTb.objects.select_related('group_tb', 'lecture_tb'
+                                                                           ).filter(group_tb_id=group_id,
+                                                                                    lecture_tb__member_id=user.id,
+                                                                                    use=USE)
             if error is None:
                 try:
                     with transaction.atomic():
@@ -2589,20 +2540,21 @@ def delete_group_member_info_logic(request):
                             raise InternalError(str(error))
 
                 except ValueError:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+                    error = '오류가 발생했습니다.'
                 except IntegrityError:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+                    error = '오류가 발생했습니다.'
                 except TypeError:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+                    error = '오류가 발생했습니다.'
                 except ValidationError:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+                    error = '오류가 발생했습니다.'
                 except InternalError:
-                    error = '오류가 발생했습니다. 관리자에게 문의해주세요.'
+                    error = '오류가 발생했습니다.'
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_name, class_tb_id=class_id,
-                             log_info='그룹 수강 정보', log_how='삭제', use=USE)
+                             log_info=group_lecture_data.group_tb.get_group_type_cd_name()+' 수강 정보',
+                             log_how='삭제', use=USE)
             log_data.save()
 
     if error is None:
@@ -2630,12 +2582,12 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                 type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
                 group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
             try:
                 state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
                 group_info.state_cd_nm = state_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
 
             lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
             for lecture_info in lecture_list:
@@ -2678,12 +2630,12 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                 type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
                 group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
             try:
                 state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
                 group_info.state_cd_nm = state_cd_nm.common_cd_nm
             except ObjectDoesNotExist:
-                error = '그룹 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
 
             lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
             for lecture_info in lecture_list:
@@ -2841,7 +2793,7 @@ def finish_group_info_logic(request):
         try:
             group_info = GroupTb.objects.get(group_id=group_id)
         except ObjectDoesNotExist:
-            error = '그룹 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
     if error is None:
         group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
 
@@ -2867,7 +2819,8 @@ def finish_group_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 수강 정보', log_how='완료 처리', use=USE)
+                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 수강 정보',
+                         log_how='완료 처리', use=USE)
 
         log_data.save()
 
@@ -2912,7 +2865,8 @@ def progress_group_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' 그룹 수강 정보', log_how='재개 처리', use=USE)
+                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 수강 정보',
+                         log_how='재개', use=USE)
 
         log_data.save()
 
@@ -2940,7 +2894,7 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
         error = None
         group_schedule_data = None
         if group_schedule_id is None or group_schedule_id == '':
-            error = '그룹 일정 정보를 불러오지 못했습니다.'
+            error = '일정 정보를 불러오지 못했습니다.'
 
         if error is None:
             group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,
@@ -3099,7 +3053,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_info = None
 
         if subject_cd is None or subject_cd == '':
-            error = '강좌 종류를 설정해주세요.'
+            error = '프로그램 종류를 설정해주세요.'
 
         if class_hour is None or class_hour == '':
             class_hour = 60
@@ -3138,9 +3092,9 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             except IntegrityError:
                 error = '등록 값에 문제가 있습니다.'
             except TypeError:
-                error = '등록 값의 형태가 문제 있습니다.'
+                error = '등록 값에 문제가 있습니다.'
             except ValidationError:
-                error = '등록 값의 형태가 문제 있습니다.'
+                error = '등록 값에 문제가 있습니다.'
             except InternalError:
                 error = '등록 값에 문제가 있습니다.'
 
@@ -3154,7 +3108,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
-                             log_info='강좌 정보', log_how='등록', use=USE)
+                             log_info='프로그램 정보', log_how='등록', use=USE)
 
             log_data.save()
 
@@ -3177,21 +3131,18 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_info = None
 
         if class_id is None or class_id == '':
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
                 class_info = MemberClassTb.objects.get(member_id=request.user.id, class_tb_id=class_id)
                 # class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
             class_info.auth_cd = 'DELETE'
             class_info.save()
-            # class_info.member_view_state_cd = 'DELETE'
-            # class_info.mod_dt = timezone.now()
-            # class_info.save()
 
         if error is None:
             if class_id == class_id_session:
@@ -3204,7 +3155,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='강좌 정보', log_how='연동 해제', use=USE)
+                             log_info='프로그램 정보', log_how='연동 해제', use=USE)
 
             log_data.save()
 
@@ -3234,13 +3185,13 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         class_info = None
 
         if class_id is None or class_id == '':
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
         if error is None:
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
 
         if error is None:
 
@@ -3270,7 +3221,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='강좌 정보', log_how='수정', use=USE)
+                             log_info='프로그램 정보', log_how='수정', use=USE)
 
             log_data.save()
 
@@ -3290,13 +3241,13 @@ def select_class_processing_logic(request):
     class_info = None
 
     if class_id == '':
-        error = '강좌를 선택해 주세요.'
+        error = '프로그램을 선택해 주세요.'
 
     if error is None:
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
     if error is None:
         request.session['class_id'] = class_id
@@ -3377,7 +3328,7 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
         log_how_info = ''
         background_img_info = None
         if class_id is None or class_id == '':
-            error = '강좌 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
         if background_img_id == '' or background_img_id is None:
             try:
                 background_img_info = BackgroundImgTb.objects.get(class_tb_id=class_id,
@@ -3446,7 +3397,7 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
                 class_id = background_img_info.class_tb_id
                 background_img_info.delete()
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
 
         if error is None:
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
@@ -3501,7 +3452,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
         off_repeat_schedule_data = None
 
         if class_id is None or class_id == '':
-            error = '강사 정보를 불러오지 못했습니다.'
+            error = '오류가 발생했습니다.'
 
         if error is None:
             try:
@@ -3513,7 +3464,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
             try:
                 class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
-                error = '강좌 정보를 불러오지 못했습니다.'
+                error = '오류가 발생했습니다.'
 
         if error is None:
             center_name = class_info.get_center_name()
@@ -3695,9 +3646,9 @@ def update_trainer_info_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -3779,9 +3730,9 @@ def update_setting_push_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -3868,9 +3819,9 @@ def update_setting_basic_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -4010,9 +3961,9 @@ def update_setting_reserve_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -4022,7 +3973,7 @@ def update_setting_reserve_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='예약 관련 설정 정보', log_how='수정', use=USE)
+                         class_tb_id=class_id, log_info='회원 예약 설정', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4153,9 +4104,9 @@ def update_setting_sales_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -4164,7 +4115,7 @@ def update_setting_sales_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='강의 금액 설정 정보', log_how='수정', use=USE)
+                         log_info='강의 금액 설정', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4206,9 +4157,9 @@ def update_setting_language_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -4216,7 +4167,7 @@ def update_setting_language_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='언어 설정 정보', log_how='수정', use=USE)
+                         class_tb_id=class_id, log_info='언어 설정', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -4235,7 +4186,7 @@ def alarm_delete_logic(request):
 
     error = None
     if log_size == '0':
-        error = '로그가 없습니다.'
+        error = '알람이 없습니다.'
 
     if error is None:
 
@@ -4243,7 +4194,7 @@ def alarm_delete_logic(request):
             try:
                 log_info = LogTb.objects.get(log_id=delete_log_id[i])
             except ObjectDoesNotExist:
-                error = '로그를 불러오지 못했습니다.'
+                error = '알람 정보를 불러오지 못했습니다.'
             if error is None:
                 log_info.use = 0
                 log_info.save()

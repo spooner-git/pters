@@ -275,7 +275,7 @@ class ResetPasswordView(View):
         subject_template_name = 'registration/password_reset_subject.txt'
         # context = None
         if email is None or email == '':
-            error = 'email 정보를 입력해주세요.'
+            error = 'Email 정보를 입력해주세요.'
 
         if error is None:
             if User.objects.filter(email=email).exists() is not True:
@@ -383,9 +383,9 @@ def add_member_info_logic_test(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
@@ -458,9 +458,9 @@ class AddMemberView(RegistrationView, View):
                 except IntegrityError:
                     error = '등록 값에 문제가 있습니다.'
                 except TypeError:
-                    error = '등록 값의 형태가 문제 있습니다.'
+                    error = '등록 값에 문제가 있습니다.'
                 except ValidationError:
-                    error = '등록 값의 형태가 문제 있습니다.'
+                    error = '등록 값에 문제가 있습니다.'
                 except InternalError:
                     error = '이미 가입된 회원입니다.'
         else:
@@ -556,16 +556,16 @@ class CheckMemberEmailView(View):
         user_email = request.POST.get('email', '')
         form = RegistrationForm(request.POST, request.FILES)
         if user_email is None or user_email == '':
-            self.error = 'email를 입력해주세요.'
+            self.error = 'Email을 입력해주세요.'
         else:
 
             if User.objects.filter(email=user_email).exists():
-                self.error = '사용중인 이메일 입니다.'
+                self.error = '사용중인 Email 입니다.'
 
             if self.error is None or self.error == '':
                 if form.is_valid():
                     if User.objects.filter(email=user_email).exists():
-                        self.error = '사용중인 이메일 입니다.'
+                        self.error = '사용중인 Email 입니다.'
                 else:
                     for field in form:
                         if field.errors:
@@ -638,12 +638,12 @@ class NewMemberReSendEmailView(View):
         error = None
         user = None
         if user_id is None or user_id == '':
-            error = '회원 정보를 불러오지 못했습니다.'
+            error = '정보를 불러오지 못했습니다.'
         if error is None:
             try:
                 user = User.objects.get(id=user_id)
             except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
+                error = '정보를 불러오지 못했습니다.'
 
         if error is None:
             context['user_email'] = user.email
@@ -663,20 +663,20 @@ def out_member_logic(request):
     user = None
     member = None
     if member_id == '':
-        error = '회원 ID를 확인해 주세요.'
+        error = 'ID를 확인해 주세요.'
 
     if error is None:
 
         try:
             user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+            error = 'ID를 확인해 주세요.'
 
     if error is None:
         try:
             member = MemberTb.objects.get(user_id=user.id, use=USE)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+            error = 'ID를 확인해 주세요.'
 
     # if error is None:
     #    group = user.groups.get(user=request.user.id)
@@ -694,9 +694,9 @@ def out_member_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -779,14 +779,14 @@ def clear_badge_counter_logic(request):
     error = None
     token_data = None
     if push_token is None or push_token == '':
-        error = '푸시 정보를 가져올 수 없습니다'
+        error = 'Push 정보를 가져올 수 없습니다'
 
     logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=USE)
         except ObjectDoesNotExist:
-            error = '푸시 정보를 가져올 수 없습니다'
+            error = 'Push 정보를 가져올 수 없습니다'
 
     if error is None:
         token_data.badge_counter = 0
@@ -870,9 +870,9 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
