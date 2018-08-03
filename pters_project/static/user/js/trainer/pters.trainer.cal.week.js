@@ -1462,11 +1462,43 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             var diffMin = planEndMin - planMinute;
 
             var diff = diff_time(planHour+':'+planMinute, planEndHour+':'+planEndMin) 
-            var lenn = Math.round(diff/30);
+            var lenn = Math.ceil(diff/30);
+            console.log(planHour+':'+planMinute+'~'+ planEndHour+':'+planEndMin,
+                        'Math.round(diff/30)', Math.ceil(diff/30), 'diff/30', diff)
             
-            if(Number(planEndMin) !=0 && Number(planEndMin)%30 ){
-                lenn = lenn +1;
+            if(Number(planEndMin) !=0 && Number(planEndMin)%30 && Number(planMinute) !=0 && Number(planMinute)%30){
+                if(diff > 30){
+                    if(planEndHour != planHour && planEndMin - planMinute <= 0 ){
+                        if(planMinute < 30 && planEndMin < 30){
+                            lenn = lenn + (planEndHour - planHour);
+                        }else if(planMinute > 30 && planEndMin < 30){
+                            lenn = lenn;
+                        }else{
+                            lenn = lenn + (planEndHour - planHour);
+                        }
+                    }else if(planEndHour != planHour && planEndMin - planMinute > 0 ){
+                        lenn = lenn 
+                    }
+                }else if(diff <= 30){
+                    if(planEndHour != planHour){
+                        lenn = lenn + (planEndHour - planHour);
+                    }else if(planEndHour == planHour ){
+                        if(planEndMin - planMinute <= 0){
+                            lenn = lenn + 1;
+                        }else if(planEndMin - planMinute > 0){
+                            if(planEndMin > 30 && planMinute < 30){
+                                lenn = lenn + 1;
+                            }else if(planEndMin > 30 && planMinute > 30){
+                                lenn = lenn;
+                            }else if(planEndMin < 30 && planMinute < 30){
+                                lenn = lenn;
+                            }
+                        }
+                    }
+                }
             }
+
+
             
 
             var hhh = Number(planHour);
