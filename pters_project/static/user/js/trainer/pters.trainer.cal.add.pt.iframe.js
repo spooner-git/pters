@@ -1746,7 +1746,7 @@ function get_repeat_info(dbID){
         url_ = '/trainer/get_group_repeat_schedule_list/';
         data_ = {"group_id": dbID};
         fill_option = 'group';
-        type_ = 'POST';
+        type_ = 'GET';
     }else if(addTypeSelect == "offadd" || addTypeSelect == "repeatoffadd"){
         url_ = '/trainer/get_off_repeat_schedule/';
         // data_;
@@ -1795,7 +1795,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_repeat_schedule_list/',
-        type : 'POST',
+        type : 'GET',
         data : {"group_repeat_schedule_id":group_repeat_id},
         dataType : 'html',
 
@@ -2927,7 +2927,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_schedule_list/',
-        type : 'POST',
+        type : 'GET',
         dataType: 'html',
         data: {"group_schedule_id": group_schedule_id},
 

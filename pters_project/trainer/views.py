@@ -529,6 +529,7 @@ class ReserveSettingView(AccessTestMixin, View):
 
         return render(request, self.template_name, context)
 
+
 class BasicSettingView(AccessTestMixin, View):
     template_name = 'setting_basic.html'
 
@@ -633,7 +634,7 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('read', '-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -689,7 +690,7 @@ class AlarmPCView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         log_data = None
         if error is None:
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('read', '-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -1656,7 +1657,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
 
     def post(self, request):
         context = {}
-        start_dt = timezone.now()
+        # start_dt = timezone.now()
         # context = super(GetLectureListView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
         member_id = request.POST.get('member_id', '')
@@ -1667,8 +1668,7 @@ class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + context['error'])
             messages.error(request, context['error'])
-        end_dt = timezone.now()
-        print(str(end_dt-start_dt))
+        # end_dt = timezone.now()
         return render(request, self.template_name, context)
 
 
@@ -2881,18 +2881,12 @@ def progress_group_info_logic(request):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        context = {}
-        # context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_schedule_id = request.POST.get('group_schedule_id', '')
+    def get_context_data(self, **kwargs):
+        context = super(GetGroupMemberScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_schedule_id = self.request.GET.get('group_schedule_id', '')
         error = None
         group_schedule_data = None
         if group_schedule_id is None or group_schedule_id == '':
@@ -2928,58 +2922,42 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Co
                     group_schedule_info.finish_check = 0
 
         if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + error)
-            messages.error(request, error)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
         else:
             context['schedule_data'] = group_schedule_data
 
-        return render(request, self.template_name, context)
+        return context
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_repeat_data_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_id = request.GET.get('group_id', '')
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_id = self.request.GET.get('group_id', '')
 
-        group_repeat_schedule_data = RepeatScheduleTb.objects.select_related('group_tb').filter(group_tb_id=group_id,
-                                                                                                group_schedule_id__isnull=True
-                                                                                                ).order_by('start_date')
-
-        context['repeat_schedule_data'] = group_repeat_schedule_data
-
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        context = {}
-        # context = super(GetGroupRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_id = request.POST.get('group_id', '')
-
-        group_repeat_schedule_data = RepeatScheduleTb.objects.select_related('group_tb').filter(group_tb_id=group_id,
-                                                                                                group_schedule_id__isnull=True
-                                                                                                ).order_by('start_date')
-
-        # for group_repeat_schedule_info in group_repeat_schedule_data:
-        #     group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
-        #     group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
+        group_repeat_schedule_data = RepeatScheduleTb.objects.select_related('group_tb'
+                                                                             ).filter(group_tb_id=group_id,
+                                                                                      group_schedule_id__isnull=True
+                                                                                      ).order_by('start_date')
 
         context['repeat_schedule_data'] = group_repeat_schedule_data
 
-        return render(request, self.template_name, context)
+        return context
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_repeat_data_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_repeat_schedule_id = request.GET.get('group_repeat_schedule_id', '')
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
+        group_repeat_schedule_id = self.request.GET.get('group_repeat_schedule_id', '')
 
         group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id
                                                                      ).order_by('start_date')
@@ -2988,30 +2966,14 @@ class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMix
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
         context['repeat_schedule_data'] = group_repeat_schedule_data
 
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        context = {}
-        # context = super(GetGroupMemberRepeatScheduleListViewAjax, self).get_context_data(**kwargs)
-        group_repeat_schedule_id = request.POST.get('group_repeat_schedule_id', '')
-
-        group_repeat_schedule_data = RepeatScheduleTb.objects.filter(group_schedule_id=group_repeat_schedule_id
-                                                                     ).order_by('start_date')
-        for group_repeat_schedule_info in group_repeat_schedule_data:
-            group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
-            group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
-
-        context['repeat_schedule_data'] = group_repeat_schedule_data
-
-        return render(request, self.template_name, context)
+        return context
 
 
-class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
+class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = "ajax/trainer_class_ajax.html"
 
-    def get(self, request):
-        context = {}
-        # class_id = request.session.get('class_id', '')
+    def get_context_data(self, **kwargs):
+        context = super(GetClassListViewAjax, self).get_context_data(**kwargs)
         member_class_data = None
         error = None
         if error is None:
@@ -3033,9 +2995,9 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         context['class_data'] = member_class_data
 
         if error is not None:
-            messages.error(request, error)
+            messages.error(self.request, error)
 
-        return render(request, self.template_name, context)
+        return context
 
 
 class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):

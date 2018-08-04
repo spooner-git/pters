@@ -1231,7 +1231,7 @@ $(document).on('click','img.substract_groupMember',function(e){
 function get_group_repeat_info(group_id){
     $.ajax({
         url: '/trainer/get_group_repeat_schedule_list/',
-        type:'POST',
+        type:'GET',
         data: {"group_id": group_id},
         dataType : 'html',
 
@@ -1379,7 +1379,7 @@ function set_group_repeat_info(jsondata, group_id){
 function set_group_member_repeat_info(group_repeat_id, use, callback){
     $.ajax({
         url: '/trainer/get_group_repeat_schedule_list/',
-        type:'POST',
+        type:'GET',
         data: {"group_repeat_id": group_repeat_id},
         dataType : 'html',
 
