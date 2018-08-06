@@ -557,8 +557,6 @@ def add_repeat_schedule_logic(request):
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
     context = {}
     error = None
-    error_date_message = None
-    success_date = None
     lecture_id = None
     repeat_schedule_start_date_info = None
     repeat_schedule_end_date_info = None
@@ -1904,8 +1902,9 @@ def add_group_repeat_schedule_logic(request):
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
+    week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
+    context = {}
     error = None
-    error_date_message = None
     success_start_date = None
     success_end_date = None
     class_info = None
@@ -1919,6 +1918,8 @@ def add_group_repeat_schedule_logic(request):
     pt_schedule_input_counter = 0
     group_schedule_reg_counter = 0
     end_time_check = 0
+    repeat_duplication_date_data = []
+    repeat_success_date_data = []
 
     if repeat_type == '':
         error = '빈도를 선택해주세요.'
@@ -2029,11 +2030,14 @@ def add_group_repeat_schedule_logic(request):
                                                                    + ' ' + repeat_end_time,
                                                                    '%Y-%m-%d %H:%M')
             except ValueError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0]
+                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                             + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             except IntegrityError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0]
+                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                             + week_info[int(repeat_schedule_date_info.strftime('%w'))]
             except TypeError:
-                error_date = str(repeat_schedule_date_info).split(' ')[0]
+                error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                             + week_info[int(repeat_schedule_date_info.strftime('%w'))]
 
             if end_time_check == 1:
                 schedule_end_datetime = schedule_end_datetime + datetime.timedelta(minutes=1)
@@ -2076,21 +2080,26 @@ def add_group_repeat_schedule_logic(request):
                         error = None
 
                 except TypeError:
-                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                    error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                                 + week_info[int(repeat_schedule_date_info.strftime('%w'))]
                 except ValueError:
-                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                    error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                                 + week_info[int(repeat_schedule_date_info.strftime('%w'))]
                 except IntegrityError:
-                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                    error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                                 + week_info[int(repeat_schedule_date_info.strftime('%w'))]
                 except ValidationError:
-                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                    error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                                 + week_info[int(repeat_schedule_date_info.strftime('%w'))]
                 except InternalError:
-                    error_date = str(repeat_schedule_date_info).split(' ')[0]
+                    error_date = str(repeat_schedule_date_info).split(' ')[0] \
+                                 + week_info[int(repeat_schedule_date_info.strftime('%w'))]
 
             if error_date is not None:
-                if error_date_message is None:
-                    error_date_message = error_date
-                else:
-                    error_date_message = error_date_message + '/' + error_date
+                repeat_duplication_date_data.append(error_date)
+            else:
+                repeat_success_date_data.append(str(repeat_schedule_date_info).split(' ')[0]
+                                                + week_info[int(repeat_schedule_date_info.strftime('%w'))])
 
     if error is None:
         if pt_schedule_input_counter == 0:
@@ -2099,16 +2108,16 @@ def add_group_repeat_schedule_logic(request):
             repeat_schedule_info.start_date = success_start_date
             repeat_schedule_info.end_date = success_end_date
             repeat_schedule_info.save()
-
-        request.session['repeat_schedule_input_counter'] = pt_schedule_input_counter
-
-        if error_date_message is not None:
-            messages.info(request, error_date_message)
+            context['repeat_start_date'] = success_start_date
+            context['repeat_end_date'] = success_end_date
+        context['repeat_schedule_input_counter'] = pt_schedule_input_counter
+        context['repeat_duplication_date_data'] = repeat_duplication_date_data
+        context['repeat_success_date_data'] = repeat_success_date_data
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
 
-    return redirect(next_page)
+    return render(request, 'ajax/repeat_schedule_result_ajax.html', context)
 
 
 def add_group_repeat_schedule_confirm(request):
