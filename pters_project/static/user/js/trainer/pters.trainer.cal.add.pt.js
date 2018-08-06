@@ -917,63 +917,72 @@ $(document).ready(function(){
         var hh = Number(selectedTime[3]);
         var hh_ = Number(selectedTime[3]);
         */
-        if(Options.classDur == 60){
-            var selectedDuration = Number(duration)/2;
-            var blankSelected = 'blankSelected';
-            var selector_blankSelected = $('.'+blankSelected);
-            var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
-            var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-            var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
-
-
-            selectedDuration = Number(duration)/2;
-            blankSelected = 'blankSelected';
-            selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-            selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
-            mi = selectedTime[4];
-            yy = Number(selectedTime[0]);
-            mm = Number(selectedTime[1]);
-            dd = Number(selectedTime[2]);
-            hh = Number(selectedTime[3]);
-
-            selector_blankSelected.removeClass(blankSelected);
-            $('#'+selectedTimeID).find('div').addClass(blankSelected);
-            for(i=hh+1; i<hh+selectedDuration; i++){
-                $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected);
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+            if(Options.classDur == 60){
+                var blankbox = 'blankSelected';
+            }else if(Options.classDur == 30){
+                var blankbox = 'blankSelected30';
             }
-        }else if(Options.classDur == 30){
-            var selectedDuration = Number(duration)/2;
-            var blankSelected = 'blankSelected30';
-            var selector_blankSelected = $('.'+blankSelected);
-            var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
-            var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-            var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+            $('.'+blankbox).css({'height':Options.classDur*duration})
+        }else{
+            if(Options.classDur == 60){
+                var selectedDuration = Number(duration)/2;
+                var blankSelected = 'blankSelected';
+                var selector_blankSelected = $('.'+blankSelected);
+                var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
+                var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
 
 
-            selectedDuration = Number(duration.replace(/시간/gi,''));
-            blankSelected = 'blankSelected30';
-            selectedTime = selector_blankSelected_first_child.parent('div').attr('id').split('_');
-            selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
-            if(selectedTime[4] == "00"){
-                mi = "30";
+                selectedDuration = Number(duration)/2;
+                blankSelected = 'blankSelected';
+                selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+                mi = selectedTime[4];
+                yy = Number(selectedTime[0]);
+                mm = Number(selectedTime[1]);
+                dd = Number(selectedTime[2]);
                 hh = Number(selectedTime[3]);
-            }else if(selectedTime[4] =="30"){
-                mi = "00";
-                hh = Number(selectedTime[3])+1;
-            }
-            yy = Number(selectedTime[0]);
-            mm = Number(selectedTime[1]);
-            dd = Number(selectedTime[2]);
-            hh_ = Number(selectedTime[3]);
-            selector_blankSelected.removeClass(blankSelected);
-            $('#'+selectedTimeID).find('div').addClass(blankSelected);
-            for(var i=hh; i<hh+selectedDuration-1; i++){
-                if(mi == 60 || mi == 0){
-                    mi = "00";
-                    hh_ = hh_ + 1;
+
+                selector_blankSelected.removeClass(blankSelected);
+                $('#'+selectedTimeID).find('div').addClass(blankSelected);
+                for(i=hh+1; i<hh+selectedDuration; i++){
+                    $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected);
                 }
-                $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected);
-                mi = Number(mi) + 30;
+            }else if(Options.classDur == 30){
+                var selectedDuration = Number(duration)/2;
+                var blankSelected = 'blankSelected30';
+                var selector_blankSelected = $('.'+blankSelected);
+                var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
+                var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+
+
+                selectedDuration = Number(duration.replace(/시간/gi,''));
+                blankSelected = 'blankSelected30';
+                selectedTime = selector_blankSelected_first_child.parent('div').attr('id').split('_');
+                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+                if(selectedTime[4] == "00"){
+                    mi = "30";
+                    hh = Number(selectedTime[3]);
+                }else if(selectedTime[4] =="30"){
+                    mi = "00";
+                    hh = Number(selectedTime[3])+1;
+                }
+                yy = Number(selectedTime[0]);
+                mm = Number(selectedTime[1]);
+                dd = Number(selectedTime[2]);
+                hh_ = Number(selectedTime[3]);
+                selector_blankSelected.removeClass(blankSelected);
+                $('#'+selectedTimeID).find('div').addClass(blankSelected);
+                for(var i=hh; i<hh+selectedDuration-1; i++){
+                    if(mi == 60 || mi == 0){
+                        mi = "00";
+                        hh_ = hh_ + 1;
+                    }
+                    $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected);
+                    mi = Number(mi) + 30;
+                }
             }
         }
     }
