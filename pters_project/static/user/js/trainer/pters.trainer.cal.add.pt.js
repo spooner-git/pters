@@ -505,23 +505,23 @@ $(document).ready(function(){
     var timeIndexhour = [];
     function get_timeindex_Y(){
         timeIndexY = [];
+        timeIndexhour = [];
         var timeIndexHeight = $('.hour').height();
         var timeIndexTopLoc = $('.timeindex').offset().top;
         for(var y=Options.workStartTime; y<Options.workEndTime;y++){
             var timeY = $('#hour'+y).offset().top;
             timeIndexY.push(timeY, timeY + timeIndexHeight/2);
-            timeIndexhour.push(y+'_00', y+'_30');
+            timeIndexhour.push(time_h_format_to_hh(y)+'_00', time_h_format_to_hh(y)+'_30');
         }
         timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height());
-        timeIndexhour.push(Options.workEndTime-1+'_00')
+        timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00')
     }
 
     $(document).on('click','.td00',function(e){
         get_timeindex_Y();
         var thisOffsetTop = $(this).offset().top;
         if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-            if(Options.classDur == 30){var blankmark = 'blankSelected30'}
-                else if(Options.classDur == 60){var blankmark = 'blankSelected'}
+            if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
 
             var localarray = timeIndexY.slice();
             var localharray = timeIndexhour.slice();
@@ -533,22 +533,25 @@ $(document).ready(function(){
             $classTimes.each(function(){
                 var thisLoc = $(this).offset().top;
                 var thisHeight = $(this).height();
+                var thisInfo = $(this).attr('class-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
-                localharray.push('classTime');
+                localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
             
             $offTimes.each(function(){
                 var thisLoc = $(this).offset().top;
                 var thisHeight = $(this).height();
+                var thisInfo = $(this).attr('off-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
-                localharray.push('offTime');
+                localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
 
             $groupTimes.each(function(){
                 var thisLoc = $(this).offset().top;
                 var thisHeight = $(this).height();
+                var thisInfo = $(this).attr('group-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
-                localharray.push('groupTime');
+                localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
 
             $('.'+blankmark).removeClass(blankmark);
@@ -558,16 +561,18 @@ $(document).ready(function(){
 
             localarray.push(thisY);
             var timeIndexY_ = localarray.sort(function(a,b){return a-b});
+            var timeHour = localharray.sort();
             var thisIndex = timeIndexY_.indexOf(thisY);
             var targetY = timeIndexY_[thisIndex-1];
             var targetYLimit = timeIndexY_[thisIndex+1];
             console.log(timeIndexY_)
-            console.log(timeIndexhour)
+            console.log(localharray)
+            console.log(timeHour)
             console.log(thisY)
             if(targetYLimit - targetY > Options.classDur*calendarSize-0.75){
                 $(this).find('div.blankbox').addClass(blankmark);
                 $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
-                show_mini_plan_add_popup_tablet(thisID+'_'+localharray[thisIndex-1],1) 
+                show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
                 //2018_8_6_0_00
             }else{
                 alert('좁아')
