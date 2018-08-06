@@ -33,6 +33,7 @@ class CheckView(LoginRequiredMixin, RedirectView):
         user_for_group = User.objects.get(id=request.user.id)
         group = user_for_group.groups.get(user=request.user.id)
         request.session['base_html'] = group.name+'_base.html'
+        request.session['group_name'] = group.name
         if group.name == 'trainee':
             self.url = '/trainee/'
         elif group.name == 'trainer':
@@ -79,28 +80,31 @@ class AccessTestMixin(UserPassesTestMixin):
         test_result = False
         error = None
         user_for_group = self.request.user
-        group = None
+        # group = None
         url = None
+        group_name = self.request.session.get('group_name', '')
 
         if error is None:
-            try:
-                group = user_for_group.groups.get(user=self.request.user.id)
-                self.request.session['base_html'] = group.name+'_base.html'
-            except ObjectDoesNotExist:
-                error = '그룹 정보를 가져오지 못했습니다'
+            if group_name == '':
+                try:
+                    group = user_for_group.groups.filter(user=self.request.user.id)[0]
+                    self.request.session['base_html'] = group.name+'_base.html'
+                    group_name = group.name
+                except ObjectDoesNotExist:
+                    error = '그룹 정보를 가져오지 못했습니다'
 
         if error is None:
             url = self.request.get_full_path().split('/')
 
         if error is None:
             if url[1] == 'trainee':
-                if group.name == 'trainee':
+                if group_name == 'trainee':
                     test_result = True
             if url[1] == 'trainer':
-                if group.name == 'trainer':
+                if group_name == 'trainer':
                     test_result = True
             if url[1] == 'center':
-                if group.name == 'center':
+                if group_name == 'center':
                     test_result = True
 
         return test_result
