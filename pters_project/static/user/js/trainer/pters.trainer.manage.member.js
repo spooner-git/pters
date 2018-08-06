@@ -925,7 +925,7 @@ $(document).ready(function(){
         var searchID = $('#memberSearch_add').val();
         $.ajax({
             url:'/trainer/get_member_info/',
-            type:'POST',
+            type:'GET',
             data: {'id':searchID, 'id_flag':user_id_flag},
             dataType : 'html',
 
@@ -2744,7 +2744,7 @@ function get_indiv_member_info(dbID){
     var bodywidth = window.innerWidth;
     $.ajax({
         url: '/trainer/get_member_info/',
-        type:'POST',
+        type:'GET',
         data: {"member_id": dbID, 'id_flag':db_id_flag},
         dataType : 'html',
 
@@ -3410,7 +3410,7 @@ function get_member_lecture_list(dbID, use, callback){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_lecture_list/',
-        type:'POST',
+        type:'GET',
         data:{"member_id":dbID},
         dataType : 'html',
 
@@ -3712,7 +3712,7 @@ function get_member_history_list(dbID){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/get_member_schedule/',
-        type:'POST',
+        type:'GET',
         data:{"member_id":dbID},
         dataType : 'html',
 
@@ -4435,7 +4435,7 @@ function get_indiv_repeat_info(dbID){
     var bodywidth = window.innerWidth;
     $.ajax({
         url: '/trainer/get_member_repeat_schedule/',
-        type:'POST',
+        type:'GET',
         data: {"member_id": dbID},
         dataType : 'html',
 

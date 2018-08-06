@@ -2586,8 +2586,8 @@ function get_trainee_reg_history(use, callback){
     $.ajax({
         url: '/trainee/get_trainee_lecture_list/',
         data:{"class_id":class_id[0], "auth_cd":'VIEW'},
+        type:'GET',
         dataType : 'html',
-        type:'POST',
 
         beforeSend:function(){
             //AjaxBeforeSend();

@@ -267,7 +267,7 @@ $('button#addBySearch_search').click(function(e){
     var searchID = $('#addBySearch_input').val();
     $.ajax({
         url:'/trainer/get_member_info/',
-        type:'POST',
+        type:'GET',
         data: {'id':searchID, 'id_flag':user_id_flag},
         dataType : 'html',
 
@@ -824,7 +824,7 @@ function get_groupmember_list(group_id, use, callback){
     $.ajax({
         url:'/trainer/get_group_member/',
         data: {"group_id":group_id},
-        type:'POST',
+        type:'GET',
         dataType : 'html',
 
         beforeSend:function(){

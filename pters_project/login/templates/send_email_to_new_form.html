@@ -829,7 +829,7 @@
             var serializeArray = $form.serializeArray();
             $.ajax({
                 url:'/login/check_member_id/',
-                type:'POST',
+                type:'GET',
                 //data:{"id" : $('#id_input').val() },
                 data:serializeArray,
                 dataType : 'html',
@@ -869,7 +869,7 @@
         var serializeArray = $form.serializeArray();
         $.ajax({
             url:'/login/check_member_email/',
-            type:'POST',
+            type:'GET',
             //data:{"email" : $('#id_email').val() },
             data:serializeArray,
             dataType : 'html',

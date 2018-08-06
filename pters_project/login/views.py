@@ -505,18 +505,14 @@ class AddMemberNoEmailView(View):
                                                     'user_db_id': context['user_db_id']})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckMemberIdView(View):
+class CheckMemberIdView(TemplateView):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
-    def post(self, request):
-        user_id = request.POST.get('id', '')
-        form = RegistrationForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super(CheckMemberIdView, self).get_context_data(**kwargs)
+        user_id = self.request.GET.get('id', '')
+        form = RegistrationForm(self.request.GET, self.request.FILES)
         if user_id is None or user_id == '':
             self.error = 'ID를 입력해주세요.'
         else:
@@ -540,21 +536,21 @@ class CheckMemberIdView(View):
             self.error = self.error.replace("이름", "ID")
             if self.error == '해당 사용자 ID은 이미 존재합니다.':
                 self.error = '사용중인 이이디 입니다.'
-        return render(request, self.template_name, {'error': self.error})
+
+        if self.error != '':
+            context['error'] = self.error
+
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckMemberEmailView(View):
+class CheckMemberEmailView(TemplateView):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
-    def post(self, request):
-        user_email = request.POST.get('email', '')
-        form = RegistrationForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super(CheckMemberEmailView, self).get_context_data(**kwargs)
+        user_email = self.request.GET.get('email', '')
+        form = RegistrationForm(self.request.GET, self.request.FILES)
         if user_email is None or user_email == '':
             self.error = 'Email을 입력해주세요.'
         else:
@@ -578,21 +574,19 @@ class CheckMemberEmailView(View):
                                 else:
                                     if field.name == 'email':
                                         self.error += err
+        if self.error != '':
+            context['error'] = self.error
 
-        return render(request, self.template_name, {'error': self.error})
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckMemberValidationView(View):
+class CheckMemberValidationView(TemplateView):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
-    def post(self, request):
-        form = RegistrationForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
+        form = RegistrationForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             self.error = ''
         else:
@@ -607,7 +601,9 @@ class CheckMemberValidationView(View):
                         else:
                             if field.name != 'username':
                                 self.error += err
-        return render(request, self.template_name, {'error': self.error})
+        if self.error != '':
+            context['error'] = self.error
+        return context
 
 
 class RegisterErrorView(TemplateView):

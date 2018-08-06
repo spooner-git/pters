@@ -22,7 +22,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from django.views.generic.base import ContextMixin, RedirectView
+from django.views.generic.base import RedirectView
 from el_pagination.views import AjaxListView
 from openpyxl import Workbook
 from openpyxl.styles import Font
@@ -785,7 +785,6 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
 
 
 # ############### ############### ############### ############### ############### ############### ##############
-@method_decorator(csrf_exempt, name='dispatch')
 class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_ajax.html'
 
@@ -822,17 +821,15 @@ class GetOffRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        date = request.GET.get('date', '')
-        day = request.GET.get('day', '')
-        group_id = request.GET.get('group_id', None)
+    def get_context_data(self, **kwargs):
+        context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        date = self.request.GET.get('date', '')
+        day = self.request.GET.get('day', '')
+        group_id = self.request.GET.get('group_id', None)
         today = datetime.date.today()
 
         if date != '':
@@ -843,37 +840,16 @@ class GetTrainerGroupScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMi
         end_date = today + datetime.timedelta(days=int(47))
         func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
 
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        context = {}
-        # context = super(GetTrainerGroupScheduleView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        date = request.POST.get('date', '')
-        day = request.POST.get('day', '')
-        group_id = request.POST.get('group_id', None)
-        today = datetime.date.today()
-        if date != '':
-            today = datetime.datetime.strptime(date, '%Y-%m-%d')
-        if day == '':
-            day = 18
-
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day) + 1)
-
-        func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id)
-        return render(request, self.template_name, context)
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/member_schedule_ajax.html'
 
-    def post(self, request):
-        context = {}
-        # context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        member_id = request.POST.get('member_id', None)
+    def get_context_data(self, **kwargs):
+        context = super(GetMemberScheduleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        member_id = self.request.GET.get('member_id', None)
         context['error'] = None
 
         if member_id is None or member_id == '':
@@ -882,60 +858,43 @@ class GetMemberScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, V
             context = func_get_trainee_schedule_list(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + context['error'])
-            messages.error(request, context['error'])
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + context['error'])
+            messages.error(self.request, context['error'])
 
-        return render(request, self.template_name, context)
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/member_repeat_schedule_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        member_id = self.request.GET.get('member_id', None)
         context['error'] = None
 
-        context = get_trainee_repeat_schedule_data_func(context, class_id, None)
-
-        if context['error'] is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + context['error'])
-            messages.error(request, context['error'])
-
-        return render(request, self.template_name, context)
-
-        # def post(self, request, *args, **kwargs):
-    def post(self, request):
-        # context = super(GetMemberRepeatScheduleView, self).get_context_data(**kwargs)
-        context = {}
-        class_id = request.session.get('class_id', '')
-        member_id = request.POST.get('member_id', None)
-        context['error'] = None
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + context['error'])
-            messages.error(request, context['error'])
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + context['error'])
+            messages.error(self.request, context['error'])
 
-        return render(request, self.template_name, context)
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/search_member_id_ajax.html'
 
-    def post(self, request):
-        context = {}
-        # context = super(GetMemberInfoView, self).get_context_data(**kwargs)
-        user_id = request.POST.get('id', '')
-        member_id = request.POST.get('member_id', '')
-        id_flag = request.POST.get('id_flag', 0)
-        class_id = request.session.get('class_id', '')
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetMemberInfoView, self).get_context_data(**kwargs)
+        user_id = self.request.GET.get('id', '')
+        member_id = self.request.GET.get('member_id', '')
+        id_flag = self.request.GET.get('id_flag', 0)
+        class_id = self.request.session.get('class_id', '')
 
         member = ''
         user = ''
@@ -989,7 +948,7 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
                     lecture_count += len(member_lecture_list)
 
         if error is None:
-            if member.reg_info is None or str(member.reg_info) != str(request.user.id):
+            if member.reg_info is None or str(member.reg_info) != str(self.request.user.id):
                 if lecture_count == 0:
                     member.sex = ''
                     member.birthday_dt = ''
@@ -1009,11 +968,11 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View)
 
         context['member_info'] = member
         if error is not None:
-            logger.error(
-                request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
-            messages.error(request, error)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name
+                         + '[' + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
-        return render(request, self.template_name, context)
+        return context
 
 
 class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -1356,7 +1315,6 @@ def delete_member_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def export_excel_member_list_logic(request):
     class_id = request.session.get('class_id', '')
     finish_flag = request.GET.get('finish_flag', '0')
@@ -1456,7 +1414,6 @@ def export_excel_member_list_logic(request):
     return response
 
 
-@csrf_exempt
 def export_excel_member_info_logic(request):
     class_id = request.session.get('class_id', '')
     member_id = request.GET.get('member_id', '')
@@ -1689,41 +1646,24 @@ def export_excel_member_info_logic(request):
     return response
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetLectureListView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetLectureListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/lecture_list_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetLectureListView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        member_id = request.GET.get('member_id', '')
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetLectureListView, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        member_id = self.request.GET.get('member_id', '')
         context['error'] = None
 
         context = func_get_lecture_list(context, class_id, member_id)
 
         if context['error'] is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + context['error'])
-            messages.error(request, context['error'])
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + context['error'])
+            messages.error(self.request, context['error'])
 
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        context = {}
-        # start_dt = timezone.now()
-        # context = super(GetLectureListView, self).get_context_data(**kwargs)
-        class_id = request.session.get('class_id', '')
-        member_id = request.POST.get('member_id', '')
-
-        context['error'] = None
-        context = func_get_lecture_list(context, class_id, member_id)
-        if context['error'] is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + context['error'])
-            messages.error(request, context['error'])
-        # end_dt = timezone.now()
-        return render(request, self.template_name, context)
+        return context
 
 
 # 회원가입 api
@@ -2623,7 +2563,6 @@ def delete_group_member_info_logic(request):
         return redirect(next_page)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/group_info_ajax.html'
 
@@ -2671,7 +2610,6 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/group_info_ajax.html'
 
@@ -2719,20 +2657,13 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/group_member_ajax.html'
 
-    def get(self, request):
-        context = {}
-        # context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        context = {}
-        # context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
-        # class_id = request.session.get('class_id', '')
-        group_id = request.POST.get('group_id', '')
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
+        group_id = self.request.GET.get('group_id', '')
         error = None
         member_data = []
         lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
@@ -2752,7 +2683,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                 else:
                     member_info.member.birthday_dt = str(member_info.member.birthday_dt)
 
-                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(request.user.id):
+                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(self.request.user.id):
                     if member_info.auth_cd != 'VIEW':
                         member_info.member.sex = ''
                         member_info.member.birthday_dt = ''
@@ -2828,13 +2759,12 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
                     member_data.append(member_info.member)
 
         if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
-                request.user.id) + ']' + error)
-            messages.error(request, error)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
         context['member_data'] = member_data
-
-        return render(request, self.template_name, context)
+        return context
 
 
 @csrf_exempt
@@ -2934,7 +2864,6 @@ def progress_group_info_logic(request):
         return render(request, 'ajax/trainer_error_ajax.html')
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
 
@@ -2985,7 +2914,6 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_repeat_data_ajax.html'
 
@@ -3004,7 +2932,6 @@ class GetGroupRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_repeat_data_ajax.html'
 
