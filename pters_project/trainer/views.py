@@ -18,9 +18,7 @@ from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from el_pagination.views import AjaxListView
@@ -1904,7 +1902,6 @@ def update_lecture_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def delete_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -1948,7 +1945,6 @@ def delete_lecture_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def finish_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2014,7 +2010,6 @@ def finish_lecture_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def refund_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2095,7 +2090,6 @@ def refund_lecture_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def progress_lecture_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2156,7 +2150,6 @@ def progress_lecture_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def update_lecture_connection_info_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     member_id = request.POST.get('member_id', '')
@@ -2221,7 +2214,6 @@ def update_lecture_connection_info_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def add_group_info_logic(request):
     class_id = request.session.get('class_id', '')
     group_type_cd = request.POST.get('group_type_cd', '')
@@ -2261,7 +2253,6 @@ def add_group_info_logic(request):
     return redirect(next_page)
 
 
-@csrf_exempt
 def delete_group_info_logic(request):
     class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
@@ -2303,7 +2294,6 @@ def delete_group_info_logic(request):
     return redirect(next_page)
 
 
-@csrf_exempt
 def update_group_info_logic(request):
     class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
@@ -2366,7 +2356,6 @@ def update_group_info_logic(request):
     return redirect(next_page)
 
 
-@csrf_exempt
 def add_group_member_logic(request):
     class_id = request.session.get('class_id', '')
     json_data = request.body.decode('utf-8')
@@ -2484,7 +2473,6 @@ def add_group_member_logic(request):
 
 
 # 그룹 회원 삭제
-@csrf_exempt
 def delete_group_member_info_logic(request):
     class_id = request.session.get('class_id', '')
     json_data = request.body.decode('utf-8')
@@ -2549,7 +2537,7 @@ def delete_group_member_info_logic(request):
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_name, class_tb_id=class_id,
-                             log_info=group_lecture_data.group_tb.get_group_type_cd_name()+' 수강 정보',
+                             log_info='수강 정보',
                              log_how='삭제', use=USE)
             log_data.save()
 
@@ -2767,7 +2755,6 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-@csrf_exempt
 def finish_group_info_logic(request):
     group_id = request.POST.get('group_id', '')
     # next_page = request.POST.get('next_page', '')
@@ -2818,7 +2805,6 @@ def finish_group_info_logic(request):
         return render(request, 'ajax/trainer_error_ajax.html')
 
 
-@csrf_exempt
 def progress_group_info_logic(request):
     group_id = request.POST.get('group_id', '')
     # next_page = request.POST.get('next_page', '')
@@ -3064,7 +3050,6 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
@@ -3112,7 +3097,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
@@ -3259,7 +3244,6 @@ class GetBackgroundImgListViewAjax(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
@@ -3324,7 +3308,7 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
         return render(request, self.template_name)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 

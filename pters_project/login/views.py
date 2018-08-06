@@ -13,11 +13,9 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
-from django.views.decorators.csrf import csrf_exempt
 from registration.backends.hmac.views import RegistrationView
 
 # Create your views here.
@@ -50,7 +48,6 @@ class IndexView(View):
         return render(request, self.template_name, context)
 
 
-@csrf_exempt
 def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
@@ -705,7 +702,6 @@ def out_member_logic(request):
         return redirect(next_page)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AddPushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
@@ -736,7 +732,6 @@ class AddPushTokenView(View):
         return render(request, self.template_name, {'token_check': token_exist})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class DeletePushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
@@ -769,7 +764,6 @@ class ClearBadgeCounterView(TemplateView):
         return context
 
 
-@csrf_exempt
 def clear_badge_counter_logic(request):
     push_token = request.session.get('push_token', '')
     error = None

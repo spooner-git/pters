@@ -255,7 +255,7 @@
 
             $.ajax({
                 url: "/payment/check_before_billing/", // 서비스 웹서버
-                method: "POST",
+                type: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
                     payment_type_cd: payment_type_cd,
@@ -263,7 +263,10 @@
                     price : price
                 }),
 
-                beforeSend:function(){
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                     beforeSend();
                 },
 
@@ -369,7 +372,7 @@
 
                         $.ajax({
                             url: "/payment/check_finish_billing/", // 서비스 웹서버
-                            method: "POST",
+                            type: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
                                 merchandise_type_cd : merchandise_type_cd,
@@ -378,7 +381,10 @@
                                 start_date: payment_date
                             }),
 
-                            beforeSend:function(){
+                            beforeSend:function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
                                 beforeSend();
                             },
 

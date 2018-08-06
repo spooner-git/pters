@@ -3107,7 +3107,10 @@ function resend_member_reg_data_pc(lectureID, dbID){
         data:{"lecture_id":lectureID,"member_id":dbID,"member_view_state_cd": 'WAIT' , "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -3149,7 +3152,10 @@ function delete_member_reg_data_pc(lectureID, dbID){
         data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -3198,7 +3204,10 @@ function complete_member_reg_data_pc(lectureID, dbID){
         data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/get_error_info/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -3248,7 +3257,10 @@ function resume_member_reg_data_pc(lectureID, dbID){
         data:{"lecture_id":lectureID, "member_id" : dbID, "next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -3309,7 +3321,10 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
             data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price , "refund_date":refund_date, "next_page":'/trainer/get_member_list/'},
             dataType : 'html',
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 beforeSend();
             },
 
@@ -3367,7 +3382,10 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
         data:{"lecture_id":lectureID, "member_id": dbID, "member_view_state_cd": stateCode ,"next_page":'/trainer/get_member_list/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -4012,7 +4030,10 @@ function add_group_form_func(){
         },
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -4077,7 +4098,10 @@ function add_groupmember_form_func(){
         data: JSON.stringify(added_member_info_to_jsonformat()),
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -4566,7 +4590,10 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
         data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_trainer_schedule/'},
         dataType:'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -4612,7 +4639,10 @@ function send_push_func(lecture_id, title, message){
         dataType: 'html',
         data : {"lecture_id":lecture_id, "title":title, "message":message, "next_page":'/trainer/get_error_info/'},
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 
@@ -4638,7 +4668,10 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
         data:{"repeat_schedule_id" : repeat_schedule_id, "next_page" : '/trainer/get_error_info/'},
         dataType:'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
         },
 

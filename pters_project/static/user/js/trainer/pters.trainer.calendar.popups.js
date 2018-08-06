@@ -913,7 +913,10 @@
             type:'POST',
             data:{"schedule_id":schedule_id,"add_memo":memo},
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 //beforeSend();
             },
 
@@ -944,7 +947,10 @@
             type:'POST',
             data:send_data,
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 //beforeSend();
             },
 

@@ -757,7 +757,10 @@ function delete_group_from_list(group_id){
         data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -812,7 +815,10 @@ function delete_groupmember_from_grouplist(){
         //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -855,7 +861,10 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -922,7 +931,10 @@ function modify_group_status(group_id, option){
         data: {"group_id":group_id},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 

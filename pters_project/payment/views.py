@@ -42,7 +42,6 @@ class PaymentView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-@csrf_exempt
 def check_before_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
@@ -120,7 +119,6 @@ def check_before_billing_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-@csrf_exempt
 def check_finish_billing_logic(request):
 
     json_data = request.body.decode('utf-8')
@@ -249,7 +247,6 @@ def billing_check_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-@csrf_exempt
 def cancel_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     cancel_type = request.POST.get('cancel_type', '')
@@ -294,7 +291,6 @@ def cancel_period_billing_logic(request):
 
 
 # 정기 결제 재시작 기능 - 확인 필요
-@csrf_exempt
 def restart_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     next_page = request.POST.get('next_page', '')
@@ -349,7 +345,6 @@ def restart_period_billing_logic(request):
 
 
 # 정기 결제 일시정지 해제 기능 - 확인 필요
-@csrf_exempt
 def clear_pause_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     next_page = request.POST.get('next_page', '')
@@ -404,7 +399,6 @@ def clear_pause_period_billing_logic(request):
     return redirect(next_page)
 
 
-@csrf_exempt
 def update_period_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
@@ -454,7 +448,6 @@ def update_period_billing_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-@csrf_exempt
 def check_update_period_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
@@ -557,7 +550,6 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         return context
 
 
-@csrf_exempt
 def resend_period_billing_logic(request):
 
     json_data = request.body.decode('utf-8')
@@ -598,7 +590,6 @@ def resend_period_billing_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-@csrf_exempt
 def delete_billing_info_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
@@ -635,7 +626,6 @@ def delete_billing_info_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
-@csrf_exempt
 def delete_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None

@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 from configs.const import USE
@@ -13,7 +12,6 @@ from .models import QATb
 logger = logging.getLogger(__name__)
 
 
-@csrf_exempt
 def question_reg_logic(request):
 
     qa_type_cd = request.POST.get('inquire_type', '')

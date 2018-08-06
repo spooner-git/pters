@@ -535,7 +535,10 @@ $(document).ready(function(){
             dataType: 'html',
             data : {"class_id":class_id, "title":title, "message":message, "next_page":'/trainee/get_trainee_error_info/'},
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 beforeSend();
             },
 

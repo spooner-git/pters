@@ -16,7 +16,6 @@ from django.db import transaction
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.core.files.base import ContentFile
 
@@ -474,7 +473,6 @@ def finish_schedule_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def upload_sign_image_logic(request):
 
     schedule_id = request.POST.get('schedule_id', '')
@@ -510,7 +508,6 @@ def upload_sign_image_logic(request):
 
 
 # 메모 수정
-@csrf_exempt
 def update_memo_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     note = request.POST.get('add_memo', '')
@@ -873,7 +870,6 @@ def add_repeat_schedule_confirm(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def delete_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id', '')
@@ -1081,7 +1077,6 @@ class CheckScheduleUpdateViewAjax(LoginRequiredMixin, View):
 
 
 # 일정 추가
-@csrf_exempt
 def add_group_schedule_logic(request):
     group_id = request.POST.get('group_id')
     schedule_date = request.POST.get('training_date')
@@ -1609,7 +1604,6 @@ def finish_group_schedule_logic(request):
 
 
 # 일정 추가
-@csrf_exempt
 def add_member_group_schedule_logic(request):
     member_id = request.POST.get('member_id')
     group_schedule_id = request.POST.get('schedule_id')
@@ -1747,7 +1741,6 @@ def add_member_group_schedule_logic(request):
 
 
 # 일정 추가
-@csrf_exempt
 def add_other_member_group_schedule_logic(request):
     member_id = request.POST.get('member_id')
     lecture_id = request.POST.get('lecture_id')
@@ -2298,7 +2291,6 @@ def add_group_repeat_schedule_confirm(request):
 
 
 # 그룹 반복 일정 취소
-@csrf_exempt
 def delete_group_repeat_schedule_logic(request):
 
     repeat_schedule_id = request.POST.get('repeat_schedule_id')
@@ -2498,7 +2490,6 @@ def delete_schedule_logic_func(schedule_id, lecture_id, repeat_schedule_id, en_d
     return error
 
 
-@csrf_exempt
 def send_push_to_trainer_logic(request):
     class_id = request.session.get('class_id', '')
     title = request.POST.get('title', '')
@@ -2521,7 +2512,6 @@ def send_push_to_trainer_logic(request):
         return redirect(next_page)
 
 
-@csrf_exempt
 def send_push_to_trainee_logic(request):
     lecture_id = request.POST.get('lecture_id', '')
     title = request.POST.get('title', '')

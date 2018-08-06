@@ -1,7 +1,6 @@
 # from django.test import TestCase
 
 # Create your tests here.
-# @method_decorator(csrf_exempt, name='dispatch')
 # class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, View):
 #     template_name = 'ajax/schedule_ajax.html'
 #

@@ -1312,7 +1312,10 @@ function clear_badge_counter(){
         type:'POST',
         //dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             //alert('before clear_badge_counter afsavf')
             console.log('before');
         },
