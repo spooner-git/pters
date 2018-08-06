@@ -596,6 +596,8 @@ a:focus, a:hover{
 
 .fixfooter{
     display: none;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 
 
@@ -627,6 +629,7 @@ a:focus, a:hover{
 }
 
 .bottomfooter2 a{
+    display: inline-block;
     color: #7d7d7d;
 }
 
@@ -650,9 +653,12 @@ a:focus, a:hover{
     color: #7d7d7d;
 }
 .bottomfooter3 span{
+    display: inline-block;
+}
+.bottomfooter3 span.footercontent{
     margin-left: 10px;
     margin-right: 10px;
-    color: #ffffff;
+    color: #282828;
 }
 
 

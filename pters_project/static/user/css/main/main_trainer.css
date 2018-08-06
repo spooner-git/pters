@@ -186,13 +186,16 @@ body{
 .fixfooter{
 	display: block;
 	position: fixed;
-	bottom: 0;
 	width: 100%;
 	/*height: 150px;*/
 	padding-bottom: 15px;
 	background: #ffffff;
 	z-index: 1;
 	background: rgba(40, 40, 40, 0.50);
+	bottom: 0;
+
+	border-top: 0 !important;
+    border-bottom: 0 !important;
 }
 
 .bottomfooter1{
@@ -206,7 +209,9 @@ body{
 .bottomfooter2 a{
 	color: #ffffff;
 }
-
+.bottomfooter3 {
+	display: none;
+}
 .bottomfooter3 p{
 	color: #cccccc;
 }
@@ -226,10 +231,10 @@ body{
 
 @media(max-width:600px){
 	.bottomfooter2{
-		display:none;
+		display:block;
 	}
 	.bottomfooter3{
-		display:block;
+		display:none;
 	}
 }
 

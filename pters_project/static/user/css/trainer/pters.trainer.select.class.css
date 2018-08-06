@@ -9,6 +9,9 @@ body{
 .borderless_bottom{
 	border-bottom-color: #ffffff !important;
 }
+.popupBtn_mini{
+	border-top: 0 !important;
+}
 
 #popup_lecture_select{
 	position: fixed;
