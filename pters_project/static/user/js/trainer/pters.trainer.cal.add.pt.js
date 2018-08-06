@@ -500,6 +500,219 @@ $(document).ready(function(){
     }
     //긁어서 일정 추가
 
+    //모바일 버전에서 weekcal 클릭해서 일정 추가하기 20180806 test
+    var timeIndexY = [];
+    var timeIndexhour = [];
+    function get_timeindex_Y(){
+        timeIndexY = [];
+        var timeIndexHeight = $('.hour').height();
+        var timeIndexTopLoc = $('.timeindex').offset().top;
+        for(var y=Options.workStartTime; y<Options.workEndTime;y++){
+            var timeY = $('#hour'+y).offset().top;
+            timeIndexY.push(timeY, timeY + timeIndexHeight/2);
+            timeIndexhour.push(y+'_00', y+'_30');
+        }
+        timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height());
+        timeIndexhour.push(Options.workEndTime-1+'_00')
+    }
+
+    $(document).on('click','.td00',function(e){
+        get_timeindex_Y();
+        var thisOffsetTop = $(this).offset().top;
+        if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+            if(Options.classDur == 30){var blankmark = 'blankSelected30'}
+                else if(Options.classDur == 60){var blankmark = 'blankSelected'}
+
+            var localarray = timeIndexY.slice();
+            var localharray = timeIndexhour.slice();
+
+            var $classTimes = $(this).find('.classTime');
+            var $offTimes = $(this).find('.offTime');
+            var $groupTimes = $(this).find('.groupTime');
+
+            $classTimes.each(function(){
+                var thisLoc = $(this).offset().top;
+                var thisHeight = $(this).height();
+                localarray.push(thisLoc, thisLoc+thisHeight);
+                localharray.push('classTime');
+            })
+            
+            $offTimes.each(function(){
+                var thisLoc = $(this).offset().top;
+                var thisHeight = $(this).height();
+                localarray.push(thisLoc, thisLoc+thisHeight);
+                localharray.push('offTime');
+            })
+
+            $groupTimes.each(function(){
+                var thisLoc = $(this).offset().top;
+                var thisHeight = $(this).height();
+                localarray.push(thisLoc, thisLoc+thisHeight);
+                localharray.push('groupTime');
+            })
+
+            $('.'+blankmark).removeClass(blankmark);
+            e.stopPropagation();
+            var thisID = getThisId(this);
+            var thisY = e.pageY;
+
+            localarray.push(thisY);
+            var timeIndexY_ = localarray.sort(function(a,b){return a-b});
+            var thisIndex = timeIndexY_.indexOf(thisY);
+            var targetY = timeIndexY_[thisIndex-1];
+            var targetYLimit = timeIndexY_[thisIndex+1];
+            console.log(timeIndexY_)
+            console.log(timeIndexhour)
+            console.log(thisY)
+            if(targetYLimit - targetY > Options.classDur*calendarSize-0.75){
+                $(this).find('div.blankbox').addClass(blankmark);
+                $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
+                show_mini_plan_add_popup_tablet(thisID+'_'+localharray[thisIndex-1],1) 
+                //2018_8_6_0_00
+            }else{
+                alert('좁아')
+            }
+        }
+    })
+
+    function getThisId(selector){
+        return $(selector).attr('id');
+    }
+    function show_mini_plan_add_popup_tablet(thisID, dur){
+        var durMin = dur*Options.classDur
+        var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
+        $("#id_training_date, #id_training_date_off, #id_training_end_date, #id_training_end_date_off").val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        $("#id_training_time, #id_training_time_off").val(starttime);
+        $('#id_memo_mini, #id_memo_mini_off').val('')
+
+        if(addTypeSelect == "ptadd"){ //Form 셋팅
+            $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
+            $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
+        }else if(addTypeSelect == "offadd"){
+            $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
+            $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
+        }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatgroupptadd"){
+            addTypeSelect = 'ptadd'
+            $('#id_training_end_time').val(add_time(starttime, '00:'+durMin))
+            $('#id_training_end_time_off').val(add_time(starttime, '00:'+durMin))
+        }
+        //$("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(((Options.classDur*Number(dur))/60)+'시간').val(dur);
+        $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text(duration_number_to_hangul((Options.classDur*Number(dur))/60)).val(dur);
+
+        var endTime = (Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60));
+        if(endTime == Options.workEndTime){
+            endTime = Options.workEndTime-1;
+        }
+
+        var endMin;
+        var endHour;
+        if((Options.classDur*Number(dur))/60 - parseInt((Options.classDur*Number(dur))/60) == 0.5){
+            if(thisID.split('_')[4] == "00"){
+                endMin = "30";
+                endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60);
+            }else{
+                endMin = "00";
+                endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60)+1;
+            }
+        }else{
+            endMin = thisID.split('_')[4];
+            endHour = Number(thisID.split('_')[3])+parseInt((Options.classDur*Number(dur))/60);
+        }
+
+        var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4];
+
+        $('#datetext_mini').text(thisID.split('_')[0]+'년 '+
+            thisID.split('_')[1]+'월 '+
+            thisID.split('_')[2]+'일 '+
+            thisID.split('_')[3]+':'+
+            thisID.split('_')[4]+'~ '+
+            endHour+':'+
+            endMin
+            //' ('+
+            //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
+        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+
+        $('.typeSelected').removeClass('typeSelected')
+        $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
+        if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
+            $('._MINI_ptadd').css('display','inline')
+            //$('._MINI_offadd').hide()
+        }else if(addTypeSelect == "offadd"){
+            //$('._MINI_offadd').show()
+            $('._MINI_ptadd').css('display','none')
+        }
+
+        if(Options.classDur == 30){
+            var blankbox = 'blankSelected30'
+        }else{
+            var blankbox = 'blankSelected'
+        }
+        var blankTop = $('.'+blankbox).offset().top;
+        var blankLeft = $('.'+blankbox).offset().left;
+        var blankWidth = $('.'+blankbox).width();
+        var blankRight = blankLeft + blankWidth;
+        //$('#page-addplan-pc').show().css({'top':blankTop+'px','left':blankRight+'px'});
+
+        //미니 팝업 위치 보정
+        
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        var popupwidth = $('#page-addplan-pc').width();
+        var popupheight = $('#page-addplan-pc').height();
+        var startTopLoc = $('.'+blankbox).offset().top;
+        var startLeftLoc = $('.'+blankbox).offset().left;
+        var startWidth = $('.'+blankbox).width();
+        if(Options.classDur == 60){
+            var startHeight = $('#'+thisID).height()*2;
+        }else if(Options.classDur == 30){
+            var startHeight = 0;
+        };
+        var endTopLoc = blankTop + $('.'+blankbox).height();
+        var endLeftLoc = blankLeft;
+        var endWidth = blankWidth;
+        var scrollTop = $(window).scrollTop();
+        var weekTopLoc = $('#week').offset().top;
+        var weekHeight = $('#week').height();
+
+        var popupRightLoc = endLeftLoc+endWidth+popupwidth;
+        var popupBottomLoc = endTopLoc + popupheight;
+        if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
+            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
+            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
+            }else{ //그외
+                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
+            }
+        }else{
+            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
+            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
+            }else{
+                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
+            }
+        }
+        
+        //미니 팝업 위치 보정
+        
+ 
+
+        ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
+            if($('.add_time_unit').hasClass('checked')){
+                durTimeSet(thisID.split('_')[3], thisID.split('_')[4],"mini", 5);
+            }else{
+                durTimeSet(thisID.split('_')[3], thisID.split('_')[4],"mini", Options.classDur);
+            }
+        });
+
+        //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth});
+        check_dropdown_selected_addplan()
+    }
+
+    //모바일 버전에서 weekcal 클릭해서 일정 추가하기 test
+
+
     function show_mini_plan_add_popup(thisID, dur){
         var durMin = dur*Options.classDur
         var starttime = time_h_format_to_hh(thisID.split('_')[3])+':'+thisID.split('_')[4];
