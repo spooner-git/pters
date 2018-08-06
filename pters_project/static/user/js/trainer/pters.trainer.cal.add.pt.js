@@ -502,19 +502,22 @@ $(document).ready(function(){
 
     //모바일 버전에서 weekcal 클릭해서 일정 추가하기 20180806 test
     var timeIndexY = [];
+    var timePlanY = [];
     var timeIndexhour = [];
     function get_timeindex_Y(){
         timeIndexY = [];
         timeIndexhour = [];
+        timePlanY = [];
         var timeIndexHeight = $('.hour').height();
         var timeIndexTopLoc = $('.timeindex').offset().top;
         for(var y=Options.workStartTime; y<Options.workEndTime;y++){
             var timeY = $('#hour'+y).offset().top;
-            timeIndexY.push(timeY, timeY + timeIndexHeight/2);
+            timeIndexY.push(timeY-0.5, timeY + timeIndexHeight/2);
             timeIndexhour.push(time_h_format_to_hh(y)+'_00', time_h_format_to_hh(y)+'_30');
         }
-        timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height());
-        timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00')
+        timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
+        timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00');
+        timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5)
     }
 
     $(document).on('click','.td00',function(e){
@@ -525,6 +528,7 @@ $(document).ready(function(){
 
             var localarray = timeIndexY.slice();
             var localharray = timeIndexhour.slice();
+            var localparray = timePlanY.slice();
 
             var $classTimes = $(this).find('.classTime');
             var $offTimes = $(this).find('.offTime');
@@ -535,6 +539,7 @@ $(document).ready(function(){
                 var thisHeight = $(this).height();
                 var thisInfo = $(this).attr('class-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
+                localparray.push(thisLoc, thisLoc+thisHeight);
                 localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
             
@@ -543,6 +548,7 @@ $(document).ready(function(){
                 var thisHeight = $(this).height();
                 var thisInfo = $(this).attr('off-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
+                localparray.push(thisLoc, thisLoc+thisHeight);
                 localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
 
@@ -551,6 +557,7 @@ $(document).ready(function(){
                 var thisHeight = $(this).height();
                 var thisInfo = $(this).attr('group-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
+                localparray.push(thisLoc, thisLoc+thisHeight);
                 localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
 
@@ -560,22 +567,28 @@ $(document).ready(function(){
             var thisY = e.pageY;
 
             localarray.push(thisY);
+            localparray.push(thisY);
             var timeIndexY_ = localarray.sort(function(a,b){return a-b});
+            var planIndexY_ = localparray.sort(function(a,b){return a-b});
             var timeHour = localharray.sort();
             var thisIndex = timeIndexY_.indexOf(thisY);
             var targetY = timeIndexY_[thisIndex-1];
             var targetYLimit = timeIndexY_[thisIndex+1];
-            console.log(timeIndexY_)
-            console.log(localharray)
-            console.log(timeHour)
-            console.log(thisY)
-            if(targetYLimit - targetY > Options.classDur*calendarSize-0.75){
-                $(this).find('div.blankbox').addClass(blankmark);
-                $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
-                show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
-                //2018_8_6_0_00
+
+            var planNextto = localparray[localparray.indexOf(thisY)+1];
+
+            if( (Options.classDur/30)*targetYLimit - targetY >= Options.classDur*calendarSize){
+                if(planNextto - targetY >= Options.classDur*calendarSize){
+                    $(this).find('div.blankbox').addClass(blankmark);
+                    $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
+                    show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
+                    //2018_8_6_0_00
+                }else{
+                    console.log('클릭한 곳과 일정간 거리가 너무 짧음')
+                }
+
             }else{
-                alert('좁아')
+                console.log('너무 좁아')
             }
         }
     })
