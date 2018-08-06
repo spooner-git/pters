@@ -1362,16 +1362,8 @@ def export_excel_member_list_logic(request):
     finish_flag = request.GET.get('finish_flag', '0')
 
     error = None
-    # class_info = None
-    # member_id = None
     member_list = []
     member_finish_list = []
-    # filename_temp = ''
-    # 강사 정보 가져오기
-    # try:
-    #     class_info = ClassTb.objects.get(class_id=class_id)
-    # except ObjectDoesNotExist:
-    #     error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
         member_list = func_get_member_ing_list(class_id, request.user.id)
@@ -1458,9 +1450,6 @@ def export_excel_member_list_logic(request):
     else:
         response['Content-Disposition'] = 'attachment; filename="' + quote(filename) + '"'
 
-    # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
-
     if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                      + str(request.user.id) + ']' + error)
@@ -1473,7 +1462,6 @@ def export_excel_member_info_logic(request):
     member_id = request.GET.get('member_id', '')
 
     error = None
-    class_info = None
     member_info = None
     lecture_counts = 0
     np_lecture_counts = 0
@@ -1487,11 +1475,6 @@ def export_excel_member_info_logic(request):
 
     wb = Workbook()
     ws1 = wb.active
-
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
 
     if error is None:
         try:
@@ -1682,6 +1665,7 @@ def export_excel_member_info_logic(request):
                         schedule_idx -= 1
 
                 ws1 = wb.create_sheet()
+
     user_agent = request.META['HTTP_USER_AGENT']
     filename = str(member_info.name + '_회원님_수강정보.xlsx').encode('utf-8')
     # test_str = urllib.parse.unquote('한글')
