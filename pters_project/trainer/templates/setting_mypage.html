@@ -5,7 +5,17 @@
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.mypage.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
     <style type="text/css">
-
+        .fixfooter{
+            position: relative;
+        }
+        @media(min-width:600px){
+            .fixfooter{
+                position: relative;
+            }
+            .bottomfooter3 span{
+                color: #282828;
+            }
+        }
         
     </style>
 {% endblock %}

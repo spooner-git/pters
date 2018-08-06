@@ -596,6 +596,8 @@ a:focus, a:hover{
 
 .fixfooter{
     display: none;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 
 
@@ -615,11 +617,11 @@ a:focus, a:hover{
 }
 
 .bottomfooter2{
-    width: 512px;
     max-width: 1000px;
     margin:0 auto;
     color: #282828;
-    font-size: 10px;
+    font-size: 11px;
+    text-align: center;
 }
 
 .bottomfooter2 p{
@@ -627,7 +629,8 @@ a:focus, a:hover{
 }
 
 .bottomfooter2 a{
-    color: #ffffff;
+    display: inline-block;
+    color: #7d7d7d;
 }
 
 .bottomfooter2 a:hover{
@@ -635,22 +638,30 @@ a:focus, a:hover{
 }
 
 .bottomfooter3{
-    width: 300px;
-    max-width: 300px;
+    width: 100%;
+    max-width: 1000px;
     margin:0 auto;
+    margin-top: 20px;
     color: #282828;
-    font-size: 10px;
-    display: none;
+    font-size: 10.5px;
+
     text-align: center;
 }
 
 .bottomfooter3 p{
-    margin-bottom:1px;
+    margin-bottom:4px;
+    color: #7d7d7d;
+}
+.bottomfooter3 span{
+    display: inline-block;
+}
+.bottomfooter3 span.footercontent{
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #282828;
 }
 
-.bottomfooter3 a{
-    color: #ffffff;
-}
+
 
 .bottomfooter3 a:hover{
     color:#fe4e65;

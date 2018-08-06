@@ -614,9 +614,13 @@ body{
 
 
 .fixfooter {
-	display: none;
+	display: block;
+	position: relative;
+	background: #ffffff;
 }
-
+.bottomfooter3 span{
+	display: inline-block;
+}
 
 
 @media(min-width: 600px){
@@ -690,7 +694,10 @@ body{
 
 
 	.fixfooter{
-		position: fixed;
+		position: relative;
 		margin-top: 50px;
+	}
+	.bottomfooter3 span{
+		color: #282828;
 	}
 }
