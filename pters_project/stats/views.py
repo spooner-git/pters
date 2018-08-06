@@ -122,4 +122,4 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, TemplateView):
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
                          + str(self.request.user.id) + ']' + error)
             messages.error(self.request, error)
-        return render(self.request, self.template_name, context)
+        return context
