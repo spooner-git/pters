@@ -923,7 +923,7 @@ $(document).ready(function(){
             }else if(Options.classDur == 30){
                 var blankbox = 'blankSelected30';
             }
-            $('.'+blankbox).css({'height':Options.classDur*duration})
+            $('.'+blankbox).css({'height':Options.classDur*duration*calendarSize})
         }else{
             if(Options.classDur == 60){
                 var selectedDuration = Number(duration)/2;
