@@ -1736,6 +1736,148 @@ def add_member_group_schedule_logic(request):
         return redirect(next_page)
 
 
+# 일정 추가
+@csrf_exempt
+def add_other_member_group_schedule_logic(request):
+    member_id = request.POST.get('member_id')
+    lecture_id = request.POST.get('lecture_id')
+    group_schedule_id = request.POST.get('schedule_id')
+    note = request.POST.get('add_memo', '')
+    date = request.POST.get('date', '')
+    day = request.POST.get('day', '')
+    class_id = request.session.get('class_id', '')
+    class_type_name = request.session.get('class_type_name', '')
+    next_page = request.POST.get('next_page')
+    setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+
+    error = None
+    group_info = None
+    schedule_info = None
+    member_info = None
+    group_id = ''
+
+    push_lecture_id = []
+    push_title = []
+    push_message = []
+    context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+
+    request.session['date'] = date
+    request.session['day'] = day
+
+    if group_schedule_id == '':
+        error = '일정을 선택해 주세요.'
+
+    if note is None:
+        note = ''
+
+    if error is None:
+        # 스케쥴 정보 가져오기
+        try:
+            schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
+        except ObjectDoesNotExist:
+            error = '일정 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_id = schedule_info.group_tb_id
+
+    if error is None:
+        # 그룹 정보 가져오기
+        try:
+            group_info = GroupTb.objects.get(group_id=group_id)
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다.'
+
+    if error is None:
+        # 회원 정보 가져오기
+        try:
+            member_info = MemberTb.objects.get(member_id=member_id)
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        # 회원 정보 가져오기
+        try:
+            lecture_info = LectureTb.objects.get(member_id=member_id)
+            if lecture_info.lecture_avail_count == 0:
+                error = '예약 가능 횟수가 없습니다.'
+        except ObjectDoesNotExist:
+            error = '회원 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,
+                                                        lecture_tb__member_id=member_id)
+        if len(group_schedule_data) != 0:
+            error = '일정에 포함되어있는 회원입니다.'
+
+    if error is None:
+        error = func_check_group_available_member_before(class_id, group_id, group_schedule_id)
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                if error is None:
+
+                    state_cd = schedule_info.state_cd
+                    if setting_schedule_auto_finish == AUTO_FINISH_ON \
+                            and timezone.now() > schedule_info.end_dt:
+                        state_cd = 'PE'
+                    schedule_result = func_add_schedule(class_id, lecture_id, None,
+                                                        group_id, group_schedule_id,
+                                                        schedule_info.start_dt, schedule_info.end_dt,
+                                                        note, ON_SCHEDULE_TYPE,
+                                                        request.user.id, state_cd)
+                    error = schedule_result['error']
+
+                if error is None:
+                    error = func_refresh_lecture_count(lecture_id)
+
+                if error is None:
+                    error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
+
+                if error is not None:
+                    raise InternalError()
+
+        except TypeError:
+            error = error
+        except ValueError:
+            error = error
+        except IntegrityError:
+            error = error
+        except InternalError:
+            error = error
+
+    if error is None:
+        log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         to_member_name=member_info.name,
+                         class_tb_id=class_id,
+                         log_info='[' + group_info.get_group_type_cd_name() + '] ' + group_info.name + ' 일정',
+                         log_how='등록',
+                         log_detail=str(schedule_info.start_dt) + '/' + str(schedule_info.end_dt), use=USE)
+        log_data.save()
+
+    if error is None:
+        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+
+        push_lecture_id.append(lecture_id)
+        push_title.append(class_type_name + ' 수업 - 일정 알림')
+        push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                            + ' [' + group_info.get_group_type_cd_name() + '] ' + group_info.name + ' 일정을 등록했습니다')
+        context['push_lecture_id'] = push_lecture_id
+        context['push_title'] = push_title
+        context['push_message'] = push_message
+
+        return render(request, 'ajax/schedule_error_info.html', context)
+    else:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+        return redirect(next_page)
+
+
 # 그룹 반복 일정 추가
 def add_group_repeat_schedule_logic(request):
     group_id = request.POST.get('group_id', '')
