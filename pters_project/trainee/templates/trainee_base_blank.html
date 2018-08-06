@@ -369,6 +369,7 @@
         $.ajax({
             url: '/trainee/get_trainee_lecture_list/',
             data:{"class_id": classid, "auth_cd":'WAIT'},
+            type:'GET',
             dataType : 'html',
 
             beforeSend:function(){

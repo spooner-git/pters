@@ -2142,7 +2142,7 @@ function get_repeat_info(dbID){
         url_ = '/trainer/get_member_repeat_schedule/';
         data_ = {"member_id": dbID};
         fill_option = 'class';
-        type_ = 'POST';
+        type_ = 'GET';
     }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatgroupptadd"){
         url_ = '/trainer/get_group_repeat_schedule_list/';
         data_ = {"group_id": dbID};

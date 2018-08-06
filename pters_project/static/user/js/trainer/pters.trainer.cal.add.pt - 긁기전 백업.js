@@ -1360,7 +1360,7 @@ function get_repeat_info(dbID){
       var url_ = '/trainer/get_member_repeat_schedule/'
       var data_ = {"member_id": dbID}
       var fill_option = 'class'
-      var type_ = 'POST'
+      var type_ = 'GET'
     }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatgroupptadd"){
       var url_ = '/trainer/get_group_repeat_schedule_list/'
       var data_ = {"group_id": dbID}

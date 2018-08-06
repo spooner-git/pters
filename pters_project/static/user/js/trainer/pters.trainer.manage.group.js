@@ -846,7 +846,7 @@ $(document).ready(function(){
         var searchID = $('#memberSearch_add').val()
         $.ajax({
             url:'/trainer/get_member_info/',
-            type:'POST',
+            type:'GET',
             data: {'id':searchID, 'id_flag':user_id_flag},
             dataType : 'html',
 
@@ -2561,7 +2561,7 @@ function limit_char(e){
 function get_indiv_member_info(dbID){
     $.ajax({
         url: '/trainer/get_member_info/',
-        type:'POST',
+        type:'GET',
         data: {"member_id": dbID, 'id_flag':db_id_flag},
         dataType : 'html',
 
@@ -3393,7 +3393,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 function get_member_lecture_list(dbID, use, callback){
     $.ajax({
         url:'/trainer/get_lecture_list/',
-        type:'POST',
+        type:'GET',
         data:{"member_id":dbID},
         dataType : 'html',
 
@@ -3694,7 +3694,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 function get_member_history_list(dbID){
     $.ajax({
         url:'/trainer/get_member_schedule/',
-        type:'POST',
+        type:'GET',
         data:{"member_id":dbID},
         dataType : 'html',
 
@@ -4390,7 +4390,7 @@ function initialize_add_member_sheet(){
 function get_indiv_repeat_info(dbID){
     $.ajax({
         url: '/trainer/get_member_repeat_schedule/',
-        type:'POST',
+        type:'GET',
         data: {"member_id": dbID},
         dataType : 'html',
 

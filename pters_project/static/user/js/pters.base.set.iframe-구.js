@@ -879,7 +879,7 @@ function get_trainee_participate_group(use, callback){
         url: '/trainee/get_trainee_group_ing_list/',
         //data: $('#pt-add-form').serialize(),
         dataType : 'html',
-        //type:'POST',
+        type:'GET',
 
         beforeSend:function(){
             beforeSend();

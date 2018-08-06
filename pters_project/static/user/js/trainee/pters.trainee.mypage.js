@@ -181,7 +181,7 @@ $(document).ready(function(){
         $.ajax({
             url: '/trainee/get_trainee_schedule_history/',
             dataType : 'html',
-            type:'POST',
+            type:'GET',
 
             beforeSend:function(){
                 //AjaxBeforeSend();
@@ -257,7 +257,7 @@ $(document).ready(function(){
             url: '/trainee/get_trainee_lecture_list/',
             data:{"class_id":class_id[0], "auth_cd":'VIEW'},
             dataType : 'html',
-            type:'POST',
+            type:'GET',
 
             beforeSend:function(){
                 //AjaxBeforeSend();

@@ -1073,7 +1073,7 @@ $(document).ready(function(){
         $('.mode_switch_button').addClass('disabled_button');
         $.ajax({
             url: '/trainee/get_trainee_schedule/',
-            type : 'POST',
+            type : 'GET',
             data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
             dataType : 'html',
 
@@ -1697,7 +1697,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
 
     $.ajax({
         url: '/trainee/get_trainee_schedule/',
-        type : 'POST',
+        type : 'GET',
         data : {"date":today_form, "day":date_form},
         dataType : 'html',
 
@@ -1950,7 +1950,7 @@ function get_trainee_reg_history(use, callback){
         url: '/trainee/get_trainee_lecture_list/',
         data:{"class_id":class_id[0], "auth_cd":'VIEW'},
         dataType : 'html',
-        type:'POST',
+        type:'GET',
 
         beforeSend:function(){
             //AjaxBeforeSend();
