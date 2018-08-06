@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -1361,16 +1362,8 @@ def export_excel_member_list_logic(request):
     finish_flag = request.GET.get('finish_flag', '0')
 
     error = None
-    # class_info = None
-    # member_id = None
     member_list = []
     member_finish_list = []
-    # filename_temp = ''
-    # 강사 정보 가져오기
-    # try:
-    #     class_info = ClassTb.objects.get(class_id=class_id)
-    # except ObjectDoesNotExist:
-    #     error = '강사 정보를 불러오지 못했습니다.'
 
     if error is None:
         member_list = func_get_member_ing_list(class_id, request.user.id)
@@ -1381,19 +1374,21 @@ def export_excel_member_list_logic(request):
     start_raw = 3
 
     ws1['A2'] = '회원명'
-    ws1['B2'] = '회원 ID'
-    ws1['C2'] = '등록 횟수'
-    ws1['D2'] = '남은 횟수'
-    ws1['E2'] = '시작 일자'
-    ws1['F2'] = '종료 일자'
-    ws1['G2'] = '연락처'
+    ws1['B2'] = '수강유형'
+    ws1['C2'] = '회원 ID'
+    ws1['D2'] = '등록 횟수'
+    ws1['E2'] = '남은 횟수'
+    ws1['F2'] = '시작 일자'
+    ws1['G2'] = '종료 일자'
+    ws1['H2'] = '연락처'
     ws1.column_dimensions['A'].width = 10
     ws1.column_dimensions['B'].width = 20
-    ws1.column_dimensions['C'].width = 10
+    ws1.column_dimensions['C'].width = 20
     ws1.column_dimensions['D'].width = 10
-    ws1.column_dimensions['E'].width = 15
+    ws1.column_dimensions['E'].width = 10
     ws1.column_dimensions['F'].width = 15
-    ws1.column_dimensions['G'].width = 20
+    ws1.column_dimensions['G'].width = 15
+    ws1.column_dimensions['H'].width = 20
     filename_temp = request.user.last_name + request.user.first_name + '님_'
     if finish_flag == '0':
         filename_temp += '진행중_회원목록'
@@ -1402,20 +1397,21 @@ def export_excel_member_list_logic(request):
         ws1['A1'].font = Font(bold=True, size=15)
         for member_info in member_list:
             ws1['A' + str(start_raw)] = member_info.name
-            ws1['B' + str(start_raw)] = member_info.user.username
-            ws1['C' + str(start_raw)] = member_info.lecture_reg_count
-            ws1['D' + str(start_raw)] = member_info.lecture_rem_count
-            ws1['E' + str(start_raw)] = member_info.start_date
+            ws1['B' + str(start_raw)] = member_info.group_info
+            ws1['C' + str(start_raw)] = member_info.user.username
+            ws1['D' + str(start_raw)] = member_info.lecture_reg_count
+            ws1['E' + str(start_raw)] = member_info.lecture_rem_count
+            ws1['F' + str(start_raw)] = member_info.start_date
             if member_info.end_date == '9999-12-31':
-                ws1['F' + str(start_raw)] = '소진시까지'
+                ws1['G' + str(start_raw)] = '소진시까지'
             else:
-                ws1['F' + str(start_raw)] = member_info.end_date
+                ws1['G' + str(start_raw)] = member_info.end_date
 
             if member_info.phone is None:
-                ws1['G' + str(start_raw)] = '---'
+                ws1['H' + str(start_raw)] = '---'
             else:
-                ws1['G' + str(start_raw)] = member_info.phone[0:3] + '-' + member_info.phone[
-                                                                           3:7] + '-' + member_info.phone[7:]
+                ws1['H' + str(start_raw)] = member_info.phone[0:3] + '-' + member_info.phone[3:7]\
+                                            + '-' + member_info.phone[7:]
             start_raw += 1
     else:
         ws1.title = "종료된 회원"
@@ -1424,19 +1420,20 @@ def export_excel_member_list_logic(request):
         ws1['A1'].font = Font(bold=True, size=15)
         for member_info in member_finish_list:
             ws1['A' + str(start_raw)] = member_info.name
-            ws1['B' + str(start_raw)] = member_info.user.username
-            ws1['C' + str(start_raw)] = member_info.lecture_reg_count
-            ws1['D' + str(start_raw)] = member_info.lecture_rem_count
-            ws1['E' + str(start_raw)] = member_info.start_date
+            ws1['B' + str(start_raw)] = member_info.group_info
+            ws1['C' + str(start_raw)] = member_info.user.username
+            ws1['D' + str(start_raw)] = member_info.lecture_reg_count
+            ws1['E' + str(start_raw)] = member_info.lecture_rem_count
+            ws1['F' + str(start_raw)] = member_info.start_date
             if member_info.end_date == '9999-12-31':
-                ws1['F' + str(start_raw)] = '소진시까지'
+                ws1['G' + str(start_raw)] = '소진시까지'
             else:
-                ws1['F' + str(start_raw)] = member_info.end_date
+                ws1['G' + str(start_raw)] = member_info.end_date
             if member_info.phone is None:
-                ws1['G' + str(start_raw)] = '---'
+                ws1['H' + str(start_raw)] = '---'
             else:
-                ws1['G' + str(start_raw)] = member_info.phone[0:3] + '-' + member_info.phone[
-                                                                           3:7] + '-' + member_info.phone[7:]
+                ws1['H' + str(start_raw)] = member_info.phone[0:3] + '-' + member_info.phone[3:7]\
+                                            + '-' + member_info.phone[7:]
             start_raw += 1
 
     user_agent = request.META['HTTP_USER_AGENT']
@@ -1453,9 +1450,6 @@ def export_excel_member_list_logic(request):
     else:
         response['Content-Disposition'] = 'attachment; filename="' + quote(filename) + '"'
 
-    # response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    # response['Content-Disposition'] = 'attachment; filename=mydata.xlsx'
-
     if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                      + str(request.user.id) + ']' + error)
@@ -1468,7 +1462,6 @@ def export_excel_member_info_logic(request):
     member_id = request.GET.get('member_id', '')
 
     error = None
-    class_info = None
     member_info = None
     lecture_counts = 0
     np_lecture_counts = 0
@@ -1483,11 +1476,6 @@ def export_excel_member_info_logic(request):
     wb = Workbook()
     ws1 = wb.active
 
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
-
     if error is None:
         try:
             member_info = MemberTb.objects.get(member_id=member_id)
@@ -1496,10 +1484,27 @@ def export_excel_member_info_logic(request):
 
     # 수강 정보 불러 오기
     if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=USE, auth_cd='VIEW',
-                                                     use=USE).order_by('-lecture_tb__start_date', 'lecture_tb__reg_dt')
+        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        query_group_name = "select NAME from GROUP_TB WHERE ID = " \
+                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+                           "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                              "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+
+        lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                 lecture_tb__member_id=member_id,
+                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
+                                                                        group_name=RawSQL(query_group_name, []),
+                                                                        lecture_count=RawSQL(query_lecture_count, [])
+                                                                        ).order_by('-lecture_tb__start_date',
+                                                                                   'lecture_tb__reg_dt')
+
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
@@ -1515,31 +1520,25 @@ def export_excel_member_info_logic(request):
                 ws1.title = lecture_info.start_date + ' 수강정보'
                 ws1['A1'] = '수강 정보'
                 ws1['A1'].font = Font(bold=True, size=15)
-                ws1['A2'] = '시작일자'
-                ws1['B2'] = '종료일자'
-                ws1['C2'] = '등록횟수'
-                ws1['D2'] = '남은횟수'
-                ws1['E2'] = '등록금액'
-                ws1['F2'] = '진행상태'
-                ws1['G2'] = '회원님과 연결상태'
-                ws1['H2'] = '특이사항'
-
-                ws1['A5'] = '수강 이력'
-                ws1['A5'].font = Font(bold=True, size=15)
-                ws1['A6'] = '회차'
-                ws1['B6'] = '시작일자'
-                ws1['C6'] = '진행시간'
-                ws1['D6'] = '구분'
-                ws1['E6'] = '메모'
+                ws1['A2'] = '수강유형'
+                ws1['B2'] = '시작일자'
+                ws1['C2'] = '종료일자'
+                ws1['D2'] = '등록횟수'
+                ws1['E2'] = '남은횟수'
+                ws1['F2'] = '등록금액'
+                ws1['G2'] = '진행상태'
+                ws1['H2'] = '회원님과 연결상태'
+                ws1['I2'] = '특이사항'
 
                 ws1.column_dimensions['A'].width = 15
                 ws1.column_dimensions['B'].width = 20
-                ws1.column_dimensions['C'].width = 10
-                ws1.column_dimensions['D'].width = 10
-                ws1.column_dimensions['E'].width = 20
-                ws1.column_dimensions['F'].width = 10
+                ws1.column_dimensions['C'].width = 20
+                ws1.column_dimensions['D'].width = 25
+                ws1.column_dimensions['E'].width = 25
+                ws1.column_dimensions['F'].width = 15
                 ws1.column_dimensions['G'].width = 10
-                ws1.column_dimensions['H'].width = 20
+                ws1.column_dimensions['H'].width = 10
+                ws1.column_dimensions['I'].width = 20
 
                 try:
                     lecture_info.state_cd_name = CommonCdTb.objects.get(common_cd=lecture_info.state_cd)
@@ -1560,24 +1559,78 @@ def export_excel_member_info_logic(request):
                     np_lecture_counts += 1
                 lecture_counts += 1
 
-                # for line in lecture_info.note:
+                if lecture_list_info.group_check == 'NORMAL':
+                    group_check = 1
+                elif lecture_list_info.group_check == 'EMPTY':
+                    group_check = 2
+                else:
+                    group_check = 0
 
-                #    if line in ['\n', '\r\n']:
-                #        line
-                #        print('empty line')
+                if lecture_info.use != UN_USE:
+                    if lecture_info.state_cd == 'IP':
+                        if group_check == 0:
+                            lecture_list_info.group_info = '1:1 레슨'
+                        elif group_check == 1:
+                            lecture_list_info.group_info = '[그룹]'+lecture_list_info.group_name
+                        else:
+                            lecture_list_info.group_info = '[클래스]'+lecture_list_info.group_name
 
                 if '\r\n' in lecture_info.note:
                     lecture_info.note = lecture_info.note.replace('\r\n', ' ')
 
-                ws1['A3'] = lecture_info.start_date
-                ws1['B3'] = lecture_info.end_date
-                ws1['C3'] = lecture_info.lecture_reg_count
-                ws1['D3'] = lecture_info.lecture_rem_count
-                ws1['E3'] = lecture_info.price
-                ws1['F3'] = lecture_info.state_cd_name.common_cd_nm
-                ws1['G3'] = lecture_info.auth_cd_name.common_cd_nm
-                ws1['H3'] = lecture_info.note
+                ws1['A3'] = lecture_list_info.group_info
+                ws1['B3'] = lecture_info.start_date
+                ws1['C3'] = lecture_info.end_date
+                ws1['D3'] = lecture_info.lecture_reg_count
+                ws1['E3'] = lecture_info.lecture_rem_count
+                ws1['F3'] = lecture_info.price
+                ws1['G3'] = lecture_info.state_cd_name.common_cd_nm
+                ws1['H3'] = lecture_info.auth_cd_name.common_cd_nm
+                ws1['I3'] = lecture_info.note
 
+                ws1['A5'] = '반복 일정'
+                ws1['A5'].font = Font(bold=True, size=15)
+                ws1['A6'] = '빈도'
+                ws1['B6'] = '요일'
+                ws1['C6'] = '시작시각 ~ 종료시각'
+                ws1['D6'] = '시작일 ~ 종료일'
+                repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                       en_dis_type=ON_SCHEDULE_TYPE
+                                                                       ).order_by('-start_date')
+                # if repeat_schedule_data is not None and len(repeat_schedule_data) > 0:
+                for repeat_schedule_info in repeat_schedule_data:
+                    if repeat_schedule_info.repeat_type_cd == 'WW':
+                        ws1['A' + str(start_raw)] = '매주'
+                    else:
+                        ws1['A' + str(start_raw)] = '격주'
+                    week_info = repeat_schedule_info.week_info.replace('MON', '월')
+                    week_info = week_info.replace('TUE', '화')
+                    week_info = week_info.replace('WED', '수')
+                    week_info = week_info.replace('THS', '목')
+                    week_info = week_info.replace('FRI', '금')
+                    week_info = week_info.replace('SAT', '토')
+                    week_info = week_info.replace('SUN', '일')
+                    ws1['B' + str(start_raw)] = week_info
+
+                    ws1['C' + str(start_raw)] = repeat_schedule_info.start_time + '~'\
+                                                + repeat_schedule_info.end_time
+
+                    ws1['D' + str(start_raw)] = str(repeat_schedule_info.start_date) + '~'\
+                                                + str(repeat_schedule_info.end_date)
+
+                    start_raw += 1
+
+                start_raw += 1
+                ws1['A' + str(start_raw)] = '레슨 이력'
+                ws1['A' + str(start_raw)].font = Font(bold=True, size=15)
+                start_raw += 1
+                ws1['A' + str(start_raw)] = '회차'
+                ws1['B' + str(start_raw)] = '수행 일시'
+                ws1['C' + str(start_raw)] = '진행시간'
+                ws1['D' + str(start_raw)] = '구분'
+                ws1['E' + str(start_raw)] = '메모'
+
+                start_raw += 1
                 pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                              en_dis_type=ON_SCHEDULE_TYPE,
                                                              use=USE).order_by('-start_dt')
@@ -1612,6 +1665,7 @@ def export_excel_member_info_logic(request):
                         schedule_idx -= 1
 
                 ws1 = wb.create_sheet()
+
     user_agent = request.META['HTTP_USER_AGENT']
     filename = str(member_info.name + '_회원님_수강정보.xlsx').encode('utf-8')
     # test_str = urllib.parse.unquote('한글')

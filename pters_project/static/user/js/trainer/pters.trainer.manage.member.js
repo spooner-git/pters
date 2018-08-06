@@ -3758,7 +3758,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
     }else if(PCorMobile == "mobile"){
         var $regHistory = $('#memberLectureHistory_info');
     }
-    var text = '수행일자';
+    var text = '수행일시';
     var text2 = '진행시간';
     var text3 = '구분';
     var text4 = '메모';
