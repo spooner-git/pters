@@ -614,7 +614,7 @@ body{
 
 
 .fixfooter {
-	display: none;
+	position: relative;
 }
 
 
@@ -690,7 +690,10 @@ body{
 
 
 	.fixfooter{
-		position: fixed;
+		position: relative;
 		margin-top: 50px;
+	}
+	.bottomfooter3 span{
+		color: #282828;
 	}
 }
