@@ -8,7 +8,10 @@
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
-      [{% for message in messages %}"{% if message.tags == "info" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [""],
+      "group_schedule_info" :
+      ["{{ group_schedule_info }}"],
+
       "repeatArray" :
       ["{{ request.session.repeat_schedule_id }}"],
       "repeatScheduleCounterArray" :
