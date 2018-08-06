@@ -9,7 +9,7 @@ from configs.const import USE
 
 from configs.views import AccessTestMixin
 
-from center.models import CenterTb, CenterTrainerTb
+from .models import CenterTb, CenterTrainerTb
 from login.models import CommonCdTb
 from trainer.models import ClassTb
 

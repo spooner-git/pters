@@ -1,9 +1,7 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
-from login.models import CommonCdTb, PushInfoTb
-from login.models import LogTb
-from login.models import MemberTb
+from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb
 
 # Register your models here.
 

@@ -849,7 +849,7 @@ $(document).ready(function(){
         //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
         $.ajax({
             url: '/trainer/get_group_member_repeat_schedule_list/',
-            type : 'POST',
+            type : 'GET',
             data : {"group_repeat_schedule_id":group_repeat_id},
             dataType : 'html',
 

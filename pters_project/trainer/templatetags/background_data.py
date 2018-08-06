@@ -62,13 +62,6 @@ def get_setting_info(request):
         request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
         request.session['setting_language'] = context['lt_lan_01']
 
-        # request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        # request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        # request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        # request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        # request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        # request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
-
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                  end_dt__lt=now, state_cd='NP',
