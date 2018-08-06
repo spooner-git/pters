@@ -502,29 +502,33 @@ $(document).ready(function(){
 
     //모바일 버전에서 weekcal 클릭해서 일정 추가하기 20180806 test
     var timeIndexY = [];
+    var timePlanY = [];
     var timeIndexhour = [];
     function get_timeindex_Y(){
         timeIndexY = [];
         timeIndexhour = [];
+        timePlanY = [];
         var timeIndexHeight = $('.hour').height();
         var timeIndexTopLoc = $('.timeindex').offset().top;
         for(var y=Options.workStartTime; y<Options.workEndTime;y++){
             var timeY = $('#hour'+y).offset().top;
-            timeIndexY.push(timeY, timeY + timeIndexHeight/2);
+            timeIndexY.push(timeY-0.5, timeY + timeIndexHeight/2);
             timeIndexhour.push(time_h_format_to_hh(y)+'_00', time_h_format_to_hh(y)+'_30');
         }
-        timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height());
-        timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00')
+        timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
+        timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00');
+        timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5)
     }
 
     $(document).on('click','.td00',function(e){
         get_timeindex_Y();
         var thisOffsetTop = $(this).offset().top;
-        if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
             if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
 
             var localarray = timeIndexY.slice();
             var localharray = timeIndexhour.slice();
+            var localparray = timePlanY.slice();
 
             var $classTimes = $(this).find('.classTime');
             var $offTimes = $(this).find('.offTime');
@@ -535,6 +539,7 @@ $(document).ready(function(){
                 var thisHeight = $(this).height();
                 var thisInfo = $(this).attr('class-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
+                localparray.push(thisLoc, thisLoc+thisHeight);
                 localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
             
@@ -543,6 +548,7 @@ $(document).ready(function(){
                 var thisHeight = $(this).height();
                 var thisInfo = $(this).attr('off-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
+                localparray.push(thisLoc, thisLoc+thisHeight);
                 localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
 
@@ -551,6 +557,7 @@ $(document).ready(function(){
                 var thisHeight = $(this).height();
                 var thisInfo = $(this).attr('group-time').split('_')
                 localarray.push(thisLoc, thisLoc+thisHeight);
+                localparray.push(thisLoc, thisLoc+thisHeight);
                 localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
             })
 
@@ -560,22 +567,28 @@ $(document).ready(function(){
             var thisY = e.pageY;
 
             localarray.push(thisY);
+            localparray.push(thisY);
             var timeIndexY_ = localarray.sort(function(a,b){return a-b});
+            var planIndexY_ = localparray.sort(function(a,b){return a-b});
             var timeHour = localharray.sort();
             var thisIndex = timeIndexY_.indexOf(thisY);
             var targetY = timeIndexY_[thisIndex-1];
             var targetYLimit = timeIndexY_[thisIndex+1];
-            console.log(timeIndexY_)
-            console.log(localharray)
-            console.log(timeHour)
-            console.log(thisY)
-            if(targetYLimit - targetY > Options.classDur*calendarSize-0.75){
-                $(this).find('div.blankbox').addClass(blankmark);
-                $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
-                show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
-                //2018_8_6_0_00
+
+            var planNextto = localparray[localparray.indexOf(thisY)+1];
+
+            if( (Options.classDur/30)*targetYLimit - targetY >= Options.classDur*calendarSize){
+                if(planNextto - targetY >= Options.classDur*calendarSize){
+                    $(this).find('div.blankbox').addClass(blankmark);
+                    $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
+                    show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
+                    //2018_8_6_0_00
+                }else{
+                    console.log('클릭한 곳과 일정간 거리가 너무 짧음')
+                }
+
             }else{
-                alert('좁아')
+                console.log('너무 좁아')
             }
         }
     })
@@ -904,63 +917,72 @@ $(document).ready(function(){
         var hh = Number(selectedTime[3]);
         var hh_ = Number(selectedTime[3]);
         */
-        if(Options.classDur == 60){
-            var selectedDuration = Number(duration)/2;
-            var blankSelected = 'blankSelected';
-            var selector_blankSelected = $('.'+blankSelected);
-            var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
-            var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-            var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
-
-
-            selectedDuration = Number(duration)/2;
-            blankSelected = 'blankSelected';
-            selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-            selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
-            mi = selectedTime[4];
-            yy = Number(selectedTime[0]);
-            mm = Number(selectedTime[1]);
-            dd = Number(selectedTime[2]);
-            hh = Number(selectedTime[3]);
-
-            selector_blankSelected.removeClass(blankSelected);
-            $('#'+selectedTimeID).find('div').addClass(blankSelected);
-            for(i=hh+1; i<hh+selectedDuration; i++){
-                $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected);
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+            if(Options.classDur == 60){
+                var blankbox = 'blankSelected';
+            }else if(Options.classDur == 30){
+                var blankbox = 'blankSelected30';
             }
-        }else if(Options.classDur == 30){
-            var selectedDuration = Number(duration)/2;
-            var blankSelected = 'blankSelected30';
-            var selector_blankSelected = $('.'+blankSelected);
-            var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
-            var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
-            var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+            $('.'+blankbox).css({'height':Options.classDur*duration})
+        }else{
+            if(Options.classDur == 60){
+                var selectedDuration = Number(duration)/2;
+                var blankSelected = 'blankSelected';
+                var selector_blankSelected = $('.'+blankSelected);
+                var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
+                var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
 
 
-            selectedDuration = Number(duration.replace(/시간/gi,''));
-            blankSelected = 'blankSelected30';
-            selectedTime = selector_blankSelected_first_child.parent('div').attr('id').split('_');
-            selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
-            if(selectedTime[4] == "00"){
-                mi = "30";
+                selectedDuration = Number(duration)/2;
+                blankSelected = 'blankSelected';
+                selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+                mi = selectedTime[4];
+                yy = Number(selectedTime[0]);
+                mm = Number(selectedTime[1]);
+                dd = Number(selectedTime[2]);
                 hh = Number(selectedTime[3]);
-            }else if(selectedTime[4] =="30"){
-                mi = "00";
-                hh = Number(selectedTime[3])+1;
-            }
-            yy = Number(selectedTime[0]);
-            mm = Number(selectedTime[1]);
-            dd = Number(selectedTime[2]);
-            hh_ = Number(selectedTime[3]);
-            selector_blankSelected.removeClass(blankSelected);
-            $('#'+selectedTimeID).find('div').addClass(blankSelected);
-            for(var i=hh; i<hh+selectedDuration-1; i++){
-                if(mi == 60 || mi == 0){
-                    mi = "00";
-                    hh_ = hh_ + 1;
+
+                selector_blankSelected.removeClass(blankSelected);
+                $('#'+selectedTimeID).find('div').addClass(blankSelected);
+                for(i=hh+1; i<hh+selectedDuration; i++){
+                    $('#'+yy+'_'+mm+'_'+dd+'_'+i+'_'+mi).find('div').addClass(blankSelected);
                 }
-                $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected);
-                mi = Number(mi) + 30;
+            }else if(Options.classDur == 30){
+                var selectedDuration = Number(duration)/2;
+                var blankSelected = 'blankSelected30';
+                var selector_blankSelected = $('.'+blankSelected);
+                var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
+                var selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
+                var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+
+
+                selectedDuration = Number(duration.replace(/시간/gi,''));
+                blankSelected = 'blankSelected30';
+                selectedTime = selector_blankSelected_first_child.parent('div').attr('id').split('_');
+                selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
+                if(selectedTime[4] == "00"){
+                    mi = "30";
+                    hh = Number(selectedTime[3]);
+                }else if(selectedTime[4] =="30"){
+                    mi = "00";
+                    hh = Number(selectedTime[3])+1;
+                }
+                yy = Number(selectedTime[0]);
+                mm = Number(selectedTime[1]);
+                dd = Number(selectedTime[2]);
+                hh_ = Number(selectedTime[3]);
+                selector_blankSelected.removeClass(blankSelected);
+                $('#'+selectedTimeID).find('div').addClass(blankSelected);
+                for(var i=hh; i<hh+selectedDuration-1; i++){
+                    if(mi == 60 || mi == 0){
+                        mi = "00";
+                        hh_ = hh_ + 1;
+                    }
+                    $('#'+yy+'_'+mm+'_'+dd+'_'+hh_+'_'+mi).find('div').addClass(blankSelected);
+                    mi = Number(mi) + 30;
+                }
             }
         }
     }
