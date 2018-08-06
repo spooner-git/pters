@@ -311,6 +311,9 @@ ul a{
 	line-height: 24px;
 	vertical-align: middle;
 }
+.dropdownlist_mini div:first-child{
+	display: none;
+}
 
 .dropdown ul{
 	padding-top: 0px;
