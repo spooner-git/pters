@@ -1328,9 +1328,11 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
     if error is None:
         if member_id is None or member_id == '':
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                         auth_cd='VIEW',
                                                          lecture_tb__use=USE, use=USE)
         else:
             lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
+                                                         auth_cd='VIEW',
                                                          lecture_tb__member_id=member_id,
                                                          lecture_tb__use=USE, use=USE)
 

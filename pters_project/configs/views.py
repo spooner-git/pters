@@ -82,6 +82,7 @@ class AccessTestMixin(UserPassesTestMixin):
         user_for_group = self.request.user
         # group = None
         url = None
+
         group_name = self.request.session.get('group_name', '')
 
         if error is None:

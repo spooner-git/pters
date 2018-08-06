@@ -3741,7 +3741,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         var $regHistory = $('#memberLectureHistory_info')
     }
     if(Options.language == "KOR"){
-        var text = '수행일자'
+        var text = '수행일시'
         var text2 = '진행시간'
         var text3 = '구분'
         var text4 = '메모'
