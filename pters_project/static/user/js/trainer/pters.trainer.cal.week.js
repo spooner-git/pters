@@ -877,7 +877,7 @@ function dateText(){
     }*/
 
     yymmarry = [$('#weekNum_1').attr('data-date'), $('#weekNum_7').attr('data-date')];
-
+    console.log(yymmarry)
     //연도, 월 셋팅
     if(yymmarry.length>1){  // [2017_12, 2018_1] ,,  [2018_1, 2018_2]
         /*
@@ -896,8 +896,13 @@ function dateText(){
 
 
         if(yy1==yy2){
-            $('#yearText').text(yy1+'년');
-            $('#monthText').text(mm1+'/'+mm2+'월');
+            if(mm1 == mm2){
+                $('#yearText').text(yy1+'년');
+                $('#monthText').text(mm1+'월');
+            }else{
+                $('#yearText').text(yy1+'년');
+                $('#monthText').text(mm1+'/'+mm2+'월');
+            }
             $('#ymdText-pc-month-start').text(mm1+'월');
             $('#ymdText-pc-month-end').text(mm2+'월');
         }else if(yy1!=yy2){
