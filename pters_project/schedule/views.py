@@ -775,8 +775,6 @@ def add_repeat_schedule_confirm(request):
     en_dis_type = None
     member_name = ''
     information = None
-    request.session['date'] = date
-    request.session['day'] = day
     lecture_id = ''
     push_lecture_id = []
     push_title = []
@@ -1105,9 +1103,6 @@ def add_group_schedule_logic(request):
     class_info = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
-    request.session['date'] = date
-    request.session['day'] = day
-
     if group_id == '':
         error = '오류가 발생했습니다.'
     elif schedule_date == '':
@@ -1304,8 +1299,6 @@ def delete_group_schedule_logic(request):
 
     error = None
     schedule_info = None
-    request.session['date'] = date
-    request.session['day'] = day
     push_lecture_id = []
     push_title = []
     push_message = []
@@ -1627,8 +1620,6 @@ def add_member_group_schedule_logic(request):
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
-    request.session['date'] = date
-    request.session['day'] = day
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1764,8 +1755,6 @@ def add_other_member_group_schedule_logic(request):
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
-    request.session['date'] = date
-    request.session['day'] = day
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1996,9 +1985,11 @@ def add_group_repeat_schedule_logic(request):
                                                           request.user.id)
         if repeat_schedule_result['error'] is None:
             if repeat_schedule_result['schedule_info'] is None:
-                request.session['repeat_schedule_id'] = ''
+                context['repeat_schedule_id'] = ''
+                # request.session['repeat_schedule_id'] = ''
             else:
-                request.session['repeat_schedule_id'] = repeat_schedule_result['schedule_info'].repeat_schedule_id
+                context['repeat_schedule_id'] = repeat_schedule_result['schedule_info'].repeat_schedule_id
+                # request.session['repeat_schedule_id'] = repeat_schedule_result['schedule_info'].repeat_schedule_id
                 repeat_schedule_info = repeat_schedule_result['schedule_info']
 
     if error is None:
@@ -2131,8 +2122,6 @@ def add_group_repeat_schedule_confirm(request):
     push_lecture_id = []
     push_title = []
     push_message = []
-    request.session['date'] = date
-    request.session['day'] = day
     error_message = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
