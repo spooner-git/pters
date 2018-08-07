@@ -84,7 +84,7 @@
 
 
     <div id="purchase_popup">
-        <label style="font-size: 18px;">피터스 이용권 구매하기</label>
+        <label style="font-size: 18px;" id="purchase_popup_product">피터스 이용권 구매하기</label>
 
         <div id="purchase_popup_page1">
             <div id="purchase_price_preview">
@@ -240,9 +240,24 @@
                                         'data-type':type,
                                         'data-function':functions,
                                         'data-price':price});
+            var type_name;
+            var functions_name;
+            if(type=='SINGLE'){
+                type_name='1개월 이용권';
+            }else{
+                type_name='정기 결제';
+            }
+            if(functions=='CLA/GRO/ADV'){
+                functions_name='클래스/그룹 레슨/광고제거';
+            }else if(functions=='GRO/ADV'){
+                functions_name='그룹 레슨/광고제거';
+            }else{
+                functions_name='광고제거';
+            }
+            $('#purchase_popup_product').text(product);
             $('#purchase_product').find('.purchase_popup_innercontent').text(product);
-            $('#purchase_functions').find('.purchase_popup_innercontent').text(functions);
-            $('#purchase_type').find('.purchase_popup_innercontent').text(type);
+            $('#purchase_functions').find('.purchase_popup_innercontent').text(functions_name);
+            $('#purchase_type').find('.purchase_popup_innercontent').text(type_name);
             $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(price));
             $('#price_preview').text(numberWithCommas(price)+' 원');
         }
