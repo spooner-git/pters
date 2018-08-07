@@ -1504,7 +1504,12 @@ function pc_add_member(option){
             $('#how_to_add_member').css('display','none');
         }
 
-        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
+        if( selector_page_addmember.height() > $(window).height() ){
+            centerLoc = '70px';
+        }
+
+        selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
@@ -1522,7 +1527,12 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
+        if( selector_page_addmember.height() > $(window).height() ){
+            centerLoc = '70px';
+        }
+
+        selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
@@ -1560,7 +1570,12 @@ function pc_add_member(option){
 
         selector_memberSearchButton.trigger('click');
 
-        selector_page_addmember.show().css({'top':(($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop()),
+        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
+        if( selector_page_addmember.height() > $(window).height() ){
+            centerLoc = '70px';
+        }
+
+        selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
