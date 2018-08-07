@@ -3069,7 +3069,7 @@ function send_add_groupmember_plan(use, callback){
                     scheduleTime('off', jsondata);
                     scheduleTime('group', jsondata);
                     get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])});
-                    alert('그룹일정 참석자 정상 등록되었습니다.');
+                    alert('일정 참석자 정상 등록되었습니다.');
                 }
             }
         },
