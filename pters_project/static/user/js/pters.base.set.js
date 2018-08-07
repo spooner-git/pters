@@ -127,6 +127,7 @@ function close_caution_popup(){
 
 function close_info_popup(option){
     var bodywidth = window.innerWidth;
+    body_position_fixed_unset();
     if(option=="cal_popup_planinfo"){
         $("#"+option).css({'display':'none'});
         $('#groupParticipants').html("");
@@ -1362,3 +1363,15 @@ function getCookie(name) {
     return cookieValue;
 }
 var csrftoken = getCookie('csrftoken');
+
+function body_position_fixed_set(){
+    if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('body').addClass('bodyfixed');
+    }
+    
+}
+function body_position_fixed_unset(){
+    if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('body').removeClass('bodyfixed');
+    }
+}

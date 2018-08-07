@@ -12,6 +12,10 @@ input{
     -webkit-opacity:1;
 }
 
+.bodyfixed{
+    position: fixed !important;
+}
+
 /*플로트 버튼*/
 #float_btn_wrap{
     position: fixed;
