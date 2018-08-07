@@ -877,7 +877,6 @@ function dateText(){
     }*/
 
     yymmarry = [$('#weekNum_1').attr('data-date'), $('#weekNum_7').attr('data-date')];
-    console.log(yymmarry)
     //연도, 월 셋팅
     if(yymmarry.length>1){  // [2017_12, 2018_1] ,,  [2018_1, 2018_2]
         /*
@@ -1468,8 +1467,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
             var diff = diff_time(planHour+':'+planMinute, planEndHour+':'+planEndMin) 
             var lenn = Math.ceil(diff/30);
-            console.log(planHour+':'+planMinute+'~'+ planEndHour+':'+planEndMin,
-                        'Math.round(diff/30)', Math.ceil(diff/30), 'diff/30', diff)
             
             if(Number(planEndMin) !=0 && Number(planEndMin)%30 && Number(planMinute) !=0 && Number(planMinute)%30){
                 if(diff > 30){
@@ -1526,9 +1523,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         // 미니 팝업 클릭 불가 영역인 _on 클래스를 달력에 추가하기 위한 작업
     }
 }
-$(document).on('click','._on',function(){
-    console.log('_on clicked')
-})
 
 
 

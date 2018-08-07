@@ -517,9 +517,6 @@ $(document).ready(function(){
         timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
         //timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00');
         timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
-        console.log(timeIndexY)
-        console.log(timePlanY)
-        console.log(timeIndexhour)
     }
 
     $(document).on('click','.td00',function(e){
@@ -583,7 +580,6 @@ $(document).ready(function(){
                 if(planNextto - targetY >= Options.classDur*calendarSize){
                     $(this).find('div.blankbox').addClass(blankmark);
                     $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
-                    console.log('timeHour',timeHour)
                     show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
                     //2018_8_6_0_00
                 }else{
@@ -1127,7 +1123,7 @@ $(document).ready(function(){
             $('#id_repeat_group_id').val(groupid);
 
             $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':groupid});
-            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text());
+            $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-groupid',groupid);
             $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
             $("#id_group_id").val(groupid);
 
@@ -1418,7 +1414,6 @@ $(document).ready(function(){
                         //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                         var jsondata = JSON.parse(data);
                         initialJSON = jsondata;
-                        console.log(initialJSON);
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
                         if(jsondata.messageArray.length>0){
@@ -1549,6 +1544,9 @@ $(document).ready(function(){
                 var id;
                 if(addTypeSelect == "repeatgroupptadd"){
                     id = $('#cal_popup_repeatconfirm').attr('data-groupid');
+                    get_groupmember_list(id, 'callback', function(jsondata){
+                        draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
+                    });
                 }else{
                     id = $('#cal_popup_repeatconfirm').attr('data-dbid');
                 }

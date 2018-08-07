@@ -593,7 +593,12 @@
                     if(bodywidth >= 600){
                         $('#calendar').css('position','relative');
                     }
+                    var groupid = $('#membersSelected button').attr('data-groupid');
+                    get_groupmember_list(groupid, 'callback', function(jsondata){
+                        draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
+                    });
                 });
+
                 // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
                 //  for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
                 //      send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
