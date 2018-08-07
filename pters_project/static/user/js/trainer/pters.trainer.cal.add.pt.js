@@ -1782,7 +1782,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }
 
     if(bodywidth <= 600){
-        $('#page-base, #float_btn, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
+        $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
         selector_page_addplan.css('top',50);
         $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
@@ -2428,7 +2428,8 @@ function closeAddPopup(){
     //$('body').css('overflow-y','overlay');
     $('#page-addplan').hide('fast','swing');
     if(bodywidth<=600){
-        $('#float_btn').show().removeClass('rotate_btn');
+        $('#float_btn_wrap').show()
+        $('#float_btn').removeClass('rotate_btn');
         $('#page-base').show();
         $('#page-base-addstyle').hide();
     }

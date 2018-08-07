@@ -78,7 +78,7 @@
 
     $(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('#float_btn').hide();
+        $('#float_btn_wrap').hide();
         shade_index(100);
         closeAlarm('pc');
         toggleGroupParticipantsList('off');
@@ -206,7 +206,7 @@
     //Off 일정 클릭시 팝업 Start
     $(document).on('click','div.offTime',function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('#float_btn').hide();
+        $('#float_btn_wrap').hide();
         shade_index(100);
         closeAlarm('pc');
         toggleGroupParticipantsList('off');
@@ -297,7 +297,7 @@
         var bodywidth = window.innerWidth;
         var group_class_type_name = $(this).attr('data-group-type-cd-name');
         e.stopPropagation();
-        $('#float_btn').hide();
+        $('#float_btn_wrap').hide();
         shade_index(100);
         closeAlarm('pc');
         $('#subpopup_addByList_plan').hide();
@@ -694,7 +694,7 @@
                 //$('#calendar').css('display','block');
                 $('#calendar').css('height','100%')
             }
-            $('#float_btn').show().removeClass('rotate_btn');
+            $('#float_btn_wrap').show().removeClass('rotate_btn');
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
 
