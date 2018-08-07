@@ -5,7 +5,6 @@ $(document).ready(function(){
     get_current_group_list();
     //
 
-
     //유저가 터치인지 마우스 사용인지 알아낸다
     var touch_or_mouse = "";
     window.addEventListener('touchstart',function(){

@@ -524,11 +524,11 @@
     $('#popup_info3_memo_modify').click(function(){
         if($(this).attr('data-type') == "view"){
             //$('html,body').css({'position':'fixed'})
-            $('#popup_info3_memo').attr({'readonly':false}).css({'border':'1px solid #fe4e65'});
+            $('#popup_info3_memo').attr('readonly',false).css({'border':'1px solid #fe4e65'});
             $(this).attr({'src':'/static/user/res/btn-pt-complete.png','data-type':'modify'});
         }else if($(this).attr('data-type') == "modify"){
             //$('html,body').css({'position':'relative'})
-            $('#popup_info3_memo').attr({'readonly':true}).css({'border':'0'});
+            $('#popup_info3_memo').attr('readonly',true,).css({'border':'0'});
             $(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
             send_memo();
         }

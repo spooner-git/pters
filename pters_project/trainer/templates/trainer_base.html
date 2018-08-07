@@ -789,6 +789,13 @@
         $('._company').css('display','none');
         $('.ads_wrap').css('display','none');
         $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        $("input").each(function(){
+            if(this.type!="text")return;
+            $(this).bind("blur",function(e){
+              window.scrollBy(0,1);
+              setTimeout(function(){window.scrollBy(0,-1)},200);
+            });
+          });
     }else{
 
     }

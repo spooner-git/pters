@@ -1020,7 +1020,7 @@ button._info_baseedit_img{
 }
 
 #memberSearch_add{
-	display: table-cell;
+	display: inline-block;
 	width: 78%;
 	height: 35px;
 	border:1px solid #8d8d8d;
@@ -1257,7 +1257,6 @@ option{
 		height: 26px;
 	}
 	#memberSearch_add{
-		display: table-cell;
 		width: 78%;
 		height: 26px;
 	}
