@@ -1,0 +1,18 @@
+    {
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "RepeatSuccessDateArray" :
+      [{% for repeat_success_date_info in repeat_success_date_data %}"{{ repeat_success_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "RepeatDuplicationDateArray" :
+      [{% for repeat_duplication_date_info in repeat_duplication_date_data %}"{{ repeat_duplication_date_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "repeat_start_date":
+      ["{{ repeat_start_date }}"],
+      "repeat_end_date":
+      ["{{ repeat_end_date }}"],
+      "repeatArray" :
+      ["{{ repeat_schedule_id }}"],
+      "repeatScheduleCounterArray" :
+      ["{{ repeat_schedule_input_counter }}"]
+
+    }

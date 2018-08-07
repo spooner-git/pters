@@ -19,7 +19,7 @@
             line-height: 40px;
         }
         .fixfooter{
-            display: none;
+            position: relative;
         }
 
         .lecture_delete{
@@ -38,6 +38,12 @@
             }
             #menuDescription{
                 line-height: unset;
+            }
+            .fixfooter{
+                margin-top: 300px;
+            }
+            .bottomfooter3 span{
+                color: #282828;
             }
         }
     </style>
@@ -77,7 +83,7 @@
             <div class="pters_table_cell_head table_trainee_num">수강생</div>
             <div class="pters_table_cell_head table_start_date">개설일</div>
             <div class="pters_table_cell_head table_lecture_status">상태</div>
-            <div class="pters_table_cell_head table_class_unit">달력 시간 단위</div>
+            <div class="pters_table_cell_head table_class_unit">레슨 시간 단위</div>
             <div class="pters_table_cell_head lecture_delete">관리</div>
             <!--
             <div class="pters_table_cell_head lecture_selection">이동</div>
@@ -106,8 +112,8 @@
         if($('body').width()<600){
             $('#page-base').css('display','none')
             $('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('프로그램 설정')
-            $('#uptext').text("프로그램 설정")
+            $('#uptext3').text('프로그램 관리')
+            $('#uptext').text("프로그램 관리")
             $('#upbutton-modify').hide()
         }
 
@@ -159,6 +165,7 @@
             $.ajax({
 
                 url: ' /trainer/get_class_list/',
+                type: 'GET',
                 dataType : 'html',
 
                 beforeSend:function(){
@@ -214,7 +221,10 @@
                 dataType : 'html',
                 type:'POST',
 
-                beforeSend:function(){
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                     beforeSend()
                 },
 
@@ -330,7 +340,6 @@
 
         function fill_lecture_select_page(jsondata){
             var json = class_sort_by_center(jsondata)
-
             var list_table_to_join = [];
             for(center in json){
                 //console.log('center---',center)
@@ -341,6 +350,7 @@
                 for(subject in json[center]){
                     //console.log(subject)
                     //console.log(json[center][subject]['classId'])
+                    var className = json[center][subject]['className'];
                     var classId = json[center][subject]['classId'];
                     var classHour = json[center][subject]['classHour'];
                     var classHourUnit = json[center][subject]['classHourUnit'];
@@ -360,7 +370,7 @@
                     }
 
                     if(classId == lec_select_currentClassId[0]){
-                        $('.pcwhere').text(subject)
+                        $('.pcwhere').text(className)
                         var table = '<div class="pters_table pters_table_at_setting_page '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
                         var currentClass = 'currentClass'
                         var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
@@ -374,7 +384,7 @@
                         }
                         var goToLecture = '"'
                         var textdeco = ""
-                        var classUnitDropdown = '<select data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+subject+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                        var classUnitDropdown = '<select data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+className+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                     }else{
                         var table = '<div class="pters_table pters_table_at_setting_page _selection '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
                         var currentClass = ""
@@ -389,14 +399,14 @@
                         }
                         var goToLecture = '" onclick="lecture_check('+classId+')"'
                         var textdeco = ' class="subjectnamespan'
-                        var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+subject+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
+                        var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+classId+'" data-subjectcd="'+subjectCode+'" data-subjectname="'+className+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
                     }
                     var centerName__ = center;
                     if(center == ""){
                         var centerName__ = '센터 미지정'
                     }
                     var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'>'+centerName__+'</div>'
-                    var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+subject+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 프로그램명을 입력 해주세요.">'+'</div>'
+                    var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+className+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 프로그램명을 입력 해주세요.">'+'</div>'
                     var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+goToLecture+'>'+classIPNumber+'명</div>'
                     var startDate = '<div class="pters_table_cell table_start_date '+currentClass+goToLecture+'>'+date_format_to_yyyymmdd(startDt,'.')+'</div>'
                     var status = '<div class="pters_table_cell table_lecture_status '+currentClass+goToLecture+'>'+stateName+'</div>'
@@ -436,8 +446,7 @@
             
         }
 
-        
-
+        /*
         function class_sort_by_center(jsondata){
             var len = jsondata.subjectNameArray.length;
             var center_subject = {}
@@ -461,7 +470,33 @@
                 center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
                 center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
             }
-            console.log(center_subject)
+            return center_subject
+        }*/
+
+        function class_sort_by_center(jsondata){
+            var len = jsondata.subjectNameArray.length;
+            var center_subject = {}
+            for(var i=0; i<len; i++){
+                center_subject[jsondata.centerNameArray[i]] = {}
+            }
+            for(var j=0; j<len; j++){
+                center_subject[jsondata.centerNameArray[j]][jsondata.classIdArray[j]] = {}
+            }
+            for(var k=0; k<len; k++){
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHour'] = jsondata.classHourArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['className'] = jsondata.subjectNameArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classId'] = jsondata.classIdArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['startDate'] = jsondata.startDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['endDate'] = jsondata.endDateArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateName'] = jsondata.stateNameArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
+                center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
+            }
             return center_subject
         }
 
@@ -483,7 +518,7 @@
             }else if(selectedClassUnit == '30'){
                 var classUnit = "30"
             }
-            var comment = '강의 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.'
+            var comment = '레슨 시간 단위가 '+selectedUnit+'으로 변경 되었습니다.'
             update_class_info(class_id, classUnit, subject_cd, subject_detail_nm, comment)
         })
 
@@ -552,7 +587,10 @@
                 dataType : 'html',
                 type:'POST',
 
-                beforeSend:function(){
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                     beforeSend()
                 },
 

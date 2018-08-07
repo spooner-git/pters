@@ -297,7 +297,7 @@
         function check_id(){
             $.ajax({
                 url:'/login/check_member_id/',
-                type:'POST',
+                type:'GET',
                 data:{"id" : $('#id_input').val() },
                 dataType : 'html',
 

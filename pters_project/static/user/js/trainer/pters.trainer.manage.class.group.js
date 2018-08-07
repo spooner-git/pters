@@ -164,7 +164,7 @@ $(document).on('click','img.add_listedMember',function(){
                                 completeSend();
                                 set_schedule_time(json);
                                 get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
-                                alert('지난 그룹일정 참석자 정상 등록되었습니다.')
+                                alert('지난 클래스 일정 참석자 정상 등록되었습니다.')
                                 /*
                                  if(z==len){
                                  completeSend();
@@ -183,7 +183,7 @@ $(document).on('click','img.add_listedMember',function(){
                     scheduleTime('off', data)
                     scheduleTime('group', data)
                     draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
-                    alert('그룹일정 참석자 정상 등록되었습니다.')
+                    alert('클래스 일정 참석자 정상 등록되었습니다.')
                 }
 
 
@@ -309,7 +309,7 @@ $('button#addBySearch_search').click(function(e){
     var searchID = $('#addBySearch_input').val()
     $.ajax({
         url:'/trainer/get_member_info/',
-        type:'POST',
+        type:'GET',
         data: {'id':searchID, 'id_flag':user_id_flag},
         dataType : 'html',
 
@@ -757,7 +757,10 @@ function delete_group_from_list(group_id){
         data: {"group_id":group_id, "next_page":next_page},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -812,7 +815,10 @@ function delete_groupmember_from_grouplist(){
         //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -855,7 +861,10 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -922,7 +931,10 @@ function modify_group_status(group_id, option){
         data: {"group_id":group_id},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend()
         },
 
@@ -1056,7 +1068,7 @@ function get_groupmember_list(group_id, use, callback){
     $.ajax({
         url:'/trainer/get_group_member/',
         data: {"group_id":group_id},
-        type:'POST',
+        type:'GET',
         dataType : 'html',
 
         beforeSend:function(){
@@ -1231,7 +1243,7 @@ $(document).on('click','img.substract_groupMember',function(e){
 function get_group_repeat_info(group_id){
     $.ajax({
         url: '/trainer/get_group_repeat_schedule_list/',
-        type:'POST',
+        type:'GET',
         data: {"group_id": group_id},
         dataType : 'html',
 
@@ -1379,7 +1391,7 @@ function set_group_repeat_info(jsondata, group_id){
 function set_group_member_repeat_info(group_repeat_id, use, callback){
     $.ajax({
         url: '/trainer/get_group_repeat_schedule_list/',
-        type:'POST',
+        type:'GET',
         data: {"group_repeat_id": group_repeat_id},
         dataType : 'html',
 

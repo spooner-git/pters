@@ -7,28 +7,26 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_done
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth import authenticate, logout, login
-from django.core.mail import EmailMessage
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from registration.backends.hmac.views import RegistrationView
 
 # Create your views here.
-from django.views.generic import TemplateView
 
 from registration.forms import RegistrationForm
 
 from configs import settings
 from configs.const import USE
-from login.forms import MyPasswordResetForm
-from login.models import MemberTb, PushInfoTb, QATb
+
+from .forms import MyPasswordResetForm
+from .models import MemberTb, PushInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +48,6 @@ class IndexView(View):
         return render(request, self.template_name, context)
 
 
-@csrf_exempt
 def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
@@ -275,7 +272,7 @@ class ResetPasswordView(View):
         subject_template_name = 'registration/password_reset_subject.txt'
         # context = None
         if email is None or email == '':
-            error = 'email 정보를 입력해주세요.'
+            error = 'Email 정보를 입력해주세요.'
 
         if error is None:
             if User.objects.filter(email=email).exists() is not True:
@@ -383,9 +380,9 @@ def add_member_info_logic_test(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 
@@ -458,9 +455,9 @@ class AddMemberView(RegistrationView, View):
                 except IntegrityError:
                     error = '등록 값에 문제가 있습니다.'
                 except TypeError:
-                    error = '등록 값의 형태가 문제 있습니다.'
+                    error = '등록 값에 문제가 있습니다.'
                 except ValidationError:
-                    error = '등록 값의 형태가 문제 있습니다.'
+                    error = '등록 값에 문제가 있습니다.'
                 except InternalError:
                     error = '이미 가입된 회원입니다.'
         else:
@@ -505,18 +502,14 @@ class AddMemberNoEmailView(View):
                                                     'user_db_id': context['user_db_id']})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckMemberIdView(View):
+class CheckMemberIdView(TemplateView):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
-    def post(self, request):
-        user_id = request.POST.get('id', '')
-        form = RegistrationForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super(CheckMemberIdView, self).get_context_data(**kwargs)
+        user_id = self.request.GET.get('id', '')
+        form = RegistrationForm(self.request.GET, self.request.FILES)
         if user_id is None or user_id == '':
             self.error = 'ID를 입력해주세요.'
         else:
@@ -540,32 +533,32 @@ class CheckMemberIdView(View):
             self.error = self.error.replace("이름", "ID")
             if self.error == '해당 사용자 ID은 이미 존재합니다.':
                 self.error = '사용중인 이이디 입니다.'
-        return render(request, self.template_name, {'error': self.error})
+
+        if self.error != '':
+            context['error'] = self.error
+
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckMemberEmailView(View):
+class CheckMemberEmailView(TemplateView):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
-    def post(self, request):
-        user_email = request.POST.get('email', '')
-        form = RegistrationForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super(CheckMemberEmailView, self).get_context_data(**kwargs)
+        user_email = self.request.GET.get('email', '')
+        form = RegistrationForm(self.request.GET, self.request.FILES)
         if user_email is None or user_email == '':
-            self.error = 'email를 입력해주세요.'
+            self.error = 'Email을 입력해주세요.'
         else:
 
             if User.objects.filter(email=user_email).exists():
-                self.error = '사용중인 이메일 입니다.'
+                self.error = '사용중인 Email 입니다.'
 
             if self.error is None or self.error == '':
                 if form.is_valid():
                     if User.objects.filter(email=user_email).exists():
-                        self.error = '사용중인 이메일 입니다.'
+                        self.error = '사용중인 Email 입니다.'
                 else:
                     for field in form:
                         if field.errors:
@@ -578,21 +571,19 @@ class CheckMemberEmailView(View):
                                 else:
                                     if field.name == 'email':
                                         self.error += err
+        if self.error != '':
+            context['error'] = self.error
 
-        return render(request, self.template_name, {'error': self.error})
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class CheckMemberValidationView(View):
+class CheckMemberValidationView(TemplateView):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
-    def post(self, request):
-        form = RegistrationForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
+        form = RegistrationForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             self.error = ''
         else:
@@ -607,7 +598,9 @@ class CheckMemberValidationView(View):
                         else:
                             if field.name != 'username':
                                 self.error += err
-        return render(request, self.template_name, {'error': self.error})
+        if self.error != '':
+            context['error'] = self.error
+        return context
 
 
 class RegisterErrorView(TemplateView):
@@ -638,12 +631,12 @@ class NewMemberReSendEmailView(View):
         error = None
         user = None
         if user_id is None or user_id == '':
-            error = '회원 정보를 불러오지 못했습니다.'
+            error = '정보를 불러오지 못했습니다.'
         if error is None:
             try:
                 user = User.objects.get(id=user_id)
             except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
+                error = '정보를 불러오지 못했습니다.'
 
         if error is None:
             context['user_email'] = user.email
@@ -663,20 +656,20 @@ def out_member_logic(request):
     user = None
     member = None
     if member_id == '':
-        error = '회원 ID를 확인해 주세요.'
+        error = 'ID를 확인해 주세요.'
 
     if error is None:
 
         try:
             user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+            error = 'ID를 확인해 주세요.'
 
     if error is None:
         try:
             member = MemberTb.objects.get(user_id=user.id, use=USE)
         except ObjectDoesNotExist:
-            error = '회원 ID를 확인해 주세요.'
+            error = 'ID를 확인해 주세요.'
 
     # if error is None:
     #    group = user.groups.get(user=request.user.id)
@@ -694,9 +687,9 @@ def out_member_logic(request):
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
@@ -709,7 +702,6 @@ def out_member_logic(request):
         return redirect(next_page)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AddPushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
@@ -740,7 +732,6 @@ class AddPushTokenView(View):
         return render(request, self.template_name, {'token_check': token_exist})
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class DeletePushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
@@ -773,20 +764,19 @@ class ClearBadgeCounterView(TemplateView):
         return context
 
 
-@csrf_exempt
 def clear_badge_counter_logic(request):
     push_token = request.session.get('push_token', '')
     error = None
     token_data = None
     if push_token is None or push_token == '':
-        error = '푸시 정보를 가져올 수 없습니다'
+        error = 'Push 정보를 가져올 수 없습니다'
 
     logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+push_token)
     if error is None:
         try:
             token_data = PushInfoTb.objects.get(token=push_token, use=USE)
         except ObjectDoesNotExist:
-            error = '푸시 정보를 가져올 수 없습니다'
+            error = 'Push 정보를 가져올 수 없습니다'
 
     if error is None:
         token_data.badge_counter = 0
@@ -799,39 +789,6 @@ def clear_badge_counter_logic(request):
         # messages.error(request, error)
 
         return render(request, 'ajax/token_check_ajax.html', {'token_check': error})
-
-
-@csrf_exempt
-def question_reg_logic(request):
-
-    qa_type_cd = request.POST.get('inquire_type', '')
-    title = request.POST.get('inquire_subject', '')
-    contents = request.POST.get('inquire_body', '')
-    next_page = request.POST.get('next_page')
-    error = None
-
-    if qa_type_cd == '' or qa_type_cd is None:
-        error = '문의 유형을 선택해주세요.'
-
-    if error is None:
-        qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
-                       status='0', use=USE)
-        qa_info.save()
-
-    if error is None:
-        email = EmailMessage('[PTERS 질문]'+request.user.last_name+request.user.first_name+'회원-'+title,
-                             '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
-                             '\n\n' + str(timezone.now()),
-                             to=['support@pters.co.kr'])
-        email.send()
-
-        return redirect(next_page)
-    else:
-        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
-        messages.error(request, error)
-        messages.info(request, qa_type_cd+'/'+title+'/'+contents)
-
-        return redirect(next_page)
 
 
 def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):
@@ -903,9 +860,9 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
         except IntegrityError:
             error = '등록 값에 문제가 있습니다.'
         except TypeError:
-            error = '등록 값의 형태가 문제 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValidationError:
-            error = '등록 값의 형태가 문제 있습니다'
+            error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '이미 가입된 회원입니다.'
 

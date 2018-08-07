@@ -20,7 +20,7 @@ body{
 	padding-top: 15px;
 	padding-bottom: 15px;
 	border-bottom: 0.5px solid #a2a2a2;
-	max-width: 500px;
+	max-width: 600px;
 	margin:0 auto;
 	cursor: pointer;
 }
@@ -45,6 +45,10 @@ body{
 
 .settingText{
 	cursor: pointer;
+}
+
+#about_us{
+
 }
 
 #logout{
@@ -114,6 +118,11 @@ body{
 		margin-top: 20px;
 		margin-bottom: 32px;
 	}
+	
+	#about_us{
+		display: none;	
+	}
+	
 	#from_pters_team img:first-child{
 		height: 50px;
 		width: 160px;

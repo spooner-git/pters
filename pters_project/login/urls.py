@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from login import views
+from . import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
@@ -54,5 +54,4 @@ urlpatterns = [
     url(r'^delete_push_token/$', views.DeletePushTokenView.as_view(), name='add_push_token'),
     url(r'^clear_badge_counter/$', views.clear_badge_counter_logic, name='clear_badge_counter'),
 
-    url(r'^question_reg/$', views.question_reg_logic, name='question_reg'),
 ]

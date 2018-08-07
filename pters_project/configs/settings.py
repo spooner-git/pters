@@ -39,15 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'el_pagination',
+    'debug_toolbar',
     'login',
+    'schedule',
     'trainee',
     'trainer',
-    'schedule',
     'center',
     'payment',
     'stats',
-    'el_pagination',
-    'debug_toolbar',
+    'board',
 ]
 
 MIDDLEWARE = [
@@ -134,13 +135,15 @@ TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False                    # if setting -> korean
 
 USE_TZ = False
 
+DATETIME_FORMAT = 'Y-m-d H:i:s'     # '2006-10-25 14:30:59'
+DATE_FORMAT = 'Y-m-d'
+TIME_FORMAT = 'H:i:s'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
@@ -153,23 +156,16 @@ STATIC_ROOT = '/static/'
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/trainer/index/'
 
-# Registration
-# https://django-registration.readthedocs.io/en/2.1.2/index.html
-ACCOUNT_ACTIVATION_DAYS = 7
-
 # Email Activation
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_SSL = True
 EMAIL_PORT = os.environ.get("PTERS_EMAIL_POST", '')
 EMAIL_HOST = os.environ.get("PTERS_EMAIL_HOST", '')
-
 EMAIL_HOST_USER = os.environ.get("PTERS_EMAIL_HOST_USER", '')
 EMAIL_HOST_PASSWORD = os.environ.get("PTERS_EMAIL_HOST_PASSWORD", '')
 DEFAULT_FROM_EMAIL = os.environ.get("PTERS_EMAIL_DEFAULT", '')
+ACCOUNT_ACTIVATION_DAYS = 7
+
 
 # AWS S3 Upload
 PTERS_AWS_ACCESS_KEY_ID = os.environ.get("PTERS_AWS_ACCESS_KEY_ID", '')
@@ -178,7 +174,6 @@ PTERS_AWS_S3_BUCKET_NAME = os.environ.get("PTERS_AWS_S3_BUCKET_NAME", '')
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
-
 PTERS_PUSH_SERVER_KEY = os.environ.get("PTERS_PUSH_SERVER_KEY", '')
 
 # db data upload size
@@ -192,6 +187,7 @@ LOG_FILE_SCHEDULE = os.path.join(os.path.dirname(__file__), '..', 'logs/schedule
 LOG_FILE_TRAINEE = os.path.join(os.path.dirname(__file__), '..', 'logs/trainee_log.log')
 LOG_FILE_TRAINER = os.path.join(os.path.dirname(__file__), '..', 'logs/trainer_log.log')
 LOG_FILE_PAYMENT = os.path.join(os.path.dirname(__file__), '..', 'logs/payment_log.log')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -294,3 +290,4 @@ LOGGING = {
 }
 
 EL_PAGINATION_LOADING = "<img src='/static/user/res/ajax/loading.gif' alt='loading' style='width:10%;'/>"
+

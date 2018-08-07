@@ -18,6 +18,8 @@
         e.preventDefault();
         var thisWidth = $(this).width();
         var thisHeight = $(this).height();
+        var thisTop = $(this).offset().top;
+        var cssthisTop = Number($(this).css('top').replace(/px/gi,""))
         var thisZindex = $(this).css('z-index');
 
         var hoverHeight;
@@ -28,8 +30,17 @@
             var hoverHeight = thisHeight + 2;
         }
 
-        $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0});
-    
+        var hoveredBottomLoc = thisTop + hoverHeight;
+        var calbottom = $('.timeindex .hour:last-child').offset().top + $('.timeindex .hour:last-child').height();
+
+        var small_plan = 0;
+        if(calbottom - thisTop < 25 ){
+            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0, 'top': cssthisTop + calbottom - hoveredBottomLoc });
+            small_plan = 1;
+        }else{
+            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0});
+        }
+
         var $memberName = $(this).find('.memberName');
         var $memberTime = $(this).find('.memberTime');
         if($memberName.hasClass('hideelement')){
@@ -40,9 +51,20 @@
 
         $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
             if(bodywidth > 600){
-                $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+                if(small_plan == 1){
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1, 'top':cssthisTop});
+                    small_plan = 0;
+                }else{
+                    console.log('small_plan',small_plan)
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+                }
            }else{
-                $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
+                if(small_plan == 1){
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'top':cssthisTop}); 
+                }else{
+                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
+                }
+                
            }
             
             if($memberName.hasClass('_hided')){
@@ -56,7 +78,7 @@
 
     $(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('#float_btn').hide();
+        $('#float_btn_wrap').hide();
         shade_index(100);
         closeAlarm('pc');
         toggleGroupParticipantsList('off');
@@ -184,7 +206,7 @@
     //Off 일정 클릭시 팝업 Start
     $(document).on('click','div.offTime',function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('#float_btn').hide();
+        $('#float_btn_wrap').hide();
         shade_index(100);
         closeAlarm('pc');
         toggleGroupParticipantsList('off');
@@ -275,7 +297,7 @@
         var bodywidth = window.innerWidth;
         var group_class_type_name = $(this).attr('data-group-type-cd-name');
         e.stopPropagation();
-        $('#float_btn').hide();
+        $('#float_btn_wrap').hide();
         shade_index(100);
         closeAlarm('pc');
         $('#subpopup_addByList_plan').hide();
@@ -411,6 +433,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////일정 완료 관련 이벤트
     //일정 완료
     $("#popup_btn_complete").click(function(){  //사인 전 일정 완료 버튼 클릭
+        body_position_fixed_unset();
         $('#canvas, #canvasWrap').css('display','block');
         $('#inner_shade_planinfo').css('display','block');
         $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
@@ -483,6 +506,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////일정 취소 관련 이벤트
     //일정 취소
     $("#popup_btn_delete").click(function(){  //일정 취소 버튼 클릭
+        body_position_fixed_unset();
         if(!$(this).hasClass('disabled_button')){
             if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
                 deleteTypeSelect = "groupptdelete";
@@ -501,12 +525,14 @@
     //미니 팝업 메모수정
     $('#popup_info3_memo_modify').click(function(){
         if($(this).attr('data-type') == "view"){
+            body_position_fixed_set();
             //$('html,body').css({'position':'fixed'})
-            $('#popup_info3_memo').attr({'readonly':false}).css({'border':'1px solid #fe4e65'});
+            $('#popup_info3_memo').attr('readonly',false).css({'border':'1px solid #fe4e65'});
             $(this).attr({'src':'/static/user/res/btn-pt-complete.png','data-type':'modify'});
         }else if($(this).attr('data-type') == "modify"){
+            body_position_fixed_unset();
             //$('html,body').css({'position':'relative'})
-            $('#popup_info3_memo').attr({'readonly':true}).css({'border':'0'});
+            $('#popup_info3_memo').attr('readonly',true,).css({'border':'0'});
             $(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
             send_memo();
         }
@@ -567,7 +593,12 @@
                     if(bodywidth >= 600){
                         $('#calendar').css('position','relative');
                     }
+                    var groupid = $('#membersSelected button').attr('data-groupid');
+                    get_groupmember_list(groupid, 'callback', function(jsondata){
+                        draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
+                    });
                 });
+
                 // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
                 //  for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
                 //      send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
@@ -633,6 +664,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////이름 눌러 회원 정보 팝업 띄우기
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView, .groupParticipantsRow span',function(){
+        body_position_fixed_unset();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
         $('.popups').hide();
@@ -672,7 +704,7 @@
                 //$('#calendar').css('display','block');
                 $('#calendar').css('height','100%')
             }
-            $('#float_btn').show().removeClass('rotate_btn');
+            $('#float_btn_wrap').show().removeClass('rotate_btn');
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
 
@@ -891,7 +923,10 @@
             type:'POST',
             data:{"schedule_id":schedule_id,"add_memo":memo},
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 //beforeSend();
             },
 
@@ -922,7 +957,10 @@
             type:'POST',
             data:send_data,
 
-            beforeSend:function(){
+            beforeSend:function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
                 //beforeSend();
             },
 

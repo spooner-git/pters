@@ -3,14 +3,11 @@ import logging
 
 # Create your views here.
 from django.shortcuts import render
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .function import get_sales_data, get_sales_info, get_stats_member_data
+from .functions import get_sales_data, get_sales_info, get_stats_member_data
 
 logger = logging.getLogger(__name__)
 
@@ -24,15 +21,14 @@ class IndexView(TemplateView):
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetSalesListViewAjax(LoginRequiredMixin, View):
+class GetSalesListViewAjax(LoginRequiredMixin, TemplateView):
     template_name = "ajax/summary_sales_data_ajax.html"
 
-    def post(self, request):
-        context = {}
-        class_id = request.POST.get('class_id', '')
-        start_date = request.POST.get('start_date', '')
-        end_date = request.POST.get('end_date', '')
+    def get_context_data(self, **kwargs):
+        context = super(GetSalesListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.GET.get('class_id', '')
+        start_date = self.request.GET.get('start_date', '')
+        end_date = self.request.GET.get('end_date', '')
 
         error = None
         if start_date == '' or start_date is None:
@@ -54,24 +50,23 @@ class GetSalesListViewAjax(LoginRequiredMixin, View):
             error = sales_data_result['error']
 
         if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + error)
-            messages.error(request, error)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
         else:
-            request.session['sales_start_date'] = str(month_first_day.date())
-            request.session['sales_finish_date'] = str(finish_date.date())
+            self.request.session['sales_start_date'] = str(month_first_day.date())
+            self.request.session['sales_finish_date'] = str(finish_date.date())
 
-        return render(request, self.template_name, context)
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetSalesInfoViewAjax(LoginRequiredMixin, View):
+class GetSalesInfoViewAjax(LoginRequiredMixin, TemplateView):
     template_name = "ajax/detail_sales_data_ajax.html"
 
-    def post(self, request):
-        context = {}
-        class_id = request.POST.get('class_id', '')
-        month_date = request.POST.get('month_date', '')
+    def get_context_data(self, **kwargs):
+        context = super(GetSalesInfoViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.GET.get('class_id', '')
+        month_date = self.request.GET.get('month_date', '')
         error = None
         if month_date == '' or month_date is None:
             error = '조회하고자 하는 날짜를 선택해주세요.'
@@ -91,22 +86,21 @@ class GetSalesInfoViewAjax(LoginRequiredMixin, View):
             error = sales_data_result['error']
 
         if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + error)
-            messages.error(request, error)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
-        return render(request, self.template_name, context)
+        return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GetStatsMemberListViewAjax(LoginRequiredMixin, View):
+class GetStatsMemberListViewAjax(LoginRequiredMixin, TemplateView):
     template_name = "ajax/summary_member_data_ajax.html"
 
-    def post(self, request):
+    def get_context_data(self, **kwargs):
         context = {}
-        class_id = request.POST.get('class_id', '')
-        start_date = request.POST.get('start_date', '')
-        end_date = request.POST.get('end_date', '')
+        class_id = self.request.GET.get('class_id', '')
+        start_date = self.request.GET.get('start_date', '')
+        end_date = self.request.GET.get('end_date', '')
 
         error = None
         if start_date == '' or start_date is None:
@@ -125,7 +119,7 @@ class GetStatsMemberListViewAjax(LoginRequiredMixin, View):
             context = get_stats_member_data(class_id, month_first_day, finish_date)
             error = context['error']
         if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + error)
-            messages.error(request, error)
-        return render(request, self.template_name, context)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+        return context

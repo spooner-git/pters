@@ -3,13 +3,16 @@ import json
 import httplib2
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
 from configs import settings
-from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_ON
-from login.models import LogTb, PushInfoTb, CommonCdTb
-from schedule.models import GroupLectureTb, ClassLectureTb, LectureTb, ScheduleTb, GroupTb, MemberLectureTb, \
-    MemberClassTb, ClassTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
+from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
+
+from login.models import LogTb, PushInfoTb
+from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb
+from trainee.models import LectureTb, MemberLectureTb
+from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
 # 1:1 Lecture Id 조회
@@ -59,13 +62,13 @@ def func_refresh_lecture_count(lecture_id):
     error = None
     lecture_info = None
     if lecture_id is None or lecture_id == '':
-        error = '회원 수강정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
         except ObjectDoesNotExist:
-            error = '회원 수강정보를 불러오지 못했습니다.'
+            error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         reg_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id).count()
@@ -181,7 +184,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
             add_schedule_info.save()
             context['schedule_id'] = add_schedule_info.schedule_id
     except TypeError:
-        error = '등록 값의 형태에 문제가 있습니다.'
+        error = '등록 값에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
     context['error'] = error
@@ -215,7 +218,7 @@ def func_add_repeat_schedule(class_id, lecture_id, group_id, group_schedule_id, 
             repeat_schedule_info.save()
             context['schedule_info'] = repeat_schedule_info
     except TypeError:
-        error = '등록 값의 형태에 문제가 있습니다.'
+        error = '등록 값에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
     context['error'] = error
@@ -230,13 +233,13 @@ def func_delete_schedule(schedule_id,  user_id):
     schedule_info = None
 
     if schedule_id is None or schedule_id == '':
-        error = '스케쥴 정보를 불러오지 못했습니다.'
+        error = '일정 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
-            error = '스케쥴 정보를 불러오지 못했습니다.'
+            error = '일정 정보를 불러오지 못했습니다.'
 
     try:
         with transaction.atomic():
@@ -259,7 +262,7 @@ def func_delete_schedule(schedule_id,  user_id):
             schedule_info.delete()
             context['schedule_id'] = delete_schedule_info.delete_schedule_id
     except TypeError:
-        error = '등록 값의 형태에 문제가 있습니다.'
+        error = '등록 값에 문제가 있습니다.'
     except ValueError:
         error = '등록 값에 문제가 있습니다.'
     context['error'] = error
@@ -304,7 +307,7 @@ def func_delete_repeat_schedule(repeat_schedule_id):
                 repeat_schedule_info.delete()
                 context['schedule_info'] = delete_repeat_schedule
         except TypeError:
-            error = '등록 값의 형태에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.'
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
     context['error'] = error
@@ -352,12 +355,12 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
         group_info = GroupTb.objects.get(group_id=group_id)
 
     except ObjectDoesNotExist:
-        error = '그룹 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  group_schedule_id=group_schedule_id, use=USE).count()
     if schedule_counter == group_info.member_num:
-        error = '그룹 정원을 초과했습니다.'
+        error = '정원을 초과했습니다.'
 
     return error
 
@@ -371,12 +374,12 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
         group_info = GroupTb.objects.get(group_id=group_id)
 
     except ObjectDoesNotExist:
-        error = '그룹 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  group_schedule_id=group_schedule_id, use=USE).count()
     if schedule_counter > group_info.member_num:
-        error = '그룹 정원을 초과했습니다.'
+        error = '정원을 초과했습니다.'
 
     return error
 
@@ -477,7 +480,7 @@ def func_check_group_schedule_enable(group_id):
     try:
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
-        error = '그룹 정보를 불러오지 못했습니다.'
+        error = '오류가 발생했습니다.'
 
     if group_info.group_type_cd == 'NORMAL':
         group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
@@ -488,7 +491,7 @@ def func_check_group_schedule_enable(group_id):
                                                                  use=USE).count()
 
         if group_lecture_data_count == 0:
-            error = '그룹에 해당하는 회원들의 예약 가능 횟수가 없습니다.'
+            error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
 
     return error
 
@@ -595,7 +598,7 @@ def func_send_push_trainer(lecture_id, title, message):
                                           headers={'Content-Type': 'application/json;',
                                                    'Authorization': 'key=' + push_server_id})
                 if resp['status'] != '200':
-                    error = '통신중 에러가 발생했습니다.'
+                    error = '오류가 발생했습니다.'
 
     return error
 
@@ -632,80 +635,66 @@ def func_send_push_trainee(class_id, title, message):
                                           headers={'Content-Type': 'application/json;',
                                                    'Authorization': 'key=' + push_server_id})
                 if resp['status'] != '200':
-                    error = '통신중 에러가 발생했습니다.'
+                    error = '오류가 발생했습니다.'
 
     return error
 
 
 def func_get_trainer_schedule(context, class_id, start_date, end_date):
 
-    error = None
-    class_info = None
-    # 강사 정보 가져오기
-    try:
-        class_info = ClassTb.objects.get(class_id=class_id)
-    except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
     func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
-
-    if error is None:
-        class_info.schedule_check = 0
-        class_info.save()
 
     return context
 
 
 def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
-    # pt_schedule_list = []
     # PT 스케쥴 정보 셋팅
-    pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                 lecture_tb__isnull=False,
-                                                 # lecture_tb=lecture_datum.lecture_id,
-                                                 lecture_tb__use=USE,
-                                                 en_dis_type=ON_SCHEDULE_TYPE,
-                                                 start_dt__gte=start_date,
-                                                 start_dt__lt=end_date, use=USE).order_by('start_dt')
-    # idx = 0
-    # for pt_schedule_info in pt_schedule_data:
-    #     idx += 1
-    #     pt_schedule_info.idx = idx
-    #     pt_schedule_list.append(pt_schedule_info)
-    context['pt_schedule_data'] = pt_schedule_data
-
-
-def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
-    group_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,
-                                                    lecture_tb__isnull=True,
-                                                    en_dis_type=ON_SCHEDULE_TYPE,
-                                                    start_dt__gte=start_date,
-                                                    start_dt__lt=end_date, use=USE)
-    if group_id is None or group_id == '':
-        group_schedule_data = group_schedule_data.filter(group_tb__isnull=False).order_by('start_dt')
-    else:
-        group_schedule_data = group_schedule_data.filter(group_tb_id=group_id).order_by('start_dt')
-
-    context['group_schedule_data'] = group_schedule_data
+    context['pt_schedule_data'] = ScheduleTb.objects.select_related('lecture_tb__member'
+                                                                    ).filter(class_tb=class_id,
+                                                                             lecture_tb__isnull=False,
+                                                                             lecture_tb__use=USE,
+                                                                             en_dis_type=ON_SCHEDULE_TYPE,
+                                                                             start_dt__gte=start_date,
+                                                                             start_dt__lt=end_date,
+                                                                             use=USE).order_by('start_dt')
 
 
 def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
     # OFF 일정 조회
-    off_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                  en_dis_type=OFF_SCHEDULE_TYPE, start_dt__gte=start_date,
-                                                  start_dt__lt=end_date)
-    context['off_schedule_data'] = off_schedule_data
+    context['off_schedule_data'] = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                             en_dis_type=OFF_SCHEDULE_TYPE, start_dt__gte=start_date,
+                                                             start_dt__lt=end_date).order_by('start_dt')
+
+
+def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+    group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(class_tb=class_id,
+                                                                               lecture_tb__isnull=True,
+                                                                               en_dis_type=ON_SCHEDULE_TYPE,
+                                                                               start_dt__gte=start_date,
+                                                                               start_dt__lt=end_date, use=USE)
+    if group_id is None or group_id == '':
+        group_schedule_data = group_schedule_data.filter(
+            group_tb__isnull=False).annotate(group_current_member_num=RawSQL(query, []),
+                                             group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+
+    else:
+        group_schedule_data = group_schedule_data.filter(
+            group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
+                                           group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+
+    context['group_schedule_data'] = group_schedule_data
 
 
 def func_get_trainer_off_repeat_schedule(context, class_id):
     error = None
-    # off_repeat_schedule_list = []
-
     # 강사 클래스의 반복 일정 불러오기
-    off_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                               en_dis_type=OFF_SCHEDULE_TYPE)
 
-    context['off_repeat_schedule_data'] = off_repeat_schedule_data
+    context['off_repeat_schedule_data'] = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                          en_dis_type=OFF_SCHEDULE_TYPE)
 
     return error
 

@@ -1308,7 +1308,7 @@ function ajaxTimeGraphSet(date, use, callback){
       var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule')
       $.ajax({
         url: '/trainer/get_trainer_schedule/',
-        type : 'POST',
+        type : 'GET',
         data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',
 
@@ -1360,12 +1360,12 @@ function get_repeat_info(dbID){
       var url_ = '/trainer/get_member_repeat_schedule/'
       var data_ = {"member_id": dbID}
       var fill_option = 'class'
-      var type_ = 'POST'
+      var type_ = 'GET'
     }else if(addTypeSelect == "groupptadd" || addTypeSelect == "repeatgroupptadd"){
       var url_ = '/trainer/get_group_repeat_schedule_list/'
       var data_ = {"group_id": dbID}
       var fill_option = 'group'
-      var type_ = 'POST'
+      var type_ = 'GET'
     }else if(addTypeSelect == "offadd" || addTypeSelect == "repeatoffadd"){
       var url_ = '/trainer/get_off_repeat_schedule/'
       var data_;
@@ -1422,7 +1422,7 @@ function get_member_repeat_id_in_group_repeat(group_repeat_id, use, callback){
     var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_repeat_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_repeat_schedule_list/',
-        type : 'POST',
+        type : 'GET',
         data : {"group_repeat_schedule_id":group_repeat_id}, 
         dataType : 'html',
 
@@ -2441,7 +2441,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption , callbac
     var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_group_member_schedule_list')
     $.ajax({
         url: '/trainer/get_group_member_schedule_list/',
-        type : 'POST',
+        type : 'GET',
         dataType: 'html',
         data: {"group_schedule_id": group_schedule_id},
 
@@ -2541,7 +2541,7 @@ function send_add_groupmember_plan(){
               scheduleTime('off', jsondata)
               scheduleTime('group', jsondata)
               get_group_plan_participants(sendData[2]["value"],'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"])})
-              alert('그룹일정 참석자 정상 등록되었습니다.')
+              alert('일정 참석자 정상 등록되었습니다.')
             }
       },
 

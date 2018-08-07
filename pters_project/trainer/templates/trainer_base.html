@@ -201,7 +201,7 @@
 
     <!--[월간전용] 일정조회(강사)팝업 -->
     <div id="cal_popup_plancheck" class="popups">
-        <div style="position: relative;">
+        <div style="position: relative;z-index: 10">
             <div>
                 <img src="/static/user/res/ptadd/icon-cal.png" alt="" class="img_cal">
                 <span id="countNum"></span>
@@ -495,39 +495,20 @@
     </div>
     <div class="bottomfooter2">
         <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-        <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext" href="https://blog.naver.com/ppkyum" target="_blank">사용법 및 FAQ</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a><span style="margin-left:10px;margin-right: 10px;">|</span>
+        <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span class="_company" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext _helpfooter" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span class="_helpfooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext _businessfooter">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span class="_businessfooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext _promisefooter" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span class="_promisefooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext _privacyfooter" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span class="_privacyfooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="KRtext _manualfooter" href="https://blog.naver.com/ppkyum" target="_blank">사용법 및 FAQ</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a>
     </div>
     <div class="bottomfooter3">
-        <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-        <a class="KRtext" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span style="margin-left:5px;margin-right: 5px;">|</span>
-        <a class="KRtext" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span style="margin-left:5px;margin-right: 5px;">|</span>
-        <a class="KRtext" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a>
+        <p><span>대표</span><span class="footercontent">김선겸</span><span>개인정보담당자</span><span class="footercontent">김선겸</span><span>사업자등록번호</span><span class="footercontent">463-56-00284</span><span>대표번호</span><span class="footercontent">02-3474-3508</span></p>
+        <p><span>통신판매신고</span><span class="footercontent">2017-서울동작-0672</span><span>주소</span><span class="footercontent">서울시 동작구 보라매로 5가길 7 캐릭터그린빌 820</span></p>
+        <p><span>기술 및 일반 문의</span><span class="footercontent">support@pters.co.kr</span><span>운영시간</span><span class="footercontent">10:00~18:00 (주말/공휴일 제외, 12:00~13:00점심시간)</span></p>
     </div>
 </footer>
-<!--
-<footer class="fixfooter">
-    <div class="bottomfooter1">
-        <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-        <span>회사소개</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>이용안내</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>제휴제안</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>개인정보처리방침</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-        <span>고객센터</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-    </div>
-    <div class="bottomfooter2">
-        <p>스푸너(SPOONER) 통신판매업 신고 : 제 2017-서울동작-0672호, 사업자등록번호 : 463-56-00284, 대표자 : OOO,XXX</p>
-        <p>Tel : xxxx-xxxx, Fax : xxxx-xxxx, 주소 : 서울특별시 동작구 신대방동 보라매로 5가길 7 캐릭터그린빌 오피스텔 x층 XXX호</p>
-        <p>이용 및 제휴문의 : skkim@spooner.co.kr</p>
-        <p>- </p>
-        <p>Copyright(C) SPOONER All rights reserved.</p>
-    </div>
-</footer>
--->
+
 
 {% block footer %}
 
@@ -834,6 +815,7 @@
     function ajax_read_lecture_info_from_db(HTMLselector){
         $.ajax({
             url: ' /trainer/get_class_list/',
+            type: 'GET',
             dataType : 'html',
 
             beforeSend:function(){
@@ -886,6 +868,7 @@
         $.ajax({
             url: '/trainee/get_trainee_lecture_list/',
             data:{"class_id": classid, "auth_cd":'WAIT'},
+            type:'GET',
             dataType : 'html',
 
             beforeSend:function(){
@@ -940,14 +923,13 @@
 
     function fill_lecture_select_popup(jsondata, HTMLselector){
         var json = class_sort_by_center(jsondata);
-        console.log(json)
-
         var list_table_to_join = [];
         for(center in json){
             var subject_join = []
             var center_counter = 0;
             var centers = [];
             for(subject in json[center]){
+                var className = json[center][subject]['className'];
                 var classId = json[center][subject]['classId'];
                 var classHour = json[center][subject]['classHour'];
                 var classHourUnit = json[center][subject]['classHourUnit'];
@@ -981,7 +963,7 @@
                
                 //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                 var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>';
-                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+subject+'</div>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+className+'</div>';
                 var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+classIPNumber+'명</div>';
                 var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(startDt,'.')+' ~</div>';
                 var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+stateName+'</div>';
@@ -1009,21 +991,22 @@
             center_subject[jsondata.centerNameArray[i]] = {}
         }
         for(var j=0; j<len; j++){
-            center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+            center_subject[jsondata.centerNameArray[j]][jsondata.classIdArray[j]] = {}
         }
         for(var k=0; k<len; k++){
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHour'] = jsondata.classHourArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['className'] = jsondata.subjectNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classId'] = jsondata.classIdArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['startDate'] = jsondata.startDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['endDate'] = jsondata.endDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateName'] = jsondata.stateNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
         }
         console.log(center_subject)
         return center_subject

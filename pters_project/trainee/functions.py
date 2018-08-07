@@ -1,12 +1,16 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
-from django.utils import timezone
 import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from django.db.models.expressions import RawSQL
+from django.utils import timezone
+
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE
-from login.models import HolidayTb, CommonCdTb
-from schedule.models import ClassTb, MemberLectureTb, ClassLectureTb, ScheduleTb, RepeatScheduleTb, GroupLectureTb, \
-    SettingTb
+
+from login.models import CommonCdTb
+from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
+from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb
+from .models import MemberLectureTb
 
 
 def func_get_holiday_schedule(context):
@@ -25,13 +29,16 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
     if start_date is None and end_date is None:
         all_schedule_check = 1
 
-    lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                 lecture_tb__member_id=user_id,
-                                                 use=USE).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+    lecture_list = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
+                                                                              lecture_tb__member_id=user_id,
+                                                                              use=USE
+                                                                              ).order_by('-lecture_tb__start_date',
+                                                                                         '-lecture_tb__reg_dt')
     for lecture_info in lecture_list:
         try:
-            member_lecture = MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
-                                                         lecture_tb_id=lecture_info.lecture_tb_id)
+            member_lecture = MemberLectureTb.objects.select_related('lecture_tb').get(auth_cd='VIEW', member_id=user_id,
+                                                                                      lecture_tb_id
+                                                                                      =lecture_info.lecture_tb_id)
         except ObjectDoesNotExist:
             member_lecture = None
         if member_lecture is not None:
@@ -43,14 +50,18 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         member_lecture_info.save()
         idx -= 1
         if all_schedule_check == 0:
-            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                      lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                      start_dt__gte=start_date,
-                                                      end_dt__lt=end_date).order_by('start_dt')
+            schedule_data = ScheduleTb.objects.select_related('lecture_tb__member'
+                                                              ).filter(class_tb_id=class_id,
+                                                                       en_dis_type=ON_SCHEDULE_TYPE,
+                                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
+                                                                       start_dt__gte=start_date,
+                                                                       end_dt__lt=end_date).order_by('start_dt')
         else:
             schedule_data = \
-                ScheduleTb.objects.filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                          lecture_tb_id=member_lecture_info.lecture_tb_id).order_by('-start_dt')
+                ScheduleTb.objects.select_related('lecture_tb__member'
+                                                  ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                                           lecture_tb_id=member_lecture_info.lecture_tb_id
+                                                           ).order_by('-start_dt')
 
         idx2 = len(schedule_data)+1
 
@@ -65,49 +76,29 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
 
 def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_date):
-    group_schedule_list = []
     # 내가 속한 그룹 일정 조회
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     group_list = func_get_trainee_group_ing_list(class_id, user_id)
     group_schedule_data = None
 
     for group_info in group_list:
         if group_schedule_data is None:
-            group_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                            group_tb_id=group_info.group_tb.group_id,
-                                                            lecture_tb__isnull=True,
-                                                            en_dis_type=ON_SCHEDULE_TYPE,
-                                                            start_dt__gte=start_date,
-                                                            start_dt__lt=end_date).order_by('start_dt')
+            group_schedule_data = ScheduleTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb_id=group_info.group_tb.group_id,
+                                   lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
+                                   start_dt__gte=start_date,
+                                   start_dt__lt=end_date
+                                   ).annotate(group_current_member_num=RawSQL(query, []),
+                                              group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
         else:
-            group_schedule_data |= ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                             group_tb_id=group_info.group_tb.group_id,
-                                                             lecture_tb__isnull=True,
-                                                             en_dis_type=ON_SCHEDULE_TYPE,
-                                                             start_dt__gte=start_date,
-                                                             start_dt__lt=end_date).order_by('start_dt')
-
-        # for group_schedule_info in group_schedule_data:
-            # lecture schedule id 셋팅
-
-            # group_schedule_info.start_dt = str(group_schedule_info.start_dt)
-            # group_schedule_info.end_dt = str(group_schedule_info.end_dt)
-            #
-            # if group_schedule_info.group_tb is not None and group_schedule_info.group_tb != '':
-            #     schedule_current_member_num = \
-            #         ScheduleTb.objects.filter(class_tb_id=class_id,
-            #                                   group_tb_id=group_schedule_info.group_tb.group_id,
-            #                                   lecture_tb__isnull=False,
-            #                                   group_schedule_id=group_schedule_info.schedule_id).count()
-            #     group_schedule_info.current_member_num = schedule_current_member_num
-            #
-            # if group_schedule_info.note is None:
-            #     group_schedule_info.note = ''
-            # 끝난 스케쥴인지 확인
-            # if group_schedule_info.state_cd == 'PE':
-            #     group_schedule_info.finish_check = 1
-            # else:
-            #     group_schedule_info.finish_check = 0
-            # group_schedule_list.append(group_schedule_info)
+            group_schedule_data |= ScheduleTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb_id=group_info.group_tb.group_id,
+                                   lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
+                                   start_dt__gte=start_date,
+                                   start_dt__lt=end_date
+                                   ).annotate(group_current_member_num=RawSQL(query, []),
+                                              group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
     context['group_schedule_data'] = group_schedule_data
 
     return context
@@ -120,11 +111,6 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=start_date,
                                               end_dt__lt=end_date).order_by('start_dt')
-
-    # for schedule_info in schedule_data:
-    #     schedule_info.start_dt = str(schedule_info.start_dt)
-    #     schedule_info.end_dt = str(schedule_info.end_dt)
-    #     off_schedule_list.append(schedule_info)
 
     context['off_schedule_data'] = schedule_data
 
@@ -238,7 +224,7 @@ def func_get_trainee_lecture_ing_list(class_id, user_id):
 def func_get_class_lecture_count(context, class_id, user_id):
     error = None
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     lecture_reg_count_sum = 0
     lecture_rem_count_sum = 0
@@ -327,7 +313,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     output_lecture_list = []
 
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -408,7 +394,7 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
     output_lecture_list = []
 
     if class_id is None or class_id == '':
-        error = '강사 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
 
     if member_id is None or member_id == '':
         error = '회원 정보를 불러오지 못했습니다.'
@@ -468,7 +454,7 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
                         state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
                         lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
                     except ObjectDoesNotExist:
-                        error = '그룹 정보를 불러오지 못했습니다.'
+                        error = '회원 정보를 불러오지 못했습니다.'
 
                 output_lecture_list.append(lecture_info_data)
 
@@ -496,7 +482,7 @@ def func_get_class_list(context, member_id):
                 try:
                     pt_type_name = CommonCdTb.objects.get(common_cd=class_lecture_info.class_tb.subject_cd)
                 except ObjectDoesNotExist:
-                    error = '강좌 정보를 불러오지 못했습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
 
             lecture_list_data = ClassLectureTb.objects.filter(class_tb_id=class_lecture_info.class_tb_id,
                                                               lecture_tb__member_id=member_id)
@@ -510,7 +496,7 @@ def func_get_class_list(context, member_id):
                     member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
                                                                       lecture_tb_id=lecture_list_info.lecture_tb_id)
                 except ObjectDoesNotExist:
-                    error = '수강 정보를 불러오지 못했습니다.'
+                    error = '수강정보를 불러오지 못했습니다.'
 
                 if error is None:
                     class_lecture_info.lecture_counts += 1
@@ -552,7 +538,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
     try:
         class_info = ClassTb.objects.get(class_id=class_id)
     except ObjectDoesNotExist:
-        error = '강좌 정보를 불러오지 못했습니다.'
+        error = '수강정보를 불러오지 못했습니다.'
     if error is None:
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
@@ -569,7 +555,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             lt_res_02 = int(setting_data_info.setting_info)
         except ObjectDoesNotExist:
             lt_res_02 = 0
-        # reserve_prohibition_time = lt_res_02
+
         try:
             setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
                                                       setting_type_cd='LT_RES_03', use=USE)
@@ -610,35 +596,35 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
 
         if reserve_stop == '1':
             if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록이 불가능합니다.'
+                error = '예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.'
+                error = '예약 취소가 불가능합니다.'
 
         if error is None:
             if now_time < reserve_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '현재 예약 등록이 불가능합니다.'
+                    error = '예약 등록이 불가능합니다.'
                 else:
-                    error = '현재 예약 취소가 불가능합니다.'
+                    error = '예약 취소가 불가능합니다.'
             if now_time > reserve_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '현재 예약 등록이 불가능합니다.'
+                    error = '예약 등록이 불가능합니다.'
                 else:
-                    error = '현재 예약 취소가 불가능합니다.'
+                    error = '예약 취소가 불가능합니다.'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
 
     if error is None:
         if start_date >= avail_end_date:
             if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록이 불가능합니다.'
+                error = '예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.'
+                error = '예약 취소가 불가능합니다.'
     if error is None:
         if start_date < disable_time:
             if add_del_type == ADD_SCHEDULE:
-                error = '현재 예약 등록이 불가능합니다.'
+                error = '예약 등록이 불가능합니다.'
             else:
-                error = '현재 예약 취소가 불가능합니다.'
+                error = '예약 취소가 불가능합니다.'
 
     return error

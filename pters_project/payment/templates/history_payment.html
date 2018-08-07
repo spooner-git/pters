@@ -349,20 +349,24 @@
     </div>
 
     <form action="{% url 'payment:cancel_period_billing' %}" id="cancel-period-payment-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_cancel" value="">
         <input type="hidden" name="cancel_type" id="id_cancel_type" value="">
         <input type="hidden" name="cancel_reason" id="id_cancel_reason" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
     <form action="{% url 'payment:restart_period_billing' %}" id="restart-period-payment-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_restart" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
     <form action="{% url 'payment:clear_pause_period_billing' %}" id="clear-pause-period-payment-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
     <form action="{% url 'payment:update_period_billing' %}" id="update-period-payment-form" method="post">
+        {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
@@ -395,13 +399,16 @@
             console.log('check_payment::'+name);
             $.ajax({
                 url: "/payment/check_update_period_billing/", // 서비스 웹서버
-                method: "POST",
+                type: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
                     customer_uid: customer_uid
                 }),
 
-                beforeSend:function(){
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
                     beforeSend();
                 },
 
@@ -482,7 +489,7 @@
 
                     $.ajax({
                         url: "/payment/check_finish_billing/", // 서비스 웹서버
-                        method: "POST",
+                        type: "POST",
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({
                             merchandise_type_cd : merchandise_type_cd,
@@ -491,7 +498,10 @@
                             start_date: today
                         }),
 
-                        beforeSend:function(){
+                        beforeSend:function(xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
                             beforeSend();
                         },
 

@@ -682,21 +682,25 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
     }
 
     
-
     var planYear    = Number(planStartDate.split('-')[0]);
     var planMonth   = Number(planStartDate.split('-')[1]);
     var planDate    = Number(planStartDate.split('-')[2]);
     var planHour    = Number(planStartTime.split(':')[0]);
-    var planMinute  =        planStartTime.split(':')[1];
+    var planMinute  = Number(planStartTime.split(':')[1]);
 
-    var planEDate   = Number(planEndDate.split('-')[2]);
-    var planEndHour = Number(planEndTime.split(':')[0]);
-    var planEndMin  =        planEndTime.split(':')[1];
-   
-    var duraMin = 0;
-    while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planEndTime.split(':')[0]+':'+planEndTime.split(':')[1]){
-        duraMin++
+    var planETime = planEndTime
+    if(planEndTime == "00:00:00"){
+        planETime = "24:00"
     }
+    var planEDate   = Number(planEndDate.split('-')[2]);
+    var planEndHour = Number(planETime.split(':')[0]);
+    var planEndMin  = Number(planETime.split(':')[1]);
+
+    var duraMin = (planEndHour-planHour)*60 + (planEndMin-planMinute);
+   
+    // while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planEndTime.split(':')[0]+':'+planEndTime.split(':')[1]){
+    //     duraMin++
+    // }
    
     return duraMin;
 }
@@ -1034,7 +1038,7 @@ function get_trainee_participate_group(use, callback){
         url: '/trainee/get_trainee_group_ing_list/',
         //data: $('#pt-add-form').serialize(),
         dataType : 'html',
-        //type:'POST',
+        type:'GET',
 
         beforeSend:function(){
             beforeSend();

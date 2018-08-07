@@ -8,9 +8,9 @@ from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
-from schedule.models import BackgroundImgTb, ScheduleTb, ClassLectureTb, LectureTb, GroupLectureTb, RepeatScheduleTb, \
-    ClassTb
-from trainer.function import func_get_trainer_setting_list
+from schedule.models import ScheduleTb, RepeatScheduleTb
+from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb
+from trainer.functions import func_get_trainer_setting_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -46,7 +46,16 @@ def get_setting_info(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     if class_id != '':
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            class_info = None
 
+        if class_info is not None:
+            request.session['class_hour'] = class_info.class_hour
+            request.session['class_type_code'] = class_info.subject_cd
+            request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            request.session['class_center_name'] = class_info.get_center_name()
         context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
@@ -61,13 +70,6 @@ def get_setting_info(request):
         request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
         request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
         request.session['setting_language'] = context['lt_lan_01']
-
-        # request.session['setting_trainee_schedule_confirm1'] = context['lt_pus_01']
-        # request.session['setting_trainee_schedule_confirm2'] = context['lt_pus_02']
-        # request.session['setting_trainee_no_schedule_confirm'] = context['lt_pus_03']
-        # request.session['setting_trainer_schedule_confirm'] = context['lt_pus_04']
-        # request.session['setting_trainer_no_schedule_confirm1'] = context['lt_pus_05']
-        # request.session['setting_trainer_no_schedule_confirm2'] = context['lt_pus_06']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,

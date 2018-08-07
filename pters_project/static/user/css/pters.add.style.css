@@ -9,7 +9,10 @@ ul a{
 }
 
 ._on{
-
+	/*
+ 	background-color: #f1f1f1;
+	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 4px, rgba(255,255,255,.5) 6px);
+	*/
 }
 
 .disabled_button{
@@ -309,6 +312,9 @@ ul a{
 	height: 24px;
 	line-height: 24px;
 	vertical-align: middle;
+}
+.dropdownlist_mini div:first-child{
+	display: none;
 }
 
 .dropdown ul{
@@ -1016,7 +1022,7 @@ button._info_baseedit_img{
 }
 
 #memberSearch_add{
-	display: table-cell;
+	display: inline-block;
 	width: 78%;
 	height: 35px;
 	border:1px solid #8d8d8d;
@@ -1253,7 +1259,6 @@ option{
 		height: 26px;
 	}
 	#memberSearch_add{
-		display: table-cell;
 		width: 78%;
 		height: 26px;
 	}

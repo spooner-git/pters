@@ -127,6 +127,7 @@ function close_caution_popup(){
 
 function close_info_popup(option){
     var bodywidth = window.innerWidth;
+    body_position_fixed_unset();
     if(option=="cal_popup_planinfo"){
         $("#"+option).css({'display':'none'});
         $('#groupParticipants').html("");
@@ -704,15 +705,14 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
     var planEndHour = Number(planETime.split(':')[0]);
     var planEndMin  = Number(planETime.split(':')[1]);
 
-    var duraMin = 0;
-    
+    var duraMin = (planEndHour-planHour)*60 + (planEndMin-planMinute);
+
     // while(add_time(planStartTime.split(':')[0]+':'+planStartTime.split(':')[1], '00:0'+duraMin) != planETime.split(':')[0]+':'+planETime.split(':')[1]){
     //     duraMin++;
     //     if(duraMin > 1440){
     //         break;
     //     }
     // }
-    duraMin = (planEndHour-planHour)*60 + (planEndMin-planMinute);
 
     return duraMin;
 }
@@ -1058,7 +1058,7 @@ function get_trainee_participate_group(use, callback){
         url: '/trainee/get_trainee_group_ing_list/',
         //data: $('#pt-add-form').serialize(),
         dataType : 'html',
-        //type:'POST',
+        type:'GET',
 
         beforeSend:function(){
             beforeSend();
@@ -1140,7 +1140,8 @@ set_drag_drop_action_to_DOM('#cal_popup_plancheck');
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 function set_drag_drop_action_to_DOM(targetSelector){
-    if(bodywidth > 600){
+    //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
+    if(bodywidth > 600 ){
         $(targetSelector).mousedown(function(event){
             $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
 
@@ -1312,7 +1313,10 @@ function clear_badge_counter(){
         type:'POST',
         //dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             //alert('before clear_badge_counter afsavf')
             console.log('before');
         },
@@ -1359,3 +1363,15 @@ function getCookie(name) {
     return cookieValue;
 }
 var csrftoken = getCookie('csrftoken');
+
+function body_position_fixed_set(){
+    if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('body').addClass('bodyfixed');
+    }
+    
+}
+function body_position_fixed_unset(){
+    if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        $('body').removeClass('bodyfixed');
+    }
+}

@@ -447,6 +447,7 @@
         $.ajax({
 
             url: ' /trainer/get_class_list/',
+            type: 'GET',
             dataType : 'html',
 
             beforeSend:function(){
@@ -485,6 +486,7 @@
         $.ajax({
             url: '/trainee/get_trainee_lecture_list/',
             data:{"class_id": classid, "auth_cd":'WAIT'},
+            type:'GET',
             dataType : 'html',
 
             beforeSend:function(){
@@ -559,14 +561,13 @@
 
     function fill_lecture_select_popup(jsondata, HTMLselector){
         var json = class_sort_by_center(jsondata);
-        console.log(json)
-
         var list_table_to_join = [];
         for(center in json){
             var subject_join = []
             var center_counter = 0;
             var centers = [];
             for(subject in json[center]){
+                var className = json[center][subject]['className'];
                 var classId = json[center][subject]['classId'];
                 var classHour = json[center][subject]['classHour'];
                 var classHourUnit = json[center][subject]['classHourUnit'];
@@ -595,7 +596,7 @@
                
                 //var table = '<div class="pters_table" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
                 var centerName = '<div class="pters_table_cell table_center_name '+currentClass+'">'+centerName__+'</div>';
-                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+subject+'</div>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+currentIndicator+className+'</div>';
                 var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+'"> 총 '+classIPNumber+'명</div>';
                 var startDate = '<div class="pters_table_cell table_start_date '+currentClass+'">'+date_format_to_yyyymmdd(startDt,'.')+' ~</div>';
                 var status = '<div class="pters_table_cell table_lecture_status '+currentClass+'">'+stateName+'</div>';
@@ -623,21 +624,22 @@
             center_subject[jsondata.centerNameArray[i]] = {}
         }
         for(var j=0; j<len; j++){
-            center_subject[jsondata.centerNameArray[j]][jsondata.subjectNameArray[j]] = {}
+            center_subject[jsondata.centerNameArray[j]][jsondata.classIdArray[j]] = {}
         }
         for(var k=0; k<len; k++){
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHour'] = jsondata.classHourArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classId'] = jsondata.classIdArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['startDate'] = jsondata.startDateArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['endDate'] = jsondata.endDateArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['stateName'] = jsondata.stateNameArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['modDate'] = jsondata.modDtArray[k];
-            center_subject[jsondata.centerNameArray[k]][jsondata.subjectNameArray[k]]['regDate'] = jsondata.regDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['subjectCode'] = jsondata.subjectCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHour'] = jsondata.classHourArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classHourUnit'] = jsondata.classHourUnitArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['className'] = jsondata.subjectNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classId'] = jsondata.classIdArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classInProgressMemberNum'] = jsondata.classInProgressMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['classMemberNum'] = jsondata.classMemberNumArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['startDate'] = jsondata.startDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['endDate'] = jsondata.endDateArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateCode'] = jsondata.stateCodeArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['stateName'] = jsondata.stateNameArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
+            center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
         }
         console.log(center_subject)
         return center_subject

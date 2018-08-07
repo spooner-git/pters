@@ -2,9 +2,9 @@
       "offScheduleIdArray" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offTimeArray_start_date" :
-      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.get_str_start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offTimeArray_end_date" :
-      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.get_str_end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "offScheduleNoteArray":
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
@@ -17,9 +17,9 @@
       "classTimeArray_member_id" :
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_start_date" : 
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.get_str_start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_end_date" : 
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.get_str_end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleNoteArray":
@@ -36,13 +36,13 @@
       "group_schedule_max_member_num":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_current_member_num":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_group_type_cd_name":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_start_datetime":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_str_start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_end_datetime":
-      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.get_str_end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_finish_check":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_note":
@@ -52,6 +52,7 @@
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}],
       "RepeatDuplicationDateArray" :
       [{% for message in messages %}"{% if message.tags == "info" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "repeatArray" :
       ["{{ request.session.repeat_schedule_id }}"],
       "repeatScheduleCounterArray" :

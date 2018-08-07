@@ -4,6 +4,19 @@
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.reserve.setting.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <style type="text/css">
+        .fixfooter{
+            position: relative;
+        }
+        @media(min-width:600px){
+            .fixfooter{
+                position: relative;
+            }
+            .bottomfooter3 span{
+                color: #282828;
+            }
+        }
+    </style>
 {% endblock %}
 
 
@@ -167,7 +180,7 @@
         if($('body').width()<600){
             $('#page-base-addstyle').css('display','block');
             $('#page-base').css('display','none');
-            $('#uptext2').text("예약 관련 설정");
+            $('#uptext2').text("기본 설정");
         }
 
         var select_all_check = false;

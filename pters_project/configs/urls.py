@@ -18,7 +18,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from configs import views
+from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^schedule/', include('schedule.urls', namespace='schedule')),
     url(r'^payment/', include('payment.urls', namespace='payment')),
     url(r'^stats/', include('stats.urls', namespace='stats')),
+    url(r'^board/', include('board.urls', namespace='board')),
     # url(r'^404_page/$', views.Error404View.as_view(), name='404_page'),
     url(r'^404\.html$', TemplateView.as_view(template_name='404.html', content_type='text/html')),
     # url(r'^500_page/$', views.Error500View.as_view(), name='500_page'),

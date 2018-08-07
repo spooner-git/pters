@@ -1,16 +1,17 @@
 import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-# Create your views here.
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-from center.models import CenterTb, CenterTrainerTb
+# Create your views here.
 from configs.const import USE
+
 from configs.views import AccessTestMixin
+
+from .models import CenterTb, CenterTrainerTb
 from login.models import CommonCdTb
-from schedule.models import ClassTb
+from trainer.models import ClassTb
 
 logger = logging.getLogger(__name__)
 

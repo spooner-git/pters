@@ -194,7 +194,10 @@ if(check_reg_val == 0 && platform_check=='pc' && browser_check != 'safari'){
         type:'POST',
         data:{"keyword":token},
 
-        beforeSend:function(){
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             //AjaxBeforeSend();
         },
 
