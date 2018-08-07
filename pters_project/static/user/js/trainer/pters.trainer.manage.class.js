@@ -4373,7 +4373,7 @@ function initialize_add_member_sheet(){
 function get_indiv_repeat_info(dbID){
     $.ajax({
         url: '/trainer/get_member_repeat_schedule/',
-        type:'POST',
+        type:'GET',
         data: {"member_id": dbID},
         dataType : 'html',
 
