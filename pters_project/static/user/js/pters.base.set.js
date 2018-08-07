@@ -297,10 +297,10 @@ $(document).ready(function(){
         $('.__weekplan').text("주간 일정");
         $('.__monthplan').text("월간 일정");
         $('.__membermanage').text("회원 관리");
-        // $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        // $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        $('.__groupmanage').html("그룹 관리");
-        $('.__classmanage').html("클래스 관리");
+        $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
+        $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
+        // $('.__groupmanage').html("그룹 관리");
+        // $('.__classmanage').html("클래스 관리");
         $('.__workmanage').text("통계");
         $('.__setting').text("설정");
         $('._nameAttach').text("님");

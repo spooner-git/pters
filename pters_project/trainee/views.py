@@ -543,7 +543,7 @@ def delete_trainee_schedule_logic(request):
         return redirect(next_page)
 
 
-class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, View):
+class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/trainee_schedule_ajax.html'
 
     def get_context_data(self, **kwargs):
@@ -560,7 +560,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, ContextMixin, 
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
-
+        context['error'] = None
         context = func_get_holiday_schedule(context)
         context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
