@@ -694,6 +694,8 @@ class AddPushTokenView(View):
                 device_type = 'Android'
 
         if str(request.user) != 'AnonymousUser':
+            logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+keyword)
+            logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+device_type)
             try:
                 token_data = PushInfoTb.objects.get(device_type=device_type, member_id=request.user.id, use=USE)
                 token_exist = True
