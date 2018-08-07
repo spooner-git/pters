@@ -47,6 +47,10 @@ body{
 	cursor: pointer;
 }
 
+#about_us{
+
+}
+
 #logout{
 	width:100%;
 	position: absolute;
@@ -114,6 +118,11 @@ body{
 		margin-top: 20px;
 		margin-bottom: 32px;
 	}
+	
+	#about_us{
+		display: none;	
+	}
+	
 	#from_pters_team img:first-child{
 		height: 50px;
 		width: 160px;

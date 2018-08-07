@@ -204,6 +204,7 @@ body{
 
 .bottomfooter2{
 	color: #ffffff;
+	font-size: 10px;
 }
 
 .bottomfooter2 a{
@@ -214,6 +215,10 @@ body{
 }
 .bottomfooter3 p{
 	color: #cccccc;
+}
+
+._company, ._businessfooter, ._manualfooter{
+	display: none !important;
 }
 
 /*
@@ -338,6 +343,10 @@ body{
 
 	.pcwhere,.pcwho{
 		color:#ffffff;
+	}
+
+	._company, ._businessfooter, ._manualfooter{
+		display: inline-block !important;
 	}
 
 }
