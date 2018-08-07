@@ -2841,7 +2841,7 @@ function open_member_info_popup_pc(dbID, jsondata){
         selector_memberInfoPopup_PC.attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
         //$('#memberInfoPopup_PC').show()
         selector_memberInfoPopup_PC.addClass('display_block')
-                                    .css({'top':(($(window).height()-selector_memberInfoPopup_PC.outerHeight())/2),
+                                    .css({'top':(($(window).height()-selector_memberInfoPopup_PC.outerHeight())/2+$(window).scrollTop()),
                                           'left':(($(window).width()-selector_memberInfoPopup_PC.outerWidth())/2+$(window).scrollLeft())});
     }
 
