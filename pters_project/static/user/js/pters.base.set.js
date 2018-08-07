@@ -1147,7 +1147,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
     if(bodywidth > 600 ){
         $(targetSelector).mousedown(function(event){
-            event.stopPropagation();
+            //event.stopPropagation();
                 var $this = $(this)
                     
 
@@ -1166,7 +1166,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
                     var oriY = event.pageY;
 
                     $(document).on('mousemove', 'body', function(e){
-
+                        e.stopPropagation()
                         var moveX = e.pageX;
                         var moveY = e.pageY;
 
@@ -1179,7 +1179,6 @@ function set_drag_drop_action_to_DOM(targetSelector){
                         var resultX = thisOriX - diffX;
                         var resultY = thisOriY - diffY;
 
-                        console.log(diffX, diffY)
                         if(Math.abs(diffX) > 10 || Math.abs(diffY) > 10){
                             $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});   
                         }
@@ -1202,11 +1201,12 @@ function set_drag_drop_action_to_DOM(targetSelector){
                                     targetSelector+ ' td,'+
                                     targetSelector+ ' tr,'+
                                     targetSelector+ ' p'
-                                    , function(e){
+                                    , function(){
                         $(document).off('mousemove');
+                        console.log('click mouseup')
                     })
-                     $(document).on('mousedown', 
-                                    targetSelector+ ' canvas'
+                     $(document).on('mousedown mousemove', 
+                                    targetSelector+' canvas'
                                     , function(){
                         $(document).off('mousemove');
                     })
