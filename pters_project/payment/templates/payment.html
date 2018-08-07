@@ -409,14 +409,17 @@
                                 if(jsondata.messageArray.length>0){
                                     msg = '결제에 실패하였습니다.';
                                     msg += '에러내용 : ' + jsondata.messageArray;
+                                    url_move = "/payment/";
                                 }else {
                                     msg = '결제가 완료되었습니다.';
+                                    url_move = "/payment/payment_history/";
             {#                        msg += '고유ID : ' + rsp.imp_uid;#}
             {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
 {#                                    msg += '결제 금액 : ' + rsp.paid_amount;#}
             {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
                                 }
                                 alert(msg);
+                                location.href=url_move;
 
                             },
 
@@ -432,6 +435,7 @@
                     } else {
                         msg = '결제에 실패하였습니다.';
                         msg += '에러내용 : ' + rsp.error_msg;
+                        shade_index(-100)
                         alert(msg);
                     }
                 });
@@ -480,6 +484,8 @@
                 console.log(pay_method);
 {#                console.log(product, method, type, functions, price)#}
                 check_payment(product, pay_method, payment_type_cd, functions, price);
+                purchase_popup_close();
+                shade_index(100)
             }
         });
         $('#view_appointment_btn').click(function(){
@@ -488,6 +494,10 @@
         });
 
         $('._button_Prev').click(function(){
+            purchase_popup_close();
+        });
+
+        function purchase_popup_close(){
             shade_index(-100);
             $('#purchase_popup, #purchase_popup_page2').hide();
             $('#purchase_popup_page1').show();
@@ -498,7 +508,7 @@
                                         'data-type':'',
                                         'data-function':'',
                                         'data-price':''})
-        });
+        }
 
 
 
