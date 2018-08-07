@@ -51,8 +51,8 @@
 	<img src="/static/user/res/PTERS_logo_pure.png" id="logo">
 	<div id="information_wrap">
 		<img src="/static/user/res/stopmark.png">
-		<p>{% trans "Email 인증이 완료되었습니다. <br> 홈페이지에서 로그인 해주세요." %}</p>
-		<a href="https://www.pters.co.kr/login/"><button>피터스 로그인</button></a>
+		<p>{% trans "Email 인증이 완료되었습니다. <br> 로그인 해주세요." %}</p>
+		<a href="{% url 'login:index' %}"><button>피터스 로그인</button></a>
 	</div>
 </div>
 {% endblock %}

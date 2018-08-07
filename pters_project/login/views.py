@@ -577,12 +577,13 @@ class CheckMemberEmailView(TemplateView):
         return context
 
 
-class CheckMemberValidationView(TemplateView):
+class CheckMemberValidationView(View):
     template_name = 'ajax/id_check_ajax.html'
     error = ''
 
-    def get_context_data(self, **kwargs):
-        context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
+    def post(self, request):
+        context = {}
+        # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
         form = RegistrationForm(self.request.POST, self.request.FILES)
         if form.is_valid():
             self.error = ''
@@ -600,7 +601,7 @@ class CheckMemberValidationView(TemplateView):
                                 self.error += err
         if self.error != '':
             context['error'] = self.error
-        return context
+        return render(request, self.template_name, context)
 
 
 class RegisterErrorView(TemplateView):
