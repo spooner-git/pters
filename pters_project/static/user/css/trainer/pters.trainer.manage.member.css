@@ -630,9 +630,9 @@ select:focus > option:checked {
 
 
 /*-----------------PC 회원정보 팝업-----------------------*/
-.infopopup_pc{
+.infopopup_pc{ /*memberInfoPopup_PC*/
 	display: none;
-	position: fixed;
+	position: absolute;
 	background: #ffffff;
 	padding: 10px;
 	width: 600px;

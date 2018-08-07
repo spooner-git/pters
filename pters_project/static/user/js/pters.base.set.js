@@ -1139,76 +1139,77 @@ function numberWithCommas(x) { //천단위 콤마 찍기
 set_drag_drop_action_to_DOM('#page-addplan');
 set_drag_drop_action_to_DOM('#cal_popup_planinfo');
 set_drag_drop_action_to_DOM('#cal_popup_plancheck');
+set_drag_drop_action_to_DOM('#page_addmember');
+set_drag_drop_action_to_DOM('#memberInfoPopup_PC')
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
     if(bodywidth > 600 ){
         $(targetSelector).mousedown(function(event){
-            $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
+            event.stopPropagation();
+                var $this = $(this)
+                    
 
-            $(this).mouseup(function(event){
-                $(this).css({'box-shadow':'unset'});
-            });
+                    $this.mouseup(function(event){
+                        $this.css({'box-shadow':'unset'});
+                    });
 
-            $(this).mouseleave(function(){
-                $(this).css({'box-shadow':'unset'});
-            });
+                    $this.mouseleave(function(){
+                        $this.css({'box-shadow':'unset'});
+                    });
 
-            var thisOriX = $(this).offset().left;
-            var thisOriY = $(this).offset().top;
+                    var thisOriX = $this.offset().left;
+                    var thisOriY = $this.offset().top;
 
-            var oriX = event.pageX;
-            var oriY = event.pageY;
+                    var oriX = event.pageX;
+                    var oriY = event.pageY;
 
-            $(document).on('mousemove', 'body', function(e){
-                var moveX = e.pageX;
-                var moveY = e.pageY;
+                    $(document).on('mousemove', 'body', function(e){
 
-                var diffX = oriX - moveX;
-                var diffY = oriY - moveY;
+                        var moveX = e.pageX;
+                        var moveY = e.pageY;
 
-                var resultX;
-                var resultY;
+                        var diffX = oriX - moveX;
+                        var diffY = oriY - moveY;
 
-                var resultX = thisOriX - diffX;
-                var resultY = thisOriY - diffY;
+                        var resultX;
+                        var resultY;
 
-                $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
-                $(document).on('mouseup click', 'body', function(){
-                    $(document).off('mousemove');
-                });
-            });
-            /*
-            $(document).on('mousedown click mouseup', 
-                            '#canvasWrap, #popup_btn_complete, .plan_raw_add, .plan_raw,'+
-                            targetSelector+ ' button,'+
-                            targetSelector+ ' input,'+
-                            targetSelector+ ' .datepicktext,'+
-                            targetSelector+ ' .mode_switch_button'
-                            , function(){
-                $(document).off('mousemove');
-            })*/
+                        var resultX = thisOriX - diffX;
+                        var resultY = thisOriY - diffY;
 
-             $(document).on('click mouseup', 
-                            targetSelector+ ' textarea,'+
-                            targetSelector+ ' button,'+
-                            targetSelector+ ' input,'+
-                            targetSelector+ ' table,'+
-                            targetSelector+ ' span,'+
-                            targetSelector+ ' div,'+
-                            targetSelector+ ' img,'+
-                            targetSelector+ ' td,'+
-                            targetSelector+ ' tr,'+
-                            targetSelector+ ' p'
-                            , function(){
-                $(document).off('mousemove');
-            })
-             $(document).on('mousedown', 
-                            targetSelector+ ' canvas'
-                            , function(){
-                $(document).off('mousemove');
-            })
+                        console.log(diffX, diffY)
+                        if(Math.abs(diffX) > 10 || Math.abs(diffY) > 10){
+                            $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});   
+                        }
+
+                        $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
+                        $(document).on('mouseup click', 'body', function(){
+                            $(document).off('mousemove');
+                        });
+                    });
+
+
+                     $(document).on('click mouseup', 
+                                    targetSelector+ ' textarea,'+
+                                    targetSelector+ ' button,'+
+                                    targetSelector+ ' input,'+
+                                    targetSelector+ ' table,'+
+                                    targetSelector+ ' span,'+
+                                    targetSelector+ ' div,'+
+                                    targetSelector+ ' img,'+
+                                    targetSelector+ ' td,'+
+                                    targetSelector+ ' tr,'+
+                                    targetSelector+ ' p'
+                                    , function(e){
+                        $(document).off('mousemove');
+                    })
+                     $(document).on('mousedown', 
+                                    targetSelector+ ' canvas'
+                                    , function(){
+                        $(document).off('mousemove');
+                    })
 
             
         });
