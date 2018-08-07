@@ -4603,7 +4603,6 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i])
                     }
                 }
-                ajaxClassTime()
                 if(use == 'callback'){
                     callback(jsondata)
                 }
