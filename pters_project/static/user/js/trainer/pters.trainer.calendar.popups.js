@@ -532,7 +532,7 @@
         }else if($(this).attr('data-type') == "modify"){
             body_position_fixed_unset();
             //$('html,body').css({'position':'relative'})
-            $('#popup_info3_memo').attr('readonly',true,).css({'border':'0'});
+            $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
             $(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
             send_memo();
         }

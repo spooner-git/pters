@@ -1344,6 +1344,36 @@ function clear_badge_counter(){
     })
 }
 
+function update_push_token(token) {
+    $.ajax({
+        url:'/login/add_push_token/',
+        type:'POST',
+        data:{"token_info":token},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            console.log('토큰 등록 완료')
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        }
+    });
+}
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));

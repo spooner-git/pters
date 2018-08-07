@@ -37,6 +37,7 @@ class IndexView(View):
     # def get_context_data(self, **kwargs):
     def get(self, request):
         context = {}
+        # print(str(request.user))
         logout(request)
         # context = super(IndexView, self).get_context_data(**kwargs)
 
@@ -52,7 +53,6 @@ def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
-    keyword = request.POST.get('keyword', '')
     auto_login_check = request.POST.get('auto_login_check', '0')
     next_page = request.POST.get('next_page')
     error = None
@@ -61,8 +61,6 @@ def login_trainer(request):
     if next_page is None:
         next_page = '/trainer/'
 
-    user_agent = request.META['HTTP_USER_AGENT']
-
     if not error:
         user = authenticate(username=username, password=password)
 
@@ -70,34 +68,8 @@ def login_trainer(request):
             login(request, user)
             if auto_login_check == '0':
                 request.session.set_expiry(0)
-
-            try:
-                token_data = PushInfoTb.objects.get(token=keyword, use=USE)
-                if token_data.member_id == user.id:
-                    token_exist = True
-                    token_data.last_login = timezone.now()
-                    token_data.save()
-                else:
-                    token_data.delete()
-                    token_exist = False
-            except ObjectDoesNotExist:
-                token_exist = False
-
-            if token_exist is False:
-                if keyword is not None and keyword != '':
-                    token_info = PushInfoTb(member_id=user.id, token=keyword, last_login=timezone.now(),
-                                            session_info=request.session.session_key,
-                                            device_info=str(user_agent), use=USE)
-                    token_info.save()
-                else:
-                    token_info = PushInfoTb(member_id=user.id, last_login=timezone.now(),
-                                            session_info=request.session.session_key,
-                                            device_info=str(user_agent), use=USE)
-                    token_info.save()
-
-            request.session['push_token'] = keyword
-
             return redirect(next_page)
+
         elif user is not None and user.is_active == 0:
             member = None
             try:
@@ -708,28 +680,40 @@ class AddPushTokenView(View):
     error = ''
 
     def post(self, request):
-        keyword = request.POST.get('keyword', '')
+        keyword = request.POST.get('token_info', '')
+        device_type = request.POST.get('device_type', '')
         user_agent = request.META['HTTP_USER_AGENT']
-        try:
-            token_data = PushInfoTb.objects.get(token=keyword, use=USE)
-            if token_data.member_id == request.user.id:
+        if device_type == '':
+            if 'iPad' in user_agent:
+                device_type = 'iPad'
+
+            elif 'iPhone' in user_agent:
+                device_type = 'iPhone'
+
+            elif 'Android' in user_agent:
+                device_type = 'Android'
+
+        if str(request.user) != 'AnonymousUser':
+            try:
+                token_data = PushInfoTb.objects.get(device_type=device_type, member_id=request.user.id, use=USE)
                 token_exist = True
+                token_data.token = keyword
                 token_data.last_login = timezone.now()
+                token_data.session_info = request.session.session_key
+                token_data.device_info = str(user_agent)
                 token_data.save()
-            else:
-                token_data.delete()
+            except ObjectDoesNotExist:
                 token_exist = False
-        except ObjectDoesNotExist:
-            token_exist = False
 
-        if token_exist is False:
-            if keyword is not None and keyword != '':
-                token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
-                                        session_info=request.session.session_key,
-                                        device_info=str(user_agent), use=USE)
-                token_info.save()
+            if token_exist is False:
+                if keyword is not None and keyword != '':
+                    token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
+                                            session_info=request.session.session_key, device_type=device_type,
+                                            device_info=str(user_agent), use=USE)
+                    token_info.save()
 
-        request.session['push_token'] = keyword
+            request.session['push_token'] = keyword
+
         return render(request, self.template_name, {'token_check': token_exist})
 
 
