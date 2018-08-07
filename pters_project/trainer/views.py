@@ -66,7 +66,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
     def get(self, request, **kwargs):
 
         class_id = request.session.get('class_id', '')
-        class_auth_data = MemberClassTb.objects.filter(member_id=request.user.id, auth_cd='VIEW', use=USE)
+        class_auth_data = MemberClassTb.objects.select_related('class_tb'
+                                                               ).filter(member_id=request.user.id,
+                                                                        auth_cd='VIEW', use=USE)
 
         error = None
         if class_id is None or class_id == '':
@@ -97,14 +99,14 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         return super(IndexView, self).get_redirect_url(*args, **kwargs)
 
 
-class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
+class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'main_trainer.html'
 
-    def get(self, request):
+    def get_context_data(self, **kwargs):
         context = {}
         # context = super(TrainerMainView, self).get_context_data(**kwargs)
 
-        class_id = request.session.get('class_id', '')
+        class_id = self.request.session.get('class_id', '')
         error = None
 
         today = datetime.date.today()
@@ -125,7 +127,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         to_be_end_member_num = 0
         np_member_num = 0
 
-        class_info = None
+        # class_info = None
 
         context['total_member_num'] = 0
         context['to_be_end_member_num'] = 0
@@ -134,16 +136,16 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
 
         if class_id is None or class_id == '':
             error = '프로그램 정보를 불러오지 못했습니다.'
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '프로그램 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
-            request.session['class_type_code'] = class_info.subject_cd
-            request.session['class_type_name'] = class_info.get_class_type_cd_name()
+        #
+        # try:
+        #     class_info = ClassTb.objects.get(class_id=class_id)
+        # except ObjectDoesNotExist:
+        #     error = '프로그램 정보를 불러오지 못했습니다.'
+        #
+        # if error is None:
+        #     self.request.session['class_hour'] = class_info.class_hour
+        #     self.request.session['class_type_code'] = class_info.subject_cd
+        #     self.request.session['class_type_name'] = class_info.get_class_type_cd_name()
 
         if error is None:
             all_member = func_get_class_member_ing_list(class_id)
@@ -162,7 +164,6 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
                                          auth_cd='VIEW', use=USE ).order_by('-lecture_tb__start_date')
                 start_date = ''
                 if len(class_lecture_list) > 0:
-
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
                         if lecture_info_data.auth_cd == 'WAIT':
@@ -207,14 +208,14 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, View):
         context['today_schedule_num'] = today_schedule_num
 
         if error is not None:
-            logger.error(request.user.last_name + ' ' + request.user.first_name + '['
-                         + str(request.user.id) + ']' + error)
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
+                         + str(self.request.user.id) + ']' + error)
             messages.error(request, error)
         else:
-            logger.info(request.user.last_name + request.user.first_name + '['
-                        + str(request.user.id) + '] : login success')
+            logger.info(self.request.user.last_name + self.request.user.first_name + '['
+                        + str(self.request.user.id) + '] : login success')
 
-        return render(request, self.template_name, context)
+        return context
 
 
 class CalDayView(LoginRequiredMixin, AccessTestMixin, View):
@@ -231,8 +232,8 @@ class CalDayView(LoginRequiredMixin, AccessTestMixin, View):
         except ObjectDoesNotExist:
             error = '프로그램 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
+        # if error is None:
+        #     request.session['class_hour'] = class_info.class_hour
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
 
@@ -779,8 +780,8 @@ class CalPreviewIframeView(LoginRequiredMixin, AccessTestMixin, View):
         except ObjectDoesNotExist:
             error = '프로그램 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            request.session['class_hour'] = class_info.class_hour
+        # if error is None:
+        #     request.session['class_hour'] = class_info.class_hour
 
         holiday = HolidayTb.objects.filter(use=USE)
         context['holiday'] = holiday
@@ -3104,7 +3105,6 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name)
 
 
-
 class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'ajax/trainer_error_ajax.html'
 
@@ -3155,6 +3155,9 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             class_info.save()
 
         if error is None:
+            request.session['class_type_code'] = class_info.subject_cd
+            request.session['class_type_name'] = class_info.subject_detail_nm
+            request.session['class_hour'] = class_info.class_hour
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,

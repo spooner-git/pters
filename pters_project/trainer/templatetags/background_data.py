@@ -9,7 +9,7 @@ from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb
+from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb
 from trainer.functions import func_get_trainer_setting_list
 
 register = template.Library()
@@ -46,7 +46,16 @@ def get_setting_info(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     if class_id != '':
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            class_info = None
 
+        if class_info is not None:
+            request.session['class_hour'] = class_info.class_hour
+            request.session['class_type_code'] = class_info.subject_cd
+            request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            request.session['class_center_name'] = class_info.get_center_name()
         context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
