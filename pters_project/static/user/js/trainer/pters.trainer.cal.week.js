@@ -2039,22 +2039,34 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             textcolor = "";
         }
 
+        var memberTimeHide;
         if(Number(planDura*planheight-1) < 29){
             hideornot = 'hideelement';
+            memberTimeHide = "hideelement"
             var groupstatus=""
         }else if(Number(planDura*planheight-1) < 47){
             hideornot = 'inlineelement';
+            memberTimeHide = "hideelement"
             var groupstatus=""
+            if(bodywidth>600){
+                memberTimeHide = 'inlineelement';
+            }
         }else{
             hideornot = 'inlineelement';
+            memberTimeHide = "hideelement"
             var groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>'
+            if(bodywidth>600){
+                memberTimeHide = 'inlineelement';
+            }
         }
+
+        
 
 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
         if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
-            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>'
+            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>'
             planhtml = '<div class-time="'+planArray.join('_')+
                         '" class-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+
@@ -2072,7 +2084,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                        '</div>'
             date_sorted[planStart].push(planhtml)
         }else if(option == 'group'){
-            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
             planhtml = '<div group-time="'+planArray.join('_')+
                         '" group-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+
@@ -2092,7 +2104,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                        '</div>'
             date_sorted[planStart].push(planhtml)
         }else if(option == 'off'){
-            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+            var innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
             planhtml = '<div off-time="'+planArray.join('_')+
                         '" off-schedule-id="'+planScheduleIdArray[i]+
                         '" data-starttime="'+planStartDate[i]+
