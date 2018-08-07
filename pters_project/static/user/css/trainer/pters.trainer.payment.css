@@ -512,9 +512,24 @@ body{
 	height: 100%;
 	background:#ffffff;
 	padding: 10px;
-
+	z-index: 150;
 	overflow: auto;
 }
+
+.popupBtn_mini{
+	display: block !important;
+}
+	.popupBtn_mini button{
+		display: inline-block !important;
+		border: 0.5px solid #cccccc;
+		width: 100px;
+		height: 30px;
+	}
+	._button_Next{
+		background: #282828;
+		color: #ffffff;
+	}
+
 
 #purchase_popup_page1{
 	display: block;
