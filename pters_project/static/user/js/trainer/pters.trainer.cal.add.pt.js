@@ -516,8 +516,11 @@ $(document).ready(function(){
             timeIndexhour.push(time_h_format_to_hh(y)+'_00', time_h_format_to_hh(y)+'_30');
         }
         timeIndexY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
-        timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00');
-        timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5)
+        //timeIndexhour.push(time_h_format_to_hh(Options.workEndTime-1)+'_00');
+        timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
+        console.log(timeIndexY)
+        console.log(timePlanY)
+        console.log(timeIndexhour)
     }
 
     $(document).on('click','.td00',function(e){
@@ -581,6 +584,7 @@ $(document).ready(function(){
                 if(planNextto - targetY >= Options.classDur*calendarSize){
                     $(this).find('div.blankbox').addClass(blankmark);
                     $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
+                    console.log('timeHour',timeHour)
                     show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
                     //2018_8_6_0_00
                 }else{
