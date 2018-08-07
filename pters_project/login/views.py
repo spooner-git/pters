@@ -693,6 +693,9 @@ class AddPushTokenView(View):
             elif 'Android' in user_agent:
                 device_type = 'Android'
 
+        logger.info('test:'+keyword)
+        logger.info('test2:'+device_type)
+        logger.info('test3:'+str(request.user))
         if str(request.user) != 'AnonymousUser':
             logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+keyword)
             logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+device_type)
