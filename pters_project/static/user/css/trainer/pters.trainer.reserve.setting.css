@@ -21,7 +21,7 @@ body{
     line-height: 40px;
 }
 
-#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText{
+#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText{
 	margin-top: 70px;
 }
 
@@ -92,6 +92,13 @@ li a{
 #memberCancelDisableSetting{
 	z-index: 1;
 }
+
+/*푸시 세팅 페이지*/
+#memberLessonNoticeSetting{
+	z-index: 20;
+}
+/*푸시 세팅 페이지*/
+
 
 #hourSelect, #hourSelect2, #workTimehourSelect, #workTimehourSelect2{
 	display: inline-block;
@@ -412,7 +419,7 @@ li a{
 	#menuDescription{
 	    line-height: unset;
 	}
-	#trainerWorkTimeSettingText ,#memberReserveBasicHourSettingText{
+	#trainerWorkTimeSettingText ,#memberReserveBasicHourSettingText, #memberLessonNoticeSettingText{
 		margin-top: 120px;
 	}
 	.settingText{
