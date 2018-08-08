@@ -720,7 +720,6 @@ class DeletePushTokenView(View):
 
     def post(self, request):
         device_id = request.POST.get('device_id', '')
-        logger.info('DeletePushTokenView:' + device_id)
         if device_id != '':
             token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
             if len(token_data) > 0:
