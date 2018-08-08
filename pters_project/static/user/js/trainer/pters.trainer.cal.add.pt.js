@@ -522,7 +522,8 @@ $(document).ready(function(){
     $(document).on('click','.td00',function(e){
         get_timeindex_Y();
         var thisOffsetTop = $(this).offset().top;
-        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+        //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
             if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
 
             var localarray = timeIndexY.slice();
@@ -693,24 +694,33 @@ $(document).ready(function(){
 
         var popupRightLoc = endLeftLoc+endWidth+popupwidth;
         var popupBottomLoc = endTopLoc + popupheight;
-        if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
-            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
-            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
-            }else{ //그외
-                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
-            }
-        }else{
-            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
-            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
+        if(bodywidth > 600){ 
+            if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
+                if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
+                }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
+                }else{ //그외
+                    $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
+                }
             }else{
-                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
+                if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
+                }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
+                }else{
+                    $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
+                }
+            }
+        }else if(bodywidth< 600){
+            if(popupBottomLoc > windowHeight + scrollTop){  //아래쪽 넘어갈때
+                $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight  , 'left':(windowWidth - popupwidth)/2})
+                console.log('??')
+            }else{ //평상시
+                $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
+                console.log('asdfasdf')
             }
         }
-        
         //미니 팝업 위치 보정
         
  
