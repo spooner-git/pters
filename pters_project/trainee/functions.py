@@ -545,7 +545,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
         lt_res_01 = '00:00-23:59'
         lt_res_02 = 0
         lt_res_03 = '0'
-        lt_res_05 = '14'
+        lt_res_05 = 14
         lt_res_cancel_time = -1
         lt_res_enable_time = -1
         setting_data = SettingTb.objects.filter(member_id=class_info.member_id, class_tb_id=class_id, use=USE)
@@ -558,7 +558,7 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             if setting_info.setting_type_cd == 'LT_RES_03':
                 lt_res_03 = setting_info.setting_info
             if setting_info.setting_type_cd == 'LT_RES_05':
-                lt_res_05 = setting_info.setting_info
+                lt_res_05 = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
                 lt_res_cancel_time = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':

@@ -477,7 +477,6 @@ def finish_schedule_logic(request):
             context['push_title'] = ''
             context['push_message'] = ''
 
-
     if error is None:
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
