@@ -107,6 +107,7 @@
 
 
         $('#myquestion_history').click(function(){
+            get_myquestion_list()
             $('._write, .popupBtn_mini').hide();
             $('._mylist').show();
         })
@@ -118,13 +119,69 @@
 
 
         function get_myquestion_list(){
+            $.ajax({
+                    url: '/board/get_question_list/',
+                    type: 'GET',
+                    dataType : 'html',
 
+                    beforeSend:function(){
+                        beforeSend()
+                    },
+
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        console.log(jsondata)
+                        if(jsondata.messageArray.length>0){
+                            $('#errorMessageBar').show();
+                            $('#errorMessageText').text(jsondata.messageArray);
+                        }else{
+                            draw_myquestion_list(jsondata, $('#myquestion_history_list'));
+                        };
+                    },
+
+                    complete:function(){
+                        completeSend()
+                    },
+
+                    error:function(){
+                        console.log('server error');
+                    }
+                })
         }
 
 
-        function draw_myquestion_list(){
+        function draw_myquestion_list(jsondata, targetSelector){
+            var targetHtml = targetSelector;
 
-        }
+            var htmlToJoin = [`<div>문의 답변은 Email: ${jsondata.user_email[0]} 으로 발송해 드립니다.</div>
+                              <div class="myquestion_history_table_title">
+                                    <div class="myquestion_history_table_cell_title _qatable_no">No.</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_type">문의유형</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_title">문의제목</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_regdt">작성일</div>
+                                    <div class="myquestion_history_table_cell_title _qatable_status">상태</div>
+                              </div>`];
+            
+            var len = jsondata.question_id.length;
+            for(var i=0; i<len; i++){
+                var number = `<div class="myquestion_history_table_cell _qatable_no">${i+1}</div>`
+                var qa_type = `<div class="myquestion_history_table_cell _qatable_type">${jsondata.qa_type_cd_name[i]}</div>`
+                var qa_title = `<div class="myquestion_history_table_cell _qatable_title"><p>${jsondata.title[i]}</p></div>`
+                var qa_regdt = `<div class="myquestion_history_table_cell _qatable_regdt">${date_format_to_user_hangul(jsondata.reg_dt[i],'minimize')}</div>`
+                var qa_status = `<div class="myquestion_history_table_cell _qatable_status">${jsondata.status_type_cd_name[i]}</div>`
+
+                var table = `<div class="myquestion_history_table" data-qid="${jsondata.question_id[i]}">
+                                ${number}${qa_type}${qa_title}${qa_regdt}${qa_status}
+                            </div>`
+                htmlToJoin.push(table);
+            };
+            if(len == 0){
+                htmlToJoin.push(`<div class="myquestion_history_table">
+                                        문의 내역이 없습니다.
+                                </div>`);
+            }
+            targetHtml.html(htmlToJoin.join(''));
+        };
 
 
         var varUA = navigator.userAgent.toLowerCase();
