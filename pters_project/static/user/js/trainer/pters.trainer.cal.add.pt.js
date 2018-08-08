@@ -521,9 +521,11 @@ $(document).ready(function(){
 
     $(document).on('click','.td00',function(e){
         get_timeindex_Y();
+
         var thisOffsetTop = $(this).offset().top;
         //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
         if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
+            closeAddPopup_mini();
             if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
 
             var localarray = timeIndexY.slice();
