@@ -13,7 +13,9 @@ body{
 	margin-right: 5px;
 }
 
-
+.fixfooter{
+	position: relative;
+}
 
 .label_explain{
 	margin-bottom: 15px;
