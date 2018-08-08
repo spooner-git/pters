@@ -23,8 +23,8 @@
         <!--<input type="hidden" name="setting_trainer_no_schedule_confirm2"   id="id_setting_trainer_no_schedule_confirm2" value="5"> 시간 숫자-->
         <input type="hidden" name="setting_trainee_todaylesson_notice"   id="id_setting_trainee_todaylesson_notice" value=""> <!-- 숫자 -->
         <input type="hidden" name="setting_trainee_lessonfinish_alert"   id="id_setting_trainee_lessonfinish_alert" value=""> <!-- 숫자 -->
-        <input type="hidden" name="setting_trainee_lessonchanged_alarm"   id="id_setting_trainee_lessonchanged_alarm" value=""> <!-- On/Off -->
-        <input type="hidden" name="setting_trainer_lessonchanged_alarm"   id="id_setting_trainer_lessonchanged_alarm" value=""> <!-- On/Off -->
+        <input type="hidden" name="setting_to_trainee_lesson_alarm"   id="id_setting_to_trainee_lesson_alarm" value=""> <!-- On/Off -->
+        <input type="hidden" name="setting_from_trainee_lesson_alarm"   id="id_setting_from_trainee_lesson_alarm" value=""> <!-- On/Off -->
 
         <input type="hidden" name="next_page" value = '{% url 'trainer:push_setting' %}'>
     </form>
@@ -198,11 +198,11 @@
             if($(this).hasClass('sw_on')){
                 console.log('ononon')
                 //스위치 켰을때 To-Do
-                $('#id_setting_trainee_lessonchanged_alarm').val(1);
+                $('#id_setting_to_trainee_lesson_alarm').val(1);
             }else if($(this).hasClass('sw_off')){
                 console.log('ofofof')
                 //수위치 껐을때 To-Do
-                $('#id_setting_trainee_lessonchanged_alarm').val(0);
+                $('#id_setting_to_trainee_lesson_alarm').val(0);
             }
         });
 
@@ -210,11 +210,11 @@
             if($(this).hasClass('sw_on')){
                 console.log('ononon')
                 //스위치 켰을때 To-Do
-                $('#id_setting_trainer_lessonchanged_alarm').val(1);
+                $('#id_setting_from_trainee_lesson_alarm').val(1);
             }else if($(this).hasClass('sw_off')){
                 console.log('ofofof')
                 //수위치 껐을때 To-Do
-                $('#id_setting_trainer_lessonchanged_alarm').val(0);
+                $('#id_setting_from_trainee_lesson_alarm').val(0);
             }
         });
 
@@ -265,7 +265,7 @@
                                                         );
         };
 
-        $('#id_setting_trainee_lessonchanged_alarm').val(Number(lt_pus_03[0]))
+        $('#id_setting_to_trainee_lesson_alarm').val(Number(lt_pus_03[0]))
         if(Number(lt_pus_03[0]) != 0){
             var db_value = Number(lt_pus_03[0])
             $('#switch3').addClass('sw_on');
@@ -273,7 +273,7 @@
             $('#switch3 .switchball').addClass('switchon').removeClass('switchoff');
         };
 
-        $('#id_setting_trainer_lessonchanged_alarm').val(Number(lt_pus_04[0]))
+        $('#id_setting_from_trainee_lesson_alarm').val(Number(lt_pus_04[0]))
         if(Number(lt_pus_04[0]) != 0){
             var db_value = Number(lt_pus_04[0])
             $('#switch4').addClass('sw_on');
@@ -302,8 +302,8 @@
             
             var trainee_todaylesson_notice = $('#id_setting_trainee_todaylesson_notice');
             var trainee_lessonfinish_alert = $('#id_setting_trainee_lessonfinish_alert');
-            var trainee_lessonchanged_alarm = $('#id_setting_trainee_lessonchanged_alarm');
-            var trainer_lessonchanged_alarm = $('#id_setting_trainer_lessonchanged_alarm');
+            var trainee_lessonchanged_alarm = $('#id_setting_to_trainee_lesson_alarm');
+            var trainer_lessonchanged_alarm = $('#id_setting_from_trainee_lesson_alarm');
 
             if(trainee_todaylesson_notice != lt_pus_01[0] || trainee_lessonfinish_alert != lt_pus_02[0] || trainee_lessonchanged_alarm != lt_pus_03[0] || trainer_lessonchanged_alarm != lt_pus_04[0]  ){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");

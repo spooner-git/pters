@@ -707,6 +707,8 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_lecture_auto_finish = AUTO_FINISH_OFF
     lt_lan_01 = 'KOR'
+    lt_pus_to_trainee_lesson_alarm = 0
+    lt_pus_from_trainee_lesson_alarm = 1
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
 
     for setting_info in setting_data:
@@ -734,6 +736,10 @@ def func_get_trainer_setting_list(context, user_id, class_id):
             lt_lecture_auto_finish = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_LAN_01':
             lt_lan_01 = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_PUS_TO_TRAINEE_LESSON_ALARM':
+            lt_pus_to_trainee_lesson_alarm = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
+            lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
@@ -747,6 +753,8 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     context['lt_res_member_start_time'] = lt_res_member_start_time
     context['lt_schedule_auto_finish'] = lt_schedule_auto_finish
     context['lt_lecture_auto_finish'] = lt_lecture_auto_finish
+    context['lt_pus_to_trainee_lesson_alarm'] = lt_pus_to_trainee_lesson_alarm
+    context['lt_pus_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
 
     return context
 

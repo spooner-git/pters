@@ -21,7 +21,8 @@ from django.core.files.base import ContentFile
 
 # Create your views here.
 from configs import settings
-from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
+from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
+    TO_TRAINEE_LESSON_ALARM_OFF
 
 from login.models import LogTb, MemberTb
 from trainer.models import GroupLectureTb, GroupTb, ClassTb
@@ -62,6 +63,8 @@ def add_schedule_logic(request):
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     error = None
     schedule_start_datetime = None
@@ -174,7 +177,7 @@ def add_schedule_logic(request):
     if error is None:
         push_info_schedule_start_date = str(schedule_start_datetime).split(':')
         push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
-        if en_dis_type == ON_SCHEDULE_TYPE:
+        if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
             push_message.append(request.user.last_name+request.user.first_name+'님이 '
@@ -206,6 +209,8 @@ def delete_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     push_lecture_id = []
     push_title = []
@@ -307,7 +312,7 @@ def delete_schedule_logic(request):
         push_info_schedule_start_date = str(start_dt).split(':')
         push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
 
-        if en_dis_type == ON_SCHEDULE_TYPE:
+        if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(schedule_info.lecture_tb_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
             if group_id is not None and group_id != '':
@@ -343,7 +348,8 @@ def finish_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
-
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
     error = None
     schedule_info = None
     lecture_info = None
@@ -461,9 +467,16 @@ def finish_schedule_logic(request):
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' [1:1 레슨] 일정이 완료됐습니다.')
-        context['push_lecture_id'] = push_lecture_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+
+        if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+            context['push_lecture_id'] = push_lecture_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_lecture_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
+
 
     if error is None:
         return render(request, 'ajax/schedule_error_info.html', context)
@@ -767,6 +780,8 @@ def add_repeat_schedule_confirm(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     error = None
     repeat_schedule_data = None
@@ -840,7 +855,7 @@ def add_repeat_schedule_confirm(request):
                                request.user.last_name+request.user.first_name,
                                member_name, en_dis_type, 'LR01', request)
 
-            if en_dis_type == ON_SCHEDULE_TYPE:
+            if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
                 push_lecture_id.append(lecture_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
                 push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
@@ -892,6 +907,8 @@ def delete_repeat_schedule_logic(request):
     group_type_cd_name = ''
     group_name = ''
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -990,7 +1007,7 @@ def delete_repeat_schedule_logic(request):
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
 
-        if en_dis_type == ON_SCHEDULE_TYPE:
+        if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
             if group_id is None or group_id == '':
@@ -1088,6 +1105,8 @@ def add_group_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     error = None
     info_message = None
@@ -1278,9 +1297,15 @@ def add_group_schedule_logic(request):
             info_message += '님의 일정이 등록되지 않았습니다.'
             context['group_schedule_info'] = info_message
         else:
-            context['push_lecture_id'] = push_lecture_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
+            if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+                context['push_lecture_id'] = push_lecture_id
+                context['push_title'] = push_title
+                context['push_message'] = push_message
+            else:
+                context['push_lecture_id'] = ''
+                context['push_title'] = ''
+                context['push_message'] = ''
+
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -1296,6 +1321,8 @@ def delete_group_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     error = None
     schedule_info = None
@@ -1400,9 +1427,14 @@ def delete_group_schedule_logic(request):
     if error is None:
 
         func_update_member_schedule_alarm(class_id)
-        context['push_lecture_id'] = push_lecture_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+        if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+            context['push_lecture_id'] = push_lecture_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_lecture_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
 
         log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
@@ -1433,6 +1465,9 @@ def finish_group_schedule_logic(request):
     start_date = None
     end_date = None
     class_type_name = request.session.get('class_type_name', '')
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
+
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if schedule_id == '':
@@ -1585,9 +1620,14 @@ def finish_group_schedule_logic(request):
         log_data.save()
     if error is None:
 
-        context['push_lecture_id'] = push_lecture_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+        if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+            context['push_lecture_id'] = push_lecture_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_lecture_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(
@@ -1607,7 +1647,8 @@ def add_member_group_schedule_logic(request):
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
     error = None
     group_info = None
     schedule_info = None
@@ -1619,7 +1660,6 @@ def add_member_group_schedule_logic(request):
     push_title = []
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1710,18 +1750,23 @@ def add_member_group_schedule_logic(request):
         log_data.save()
 
     if error is None:
-        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
-        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+        if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+            push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+            push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
 
-        push_lecture_id.append(lecture_id)
-        push_title.append(class_type_name + ' 수업 - 일정 알림')
-        push_message.append(request.user.last_name + request.user.first_name + '님이 '
-                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                            + ' ['+group_info.get_group_type_cd_name()+'] '+group_info.name+' 일정을 등록했습니다')
-        context['push_lecture_id'] = push_lecture_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+            push_lecture_id.append(lecture_id)
+            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                + ' ['+group_info.get_group_type_cd_name()+'] '+group_info.name+' 일정을 등록했습니다')
+            context['push_lecture_id'] = push_lecture_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_lecture_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
 
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
@@ -1743,6 +1788,8 @@ def add_other_member_group_schedule_logic(request):
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     error = None
     group_info = None
@@ -1754,7 +1801,6 @@ def add_other_member_group_schedule_logic(request):
     push_title = []
     push_message = []
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
-
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
@@ -1849,18 +1895,23 @@ def add_other_member_group_schedule_logic(request):
         log_data.save()
 
     if error is None:
-        push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
-        push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
+        if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+            push_info_schedule_start_date = str(schedule_info.start_dt).split(':')
+            push_info_schedule_end_date = str(schedule_info.end_dt).split(' ')[1].split(':')
 
-        push_lecture_id.append(lecture_id)
-        push_title.append(class_type_name + ' 수업 - 일정 알림')
-        push_message.append(request.user.last_name + request.user.first_name + '님이 '
-                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                            + ' [' + group_info.get_group_type_cd_name() + '] ' + group_info.name + ' 일정을 등록했습니다')
-        context['push_lecture_id'] = push_lecture_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+            push_lecture_id.append(lecture_id)
+            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                + ' [' + group_info.get_group_type_cd_name() + '] ' + group_info.name + ' 일정을 등록했습니다')
+            context['push_lecture_id'] = push_lecture_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_lecture_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
 
         return render(request, 'ajax/schedule_error_info.html', context)
     else:
@@ -2125,6 +2176,8 @@ def add_group_repeat_schedule_confirm(request):
     error_message = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -2266,9 +2319,15 @@ def add_group_repeat_schedule_confirm(request):
         if information is None:
             return redirect(next_page)
         else:
-            context['push_lecture_id'] = push_lecture_id
-            context['push_title'] = push_title
-            context['push_message'] = push_message
+            if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+                context['push_lecture_id'] = push_lecture_id
+                context['push_title'] = push_title
+                context['push_message'] = push_message
+            else:
+                context['push_lecture_id'] = ''
+                context['push_title'] = ''
+                context['push_message'] = ''
+
             messages.info(request, information)
             logger.info(request.user.last_name + ' ' + request.user.first_name + '['
                         + str(request.user.id) + '] ' + str(error_message))
@@ -2300,6 +2359,8 @@ def delete_group_repeat_schedule_logic(request):
     request.session['date'] = date
     request.session['day'] = day
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
+    setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
+                                                          TO_TRAINEE_LESSON_ALARM_OFF)
 
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
@@ -2439,9 +2500,14 @@ def delete_group_repeat_schedule_logic(request):
                          log_how='취소',
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
-        context['push_lecture_id'] = push_lecture_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+        if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
+            context['push_lecture_id'] = push_lecture_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_lecture_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
 
         return render(request, 'ajax/schedule_error_info.html', context)
     else:

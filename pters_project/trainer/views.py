@@ -3608,62 +3608,41 @@ def update_trainer_info_logic(request):
 
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_push_logic(request):
-    setting_trainee_schedule_confirm1 = request.POST.get('setting_trainee_schedule_confirm1', '')
-    setting_trainee_schedule_confirm2 = request.POST.get('setting_trainee_schedule_confirm2', '')
-    setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
-    setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
-    setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
-    setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
+    setting_to_trainee_lesson_alarm = request.POST.get('setting_to_trainee_lesson_alarm', '0')
+    setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
+    # setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
+    # setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
+    # setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
+    # setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
-    lt_pus_01 = None
-    lt_pus_02 = None
-    lt_pus_03 = None
-    lt_pus_04 = None
+    lt_pus_to_trainee_lesson_alarm = None
+    lt_pus_from_trainee_lesson_alarm = None
 
     if error is None:
         try:
             lt_pus_01 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_01')
+                                              class_tb_id=class_id, setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM')
         except ObjectDoesNotExist:
             lt_pus_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_01', use=USE)
+                                  setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
         try:
             lt_pus_02 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_02')
+                                              class_tb_id=class_id, setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
         except ObjectDoesNotExist:
             lt_pus_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_02', use=USE)
-        try:
-            lt_pus_03 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_03')
-        except ObjectDoesNotExist:
-            lt_pus_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_03', use=USE)
-        try:
-            lt_pus_04 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_04')
-        except ObjectDoesNotExist:
-            lt_pus_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_04', use=USE)
+                                  setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-                lt_pus_01.setting_info = setting_trainee_schedule_confirm1 + '/' + setting_trainee_schedule_confirm2
+                lt_pus_01.setting_info = setting_to_trainee_lesson_alarm
                 lt_pus_01.save()
 
-                lt_pus_02.setting_info = setting_trainee_no_schedule_confirm
+                lt_pus_02.setting_info = setting_from_trainee_lesson_alarm
                 lt_pus_02.save()
-
-                lt_pus_03.setting_info = setting_trainer_schedule_confirm
-                lt_pus_03.save()
-
-                lt_pus_04.setting_info = \
-                    setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
-                lt_pus_04.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -3678,12 +3657,8 @@ def update_setting_push_logic(request):
 
     if error is None:
 
-        request.session.setting_trainee_schedule_confirm = setting_trainee_schedule_confirm1 + '/' \
-                                                           + setting_trainee_schedule_confirm2
-        request.session.setting_trainee_no_schedule_confirm = setting_trainee_no_schedule_confirm
-        request.session.setting_trainer_schedule_confirm = setting_trainer_schedule_confirm
-        request.session.setting_trainer_no_schedule_confirm1 = \
-            setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
+        request.session.setting_to_trainee_lesson_alarm = int(setting_to_trainee_lesson_alarm)
+        request.session.setting_from_trainee_lesson_alarm = int(setting_from_trainee_lesson_alarm)
 
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
         #               + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
