@@ -53,12 +53,12 @@ body{
 
 #logout{
 	width:100%;
-	position: absolute;
-	bottom : 10%;
+	position: relative;
 	font-size: 15px;
 	font-weight: bold;
 	color: #282828;
 	text-align: center;
+	margin-top: 40px;
 }
 
 #logout span{
