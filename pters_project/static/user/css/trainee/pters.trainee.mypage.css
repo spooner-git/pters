@@ -9,6 +9,10 @@ body{
 	padding: 0;
 }
 
+.fixfooter{
+	position: relative !important;
+}
+
 #blank_member_popup{
 	position: absolute;
 	width: 90%;
