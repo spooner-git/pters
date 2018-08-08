@@ -17,8 +17,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-
-    url(r'^question_reg/$', views.question_reg_logic, name='question_reg'),
+    url(r'^add_question_info/$', views.add_question_info_logic, name='add_question_info'),
+    url(r'^get_question_list/$', views.GetQuestionDataView.as_view(), name='get_question_list')
 ]
 
 

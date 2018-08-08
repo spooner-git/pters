@@ -9,9 +9,9 @@
 
 
 {% block content %}
-    <form action="/board/question_reg/" id="update-setting-inquire-form" method="post">
+    <form action="{% url 'board:add_question_info' %}" id="update-setting-inquire-form" method="post">
         {% csrf_token %}
-        <input type="hidden" name="next_page" value="/trainer/help_setting/">
+        <input type="hidden" name="next_page" value="{% url 'trainer:help_setting' %}">
         <input type="hidden" name="inquire_type" id="id_inquire_type">
         <div id="help_label" class="settingMenu wrap800">
             <p class="settingText">PTERS 이용 문의</p>
@@ -36,10 +36,13 @@
                     <span>문의 유형 : </span>
                     <select>
                         <option disabled selected>선택</option>
-                        <option value="ERROR">기능 오류</option>
-                        <option value="USAGE">사용법 문의</option>
-                        <option value="SUGGEST">기능 제안</option>
-                        <option value="OTHER">기타</option>
+                        {% for qa_type_info in qa_type_data %}
+                        <option value="{{ qa_type_info.common_cd }}">{{ qa_type_info.common_cd_nm }}</option>
+{#                        <option value="ERROR">기능 오류</option>#}
+{#                        <option value="USAGE">사용법 문의</option>#}
+{#                        <option value="SUGGEST">기능 제안</option>#}
+{#                        <option value="OTHER">기타</option>#}
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" placeholder=" 문의 제목을 입력해주세요."  maxlength="255"></div>

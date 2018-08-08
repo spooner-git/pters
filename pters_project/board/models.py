@@ -11,7 +11,7 @@ class QATb(TimeStampedModel):
     qa_type_cd = models.CharField(db_column='QA_TYPE_CD', max_length=45, blank=True, default='')
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, default='')
-    status = models.CharField(db_column='STATUS', max_length=45, blank=True, default='')
+    status_type_cd = models.CharField(db_column='STATUS', max_length=45, blank=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

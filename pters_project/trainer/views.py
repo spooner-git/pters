@@ -287,7 +287,8 @@ class HelpPtersView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HelpPtersView, self).get_context_data(**kwargs)
-
+        qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
+        context['qa_type_data'] = qa_type_list
         return context
 
 class FromPtersView(AccessTestMixin, TemplateView):
@@ -3699,7 +3700,7 @@ def update_setting_push_logic(request):
         return redirect(next_page)
 
 
-# 강사 예약허용시간 setting 업데이트 api
+# 강사 기본 setting 업데이트 api
 def update_setting_basic_logic(request):
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
