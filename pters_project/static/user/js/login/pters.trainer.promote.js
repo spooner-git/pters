@@ -18,7 +18,7 @@ $(document).ready(function(){
 });
 
 
-function deleteToken(device_id){
+function delete_token(device_id){
     $.ajax({
         url:'/login/delete_push_token/',
         type:'POST',
