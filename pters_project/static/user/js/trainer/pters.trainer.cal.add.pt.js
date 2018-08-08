@@ -714,11 +714,13 @@ $(document).ready(function(){
             }
         }else if(bodywidth< 600){
             if(popupBottomLoc > windowHeight + scrollTop){  //아래쪽 넘어갈때
-                $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight  , 'left':(windowWidth - popupwidth)/2})
-                console.log('??')
+                if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //위로 넘어갈때
+                    $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
+                }else{
+                    $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight  , 'left':(windowWidth - popupwidth)/2})
+                }
             }else{ //평상시
                 $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
-                console.log('asdfasdf')
             }
         }
         //미니 팝업 위치 보정
@@ -926,7 +928,7 @@ $(document).ready(function(){
         var hh = Number(selectedTime[3]);
         var hh_ = Number(selectedTime[3]);
         */
-        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null)){
             if(Options.classDur == 60){
                 var blankbox = 'blankSelected';
             }else if(Options.classDur == 30){
@@ -1254,7 +1256,7 @@ $(document).ready(function(){
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
-    $(document).on('click','#durationsSelected button',function(e){
+    $(document).on('click','#page-addplan #durationsSelected button',function(e){
         if($('#durations li').length == 0){
             $('.dropdown-backdrop').css('display','none');
             position_absolute_addplan_if_mobile($('#starttimesSelected'));
@@ -1796,6 +1798,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
         selector_page_addplan.css('top',50);
+        $('#float_btn').removeClass('rotate_btn')
         $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#calendar').css('height','0');
         $('#upbutton-x').attr('data-page','addplan');
