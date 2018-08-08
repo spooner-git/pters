@@ -172,36 +172,36 @@
 {#    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
 {#    <link rel="manifest" href={% static_url "manifest.json" %}>#}
-<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
-    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
-    <script>
-    function playSound() {
-          var sound = document.getElementById("audio");
-          sound.loop = false;
-          sound.play();
-      }
-    </script>
-    <script type="text/javascript">
-        
-// var requestButton = document.querySelector(".request-btn");
-
-    //});
-    //const messageChannel = new MessageChannel();
-    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
-    //navigator.serviceWorker.controller.postMessage({'hello':'test'});
-        function messageCommunicationWithWorker(){
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                registrations.forEach(function (v) {
-                    send_message_to_sw(v.active, "hello cal week").then(function (m) {
-                        playSound();
-                        ajaxClassTime();
-                        messageCommunicationWithWorker();
-                    });
-                });
-            });
-        }
-        messageCommunicationWithWorker();
-    </script>-->
+{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
+{#    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
+{#    <script>#}
+{#    function playSound() {#}
+{#          var sound = document.getElementById("audio");#}
+{#          sound.loop = false;#}
+{#          sound.play();#}
+{#      }#}
+{#    </script>#}
+{#    <script type="text/javascript">#}
+{#        #}
+{#// var requestButton = document.querySelector(".request-btn");#}
+{##}
+{#    //});#}
+{#    //const messageChannel = new MessageChannel();#}
+{#    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
+{#    //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
+{#        function messageCommunicationWithWorker(){#}
+{#            navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#                registrations.forEach(function (v) {#}
+{#                    send_message_to_sw(v.active, "hello cal week").then(function (m) {#}
+{#                        playSound();#}
+{#                        ajaxClassTime();#}
+{#                        messageCommunicationWithWorker();#}
+{#                    });#}
+{#                });#}
+{#            });#}
+{#        }#}
+{#        messageCommunicationWithWorker();#}
+{#    </script>-->#}
 <script type="text/javascript">
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
