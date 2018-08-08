@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON_ALARM_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
+    AUTO_FINISH_OFF
 
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
@@ -540,48 +541,35 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
     except ObjectDoesNotExist:
         error = '수강정보를 불러오지 못했습니다.'
     if error is None:
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                      setting_type_cd='LT_RES_01', use=USE)
-            lt_res_01 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_01 = '00:00-23:59'
+
+        lt_res_01 = '00:00-23:59'
+        lt_res_02 = 0
+        lt_res_03 = '0'
+        lt_res_05 = '14'
+        lt_res_cancel_time = -1
+        lt_res_enable_time = -1
+        setting_data = SettingTb.objects.filter(member_id=class_info.member_id, class_tb_id=class_id, use=USE)
+
+        for setting_info in setting_data:
+            if setting_info.setting_type_cd == 'LT_RES_01':
+                lt_res_01 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_02':
+                lt_res_02 = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_03':
+                lt_res_03 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_05':
+                lt_res_05 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
+                lt_res_cancel_time = int(setting_info.setting_info)
+            if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
+                lt_res_enable_time = int(setting_info.setting_info)
+        if lt_res_cancel_time == -1:
+            lt_res_cancel_time = lt_res_02*60
+        if lt_res_enable_time == -1:
+            lt_res_enable_time = lt_res_02*60
 
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                      setting_type_cd='LT_RES_02', use=USE)
-            lt_res_02 = int(setting_data_info.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_02 = 0
-
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                      setting_type_cd='LT_RES_03', use=USE)
-            lt_res_03 = setting_data_info.setting_info
-        except ObjectDoesNotExist:
-            lt_res_03 = '0'
-
-        try:
-            setting_data_info = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                      setting_type_cd='LT_RES_05', use=USE)
-            lt_res_05 = int(setting_data_info.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_05 = 14
-
-        try:
-            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                 setting_type_cd='LT_RES_CANCEL_TIME')
-            lt_res_cancel_time = int(setting_data.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_cancel_time = lt_res_02*60
-        try:
-            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
-                                                 setting_type_cd='LT_RES_ENABLE_TIME')
-            lt_res_enable_time = int(setting_data.setting_info)
-        except ObjectDoesNotExist:
-            lt_res_enable_time = lt_res_02*60
 
         reserve_stop = lt_res_03
         reserve_avail_date = lt_res_05

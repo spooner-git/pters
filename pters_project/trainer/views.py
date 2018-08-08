@@ -3623,26 +3623,28 @@ def update_setting_push_logic(request):
 
     if error is None:
         try:
-            lt_pus_01 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM')
+            lt_pus_to_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
+                                                                   class_tb_id=class_id,
+                                                                   setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM')
         except ObjectDoesNotExist:
-            lt_pus_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
+            lt_pus_to_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
+                                                       setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
         try:
-            lt_pus_02 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+            lt_pus_from_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
+                                                                     class_tb_id=class_id,
+                                                                     setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
         except ObjectDoesNotExist:
-            lt_pus_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM', use=USE)
+            lt_pus_from_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
+                                                         setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-                lt_pus_01.setting_info = setting_to_trainee_lesson_alarm
-                lt_pus_01.save()
+                lt_pus_to_trainee_lesson_alarm.setting_info = setting_to_trainee_lesson_alarm
+                lt_pus_to_trainee_lesson_alarm.save()
 
-                lt_pus_02.setting_info = setting_from_trainee_lesson_alarm
-                lt_pus_02.save()
+                lt_pus_from_trainee_lesson_alarm.setting_info = setting_from_trainee_lesson_alarm
+                lt_pus_from_trainee_lesson_alarm.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -3668,6 +3670,7 @@ def update_setting_push_logic(request):
                          class_tb_id=class_id,
                          log_info='PUSH 설정 정보', log_how='수정', use=USE)
         log_data.save()
+        return redirect(next_page)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)

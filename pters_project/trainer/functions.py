@@ -6,7 +6,8 @@ from django.db import IntegrityError
 from django.db import transaction
 from django.db.models.expressions import RawSQL
 
-from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
+from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, FROM_TRAINEE_LESSON_ALARM_ON, \
+    TO_TRAINEE_LESSON_ALARM_OFF
 
 from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -700,15 +701,15 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_res_03 = '0'
     lt_res_04 = '00:00-23:59'
     lt_res_05 = '14'
-    lt_res_cancel_time = lt_res_02*60
-    lt_res_enable_time = lt_res_02*60
+    lt_res_cancel_time = -1
+    lt_res_enable_time = -1
     lt_res_member_time_duration = 1
     lt_res_member_start_time = 'A-0'
     lt_schedule_auto_finish = AUTO_FINISH_OFF
     lt_lecture_auto_finish = AUTO_FINISH_OFF
     lt_lan_01 = 'KOR'
-    lt_pus_to_trainee_lesson_alarm = 0
-    lt_pus_from_trainee_lesson_alarm = 1
+    lt_pus_to_trainee_lesson_alarm = TO_TRAINEE_LESSON_ALARM_OFF
+    lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
     setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
 
     for setting_info in setting_data:
@@ -740,6 +741,11 @@ def func_get_trainer_setting_list(context, user_id, class_id):
             lt_pus_to_trainee_lesson_alarm = int(setting_info.setting_info)
         if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
             lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
+
+    if lt_res_cancel_time == -1:
+        lt_res_cancel_time = lt_res_02*60
+    if lt_res_enable_time == -1:
+        lt_res_enable_time = lt_res_02*60
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
