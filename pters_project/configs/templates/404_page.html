@@ -52,7 +52,7 @@
 	<div id="information_wrap">
 		<img src="/static/user/res/stopmark.png">
 		<p>{% trans "요청된 주소를 찾지 못했습니다. <br> 404. That’s an error." %}</p>
-		<a href="https://www.pters.co.kr"><button>처음으로</button></a>
+		<a href="{% url 'index' %}"><button>처음으로</button></a>
 	</div>
 </div>
 {% endblock %}

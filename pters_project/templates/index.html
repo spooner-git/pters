@@ -473,18 +473,18 @@
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
             registrations.forEach(function(v) {
                 if(v.active){
-                    if(v.scope=="http://localhost:8000/static/user/js/push/" || v.scope=="https://pters.co.kr/static/user/js/push/"){
+                    if(v.scope=="{% url 'index' %}/static/user/js/push/" || v.scope=="{% url 'index' %}/static/user/js/push/"){
                         v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
                     }
                 }
             });
         });
 
-        function deleteToken(){
+        function deleteToken(device_id){
             $.ajax({
                 url:'/login/delete_push_token/',
                 type:'POST',
-                data:{"keyword": document.getElementById('keyword').value},
+                data:{"device_id": device_id},
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

@@ -1345,11 +1345,11 @@ function clear_badge_counter(){
     })
 }
 
-function update_push_token(token) {
+function update_push_token(token, device_id) {
     $.ajax({
         url:'/login/add_push_token/',
         type:'POST',
-        data:{"token_info":token},
+        data:{"token_info":token, "device_id":device_id},
 
         beforeSend:function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1372,6 +1372,36 @@ function update_push_token(token) {
         error:function(){
 
         }
+    });
+}
+
+function deleteToken(){
+    $.ajax({
+        url:'/login/delete_push_token/',
+        type:'POST',
+        data:{"keyword": document.getElementById('keyword').value},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            console.log('토큰 삭제 완료')
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        },
     });
 }
 
