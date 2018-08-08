@@ -442,10 +442,6 @@
             }
         }
 
-
-
-
-
         function goPage(option){
             if(option == 0){
                 location.href="/accounts/register/";
@@ -471,15 +467,15 @@
             $('#errorMessageBar').fadeOut('fast')
         })
 
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            registrations.forEach(function(v) {
-                if(v.active){
-                    if(v.scope=="{% url 'index' %}/static/user/js/push/" || v.scope=="{% url 'index' %}/static/user/js/push/"){
-                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
-                    }
-                }
-            });
-        });
+{#        navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#            registrations.forEach(function(v) {#}
+{#                if(v.active){#}
+{#                    if(v.scope=="{% url 'index' %}/static/user/js/push/" || v.scope=="{% url 'index' %}/static/user/js/push/"){#}
+{#                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
+{#                    }#}
+{#                }#}
+{#            });#}
+{#        });#}
 
 
         function getCookie(name) {
