@@ -82,7 +82,7 @@ class PushInfoTb(TimeStampedModel):
     last_login = models.DateTimeField(db_column='LAST_LOGIN', blank=True, null=True)  # Field name made lowercase.
     session_info = models.CharField(db_column='SESSION_INFO', max_length=255, blank=True, default='')
     device_info = models.CharField(db_column='DEVICE_INFO', max_length=255, blank=True, default='')
-    device_type = models.CharField(db_column='DEVICE_TYPE', max_length=45, blank=True, default='')
+    device_id = models.CharField(db_column='DEVICE_ID', max_length=45, blank=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

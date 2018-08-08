@@ -680,67 +680,52 @@ class AddPushTokenView(View):
     error = ''
 
     def post(self, request):
-        logger.info('test')
         keyword = request.POST.get('token_info', '')
-        device_type = request.POST.get('device_type', '')
+        device_id = request.POST.get('device_id', '')
         user_agent = request.META['HTTP_USER_AGENT']
-        if device_type == '':
-            if 'iPad' in user_agent:
-                device_type = 'iPad'
+        add_token_check = False
+        if keyword == '' or device_id == '' or keyword is None or device_id is None:
+            self.error = 'token 정보를 불러오지 못했습니다.'
 
-            elif 'iPhone' in user_agent:
-                device_type = 'iPhone'
+        if self.error == '':
+            if str(request.user) != 'AnonymousUser':
+                token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+                if len(token_data) == 0:
+                    add_token_check = True
+                elif len(token_data) == 1:
+                    token_data.update(token=keyword, last_login=timezone.now(), member_id=request.user.id,
+                                      session_info=request.session.session_key, device_info=str(user_agent))
+                else:
+                    token_data.delete()
+                    add_token_check = True
 
-            elif 'Android' in user_agent:
-                device_type = 'Android'
+                if add_token_check:
+                    token_data = PushInfoTb.objects.filter(token=keyword, use=USE)
+                    if len(token_data) > 0:
+                        token_data.delete()
 
-        logger.info('test1:'+keyword)
-        logger.info('test2:'+device_type)
-        logger.info('test3:'+str(request.user))
-        if str(request.user) != 'AnonymousUser':
-            logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+keyword)
-            logger.info(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+device_type)
-            try:
-                token_data = PushInfoTb.objects.get(device_type=device_type, member_id=request.user.id, use=USE)
-                token_exist = True
-                token_data.token = keyword
-                token_data.last_login = timezone.now()
-                token_data.session_info = request.session.session_key
-                token_data.device_info = str(user_agent)
-                token_data.save()
-            except ObjectDoesNotExist:
-                token_exist = False
-
-            if token_exist is False:
-                if keyword is not None and keyword != '':
                     token_info = PushInfoTb(member_id=request.user.id, token=keyword, last_login=timezone.now(),
-                                            session_info=request.session.session_key, device_type=device_type,
+                                            session_info=request.session.session_key, device_id=device_id,
                                             device_info=str(user_agent), use=USE)
                     token_info.save()
 
-            request.session['push_token'] = keyword
+                request.session['push_token'] = keyword
 
-        return render(request, self.template_name, {'token_check': token_exist})
+        return render(request, self.template_name, {'token_check': True})
 
 
 class DeletePushTokenView(View):
     template_name = 'ajax/token_check_ajax.html'
     error = ''
 
-    def get(self, request):
-
-        return render(request, self.template_name)
-
     def post(self, request):
-        keyword = request.POST.get('keyword', '')
-        try:
-            token_data = PushInfoTb.objects.get(token=keyword, use=USE)
-            token_data.delete()
-            token_exist = False
-        except ObjectDoesNotExist:
-            token_exist = False
+        device_id = request.POST.get('device_id', '')
+        if device_id != '':
+            token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+            if len(token_data) > 0:
+                token_data.delete()
 
-        return render(request, self.template_name, {'token_check': token_exist})
+        return render(request, self.template_name, {'token_check': True})
 
 
 class ClearBadgeCounterView(TemplateView):
@@ -779,7 +764,7 @@ def clear_badge_counter_logic(request):
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         # messages.error(request, error)
 
-        return render(request, 'ajax/token_check_ajax.html', {'token_check': error})
+        return render(request, 'ajax/token_check_ajax.html', {'token_check': ''})
 
 
 def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthday_dt):

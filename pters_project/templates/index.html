@@ -480,11 +480,11 @@
             });
         });
 
-        function deleteToken(){
+        function deleteToken(device_id){
             $.ajax({
                 url:'/login/delete_push_token/',
                 type:'POST',
-                data:{"keyword": document.getElementById('keyword').value},
+                data:{"device_id": device_id},
 
                 beforeSend:function(xhr, settings) {
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
