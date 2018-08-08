@@ -52,7 +52,7 @@
 	<div id="information_wrap">
 		<img src="/static/user/res/stopmark.png">
 		<p>{% trans "인증에 실패했습니다. <br> 다시 로그인하여 재인증 요청을 해주세요." %}</p>
-		<a href="https://www.pters.co.kr"><button>피터스 홈페이지</button></a>
+		<a href="{% url 'index' %}"><button>피터스 홈페이지</button></a>
 	</div>
 </div>
 {% endblock %}
