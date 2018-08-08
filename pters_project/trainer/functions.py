@@ -69,7 +69,7 @@ def func_get_class_member_end_list(class_id):
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
                                            lecture_tb__use=USE, use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
-                                                     ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, []),
+                                                     ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
                                                                 ).order_by('lecture_tb__member__name')
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
