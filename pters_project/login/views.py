@@ -680,6 +680,7 @@ class AddPushTokenView(View):
     error = ''
 
     def post(self, request):
+        logger.info('test')
         keyword = request.POST.get('token_info', '')
         device_type = request.POST.get('device_type', '')
         user_agent = request.META['HTTP_USER_AGENT']
@@ -693,7 +694,7 @@ class AddPushTokenView(View):
             elif 'Android' in user_agent:
                 device_type = 'Android'
 
-        logger.info('test:'+keyword)
+        logger.info('test1:'+keyword)
         logger.info('test2:'+device_type)
         logger.info('test3:'+str(request.user))
         if str(request.user) != 'AnonymousUser':
