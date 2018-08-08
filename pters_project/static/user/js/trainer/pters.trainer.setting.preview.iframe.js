@@ -1577,7 +1577,8 @@ $(document).ready(function(){
                     continue;
 
                 }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
-                       && compare_time(plan_start, work_end) == false
+                       && compare_time(work_end, plan_start)
+                        //&& compare_time(plan_start, work_end) == false
                        && compare_time(work_end, plan_end) == false){
                     
                     timegraph_hourwidth = $('#'+planHour+'g_00').width();
