@@ -522,7 +522,8 @@ $(document).ready(function(){
     $(document).on('click','.td00',function(e){
         get_timeindex_Y();
         var thisOffsetTop = $(this).offset().top;
-        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+        //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
             if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
 
             var localarray = timeIndexY.slice();
@@ -693,24 +694,35 @@ $(document).ready(function(){
 
         var popupRightLoc = endLeftLoc+endWidth+popupwidth;
         var popupBottomLoc = endTopLoc + popupheight;
-        if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
-            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
-            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
-            }else{ //그외
-                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
-            }
-        }else{
-            if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
-            }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
-                $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
+        if(bodywidth > 600){ 
+            if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
+                if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth})
+                }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth})
+                }else{ //그외
+                    $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc - popupwidth})
+                }
             }else{
-                $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
+                if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth})
+                }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth})
+                }else{
+                    $('#page-addplan-pc').show().css({'top':endTopLoc - startHeight, 'left':endLeftLoc+endWidth})
+                }
+            }
+        }else if(bodywidth< 600){
+            if(popupBottomLoc > windowHeight + scrollTop){  //아래쪽 넘어갈때
+                if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //위로 넘어갈때
+                    $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
+                }else{
+                    $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight  , 'left':(windowWidth - popupwidth)/2})
+                }
+            }else{ //평상시
+                $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
             }
         }
-        
         //미니 팝업 위치 보정
         
  
@@ -916,7 +928,7 @@ $(document).ready(function(){
         var hh = Number(selectedTime[3]);
         var hh_ = Number(selectedTime[3]);
         */
-        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null)){
             if(Options.classDur == 60){
                 var blankbox = 'blankSelected';
             }else if(Options.classDur == 30){
@@ -1244,7 +1256,7 @@ $(document).ready(function(){
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
-    $(document).on('click','#durationsSelected button',function(e){
+    $(document).on('click','#page-addplan #durationsSelected button',function(e){
         if($('#durations li').length == 0){
             $('.dropdown-backdrop').css('display','none');
             position_absolute_addplan_if_mobile($('#starttimesSelected'));
@@ -1786,6 +1798,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
         selector_page_addplan.css('top',50);
+        $('#float_btn').removeClass('rotate_btn')
         $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#calendar').css('height','0');
         $('#upbutton-x').attr('data-page','addplan');
@@ -3062,20 +3075,17 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
             continue;
 
         }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
-               && compare_time(work_end, plan_start)
-               //&& compare_time(plan_start, work_end) == false
+               && compare_time(plan_start, work_end) == false
                && compare_time(work_end, plan_end) == false){
-
-            console.log('plan_start',plan_start, 'work_start',work_start, compare_time(plan_start, work_start)  )
-            console.log('plan_start',plan_start, 'work_end', work_end, compare_time(plan_start, work_end) )
-            console.log('work_end',work_end, 'plan_end',plan_end, compare_time(work_end, plan_end) )
-            
-            timegraph_hourwidth = $('#'+planHour+'g_00').width();
-            timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-            timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-            timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-            timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
-
+            if(plan_start == work_end){
+                continue;
+            }else{
+                timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
+                timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
+            }
         }else if( compare_time(plan_start, work_end) == false   // 시작시간이 업무시간 전에 있고, 종료시간이 업무시간 밖에 위치
                && compare_time(plan_end, work_end)){
             
