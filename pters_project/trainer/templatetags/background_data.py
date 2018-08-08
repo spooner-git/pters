@@ -69,6 +69,8 @@ def get_setting_info(request):
         request.session['setting_member_start_time'] = context['lt_res_member_start_time']
         request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
         request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+        request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
+        request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
         request.session['setting_language'] = context['lt_lan_01']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:

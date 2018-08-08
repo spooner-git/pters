@@ -18,7 +18,7 @@ from el_pagination.views import AjaxListView
 
 # Create your views here.
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON
 
 from configs.views import AccessTestMixin
 
@@ -383,30 +383,42 @@ def add_trainee_schedule_logic(request):
         class_info.schedule_check = 1
         class_info.save()
 
-        push_info_schedule_start_date = str(start_date).split(':')
-        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+        try:
+            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                 setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+            lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+        except ObjectDoesNotExist:
+            lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
 
-        if group_schedule_id == '' or group_schedule_id is None:
+        if lt_pus_from_trainee_lesson_alarm == lt_pus_from_trainee_lesson_alarm:
+            push_info_schedule_start_date = str(start_date).split(':')
+            push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-            push_class_id.append(class_id)
-            push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name + request.user.first_name + '님이 '
-                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' [1:1 레슨] 일정을 등록했습니다')
+            if group_schedule_id == '' or group_schedule_id is None:
+
+                push_class_id.append(class_id)
+                push_title.append(class_type_name + ' 수업 - 일정 알림')
+                push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                    + ' [1:1 레슨] 일정을 등록했습니다')
+            else:
+
+                push_class_id.append(class_id)
+                push_title.append(class_type_name + ' 수업 - 일정 알림')
+                push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                    + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                    + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                    + ' ['+schedule_info.get_group_type_cd_name()+']'
+                                    + schedule_info.get_group_name() + ' 일정을 등록했습니다')
+
+            context['push_class_id'] = push_class_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
         else:
-
-            push_class_id.append(class_id)
-            push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name + request.user.first_name + '님이 '
-                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' ['+schedule_info.get_group_type_cd_name()+']'
-                                + schedule_info.get_group_name() + ' 일정을 등록했습니다')
-
-        context['push_class_id'] = push_class_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+            context['push_class_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
 
         return render(request, 'ajax/trainee_error_info.html', context)
     else:
@@ -522,19 +534,30 @@ def delete_trainee_schedule_logic(request):
                          log_how='취소', log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
 
-        push_info_schedule_start_date = str(start_date).split(':')
-        push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
+        try:
+            setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
+                                                 setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
+            lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
+        except ObjectDoesNotExist:
+            lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+        if lt_pus_from_trainee_lesson_alarm == lt_pus_from_trainee_lesson_alarm:
+            push_info_schedule_start_date = str(start_date).split(':')
+            push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
-        push_class_id.append(class_id)
-        push_title.append(class_type_name + ' 수업 - 일정 알림')
-        push_message.append(request.user.last_name + request.user.first_name + '님이 '
-                            + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
-                            + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                            + ' ['+group_type_name+']'+group_name+' 일정을 취소했습니다.')
+            push_class_id.append(class_id)
+            push_title.append(class_type_name + ' 수업 - 일정 알림')
+            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
+                                + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
+                                + ' ['+group_type_name+']'+group_name+' 일정을 취소했습니다.')
 
-        context['push_class_id'] = push_class_id
-        context['push_title'] = push_title
-        context['push_message'] = push_message
+            context['push_class_id'] = push_class_id
+            context['push_title'] = push_title
+            context['push_message'] = push_message
+        else:
+            context['push_class_id'] = ''
+            context['push_title'] = ''
+            context['push_message'] = ''
 
         return render(request, 'ajax/trainee_error_info.html', context)
     else:
