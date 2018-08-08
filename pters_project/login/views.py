@@ -725,6 +725,7 @@ class DeletePushTokenView(View):
             if len(token_data) > 0:
                 token_data.delete()
 
+        logger.info('DeletePushTokenView:' + device_id)
         return render(request, self.template_name, {'token_check': True})
 
 
