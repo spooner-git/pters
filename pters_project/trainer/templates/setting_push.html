@@ -130,6 +130,20 @@
             $('#uptext2').text("푸시 알림 설정");
         }
 
+        //DB에 저장된 옵션값
+        /*
+        var lt_pus_01 =  ['{{ lt_pus_01 }}'];
+        var lt_pus_02 =  ['{{ lt_pus_02 }}'];
+        var lt_pus_03 =  ['{{ lt_pus_03 }}'];
+        var lt_pus_04 =  ['{{ lt_pus_04 }}'];
+        var lt_pus_05 =  ['{{ lt_pus_05 }}'];
+        var lt_pus_06 =  ['{{ lt_pus_06 }}'];
+        */
+        var lt_pus_01 =  [0];
+        var lt_pus_02 =  [3];
+        var lt_pus_03 =  [1];
+        var lt_pus_04 =  [0];
+
         var select_all_check = false;
 
         /*모듈 기본 동작*/
@@ -153,7 +167,6 @@
                                                             $(this).text()
                                                         );
         });
-
         /*모듈 기본 동작*/
 
 
@@ -216,6 +229,60 @@
                                                                 $(this).attr('data-time')
                                                             );
         })
+
+        /*DB저장값으로 초기 셋팅 해주기*/
+        $('#id_setting_trainee_todaylesson_notice').val(Number(lt_pus_01[0]));
+        if(Number(lt_pus_01[0]) != 0){
+            var db_value = Number(lt_pus_01[0]);
+
+            $('#switch1').addClass('sw_on');
+            $('#switch1 .switchback').addClass('switchon-back');
+            $('#switch1 .switchball').addClass('switchon').removeClass('switchoff');
+
+            $('#memberLessonNoticeSetting').css('display','block');
+            $('#memberLessonNoticeSetting button').text(
+                                                            $('#ulTimes1 li a[data-time="'+db_value+'"]').text()
+                                                        )
+                                                   .val(
+                                                            $('#ulTimes1 li a[data-time="'+db_value+'"]').attr('data-time')
+                                                        );
+        };
+
+        $('#id_setting_trainee_lessonfinish_alert').val(Number(lt_pus_02[0]));
+        if(Number(lt_pus_02[0]) != 0){
+            var db_value = Number(lt_pus_02[0]);
+
+            $('#switch2').addClass('sw_on');
+            $('#switch2 .switchback').addClass('switchon-back');
+            $('#switch2 .switchball').addClass('switchon').removeClass('switchoff');
+
+            $('#memberFinishAlertSetting').css('display','block');
+            $('#memberFinishAlertSetting button').text(
+                                                            $('#ulTimes2 li a[data-time="'+db_value+'"]').text()
+                                                        )
+                                                   .val(
+                                                            $('#ulTimes2 li a[data-time="'+db_value+'"]').attr('data-time')
+                                                        );
+        };
+
+        $('#id_setting_trainee_lessonchanged_alarm').val(Number(lt_pus_03[0]))
+        if(Number(lt_pus_03[0]) != 0){
+            var db_value = Number(lt_pus_03[0])
+            $('#switch3').addClass('sw_on');
+            $('#switch3 .switchback').addClass('switchon-back');
+            $('#switch3 .switchball').addClass('switchon').removeClass('switchoff');
+        };
+
+        $('#id_setting_trainer_lessonchanged_alarm').val(Number(lt_pus_04[0]))
+        if(Number(lt_pus_04[0]) != 0){
+            var db_value = Number(lt_pus_04[0])
+            $('#switch4').addClass('sw_on');
+            $('#switch4 .switchback').addClass('switchon-back');
+            $('#switch4 .switchball').addClass('switchon').removeClass('switchoff');
+        };
+
+
+        /*DB저장값으로 초기 셋팅 해주기*/
     
 
         $("#upbutton-check, ._button_Next").click(function(){
@@ -232,30 +299,19 @@
         });
 
         function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
-            var ulMorningDay = $("#morningdaySelect button");
-            var ulMorningDay2 = $("#morningdaySelect2 button");
-            var ulTimes = $("#hourSelect button");
-            var ulTimes2 = $("#hourSelect2 button")
-            var ulnoRegMember = $("#noRegMemberAlarmSelect button");
-            var ulchangedPlan = $("#changedPlanAlarmSelect button");
-            var ulurgentDay = $("#urgentMemberAlarmSelect button");
-            var ulurgentMember = $("#urgentMemberAlarmWhenSelect button")
-            if((ulMorningDay).hasClass("dropdown_selected")==true && (ulMorningDay2).hasClass("dropdown_selected")==true && (ulTimes).hasClass("dropdown_selected")==true && (ulTimes2).hasClass("dropdown_selected")==true && (ulnoRegMember).hasClass("dropdown_selected")==true && (ulchangedPlan).hasClass("dropdown_selected")==true && (ulurgentDay).hasClass("dropdown_selected")==true &&(ulurgentMember).hasClass("dropdown_selected")==true){
+            
+            var trainee_todaylesson_notice = $('#id_setting_trainee_todaylesson_notice');
+            var trainee_lessonfinish_alert = $('#id_setting_trainee_lessonfinish_alert');
+            var trainee_lessonchanged_alarm = $('#id_setting_trainee_lessonchanged_alarm');
+            var trainer_lessonchanged_alarm = $('#id_setting_trainer_lessonchanged_alarm');
+
+            if(trainee_todaylesson_notice != lt_pus_01[0] || trainee_lessonfinish_alert != lt_pus_02[0] || trainee_lessonchanged_alarm != lt_pus_03[0] || trainer_lessonchanged_alarm != lt_pus_04[0]  ){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 select_all_check=true;
-                console.log('checked')
             }else{
                 select_all_check=false;
-            }
-        }
-    </script>
-    <script>
-        var lt_pus_01 =  ['{{ lt_pus_01 }}'];
-        var lt_pus_02 =  ['{{ lt_pus_02 }}'];
-        var lt_pus_03 =  ['{{ lt_pus_03 }}'];
-        var lt_pus_04 =  ['{{ lt_pus_04 }}'];
-        var lt_pus_05 =  ['{{ lt_pus_05 }}'];
-        var lt_pus_06 =  ['{{ lt_pus_06 }}'];
+            };
+        };
     </script>
 
 {% endblock %}
