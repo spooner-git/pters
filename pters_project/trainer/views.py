@@ -881,9 +881,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateV
         class_id = self.request.session.get('class_id', '')
         member_id = self.request.GET.get('member_id', None)
         context['error'] = None
-
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
-
         if context['error'] is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
                          + str(self.request.user.id) + ']' + context['error'])
