@@ -1230,7 +1230,6 @@ $(document).ready(function(){
                 }else if(compare_time(plan_start, work_start) == false  //시작시간이 업무시간 전에 있고, 종료시간도 업무시간 전
                        && compare_time(plan_end, work_start) == false ){
                     continue;
-
                 }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
                         && compare_time(plan_start, work_end) == false
                         && compare_time(work_end, plan_end) == false){
