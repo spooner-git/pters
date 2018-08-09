@@ -75,7 +75,7 @@ def get_setting_info(request):
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
             not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                 end_dt__lt=now, state_cd='NP',
+                                                                 end_dt__lte=now, state_cd='NP',
                                                                  en_dis_type=ON_SCHEDULE_TYPE, use=USE)
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
@@ -99,10 +99,15 @@ def get_setting_info(request):
                 except ObjectDoesNotExist:
                     group_info = None
 
-                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                          end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                 end_dt__gt=now, use=USE).exclude(state_cd='PE')
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                 if len(schedule_data) > 0:
-                    schedule_data.delete()
+                    schedule_data.update(state_cd='PE')
+                if len(schedule_data_delete) > 0:
+                    schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
                 lecture_info.lecture_avail_count = 0

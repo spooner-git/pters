@@ -30,6 +30,7 @@ def add_question_info_logic(request):
 
     if error is None:
         qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
+                       email_address=request.user.email,
                        status_type_cd='QA_WAIT', use=USE)
         qa_info.save()
 

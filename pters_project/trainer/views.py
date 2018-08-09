@@ -42,7 +42,7 @@ from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule
+    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -1986,12 +1986,20 @@ def finish_lecture_info_logic(request):
             group_info = None
 
     if error is None:
+        now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # func_refresh_lecture_count(lecture_id)
+
         if len(schedule_data) > 0:
-            schedule_data.delete()
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
         if len(repeat_schedule_data) > 0:
             repeat_schedule_data.delete()
         lecture_info.lecture_avail_count = 0
@@ -2067,14 +2075,30 @@ def refund_lecture_info_logic(request):
         except ObjectDoesNotExist:
             group_info = None
     if error is None:
+        now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data.delete()
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+
+        if len(schedule_data) > 0:
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
+        if len(repeat_schedule_data) > 0:
+            repeat_schedule_data.delete()
         repeat_schedule_data.delete()
         lecture_info.refund_price = input_refund_price
         lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
+
+        end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
+        if lecture_info.lecture_reg_count >= end_schedule_counter:
+            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
+                                               - end_schedule_counter
+        # func_refresh_lecture_count(lecture_id)
         # lecture_info.lecture_rem_count = 0
         lecture_info.state_cd = 'RF'
         lecture_info.save()
@@ -2131,10 +2155,11 @@ def progress_lecture_info_logic(request):
             group_info = None
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
-        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
-        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+        schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
+        schedule_data_finish_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                               state_cd='PE').count()
+        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
+        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
         lecture_info.refund_price = 0
         lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'

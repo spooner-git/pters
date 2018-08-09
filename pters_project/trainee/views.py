@@ -1177,7 +1177,6 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
         if start_date < timezone.now():
             error = '등록할 수 없는 날짜입니다.'
 
-
     if error is None:
         if lecture_info.lecture_avail_count == 0:
             error = '예약 가능한 횟수가 없습니다'

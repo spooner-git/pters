@@ -8,6 +8,7 @@ from login.models import MemberTb
 class QATb(TimeStampedModel):
     qa_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    email_address = models.CharField(db_column='EMAIL_ADDRESS', max_length=255, blank=True, default='')
     qa_type_cd = models.CharField(db_column='QA_TYPE_CD', max_length=45, blank=True, default='')
     title = models.CharField(db_column='TITLE', max_length=255, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=1000, blank=True, default='')
