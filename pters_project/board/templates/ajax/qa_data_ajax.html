@@ -13,12 +13,12 @@
       [{% for question_info in question_data %}"{{ question_info.status_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "status_type_cd_name":
       [{% for question_info in question_data %}"{{ question_info.status_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "email_address":
+      [{% for question_info in question_data %}"{{ question_info.email_address }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "reg_dt":
       [{% for question_info in question_data %}"{{ question_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "mod_dt":
       [{% for question_info in question_data %}"{{ question_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "user_email":
-      [{{ request.user.email }}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
