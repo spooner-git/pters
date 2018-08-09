@@ -630,7 +630,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             else:
                 if len(group_data) > 0:
                     group_data.update(use=UN_USE)
-                schedule_data.update(use=UN_USE)
+                schedule_data.delete()
                 schedule_data_finish.update(use=UN_USE)
                 class_lecture_info.auth_cd = 'DELETE'
                 # lecture_info.use = 0
@@ -638,12 +638,15 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                 # if lecture_info.state_cd == 'IP':
                 #    lecture_info.state_cd = 'PE'
                 class_lecture_info.save()
-                if lecture_info.state_cd == 'IP':
-                    lecture_info.state_cd = 'PE'
-                    lecture_info.lecture_avail_count = 0
-                    lecture_info.lecture_rem_count = 0
-                    lecture_info.use=UN_USE
-                    lecture_info.save()
+                if lecture_info.lecture_rem_count == lecture_info.lecture_reg_count:
+                    lecture_info.delete()
+                else:
+                    if lecture_info.state_cd == 'IP':
+                        lecture_info.state_cd = 'PE'
+                        lecture_info.lecture_avail_count = 0
+                        lecture_info.lecture_rem_count = 0
+                        lecture_info.use = UN_USE
+                        lecture_info.save()
 
                 if len(group_data) > 0:
                     for group_info in group_data:
