@@ -971,6 +971,7 @@ $(document).ready(function(){
         targetHTML.html(tbody)
     }*/
 
+    /*
     function draw_time_graph(option, width, type){  //type = '' and mini
 
         var targetHTML =  '';
@@ -1003,6 +1004,49 @@ $(document).ready(function(){
             for(i; i<Preview_Options.workEndTime; i++){
                 tr1[i] = '<div style="width:'+tdwidth+'px;" class="colspan">'+(i)+'</div>';
                 tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'px;"></div>';
+            }
+        }
+        var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
+        targetHTML.html(tbody);
+    }*/
+
+    function draw_time_graph(option, temp, type){  //type = '' and mini
+
+        var targetHTML =  '';
+        var types = '';
+        if(type == 'mini'){
+            targetHTML =  $('#timeGraph.ptaddbox_mini table');
+            types = "_mini"
+        }else{
+            targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph .timegraphtext');
+            types = ''
+        }
+
+
+        var tdwidth = (100/(Options.workEndTime-Options.workStartTime));
+        var tdwidth_ = (100/(Options.workEndTime-Options.workStartTime));
+
+        var tr1 = [];
+        var tr2 = [];
+        var i=Options.workStartTime;
+        if(option == "30"){
+            for(var i=0; i<=24; i++){
+                var display = "";
+                if(i<Options.workStartTime || i >= Options.workEndTime){
+                    var display = 'display:none;'
+                }
+                tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
+                //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
+            }
+        }else if(option == "60"){
+            for(var i=0; i<=24; i++){
+                var display = "";
+                if(i<Options.workStartTime || i >= Options.workEndTime){
+                    var display = 'display:none;'
+                }
+                tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
             }
         }
         var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
@@ -1554,61 +1598,45 @@ $(document).ready(function(){
                 var work_end = add_time(Options.workEndTime+':00','00:00');
                 var plan_start = add_time(planHour+':'+planMinute,'00:00');
                 var plan_end = add_time(planEndHour+':'+planEndMin,'00:00');
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-                if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간과 같거나 전에 있고, 종료시간이 업무종료시간과 같거나 업무시간 내에 위치
-                  && compare_time(plan_end, work_start) 
-                  && compare_time(plan_end, work_end) ==false)
-                { console.log(plan_start, plan_end, work_start, work_end)
-                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
-                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-                    if(planEndHour == Options.workEndTime){
-                        var planEndHour = Options.workEndTime -1;
-                        var planEndMin = 60;
-                    }else{
-                        var planEndHour = planEndHour;
-                    }
+                
 
-                    timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
-                    timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
+                timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
+                timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
 
-                }else if(compare_time(plan_start, work_start) == false  //시작시간이 업무시간 전에 있고, 종료시간도 업무시간 전
-                       && compare_time(plan_end, work_start) == false ){
-                    continue;
-
-                }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
-                       && compare_time(plan_start, work_end) == false
-                       && compare_time(work_end, plan_end) == false){
-                    if(plan_start == work_end){
+                var $workstarttime = $(`#${Options.workStartTime}g_00`);
+                var $workendtime = $(`#${Options.workEndTime-1}g_00`);
+                if(planHour<Options.workStartTime){ //시작시간이 업무시간 전에 있을 경우
+                    if(planEndHour >= Options.workStartTime && planEndHour < Options.workEndTime){ //종료시간이 업무시간 안에 있을 경우
+                        timegraph_hourwidth = $workstarttime.width();
+                        timegraph_houroffset = $workstarttime.position().left
+                        timegraph_houroffsetb = $workstarttime.position().top;
+                        var flag = 'flag1'
+                    }else if(planEndHour < Options.workStartTime){                                 //종료시간이 업무시간 전에 있을 경우
+                        //숨김
                         continue;
-                    }else{
-                        timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                        timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                        timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-                        timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-                        timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
+                    }else if(planEndHour >= Options.workEndTime){                                    //종료시간이 업무시간 후에 있을 경우
+                        timegraph_hourwidth = $workstarttime.width();
+                        timegraph_houroffset = $workstarttime.position().left + timegraph_hourwidth*(planMinute/60);
+                        timegraph_houroffsetb = $workstarttime.position().top;
+                        timegraph_hourendwidth = $workendtime.width();
+                        timegraph_hourendoffset = $workendtime.position().left + timegraph_hourendwidth
                     }
-
-                }else if( compare_time(plan_start, work_end) == false   // 시작시간이 업무시간 전에 있고, 종료시간이 업무시간 밖에 위치
-                       && compare_time(plan_end, work_end)){
-                    
-                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
-                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
-
-                }else if( compare_time(plan_start, work_end)            // 시작시간이 업무종료 후에 있고, 종료시간이 업무시간 후에 위치
-                       && compare_time(plan_end, work_end) ){
-
-                }else{                                                   //시작시간과 종료시간 모두 업무시간에 위치
-                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-                    timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
-                    timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
+                }else if(planHour >= Options.workStartTime && planHour < Options.workEndTime ){ // 시작시간이 업무시간 내에 있을 경우
+                    if(planEndHour >= Options.workStartTime && planEndHour < Options.workEndTime){ //종료시간이 업무시간 안에 있을 경우
+                        //정상 경우
+                    }else if(planEndHour < Options.workStartTime){                                 //종료시간이 업무시간 전에 있을 경우
+                        //경우 발생하지 않음
+                    }else if(planEndHour >= Options.workEndTime){                                    //종료시간이 업무시간 후에 있을 경우
+                        timegraph_hourendwidth = $workendtime.width();
+                        timegraph_hourendoffset = $workendtime.position().left + timegraph_hourendwidth;
+                    }
+                }else if(planHour >= Options.workEndTime){                                       //시작시간이 업무시간 후에 있을 경우
+                    //패스
+                    continue;
                 }
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
 
 
                 if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
@@ -1977,6 +2005,7 @@ $(document).ready(function(){
             }
         }
         allplans = sortedlist
+        console.log(semiresult)
         return {"addOkArray":addOkArrayList, "allplans":sortedlist}
     }
 
