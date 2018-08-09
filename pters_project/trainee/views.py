@@ -1131,16 +1131,16 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
             group_schedule_id = None
 
     if error is None:
-        if lecture_info.member_id != str(user_id):
-            error = '회원 정보를 불러오지 못했습니다.'
-
-    if error is None:
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
         except ValueError:
             error = '수강정보를 불러오지 못했습니다.'
+
+    if error is None:
+        if lecture_info.member_id != str(user_id):
+            error = '회원 정보를 불러오지 못했습니다.'
 
     if error is None:
         if lecture_info.state_cd != 'IP':
