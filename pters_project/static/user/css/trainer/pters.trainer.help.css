@@ -94,8 +94,20 @@ body{
 		border-bottom: 1px solid #9c9c9c;
 		cursor: pointer;
 	}
+		.myquestion_history_table:hover{
+			background: #f3f3f3;
+		}
 	.myquestion_history_table_cell{
 		display: table-cell;
+	}
+	.myquestion_history_table_content{
+		display: none;
+		width: 100%;
+		height: auto;
+		min-height: 40px;
+		padding: 20px;
+		background: #ffffff;
+		border-bottom: 1px solid #9c9c9c;
 	}
 
 	._qatable_no{

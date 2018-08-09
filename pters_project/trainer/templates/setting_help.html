@@ -173,7 +173,10 @@
                 var table = `<div class="myquestion_history_table" data-qid="${jsondata.question_id[i]}">
                                 ${number}${qa_type}${qa_title}${qa_regdt}${qa_status}
                             </div>`
-                htmlToJoin.push(table);
+                var content = `<div class="myquestion_history_table_content" data-qid="${jsondata.question_id[i]}">
+                                ${jsondata.contents[i]}
+                            </div>`
+                htmlToJoin.push(table+content);
             };
             if(len == 0){
                 htmlToJoin.push(`<div class="myquestion_history_table">
@@ -182,6 +185,16 @@
             }
             targetHtml.html(htmlToJoin.join(''));
         };
+
+        $(document).on('click','div.myquestion_history_table',function(){
+            var qid = $(this).attr('data-qid');
+            var $myContent = $(`.myquestion_history_table_content[data-qid=${qid}]`);
+            if($myContent.css('display') == "none"){
+                $myContent.show();
+            }else{
+                $myContent.hide();
+            }
+        })
 
 
         var varUA = navigator.userAgent.toLowerCase();
