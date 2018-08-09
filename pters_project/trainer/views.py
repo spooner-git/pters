@@ -42,7 +42,7 @@ from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
-    func_refresh_group_status, func_get_trainer_group_schedule
+    func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
 from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
@@ -287,7 +287,8 @@ class HelpPtersView(AccessTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HelpPtersView, self).get_context_data(**kwargs)
-
+        qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
+        context['qa_type_data'] = qa_type_list
         return context
 
 class FromPtersView(AccessTestMixin, TemplateView):
@@ -880,9 +881,7 @@ class GetMemberRepeatScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateV
         class_id = self.request.session.get('class_id', '')
         member_id = self.request.GET.get('member_id', None)
         context['error'] = None
-
         context = get_trainee_repeat_schedule_data_func(context, class_id, member_id)
-
         if context['error'] is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '['
                          + str(self.request.user.id) + ']' + context['error'])
@@ -1985,12 +1984,20 @@ def finish_lecture_info_logic(request):
             group_info = None
 
     if error is None:
+        now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+        # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # func_refresh_lecture_count(lecture_id)
+
         if len(schedule_data) > 0:
-            schedule_data.delete()
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
         if len(repeat_schedule_data) > 0:
             repeat_schedule_data.delete()
         lecture_info.lecture_avail_count = 0
@@ -2066,14 +2073,30 @@ def refund_lecture_info_logic(request):
         except ObjectDoesNotExist:
             group_info = None
     if error is None:
+        now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data.delete()
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+        schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
+                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+
+        if len(schedule_data) > 0:
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
+        if len(repeat_schedule_data) > 0:
+            repeat_schedule_data.delete()
         repeat_schedule_data.delete()
         lecture_info.refund_price = input_refund_price
         lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
+
+        end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
+        if lecture_info.lecture_reg_count >= end_schedule_counter:
+            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
+                                               - end_schedule_counter
+        # func_refresh_lecture_count(lecture_id)
         # lecture_info.lecture_rem_count = 0
         lecture_info.state_cd = 'RF'
         lecture_info.save()
@@ -2130,10 +2153,11 @@ def progress_lecture_info_logic(request):
             group_info = None
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
-        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
-        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+        schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
+        schedule_data_finish_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                               state_cd='PE').count()
+        lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
+        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
         lecture_info.refund_price = 0
         lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'
@@ -3179,7 +3203,7 @@ def select_class_processing_logic(request):
 
     error = None
     class_info = None
-    # test
+
     if class_id == '':
         error = '프로그램을 선택해 주세요.'
 
@@ -3607,62 +3631,43 @@ def update_trainer_info_logic(request):
 
 # 강사 예약허용시간 setting 업데이트 api
 def update_setting_push_logic(request):
-    setting_trainee_schedule_confirm1 = request.POST.get('setting_trainee_schedule_confirm1', '')
-    setting_trainee_schedule_confirm2 = request.POST.get('setting_trainee_schedule_confirm2', '')
-    setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
-    setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
-    setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
-    setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
+    setting_to_trainee_lesson_alarm = request.POST.get('setting_to_trainee_lesson_alarm', '0')
+    setting_from_trainee_lesson_alarm = request.POST.get('setting_from_trainee_lesson_alarm', '1')
+    # setting_trainee_no_schedule_confirm = request.POST.get('setting_trainee_no_schedule_confirm', '')
+    # setting_trainer_schedule_confirm = request.POST.get('setting_trainer_schedule_confirm', '')
+    # setting_trainer_no_schedule_confirm1 = request.POST.get('setting_trainer_no_schedule_confirm1', '')
+    # setting_trainer_no_schedule_confirm2 = request.POST.get('setting_trainer_no_schedule_confirm2', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
 
     error = None
-    lt_pus_01 = None
-    lt_pus_02 = None
-    lt_pus_03 = None
-    lt_pus_04 = None
+    lt_pus_to_trainee_lesson_alarm = None
+    lt_pus_from_trainee_lesson_alarm = None
 
     if error is None:
         try:
-            lt_pus_01 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_01')
+            lt_pus_to_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
+                                                                   class_tb_id=class_id,
+                                                                   setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM')
         except ObjectDoesNotExist:
-            lt_pus_01 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_01', use=USE)
+            lt_pus_to_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
+                                                       setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
         try:
-            lt_pus_02 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_02')
+            lt_pus_from_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
+                                                                     class_tb_id=class_id,
+                                                                     setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM')
         except ObjectDoesNotExist:
-            lt_pus_02 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_02', use=USE)
-        try:
-            lt_pus_03 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_03')
-        except ObjectDoesNotExist:
-            lt_pus_03 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_03', use=USE)
-        try:
-            lt_pus_04 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_PUS_04')
-        except ObjectDoesNotExist:
-            lt_pus_04 = SettingTb(member_id=request.user.id, class_tb_id=class_id,
-                                  setting_type_cd='LT_PUS_04', use=USE)
+            lt_pus_from_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
+                                                         setting_type_cd='LT_PUS_FROM_TRAINEE_LESSON_ALARM', use=USE)
 
     if error is None:
         try:
             with transaction.atomic():
-                lt_pus_01.setting_info = setting_trainee_schedule_confirm1 + '/' + setting_trainee_schedule_confirm2
-                lt_pus_01.save()
+                lt_pus_to_trainee_lesson_alarm.setting_info = setting_to_trainee_lesson_alarm
+                lt_pus_to_trainee_lesson_alarm.save()
 
-                lt_pus_02.setting_info = setting_trainee_no_schedule_confirm
-                lt_pus_02.save()
-
-                lt_pus_03.setting_info = setting_trainer_schedule_confirm
-                lt_pus_03.save()
-
-                lt_pus_04.setting_info = \
-                    setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
-                lt_pus_04.save()
+                lt_pus_from_trainee_lesson_alarm.setting_info = setting_from_trainee_lesson_alarm
+                lt_pus_from_trainee_lesson_alarm.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -3677,12 +3682,8 @@ def update_setting_push_logic(request):
 
     if error is None:
 
-        request.session.setting_trainee_schedule_confirm = setting_trainee_schedule_confirm1 + '/' \
-                                                           + setting_trainee_schedule_confirm2
-        request.session.setting_trainee_no_schedule_confirm = setting_trainee_no_schedule_confirm
-        request.session.setting_trainer_schedule_confirm = setting_trainer_schedule_confirm
-        request.session.setting_trainer_no_schedule_confirm1 = \
-            setting_trainer_no_schedule_confirm1 + '/' + setting_trainer_no_schedule_confirm2
+        request.session.setting_to_trainee_lesson_alarm = int(setting_to_trainee_lesson_alarm)
+        request.session.setting_from_trainee_lesson_alarm = int(setting_from_trainee_lesson_alarm)
 
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
         #               + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
@@ -3692,6 +3693,7 @@ def update_setting_push_logic(request):
                          class_tb_id=class_id,
                          log_info='PUSH 설정 정보', log_how='수정', use=USE)
         log_data.save()
+        return redirect(next_page)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
@@ -3699,7 +3701,7 @@ def update_setting_push_logic(request):
         return redirect(next_page)
 
 
-# 강사 예약허용시간 setting 업데이트 api
+# 강사 기본 setting 업데이트 api
 def update_setting_basic_logic(request):
     setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
