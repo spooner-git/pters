@@ -243,46 +243,55 @@ def func_get_class_lecture_count(context, class_id, user_id):
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                     lecture_tb__member_id=user_id, use=USE).order_by('lecture_tb')
+
+        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                              " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
+                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+
+        lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id,
+                                 lecture_tb__member_id=user_id,
+                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
+                                                                        lecture_count=RawSQL(query_lecture_count, [])
+                                                                        ).order_by('lecture_tb__start_date')
+
+        # lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
+        #                                                      ).filter(class_tb_id=class_id,
+        #                                                               use=USE).order_by('lecture_tb')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
-        if len(lecture_list) > 0:
-            for idx, lecture_list_info in enumerate(lecture_list):
-                lecture_info = lecture_list_info.lecture_tb
-                try:
-                    MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
-                                                lecture_tb=lecture_info.lecture_id, use=USE)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+        for lecture_list_info in lecture_list:
+            lecture_info = lecture_list_info.lecture_tb
 
-                if error is None:
-
-                    # group_lecture_check = 0
-                    group_lecture_info = None
-                    try:
-                        group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
-                                                                        lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    except ObjectDoesNotExist:
-                        group_lecture_info = None
-                    if group_lecture_info is None:
-                        if lecture_info.state_cd == 'IP':
-                            lecture_reg_count_sum += lecture_info.lecture_reg_count
-                            lecture_rem_count_sum += lecture_info.lecture_rem_count
-                            lecture_avail_count_sum += lecture_info.lecture_avail_count
-                    else:
-                        if lecture_info.state_cd == 'IP':
-                            if group_lecture_info.group_tb.group_type_cd == 'EMPTY':
-                                class_lecture_reg_count_sum += lecture_info.lecture_reg_count
-                                class_lecture_rem_count_sum += lecture_info.lecture_rem_count
-                                class_lecture_avail_count_sum += lecture_info.lecture_avail_count
-                            else:
-                                group_lecture_reg_count_sum += lecture_info.lecture_reg_count
-                                group_lecture_rem_count_sum += lecture_info.lecture_rem_count
-                                group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+            if lecture_list_info.lecture_count > 0:
+                # group_lecture_check = 0
+                if lecture_list_info.group_check == 'NORMAL':
+                    group_check = 1
+                elif lecture_list_info.group_check == 'EMPTY':
+                    group_check = 2
                 else:
-                    error = None
+                    group_check = 0
+
+                if group_check == 0:
+                    if lecture_info.state_cd == 'IP':
+                        lecture_reg_count_sum += lecture_info.lecture_reg_count
+                        lecture_rem_count_sum += lecture_info.lecture_rem_count
+                        lecture_avail_count_sum += lecture_info.lecture_avail_count
+                else:
+                    if lecture_info.state_cd == 'IP':
+                        if group_check == 2:
+                            class_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                            class_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                            class_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                        else:
+                            group_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                            group_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                            group_lecture_avail_count_sum += lecture_info.lecture_avail_count
 
     if lecture_reg_count_sum > 0:
         lecture_flag = True

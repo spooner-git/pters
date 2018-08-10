@@ -1200,9 +1200,9 @@ $(document).ready(function(){
 
                         // }
                         // else{
-                            draw_time_graph(60,tablewidth,'');
-                            timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
-                            timeGraphSet("off","grey", "AddClass", jsondata);
+                        draw_time_graph(60,tablewidth,'');
+                        timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
+                        timeGraphSet("off","grey", "AddClass", jsondata);
                             // $('#offStartTime').show();
                             // $('#submitBtn').show();
                         // }
