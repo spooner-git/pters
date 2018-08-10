@@ -21,7 +21,15 @@ var multiLanguage = { 'KOR':
 var multi_language_set = {
                             "KOR":{  
                                     "text-hello":"안녕하세요!",
+                                    "text-today":"오늘",
+                                    "text-lesson":"레슨",
+                                    "text-off":"OFF",
+                                    "text-add":"추가",
                                     "text-plan":"일정",
+                                    "text-lessonplan":"레슨<br>일정",
+                                    "text-offplan":"OFF<br>일정",
+                                    "text-addlessonplan":"+ 레슨 일정 등록",
+                                    "text-addoffplan":"+ OFF 일정 등록",
                                     "text-todayplan":"오늘 일정",
                                     "text-weekplan" :"주간 일정",
                                     "text-monthplan":"월간 일정",
@@ -58,6 +66,11 @@ var multi_language_set = {
 
                                     "text-memberinfo":"회원 정보",
 
+                                    "text-refresh":"새로고침",
+                                    "text-zoomin":"일정 확대 보기",
+                                    "text-zoomout":"일정 보기 원래대로",
+                                    "text-youcan-usecal":"일정을 확인하고 등록 할 수 있습니다.",
+
                                     "text-dd":"매일", "text-ww":"매주", "text-2w":"격주",
                                     "text-sunday":"일요일", "text-monday":"월요일","text-tuesday":"화요일","text-wednesday":"수요일","text-thursday":"목요일","text-friday":"금요일","text-saturday":"토요일",
                                     "text-sundaymin":"일","text-mondaymin":"월","text-tuesdaymin":"화","text-wednesdaymin":"수","text-thursdaymin":"목","text-fridaymin":"금","text-saturdaymin":"토",
@@ -72,7 +85,15 @@ var multi_language_set = {
 
                             "JPN":{  
                                     "text-hello":"Hello!",
+                                    "text-today":"今日",
+                                    "text-lesson":"レッスン",
+                                    "text-off":"OFF",
+                                    "text-add":"追加",
                                     "text-plan":"日程",
+                                    "text-lessonplan":"レッスン<br>追加",
+                                    "text-offplan":"OFF<br>追加",
+                                    "text-addlessonplan":"+ レッスン プラン 追加",
+                                    "text-addoffplan":"+ OFF プラン 追加",
                                     "text-todayplan":"今日の日程",
                                     "text-weekplan" :"週間カレンダー",
                                     "text-monthplan":"月間カレンダー",
@@ -109,6 +130,11 @@ var multi_language_set = {
 
                                     "text-memberinfo":"メンバー情報",
 
+                                    "text-refresh":"Refresh",
+                                    "text-zoomin":"拡大して見る",
+                                    "text-zoomout":"元に戻す",
+                                    "text-youcan-usecal":"スケジュールの登録・確認ができます。",
+
                                     "text-dd":"毎日", "text-ww":"毎週", "text-2w":"隔週",
                                     "text-sunday":"日曜日", "text-monday":"月曜日","text-tuesday":"火曜日","text-wednesday":"水曜日","text-thursday":"木曜日","text-friday":"金曜日","text-saturday":"土曜日",
                                     "text-sundaymin":"日","text-mondaymin":"月","text-tuesdaymin":"火","text-wednesdaymin":"水","text-thursdaymin":"木","text-fridaymin":"金","text-saturdaymin":"土",
@@ -123,7 +149,15 @@ var multi_language_set = {
 
                             "ENG":{
                                     "text-hello":"What a nice day!",
+                                    "text-today":"Today",
+                                    "text-lesson":"Plan",
+                                    "text-off":"OFF",
+                                    "text-add":"Add",
                                     "text-plan":"Plan",
+                                    "text-lessonplan":"Add<br>Plan",
+                                    "text-offplan":"Add<br>OFF",
+                                    "text-addlessonplan":"+ Add Plan",
+                                    "text-addoffplan":"+ Add OFF",
                                     "text-todayplan":"Day Cal.",
                                     "text-weekplan" :"Week Cal.",
                                     "text-monthplan":"Month Cal.",
@@ -160,6 +194,11 @@ var multi_language_set = {
 
                                     "text-memberinfo":"Member Info.",
 
+                                    "text-refresh":"Refresh",
+                                    "text-zoomin":"Zoom in",
+                                    "text-zoomout":"Zoom out",
+                                    "text-youcan-usecal":"Manage schedule by week calendar",
+
                                     "text-dd":"매일", "text-ww":"매주", "text-2w":"격주",
                                     "text-sunday":"Sunday", "text-monday":"Monday","text-tuesday":"Tuesday","text-wednesday":"Wednesday","text-thursday":"Thursday","text-friday":"Friday","text-saturday":"Saturday",
                                     "text-sundaymin":"SUN","text-mondaymin":"MON","text-tuesdaymin":"TUE","text-wednesdaymin":"WED","text-thursdaymin":"THU","text-fridaymin":"FRI","text-saturdaymin":"SAT",
@@ -174,6 +213,7 @@ var multi_language_set = {
 };
 
 //Trainer base - Menu Name
+$('.text-hello').text(multi_language_set[Options.language]["text-hello"]);
 $('.text-todayplan').text(multi_language_set[Options.language]["text-todayplan"]);
 $('.text-weekplan').text(multi_language_set[Options.language]["text-weekplan"]);
 $('.text-monthplan').text(multi_language_set[Options.language]["text-monthplan"]);
@@ -205,9 +245,27 @@ $('.text-close').text(multi_language_set[Options.language]["text-close"]);
 
 $('.text-memberinfo').text(multi_language_set[Options.language]["text-memberinfo"]);
 $('.text-thisgroupmember').text(multi_language_set[Options.language]["text-thisgroupmember"]);
-$('.text-hello').text(multi_language_set[Options.language]["text-hello"]);
+
+//Calendar
+$('.text-sundaymin').text(multi_language_set[Options.language]["text-sundaymin"]);
+$('.text-mondaymin').text(multi_language_set[Options.language]["text-mondaymin"]);
+$('.text-tuesdaymin').text(multi_language_set[Options.language]["text-tuesdaymin"]);
+$('.text-wednesdaymin').text(multi_language_set[Options.language]["text-wednesdaymin"]);
+$('.text-thursdaymin').text(multi_language_set[Options.language]["text-thursdaymin"]);
+$('.text-fridaymin').text(multi_language_set[Options.language]["text-fridaymin"]);
+$('.text-saturdaymin').text(multi_language_set[Options.language]["text-saturdaymin"]);
+$('.text-refresh').text(multi_language_set[Options.language]["text-refresh"]);
+$('.text-zoomout').text(multi_language_set[Options.language]["text-zoomout"]);
+$('.text-zoomin').text(multi_language_set[Options.language]["text-zoomin"]);
+$('.text-youcan-usecal').text(multi_language_set[Options.language]["text-youcan-usecal"]);
+$('.text-today').text(multi_language_set[Options.language]["text-today"]);
+$('.text-lessonplan').html(multi_language_set[Options.language]["text-lessonplan"]);
+$('.text-offplan').html(multi_language_set[Options.language]["text-offplan"]);
+$('.text-addoffplan').text(multi_language_set[Options.language]["text-addoffplan"]);
+$('.text-addlessonplan').text(multi_language_set[Options.language]["text-addlessonplan"]);
 
 
+//Footer
 $('.text-company').text(multi_language_set[Options.language]["text-company"]);
 $('.text-business').text(multi_language_set[Options.language]["text-business"]);
 $('.text-policy').text(multi_language_set[Options.language]["text-policy"]);
@@ -216,9 +274,7 @@ $('.text-manual').text(multi_language_set[Options.language]["text-manual"]);
 
 $('.text-footerdisplay').css('display',multi_language_set[Options.language]["text-footerdisplay"])
 
-//$('.text-').text(multi_language_set[Options.language]["text-"]);
-//$('.text-').text(multi_language_set[Options.language]["text-"]);
-//$('.text-').text(multi_language_set[Options.language]["text-"]);
+
 //$('.text-').text(multi_language_set[Options.language]["text-"]);
 //$('.text-').text(multi_language_set[Options.language]["text-"]);
 //$('.text-').text(multi_language_set[Options.language]["text-"]);
