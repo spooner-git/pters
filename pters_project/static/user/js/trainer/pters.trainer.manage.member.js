@@ -3251,6 +3251,9 @@ function complete_member_reg_data_pc(lectureID, dbID){
                         memberListSet('finished','date','yes',jsondata);
                     })
                 }
+                if($('#calendar').length > 0){
+                    ajaxClassTime();
+                }
                 get_member_lecture_list(dbID);
                 console.log('success');
             }
@@ -3368,9 +3371,12 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
                             memberListSet('finished','date','yes',jsondata);
                         })
                     }
+                    if($('#calendar').length > 0){
+                        ajaxClassTime();
+                    }
                     get_member_lecture_list(dbID);
 
-                    $('#shade3').css('display','none');
+                    //$('#shade3').css('display','none');
                     $('div.lectureRefundPopup.popups input[type="number"]').val('');
                     console.log('success');
 
