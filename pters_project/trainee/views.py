@@ -194,8 +194,13 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         except ObjectDoesNotExist:
             error = '수강 정보를 불러오지 못했습니다.'
 
+        today = datetime.date.today()
+        day = 1
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
         if error is None:
             context = func_get_holiday_schedule(context)
+            context = func_get_trainee_on_schedule(context, class_id, request.user.id, start_date, end_date)
             context = func_get_class_lecture_count(context, class_id, request.user.id)
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, request.user.id)

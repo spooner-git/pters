@@ -1014,43 +1014,43 @@ $(document).ready(function(){
         var dateplans = []
 
 
-        for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
-            var grouptype = "group"
-            var dbID = ''
-            var group_id = jsondata.group_schedule_group_id[i]
-            var scheduleID = jsondata.group_schedule_id[i]
-            var index = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i])
-            if(index != -1){
-                var scheduleID = jsondata.scheduleIdArray[index]
-            }else{
-                var scheduleID = ''
-            }
-            var classLectureID = ''
-            var scheduleFinish = jsondata.group_schedule_finish_check[i]
-            var memoArray = jsondata.group_schedule_note[i]
-            var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
-            var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
-            var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
-            var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
-            var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
-            var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
-            var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
-            var groupmax = jsondata.group_schedule_max_member_num[i]
-            var groupcurrent = jsondata.group_schedule_current_member_num[i]
-            var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
-            var name = '['+jsondata.group_schedule_group_type_cd_name[i]+'] '+jsondata.group_schedule_group_name[i]+groupParticipants
-            if(stime1.length<2){
-                var stime1 = '0'+stime1
-            }else if(stime1 == '24'){
-                var stime1 = '00'
-            }
-            var stime = stime1+'_'+sminute
-            var etime = etime1+'_'+eminute
-            var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-            if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
-                dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
-            }
-        }
+        // for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
+        //     var grouptype = "group"
+        //     var dbID = ''
+        //     var group_id = jsondata.group_schedule_group_id[i]
+        //     var scheduleID = jsondata.group_schedule_id[i]
+        //     var index = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i])
+        //     if(index != -1){
+        //         var scheduleID = jsondata.scheduleIdArray[index]
+        //     }else{
+        //         var scheduleID = ''
+        //     }
+        //     var classLectureID = ''
+        //     var scheduleFinish = jsondata.group_schedule_finish_check[i]
+        //     var memoArray = jsondata.group_schedule_note[i]
+        //     var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
+        //     var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
+        //     var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
+        //     var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
+        //     var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
+        //     var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
+        //     var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
+        //     var groupmax = jsondata.group_schedule_max_member_num[i]
+        //     var groupcurrent = jsondata.group_schedule_current_member_num[i]
+        //     var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
+        //     var name = '['+jsondata.group_schedule_group_type_cd_name[i]+'] '+jsondata.group_schedule_group_name[i]+groupParticipants
+        //     if(stime1.length<2){
+        //         var stime1 = '0'+stime1
+        //     }else if(stime1 == '24'){
+        //         var stime1 = '00'
+        //     }
+        //     var stime = stime1+'_'+sminute
+        //     var etime = etime1+'_'+eminute
+        //     var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
+        //     if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
+        //         dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
+        //     }
+        // }
 
         for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
             var grouptype = "class"
@@ -1076,9 +1076,14 @@ $(document).ready(function(){
             }
             var stime = stime1+'_'+sminute
             var etime = etime1+'_'+eminute
-            var name = "[1:1 레슨] "
+            var groupParticipants = "";
+            if(jsondata.schedule_group_max_member_num[i] != "") {
+                groupParticipants = '(' + jsondata.schedule_group_current_member_num[i] + '/' + jsondata.schedule_group_max_member_num[i] + ')'
+            }
+            var name = '['+jsondata.schedule_group_type_cd_name[i]+'] '+jsondata.schedule_group_name[i] + groupParticipants;
             var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-            if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+            // if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+            if(ymd == dateinfo ){
                 dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
             }
         }
@@ -1182,6 +1187,7 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -1807,6 +1813,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
+            console.log(initialJSON);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -1921,13 +1928,19 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
         if(classTime == "24:00"){
             var classTime = "00:00"
         }
-
-        if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-            var groupname = " - [1:1 레슨]"
-        }else{
-            var index = jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i])
-            var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
+        var groupname = " - [";
+        if(jsondata.schedule_group_name[i]==""){
+            groupname += jsondata.schedule_group_type_cd_name[i]+"]";
         }
+        else{
+            groupname += jsondata.schedule_group_name[i]+"]";
+        }
+        // if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+        //     var groupname = " - [1:1 레슨]"
+        // }else{
+        //     var index = jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i])
+        //     var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
+        // }
 
         var index = count_date_info.dateResult.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0])
         var count = count_date_info.countResult[index]

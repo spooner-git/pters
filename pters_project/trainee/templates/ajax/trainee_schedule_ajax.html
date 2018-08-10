@@ -13,6 +13,14 @@
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleIdxArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.idx }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_group_type_cd_name":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_group_name":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_group_current_member_num":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedule_group_max_member_num":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "offTimeArray_start_date" :
       [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
