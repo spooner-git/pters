@@ -3774,6 +3774,7 @@ function send_add_groupmember_plan(use, callback){
 //그룹/클래스 일정내에서 그룹원을 일정에 추가할때
 function add_scroll_arrow_to_addByList($selector){ //subpopup_addByList_thisgroup or subpopup_addByList_whole
     
+    var $selectorSibling = $selector.siblings('.mode_switch_button_wrap_cal');
     var selectorHeight = $selector.height();
     var groupMemberList = $selector.find('.list_addByList_padding')
     var groupMemberListHeight = groupMemberList.length * groupMemberList.outerHeight();
@@ -3781,10 +3782,10 @@ function add_scroll_arrow_to_addByList($selector){ //subpopup_addByList_thisgrou
     console.log(selectorHeight, groupMemberList.length, groupMemberList.outerHeight())
 
     if(groupMemberListHeight > selectorHeight  - 64){
-        if($selector.find('.dropdown_scroll_arrow_top').length == 0){
-            $selector.append(
-                                '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="position:fixed;top:15px;left:0;">'+
-                                '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="position:fixed;bottom:0px;left:0;">'
+        if($selectorSibling.find('.dropdown_scroll_arrow_top').length == 0){
+            $selectorSibling.append(
+                                '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="position:absolute;top:25px;left:0;">'+
+                                '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="position:absolute;top:385px;left:0;">'
                              )
         }
     }
