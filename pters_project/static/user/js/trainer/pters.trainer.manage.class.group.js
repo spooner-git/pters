@@ -271,7 +271,11 @@ function draw_memberlist_for_addByList(targetHTML){
                 for(var i=1; i<=len; i++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.dIdArray[i-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sexArray[i-1]+'.png">'
-                        htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'"><div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+'<div>'+jsondata.phoneArray[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                        htmlToJoin[i] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.lastNameArray[i-1]+'" data-firstname="'+jsondata.firstNameArray[i-1]+'" data-dbid="'+jsondata.dIdArray[i-1]+'" data-id="'+jsondata.idArray[i-1]+'" data-sex="'+jsondata.sexArray[i-1]+'" data-phone="'+jsondata.phoneArray[i-1]+'">'+
+                                            '<div data-dbid="'+jsondata.dIdArray[i-1]+'">'+sexInfo+jsondata.nameArray[i-1]+' (ID: '+jsondata.idArray[i-1]+')'+'</div>'+
+                                            '<div>'+jsondata.phoneArray[i-1]+'</div>'+
+                                            '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+
+                                        '</div>'
                         addedNum++
                     }
                 }
@@ -279,12 +283,16 @@ function draw_memberlist_for_addByList(targetHTML){
                 for(var j=1; j<=len_finish; j++){
                     if($('#addedMemberListBox div[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0 && $('div.groupMembersWrap[data-groupid="'+$('#form_member_groupid').val()+'"] div.memberline[data-dbid="'+jsondata.finishDidArray[j-1]+'"]').length == 0){ //추가될 리스트에 이미 있으면 목록에 보여주지 않는다.
                         var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.finishsexArray[j-1]+'.png">'
-                        htmlToJoin[i+j-1] = '<div class="list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'"><div data-dbid="'+jsondata.finishDidArray[j-1]+'">'+sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+'<div>'+jsondata.finishphoneArray[j-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>'
+                        htmlToJoin[i+j-1] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.finishLastNameArray[j-1]+'" data-firstname="'+jsondata.finishFirstNameArray[j-1]+'" data-dbid="'+jsondata.finishDidArray[j-1]+'" data-id="'+jsondata.finishIdArray[j-1]+'" data-sex="'+jsondata.finishsexArray[j-1]+'" data-phone="'+jsondata.finishphoneArray[j-1]+'">'+
+                                                '<div data-dbid="'+jsondata.finishDidArray[j-1]+'">'+sexInfo+jsondata.finishnameArray[j-1]+' (ID: '+jsondata.finishIdArray[j-1]+')'+'</div>'+
+                                                '<div>'+jsondata.finishphoneArray[j-1]+'</div>'+
+                                                '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+
+                                            '</div>'
                         addedNum++
                     }
                 }
                 if(addedNum == 0){
-                    htmlToJoin.push('<div class="list_addByList">'+'추가 가능한 회원이 없습니다.'+'</div>')
+                    htmlToJoin.push('<div class="list_addByList_padding list_addByList">'+'추가 가능한 회원이 없습니다.'+'</div>')
                 }
 
                 var html = htmlToJoin.join('')
@@ -807,7 +815,7 @@ function delete_group_from_list(group_id){
 //그룹 지우기
 
 //그룹원 지우기
-function delete_groupmember_from_grouplist(){
+function delete_groupmember_from_grouplist(use, callback){
     $.ajax({
         url:'/trainer/delete_group_member_info/',
         type:'POST',
@@ -829,6 +837,7 @@ function delete_groupmember_from_grouplist(){
 
         //통신성공시 처리
         success:function(data){
+            enable_delete_btns_after_ajax();
             var jsondata = JSON.parse(data)
             //ajax_received_json_data_member_manage(data);
             if(jsondata.messageArray.length>0){
@@ -840,6 +849,9 @@ function delete_groupmember_from_grouplist(){
                 $('#errorMessageText').text('')
                 get_group_ing_list()
                 console.log('success');
+                if(use == "callback"){
+                    callback();
+                }
             }
         },
 
@@ -1223,18 +1235,44 @@ function groupMemberListSet(group_id, jsondata){
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
 $(document).on('click','img.substract_groupMember',function(e){
     e.stopPropagation();
+
     var groupmember_name = $(this).attr('data-fullname')
-    //var groupmember_lecid = $(this).attr('data-lecid');
     var groupmember_dbid = $(this).attr('data-dbid')
     var groupmember_groupid = $(this).attr('data-groupid')
-    //delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id)
-
+    var groupname = $(`div.groupWrap[data-groupid="${groupmember_groupid}"] ._groupname input`).val();
     group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
     group_delete_JSON.ids.push(groupmember_dbid)
     group_delete_JSON.fullnames.push(groupmember_name)
     group_delete_JSON.group_id = groupmember_groupid
-    delete_groupmember_from_grouplist()
+
+    $('#cal_popup_plandelete').css('display','block');
+    $('#popup_delete_question').text(`${groupname}에서 ${groupmember_name}님을 제외 하시겠습니까?`)
+    deleteTypeSelect = "groupMember_Substract_From_Group"
+
 })
+
+$('#popup_delete_btn_yes').click(function(){
+    var bodywidth = window.innerWidth;
+    //if(ajax_block_during_delete_weekcal == true){
+    if(!$(this).hasClass('disabled_button')){
+        //ajax_block_during_delete_weekcal = false;
+        disable_delete_btns_during_ajax();
+        if(deleteTypeSelect == "groupMember_Substract_From_Group"){
+            delete_groupmember_from_grouplist('callback',function(){
+                close_info_popup('cal_popup_plandelete');
+            })
+        }
+    }
+});
+function disable_delete_btns_during_ajax(){
+    $('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button')
+    //ajax_block_during_delete_weekcal = false;
+}
+
+function enable_delete_btns_after_ajax(){
+    $('#popup_delete_btn_yes, #popup_delete_btn_no').removeClass('disabled_button')
+    //ajax_block_during_delete_weekcal = false;
+}
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 
 

@@ -147,8 +147,8 @@
 
 .groupParticipantsRow{
 	text-align: left;
-	margin-top: 3px;
-	margin-bottom: 3px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 .groupParticipantsRow span{
 	cursor: pointer;
@@ -551,6 +551,10 @@
 		background: #ffffff;
 		overflow: hidden;
 		border:1px solid #e8e8e8;
+	}
+	.groupParticipantsRow{
+		padding-top: 5px;
+		padding-bottom: 5px;
 	}
 
 	#popup_triangle{

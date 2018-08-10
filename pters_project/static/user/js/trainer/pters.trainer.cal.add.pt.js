@@ -1297,29 +1297,27 @@ $(document).ready(function(){
     //드랍다운 씹힘현상 해결
     //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 
-    
-
     //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
-    $(document).on('click','img.dropdown_scroll_arrow_top',function(e){
-        e.stopPropagation();
-        var $thisul = $(this).parents('ul');
-        var $thisul_scroll_height = $thisul.prop('scrollHeight');
-        var $thisul_display_height = $thisul.height();
-        if($(this).css('visibility') == 'visible'){
-            $thisul.animate({scrollTop: 0},200)
-        }
-    });
+        $(document).on('click','ul img.dropdown_scroll_arrow_top',function(e){
+            e.stopPropagation();
+            var $thisul = $(this).parents('ul');
+            var $thisul_scroll_height = $thisul.prop('scrollHeight');
+            var $thisul_display_height = $thisul.height();
+            if($(this).css('visibility') == 'visible'){
+                $thisul.animate({scrollTop: 0},200)
+            }
+        });
     //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
     //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
-    $(document).on('click','img.dropdown_scroll_arrow_bottom',function(e){
-        e.stopPropagation();
-        var $thisul = $(this).parents('ul');
-        var $thisul_scroll_height = $thisul.prop('scrollHeight');
-        var $thisul_display_height = $thisul.height();
-        if($(this).css('visibility') == 'visible'){
-            $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
-        }
-    });
+        $(document).on('click','ul img.dropdown_scroll_arrow_bottom',function(e){
+            e.stopPropagation();
+            var $thisul = $(this).parents('ul');
+            var $thisul_scroll_height = $thisul.prop('scrollHeight');
+            var $thisul_display_height = $thisul.height();
+            if($(this).css('visibility') == 'visible'){
+                $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+            }
+        });
     //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
 
     //드랍다운 리스트가 창길이보다 2배이상 길면 중간지점으로 이동한다.
@@ -3557,11 +3555,14 @@ $(document).on('click','img.add_groupmember_plan',function(){
     $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid')) ;
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum')) ;
     $('#subpopup_addByList_plan').show();
-    get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
-    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))});//특정그룹회원 목록 조회
+    //get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
+    var parentPopupHeight = $('#cal_popup_planinfo').height();
+    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))
+                                                                                        $('#subpopup_addByList_plan').css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
+                                                                                        add_scroll_arrow_to_addByList( $('#subpopup_addByList_thisgroup') ) });//특정그룹회원 목록 조회
 });
 
-$(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',function(){
+$(document).on('click','#close_subpopup_addBylist_plan',function(){
     $('#subpopup_addByList_plan').hide();
 });
 
@@ -3644,14 +3645,14 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
-    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
+    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var addedCount = 0;
 
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
             var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">';
-            htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+
+            htmlToJoin[i] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.last_name[i-1]+
                 '" data-firstname="'+jsondata.first_name[i-1]+
                 '" data-dbid="'+jsondata.db_id[i-1]+
                 '" data-id="'+jsondata.member_id[i-1]+
@@ -3664,10 +3665,10 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
         }
     }
     if(len == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList_padding list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
     }
     if(addedCount == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>일정 등록 가능한  회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList_padding list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>일정 등록 가능한  회원이 없습니다.</div>");
     }
 
     var html = htmlToJoin.join('');
@@ -3768,6 +3769,77 @@ function send_add_groupmember_plan(use, callback){
         }
     });
 };
+
+
+//그룹/클래스 일정내에서 그룹원을 일정에 추가할때
+function add_scroll_arrow_to_addByList($selector){ //subpopup_addByList_thisgroup or subpopup_addByList_whole
+    
+    var $selectorSibling = $selector.siblings('.mode_switch_button_wrap_cal');
+    var selectorHeight = $selector.height();
+    var groupMemberList = $selector.find('.list_addByList_padding')
+    var groupMemberListHeight = groupMemberList.length * groupMemberList.outerHeight();
+
+    console.log(selectorHeight, groupMemberList.length, groupMemberList.outerHeight())
+
+    if(groupMemberListHeight > selectorHeight  - 64){
+        if($selectorSibling.find('.dropdown_scroll_arrow_top').length == 0){
+            $selectorSibling.append(
+                                '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="position:absolute;top:25px;left:0;">'+
+                                '<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="position:absolute;top:385px;left:0;">'
+                             )
+        }
+    }
+    if($selector.scrollTop() < 30 ){
+        $('.dropdown_scroll_arrow_top').css('visibility','hidden');
+    };
+}
+
+//그룹/클래스 일정내에서 그룹원을 일정에 추가할때 드랍다운 씹힘 해결
+$('#subpopup_addByList_thisgroup').scroll(function(){
+    var scrollHeight = $(this).prop('scrollHeight');
+    var popupHeight = $(this).height();
+    var scrollLocation = $(this).scrollTop();
+    //scrollHeight = popupHeight + scrollLocation(끝)
+    if(popupHeight + scrollLocation == scrollHeight){
+        $(this).animate({scrollTop : scrollLocation-1},10)
+    }else if(popupHeight + scrollLocation == popupHeight){
+        $(this).animate({scrollTop : scrollLocation+1},10)
+    }
+
+    // 좌측 스크롤 애로우 보이기
+    if(popupHeight + scrollLocation < scrollHeight-30){
+        $('.dropdown_scroll_arrow_bottom').css('visibility','visible')
+    }else{
+        $('.dropdown_scroll_arrow_bottom').css('visibility','hidden')
+    }
+    if(scrollLocation > 30){
+        $('.dropdown_scroll_arrow_top').css('visibility','visible')
+    }else{
+        $('.dropdown_scroll_arrow_top').css('visibility','hidden')
+    }
+    //좌측 스크롤 애로우 보이기
+});
+//그룹원 추가시 드랍다운 화살표 위로
+$(document).on('click','.subpopup_addGroup img.dropdown_scroll_arrow_top',function(e){
+    e.stopPropagation();
+    var $scrollWrapper = $(this).parent('div');
+    if($(this).css('visibility') == 'visible'){
+        $scrollWrapper.animate({scrollTop: 0},200)
+    }
+});
+//그룹원 추가시 드랍다운 화살표 아래로
+$(document).on('click','.subpopup_addGroup img.dropdown_scroll_arrow_bottom',function(e){
+    e.stopPropagation();
+    var $scrollWrapper = $(this).parent('div');
+    var $thisul_scroll_height = $scrollWrapper.prop('scrollHeight');
+    var $thisul_display_height = $scrollWrapper.height();
+    if($(this).css('visibility') == 'visible'){
+        $scrollWrapper.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+    }
+});
+
+
+
 
 
 $(document).on('click','.group_member_cancel',function(){
