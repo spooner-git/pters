@@ -670,6 +670,7 @@ $(document).ready(function(){
         var blankTop = $('.'+blankbox).offset().top;
         var blankLeft = $('.'+blankbox).offset().left;
         var blankWidth = $('.'+blankbox).width();
+        var blankHeight = $('.'+blankbox).height();
         var blankRight = blankLeft + blankWidth;
         //$('#page-addplan-pc').show().css({'top':blankTop+'px','left':blankRight+'px'});
 
@@ -716,15 +717,12 @@ $(document).ready(function(){
             }
         }else if(bodywidth< 600){
             if(popupBottomLoc > windowHeight + scrollTop){  //아래쪽 넘어갈때
-                if(popupBottomLoc - popupheight < weekTopLoc){ //위로 넘어갈때
-                    console.log('11')
+                if(blankTop - popupheight < weekTopLoc + weekHeight ){ //위로 넘어갈때
                     $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 5  , 'left':(windowWidth - popupwidth)/2})
                 }else{
-                    console.log('22')
                     $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight - 10 , 'left':(windowWidth - popupwidth)/2})
                 }
             }else{ //평상시
-                console.log('33')
                 $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 5  , 'left':(windowWidth - popupwidth)/2})
             }
         }
