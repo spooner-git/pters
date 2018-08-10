@@ -258,60 +258,6 @@ $(document).ready(function(){
         //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
     }
 
-    if(Options.language == "JPN"){
-        $('.__todayplan').text("今日の日程");
-        $('.__weekplan').text("日程表");
-        $('.__monthplan').text("カレンダー");
-        $('.__membermanage').text("会員管理");
-        $('.__groupmanage').text("グループ管理");
-        $('.__workmanage').text("業務管理");
-        $('.__setting').text("設定");
-        $('._nameAttach').text("様");
-        //$('.pcwhere').text("PTERSトレーニングセンター");
-        $('.pclogout').text("ログアウト");
-        $('#uptext span').text("様のスケジュール");
-        $('.__alarm').text("アラーム");
-        $('.__calSelect').text("カレンダー選択");
-        $('.__mypage').text("マイページ");
-        $('.__help').text("お問い合わせ");
-
-    }else if(Options.language == "ENG"){
-        $('.__todayplan').text("Daily");
-        $('.__weekplan').text("Schedule");
-        $('.__monthplan').text("Calendar");
-        $('.__membermanage').text("Members");
-        $('.__groupmanage').text("Groups");
-        $('.__workmanage').text("Work");
-        $('.__setting').text("Settings");
-        $('._nameAttach').text("");
-        //$('.pcwhere').text("PTERS Traning Center");
-        $('.pclogout').text("Logout");
-        $('#uptext span').text("'s schedule");
-        $('.__alarm').text("Alarm");
-        $('.__calSelect').text("Change Cal.");
-        $('.__mypage').text("My page");
-        $('.__help').text("Help");
-
-    }else if(Options.language == "KOR"){
-        $('.__todayplan').text("오늘 일정");
-        $('.__weekplan').text("주간 일정");
-        $('.__monthplan').text("월간 일정");
-        $('.__membermanage').text("회원 관리");
-        $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        // $('.__groupmanage').html("그룹 관리");
-        // $('.__classmanage').html("클래스 관리");
-        $('.__workmanage').text("통계");
-        $('.__setting').text("설정");
-        $('._nameAttach').text("님");
-        //$('.pcwhere').text("PTERS 트레이닝센터")
-        $('.pclogout').text("로그아웃");
-        $('#uptext span').text("님 일정");
-        $('.__alarm').text("알림");
-        $('.__calSelect').text("클래스 선택");
-        $('.__mypage').text("마이페이지");
-        $('.__help').text("이용문의");
-    }
 
     /*
      $('.__alarm, #upbutton-alarm').click(function(){
@@ -362,6 +308,7 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
 }else{
     lastDay[1] = 28;
 };
+
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
