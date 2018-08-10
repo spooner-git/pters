@@ -716,13 +716,16 @@ $(document).ready(function(){
             }
         }else if(bodywidth< 600){
             if(popupBottomLoc > windowHeight + scrollTop){  //아래쪽 넘어갈때
-                if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //위로 넘어갈때
-                    $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
+                if(popupBottomLoc - popupheight < weekTopLoc){ //위로 넘어갈때
+                    console.log('11')
+                    $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 5  , 'left':(windowWidth - popupwidth)/2})
                 }else{
-                    $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight  , 'left':(windowWidth - popupwidth)/2})
+                    console.log('22')
+                    $('#page-addplan-pc').show().css({'top':startTopLoc - popupheight - 10 , 'left':(windowWidth - popupwidth)/2})
                 }
             }else{ //평상시
-                $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 3  , 'left':(windowWidth - popupwidth)/2})
+                console.log('33')
+                $('#page-addplan-pc').show().css({'top':startTopLoc + $('.'+blankbox).height() + 5  , 'left':(windowWidth - popupwidth)/2})
             }
         }
         //미니 팝업 위치 보정
@@ -3244,7 +3247,6 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
         var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
-        console.log(planYear+'_'+planMonth+'_'+planDate, planHour+':'+planMinute)
 
         if(add_date(planEndDate[i].split(' ')[0],0) == add_date(planStartDate[i].split(' ')[0],1) 
             && planEndDate[i].split(' ')[1] == "00:00:00" ){
