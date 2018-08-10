@@ -3,6 +3,7 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON_ALARM_OFF, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -27,6 +28,10 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
     pt_schedule_list = []
     all_schedule_check = 0
 
+    query_group_current_member_num \
+        = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`GROUP_SCHEDULE_ID`"
+    query_group_type_cd_name \
+        = "select `COMMON_CD_NM` from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     if start_date is None and end_date is None:
         all_schedule_check = 1
 
@@ -51,18 +56,20 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         member_lecture_info.save()
         idx -= 1
         if all_schedule_check == 0:
-            schedule_data = ScheduleTb.objects.select_related('lecture_tb__member'
-                                                              ).filter(class_tb_id=class_id,
-                                                                       en_dis_type=ON_SCHEDULE_TYPE,
-                                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                                       start_dt__gte=start_date,
-                                                                       start_dt__lt=end_date).order_by('start_dt')
+            schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb__member', 'group_tb'
+            ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                     lecture_tb_id=member_lecture_info.lecture_tb_id, start_dt__gte=start_date, start_dt__lt=end_date
+                     ).annotate(group_type_cd_name=RawSQL('IFNULL(( '+query_group_type_cd_name+' ), \'1:1 레슨\')', []),
+                                group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', [])
+                                ).order_by('start_dt')
         else:
             schedule_data = \
-                ScheduleTb.objects.select_related('lecture_tb__member'
+                ScheduleTb.objects.select_related('lecture_tb__member', 'group_tb'
                                                   ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
                                                            lecture_tb_id=member_lecture_info.lecture_tb_id
-                                                           ).order_by('-start_dt')
+                                                           ).annotate(group_name=RawSQL(query_group_name, []),
+                                                                      group_type_cd_name=RawSQL(query_group_type_cd_name, [])).order_by('start_dt')
 
         idx2 = len(schedule_data)+1
 
