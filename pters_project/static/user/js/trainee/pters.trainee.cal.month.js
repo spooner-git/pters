@@ -865,9 +865,9 @@ $(document).ready(function(){
                 if(i<Options.workStartTime || i >= Options.workEndTime){
                     var display = 'display:none;'
                 }
-                tr1[i] = '<div colspan="2" style="width:${tdwidth_}%;${display}" class="colspan">${i}</div>';
+                tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
                 //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
-                tr2[i] = '<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>';
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
             }
         }else if(option == "60"){
             for(var i=0; i<=24; i++){
@@ -875,8 +875,8 @@ $(document).ready(function(){
                 if(i<Options.workStartTime || i >= Options.workEndTime){
                     var display = 'display:none;'
                 }
-                tr1[i] = '<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>';
-                tr2[i] = '<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>';
+                tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
             }
         }
         var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
