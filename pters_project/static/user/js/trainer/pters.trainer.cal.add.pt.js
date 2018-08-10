@@ -3561,7 +3561,7 @@ $(document).on('click','img.add_groupmember_plan',function(){
     get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))});//특정그룹회원 목록 조회
 });
 
-$(document).on('click','#subpopup_addByList_plan .listTitle_addByList span',function(){
+$(document).on('click','#close_subpopup_addBylist_plan',function(){
     $('#subpopup_addByList_plan').hide();
 });
 
@@ -3644,14 +3644,14 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
-    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
+    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var addedCount = 0;
 
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
             var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">';
-            htmlToJoin[i] = '<div class="list_addByList" data-lastname="'+jsondata.last_name[i-1]+
+            htmlToJoin[i] = '<div class="list_addByList_padding list_addByList" data-lastname="'+jsondata.last_name[i-1]+
                 '" data-firstname="'+jsondata.first_name[i-1]+
                 '" data-dbid="'+jsondata.db_id[i-1]+
                 '" data-id="'+jsondata.member_id[i-1]+
@@ -3664,10 +3664,10 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
         }
     }
     if(len == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList_padding list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>소속된 회원이 없습니다.</div>");
     }
     if(addedCount == 0){
-        htmlToJoin.push("<div class='list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>일정 등록 가능한  회원이 없습니다.</div>");
+        htmlToJoin.push("<div class='list_addByList_padding list_addByList' style='margin-top:30px;margin-bottom:30px;border:0'>일정 등록 가능한  회원이 없습니다.</div>");
     }
 
     var html = htmlToJoin.join('');
