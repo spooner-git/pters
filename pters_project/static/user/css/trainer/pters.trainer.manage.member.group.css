@@ -387,10 +387,10 @@ div.memberline div{
 	padding:8px 0 8px 0;
 }
 img.substract_groupMember{
-	width: 10px;
+	width: 22px;
 	margin-left: 7px;
-	margin-bottom: 6px;
 	cursor: pointer;
+	padding: 5px;
 }
 
 div._id, div._startdate, div._finday{

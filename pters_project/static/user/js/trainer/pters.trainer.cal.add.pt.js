@@ -3557,8 +3557,10 @@ $(document).on('click','img.add_groupmember_plan',function(){
     $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid')) ;
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum')) ;
     $('#subpopup_addByList_plan').show();
-    get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
-    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))});//특정그룹회원 목록 조회
+    //get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
+    var parentPopupHeight = $('#cal_popup_planinfo').height();
+    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'))
+                                                                                        $('#subpopup_addByList_plan').css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2}) });//특정그룹회원 목록 조회
 });
 
 $(document).on('click','#close_subpopup_addBylist_plan',function(){
