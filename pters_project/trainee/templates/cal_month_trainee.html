@@ -273,9 +273,6 @@
 
         var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
         var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-
-        var classHourArray = ['{{ class_info.class_hour }}'];
-
         var group_schedule_id = [{% for group_schedule_id_info in group_schedule_id %}"{{ group_schedule_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
         var group_schedule_group_id = [{% for group_schedule_group_id_info in group_schedule_group_id %}"{{ group_schedule_group_id_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
         var group_schedule_group_name = [{% for group_schedule_name_info in group_schedule_name %}"{{ group_schedule_name_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
@@ -285,6 +282,9 @@
         var group_schedule_end_datetime = [{% for group_schedule_end_datetime_info in group_schedule_end_datetime %}"{{ group_schedule_end_datetime_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
         var group_schedule_finish_check = [{% for group_schedule_finish_check_info in group_schedule_finish_check %}"{{ group_schedule_finish_check_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
         var group_schedule_note = [{% for group_schedule_note_info in group_schedule_note %}"{{ group_schedule_note_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+
+        var classHourArray = ['{{ class_info.class_hour }}'];
 
 
         var lecture_avail_count = [{{ lecture_avail_count }}];

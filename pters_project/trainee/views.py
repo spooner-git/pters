@@ -194,27 +194,16 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         except ObjectDoesNotExist:
             error = '수강 정보를 불러오지 못했습니다.'
 
-        today = datetime.date.today()
-        start_date = today - datetime.timedelta(days=46)
-        end_date = today + datetime.timedelta(days=47)
-
         if error is None:
-            # context = func_get_trainee_schedule_data(context, self.request.user.id, class_id, start_date, end_date)
             context = func_get_holiday_schedule(context)
-            context = func_get_trainee_on_schedule(context, class_id, request.user.id, start_date, end_date)
-            context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
-            context = func_get_trainee_group_schedule(context, request.user.id, class_id, start_date, end_date)
             context = func_get_class_lecture_count(context, class_id, request.user.id)
-
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
-
-        # 강사 setting 값 로드
-        if error is None:
+            # 강사 setting 값 로드
             context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return render(request, self.template_name, context)
@@ -584,7 +573,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
         context['error'] = None
-        context = func_get_holiday_schedule(context)
+        # context = func_get_holiday_schedule(context)
         context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
@@ -1307,62 +1296,44 @@ def get_trainee_repeat_schedule_data_func(context, class_id, member_id):
 
 def get_trainer_setting_data(context, user_id, class_id):
 
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_01')
-        lt_res_01 = setting_data.setting_info
-    except ObjectDoesNotExist:
-        lt_res_01 = '00:00-23:59'
+    lt_res_01 = '00:00-23:59'
+    lt_res_02 = 0
+    lt_res_03 = '0'
+    lt_res_04 = '00:00-23:59'
+    lt_res_05 = '14'
+    lt_res_cancel_time = -1
+    lt_res_enable_time = -1
+    lt_res_member_time_duration = 1
+    lt_res_member_start_time = 'A-0'
+    lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
+    setting_data = SettingTb.objects.filter(member_id=user_id, class_tb_id=class_id, use=USE)
 
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_02')
-        lt_res_02 = int(setting_data.setting_info)
-    except ObjectDoesNotExist:
-        lt_res_02 = 0
+    for setting_info in setting_data:
+        if setting_info.setting_type_cd == 'LT_RES_01':
+            lt_res_01 = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_RES_02':
+            lt_res_02 = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_03':
+            lt_res_03 = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_RES_04':
+            lt_res_04 = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_RES_05':
+            lt_res_05 = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
+            lt_res_cancel_time = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_ENABLE_TIME':
+            lt_res_enable_time = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_MEMBER_TIME_DURATION':
+            lt_res_member_time_duration = int(setting_info.setting_info)
+        if setting_info.setting_type_cd == 'LT_RES_MEMBER_START_TIME':
+            lt_res_member_start_time = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_PUS_FROM_TRAINEE_LESSON_ALARM':
+            lt_pus_from_trainee_lesson_alarm = int(setting_info.setting_info)
 
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_03')
-        lt_res_03 = setting_data.setting_info
-    except ObjectDoesNotExist:
-        lt_res_03 = '0'
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_04')
-        lt_res_04 = setting_data.setting_info
-    except ObjectDoesNotExist:
-        lt_res_04 = '00:00-23:59'
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_05')
-        lt_res_05 = setting_data.setting_info
-    except ObjectDoesNotExist:
-        lt_res_05 = '14'
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
-                                             setting_type_cd='LT_RES_CANCEL_TIME')
-        lt_res_cancel_time = int(setting_data.setting_info)
-    except ObjectDoesNotExist:
+    if lt_res_cancel_time == -1:
         lt_res_cancel_time = lt_res_02*60
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
-                                             setting_type_cd='LT_RES_ENABLE_TIME')
-        lt_res_enable_time = int(setting_data.setting_info)
-    except ObjectDoesNotExist:
+    if lt_res_enable_time == -1:
         lt_res_enable_time = lt_res_02*60
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id, setting_type_cd='LT_RES_ENABLE')
-        lt_res_enable = setting_data.setting_info
-    except ObjectDoesNotExist:
-        lt_res_enable = lt_res_03
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
-                                             setting_type_cd='LT_RES_MEMBER_TIME_DURATION')
-        lt_res_member_time_duration = int(setting_data.setting_info)
-    except ObjectDoesNotExist:
-        lt_res_member_time_duration = 1
-    try:
-        setting_data = SettingTb.objects.get(member_id=user_id, class_tb_id=class_id,
-                                             setting_type_cd='LT_RES_MEMBER_START_TIME')
-        lt_res_member_start_time = setting_data.setting_info
-    except ObjectDoesNotExist:
-        lt_res_member_start_time = 'A-0'
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
@@ -1371,9 +1342,9 @@ def get_trainer_setting_data(context, user_id, class_id):
     context['lt_res_05'] = lt_res_05
     context['lt_res_enable_time'] = lt_res_enable_time
     context['lt_res_cancel_time'] = lt_res_cancel_time
-    context['lt_res_enable'] = lt_res_enable
     context['lt_res_member_time_duration'] = lt_res_member_time_duration
     context['lt_res_member_start_time'] = lt_res_member_start_time
+    context['lt_pus_from_trainee_lesson_alarm'] = lt_pus_from_trainee_lesson_alarm
 
     return context
 
