@@ -79,8 +79,10 @@ $(document).ready(function(){
         if(!$(this).hasClass('disabled_button')){
             var page = $(this).attr('data-page')
             if(page == "personalreserve"){
-                $('.'+page).show()
-                $('.groupreserve, .classreserve').hide()
+                $('.'+page).show();
+                // //$('.'+page).show();
+                // $('#timeGraph').show();
+                $('.groupreserve, .classreserve').hide();
                 $('._userchecked').removeClass('checked ptersCheckboxInner');
 
                 $('.timegraphtext').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="height:23px;marign:auto;"></div>');
@@ -158,6 +160,18 @@ $(document).ready(function(){
         var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
         clicked_td_date_info = yy+'_'+mm+'_'+dd
         click_check = 0;
+        // var time_graph_val = $('#timeGraph');
+        // var htmlTojoin = [];
+        // htmlTojoin.push('<div class="ptaddboxtext" style="margin-top: 10px;margin-bottom:4px;">예약 가능 시간');
+        // htmlTojoin.push('<div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>');
+        // htmlTojoin.push('</div>');
+        // htmlTojoin.push('<div class="timegraphtext">');
+        // htmlTojoin.push('</div>');
+        // htmlTojoin.push('<p style="margin-top:10px;margin-bottom:0;font-size:13px;">- <span class="timeDur_time" style="color:#fe4e65;"></span> 단위로 예약 할 수 있습니다.</p>');
+        // htmlTojoin.push('<p style="margin-top:0px;margin-bottom:0;font-size:13px;">- <span class="startTime_time" style="color:#fe4e65;"></span> 예약 할 수 있습니다.</p>');
+        // htmlTojoin.push('<p style="margin-top:0px;font-size:13px;">- <span class="cancellimit_time" style="color:#fe4e65;"></span>까지 취소 할 수 있습니다.</p>');
+        // time_graph_val.html(htmlTojoin.join(''));
+
         if(!$(this).hasClass('prevDates') && !$(this).hasClass('nextDates')){
             if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
                 $('#shade2').css({'display':'block'});
@@ -851,9 +865,9 @@ $(document).ready(function(){
                 if(i<Options.workStartTime || i >= Options.workEndTime){
                     var display = 'display:none;'
                 }
-                tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
+                tr1[i] = '<div colspan="2" style="width:${tdwidth_}%;${display}" class="colspan">${i}</div>';
                 //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
-                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
+                tr2[i] = '<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>';
             }
         }else if(option == "60"){
             for(var i=0; i<=24; i++){
@@ -861,8 +875,8 @@ $(document).ready(function(){
                 if(i<Options.workStartTime || i >= Options.workEndTime){
                     var display = 'display:none;'
                 }
-                tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
-                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
+                tr1[i] = '<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>';
+                tr2[i] = '<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>';
             }
         }
         var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
@@ -1134,10 +1148,24 @@ $(document).ready(function(){
                 }else{
                     ajaxJSON_cache = jsondata
                     if($('#timeGraph').length > 0){
-                        draw_time_graph(60,tablewidth,'')
-                        timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
-                        timeGraphSet("off","grey", "AddClass", jsondata);
                         startTimeSet('class', jsondata, today_form, Options.classDur*Options.timeDur, Options.startTime);  //일정등록 가능한 시작시간 리스트 채우기
+                        // var start_time_length = $('#starttimes li:first-child').length;
+                        // if(start_time_length==0){
+                        //     var time_graph_val = $('#timeGraph');
+                        //     var htmlTojoin = [];
+                        //     htmlTojoin.push('<div style="text-align:center;margin-top:18px;margin-bottom:18px;font-weight:bold;">예약 가능한 일정이 없습니다.</div>');
+                        //     time_graph_val.html(htmlTojoin.join(''));
+                        //     $('#offStartTime').hide();
+                        //     $('#submitBtn').hide()
+
+                        // }
+                        // else{
+                            draw_time_graph(60,tablewidth,'');
+                            timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
+                            timeGraphSet("off","grey", "AddClass", jsondata);
+                            // $('#offStartTime').show();
+                            // $('#submitBtn').show();
+                        // }
                     }
 
                     draw_time_group_graph('group', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
