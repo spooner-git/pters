@@ -64,12 +64,13 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
                                 group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', [])
                                 ).order_by('start_dt')
         else:
-            schedule_data = \
-                ScheduleTb.objects.select_related('lecture_tb__member', 'group_tb'
-                                                  ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                                                           lecture_tb_id=member_lecture_info.lecture_tb_id
-                                                           ).annotate(group_name=RawSQL(query_group_name, []),
-                                                                      group_type_cd_name=RawSQL(query_group_type_cd_name, [])).order_by('start_dt')
+            schedule_data = ScheduleTb.objects.select_related(
+                'lecture_tb__member', 'group_tb'
+            ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                     lecture_tb_id=member_lecture_info.lecture_tb_id
+                     ).annotate(group_type_cd_name=RawSQL('IFNULL(('+query_group_type_cd_name+'), \'1:1 레슨\')',[]),
+                                group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', [])
+                                ).order_by('start_dt')
 
         idx2 = len(schedule_data)+1
 
