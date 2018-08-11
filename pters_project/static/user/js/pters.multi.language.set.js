@@ -243,6 +243,7 @@ $('.text-yes').text(multi_language_set[Options.language]["text-yes"]);
 $('.text-no').text(multi_language_set[Options.language]["text-no"]);
 $('.text-close').text(multi_language_set[Options.language]["text-close"]);
 
+$('.text-deletequestion-plan').text(multi_language_set[Options.language]["text-deletequestion-plan"])
 $('.text-memberinfo').text(multi_language_set[Options.language]["text-memberinfo"]);
 $('.text-thisgroupmember').text(multi_language_set[Options.language]["text-thisgroupmember"]);
 
