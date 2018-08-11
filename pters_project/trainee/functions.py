@@ -24,7 +24,6 @@ def func_get_holiday_schedule(context):
 
 
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
-    member_lecture_list = []
     pt_schedule_list = []
     all_schedule_check = 0
 
@@ -32,52 +31,41 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`GROUP_SCHEDULE_ID`"
     query_group_type_cd_name \
         = "select `COMMON_CD_NM` from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(user_id)
     if start_date is None and end_date is None:
         all_schedule_check = 1
 
-    lecture_list = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
-                                                                              lecture_tb__member_id=user_id,
-                                                                              use=USE
-                                                                              ).order_by('-lecture_tb__start_date',
-                                                                                         '-lecture_tb__reg_dt')
-    for lecture_info in lecture_list:
-        try:
-            member_lecture = MemberLectureTb.objects.select_related('lecture_tb').get(auth_cd='VIEW', member_id=user_id,
-                                                                                      lecture_tb_id
-                                                                                      =lecture_info.lecture_tb_id)
-        except ObjectDoesNotExist:
-            member_lecture = None
-        if member_lecture is not None:
-            member_lecture_list.append(member_lecture)
+    if all_schedule_check == 0:
+        schedule_data = ScheduleTb.objects.select_related(
+            'lecture_tb__member', 'group_tb'
+        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                 start_dt__gte=start_date, start_dt__lt=end_date
+                 ).annotate(group_type_cd_name=RawSQL('IFNULL(( '+query_group_type_cd_name+' ), \'1:1 레슨\')', []),
+                            group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', []),
+                            member_auth_cd=RawSQL(query_member_auth_cd, [])
+                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt')
+    else:
+        schedule_data = ScheduleTb.objects.select_related(
+            'lecture_tb__member', 'group_tb'
+        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
+                 ).annotate(group_type_cd_name=RawSQL('IFNULL(('+query_group_type_cd_name+'), \'1:1 레슨\')', []),
+                            group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', []),
+                            member_auth_cd=RawSQL(query_member_auth_cd, [])
+                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt')
 
-    idx = len(member_lecture_list)+1
-    for member_lecture_info in member_lecture_list:
-        member_lecture_info.lecture_tb.schedule_check = 0
-        member_lecture_info.save()
-        idx -= 1
-        if all_schedule_check == 0:
-            schedule_data = ScheduleTb.objects.select_related(
-                'lecture_tb__member', 'group_tb'
-            ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                     lecture_tb_id=member_lecture_info.lecture_tb_id, start_dt__gte=start_date, start_dt__lt=end_date
-                     ).annotate(group_type_cd_name=RawSQL('IFNULL(( '+query_group_type_cd_name+' ), \'1:1 레슨\')', []),
-                                group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', [])
-                                ).order_by('start_dt')
-        else:
-            schedule_data = ScheduleTb.objects.select_related(
-                'lecture_tb__member', 'group_tb'
-            ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                     lecture_tb_id=member_lecture_info.lecture_tb_id
-                     ).annotate(group_type_cd_name=RawSQL('IFNULL(('+query_group_type_cd_name+'), \'1:1 레슨\')',[]),
-                                group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', [])
-                                ).order_by('start_dt')
-
-        idx2 = len(schedule_data)+1
-
-        for schedule_info in schedule_data:
-            idx2 -= 1
-            schedule_info.idx = str(idx)+'-'+str(idx2)
-            pt_schedule_list.append(schedule_info)
+    idx1 = 0
+    idx2 = 1
+    lecture_id = None
+    for schedule_info in schedule_data:
+        if lecture_id != schedule_info.lecture_tb_id:
+            lecture_id = schedule_info.lecture_tb_id
+            idx1 += 1
+            idx2 = 1
+        schedule_info.idx = str(idx1)+'-'+str(idx2)
+        pt_schedule_list.append(schedule_info)
+        idx2 += 1
 
     context['pt_schedule_data'] = pt_schedule_list
 
@@ -88,26 +76,23 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
     # 내가 속한 그룹 일정 조회
     query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-    group_list = func_get_trainee_group_ing_list(class_id, user_id)
-    group_schedule_data = None
+    query_member_auth_cd \
+        = "select `LECTURE_TB_ID` from GROUP_LECTURE_TB as B" \
+          " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
+          " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)='IP'" \
+          " and (select `AUTH_CD` from MEMBER_LECTURE_TB as C WHERE C.LECTURE_TB_ID = B.LECTURE_TB_ID" \
+          " and C.MEMBER_ID= "+str(user_id)+")='VIEW'" \
 
-    for group_info in group_list:
-        if group_schedule_data is None:
-            group_schedule_data = ScheduleTb.objects.select_related(
-                'group_tb').filter(class_tb_id=class_id, group_tb_id=group_info.group_tb.group_id,
-                                   lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
-                                   start_dt__gte=start_date,
-                                   start_dt__lt=end_date
-                                   ).annotate(group_current_member_num=RawSQL(query, []),
-                                              group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
-        else:
-            group_schedule_data |= ScheduleTb.objects.select_related(
-                'group_tb').filter(class_tb_id=class_id, group_tb_id=group_info.group_tb.group_id,
-                                   lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
-                                   start_dt__gte=start_date,
-                                   start_dt__lt=end_date
-                                   ).annotate(group_current_member_num=RawSQL(query, []),
-                                              group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+    group_schedule_data = ScheduleTb.objects.select_related(
+        'group_tb').filter(class_tb_id=class_id, group_tb__isnull=False,
+                           lecture_tb__isnull=True, en_dis_type=ON_SCHEDULE_TYPE,
+                           start_dt__gte=start_date,
+                           start_dt__lt=end_date
+                           ).annotate(group_current_member_num=RawSQL(query, []),
+                                      group_type_cd_name=RawSQL(query_type_cd, []),
+                                      group_check=RawSQL('IFNULL(('+query_member_auth_cd+' ), 0)', [])
+                                      ).filter(group_check__gt=0).order_by('start_dt')
+
     context['group_schedule_data'] = group_schedule_data
 
     return context
@@ -128,24 +113,18 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
 
 def func_get_trainee_on_repeat_schedule(context, user_id, class_id):
     # repeat_schedule_list = []
-    pt_repeat_schedule_data = None
-    member_lecture_data = MemberLectureTb.objects.filter(auth_cd='VIEW',
-                                                         member_id=user_id).order_by('lecture_tb__start_date')
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `REPEAT_SCHEDULE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(user_id)
 
-    for member_lecture_info in member_lecture_data:
-        if pt_repeat_schedule_data is None:
-            pt_repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                      lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                                      en_dis_type=ON_SCHEDULE_TYPE)
-        else:
-            pt_repeat_schedule_data |= RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                       lecture_tb_id=member_lecture_info.lecture_tb_id,
-                                                                       en_dis_type=ON_SCHEDULE_TYPE)
-    # 강사 클래스의 반복일정 불러오기
-    #     for pt_repeat_schedule_info in pt_repeat_schedule_data:
-            # pt_repeat_schedule_info.start_date = str(pt_repeat_schedule_info.start_date)
-            # pt_repeat_schedule_info.end_date = str(pt_repeat_schedule_info.end_date)
-            # repeat_schedule_list.append(pt_repeat_schedule_info)
+    pt_repeat_schedule_data \
+        = RepeatScheduleTb.objects.select_related('lecture_tb'
+                                                  ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
+                                                           lecture_tb__state_cd='IP',
+                                                           lecture_tb__use=USE
+                                                           ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                                                      ).filter(member_auth_cd='VIEW'
+                                                                               ).order_by('lecture_tb__start_date')
 
     context['repeat_schedule_data'] = pt_repeat_schedule_data
 
