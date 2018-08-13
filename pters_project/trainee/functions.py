@@ -250,9 +250,9 @@ def func_get_class_lecture_count(context, class_id, user_id):
         lecture_list = ClassLectureTb.objects.select_related(
             'lecture_tb').filter(class_tb_id=class_id,
                                  lecture_tb__member_id=user_id,
-                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                        lecture_count=RawSQL(query_lecture_count, [])
-                                                                        ).order_by('lecture_tb__start_date')
+                                 lecture_tb__use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
+                                                               lecture_count=RawSQL(query_lecture_count, [])
+                                                               ).order_by('lecture_tb__start_date')
 
         # lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
         #                                                      ).filter(class_tb_id=class_id,
@@ -330,7 +330,8 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     use=USE).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+                                                     lecture_tb__use=USE
+                                                     ).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
         for lecture_info in lecture_list:
             lecture_info_data = None

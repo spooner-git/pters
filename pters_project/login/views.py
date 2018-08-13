@@ -53,7 +53,7 @@ def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
-    keyword = request.POST.get('keyword')
+    keyword = request.POST.get('keyword', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
     next_page = request.POST.get('next_page')
     error = None
