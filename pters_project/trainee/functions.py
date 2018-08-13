@@ -26,7 +26,8 @@ def func_get_holiday_schedule(context):
 def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_date):
     pt_schedule_list = []
     all_schedule_check = 0
-
+    now = timezone.now()
+    next_schedule = ''
     query_group_current_member_num \
         = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`GROUP_SCHEDULE_ID`"
     query_group_type_cd_name \
@@ -67,8 +68,15 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         pt_schedule_list.append(schedule_info)
         idx2 += 1
 
-    context['pt_schedule_data'] = pt_schedule_list
+        if now <= schedule_info.start_dt:
+            if next_schedule == '':
+                next_schedule = schedule_info.start_dt
+            else:
+                if next_schedule > schedule_info.start_dt:
+                    next_schedule = schedule_info.start_dt
 
+    context['pt_schedule_data'] = pt_schedule_list
+    context['next_schedule'] = next_schedule
     return context
 
 

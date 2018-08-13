@@ -136,8 +136,6 @@ $(document).ready(function(){
                 var trainee_repeat_end = ptRepeatScheduleStartDateArray[i] +'부터 ~ '+ptRepeatScheduleEndDateArray[i]+'까지';
                 var trainee_repeat_day = trainee_repeat_days()
 
-                
-                $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
                 // $('._Repeat_Info p:nth-child(2)').text('['+trainee_repeat_group_type_name+']'+trainee_repeat_type+' '
                 //     +trainee_repeat_day + ' '
                 //     +trainee_repeat_time)
@@ -164,6 +162,8 @@ $(document).ready(function(){
                 $('._Repeat_Info p:nth-child(2)').html(repeatText)
         }
 
+        console.log('test:'+trainee_next_schedule)
+        $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
     }
 
     $('.mode_switch_button').click(function(){

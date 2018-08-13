@@ -72,11 +72,11 @@
                 {% block nav_center_img %}
                     <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month' %}'">{{ user.last_name }}{{ user.first_name }}님 일정 - {{ request.session.class_type_name }} </span>
                 {% endblock %}
-                <!--
-                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
-                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
-                 </button> 
-                  -->
+{#                <!--#}
+{#                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">#}
+{#                    <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>#}
+{#                 </button> #}
+{#                  -->#}
                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
                     <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
                 </button>
@@ -112,7 +112,7 @@
                 <span class="pcwhere"></span>
                 <span class="pcwho">{{ request.session.class_type_name }} - {{ user.last_name }}{{user.first_name}}님<span></span></span>
             </div>
-            <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
+            <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
             <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
         </div>
     </nav>

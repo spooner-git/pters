@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
+from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
@@ -231,6 +232,13 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 member_info = MemberTb.objects.get(member_id=request.user.id)
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+        context['class_info'] = class_info
 
         if error is None:
             if member_info.phone is None:
@@ -783,6 +791,13 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 member_info = MemberTb.objects.get(member_id=request.user.id)
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            try:
+                class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+            except ObjectDoesNotExist:
+                error = '수강정보를 불러오지 못했습니다.'
+        context['class_info'] = class_info
 
         if error is None:
             context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
@@ -1365,7 +1380,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     context['lecture_info'] = None
     context['error'] = None
 
-    class_info = None
+    # class_info = None
     next_schedule_start_dt = ''
     next_schedule_end_dt = ''
     lecture_reg_count_sum = 0
@@ -1379,34 +1394,22 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     if class_id is None or class_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
-    if error is None:
-        # 강사 정보 가져오기
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
-
-    if error is None:
-        try:
-            class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(user_id)
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id,
-                                                     lecture_tb__member_id=user_id).order_by('lecture_tb')
+        lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user_id
+                                 ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
             for idx, lecture_list_info in enumerate(lecture_list):
                 lecture_info = lecture_list_info.lecture_tb
-                try:
-                    MemberLectureTb.objects.get(auth_cd='VIEW', member_id=user_id,
-                                                lecture_tb=lecture_info.lecture_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
 
                 if error is None:
                     lecture_counts += 1
@@ -1432,12 +1435,9 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
                     if lecture_info.state_cd == 'IP':
                         lecture_rem_count_sum += lecture_info.lecture_rem_count
                         lecture_avail_count_sum += lecture_info.lecture_avail_count
-                    # lecture_info.schedule_check = 0
-                    # lecture_info.save()
+
                 else:
                     error = None
-
-    holiday = HolidayTb.objects.filter(use=USE)
 
     if error is not None:
         context['error'] = error
@@ -1445,12 +1445,10 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     context['next_schedule_start_dt'] = str(next_schedule_start_dt)
     context['next_schedule_end_dt'] = str(next_schedule_end_dt)
     context['lecture_info'] = lecture_list
-    context['class_info'] = class_info
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
     context['pt_start_date'] = str(pt_start_date)
     context['pt_end_date'] = str(pt_end_date)
-    context['holiday'] = holiday
 
     return context
