@@ -26,8 +26,7 @@
 								$(this).position().left
 							);
 		});
-		seek_divide.unshift(0);
-		seek_divide.push($selector.find('.pters_seekbar_bar').width() + 29 )
+		seek_divide.push($selector.find('.pters_seekbar_bar').width() + $segment.position().left)
 		//각 세그먼트 좌표값 구해놓기
 
 		//Ball의 위치에 맞게 pters_seekbar_length_bar를 초기 셋팅하기
@@ -94,26 +93,24 @@
 			})
 		})
 		$startball.on('touchstart',function(e){
-			var hardstopX = $selector.find('.pters_seekbar_bar').position().left;
+			var hardstopX = $selector.find('.pters_seekbar_bar').offset().left;
 			var oriX = e.originalEvent.touches[0].pageX;
-			var startball_oriX = $startball.position().left;
-			var endball_oriX = $endball.position().left;
+			var startball_oriX = $startball.offset().left;
+			var endball_oriX = $endball.offset().left;
 			var lengthbar_width = $lengthbar.width();
-
 			$('body').on('touchmove',function(event){
 				var moveX = event.originalEvent.touches[0].pageX;
 				var diffX = moveX - oriX;
 
 				var destinationX = startball_oriX + diffX;
-				var destinationW = endball_oriX - $startball.position().left;
 
-				if(destinationX >= hardstopX){
+				if(destinationX >= hardstopX - $startball.outerWidth()/2){
 					$startball.css({
-									'left': destinationX
-									})
+									'left': destinationX - hardstopX
+									}).attr('data-des',hardstopX - $startball.outerWidth()/2)
 					$lengthbar.css({
-									'left': startball_oriX + $startball.width()/2 + diffX,
-									'width': endball_oriX - $startball.position().left
+									'left': destinationX - hardstopX + $startball.outerWidth()/2,
+									'width': endball_oriX - $startball.offset().left
 									})
 				}
 
@@ -133,9 +130,9 @@
 									'top':-30
 								})
 				if(finalDesitination - prev_val < next_val - finalDesitination){
-					$mobileguide.text(index-2);
-				}else{
 					$mobileguide.text(index-1);
+				}else{
+					$mobileguide.text(index);
 				}
 
 
@@ -151,6 +148,7 @@
 				var next_val = sortedlist[index+1];
 
 				$segment.find('._startball').hide();
+				
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$startball.css({
 									'left':prev_val - $startball.outerWidth()/2
@@ -160,7 +158,7 @@
 									'width': $endball.position().left - $startball.position().left
 									})
 					$mobileguide.css({'display':'none',	'left':prev_val - $mobileguide.width()/2,'top':-40})
-					$segment.find(`span[data-value="${index-2}"]`).show().addClass('_startball');
+					$segment.find(`span[data-value="${index-1}"]`).show().addClass('_startball');
 				}else{
 					$startball.css({
 									'left':next_val - $startball.outerWidth()/2
@@ -170,8 +168,9 @@
 									'width': $endball.position().left - $startball.position().left
 									})
 					$mobileguide.css({'display':'none',	'left':next_val -$mobileguide.width()/2,'top':-40})
-					$segment.find(`span[data-value="${index-1}"]`).show().addClass('_startball');
+					$segment.find(`span[data-value="${index}"]`).show().addClass('_startball');
 				}
+				
 				
 			})
 		})
@@ -232,12 +231,10 @@
 		//endBall을 끌고 당기는 Seekbar 액션
 
 		$endball.on('touchstart',function(e){
-			var hardstopX2 = $selector.find('.pters_seekbar_bar').position().left + $selector.find('.pters_seekbar_bar').width() + 20;
-			console.log('hardstopX2',hardstopX2)
-			console.log(seek_divide)
+			var hardstopX2 = $selector.find('.pters_seekbar_bar').offset().left + $selector.find('.pters_seekbar_bar').width();
 			var oriX = e.originalEvent.touches[0].pageX;
-			var startball_oriX = $startball.position().left;
-			var endball_oriX = $endball.position().left;
+			var startball_oriX = $startball.offset().left;
+			var endball_oriX = $endball.offset().left;
 			var lengthbar_width = $lengthbar.width();
 
 			$('body').on('touchmove',function(event){
@@ -247,13 +244,13 @@
 				var destinationX = endball_oriX + diffX;
 				var destinationW = endball_oriX - $endball.position().left;
 
-				if(destinationX < hardstopX2){
+				if(destinationX + $endball.outerWidth()/2 <= hardstopX2){
 					$endball.css({
 									//'left': endball_oriX + $endball.width()/2 + diffX
-									'left':destinationX
+									'left':destinationX - $selector.find('.pters_seekbar_bar').offset().left
 									})
 					$lengthbar.css({
-									'width': $endball.position().left - startball_oriX
+									'width': $endball.offset().left - startball_oriX
 									})
 				}
 
@@ -272,9 +269,9 @@
 									'top':-30
 								})
 				if(finalDesitination - prev_val < next_val - finalDesitination){
-					$mobileguide.text(index-2);
-				}else{
 					$mobileguide.text(index-1);
+				}else{
+					$mobileguide.text(index);
 				}
 			})
 
@@ -294,20 +291,20 @@
 									'left':prev_val - $endball.outerWidth()/2
 									})
 					$lengthbar.css({
-									'width': $endball.position().left - startball_oriX
+									'width': $endball.offset().left - startball_oriX
 									})
 					$mobileguide.css({'display':'none',	'left':prev_val -$mobileguide.width()/2,'top':-40})
 
-					$segment.find(`span[data-value="${index-2}"]`).show().addClass('_endball');
+					$segment.find(`span[data-value="${index-1}"]`).show().addClass('_endball');
 				}else{
 					$endball.css({
 									'left':next_val - $endball.outerWidth()/2
 									})
 					$lengthbar.css({
-									'width': $endball.position().left - startball_oriX
+									'width': $endball.offset().left - startball_oriX
 									})
 					$mobileguide.css({'display':'none',	'left':next_val -$mobileguide.width()/2,'top':-40})
-					$segment.find(`span[data-value="${index-1}"]`).show().addClass('_endball');
+					$segment.find(`span[data-value="${index}"]`).show().addClass('_endball');
 				}
 			})
 		})

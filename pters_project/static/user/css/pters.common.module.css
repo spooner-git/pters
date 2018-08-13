@@ -54,6 +54,15 @@
 
 
 /*피터스 Seekbar 모듈*/
+.pters_seekbar_wrapper_wrap{
+	height: auto;
+	background:#ffffff;
+	padding-bottom:20px;
+	padding-left:10%;
+	padding-right:10%;
+	margin: 0 auto;
+	overflow-x:hidden;
+}
 .pters_seekbar_wrapper{
 	position: relative;
 	height: auto;
@@ -64,7 +73,7 @@
 	table-layout: fixed;
 	width: 100%;
 	height: 40px;
-	padding: 17px 30px 17px 30px;
+	padding: 17px 0px 17px 0px;
 	user-select: none;
 }
 	.pters_seekbar_segment{
@@ -79,6 +88,10 @@
 	.pters_seekbar_segment:first-child{
 		border-left:1px solid #cccccc;
 	}
+	.pters_seekbar_segment:last-child{
+		width: 0;
+		border: 0;
+	}
 		.pters_seekbar_segment > span{
 			position: absolute;
 			font-size: 11px;
@@ -88,7 +101,7 @@
 		}
 .pters_seekbar_start_ball, .pters_seekbar_end_ball{
 	cursor: pointer;
-	top: 11px;
+	top: 10px;
 	position: absolute;
 	width: 20px;
 	height: 20px;
@@ -97,11 +110,11 @@
 	border:2px solid #282828;
 } 
 .pters_seekbar_start_ball{
-	left: 19px;
+	left: -10px;
 	z-index: 2;
 }
 .pters_seekbar_end_ball{
-	right: 19px;
+	right: -10px;
 	z-index: 2;
 }
 .pters_seekbar_length_bar{
