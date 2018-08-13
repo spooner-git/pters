@@ -3015,7 +3015,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         start_date = request.POST.get('start_date', '')
         end_date = request.POST.get('end_date', '')
         class_hour = request.POST.get('class_hour', 60)
-        start_hour_unit = request.POST.get('start_hour_unit', 1.0)
+        start_hour_unit = request.POST.get('start_hour_unit', 1)
         class_member_num = request.POST.get('class_member_num', '')
 
         error = None
@@ -3028,7 +3028,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             class_hour = 60
 
         if start_hour_unit is None or start_hour_unit == '':
-            start_hour_unit = 1.0
+            start_hour_unit = 1
 
         if start_date is None or start_date == '':
             start_date = datetime.date.today()
@@ -3046,7 +3046,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 with transaction.atomic():
                     class_info = ClassTb(member_id=request.user.id, center_tb_id=center_id,
                                          subject_cd=subject_cd, start_date=start_date, end_date=end_date,
-                                         class_hour=float(class_hour), start_hour_unit=float(start_hour_unit),
+                                         class_hour=class_hour, start_hour_unit=start_hour_unit,
                                          # member_view_state_cd='VIEW',
                                          subject_detail_nm=subject_detail_nm,
                                          class_member_num=int(class_member_num), state_cd='IP', use=USE)
@@ -3346,7 +3346,6 @@ class UpdateBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             messages.error(request, error)
 
         return render(request, self.template_name)
-
 
 
 class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View):
