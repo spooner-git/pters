@@ -1,0 +1,54 @@
+
+
+/*피터스 상단 셀렉트 박스 모듈*/
+	.pters_selectbox_wrapper{
+		width: 100%;
+		height: 35px;
+		display: table;
+		table-layout: fixed;
+		background: #ffffff;
+		color: #cccccc;
+		text-align: center;
+		margin: 0 auto;
+	}
+		.pters_selectbox_btn{
+			display: table-cell;
+			width: auto;
+			line-height: 35px;
+			cursor: pointer;
+			border-top:3px solid transparent;
+		}
+		.pters_selectbox_btn_selected{
+			color: #fe4e65;
+			border-top-color: #fe4e65;
+			font-weight: 500;
+		}
+	@media(min-width:600px){
+		.pters_selectbox_wrapper{
+			width: auto;
+			height: 45px;
+			display: table;
+			background: #ffffff;
+			color: #cccccc;
+			text-align: center;
+			margin: 0 auto;
+		}
+			.pters_selectbox_btn{
+				display: table-cell;
+				width: 150px;
+				line-height: 45px;
+				border: 1px solid #cccccc;
+				border-left: 0;
+				cursor: pointer;
+			}
+			.pters_selectbox_btn:first-child{
+				border-left: 1px solid #cccccc;
+			}
+			.pters_selectbox_btn_selected{
+				background: #282828;
+				color: #ffffff;
+				font-weight: 500;
+			}
+	}
+/*피터스 상단 셀렉트 박스 모듈*/
+

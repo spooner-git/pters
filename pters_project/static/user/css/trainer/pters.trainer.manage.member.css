@@ -27,7 +27,9 @@ body{
   line-height: 40px;
 }
 
-
+.pters_selectbox_wrapper{
+	margin-top: 50px;
+}
 
 
 @media(min-width: 600px){
@@ -173,34 +175,6 @@ body{
 	z-index: 350;
 }
 
-#selectBox{
-	border-top: 1px solid black;
-	max-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#selectBox_type.list_switch_wrap{
-	max-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 20px;
-	font-size: 15px;
-	text-align: center;
-}
-#selectBox_type.list_switch_wrap div.list_switch{
-	display: inline-block;
-	cursor: pointer;
-}
-#selectBox_type.list_switch_wrap span.list_switch_divider{
-	margin-right: 15px;
-	margin-left: 15px;
-	color: #cccccc;
-}
-.list_switch_selected{
-	color: #282828;
-	font-weight: 500;
-}
 
 .alignSelect{
 	width: 100%;
@@ -243,6 +217,7 @@ select:focus > option:checked {
 	display: none;
 }
 
+/*
 .btn{
 	border-radius: 0;
 }
@@ -287,6 +262,7 @@ select:focus > option:checked {
 	border-left-color: transparent;
 	border-right-color: transparent;
 }
+*/
 
 ._GROUP_THEAD{
 	display: none;
@@ -1247,6 +1223,9 @@ span.summaryInnerBoxText_Repeatendtext{
 }
 
 @media(min-width: 600px){
+	.pters_selectbox_wrapper{
+		margin-top: 20px;
+	}
 
 	.input_available{
 		background: #ffffff !important;
@@ -1615,43 +1594,8 @@ span.summaryInnerBoxText_Repeatendtext{
 		line-height: 30px;
 	}
 
-	#selectBox{
-		border:1px solid #cccccc;
-		width: 350px;
-		height: 45px;
-		margin-top: unset;
-	}
-	#selectBox_type.list_switch_wrap{
-		border: 0;
-		height: 33px;
-		margin-top: 20px;
-		color: #cccccc;
-		font-weight: 300;
-		font-size: 15px;
-		text-align: center;
-	}
-	#selectBox_type.list_switch_wrap div.list_switch{
-		padding: 0;
-		display: inline-block;
-		cursor: pointer;
-	}
-	#selectBox_type.list_switch_wrap div.list_switch:hover{
-		color: #282828;
-		font-weight: 400;
-	}
-	#selectBox_type.list_switch_wrap span.list_switch_divider{
-		margin-right: 15px;
-		margin-left: 15px;
-		color: #cccccc;
-	}
-	.list_switch_selected{
-		color: #282828;
-		font-weight: 500;
-	}
-
-
-
-
+	
+/*
 	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 		border-color:#282828;
 		background:#282828;
@@ -1667,6 +1611,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	.btn-primary{
 		color: #cccccc;
 	}
+*/
 
 	#upperImg{
 		margin-bottom: 20px;

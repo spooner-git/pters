@@ -281,6 +281,12 @@ class ManageClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageClassView, self).get_context_data(**kwargs)
         return context
 
+class ManageCenterView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_center.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageCenterView, self).get_context_data(**kwargs)
+        return context
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'

@@ -36,6 +36,7 @@ var multi_language_set = {
                                     "text-membermanage":"회원 관리",
                                     "text-groupmanage":"그룹 관리",
                                     "text-classmange":"클래스 관리",
+                                    "text-centermanage":"센터 관리",
                                     "text-analytics":"통계",
                                     "text-setting":"설정",
                                     "text-nameAttach":"님",
@@ -100,6 +101,7 @@ var multi_language_set = {
                                     "text-membermanage":"会員管理",
                                     "text-groupmanage":"グループ管理",
                                     "text-classmange":"クラス管理",
+                                    "text-centermanage":"センター管理",
                                     "text-analytics":"統計",
                                     "text-setting":"設定",
                                     "text-nameAttach":"様",
@@ -163,6 +165,7 @@ var multi_language_set = {
                                     "text-monthplan":"Month Cal.",
                                     "text-membermanage":"Members",
                                     "text-groupmanage":"Groups",
+                                    "text-centermanage":"Center",
                                     "text-classmange":"Classes",
                                     "text-analytics":"Analytics",
                                     "text-setting":"Settings",
@@ -220,6 +223,7 @@ $('.text-monthplan').text(multi_language_set[Options.language]["text-monthplan"]
 $('.text-membermanage').text(multi_language_set[Options.language]["text-membermanage"]);
 $('.text-groupmanage').html(multi_language_set[Options.language]["text-groupmanage"]);
 $('.text-classmanage').html(multi_language_set[Options.language]["text-classmange"]);
+$('.text-centermanage').html(multi_language_set[Options.language]["text-centermanage"]);
 $('.text-workmanage').text(multi_language_set[Options.language]["text-analytics"]);
 $('.text-setting').text(multi_language_set[Options.language]["text-setting"]);
 $('.text-nameAttach').text(multi_language_set[Options.language]["text-nameAttach"]);
