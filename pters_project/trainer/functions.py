@@ -228,7 +228,7 @@ def func_get_member_ing_list(class_id, user_id):
             if lecture_count == 0:
                 member_data.sex = ''
                 member_data.birthday_dt = ''
-                if member_data.phone is member_data.phone == '':
+                if member_data.phone is None or member_data.phone == '':
                     member_data.phone = ''
                 else:
                     member_data.phone = '***-****-' + member_data.phone[7:]
