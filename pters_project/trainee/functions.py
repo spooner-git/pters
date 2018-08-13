@@ -89,7 +89,7 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
           " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
           " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)='IP'" \
           " and (select `AUTH_CD` from MEMBER_LECTURE_TB as C WHERE C.LECTURE_TB_ID = B.LECTURE_TB_ID" \
-          " and C.MEMBER_ID= "+str(user_id)+")='VIEW'" \
+          " and C.MEMBER_ID= "+str(user_id)+")='VIEW'"
 
     group_schedule_data = ScheduleTb.objects.select_related(
         'group_tb').filter(class_tb_id=class_id, group_tb__isnull=False,
@@ -250,9 +250,9 @@ def func_get_class_lecture_count(context, class_id, user_id):
         lecture_list = ClassLectureTb.objects.select_related(
             'lecture_tb').filter(class_tb_id=class_id,
                                  lecture_tb__member_id=user_id,
-                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                        lecture_count=RawSQL(query_lecture_count, [])
-                                                                        ).order_by('lecture_tb__start_date')
+                                 lecture_tb__use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
+                                                               lecture_count=RawSQL(query_lecture_count, [])
+                                                               ).order_by('lecture_tb__start_date')
 
         # lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
         #                                                      ).filter(class_tb_id=class_id,
@@ -330,7 +330,8 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     if error is None:
         lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_id,
-                                                     use=USE).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+                                                     lecture_tb__use=USE
+                                                     ).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
 
         for lecture_info in lecture_list:
             lecture_info_data = None
@@ -474,56 +475,48 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
 def func_get_class_list(context, member_id):
 
     error = None
-    class_lecture_data = ClassLectureTb.objects.filter(lecture_tb__member_id=member_id,
-                                                       use=USE).order_by('class_tb_id').distinct()
+
+    query_member_auth_cd \
+        = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+          " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(member_id)
+
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `CLASS_LECTURE_TB`.`CLASS_TB_ID`"
+
+    class_lecture_data = ClassLectureTb.objects.select_related(
+        'class_tb', 'lecture_tb').filter(
+        lecture_tb__member_id=member_id, use=USE).annotate(member_auth_cd=RawSQL(query_member_auth_cd, []),
+                                                           class_type_name=RawSQL(query_type_cd, [])
+                                                           ).exclude(member_auth_cd='DELETE').order_by('class_tb_id')
 
     # class_lecture_data = class_lecture_data.values('class_tb')
     class_list = []
     if len(class_lecture_data) > 0:
+        input_class_info = None
+        index = 0
         for class_lecture_info in class_lecture_data:
+            if input_class_info is None:
+                input_class_info = class_lecture_info
+                input_class_info.np_lecture_counts = 0
+                input_class_info.lecture_counts = 0
+                class_list.append(input_class_info)
+            else:
+                if input_class_info.class_tb_id != class_lecture_info.class_tb_id:
+                    input_class_info = class_lecture_info
+                    input_class_info.np_lecture_counts = 0
+                    input_class_info.lecture_counts = 0
+                    index += 1
+                    class_list.append(input_class_info)
 
-            pt_type_name = None
-            if error is None:
-                try:
-                    pt_type_name = CommonCdTb.objects.get(common_cd=class_lecture_info.class_tb.subject_cd)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
+            if class_lecture_info.member_auth_cd == 'WAIT':
+                input_class_info.np_lecture_counts += 1
+            if class_lecture_info.member_auth_cd == 'VIEW':
+                input_class_info.lecture_counts += 1
 
-            lecture_list_data = ClassLectureTb.objects.filter(class_tb_id=class_lecture_info.class_tb_id,
-                                                              lecture_tb__member_id=member_id)
+            if class_lecture_info.class_tb.subject_detail_nm is not None\
+                    and class_lecture_info.class_tb.subject_detail_nm != '':
+                input_class_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
 
-            class_lecture_info.np_lecture_counts = 0
-            class_lecture_info.lecture_counts = 0
-
-            for lecture_list_info in lecture_list_data:
-                member_lecture_data = None
-                try:
-                    member_lecture_data = MemberLectureTb.objects.get(~Q(auth_cd='DELETE'), member_id=member_id,
-                                                                      lecture_tb_id=lecture_list_info.lecture_tb_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
-
-                if error is None:
-                    class_lecture_info.lecture_counts += 1
-                    if member_lecture_data.auth_cd == 'WAIT':
-                        class_lecture_info.np_lecture_counts += 1
-                else:
-                    error = None
-
-            if error is None and class_lecture_info.lecture_counts > 0:
-                class_lecture_info.class_type_name = pt_type_name.common_cd_nm
-
-                if class_lecture_info.class_tb.subject_detail_nm is not None\
-                        and class_lecture_info.class_tb.subject_detail_nm != '':
-                    class_lecture_info.class_type_name = class_lecture_info.class_tb.subject_detail_nm
-
-                check = 0
-                for check_class_list_item in class_list:
-                    if check_class_list_item.class_tb_id == class_lecture_info.class_tb_id:
-                        check = 1
-
-                if check == 0:
-                    class_list.append(class_lecture_info)
+            class_list[index] = input_class_info
 
     context['class_data'] = class_list
 

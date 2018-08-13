@@ -19,8 +19,8 @@ class ClassTb(TimeStampedModel):
     subject_detail_nm = models.CharField(db_column='SUBJECT_DETAIL_NM', max_length=20, blank=True, default='')
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
-    class_hour = models.FloatField(db_column='CLASS_HOUR', blank=True, null=True)  # Field name made lowercase.
-    start_hour_unit = models.FloatField(db_column='START_HOUR_UNIT', blank=True, null=True)
+    class_hour = models.IntegerField(db_column='CLASS_HOUR', blank=True, null=True)  # Field name made lowercase.
+    start_hour_unit = models.IntegerField(db_column='START_HOUR_UNIT', blank=True, null=True)
     class_member_num = models.IntegerField(db_column='CLASS_MEMBER_NUM', default=1)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, default='')
     schedule_check = models.IntegerField(db_column='SCHEDULE_CHECK', default=1)

@@ -1401,12 +1401,12 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
         lecture_list = ClassLectureTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user_id
+            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user_id,
+                                 lecture_tb__use=USE
                                  ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
                                             ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date')
 
     if error is None:
-        # 강사 클래스의 반복일정 불러오기
         if len(lecture_list) > 0:
             for idx, lecture_list_info in enumerate(lecture_list):
                 lecture_info = lecture_list_info.lecture_tb
@@ -1438,6 +1438,17 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
 
                 else:
                     error = None
+    if error is None:
+
+        query_member_auth_cd \
+            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+              " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(user_id)
+
+        lecture_finish_count = ScheduleTb.objects.select_related(
+            'lecture_tb__member', 'group_tb'
+        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE'
+                 ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt').count()
 
     if error is not None:
         context['error'] = error
@@ -1446,7 +1457,8 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     context['next_schedule_end_dt'] = str(next_schedule_end_dt)
     context['lecture_info'] = lecture_list
     context['lecture_reg_count'] = lecture_reg_count_sum
-    context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
+    context['lecture_finish_count'] = lecture_finish_count
+    context['lecture_rem_count'] = lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
     context['pt_start_date'] = str(pt_start_date)
     context['pt_end_date'] = str(pt_end_date)

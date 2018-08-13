@@ -480,6 +480,10 @@
         });
         /*과목 선택*/
 
+        $(document).on('click','#class_type li a',function(){
+            $('#id_subject_detail_nm').attr('value','');
+            $('#id_input_subject_detail_nm').val('');
+        });
 
         /*업무 시간 설정*/
         $("#myWorkTimeStart li a").click(function(){
