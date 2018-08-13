@@ -194,13 +194,8 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         except ObjectDoesNotExist:
             error = '수강 정보를 불러오지 못했습니다.'
 
-        today = datetime.date.today()
-        day = 1
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day))
         if error is None:
             context = func_get_holiday_schedule(context)
-            context = func_get_trainee_on_schedule(context, class_id, request.user.id, start_date, end_date)
             context = func_get_class_lecture_count(context, class_id, request.user.id)
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, request.user.id)
@@ -238,24 +233,22 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '회원 정보를 불러오지 못했습니다.'
 
         if error is None:
-            context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
-            context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
-            context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
-                                                                 class_id)
-            # 강사 setting 값 로드
-            context = get_trainee_setting_data(context, request.user.id)
-            request.session['setting_language'] = context['lt_lan_01']
-
-        # 강사 setting 값 로드
-        if error is None:
-            context = get_trainer_setting_data(context, class_info.member_id, class_id)
-
-        if error is None:
             if member_info.phone is None:
                 member_info.phone = ''
             if member_info.birthday_dt is None:
                 member_info.birthday_dt = ''
             context['member_info'] = member_info
+
+        if error is None:
+            context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
+            context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
+            context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
+                                                                 class_id)
+            # 회원 setting 값 로드
+            context = get_trainee_setting_data(context, request.user.id)
+            request.session['setting_language'] = context['lt_lan_01']
+            # 강사 setting 값 로드
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return render(request, self.template_name, context)
 
