@@ -86,7 +86,7 @@ def func_refresh_lecture_count(lecture_id):
                                                - end_schedule_counter
             if lecture_info.lecture_rem_count == 0:
                 lecture_info.state_cd = 'PE'
-            else:
+            elif lecture_info.lecture_rem_count == 1:
                 lecture_info.state_cd = 'IP'
             lecture_info.save()
         else:
