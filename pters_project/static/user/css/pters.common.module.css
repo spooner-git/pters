@@ -52,3 +52,73 @@
 	}
 /*피터스 상단 셀렉트 박스 모듈*/
 
+
+/*피터스 Seekbar 모듈*/
+.pters_seekbar_wrapper{
+	position: relative;
+	height: auto;
+	user-select: none;
+}
+.pters_seekbar_bar{
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	height: 40px;
+	padding: 17px 30px 17px 30px;
+	user-select: none;
+}
+	.pters_seekbar_segment{
+		user-select: none;
+		position: relative;
+		display: table-cell;
+		height: 100%;
+		width: auto;
+		border: 1px solid #cccccc;
+		border-left:0;
+	}
+	.pters_seekbar_segment:first-child{
+		border-left:1px solid #cccccc;
+	}
+		.pters_seekbar_segment > span{
+			position: absolute;
+			font-size: 11px;
+			left: -5px;
+			bottom: -23px;
+			user-select: none;
+		}
+.pters_seekbar_start_ball, .pters_seekbar_end_ball{
+	cursor: pointer;
+	top: 11px;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #fe4e65;
+	border:2px solid #282828;
+} 
+.pters_seekbar_start_ball{
+	left: 19px;
+	z-index: 2;
+}
+.pters_seekbar_end_ball{
+	right: 19px;
+	z-index: 2;
+}
+.pters_seekbar_length_bar{
+	position: absolute;
+	background-color: #fe4e65;
+	z-index: 0;
+}
+.pters_seekbar_mobile_guide{
+	display: none;
+	z-index: 10;
+	position: absolute;
+	background-color: #ffffff;
+	border:1px solid #cccccc;
+	width: 10%;
+	height: 100%;
+	text-align: center;
+	font-size: 20px;
+	padding-top: 4px;
+}
+/*피터스 Seekbar 모듈*/

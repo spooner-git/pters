@@ -262,6 +262,16 @@ li a{
 }
 
 
+.pters_seekbar_segment > span{
+	display: none;
+}
+@media(min-width: 600px){
+	.pters_seekbar_segment > span{
+		display: inline-block;
+	}
+}
+
+
 
 /*스위치*/
 .pters_switch{
