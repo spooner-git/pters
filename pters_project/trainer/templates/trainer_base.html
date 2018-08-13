@@ -35,6 +35,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.common.module.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
@@ -69,7 +70,7 @@
     </div>
 
     <div id="errorMessageBar">
-        <span id="errorMessageText"></span><span>닫기</span>
+        <span id="errorMessageText"></span><span class="text-close"></span>
     </div>
 
 
@@ -81,9 +82,7 @@
         </form>
         <!--<label>클래스 선택</label>-->
         <p>
-            <span class="KRtext">프로그램을 선택하면 이동합니다.</span>
-            <span class="JPtext">クラスを選択してください。</span>
-            <span class="ENtext">Choose class</span>
+            <span class="text-moveprogram"></span>
             <img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup">
         </p>
         <!--
@@ -110,46 +109,47 @@
             <p id="popup_info"></p>
             <p id="popup_info2"></p>
             <input id="popup_info3_memo" type="text" maxlength="15" title="메모" readonly>
-            <img src="/static/user/res/icon-pencil.png" style="width: 12px;cursor:pointer;margin-left: 5px;" title="메모 수정" id="popup_info3_memo_modify" data-type="view">
-            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup">레슨일정의 메모는 회원님께 공유됩니다.</p>
+            <img src="/static/user/res/icon-pencil.png" style="width: 12px;cursor:pointer;margin-left: 5px;" title="Edit" id="popup_info3_memo_modify" data-type="view">
+            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup text_memocaution"></p>
         </div>
         <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
-            <span class="KRtext">일정 완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
+            <span class="text-plancomplete"></span>
         </div>
         <div id="popup_btn_delete" class="popup_inner popup_inner_delete  popup_inner_x3">
-            <span class="KRtext">일정 취소</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
+            <span class="text-plancancel"></span>
         </div>
         <div class="popup_inner  popup_inner_x3" onclick="close_info_popup('cal_popup_planinfo')">
-            <span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Close</span>
+            <span class="text-close"></span>
         </div>
         <div id="canvasWrap">
-            <p class="KRtext">회원님 완료 서명을 입력해주세요.</p>
-            <p class="JPtext">完了署名を入力して下さい</span>
-            <p class="ENtext">Enter Completion Signature</p>
+            <p class="text-pleasesign"></p>
             <canvas id="canvas"></canvas>
             <div id="popup_btn_sign_complete" class="popup_inner popup_inner_finish popup_inner_x3">
-                <span class="KRtext">완료</span><span class="JPtext">日程完了</span><span class="ENtext">Finish Schedule</span>
+                <span class="text-ok"></span>
             </div>
             <div id="popup_btn_sign_close" class="popup_inner popup_inner_delete  popup_inner_x3">
-                <span class="KRtext">닫기</span><span class="JPtext">日程削除</span><span class="ENtext">Delete Schedule</span>
+                <span class="text-close"></span>
             </div>
         </div>
-        <div id="popup_btn_viewGroupParticipants"><span>참석자</span><img src="/static/user/res/icon-down-grey.png"></div>
+        <div id="popup_btn_viewGroupParticipants"><span class="text-participants"></span><img src="/static/user/res/icon-down-grey.png"></div>
         <div id="groupParticipants">
 
         </div>
         <div id="popup_sign_img">
-            <span>완료 서명</span>
+            <span class="text-completesign"></span>
             <img src="" id="id_sign_img">
         </div>
 
-        <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:110px;width: 100%;">
+        <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:50%;width: 100%;">
             <div class="mode_switch_button_wrap_cal" style="margin-top:5px;">
-                <div class="mode_switch_button mode_active" data-page="thisgroup" style="width: 90px;">이 수업 회원</div>
+                <div class="mode_switch_button mode_active text-thisgroupmember" data-page="thisgroup" style="width: 90px;"></div>
+                <span style="position: absolute;right: 0;top: 0;margin-top:3px;margin-right:11px;cursor: pointer;" id="close_subpopup_addBylist_plan">
+                    <img src="/static/user/res/member/icon-x-grey.png" style="width: 10px;margin-bottom:3px;margin-right: 2px;"><span class="text-close"></span>
+                </span>
                 <!--<div class="mode_switch_button" data-page="whole">전체 회원</div>-->
             </div>
-            <div id="subpopup_addByList_whole">"<div class='list_addByList'>리스트 불러오는 중...</div>"</div>
-            <div id="subpopup_addByList_thisgroup">"<div class='list_addByList'>리스트 불러오는 중...</div>"</div>
+            <div id="subpopup_addByList_whole">"<div class='list_addByList text-listloading'></div>"</div>
+            <div id="subpopup_addByList_thisgroup">"<div class='list_addByList text-listloading'></div>"</div>
         </div>
     </div>
     <!--일정 눌렀을때 팝업메뉴-->
@@ -160,18 +160,12 @@
             <span id="popup_delete_title" class="popup_title"></span>
             <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
         </div>
-        <div id="popup_delete_question" class="KRtext popup_info_text">정말 일정을 취소하시겠습니까?</div>
-        <div id="popup_delete_question" class="JPtext popup_info_text">日程を削除しますか</div>
-        <div id="popup_delete_question" class="ENtext popup_info_text">Are you sure to cancel the schedule?</div>
+        <div id="popup_delete_question" class="popup_info_text text-deletequestion-plan"></div>
         <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
-            <span class="KRtext">예</span>
-            <span class="JPtext">はい</span>
-            <span class="ENtext">Yes</span>
+            <span class="text-yes"></span>
         </div>
         <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete" onclick="close_info_popup('cal_popup_plandelete')">
-            <span class="KRtext">아니오</span>
-            <span class="JPtext">いいえ</span>
-            <span class="ENtext">No</span>
+            <span class="text-no"></span>
         </div>
     </div>
     <!--삭제 확인 팝업메뉴-->
@@ -187,14 +181,10 @@
             <p id="repeat_confirm_dur"></p>
         </div>
         <div id="popup_btn_repeatconfirm_yes" class="popup_inner popup_inner_delete">
-            <span style="color:#282828;" class="KRtext">예</span>
-            <span style="color:#282828;" class="JPtext">はい</span>
-            <span style="color:#282828;" class="ENtext">Yes</span>
+            <span style="color:#282828;" class="text-yes"></span>
         </div>
         <div id="popup_btn_repeatconfirm_no" class="popup_inner popup_inner_delete">
-            <span class="KRtext">아니오</span>
-            <span class="JPtext">いいえ</span>
-            <span class="ENtext">No</span>
+            <span class="text-no"></span>
         </div>
     </div>
     <!--반복일정 등록 확인 팝업메뉴-->
@@ -229,9 +219,7 @@
 
         </div>
         <div id="popup_btn_check_finished_member_yes" class="popup_inner" onclick="close_caution_popup()">
-            <span style="color:#282828;" class="KRtext">닫기</span>
-            <span style="color:#282828;" class="JPtext">はい</span>
-            <span style="color:#282828;" class="ENtext">Yes</span>
+            <span style="color:#282828;" class="text-close"></span>
         </div>
         <!--
         <div id="popup_btn_check_finished_member_no" class="popup_inner popup_inner_delete">
@@ -270,12 +258,10 @@
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                         <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
                         <div id="user_name">{{user.last_name}} {{user.first_name}}
-                            <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
+                            <span class="text-nameAttach"></span>
                         </div>
                         <div id="welcome">
-                            <span class="KRtext">안녕하세요!</span>
-                            <span class="JPtext">Hello!</span>
-                            <span class="ENtext">What a nice day!</span>
+                            <span class="text-hello"></span>
                             <p style="margin-top:15px;color:#f4f4f4;font-size:12px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}
                             </p>
                         </div>
@@ -283,37 +269,43 @@
 
                     <div id="sidenav_wrapper_slide">
                         <div style="display: none;" class="sidebar_div" id="cal_day" onclick="sideGoPage('cal_day')"><img src="{% static_url "user/res/icon-calendar-day.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text __todayplan">
+                            <a class="sidebar_text text-todayplan">
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text __weekplan">
+                            <a class="sidebar_text text-weekplan">
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text __monthplan">
+                            <a class="sidebar_text text-monthplan">
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text __membermanage">
+                            <a class="sidebar_text text-membermanage">
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text __groupmanage">
+                            <a class="sidebar_text text-groupmanage">
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text __classmanage">
+                            <a class="sidebar_text text-classmanage">
                             </a>
                         </div>
+                        <!--
+                        <div class="sidebar_div" onclick="sideGoPage('center_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text text-centermanage">
+                            </a>
+                        </div>
+                        -->
                         
                             <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
-                                <a href="{% url 'trainer:work_manage' %}" class="sidebar_text __workmanage">
+                                <a href="{% url 'trainer:work_manage' %}" class="sidebar_text text-workmanage">
                                 </a>
                             </div>
                             
                         <div class="sidebar_div"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:alarm' %}" class="sidebar_text __alarm">
+                            <a href="{% url 'trainer:alarm' %}" class="sidebar_text text-alarm">
                             </a>
                         </div>
                         <!--
@@ -323,7 +315,7 @@
                         </div>
                         -->
                         <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text __help">
+                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help">
                             </a>
                         </div>
                     </div>
@@ -331,7 +323,7 @@
                     <div class="sidebar_div_last">
                         <div class="sidebar_div_last1" onclick="sideGoPage('trainer_setting')">
                             <img src="{% static_url "user/res/icon-setting.png" %}" class="sidebar_icon sidebar_icon_setting" alt="#">
-                            <a class="sidebar_text __setting">
+                            <a class="sidebar_text text-setting">
                             </a>
                         </div>
                         <div class="sidebar_div_last2">
@@ -369,7 +361,7 @@
                     <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
                 </button>
                 {% block nav_center_img2 %}
-                    <a id="uptext3" class="uptext"><span class="KRtext">회원 정보</span><span class="JPtext">メンバー</span><span class="ENtext">Member Info.</span></a>
+                    <a id="uptext3" class="uptext"><span class="text-memberinfo"></span></a>
                 {% endblock %}
                 <button id="upbutton-modify" class="navbar-toggle" aria-controls="navbar" data-type = "view">
                     <img src="{% static_url "user/res/member/icon-edit.png" %}" style="width:100%;">
@@ -383,35 +375,41 @@
             <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
             <div class="centermenu_box">
                 <div class="centermenu_div" style="display: none;">
-                    <a href="{% url 'trainer:cal_day' %}" class="centermenu_text __todayplan"></a>
+                    <a href="{% url 'trainer:cal_day' %}" class="centermenu_text text-todayplan"></a>
                 </div>
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text __weekplan"></a>
+                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text text-weekplan"></a>
                 </div>
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text __monthplan"></a>
+                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text text-monthplan"></a>
                 </div>
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:member_manage' %}" class="centermenu_text __membermanage"></a>
+                    <a href="{% url 'trainer:member_manage' %}" class="centermenu_text text-membermanage"></a>
                 </div>
-                <div class="centermenu_div" style="margin-right: 25px;">
-                    <a href="{% url 'trainer:group_manage' %}" class="centermenu_text __groupmanage"></a>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:group_manage' %}" class="centermenu_text text-groupmanage"></a>
                 </div>
 
-                <div class="centermenu_div" style="margin-right: 25px;">
-                    <a href="{% url 'trainer:class_manage' %}" class="centermenu_text __classmanage"></a>
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:class_manage' %}" class="centermenu_text text-classmanage"></a>
                 </div>
 
-                
-                    <div class="centermenu_div">
-                        <a href="{% url 'trainer:work_manage' %}" class="centermenu_text __workmanage"></a>
-                    </div>
+                <!--
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:center_manage' %}" class="centermenu_text text-centermanage"></a>
+                </div>
+                -->
+
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:work_manage' %}" class="centermenu_text text-workmanage"></a>
+                </div>
                     
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text __setting"></a>
+                    <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text text-setting"></a>
                 </div>
+                
                 <div class="centermenu_div" style="display: none;">
-                    <a href="{% url 'trainer:help_setting' %}" class="centermenu_text __help"></a>
+                    <a href="{% url 'trainer:help_setting' %}" class="centermenu_text text-help"></a>
                 </div>
                 <!--
                 <div class="centermenu_div">
@@ -427,19 +425,19 @@
                 <img src="/static/user/res/icon-name-b.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
                 <div id="popup_triangle"></div>
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
-                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
+                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="text-nameAttach"></span></span>
             </div>
-            <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
+            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
             
             <div class="pcver-slide-menu_class">
                 <div id="myInfo">
                     <span id="myInfo_center_name">{{ request.session.class_center_name }}</span>&nbsp
-                    <span id="myInfo_user_name">{{user.last_name}} {{user.first_name}}<span class="_nameAttach"></span></span>
+                    <span id="myInfo_user_name">{{user.last_name}} {{user.first_name}}<span class="text-nameAttach"></span></span>
                     
-                    <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
+                    <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'" class="text-mypage"></span>
                     <img src="/static/user/res/ptadd/btn-x.png" onclick="" hidden>
-                    <p> 선택시 해당 프로그램으로 이동합니다.</p>
+                    <p class="text-moveprogram"></p>
                 </div>
                 <!--
                 <div class="pters_table">
@@ -449,13 +447,11 @@
                 </div>
             -->
                 <div id="subject-selector"></div>
-                <div id="class_view_all">닫기</div>
+                <div id="class_view_all" class="text-close"></div>
             </div>
             <div class="pcver-slide-menu_alarm">
                 <div id="alarm-notify">
-                    <span class="KRtext" style="font-size:17px;font-weight:500;margin-left:16px;">일정 알림</span>
-                    <span class="JPtext">新しい通知があります</span>
-                    <span class="ENtext">New notification arrived</span>
+                    <span class="text-alarm" style="font-size:17px;font-weight:500;margin-left:16px;"></span>
                     <div id="new_alarm_count" style="display:inline-block;width:19px;height:19px;background:#fe4e65;color:#ffffff;border-radius:50%;font-size:12px;text-align:center;margin-right:8px;margin-left:8px;">
                         <div style="padding-top:3px;font-size: 10px;"></div>
                     </div>
@@ -469,7 +465,7 @@
                     </iframe>
                     -->
                 </div>
-                <div id="alarm_view_all">닫기</div>
+                <div id="alarm_view_all" class="text-close"></div>
             </div>
         </div>
     </nav>
@@ -495,14 +491,19 @@
     </div>
     <div class="bottomfooter2">
         <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-        <a href="http://www.spooner.co.kr" class="KRtext _company">회사소개</a><a href="http://www.spooner.co.kr" class="JPtext _company">会社紹介</a><a href="http://www.spooner.co.kr" class="ENtext _company">About us</a><span class="_company" style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext _helpfooter" href='{% url 'trainer:help_setting' %}'>이용문의</a><a class="JPtext">利用案内</a><a class="ENtext">Help</a><span class="_helpfooter" style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext _businessfooter">제휴제안</a><a class="JPtext">提携</a><a class="ENtext">Partnership</a><span class="_businessfooter" style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext _promisefooter" href='{% url 'policy' %}'>이용약관</a><a class="JPtext">利用案内</a><a class="ENtext">Policy</a><span class="_promisefooter" style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext _privacyfooter" href='{% url 'privacy' %}'>개인정보처리방침</a><a class="JPtext">個人情報処理方針</a><a class="ENtext">Privacy Policy</a><span class="_privacyfooter" style="margin-left:10px;margin-right: 10px;">|</span>
-        <a class="KRtext _manualfooter" href="https://blog.naver.com/ppkyum" target="_blank">사용법 및 FAQ</a><a class="JPtext">ヘルプ</a><a class="ENtext">Customer Service</a>
+        <a href="http://www.spooner.co.kr" class="_company text-company"></a>
+        <span class="_company" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="_helpfooter text-help" href='{% url 'trainer:help_setting' %}'></a>
+        <span class="_helpfooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="_businessfooter text-business"></a>
+        <span class="_businessfooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="_promisefooter text-policy" href='{% url 'policy' %}'></a>
+        <span class="_promisefooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="_privacyfooter text-privacy" href='{% url 'privacy' %}'></a>
+        <span class="_privacyfooter" style="margin-left:10px;margin-right: 10px;">|</span>
+        <a class="_manualfooter text-manual" href="https://blog.naver.com/ppkyum" target="_blank"></a>
     </div>
-    <div class="bottomfooter3">
+    <div class="bottomfooter3 text-footerdisplay">
         <p><span>대표</span><span class="footercontent">김선겸</span><span>개인정보담당자</span><span class="footercontent">김선겸</span><span>사업자등록번호</span><span class="footercontent">463-56-00284</span><span>대표번호</span><span class="footercontent">02-3474-3508</span></p>
         <p><span>통신판매신고</span><span class="footercontent">2017-서울동작-0672</span><span>주소</span><span class="footercontent">서울시 동작구 보라매로 5가길 7 캐릭터그린빌 820</span></p>
         <p><span>기술 및 일반 문의</span><span class="footercontent">support@pters.co.kr</span><span>운영시간</span><span class="footercontent">10:00~18:00 (주말/공휴일 제외, 12:00~13:00점심시간)</span></p>
@@ -1035,6 +1036,8 @@
 </script>
 <script type="text/javascript" src={% static_url "common/js/jquery.cookie.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.multi.language.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 
 {% block local_js_footer %}

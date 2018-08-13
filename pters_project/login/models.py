@@ -77,6 +77,7 @@ class LogTb(TimeStampedModel):
 class PushInfoTb(TimeStampedModel):
     push_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    device_id = models.CharField(db_column='DEVICE_ID', max_length=255, blank=True, default='')
     token = models.CharField(db_column='TOKEN', max_length=255, blank=True, default='')
     badge_counter = models.IntegerField(db_column='BADGE_COUNTER', default=0)
     last_login = models.DateTimeField(db_column='LAST_LOGIN', blank=True, null=True)  # Field name made lowercase.

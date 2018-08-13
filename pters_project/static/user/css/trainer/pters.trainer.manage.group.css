@@ -32,6 +32,9 @@ body{
   line-height: 40px;
 }
 
+.pters_selectbox_wrapper{
+	margin-top: 50px;
+}
 
 @media(min-width: 600px){
 	#how_to_add_member{
@@ -178,36 +181,6 @@ body{
 	z-index: 350;
 }
 
-#selectBox{
-	border-top: 1px solid black;
-	max-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 50px;
-}
-
-#selectBox_type.list_switch_wrap{
-	max-width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 20px;
-	font-size: 15px;
-	text-align: center;
-}
-#selectBox_type.list_switch_wrap div.list_switch{
-	display: inline-block;
-	cursor: pointer;
-}
-#selectBox_type.list_switch_wrap span.list_switch_divider{
-	margin-right: 15px;
-	margin-left: 15px;
-	color: #cccccc;
-}
-.list_switch_selected{
-	color: #282828;
-	font-weight: 500;
-}
-
 ._ALIGN_DROPDOWN{
 	display: none;
 }
@@ -251,6 +224,7 @@ select:focus > option:checked {
 	display: none;
 }
 
+/*
 .btn{
 	border-radius: 0;
 }
@@ -295,6 +269,7 @@ select:focus > option:checked {
 	border-left-color: transparent;
 	border-right-color: transparent;
 }
+*/
 
 ._GROUP_THEAD{
 
@@ -639,7 +614,7 @@ select:focus > option:checked {
 /*-----------------PC 회원정보 팝업-----------------------*/
 .infopopup_pc{
 	display: none;
-	position: fixed;
+	position: absolute;
 	background: #ffffff;
 	padding: 10px;
 	width: 600px;
@@ -1261,6 +1236,10 @@ span.summaryInnerBoxText_Repeatendtext{
 
 @media(min-width: 600px){
 
+	.pters_selectbox_wrapper{
+		margin-top: 20px;
+	}
+
 	.input_available{
 		background: #ffffff !important;
 		color: #fe4e65 !important;
@@ -1654,7 +1633,7 @@ span.summaryInnerBoxText_Repeatendtext{
 
 
 
-
+	/*
 	.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary{
 		border-color:#282828;
 		background:#282828;
@@ -1670,6 +1649,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	.btn-primary{
 		color: #cccccc;
 	}
+	*/
 
 	#upperImg{
 		margin-bottom: 20px;

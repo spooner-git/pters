@@ -79,8 +79,10 @@ $(document).ready(function(){
         if(!$(this).hasClass('disabled_button')){
             var page = $(this).attr('data-page')
             if(page == "personalreserve"){
-                $('.'+page).show()
-                $('.groupreserve, .classreserve').hide()
+                $('.'+page).show();
+                // //$('.'+page).show();
+                // $('#timeGraph').show();
+                $('.groupreserve, .classreserve').hide();
                 $('._userchecked').removeClass('checked ptersCheckboxInner');
 
                 $('.timegraphtext').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="height:23px;marign:auto;"></div>');
@@ -158,6 +160,18 @@ $(document).ready(function(){
         var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
         clicked_td_date_info = yy+'_'+mm+'_'+dd
         click_check = 0;
+        // var time_graph_val = $('#timeGraph');
+        // var htmlTojoin = [];
+        // htmlTojoin.push('<div class="ptaddboxtext" style="margin-top: 10px;margin-bottom:4px;">예약 가능 시간');
+        // htmlTojoin.push('<div class="tdgraph" style="display: inline-block;margin-bottom:1px;margin-left:3px;width:17px;height:9px;border:1px solid #cccccc;background: #ffffff;"></div>');
+        // htmlTojoin.push('</div>');
+        // htmlTojoin.push('<div class="timegraphtext">');
+        // htmlTojoin.push('</div>');
+        // htmlTojoin.push('<p style="margin-top:10px;margin-bottom:0;font-size:13px;">- <span class="timeDur_time" style="color:#fe4e65;"></span> 단위로 예약 할 수 있습니다.</p>');
+        // htmlTojoin.push('<p style="margin-top:0px;margin-bottom:0;font-size:13px;">- <span class="startTime_time" style="color:#fe4e65;"></span> 예약 할 수 있습니다.</p>');
+        // htmlTojoin.push('<p style="margin-top:0px;font-size:13px;">- <span class="cancellimit_time" style="color:#fe4e65;"></span>까지 취소 할 수 있습니다.</p>');
+        // time_graph_val.html(htmlTojoin.join(''));
+
         if(!$(this).hasClass('prevDates') && !$(this).hasClass('nextDates')){
             if($(this).hasClass('notavailable') && !$(this).find('div').hasClass('dateMytime')){
                 $('#shade2').css({'display':'block'});
@@ -364,6 +378,17 @@ $(document).ready(function(){
     var select_all_check = false;
     //달력 선택된 날짜
     //출력 예시 : Fri Sep 08 2017 00:00:00 GMT+0900 (대한민국 표준시)
+
+    $('#starttimesSelected button').click(function(e){
+        
+        //e.preventDefault();
+        if($('#starttimes').find('li').length == 0){
+            e.stopPropagation();
+            alert('예약 가능한 시간이 없습니다.')
+        }else{
+
+        }
+    })
 
     $(document).on('click','#starttimes li a',function(){
         $("#starttimesSelected button").addClass("dropdown_selected");
@@ -593,6 +618,7 @@ $(document).ready(function(){
             },
 
             success:function(data){
+                console.log(data);
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
@@ -790,7 +816,7 @@ $(document).ready(function(){
         }
     };
 
-
+    /*
     function draw_time_graph(option, width, type){  //type = '' and mini
 
         var targetHTML =  '';
@@ -824,7 +850,49 @@ $(document).ready(function(){
         var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
         targetHTML.html(tbody);
     }
+    */
+    function draw_time_graph(option, temp, type){  //type = '' and mini
 
+        var targetHTML =  '';
+        var types = '';
+        if(type == 'mini'){
+            targetHTML =  $('#timeGraph.ptaddbox_mini table');
+            types = "_mini"
+        }else{
+            targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph .timegraphtext');
+            types = ''
+        }
+
+
+        var tdwidth = (100/(Options.workEndTime-Options.workStartTime));
+        var tdwidth_ = (100/(Options.workEndTime-Options.workStartTime));
+
+        var tr1 = [];
+        var tr2 = [];
+        var i=Options.workStartTime;
+        if(option == "30"){
+            for(var i=0; i<=24; i++){
+                var display = "";
+                if(i<Options.workStartTime || i >= Options.workEndTime){
+                    var display = 'display:none;'
+                }
+                tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
+                //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
+            }
+        }else if(option == "60"){
+            for(var i=0; i<=24; i++){
+                var display = "";
+                if(i<Options.workStartTime || i >= Options.workEndTime){
+                    var display = 'display:none;'
+                }
+                tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
+            }
+        }
+        var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
+        targetHTML.html(tbody);
+    }
 
 
     function draw_time_group_graph(option, jsondata, dateinfo){
@@ -946,43 +1014,43 @@ $(document).ready(function(){
         var dateplans = []
 
 
-        for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
-            var grouptype = "group"
-            var dbID = ''
-            var group_id = jsondata.group_schedule_group_id[i]
-            var scheduleID = jsondata.group_schedule_id[i]
-            var index = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i])
-            if(index != -1){
-                var scheduleID = jsondata.scheduleIdArray[index]
-            }else{
-                var scheduleID = ''
-            }
-            var classLectureID = ''
-            var scheduleFinish = jsondata.group_schedule_finish_check[i]
-            var memoArray = jsondata.group_schedule_note[i]
-            var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
-            var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
-            var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
-            var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
-            var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
-            var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
-            var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
-            var groupmax = jsondata.group_schedule_max_member_num[i]
-            var groupcurrent = jsondata.group_schedule_current_member_num[i]
-            var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
-            var name = '['+jsondata.group_schedule_group_type_cd_name[i]+'] '+jsondata.group_schedule_group_name[i]+groupParticipants
-            if(stime1.length<2){
-                var stime1 = '0'+stime1
-            }else if(stime1 == '24'){
-                var stime1 = '00'
-            }
-            var stime = stime1+'_'+sminute
-            var etime = etime1+'_'+eminute
-            var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-            if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
-                dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
-            }
-        }
+        // for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
+        //     var grouptype = "group"
+        //     var dbID = ''
+        //     var group_id = jsondata.group_schedule_group_id[i]
+        //     var scheduleID = jsondata.group_schedule_id[i]
+        //     var index = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i])
+        //     if(index != -1){
+        //         var scheduleID = jsondata.scheduleIdArray[index]
+        //     }else{
+        //         var scheduleID = ''
+        //     }
+        //     var classLectureID = ''
+        //     var scheduleFinish = jsondata.group_schedule_finish_check[i]
+        //     var memoArray = jsondata.group_schedule_note[i]
+        //     var yy = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[0]
+        //     var mm = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[1]
+        //     var dd = jsondata.group_schedule_start_datetime[i].split(' ')[0].split('-')[2]
+        //     var stime1 = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]
+        //     var etime1 = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]
+        //     var sminute = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1]
+        //     var eminute = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1]
+        //     var groupmax = jsondata.group_schedule_max_member_num[i]
+        //     var groupcurrent = jsondata.group_schedule_current_member_num[i]
+        //     var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')'
+        //     var name = '['+jsondata.group_schedule_group_type_cd_name[i]+'] '+jsondata.group_schedule_group_name[i]+groupParticipants
+        //     if(stime1.length<2){
+        //         var stime1 = '0'+stime1
+        //     }else if(stime1 == '24'){
+        //         var stime1 = '00'
+        //     }
+        //     var stime = stime1+'_'+sminute
+        //     var etime = etime1+'_'+eminute
+        //     var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
+        //     if(ymd == dateinfo && jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) != -1){
+        //         dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
+        //     }
+        // }
 
         for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
             var grouptype = "class"
@@ -1008,9 +1076,14 @@ $(document).ready(function(){
             }
             var stime = stime1+'_'+sminute
             var etime = etime1+'_'+eminute
-            var name = "[1:1 레슨] "
+            var groupParticipants = "";
+            if(jsondata.schedule_group_max_member_num[i] != "") {
+                groupParticipants = '(' + jsondata.schedule_group_current_member_num[i] + '/' + jsondata.schedule_group_max_member_num[i] + ')'
+            }
+            var name = '['+jsondata.schedule_group_type_cd_name[i]+'] '+jsondata.schedule_group_name[i] + groupParticipants;
             var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
-            if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+            // if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+            if(ymd == dateinfo ){
                 dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_/'+memoArray)
             }
         }
@@ -1027,6 +1100,15 @@ $(document).ready(function(){
                 var etime = Number(splited[2])
                 var eminute = splited[3]
                 var name = splited[4]
+                var textsize = ""
+
+                if(name.length > 12 ){
+                    textsize = 'style="font-size:11.5px"'
+                }else if(name.length > 9){
+                    textsize = 'style="font-size:12px"'
+                }
+
+
                 var morningday = ""
                 if(stime==0 & dateplans[i-2]==undefined){
                     var morningday = "오전"
@@ -1041,10 +1123,30 @@ $(document).ready(function(){
                     var morningday = "오후"
                 }
                 if(splited[10]==1){
-                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span></div>')
+                    /*
+                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                        '<span class="plancheckmorningday">'+morningday+'</span>'+
+                                        '<span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span>'+
+                                        '<span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span>'+
+                                    '</div>')*/
+                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                        '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                        '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                        '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
+                                    '</div>')
 
                 }else if(splited[10] == 0){
-                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'"><span class="plancheckmorningday">'+morningday+'</span><span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span><span class="plancheckname">'+name+'</span></div>')
+                    /*
+                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                        '<span class="plancheckmorningday">'+morningday+'</span>'+
+                                        '<span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span>'+
+                                        '<span class="plancheckname">'+name+'</span>'+
+                                    '</div>')*/
+                    htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                        '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                        '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                        '<div class="plancheckname"><p '+textsize+'>'+name+'</p></div>'+
+                                    '</div>')
                 }
             }
         }else{
@@ -1085,16 +1187,31 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
                 }else{
                     ajaxJSON_cache = jsondata
                     if($('#timeGraph').length > 0){
-                        draw_time_graph(60,tablewidth,'')
+                        startTimeSet('class', jsondata, today_form, Options.classDur*Options.timeDur, Options.startTime);  //일정등록 가능한 시작시간 리스트 채우기
+                        // var start_time_length = $('#starttimes li:first-child').length;
+                        // if(start_time_length==0){
+                        //     var time_graph_val = $('#timeGraph');
+                        //     var htmlTojoin = [];
+                        //     htmlTojoin.push('<div style="text-align:center;margin-top:18px;margin-bottom:18px;font-weight:bold;">예약 가능한 일정이 없습니다.</div>');
+                        //     time_graph_val.html(htmlTojoin.join(''));
+                        //     $('#offStartTime').hide();
+                        //     $('#submitBtn').hide()
+
+                        // }
+                        // else{
+                        draw_time_graph(60,tablewidth,'');
                         timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
                         timeGraphSet("off","grey", "AddClass", jsondata);
-                        startTimeSet('class', jsondata, today_form, Options.classDur*Options.timeDur, Options.startTime);  //일정등록 가능한 시작시간 리스트 채우기
+                            // $('#offStartTime').show();
+                            // $('#submitBtn').show();
+                        // }
                     }
 
                     draw_time_group_graph('group', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form,'_'))
@@ -1208,59 +1325,44 @@ $(document).ready(function(){
                 var work_end = add_time(Options.workEndTime+':00','00:00');
                 var plan_start = add_time(planHour+':'+planMinute,'00:00');
                 var plan_end = add_time(planEndHour+':'+planEndMin,'00:00');
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-                if(compare_time(plan_start, work_start) == false        //시작시간이 업무시간과 같거나 전에 있고, 종료시간이 업무종료시간과 같거나 업무시간 내에 위치
-                  && compare_time(plan_end, work_start)
-                  && compare_time(plan_end, work_end) ==false)
-                { console.log(plan_start, plan_end, work_start, work_end)
-                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
-                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-                    if(planEndHour == Options.workEndTime){
-                        var planEndHour = Options.workEndTime -1;
-                        var planEndMin = 60;
-                    }else{
-                        var planEndHour = planEndHour;
+
+                timegraph_hourwidth = $('#'+planHour+'g_00').width();
+                timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
+                timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
+                timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
+                timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
+
+                var $workstarttime = $(`#${Options.workStartTime}g_00`);
+                var $workendtime = $(`#${Options.workEndTime-1}g_00`);
+                if(planHour<Options.workStartTime){ //시작시간이 업무시간 전에 있을 경우
+                    if(planEndHour >= Options.workStartTime && planEndHour < Options.workEndTime){ //종료시간이 업무시간 안에 있을 경우
+                        timegraph_hourwidth = $workstarttime.width();
+                        timegraph_houroffset = $workstarttime.position().left
+                        timegraph_houroffsetb = $workstarttime.position().top;
+                        var flag = 'flag1'
+                    }else if(planEndHour < Options.workStartTime){                                 //종료시간이 업무시간 전에 있을 경우
+                        //숨김
+                        continue;
+                    }else if(planEndHour >= Options.workEndTime){                                    //종료시간이 업무시간 후에 있을 경우
+                        timegraph_hourwidth = $workstarttime.width();
+                        timegraph_houroffset = $workstarttime.position().left + timegraph_hourwidth*(planMinute/60);
+                        timegraph_houroffsetb = $workstarttime.position().top;
+                        timegraph_hourendwidth = $workendtime.width();
+                        timegraph_hourendoffset = $workendtime.position().left + timegraph_hourendwidth
                     }
-
-                    timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
-                    timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
-
-                }else if(compare_time(plan_start, work_start) == false  //시작시간이 업무시간 전에 있고, 종료시간도 업무시간 전
-                       && compare_time(plan_end, work_start) == false ){
+                }else if(planHour >= Options.workStartTime && planHour < Options.workEndTime ){ // 시작시간이 업무시간 내에 있을 경우
+                    if(planEndHour >= Options.workStartTime && planEndHour < Options.workEndTime){ //종료시간이 업무시간 안에 있을 경우
+                        //정상 경우
+                    }else if(planEndHour < Options.workStartTime){                                 //종료시간이 업무시간 전에 있을 경우
+                        //경우 발생하지 않음
+                    }else if(planEndHour >= Options.workEndTime){                                    //종료시간이 업무시간 후에 있을 경우
+                        timegraph_hourendwidth = $workendtime.width();
+                        timegraph_hourendoffset = $workendtime.position().left + timegraph_hourendwidth;
+                    }
+                }else if(planHour >= Options.workEndTime){                                       //시작시간이 업무시간 후에 있을 경우
+                    //패스
                     continue;
-
-                }else if(compare_time(plan_start, work_start)           //시작시간이 업무시간내에 있고, 종료시간이 업무시간 밖에 위치
-                       && compare_time(plan_start, work_end) == false
-                       && compare_time(work_end, plan_end) == false){
-
-                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
-
-                }else if( compare_time(plan_start, work_end) == false   // 시작시간이 업무시간 전에 있고, 종료시간이 업무시간 밖에 위치
-                       && compare_time(plan_end, work_end)){
-
-                    timegraph_hourwidth = $('#'+Options.workStartTime+'g_00').width();
-                    timegraph_houroffset = $('#'+Options.workStartTime+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+Options.workStartTime+'g_00').position().top;
-                    timegraph_hourendwidth = $('#'+(Options.workEndTime-1)+'g_00').width();
-                    timegraph_hourendoffset = $('#'+(Options.workEndTime-1)+'g_00').position().left + timegraph_hourendwidth;
-
-                }else if( compare_time(plan_start, work_end)            // 시작시간이 업무종료 후에 있고, 종료시간이 업무시간 후에 위치
-                       && compare_time(plan_end, work_end) ){
-
-                }else{                                                   //시작시간과 종료시간 모두 업무시간에 위치
-                    timegraph_hourwidth = $('#'+planHour+'g_00').width();
-                    timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
-                    timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
-                    timegraph_hourendwidth = $('#'+planEndHour+'g_00').width();
-                    timegraph_hourendoffset = $('#'+planEndHour+'g_00').position().left + timegraph_hourendwidth*(planEndMin/60);
                 }
-                // 업무시간내 위치하지 않아서(넘어가서) 보이지 않는 일정들에 대한 처리
-
 
 
                 if(date_format_yyyy_m_d_to_yyyy_mm_dd(planYear+'-'+planMonth+'-'+planDate,'-') == date){
@@ -1711,6 +1813,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
+            console.log(initialJSON);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -1825,13 +1928,19 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
         if(classTime == "24:00"){
             var classTime = "00:00"
         }
-
-        if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-            var groupname = " - [1:1 레슨]"
-        }else{
-            var index = jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i])
-            var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
+        var groupname = " - [";
+        if(jsondata.schedule_group_name[i]==""){
+            groupname += jsondata.schedule_group_type_cd_name[i]+"]";
         }
+        else{
+            groupname += jsondata.schedule_group_name[i]+"]";
+        }
+        // if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
+        //     var groupname = " - [1:1 레슨]"
+        // }else{
+        //     var index = jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i])
+        //     var groupname = " - ["+jsondata.group_schedule_group_name[index]+"]"
+        // }
 
         var index = count_date_info.dateResult.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0])
         var count = count_date_info.countResult[index]

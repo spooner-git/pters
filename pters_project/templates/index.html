@@ -307,9 +307,10 @@
 {% endblock %}
 
 {% block local_js_footer %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
-    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+{#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script>
         var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
         if(varUA.match('android') != null){
@@ -441,10 +442,6 @@
             }
         }
 
-
-
-
-
         function goPage(option){
             if(option == 0){
                 location.href="/accounts/register/";
@@ -457,58 +454,29 @@
             $('body, html').animate({scrollTop : offset},400)
         }
 
-        Push.Permission.request(onGranted, onDenied);
+{#        Push.Permission.request(onGranted, onDenied);#}
 
-        function onDenied() {
-            console.log('알람 거절 상태')
-        }
-        function onGranted() {
-            console.log('알람 승인 상태')
-        }
+{#        function onDenied() {#}
+{#            console.log('알람 거절 상태')#}
+{#        }#}
+{#        function onGranted() {#}
+{#            console.log('알람 승인 상태')#}
+{#        }#}
 
         $('#errorMessageBar span:nth-child(2)').click(function(){
             $('#errorMessageBar').fadeOut('fast')
         })
 
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            registrations.forEach(function(v) {
-                if(v.active){
-                    if(v.scope=="http://localhost:8000/static/user/js/push/" || v.scope=="https://pters.co.kr/static/user/js/push/"){
-                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
-                    }
-                }
-            });
-        });
+{#        navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#            registrations.forEach(function(v) {#}
+{#                if(v.active){#}
+{#                    if(v.scope=="{% url 'index' %}/static/user/js/push/" || v.scope=="{% url 'index' %}/static/user/js/push/"){#}
+{#                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
+{#                    }#}
+{#                }#}
+{#            });#}
+{#        });#}
 
-        function deleteToken(){
-            $.ajax({
-                url:'/login/delete_push_token/',
-                type:'POST',
-                data:{"keyword": document.getElementById('keyword').value},
-
-                beforeSend:function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                    //AjaxBeforeSend();
-                },
-
-                //통신성공시 처리
-                success:function(){
-                    console.log('토큰 삭제 완료')
-                },
-
-                //보내기후 팝업창 닫기
-                complete:function(){
-
-                },
-
-                //통신 실패시 처리
-                error:function(){
-
-                },
-            });
-        }
 
         function getCookie(name) {
             var cookieValue = null;

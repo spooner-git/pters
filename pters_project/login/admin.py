@@ -39,5 +39,6 @@ class MemberTbAdmin(admin.ModelAdmin):
 
 @admin.register(PushInfoTb)
 class PushInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('push_info_id', 'member', 'device_info', 'token', 'badge_counter', 'last_login', 'use')
+    list_display = ('push_info_id', 'member', 'device_info', 'token', 'badge_counter', 'device_id',
+                    'last_login', 'use')
 

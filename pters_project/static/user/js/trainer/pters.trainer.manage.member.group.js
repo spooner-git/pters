@@ -663,10 +663,7 @@ function delete_group_from_list(group_id){
 //그룹 지우기
 
 //그룹원 지우기
-function delete_groupmember_from_grouplist(){
-
-    console.log('delete_groupmember_from_grouplist');
-    console.log(group_delete_JSON);
+function delete_groupmember_from_grouplist(use, callback){
     $.ajax({
         url:'/trainer/delete_group_member_info/',
         type:'POST',
@@ -688,6 +685,7 @@ function delete_groupmember_from_grouplist(){
 
         //통신성공시 처리
         success:function(data){
+            enable_delete_btns_after_ajax()
             var jsondata = JSON.parse(data);
             //ajax_received_json_data_member_manage(data);
             if(jsondata.messageArray.length>0){
@@ -699,6 +697,9 @@ function delete_groupmember_from_grouplist(){
                 $('#errorMessageText').text('');
                 get_group_ing_list();
                 console.log('success');
+                if(use == "callback"){
+                    callback();
+                }
             }
         },
 
@@ -985,19 +986,44 @@ function groupMemberListSet(group_id, jsondata){
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
 $(document).on('click','img.substract_groupMember',function(e){
     e.stopPropagation();
-    var groupmember_name = $(this).attr('data-fullname');
-    //var groupmember_lecid = $(this).attr('data-lecid');
-    var groupmember_dbid = $(this).attr('data-dbid');
-    var groupmember_groupid = $(this).attr('data-groupid');
-    //delete_groupmember_from_grouplist(groupmember_lecid, groupmember_name, groupmember_id);
 
-    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
-    group_delete_JSON.ids.push(groupmember_dbid);
-    group_delete_JSON.fullnames.push(groupmember_name);
-    group_delete_JSON.group_id = groupmember_groupid;
-    console.log(group_delete_JSON);
-    delete_groupmember_from_grouplist();
+    var groupmember_name = $(this).attr('data-fullname')
+    var groupmember_dbid = $(this).attr('data-dbid')
+    var groupmember_groupid = $(this).attr('data-groupid')
+    var groupname = $(`div.groupWrap[data-groupid="${groupmember_groupid}"] ._groupname input`).val();
+    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]}
+    group_delete_JSON.ids.push(groupmember_dbid)
+    group_delete_JSON.fullnames.push(groupmember_name)
+    group_delete_JSON.group_id = groupmember_groupid
+
+    $('#cal_popup_plandelete').css('display','block');
+    $('#popup_delete_question').text(`${groupname}에서 ${groupmember_name}님을 제외 하시겠습니까?`)
+    deleteTypeSelect = "groupMember_Substract_From_Group"
+
+})
+
+$('#popup_delete_btn_yes').click(function(){
+    var bodywidth = window.innerWidth;
+    //if(ajax_block_during_delete_weekcal == true){
+    if(!$(this).hasClass('disabled_button')){
+        //ajax_block_during_delete_weekcal = false;
+        disable_delete_btns_during_ajax();
+        if(deleteTypeSelect == "groupMember_Substract_From_Group"){
+            delete_groupmember_from_grouplist('callback',function(){
+                close_info_popup('cal_popup_plandelete');
+            })
+        }
+    }
 });
+function disable_delete_btns_during_ajax(){
+    $('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button')
+    //ajax_block_during_delete_weekcal = false;
+}
+
+function enable_delete_btns_after_ajax(){
+    $('#popup_delete_btn_yes, #popup_delete_btn_no').removeClass('disabled_button')
+    //ajax_block_during_delete_weekcal = false;
+}
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 
 

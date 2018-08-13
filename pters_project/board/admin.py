@@ -6,7 +6,8 @@ from .models import QATb, BoardTb, CommentTb
 
 @admin.register(QATb)
 class QATbAdmin(admin.ModelAdmin):
-    list_display = ('qa_id', 'member', 'qa_type_cd', 'title', 'contents', 'status', 'mod_dt', 'reg_dt', 'use')
+    list_display = ('qa_id', 'member', 'email_address',
+                    'qa_type_cd', 'title', 'contents', 'status_type_cd', 'mod_dt', 'reg_dt', 'use')
 
 
 @admin.register(BoardTb)

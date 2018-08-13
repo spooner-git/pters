@@ -136,8 +136,6 @@ $(document).ready(function(){
                 var trainee_repeat_end = ptRepeatScheduleStartDateArray[i] +'부터 ~ '+ptRepeatScheduleEndDateArray[i]+'까지';
                 var trainee_repeat_day = trainee_repeat_days()
 
-                
-                $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
                 // $('._Repeat_Info p:nth-child(2)').text('['+trainee_repeat_group_type_name+']'+trainee_repeat_type+' '
                 //     +trainee_repeat_day + ' '
                 //     +trainee_repeat_time)
@@ -164,6 +162,8 @@ $(document).ready(function(){
                 $('._Repeat_Info p:nth-child(2)').html(repeatText)
         }
 
+        console.log('test:'+trainee_next_schedule)
+        $('#planBoardWrap > div.planBoard._Next_Info > p:nth-child(2)').text(trainee_next_schedule)
     }
 
     $('.mode_switch_button').click(function(){
@@ -220,7 +220,7 @@ $(document).ready(function(){
             '<div class="cell5">강사노트</div>'+
             '</div>'
         var html = []
-        for(var i=0; i<jsondata.ptScheduleStateCdArray.length; i++){
+        for(var i=jsondata.ptScheduleStateCdArray.length-1; i>=0; i--){
             var number 	     = '<div class="cell1">'+jsondata.ptScheduleIdxArray[i]+'</div>'
             if($('body').width()>600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i])
@@ -236,8 +236,8 @@ $(document).ready(function(){
             var state        = '<div class="cell4 state_'+jsondata.ptScheduleStateCdArray[i]+'">'+stateCodeDict[jsondata.ptScheduleStateCdArray[i]]+'</div>'
             var memo         = '<div class="cell5">'+jsondata.ptScheduleNoteArray[i]+'</div>'
             
-            if(jsondata.ptScheduleIdxArray[i+1] != undefined){
-                if(jsondata.ptScheduleIdxArray[i].split('-')[0] != jsondata.ptScheduleIdxArray[i+1].split('-')[0]){
+            if(jsondata.ptScheduleIdxArray[i-1] != undefined){
+                if(jsondata.ptScheduleIdxArray[i].split('-')[0] != jsondata.ptScheduleIdxArray[i-1].split('-')[0]){
                     html.push('<div class="lecture_history_table_row" style="border-bottom:1px solid #cccccc;padding-bottom:10px;">'+number+date+duration+state+memo+'</div>')
                 }else{
                     html.push('<div class="lecture_history_table_row">'+number+date+duration+state+memo+'</div>')

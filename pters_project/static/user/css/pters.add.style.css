@@ -52,8 +52,23 @@ ul a{
 	top: 50px;
 }
 
+
 #page-addplan-pc{
 	display: none;
+	position: absolute;
+	width: 300px;
+	z-index: 3;
+	background: #ffffff;
+	width: 300px;
+	border: 1px solid #eaeaea;
+	padding-bottom: 5px;
+	/*box-shadow: 0px 0.5px 0.5px 0 rgba(0, 0, 0, 0.2);*/
+	box-shadow: 4px 6.5px 12.5px 0 rgba(0, 0, 0, 0.2);
+	z-index: 3;
+	/*
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	*/
 }
 
 #addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
@@ -243,7 +258,7 @@ ul a{
 }
 
 .dropdownlist_mini{
-	width: 180px;
+	width: 100%;
 	top:auto;
 	left: auto;
 	overflow-y:auto;
@@ -257,8 +272,20 @@ ul a{
 	padding-bottom:2px;
 }
 
+
 #durations_mini{
-	left: 93px;
+	left: 0px;
+}
+#classDuration_mini #durationsSelected{
+	position: relative;
+	margin-left: 7px;
+}
+#membersSelected_mini{
+	position: relative;
+	margin-left: 15px;
+}
+#memberName_mini .dropdown_mini{
+	margin-left: 6px;
 }
 
 #members_pc{
@@ -777,10 +804,7 @@ ul a{
 }
 
 
-#submitBtn{
-	height: 50px;
-	color: #3d3b3b;
-}
+
 
 button._info_delete_img{
 	position: absolute;
@@ -831,12 +855,7 @@ button._info_baseedit_img{
 	z-index: 1000;
 }
 
-.submitBtnActivated{
-	color: #ffffff !important;
-	background:#fe4e65 !important;
-	border:0 !important;
-	cursor: pointer;
-}
+
 
 .popupBtn{
 	text-align: center;
@@ -853,15 +872,34 @@ button._info_baseedit_img{
 	border-top: 1px solid #cccccc;
 }
 
+#submitBtn{
+	height: 50px;
+	color: #3d3b3b;
+}
+
 .submitBtn{
 	display:none;
 	cursor: pointer;
+}
+.submitBtn_weekcalonly{
+	display: block;
+	color: #ffffff;
+	width: 80px;
+	margin: 0 auto;
+	height: 30px;
+	line-height: 30px;
 }
 
 .submitBtn_mini{
 	display:none;
 }
 
+.submitBtnActivated{
+	color: #ffffff !important;
+	background:#fe4e65 !important;
+	border:0 !important;
+	cursor: pointer;
+}
 .cancelBtn_mini{
 	cursor: pointer;
 }
@@ -1166,6 +1204,9 @@ option{
 	margin-left: 3px;
 	margin-top: 2px;
 	z-index: 1;
+
+	margin-left: 0;
+	width: 99%;
 }
 /*
 .blankSelected{
@@ -1186,6 +1227,9 @@ option{
 	border:2px solid #fe4e65;
 	margin-left: 3px;
 	margin-top: 2px;
+
+	margin-left: 0;
+	width: 99%;
 }
 
 #starttimesSelected button{
@@ -1263,10 +1307,7 @@ option{
 		height: 26px;
 	}
 
-	#membersSelected_mini{
-		position: relative;
-		margin-left: 15px;
-	}
+	
 
 	#remainCount div:nth-child(2){
 		border-top: 1px solid #8d8d8d;
@@ -1281,17 +1322,13 @@ option{
 		width: 96.5%;
 	}
 
-	#memberName_mini .dropdown_mini{
-		margin-left: 6px;
-	}
+	
 
 	#durationsSelected{
 
 	}
 
-	#classDuration_mini #durationsSelected{
-		margin-left: 7px;
-	}
+	
 
 	#memberName_reg{
 		width: 54%;
@@ -1361,6 +1398,26 @@ option{
 		border-top-right-radius: 20px;
 		border-bottom-left-radius: 20px;
 		*/
+	}
+
+	.blankSelected{
+		width: 97%;
+		margin-left: 3px;
+	}
+	/*
+	.blankSelected{
+		position: absolute;
+		top: 0;
+		width: 97%;
+		height: 90%;
+		border:2px solid #fe4e65;
+		margin-left: 3px;
+		margin-top: 2px;
+	}
+	*/
+	.blankSelected30{
+		width: 97%;
+		margin-left: 3px;
 	}
 
 	.icondown{

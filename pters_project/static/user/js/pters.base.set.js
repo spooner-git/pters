@@ -258,60 +258,6 @@ $(document).ready(function(){
         //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
     }
 
-    if(Options.language == "JPN"){
-        $('.__todayplan').text("今日の日程");
-        $('.__weekplan').text("日程表");
-        $('.__monthplan').text("カレンダー");
-        $('.__membermanage').text("会員管理");
-        $('.__groupmanage').text("グループ管理");
-        $('.__workmanage').text("業務管理");
-        $('.__setting').text("設定");
-        $('._nameAttach').text("様");
-        //$('.pcwhere').text("PTERSトレーニングセンター");
-        $('.pclogout').text("ログアウト");
-        $('#uptext span').text("様のスケジュール");
-        $('.__alarm').text("アラーム");
-        $('.__calSelect').text("カレンダー選択");
-        $('.__mypage').text("マイページ");
-        $('.__help').text("お問い合わせ");
-
-    }else if(Options.language == "ENG"){
-        $('.__todayplan').text("Daily");
-        $('.__weekplan').text("Schedule");
-        $('.__monthplan').text("Calendar");
-        $('.__membermanage').text("Members");
-        $('.__groupmanage').text("Groups");
-        $('.__workmanage').text("Work");
-        $('.__setting').text("Settings");
-        $('._nameAttach').text("");
-        //$('.pcwhere').text("PTERS Traning Center");
-        $('.pclogout').text("Logout");
-        $('#uptext span').text("'s schedule");
-        $('.__alarm').text("Alarm");
-        $('.__calSelect').text("Change Cal.");
-        $('.__mypage').text("My page");
-        $('.__help').text("Help");
-
-    }else if(Options.language == "KOR"){
-        $('.__todayplan').text("오늘 일정");
-        $('.__weekplan').text("주간 일정");
-        $('.__monthplan').text("월간 일정");
-        $('.__membermanage').text("회원 관리");
-        $('.__groupmanage').html("그룹 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        $('.__classmanage').html("클래스 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>");
-        // $('.__groupmanage').html("그룹 관리");
-        // $('.__classmanage').html("클래스 관리");
-        $('.__workmanage').text("통계");
-        $('.__setting').text("설정");
-        $('._nameAttach').text("님");
-        //$('.pcwhere').text("PTERS 트레이닝센터")
-        $('.pclogout').text("로그아웃");
-        $('#uptext span').text("님 일정");
-        $('.__alarm').text("알림");
-        $('.__calSelect').text("클래스 선택");
-        $('.__mypage').text("마이페이지");
-        $('.__help').text("이용문의");
-    }
 
     /*
      $('.__alarm, #upbutton-alarm').click(function(){
@@ -362,6 +308,7 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
 }else{
     lastDay[1] = 28;
 };
+
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
@@ -1139,76 +1086,77 @@ function numberWithCommas(x) { //천단위 콤마 찍기
 set_drag_drop_action_to_DOM('#page-addplan');
 set_drag_drop_action_to_DOM('#cal_popup_planinfo');
 set_drag_drop_action_to_DOM('#cal_popup_plancheck');
+set_drag_drop_action_to_DOM('#page_addmember');
+set_drag_drop_action_to_DOM('#memberInfoPopup_PC')
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
     if(bodywidth > 600 ){
         $(targetSelector).mousedown(function(event){
-            $(this).css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
+            //event.stopPropagation();
+                var $this = $(this)
+                    
 
-            $(this).mouseup(function(event){
-                $(this).css({'box-shadow':'unset'});
-            });
+                    $this.mouseup(function(event){
+                        $this.css({'box-shadow':'unset'});
+                    });
 
-            $(this).mouseleave(function(){
-                $(this).css({'box-shadow':'unset'});
-            });
+                    $this.mouseleave(function(){
+                        $this.css({'box-shadow':'unset'});
+                    });
 
-            var thisOriX = $(this).offset().left;
-            var thisOriY = $(this).offset().top;
+                    var thisOriX = $this.offset().left;
+                    var thisOriY = $this.offset().top;
 
-            var oriX = event.pageX;
-            var oriY = event.pageY;
+                    var oriX = event.pageX;
+                    var oriY = event.pageY;
 
-            $(document).on('mousemove', 'body', function(e){
-                var moveX = e.pageX;
-                var moveY = e.pageY;
+                    $(document).on('mousemove', 'body', function(e){
+                        e.stopPropagation()
+                        var moveX = e.pageX;
+                        var moveY = e.pageY;
 
-                var diffX = oriX - moveX;
-                var diffY = oriY - moveY;
+                        var diffX = oriX - moveX;
+                        var diffY = oriY - moveY;
 
-                var resultX;
-                var resultY;
+                        var resultX;
+                        var resultY;
 
-                var resultX = thisOriX - diffX;
-                var resultY = thisOriY - diffY;
+                        var resultX = thisOriX - diffX;
+                        var resultY = thisOriY - diffY;
 
-                $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
-                $(document).on('mouseup click', 'body', function(){
-                    $(document).off('mousemove');
-                });
-            });
-            /*
-            $(document).on('mousedown click mouseup', 
-                            '#canvasWrap, #popup_btn_complete, .plan_raw_add, .plan_raw,'+
-                            targetSelector+ ' button,'+
-                            targetSelector+ ' input,'+
-                            targetSelector+ ' .datepicktext,'+
-                            targetSelector+ ' .mode_switch_button'
-                            , function(){
-                $(document).off('mousemove');
-            })*/
+                        if(Math.abs(diffX) > 10 || Math.abs(diffY) > 10){
+                            $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});   
+                        }
 
-             $(document).on('click mouseup', 
-                            targetSelector+ ' textarea,'+
-                            targetSelector+ ' button,'+
-                            targetSelector+ ' input,'+
-                            targetSelector+ ' table,'+
-                            targetSelector+ ' span,'+
-                            targetSelector+ ' div,'+
-                            targetSelector+ ' img,'+
-                            targetSelector+ ' td,'+
-                            targetSelector+ ' tr,'+
-                            targetSelector+ ' p'
-                            , function(){
-                $(document).off('mousemove');
-            })
-             $(document).on('mousedown', 
-                            targetSelector+ ' canvas'
-                            , function(){
-                $(document).off('mousemove');
-            })
+                        $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
+                        $(document).on('mouseup click', 'body', function(){
+                            $(document).off('mousemove');
+                        });
+                    });
+
+
+                     $(document).on('click mouseup', 
+                                    targetSelector+ ' textarea,'+
+                                    targetSelector+ ' button,'+
+                                    targetSelector+ ' input,'+
+                                    targetSelector+ ' table,'+
+                                    targetSelector+ ' span,'+
+                                    targetSelector+ ' div,'+
+                                    targetSelector+ ' img,'+
+                                    targetSelector+ ' td,'+
+                                    targetSelector+ ' tr,'+
+                                    targetSelector+ ' p'
+                                    , function(){
+                        $(document).off('mousemove');
+                        console.log('click mouseup')
+                    })
+                     $(document).on('mousedown mousemove', 
+                                    targetSelector+' canvas'
+                                    , function(){
+                        $(document).off('mousemove');
+                    })
 
             
         });
@@ -1343,6 +1291,37 @@ function clear_badge_counter(){
         }
     })
 }
+
+function update_push_token(token, device_id) {
+    $.ajax({
+        url:'/login/add_push_token/',
+        type:'POST',
+        data:{"token_info":token, "device_id":device_id},
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            //AjaxBeforeSend();
+        },
+
+        //통신성공시 처리
+        success:function(){
+            console.log('토큰 등록 완료')
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+
+        },
+
+        //통신 실패시 처리
+        error:function(){
+
+        }
+    });
+}
+
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection

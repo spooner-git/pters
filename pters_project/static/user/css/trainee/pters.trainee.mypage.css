@@ -5,8 +5,23 @@ body{
 	height: 300px;
 }
 
+@media(max-width:599px){
+	.bottomfooter2{
+		display:none;
+	}
+	.bottomfooter3{
+		display:block;
+	}
+	.fixfooter{
+		position:fixed;
+	}
+}
 #ymdTextWrap{
 	padding: 0;
+}
+
+.fixfooter{
+	position: relative !important;
 }
 
 #blank_member_popup{
@@ -645,10 +660,19 @@ body{
 		padding-top: 10px;
 		/*background: #f7f7f7;*/
 	}
-	.bottomfooter2 a{
-		color: #7d7d7d;
+
+	.bottomfooter2{
+		display:block;
 	}
-	.bottomfooter3 a{
-		color: #7d7d7d;
+	.bottomfooter3{
+		display:none;
 	}
+}
+
+.bottomfooter2 {
+	color: #ffffff;
+}
+
+.bottomfooter3 {
+	color: #ffffff;
 }

@@ -960,8 +960,11 @@ img,a,div,span,p{
 	position: relative;
 }
 #subpopup_addByList_thisgroup, #subpopup_addByList_whole{
+	position: relative;
+	min-height: 330px;
 	max-height: 400px;
 	overflow-y: auto;
+	-webkit-overflow-scrolling:touch;
 }
 .list_addByList > div:nth-child(1){
 	width: 43% !important;
@@ -971,6 +974,7 @@ img,a,div,span,p{
 }
 .list_addByList > div:nth-child(3){
 	width: 20% !important;
+	text-align: center !important;
 }
 
 

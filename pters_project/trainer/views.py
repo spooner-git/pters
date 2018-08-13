@@ -281,6 +281,12 @@ class ManageClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageClassView, self).get_context_data(**kwargs)
         return context
 
+class ManageCenterView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_center.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageCenterView, self).get_context_data(**kwargs)
+        return context
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
@@ -3652,6 +3658,7 @@ def update_setting_push_logic(request):
         except ObjectDoesNotExist:
             lt_pus_to_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
                                                        setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
+
         try:
             lt_pus_from_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
                                                                      class_tb_id=class_id,

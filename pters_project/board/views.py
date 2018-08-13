@@ -1,10 +1,15 @@
 import logging
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect
 
 # Create your views here.
+from django.views.generic import TemplateView
+
 from configs.const import USE
 
 from .models import QATb
@@ -12,7 +17,7 @@ from .models import QATb
 logger = logging.getLogger(__name__)
 
 
-def question_reg_logic(request):
+def add_question_info_logic(request):
 
     qa_type_cd = request.POST.get('inquire_type', '')
     title = request.POST.get('inquire_subject', '')
@@ -25,7 +30,8 @@ def question_reg_logic(request):
 
     if error is None:
         qa_info = QATb(member_id=request.user.id, qa_type_cd=qa_type_cd, title=title, contents=contents,
-                       status='0', use=USE)
+                       email_address=request.user.email,
+                       status_type_cd='QA_WAIT', use=USE)
         qa_info.save()
 
     if error is None:
@@ -42,3 +48,22 @@ def question_reg_logic(request):
         messages.info(request, qa_type_cd+'/'+title+'/'+contents)
 
         return redirect(next_page)
+
+
+class GetQuestionDataView(LoginRequiredMixin, TemplateView):
+    template_name = 'ajax/qa_data_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # start_time = timezone.now()
+        # context = {}
+        context = super(GetQuestionDataView, self).get_context_data(**kwargs)
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`QA_TYPE_CD`"
+        query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`STATUS`"
+        question_list = QATb.objects.filter(member_id=self.request.user.id, use=USE
+                                            ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
+                                                       status_type_cd_name=RawSQL(query_status, [])
+                                                       ).order_by('reg_dt')
+        context['question_data'] = question_list
+
+        return context
+

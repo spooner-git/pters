@@ -29,6 +29,8 @@
       ["{{ member_info.reg_dt }}"],
         "center_name":
       ["{{ center_name }}"],
+        "email":
+      ["{{ request.user.email }}"],
 
         "off_repeat_schedule_id_data":
       [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.repeat_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

@@ -69,10 +69,10 @@
             
         </div>
         <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
-            <a class="KRtext">레슨<br/>일정</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+            <a class="text-lessonplan"></a>
         </div>
         <div id="float_inner2" class="float_inner"  onclick="float_btn_addplan(2)">
-            <a class="KRtext">OFF<br/>일정</a><a class="JPtext">OFF<br/>追加</a><a class="ENtext">Add<br/>OFF</a>
+            <a class="text-offplan"></a>
         </div>
     </div>
     <!--플로팅 버튼-->
@@ -83,12 +83,12 @@
             <a id="leftArrowButton" style="left: 4%">
                 <img src="{% static_url "user/res/btn-today-left.png" %}" alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;">
                 <img src="{% static_url "user/res/daycal_arrow.png" %}" alt="" id="leftArrowButtonImg">
-                <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible">Today</span>
+                <span style="position: absolute;top:6px;left:-9px;font-size: 10px;color:#fe4e65;" class="_pinkarrowbefore setunVisible text-today"></span>
             </a>
             <a id="rightArrowButton" style="right: 4%">
                 <img src="{% static_url "user/res/daycal_arrow.png" %}" alt="" id="rightArrowButtonImg">
                 <img src="{% static_url "user/res/btn-today-left.png" %}" alt="" class="_pinkarrowafter setunVisible" style="-webkit-transform:rotate(180deg);width: 11px;margin-top:1px;margin-left: 10px;">
-                <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible">Today</span>
+                <span style="position: absolute;top:6px;right:-8px;font-size: 10px;color:#fe4e65;" class="_pinkarrowafter setunVisible text-today"></span>
             </a>
         </div>
         <div id="yearText">
@@ -96,55 +96,43 @@
         <div id="monthText">
         </div>
         <div id="menuName">
-            <span class="KRtext">주간 일정</span>
-            <span class="JPtext">週間日程</span>
-            <span class="ENtext">Weekly Schedule</span>
+            <span class="text-weekplan"></span>
         </div>
         <div id="menuDescription">
-            <span class="KRtext">일정을 확인하고 등록 할 수 있습니다.</span>
-            <span class="JPtext">スケジュールの登録・確認ができます。</span>
-            <span class="ENtext">Manage schedule by week calendar</span>
+            <span class="text-youcan-usecal"></span>
         </div>
     </div>
 
     <div id="hidetoggle" class="" data-type = '0'>
         <img src="/static/user/res/daycal_arrow_pink.png" style="-webkit-transform:rotate(90deg)">
-        <span class="KRtext">일정 넓게 보기</span>
-        <span class="JPtext">隠す</span>
-        <span class="ENtext">Hide</span>
+        <span class="text-zoomin"></span>
     </div>
 
     <div id="ymdText-pc" class="wrap">
         <div class="ymdText-pc-refresh">
             <div class="ymdText-pc-add-refresh">
-                <span class="KRtext">새로고침</span>
-                <span class="JPtext">Refresh</span>
-                <span class="ENtext">Refresh</span>
+                <span class="text-refresh"></span>
             </div>
         </div>
 
         <img src="/static/user/res/icon-cal-btn.png" id="ymdText-pc-prev-btn">
         <div class="ymdText-pc-fulldate">
-            <span id="ymdText-pc-month-start" class="ymdText-pc-month">mm</span>
-            <span id="ymdText-pc-date-start" class="ymdText-pc-date">dd</span>
+            <span id="ymdText-pc-month-start" class="ymdText-pc-month"></span>
+            <span id="ymdText-pc-date-start" class="ymdText-pc-date"></span>
         </div>
         <span style="font-size: 20px;margin-left:10px;">- </span>
         <div class="ymdText-pc-fulldate">
-            <span id="ymdText-pc-month-end" class="ymdText-pc-month">mm</span>
-            <span id="ymdText-pc-date-end" class="ymdText-pc-date">dd</span>
+            <span id="ymdText-pc-month-end" class="ymdText-pc-month"></span>
+            <span id="ymdText-pc-date-end" class="ymdText-pc-date"></span>
         </div>
         <img src="/static/user/res/icon-cal-btn.png"  id="ymdText-pc-next-btn" style="-webkit-transform:rotate(180deg)">
 
         <div class="ymdText-pc-add">
             <div class="ymdText-pc-add-off" onclick="float_btn_addplan(2)">
-                <span class="KRtext">+ OFF 일정 등록</span>
-                <span class="JPtext">+ OFF 追加</span>
-                <span class="ENtext">+ Add OFF</span>
+                <span class="text-addoffplan"></span>
             </div>
             <div class="ymdText-pc-add-pt" onclick="float_btn_addplan(1)">
-                <span class="KRtext">+ 레슨 일정 등록</span>
-                <span class="JPtext">+ プラン 追加</span>
-                <span class="ENtext">+ Add plan</span>
+                <span class="text-addlessonplan"></span>
             </div>
         </div>
     </div>
@@ -155,45 +143,31 @@
         <div class="slidegap"><span></span><span></span></div>
         <div id="weekNum_1" class="weekNum sunDate">
             <span class="weekToday-style"></span><span id="sunDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">일</span>
-            <span class="weekToday-style JPtext">日</span>
-            <span class="weekToday-style ENtext">Sun</span>
+            <span class="weekToday-style text-sundaymin"></span>
             <span class="holidayName"></span>
         </div>
         <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">월</span>
-            <span class="weekToday-style JPtext">月</span>
-            <span class="weekToday-style ENtext">Mon</span>
+            <span class="weekToday-style text-mondaymin"></span>
             <span class="holidayName"></span>
         </div>
         <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">화</span>
-            <span class="weekToday-style JPtext">火</span>
-            <span class="weekToday-style ENtext">Tue</span>
+            <span class="weekToday-style text-tuesdaymin"></span>
             <span class="holidayName"></span>
         </div>
         <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">수</span>
-            <span class="weekToday-style JPtext">水</span>
-            <span class="weekToday-style ENtext">Wed</span>
+            <span class="weekToday-style text-wednesdaymin"></span>
             <span class="holidayName"></span>
         </div>
         <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">목</span>
-            <span class="weekToday-style JPtext">木</span>
-            <span class="weekToday-style ENtext">Thu</span>
+            <span class="weekToday-style text-thursdaymin"></span>
             <span class="holidayName"></span>
         </div>
         <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">금</span>
-            <span class="weekToday-style JPtext">金</span>
-            <span class="weekToday-style ENtext">Fri</span>
+            <span class="weekToday-style text-fridaymin"></span>
             <span class="holidayName"></span>
         </div>
         <div id="weekNum_7" class="weekNum satDate"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style"></span>
-            <span class="weekToday-style KRtext">토</span>
-            <span class="weekToday-style JPtext">土</span>
-            <span class="weekToday-style ENtext">Sat</span>
+            <span class="weekToday-style text-saturdaymin"></span>
             <span class="holidayName"></span>
         </div>
     </div>
@@ -757,8 +731,8 @@
             </p>
         </div>
 
-        <div class='popupBtn_mini'>
-            <div class="submitBtn" id="submitBtn_mini">
+        <div class='popupBtn_mini' style="display: block;">
+            <div class="submitBtn submitBtn_weekcalonly" id="submitBtn_mini" style="display: block;">
                 <span class="KRtext">등록</span>
                 <span class="JPtext">登録</span>
                 <span class="ENtext">OK</span>
@@ -929,7 +903,7 @@
     </div>
 
 
-    <div id="memberInfoPopup_PC" class="infopopup_pc wrap popups _member_info_popup">
+    <div id="memberInfoPopup_PC" class="infopopup_pc popups _member_info_popup">
         <div id="inputError_info_PC" style="position: absolute;top: 0;left: 0;">
             <div id="errorMsg_info_PC" class="inputErrorInner" style="height: 22px;">
                 <p style="line-height: 22px;vertical-align: middle;margin:0;"></p>
@@ -1076,19 +1050,19 @@
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
         <div class="popup_inner _complete" data-stat="complete">
-            <span style="color:#fe4e65;font-weight: bold;" class="KRtext">진행 완료</span>
-            <span style="color:#fe4e65;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#fe4e65;font-weight: bold;" class="ENtext">Yes</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="KRtext">진행 완료</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="JPtext">はい</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="ENtext">Yes</span>
         </div>
         <div class="popup_inner _resume" data-stat="resume">
-            <span style="color:#282828;font-weight: bold;" class="KRtext">재개</span>
-            <span style="color:#282828;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#282828;font-weight: bold;" class="ENtext">Yes</span>
+            <span style="color:#282828;font-weight: 500;" class="KRtext">재개</span>
+            <span style="color:#282828;font-weight: 500;" class="JPtext">はい</span>
+            <span style="color:#282828;font-weight: 500;" class="ENtext">Yes</span>
         </div>
         <div class="popup_inner _refund" data-stat="refund">
-            <span style="color:#8c8763;font-weight: bold;" class="KRtext">환불</span>
-            <span style="color:#8c8763;font-weight: bold;" class="JPtext">はい</span>
-            <span style="color:#8c8763;font-weight: bold;" class="ENtext">Yes</span>
+            <span style="color:#8c8763;font-weight: 500;" class="KRtext">환불</span>
+            <span style="color:#8c8763;font-weight: 500;" class="JPtext">はい</span>
+            <span style="color:#8c8763;font-weight: 500;" class="ENtext">Yes</span>
         </div>
         <div class="popup_inner _delete" data-stat="delete">
             <span style="color:#fe4e65;" class="KRtext">삭제</span>
@@ -1117,9 +1091,9 @@
             <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span style="color:#8c8763;font-weight: bold;" class="KRtext refund">환불</span>
-            <span style="color:#8c8763;font-weight: bold;" class="JPtext refund">はい</span>
-            <span style="color:#8c8763;font-weight: bold;" class="ENtext refund">Yes</span>
+            <span style="color:#8c8763;font-weight: 500;" class="KRtext refund">환불</span>
+            <span style="color:#8c8763;font-weight: 500;" class="JPtext refund">はい</span>
+            <span style="color:#8c8763;font-weight: 500;" class="ENtext refund">Yes</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_refund">취소</span>
@@ -1138,9 +1112,9 @@
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
         <div class="popup_inner popup_inner_resend" data-stat="DELETE">
-            <span style="color:#fe4e65;font-weight: bold;" class="KRtext connectchange">연결해제</span>
-            <span style="color:#fe4e65;font-weight: bold;" class="JPtext connectchange">はい</span>
-            <span style="color:#fe4e65;font-weight: bold;" class="ENtext connectchange">Yes</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="KRtext connectchange">연결해제</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="JPtext connectchange">はい</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="ENtext connectchange">Yes</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_connectchange">취소</span>
@@ -1159,9 +1133,9 @@
         <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
         <div class="ENtext confirmText">The member disconnected the calendar.</div>
         <div class="popup_inner popup_inner_resend">
-            <span style="color:#fe4e65;font-weight: bold;" class="KRtext resend">연결요청</span>
-            <span style="color:#fe4e65;font-weight: bold;" class="JPtext resend">連結要請</span>
-            <span style="color:#fe4e65;font-weight: bold;" class="ENtext resend">Send Request</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="KRtext resend">연결요청</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="JPtext resend">連結要請</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="ENtext resend">Send Request</span>
         </div>
         <div class="popup_inner popup_inner_resend">
             <span class="KRtext cancel_resend">취소</span>
