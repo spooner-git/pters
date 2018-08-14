@@ -9,7 +9,8 @@
 
 //작업중인 항목
 //피터스 seekbar 모듈
-	function initialize_pters_seekbar_module(selector){
+	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint){
+		var bodywidth = $(window).innerWidth;
 		var $selector = selector;
 		var $segment = $selector.find('.pters_seekbar_segment');
 		var $startball = $selector.find('.pters_seekbar_start_ball');
@@ -28,6 +29,12 @@
 		});
 		seek_divide.push($selector.find('.pters_seekbar_bar').width() + $segment.position().left)
 		//각 세그먼트 좌표값 구해놓기
+
+		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
+		$startball.css({'left':seek_divide[initLoc_start] - $startball.outerWidth()/2 });
+		$endball.css({'left':seek_divide[initLoc_end] - $startball.outerWidth()/2 });
+		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
+
 
 		//Ball의 위치에 맞게 pters_seekbar_length_bar를 초기 셋팅하기
 		$lengthbar.css({
@@ -78,7 +85,7 @@
 									'left':prev_val - $startball.width()/2
 									})
 					$lengthbar.css({
-									'left': $startball.position().left+$startball.width()/2,
+									'left': $startball.position().left+$startball.outerWidth()/2,
 									'width': $endball.position().left - $startball.position().left
 									})
 				}else{
@@ -86,7 +93,7 @@
 									'left':next_val - $startball.width()/2
 									})
 					$lengthbar.css({
-									'left':$startball.position().left+$startball.width()/2,
+									'left':$startball.position().left+$startball.outerWidth()/2,
 									'width': $endball.position().left - $startball.position().left
 									})
 				}
@@ -150,8 +157,9 @@
 				var prev_val = sortedlist[index-1];
 				var next_val = sortedlist[index+1];
 
-				$segment.find('._startball').hide();
-				
+				if(bodywidth < breakpoint){
+					$segment.find('._startball').hide();	
+				}
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$startball.css({
 									'left':prev_val - $startball.outerWidth()/2
@@ -289,7 +297,9 @@
 				var prev_val = sortedlist[index-1];
 				var next_val = sortedlist[index+1];
 
-				$segment.find('._endball').hide();
+				if(bodywidth < breakpoint){
+					$segment.find('._endball').hide();
+				}
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$endball.css({
 									'left':prev_val - $endball.outerWidth()/2
