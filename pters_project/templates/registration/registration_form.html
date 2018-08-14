@@ -1102,6 +1102,8 @@
 
 
         $('#id_input').keyup(function(){
+            $('.id_confirm').text('')
+            $('#id_duplicate_check').val('none');
             var userinput = $(this).val();
             $('#id_username').attr('value',userinput);
             $form.find('#newid2').attr('value',userinput);
@@ -1209,6 +1211,8 @@
         });
 
         $('#email_input').keyup(function(){
+            $('#email_duplicate_check').val('none');
+            $('.email_confirm').text('')
             var selector_email_input_re = $('#email_input_re');
             if(selector_email_input_re.val().length>0){
                 $('#id_email').attr('value', $(this).val()+'@'+selector_email_input_re.val());
