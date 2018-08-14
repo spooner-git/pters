@@ -933,7 +933,20 @@ $(document).ready(function(){
 
 
 var clicked_td_date_info;
-function ajaxClassTime(){
+function ajaxClassTime(use, callfunction){
+    var beforeSend_;
+    var completeSend_;
+    if(use == "callbefore"){
+        beforeSend_ = function(){beforeSend('callback', function(){callfunction();})};
+        completeSend_ = function(){completeSend()};
+    }else if(use == "callafter"){
+        beforeSend_ = function(){beforeSend()};
+        completeSend_ = function(){completeSend('callback', function(){callfunction();})};
+    }else{
+        beforeSend_ = function(){beforeSend()};
+        completeSend_ = function(){completeSend()};
+    }
+
     var yyyy = $('#yearText').text()
     var mm = $('#monthText').text().replace(/월/gi,"")
     if(mm.length<2){
@@ -949,7 +962,7 @@ function ajaxClassTime(){
         dataType : 'html',
 
         beforeSend:function(){
-            beforeSend();
+            beforeSend_();
             $('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick','')
         },
 
@@ -963,10 +976,11 @@ function ajaxClassTime(){
                 set_schedule_time(jsondata)
             }
 
+            completeSend_();
+
         },
 
         complete:function(){
-            completeSend();
             $('.ymdText-pc-add div').removeClass('disabled_button')
             $('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)')
             $('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)')
