@@ -76,6 +76,15 @@ def get_setting_info(request):
         request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
         request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
         request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+
+        request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
+        request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
+        request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
+        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+        request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
+        request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
+        request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
+
         request.session['setting_member_reserve_date_available'] = context['lt_res_05']
         request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
         request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']

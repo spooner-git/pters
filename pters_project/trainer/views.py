@@ -3708,7 +3708,14 @@ def update_setting_push_logic(request):
 
 # 강사 기본 setting 업데이트 api
 def update_setting_basic_logic(request):
-    setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
+    # setting_trainer_work_time_available = request.POST.get('setting_trainer_work_time_available', '00:00-23:59')
+    setting_trainer_work_sun_time_avail = request.POST.get('setting_trainer_work_sun_time_avail', '00:00-23:59')
+    setting_trainer_work_mon_time_avail = request.POST.get('setting_trainer_work_mon_time_avail', '00:00-23:59')
+    setting_trainer_work_tue_time_avail = request.POST.get('setting_trainer_work_tue_time_avail', '00:00-23:59')
+    setting_trainer_work_wed_time_avail = request.POST.get('setting_trainer_work_wed_time_avail', '00:00-23:59')
+    setting_trainer_work_ths_time_avail = request.POST.get('setting_trainer_work_ths_time_avail', '00:00-23:59')
+    setting_trainer_work_fri_time_avail = request.POST.get('setting_trainer_work_fri_time_avail', '00:00-23:59')
+    setting_trainer_work_sat_time_avail = request.POST.get('setting_trainer_work_sat_time_avail', '00:00-23:59')
     setting_schedule_auto_finish = request.POST.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_lecture_auto_finish = request.POST.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     class_id = request.session.get('class_id', '')
@@ -3716,8 +3723,20 @@ def update_setting_basic_logic(request):
 
     error = None
     if error is None:
-        if setting_trainer_work_time_available is None or setting_trainer_work_time_available == '':
-            setting_trainer_work_time_available = '00:00-23:59'
+        if setting_trainer_work_sun_time_avail is None or setting_trainer_work_sun_time_avail == '':
+            setting_trainer_work_sun_time_avail = '00:00-23:59'
+        if setting_trainer_work_mon_time_avail is None or setting_trainer_work_mon_time_avail == '':
+            setting_trainer_work_mon_time_avail = '00:00-23:59'
+        if setting_trainer_work_tue_time_avail is None or setting_trainer_work_tue_time_avail == '':
+            setting_trainer_work_tue_time_avail = '00:00-23:59'
+        if setting_trainer_work_wed_time_avail is None or setting_trainer_work_wed_time_avail == '':
+            setting_trainer_work_wed_time_avail = '00:00-23:59'
+        if setting_trainer_work_ths_time_avail is None or setting_trainer_work_ths_time_avail == '':
+            setting_trainer_work_ths_time_avail = '00:00-23:59'
+        if setting_trainer_work_fri_time_avail is None or setting_trainer_work_fri_time_avail == '':
+            setting_trainer_work_fri_time_avail = '00:00-23:59'
+        if setting_trainer_work_sat_time_avail is None or setting_trainer_work_sat_time_avail == '':
+            setting_trainer_work_sat_time_avail = '00:00-23:59'
         if setting_schedule_auto_finish is None or setting_schedule_auto_finish == '':
             setting_schedule_auto_finish = AUTO_FINISH_OFF
         if setting_lecture_auto_finish is None or setting_lecture_auto_finish == '':
@@ -3725,11 +3744,47 @@ def update_setting_basic_logic(request):
 
     if error is None:
         try:
-            lt_res_04 = SettingTb.objects.get(member_id=request.user.id,
-                                              class_tb_id=class_id, setting_type_cd='LT_RES_04')
+            lt_work_sun_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_SUN_TIME_AVAIL')
         except ObjectDoesNotExist:
-            lt_res_04 = SettingTb(member_id=request.user.id,
-                                  class_tb_id=class_id, setting_type_cd='LT_RES_04', use=USE)
+            lt_work_sun_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_SUN_TIME_AVAIL', use=USE)
+        try:
+            lt_work_mon_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_MON_TIME_AVAIL')
+        except ObjectDoesNotExist:
+            lt_work_mon_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_TUE_TIME_AVAIL', use=USE)
+        try:
+            lt_work_tue_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_TUE_TIME_AVAIL')
+        except ObjectDoesNotExist:
+            lt_work_tue_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_WED_TIME_AVAIL', use=USE)
+        try:
+            lt_work_wed_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_WED_TIME_AVAIL')
+        except ObjectDoesNotExist:
+            lt_work_wed_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_THS_TIME_AVAIL', use=USE)
+        try:
+            lt_work_ths_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_THS_TIME_AVAIL')
+        except ObjectDoesNotExist:
+            lt_work_ths_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_FRI_TIME_AVAIL', use=USE)
+        try:
+            lt_work_fri_time_avail = SettingTb.objects.get(member_id=request.user.id,  class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_FRI_TIME_AVAIL')
+        except ObjectDoesNotExist:
+            lt_work_fri_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_SAT_TIME_AVAIL', use=USE)
+        try:
+            lt_work_sat_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
+                                                           setting_type_cd='LT_WORK_SAT_TIME_AVAIL')
+        except ObjectDoesNotExist:
+            lt_work_sat_time_avail = SettingTb(member_id=request.user.id,
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_SAT_TIME_AVAIL', use=USE)
         try:
             lt_schedule_auto_finish = SettingTb.objects.get(member_id=request.user.id,
                                                             class_tb_id=class_id,
@@ -3751,8 +3806,22 @@ def update_setting_basic_logic(request):
         try:
             with transaction.atomic():
 
-                lt_res_04.setting_info = setting_trainer_work_time_available
-                lt_res_04.save()
+                lt_work_sun_time_avail.setting_info = setting_trainer_work_sun_time_avail
+                lt_work_mon_time_avail.setting_info = setting_trainer_work_mon_time_avail
+                lt_work_tue_time_avail.setting_info = setting_trainer_work_tue_time_avail
+                lt_work_wed_time_avail.setting_info = setting_trainer_work_wed_time_avail
+                lt_work_ths_time_avail.setting_info = setting_trainer_work_ths_time_avail
+                lt_work_fri_time_avail.setting_info = setting_trainer_work_fri_time_avail
+                lt_work_sat_time_avail.setting_info = setting_trainer_work_sat_time_avail
+                lt_work_sun_time_avail.save()
+                lt_work_mon_time_avail.save()
+                lt_work_tue_time_avail.save()
+                lt_work_wed_time_avail.save()
+                lt_work_ths_time_avail.save()
+                lt_work_fri_time_avail.save()
+                lt_work_sat_time_avail.save()
+                # lt_res_04.setting_info = setting_trainer_work_time_available
+                # lt_res_04.save()
 
                 lt_schedule_auto_finish.setting_info = setting_schedule_auto_finish
                 lt_schedule_auto_finish.save()
