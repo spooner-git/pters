@@ -18,54 +18,27 @@ firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
 
-var check_reg_val = 0;
-var filter = "win16|win32|win64|mac|macintel";
-var platform_check;
-var browser_check;
-var agent = navigator.userAgent.toLowerCase();
-console.log(agent)
-if ( navigator.platform ) {
-    if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
-        //mobile
-        platform_check = 'mobile'
-    }
-    else {
-        //pc
-        platform_check = 'pc'
-    }
-}
-
-if (agent.indexOf("safari") != -1) {
-    browser_check = 'safari'
-}
-if (agent.indexOf("chrome") != -1) {
-    browser_check = 'chrome'
-}
-if (agent.indexOf("firefox") != -1) {
-    browser_check = 'firefox'
-}
-
-function registrationServiceWorker(){
+function registrationServiceWorker(token_info){
         messaging.requestPermission()
         .then(function() {
             if (navigator.serviceWorker) {
-                if(check_reg_val==0) {
-                    navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t89')
-                        .then(function (reg) {
-                            console.log('서비스워커 등록성공 :', reg)
-                            //firebase_worker = reg.active;
-                            //reg.active.postMessage({'hello':'world'});
-                            //window.addEventListener('message', function(event){ console.log('client::'+event) }, false);
-                            messaging.useServiceWorker(reg);
+                navigator.serviceWorker.register('/static/user/js/push/firebase-messaging-sw.js?v=t89')
+                    .then(function (reg) {
+                        console.log('서비스워커 등록성공 :', reg)
+                        //firebase_worker = reg.active;
+                        //reg.active.postMessage({'hello':'world'});
+                        //window.addEventListener('message', function(event){ console.log('client::'+event) }, false);
+                        messaging.useServiceWorker(reg);
 
-                            return messaging.getToken()
-                                .then(function (currentToken) {
-                                    console.log(currentToken)
+                        return messaging.getToken()
+                            .then(function (currentToken) {
+                                console.log(currentToken)
+                                // pc_token = currentToken;
+                                if(token_info != currentToken){
                                     if (currentToken) {
                                         sendTokenToServer(currentToken);
                                         //updateUIForPushEnabled(currentToken);
-                                        afterLoad(currentToken);
-                                        check_reg_val=1;
+                                        update_push_token(currentToken, platform_check);
                                     } else {
                                         // Show permission request.
                                         console.log('No Instance ID token available. Request permission to generate one.');
@@ -73,20 +46,21 @@ function registrationServiceWorker(){
                                         //updateUIForPushPermissionRequired();
                                         setTokenSentToServer(false);
                                     }
-                                })
-                                .catch(function (err) {
-                                    reg.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
-                                    console.log('An error occurred while retrieving token. ', err);
-                                    showToken('Error retrieving Instance ID token. ', err);
-                                    setTokenSentToServer(false);
-                                });
-                        })
-                        .catch(function (error) {
-                            console.log('서비스워커 등록실패 :', error)
-                            location.reload()
-                            //registrationServiceWorker();
-                        });
-                }
+                                }
+                            })
+                            .catch(function (err) {
+                                reg.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')
+                                console.log('An error occurred while retrieving token. ', err);
+                                showToken('Error retrieving Instance ID token. ', err);
+                                setTokenSentToServer(false);
+                            });
+                    })
+                    .catch(function (error) {
+                        console.log('서비스워커 등록실패 :', error)
+                        location.reload()
+                        //registrationServiceWorker();
+                    });
+
             }
         })
         .catch(function(err) {
@@ -96,9 +70,10 @@ function registrationServiceWorker(){
    // $('.request-btn').click(function () {
     //   console.log(Push.Permission.get());
 
-if(check_reg_val == 0 && platform_check=='pc' && browser_check != 'safari'){
-    registrationServiceWorker();
-}
+// if(check_reg_val == 0 && platform_check=='pc'){
+//     registrationServiceWorker();
+// }
+
  function showToken(currentToken) {
     // Show token in console and UI.
     var tokenElement = document.querySelector('#token');
@@ -186,39 +161,6 @@ if(check_reg_val == 0 && platform_check=='pc' && browser_check != 'safari'){
     }
   }
 
-  function afterLoad(token) {
-    //document.getElementById('keyword').value = token;
-    //document.getElementById('keyword_pc').value = token;
-    $.ajax({
-        url:'/login/add_push_token/',
-        type:'POST',
-        data:{"keyword":token},
-
-        beforeSend:function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-            //AjaxBeforeSend();
-        },
-
-        //통신성공시 처리
-        success:function(){
-            console.log('토큰 등록 완료')
-        },
-
-        //보내기후 팝업창 닫기
-        complete:function(){
-
-        },
-
-        //통신 실패시 처리
-        error:function(){
-
-        },
-    });
-
-    messageCommunicationWithWorker();
-}
 
 function send_message_to_sw(worker, msg){
     return new Promise(function(resolve, reject){
@@ -233,7 +175,6 @@ function send_message_to_sw(worker, msg){
                 resolve(event.data);
             }
         };
-
         // Send message to service worker along with port for reply
         worker.postMessage("tell me'"+msg+"'", [msg_chan.port2]);
     });

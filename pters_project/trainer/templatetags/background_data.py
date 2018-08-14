@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
+from login.models import PushInfoTb
 from payment.models import BillingInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
@@ -45,7 +46,20 @@ def get_setting_info(request):
     context = {}
     now = timezone.now()
     class_id = request.session.get('class_id', '')
+    device_id = request.session.get('device_id', 'pc')
     if class_id != '':
+
+        token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
+        if len(token_data) == 0:
+            token_info = ''
+        elif len(token_data) == 1:
+            token_info = token_data[0].token
+        else:
+            token_data.delete()
+            token_info = ''
+
+        request.session['push_token'] = token_info
+
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
