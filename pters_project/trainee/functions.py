@@ -480,7 +480,7 @@ def func_get_class_list(context, member_id):
         = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
           " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(member_id)
 
-    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `CLASS_LECTURE_TB`.`CLASS_TB_ID`"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `CLASS_TB`.`SUBJECT_CD`"
 
     class_lecture_data = ClassLectureTb.objects.select_related(
         'class_tb', 'lecture_tb').filter(
