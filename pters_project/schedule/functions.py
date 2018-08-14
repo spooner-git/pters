@@ -579,7 +579,7 @@ def func_send_push_trainer(lecture_id, title, message):
         for lecture_info in lecture_info:
             token_data = PushInfoTb.objects.filter(member_id=lecture_info.member.member_id)
             for token_info in token_data:
-                if token_info.device_id != 'PC':
+                if token_info.device_id != 'pc':
                     token_info.badge_counter += 1
                     token_info.save()
                 instance_id = token_info.token
@@ -616,7 +616,7 @@ def func_send_push_trainee(class_id, title, message):
 
             token_data = PushInfoTb.objects.filter(member_id=member_class_info.member.member_id)
             for token_info in token_data:
-                if token_info.device_id != 'PC':
+                if token_info.device_id != 'pc':
                     token_info.badge_counter += 1
                     token_info.save()
                 instance_id = token_info.token
