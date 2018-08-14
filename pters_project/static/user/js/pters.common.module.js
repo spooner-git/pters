@@ -10,7 +10,7 @@
 //작업중인 항목
 //피터스 seekbar 모듈
 	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint){
-		var bodywidth = $(window).innerWidth;
+		var bodywidth = window.innerWidth
 		var $selector = selector;
 		var $segment = $selector.find('.pters_seekbar_segment');
 		var $startball = $selector.find('.pters_seekbar_start_ball');
@@ -32,7 +32,9 @@
 
 		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
 		$startball.css({'left':seek_divide[initLoc_start] - $startball.outerWidth()/2 });
+		$segment.find(`span[data-value="${initLoc_start}"]`).show().addClass('_startball');
 		$endball.css({'left':seek_divide[initLoc_end] - $startball.outerWidth()/2 });
+		$segment.find(`span[data-value="${initLoc_end}"]`).show().addClass('_endball');
 		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
 
 
@@ -157,6 +159,7 @@
 				var prev_val = sortedlist[index-1];
 				var next_val = sortedlist[index+1];
 
+				console.log('bodywidth',bodywidth)
 				if(bodywidth < breakpoint){
 					$segment.find('._startball').hide();	
 				}
@@ -169,7 +172,9 @@
 									'width': $endball.position().left - $startball.position().left
 									})
 					$mobileguide.css({'display':'none',	'left':prev_val - $mobileguide.width()/2,'top':-40})
-					$segment.find(`span[data-value="${index-1}"]`).show().addClass('_startball');
+					if(bodywidth < breakpoint){	
+						$segment.find(`span[data-value="${index-1}"]`).show().addClass('_startball');
+					}
 				}else{
 					$startball.css({
 									'left':next_val - $startball.outerWidth()/2
@@ -179,7 +184,9 @@
 									'width': $endball.position().left - $startball.position().left
 									})
 					$mobileguide.css({'display':'none',	'left':next_val -$mobileguide.width()/2,'top':-40})
-					$segment.find(`span[data-value="${index}"]`).show().addClass('_startball');
+					if(bodywidth < breakpoint){
+						$segment.find(`span[data-value="${index}"]`).show().addClass('_startball');
+					}
 				}
 				
 				
@@ -308,8 +315,9 @@
 									'width': $endball.offset().left - startball_oriX
 									})
 					$mobileguide.css({'display':'none',	'left':prev_val -$mobileguide.width()/2,'top':-40})
-
-					$segment.find(`span[data-value="${index-1}"]`).show().addClass('_endball');
+					if(bodywidth < breakpoint){
+						$segment.find(`span[data-value="${index-1}"]`).show().addClass('_endball');
+					}
 				}else{
 					$endball.css({
 									'left':next_val - $endball.outerWidth()/2
@@ -318,7 +326,9 @@
 									'width': $endball.offset().left - startball_oriX
 									})
 					$mobileguide.css({'display':'none',	'left':next_val -$mobileguide.width()/2,'top':-40})
-					$segment.find(`span[data-value="${index}"]`).show().addClass('_endball');
+					if(bodywidth < breakpoint){
+						$segment.find(`span[data-value="${index}"]`).show().addClass('_endball');
+					}
 				}
 			})
 		})
