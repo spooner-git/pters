@@ -976,6 +976,8 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
             if member.phone is None:
                 member.phone = ''
+            if member.sex is None:
+                member.sex = ''
 
         context['member_info'] = member
         if error is not None:

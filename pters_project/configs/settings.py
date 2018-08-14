@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-#INTERNAL_IPS = ('127.0.0.1', 'localhost',)
+INTERNAL_IPS = ('127.0.0.1', 'localhost',)
 ROOT_URLCONF = 'configs.urls'
 
 AUTHENTICATION_BACKENDS = (
