@@ -374,9 +374,9 @@ def add_trainee_schedule_logic(request):
                                   request, group_schedule_id)
 
     if error is None:
-        func_update_member_schedule_alarm(class_id)
-        class_info.schedule_check = 1
-        class_info.save()
+        # func_update_member_schedule_alarm(class_id)
+        # class_info.schedule_check = 1
+        # class_info.save()
 
         try:
             setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
@@ -518,9 +518,9 @@ def delete_trainee_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
-        func_update_member_schedule_alarm(class_id)
-        class_info.schedule_check = 1
-        class_info.save()
+        # func_update_member_schedule_alarm(class_id)
+        # class_info.schedule_check = 1
+        # class_info.save()
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
