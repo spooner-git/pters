@@ -527,39 +527,80 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
 
-{#    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
-{#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
-{#    <link rel="manifest" href={% static_url "manifest.json" %}>#}
-{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
-{#    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
-{#    <script>#}
-{#    function playSound() {#}
-{#          var sound = document.getElementById("audio");#}
-{#          sound.loop = false;#}
-{#          sound.play();#}
-{#      }#}
-{#    </script>#}
-{#    <script type="text/javascript">#}
-{#        #}
-{#// var requestButton = document.querySelector(".request-btn");#}
-{##}
-{#    //});#}
-{#    //const messageChannel = new MessageChannel();#}
-{#    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
-{#    //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
-{#        function messageCommunicationWithWorker(){#}
-{#            navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
-{#                registrations.forEach(function (v) {#}
-{#                    send_message_to_sw(v.active, "hello cal week").then(function (m) {#}
-{#                        playSound();#}
-{#                        ajaxClassTime();#}
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+    <link rel="manifest" href={% static_url "manifest.json" %}>
+<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
+    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
+    <script>
+    function playSound() {
+          var sound = document.getElementById("audio");
+          sound.loop = false;
+          sound.play();
+      }
+    </script>
+    <script type="text/javascript">
+
+// var requestButton = document.querySelector(".request-btn");
+
+    //});
+    //const messageChannel = new MessageChannel();
+    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
+    //navigator.serviceWorker.controller.postMessage({'hello':'test'});
+    var platform_check = 'pc'
+    var varUA = navigator.userAgent.toLowerCase();
+        if(varUA.match('android') != null){
+            $('._company').css('display','none');
+            $('.ads_wrap').css('display','none');
+            $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+            platform_check = 'mobile'
+        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+            $('._company').css('display','none');
+            $('.ads_wrap').css('display','none');
+            $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+            platform_check = 'mobile'
+        }else{
+            platform_check = 'pc'
+        }
+    if(platform_check=='pc'){
+        Push.Permission.request(onGranted, onDenied);
+
+        function onDenied() {
+            console.log('알람 거절 상태')
+        }
+        function onGranted() {
+            console.log('알람 승인 상태')
+        }
+    }
+    if(('{{ request.session.push_token }}' == '') && (platform_check=='pc')){
+        registrationServiceWorker();
+    }
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          registrations.forEach(function(v) {
+              if(v.active){
+                  if(v.scope=="http://localhost:8000/user/js/push/"||v.scope=="http://www.pters.co.kr/user/js/push/"||v.scope=="http://spooner-test.pters.co.kr/user/js/push/"){
+                      v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')
+                  }
+              }
+          });
+        });
+
+        function messageCommunicationWithWorker(){
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                registrations.forEach(function (v) {
+                        send_message_to_sw(v.active, "hello cal week").then(function (m) {
+                        playSound();
+                        ajaxClassTime();
 {#                        messageCommunicationWithWorker();#}
-{#                    });#}
-{#                });#}
-{#            });#}
-{#        }#}
-{#        messageCommunicationWithWorker();#}
-{#    </script>-->#}
+                    });
+                });
+            });
+        }
+
+    if(('{{ request.session.push_token }}' == '') && (platform_check=='pc')) {
+        messageCommunicationWithWorker();
+    }
+    </script>
 <script type="text/javascript">
     var class_id = '{{ request.session.class_id }}';
     var class_name = '{{ request.session.class_type_name }}';
@@ -781,18 +822,6 @@
         $(".KRtext").show();
     }
 
-    var varUA = navigator.userAgent.toLowerCase();
-    if(varUA.match('android') != null){
-        $('._company').css('display','none');
-        $('.ads_wrap').css('display','none');
-        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
-    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('._company').css('display','none');
-        $('.ads_wrap').css('display','none');
-        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
-    }else{
-
-    }
 
     function languageSet(language){
         $('#id_setting_language').val(language);

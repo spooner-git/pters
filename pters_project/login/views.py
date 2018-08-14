@@ -53,7 +53,6 @@ def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
-    keyword = request.POST.get('keyword', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
     next_page = request.POST.get('next_page')
     error = None
@@ -61,7 +60,7 @@ def login_trainer(request):
         next_page = '/trainer/'
     if next_page is None:
         next_page = '/trainer/'
-
+    request.session['push_token'] = ''
     if not error:
         user = authenticate(username=username, password=password)
 
@@ -138,14 +137,12 @@ class RegisterTypeSelectView(TemplateView):
 # 로그아웃 api
 def logout_trainer(request):
     # logout 끝나면 login page로 이동
-    token = request.session.get('push_token', '')
+    # token = request.session.get('push_token', '')
+    device_id = request.session.get('device_id', 'pc')
     error = None
-    if token is not None and token != '':
-        try:
-            token_data = PushInfoTb.objects.get(member_id=request.user.id, token=token)
-            token_data.delete()
-        except ObjectDoesNotExist:
-            error = 'token data 없음 : PC 버전'
+    if device_id == 'pc':
+        token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id)
+        token_data.delete()
 
     logout(request)
     if error is not None:
@@ -709,7 +706,7 @@ class AddPushTokenView(View):
                                             session_info=request.session.session_key, device_id=device_id,
                                             device_info=str(user_agent), use=USE)
                     token_info.save()
-
+                request.session['device_id'] = device_id
                 request.session['push_token'] = keyword
 
         return render(request, self.template_name, {'token_check': True})
