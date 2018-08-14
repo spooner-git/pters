@@ -15,26 +15,29 @@ $(document).on("touchend",'html',function(e){
 });
 //플로팅 버튼 스크롤시 숨기기 End
 
-$(document).keypress(function(e){
-    if(e.keyCode == 13){
-        e.preventDefault();
+
+$(window).keydown(function(event){
+    if((event.which== 13) && ($(event.target)[0]!=$("textarea")[0])) {
+      event.preventDefault();
+      return false;
     }
-})
+});
+
 
 function beforeSend(use, callback){
+    $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+    $('.ajaxloadingPC').css('display','block')
     if(use == "callback"){
         callback()
     }
-    $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-    $('.ajaxloadingPC').css('display','block')
 }
 
 function completeSend(use, callback){
+    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+    $('.ajaxloadingPC').css('display','none');
     if(use == "callback"){
         callback()
     }
-    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-    $('.ajaxloadingPC').css('display','none');
 }
 
 function upTouchEvent(){

@@ -1457,6 +1457,7 @@ $(document).ready(function(){
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                     shade_index(200);
                                 }
+                                check_dropdown_selected_addplan();
                             }else if(RepeatDuplicationDateArray.length==0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
                                 //if(jsondata.repeatScheduleCounterArray[0] == 0){
                                 // alert('선택한 회원님의 등록 가능한 횟수가 부족합니다.\n 다시 확인 후 등록해주세요.')
@@ -1471,6 +1472,7 @@ $(document).ready(function(){
                                 $('#id_repeat_schedule_id_confirm').val(repeatArray);
                                 completeSend(); //ajax 로딩 이미지 숨기기
                                 shade_index(200);
+                                check_dropdown_selected_addplan();
                                 //};
                             }else{
                                 if(jsondata.push_lecture_id.length>0){
@@ -1534,8 +1536,11 @@ $(document).ready(function(){
              }
              */
             close_info_popup('cal_popup_repeatconfirm');
-            ajaxRepeatConfirmSend();
-            check_dropdown_selected_addplan();
+            
+            ajaxRepeatConfirmSend('callback',function(){
+                check_dropdown_selected_addplan();
+            });
+            
         }
     });
 
@@ -2051,22 +2056,27 @@ function ajaxRepeatConfirmSend(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-
+                
                 if(jsondata.push_lecture_id.length>0){
                     for(var i=0; i<jsondata.push_lecture_id.length; i++) {
                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                     }
                 }
-                super_ajaxClassTime();
-
-                if(use == "callback"){
-                    callback(jsondata);
-                }
+                
+                completeSend(); //ajax 로딩이미지 숨기기
+                
+                super_ajaxClassTime('callafter',function(){
+                    if(use == "callback"){
+                        callback(jsondata);
+                    }
+                });
+                
+                
             }
         },
 
         complete:function(){
-            completeSend(); //ajax 로딩이미지 숨기기
+            
             ajax_block_during_repeat_confirm = true;
         },
 
@@ -4032,12 +4042,12 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
 
 
 
-function super_ajaxClassTime(){
+function super_ajaxClassTime(use, callback){
     var selector_calendar = $('#calendar');
     if(selector_calendar.hasClass('_calmonth')){
-        ajaxClassTime();
+        ajaxClassTime(use, callback);
     }else if(selector_calendar.hasClass('_calweek')){
-        ajaxClassTime();
+        ajaxClassTime(use, callback);
     }else if(selector_calendar.hasClass('_calday')){
         ajaxClassTime_day();
     };

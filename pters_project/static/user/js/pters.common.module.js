@@ -159,7 +159,6 @@
 				var prev_val = sortedlist[index-1];
 				var next_val = sortedlist[index+1];
 
-				console.log('bodywidth',bodywidth)
 				if(bodywidth < breakpoint){
 					$segment.find('._startball').hide();	
 				}
