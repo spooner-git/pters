@@ -48,7 +48,7 @@
                 <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" placeholder=" 문의 제목을 입력해주세요."  maxlength="255"></div>
                 <div class="textarea_wrap">
                     <p>문의 내용: </p>
-                    <textarea class="textarea" placeholder=" 이 곳에 문의 내용을 작성해 주세요.(최대 1,000자)" name="" maxlength="1000" onkeyup="characterCheck()" onkeydown="characterCheck()"></textarea>
+                    <textarea class="textarea" placeholder=" 이 곳에 문의 내용을 작성해 주세요.(최대 1,000자)" name="textarea_body" maxlength="1000" onkeyup="characterCheck()" onkeydown="characterCheck()"></textarea>
                     <input type="hidden" name="inquire_body" id="id_inquire_body">
                 </div>
             </div>
@@ -92,8 +92,8 @@
         })
 
         function characterCheck() {
-            var RegExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
-            var obj = document.getElementsByName("inquire_body")[0]
+            var RegExp = /[ \{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
+            var obj = document.getElementsByName("textarea_body")[0]
             if (RegExp.test(obj.value)) {
                 obj.value = obj.value.substring(0, obj.value.length - 1);//특수문자를 지우는 구문
             }
