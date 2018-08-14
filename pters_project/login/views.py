@@ -679,7 +679,7 @@ class AddPushTokenView(View):
 
     def post(self, request):
         keyword = request.POST.get('token_info', '')
-        device_id = request.POST.get('device_id', '')
+        device_id = request.POST.get('device_id', 'pc')
         user_agent = request.META['HTTP_USER_AGENT']
         add_token_check = False
         if keyword == '' or device_id == '' or keyword is None or device_id is None:
@@ -687,7 +687,11 @@ class AddPushTokenView(View):
 
         if self.error == '':
             if str(request.user) != 'AnonymousUser':
-                token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+                if device_id == 'pc':
+                    token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
+                else:
+                    token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+
                 if len(token_data) == 0:
                     add_token_check = True
                 elif len(token_data) == 1:

@@ -572,32 +572,42 @@
             console.log('알람 승인 상태')
         }
     }
-    if(('{{ request.session.push_token }}' == '') && (platform_check=='pc')){
-        registrationServiceWorker();
+    if(platform_check=='pc'){
+        registrationServiceWorker('{{ request.session.push_token }}');
     }
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          registrations.forEach(function(v) {
-              if(v.active){
-                  if(v.scope=="http://localhost:8000/user/js/push/"||v.scope=="http://www.pters.co.kr/user/js/push/"||v.scope=="http://spooner-test.pters.co.kr/user/js/push/"){
-                      v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')
-                  }
-              }
-          });
-        });
 
-        function messageCommunicationWithWorker(){
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                registrations.forEach(function (v) {
-                        send_message_to_sw(v.active, "hello cal week").then(function (m) {
-                        playSound();
+    if(platform_check=='pc') {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            registrations.forEach(function (v) {
+                if (v.active) {
+                    if (v.scope == "http://localhost:8000/user/js/push/"
+                        || v.scope == "https://www.pters.co.kr/user/js/push/"
+                        || v.scope == "https://pters.co.kr/user/js/push/"
+                        || v.scope == "https://kr.pters.co.kr/user/js/push/"
+                        || v.scope == "https://jp.pters.co.kr/user/js/push/"
+                        || v.scope == "https://us.pters.co.kr/user/js/push/"
+                        || v.scope == "https://spooner-test.pters.co.kr/user/js/push/") {
+                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')
+                    }
+                }
+            });
+        });
+    }
+    function messageCommunicationWithWorker(){
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            registrations.forEach(function (v) {
+                    send_message_to_sw(v.active, "hello cal week").then(function (m) {
+                    playSound();
+                    if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')){
                         ajaxClassTime();
-{#                        messageCommunicationWithWorker();#}
-                    });
+                    }
+                    messageCommunicationWithWorker();
                 });
             });
-        }
+        });
+    }
 
-    if(('{{ request.session.push_token }}' == '') && (platform_check=='pc')) {
+    if(platform_check=='pc') {
         messageCommunicationWithWorker();
     }
     </script>

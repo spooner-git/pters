@@ -18,7 +18,7 @@ firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
 
-function registrationServiceWorker(){
+function registrationServiceWorker(token_info){
         messaging.requestPermission()
         .then(function() {
             if (navigator.serviceWorker) {
@@ -34,16 +34,18 @@ function registrationServiceWorker(){
                             .then(function (currentToken) {
                                 console.log(currentToken)
                                 // pc_token = currentToken;
-                                if (currentToken) {
-                                    sendTokenToServer(currentToken);
-                                    //updateUIForPushEnabled(currentToken);
-                                    update_push_token(currentToken, platform_check);
-                                } else {
-                                    // Show permission request.
-                                    console.log('No Instance ID token available. Request permission to generate one.');
-                                    // Show permission UI.
-                                    //updateUIForPushPermissionRequired();
-                                    setTokenSentToServer(false);
+                                if(token_info != currentToken){
+                                    if (currentToken) {
+                                        sendTokenToServer(currentToken);
+                                        //updateUIForPushEnabled(currentToken);
+                                        update_push_token(currentToken, platform_check);
+                                    } else {
+                                        // Show permission request.
+                                        console.log('No Instance ID token available. Request permission to generate one.');
+                                        // Show permission UI.
+                                        //updateUIForPushPermissionRequired();
+                                        setTokenSentToServer(false);
+                                    }
                                 }
                             })
                             .catch(function (err) {
