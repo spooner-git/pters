@@ -66,6 +66,7 @@
 .pters_seekbar_wrapper{
 	position: relative;
 	height: auto;
+	margin-bottom: 15px;
 	user-select: none;
 }
 .pters_seekbar_bar{
@@ -95,16 +96,16 @@
 		.pters_seekbar_segment > span{
 			position: absolute;
 			font-size: 11px;
-			left: -5px;
-			bottom: -23px;
+			left: -6px;
+			bottom: -30px;
 			user-select: none;
 		}
 .pters_seekbar_start_ball, .pters_seekbar_end_ball{
 	cursor: pointer;
-	top: 10px;
+	top: 6px;
 	position: absolute;
-	width: 20px;
-	height: 20px;
+	width: 30px;
+	height: 30px;
 	border-radius: 50%;
 	background-color: #fe4e65;
 	border:2px solid #282828;
@@ -121,6 +122,7 @@
 	position: absolute;
 	background-color: #fe4e65;
 	z-index: 0;
+	opacity: 0.6;
 }
 .pters_seekbar_mobile_guide{
 	display: none;

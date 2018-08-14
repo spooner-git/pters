@@ -40,14 +40,13 @@
 
 		//startBall을 끌고 당기는 Seekbar 액션
 		$startball.on('mousedown',function(e){
-			var hardstopX = $selector.find('.pters_seekbar_bar').position().left;
+			var hardstopX = $selector.find('.pters_seekbar_bar').position().left  - $startball.width()/2;
 			var oriX = e.pageX
 			var startball_oriX = $startball.position().left;
 			var endball_oriX = $endball.position().left;
 			var lengthbar_width = $lengthbar.width();
 
 			$('body').on('mousemove',function(event){
-
 				var moveX = event.pageX
 				var diffX = moveX - oriX;
 
@@ -66,6 +65,7 @@
 			})
 			$('body').on('mouseup',function(){
 				$('body').off('mousemove mouseup')
+				
 				var tempArray = seek_divide.slice();
 				var finalDesitination = $startball.position().left + $startball.width()/2;
 				tempArray.push(finalDesitination);
@@ -90,8 +90,11 @@
 									'width': $endball.position().left - $startball.position().left
 									})
 				}
+				
 			})
 		})
+
+
 		$startball.on('touchstart',function(e){
 			var hardstopX = $selector.find('.pters_seekbar_bar').offset().left;
 			var oriX = e.originalEvent.touches[0].pageX;
@@ -126,8 +129,8 @@
 
 				$mobileguide.css({
 									'display':'block',
-									'left':destinationX - $mobileguide.width()/4,
-									'top':-30
+									'left':destinationX - hardstopX - $mobileguide.width()/4,
+									'top':-40
 								})
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$mobileguide.text(index-1);
@@ -178,7 +181,7 @@
 
 		//endBall을 끌고 당기는 Seekbar 액션
 		$endball.on('mousedown',function(e){
-			var hardstopX2 = $selector.find('.pters_seekbar_bar').position().left + $selector.find('.pters_seekbar_bar').width() + 29;
+			var hardstopX2 = $selector.find('.pters_seekbar_bar').width();
 			var oriX = e.pageX
 			var startball_oriX = $startball.position().left;
 			var endball_oriX = $endball.position().left;
@@ -191,8 +194,7 @@
 
 				var destinationX = endball_oriX + diffX;
 				var destinationW = endball_oriX - $endball.position().left;
-
-				if(destinationX < hardstopX2){
+				if(destinationX <= hardstopX2 - $endball.width()/2){
 					$endball.css({
 									'left': destinationX
 									})
@@ -203,6 +205,7 @@
 			})
 			$('body').on('mouseup',function(){
 				$('body').off('mousemove mouseup')
+				
 				var tempArray = seek_divide.slice();
 				var finalDesitination = $endball.position().left + $endball.width()/2;
 				tempArray.push(finalDesitination);
@@ -225,10 +228,11 @@
 									'width': $endball.position().left - startball_oriX
 									})
 				}
+				
 			})
 			
 		})
-		//endBall을 끌고 당기는 Seekbar 액션
+		
 
 		$endball.on('touchstart',function(e){
 			var hardstopX2 = $selector.find('.pters_seekbar_bar').offset().left + $selector.find('.pters_seekbar_bar').width();
@@ -265,8 +269,8 @@
 
 				$mobileguide.css({
 									'display':'block',
-									'left':destinationX - $mobileguide.width()/4,
-									'top':-30
+									'left':destinationX - $selector.find('.pters_seekbar_bar').offset().left - $mobileguide.width()/4,
+									'top':-40
 								})
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$mobileguide.text(index-1);
@@ -308,6 +312,7 @@
 				}
 			})
 		})
+		//endBall을 끌고 당기는 Seekbar 액션
 	}; 
 
 
