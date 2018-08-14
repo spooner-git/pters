@@ -1,3 +1,5 @@
+
+    {% autoescape off %}
     {
       "question_id":
       [{% for question_info in question_data %}"{{ question_info.qa_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
@@ -23,3 +25,4 @@
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
+    {% endautoescape %}
