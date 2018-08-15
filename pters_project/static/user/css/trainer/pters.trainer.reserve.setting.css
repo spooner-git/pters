@@ -25,6 +25,17 @@ body{
 	margin-top: 70px;
 }
 
+#switch_autocomplete, #switch_autofinish, #switch1, #switch2, #switch_cancel_limit{
+	position: absolute;
+}
+#switch_worktime_sun, #switch_worktime_mon, #switch_worktime_tue, #switch_worktime_wed, #switch_worktime_thu, #switch_worktime_fri, #switch_worktime_sat{
+	transform: scale(0.6);
+}
+
+.worktimeWeekly_dayname{
+	font-weight: 500;
+	color: #282828;
+}
 
 .fixfooter{
 	position: relative;
@@ -273,47 +284,6 @@ li a{
 
 
 
-/*스위치*/
-.pters_switch{
-	position: absolute;
-	display: inline-block;
-	width: 53.5px;
-	height: 35px;
-	top: 1px;
-	right: 3px;
-}
-
-.switchback{
-	position: absolute;
-	width:53.5px;
-	height: 100%;
-	border-radius: 27px;
-	border:0.5px solid #a2a2a2;
-	background: #cbc9c4;
-}
-
-.switchball{
-	position: absolute;
-	top: 3px;
-	width: 28px;
-	height: 28px;
-	border-radius: 14px;
-	border:2px solid #282828;
-}
-
-.switchoff{
-	background: grey;
-	left: 4px;
-}
-
-.switchon{
-	background: #fe4e65;
-	right: 4px;
-}
-
-.switchon-back{
-	background: #ffffff;
-}
 
 #mobile_preview_btn{
 	display: block;

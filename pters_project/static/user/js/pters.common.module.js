@@ -6,6 +6,19 @@
 	})
 //피터스 상단 셀렉트 박스 모듈
 
+//피터스 On/Off 스위치
+$('.pters_switch').click(function(){
+    if($(this).find('.switchball').hasClass('switchoff')){
+        $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
+        $(this).find('.switchback').addClass('switchon-back')
+    }else{
+        $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
+        $(this).find('.switchback').removeClass('switchon-back')
+    }
+});
+//피터스 On/Off 스위치
+
+
 
 //작업중인 항목
 //피터스 seekbar 모듈

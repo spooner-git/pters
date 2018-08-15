@@ -146,7 +146,14 @@
     <div id="trainerWorkTimeSetting" class="settingBox wrap800" style="z-index: 10;">
         <div class="pters_seekbar_wrapper_wrap">
             
-            <p style="margin:0">일</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">일</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_sun" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_sunday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -181,7 +188,14 @@
                 <div class="pters_seekbar_mobile_guide"></div>
             </div>
 
-            <p style="margin:0">월</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">월</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_mon" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_monday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -216,7 +230,14 @@
                 <div class="pters_seekbar_mobile_guide"></div>
             </div>
 
-            <p style="margin:0">화</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">화</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_tue" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_tuesday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -251,7 +272,14 @@
                 <div class="pters_seekbar_mobile_guide"></div>
             </div>
 
-            <p style="margin:0">수</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">수</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_wed" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div>  
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_wednesday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -286,7 +314,14 @@
                 <div class="pters_seekbar_mobile_guide"></div>
             </div>
 
-            <p style="margin:0">목</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">목</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_thu" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_thursday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -321,7 +356,14 @@
                 <div class="pters_seekbar_mobile_guide"></div>
             </div>
 
-            <p style="margin:0">금</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">금</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_fri" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_friday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -356,7 +398,14 @@
                 <div class="pters_seekbar_mobile_guide"></div>
             </div>
 
-            <p style="margin:0">토</p> 
+            <div style="margin:0">
+                <span class="worktimeWeekly_dayname">토</span>
+                <span class="pters_switch_label">휴무</span>
+                <div id="switch_worktime_sat" class="pters_switch">
+                    <div class="switchback"></div>
+                    <div class="switchball switchoff"></div>
+                </div>
+            </div> 
             <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_saturday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
@@ -437,13 +486,22 @@
         var select_all_check = false;
 
         //업무 시간 설정 seekbar
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),3,20,600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),5,22,600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),7,23,600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_wednesday'),6,20,600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_thursday'),7,22,600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),8,21,600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),9,24,600)
+        var mon_Worktime = worktime_extract_hour(Options.worktimeWeekly[0]);
+        var tue_Worktime = worktime_extract_hour(Options.worktimeWeekly[1]);
+        var wed_Worktime = worktime_extract_hour(Options.worktimeWeekly[2]);
+        var thu_Worktime = worktime_extract_hour(Options.worktimeWeekly[3]);
+        var fri_Worktime = worktime_extract_hour(Options.worktimeWeekly[4]);
+        var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[5]);
+        var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
+
+
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),sun_Worktime["start"], sun_Worktime["end"],600)
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),mon_Worktime["start"], mon_Worktime["end"],600)
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),tue_Worktime["start"], tue_Worktime["end"],600)
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_wednesday'),wed_Worktime["start"], wed_Worktime["end"],600)
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_thursday'),thu_Worktime["start"], thu_Worktime["end"],600)
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),fri_Worktime["start"], fri_Worktime["end"],600)
+        initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),sat_Worktime["start"], sat_Worktime["end"],600)
         //업무 시간 설정 seekbar
 
 
@@ -632,19 +690,6 @@
         });
 
         /* 예약 기본 시간 단위 설정 */
-
-
-
-        $('.pters_switch').click(function(){
-            if($(this).find('.switchball').hasClass('switchoff')){
-                $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-                $(this).find('.switchback').addClass('switchon-back')
-            }else{
-                $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-                $(this).find('.switchback').removeClass('switchon-back')
-            }
-        });
-
         $('#switch1').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
                 $('#memberDisableSetting').hide('fast','swing')

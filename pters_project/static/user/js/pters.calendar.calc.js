@@ -322,3 +322,20 @@ function compare_time(time1, time2){
 		return false;
 	}
 }
+
+// "0:00-23:59" 형식에서 시간만 뽑아오기 (업무시간 설정)
+function worktime_extract_hour(worktimeformat){
+    var worktime = worktimeformat;
+    var starthour = worktime.split('-')[0].split(':')[0];
+    var endhour = worktime.split('-')[1].split(':')[0];
+    var startmin = worktime.split('-')[0].split(':')[1];
+    var endmin = worktime.split('-')[1].split(':')[1];
+    if(startmin == "59" && starthour == "23"){
+        starthour = 24
+    }
+    if(endmin == "59" && endhour == "23"){
+        endhour == 24
+    }
+
+    return {"start":starthour, "end":endhour}
+}
