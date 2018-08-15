@@ -263,7 +263,7 @@ function draw_memberlist_for_addByList(targetHTML){
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    //$('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')

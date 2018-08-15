@@ -1390,7 +1390,7 @@ function float_btn_managemember(option){
             $('#page-base').hide();
             $('#page-base-addstyle').show();
         }
-
+        
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
     }
