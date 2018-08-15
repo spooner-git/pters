@@ -376,8 +376,7 @@ li a{
 
 @media(min-width: 345px){
 	.pters_switch{
-		top: 5px;
-		right: 5px;
+		top: 12px;
 	}
 }
 
@@ -409,10 +408,6 @@ li a{
 		font-size: 14px;
 	}
 
-	.pters_switch{
-		top: 13px;
-		right: 14.5px;
-	}
 	#mobile_preview_btn{
 		display: none;
 	}
