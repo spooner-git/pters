@@ -306,6 +306,9 @@ function week_calendar(referencedate){
 }
 
 function week_calendar_mobile(referencedate){
+    time_index_set(calendarSize);
+    $('div.timeindex').css('height','auto');
+
     var page1 = $('.swiper-slide:nth-of-type(1)');
     var page2 = $('.swiper-slide:nth-of-type(2)');
     var page3 = $('.swiper-slide:nth-of-type(3)');
@@ -736,19 +739,43 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 0 :
             td1 = [];
             for(z=0; z<=6; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
+
+
                 if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
-                    td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[monthdata]){
-                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
-                    td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
                     if(Month-1<1){
-                        td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+'</div>';
+                        td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                     }else{
-                        td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+'</div>';
+                        td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                     }
                 }
             }
@@ -758,16 +785,38 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 1 :
             td1 = [];
             for(z=-1; z<=5; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z+1])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z+1])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+1)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -776,16 +825,38 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 2 :
             td1 = [];
             for(z=-2; z<=4; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z+2])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z+2])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+2)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -794,16 +865,38 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 3 :
             td1 = [];
             for(z=-3; z<=3; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z+3])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z+3])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+3)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -812,16 +905,38 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 4 :
             td1 = [];
             for(z=-4; z<=2; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z+4])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z+4])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+4)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -830,16 +945,38 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 5 :
             td1 = [];
             for(z=-5; z<=1; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z+5])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z+5])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+5)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -848,16 +985,38 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
         case 6 :
             td1 = [];
             for(z=-6; z<=0; z++){
+                var worktime_option = Options.worktimeWeekly;
+                var starttime = worktime_extract_hour(worktime_option[z+6])["start"];
+                var endtime = worktime_extract_hour(worktime_option[z+6])["end"]-1;
+
+                var hour_firstcell = $('.timeindex div.hour:first-child');
+                var hour_lastcell = $('.timeindex div.hour:last-child');
+
+                var workstart_disabling = `<div style="position:absolute;
+                                                      top:${hour_firstcell.position().top}px;
+                                                      width:100%;
+                                                      height:${ $(`#hour${starttime}`).position().top - hour_firstcell.position().top }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+                var workend_disabling = `<div style="position:absolute;
+                                                      top:${$(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      width:100%;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${endtime}`).position().top + $(`#hour${endtime}`).height() }px;
+                                                      opacity:0.8;" 
+                                                      class="worktime_disable">
+                                          </div>`
+
                 if(currentDates+z>lastDay[currentMonth] && Month+1>12){
-                    td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
-                    td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z>lastDay[currentMonth]){
-                    td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
-                    td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
-                    td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+'</div>';
+                    td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+(z+6)+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }
             }
             td1_1 = td1.join('');
@@ -889,8 +1048,7 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
     slideIndex.html(tableHTML.join(''))
     //slideIndex.append(fakeElementForBlankPage);
     //weekNum_Set(Index);
-    time_index_set(calendarSize);
-    $('div.timeindex').css('height','auto');
+    
     $('.swiper-slide').css('height',$('div.timeindex').height());
 } //calTable_Set
 
