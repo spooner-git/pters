@@ -334,8 +334,17 @@ function worktime_extract_hour(worktimeformat){
         starthour = 24
     }
     if(endmin == "59" && endhour == "23"){
-        endhour == 24
+        endhour = 24
     }
-
     return {"start":starthour, "end":endhour}
+}
+
+function worktime_extract_maxmin(worktimeArray){
+	var len = worktimeArray.length;
+	var extracted = [];
+	for(var i=0; i<len; i++){
+		extracted.push(worktime_extract_hour(worktimeArray[i])["start"], worktime_extract_hour(worktimeArray[i])["end"] )
+	}
+
+	return {"max":Math.max.apply(null,extracted), "min":Math.min.apply(null,extracted)}
 }

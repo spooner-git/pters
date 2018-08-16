@@ -373,7 +373,10 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
     var mm = String(currentPageMonth);
     var dd = String(currentDate);
     var today_date = yy+'_'+mm+'_'+dd;
-    for(var i=Options.workStartTime; i<Options.workEndTime; i++){
+    var work_startTime = worktime_extract_maxmin(Options.worktimeWeekly)["min"]
+    var work_endTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"]
+
+    for(var i=work_startTime; i<work_endTime; i++){
         var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row" style="height:'+(30*calendarSize)+'px;">';
         var textToAppend_ = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_30M'+'" class="time-row time-row30" style="height:'+(30*calendarSize)+'px;">';
         var divToAppend = $(textToAppend);
@@ -388,31 +391,40 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=0; z<=6; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable _on"
+                    }else{
+                        var worktime_disabling = ""
+                    }
+
                     if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[monthdata]){
                         if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if(Month-1<1){
                             if( (Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                            td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                            td2[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td2[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                         }else{
                             if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                            td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                            td2[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td2[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                         }
                     }
                 }
@@ -424,26 +436,34 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=-1; z<=5; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z+1])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z+1])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable"
+                    }else{
+                        var worktime_disabling = ""
+                    }
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td1[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td1[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
                         if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td1[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td1[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
-                        td2[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td1[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
+                        td2[z+1]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+1)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -454,26 +474,34 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=-2; z<=4; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z+2])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z+2])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable"
+                    }else{
+                        var worktime_disabling = ""
+                    }
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td1[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td1[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
                         if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td1[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td1[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
-                        td2[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td1[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
+                        td2[z+2]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+2)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -484,26 +512,34 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=-3; z<=3; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z+3])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z+3])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable"
+                    }else{
+                        var worktime_disabling = ""
+                    }
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td1[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td1[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
                         if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td1[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td1[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
-                        td2[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td1[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
+                        td2[z+3]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+3)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -514,26 +550,34 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=-4; z<=2; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z+4])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z+4])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable"
+                    }else{
+                        var worktime_disabling = ""
+                    }
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'">'+'<div></div>'+'</div>';
+                        td1[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'">'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td1[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
                         if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td1[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td1[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
-                        td2[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td1[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
+                        td2[z+4]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+4)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -544,26 +588,34 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=-5; z<=1; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z+5])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z+5])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable"
+                    }else{
+                        var worktime_disabling = ""
+                    }
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td1[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td1[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
                         if( ear+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td1[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td1[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
-                        td2[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td1[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
+                        td2[z+5]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+5)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -574,26 +626,34 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                 td1 = [];
                 td2 = [];
                 for(z=-6; z<=0; z++){
+                    var worktime_option = Options.worktimeWeekly;
+                    var starttime = worktime_extract_hour(worktime_option[z+6])["start"];
+                    var endtime = worktime_extract_hour(worktime_option[z+6])["end"]
+                    if( i < starttime || i >= endtime  ){
+                        var worktime_disabling = " worktime_disable"
+                    }else{
+                        var worktime_disabling = ""
+                    }
                     if(currentDates+z>lastDay[currentMonth] && Month+1>12){
                         if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td1[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td1[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z>lastDay[currentMonth]){
                         if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td1[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td1[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
                         if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){var todaywide="todaywide"}else{var todaywide = "";};
-                        td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
-                        td2[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td1[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
+                        td2[z+6]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+(z+6)+'>'+'<div></div>'+'</div>';
                     }
                 }
                 td1_1 = td1.join('');
@@ -1170,6 +1230,10 @@ function reserveAvailable(){
         }
     }
 }
+
+
+
+
 
 function fake_show(){
     //var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
@@ -2226,6 +2290,7 @@ function ajaxClassTime(use, callfunction){
 //   }
 //   return zero + n;
 // }
+
 
 
 function set_schedule_time(jsondata){
