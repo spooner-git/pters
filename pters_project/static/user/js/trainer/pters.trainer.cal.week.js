@@ -1055,6 +1055,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 function time_index_set(size){
     var start = Options.workStartTime;
     var end = Options.workEndTime;
+
+    var work_startTime = worktime_extract_maxmin(Options.worktimeWeekly)["min"]
+    var work_endTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"]
+
     var timelist = [];
 
     var morning = '<span class="KRtext">오전</span>';
@@ -1068,8 +1072,8 @@ function time_index_set(size){
     }
 
 
-    for(var i=start; i<end; i++){
-        if(i<12 && i == start){
+    for(var i=work_startTime; i<work_endTime; i++){
+        if(i<12 && i == work_startTime){
             timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else if(i==12){
             timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
