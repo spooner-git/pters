@@ -160,7 +160,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div> 
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_sunday">
+            <div class="pters_seekbar_wrapper worktime_sun" id="worktimeset_seekbar_sunday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -202,7 +202,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div> 
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_monday">
+            <div class="pters_seekbar_wrapper worktime_mon" id="worktimeset_seekbar_monday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -244,7 +244,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div> 
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_tuesday">
+            <div class="pters_seekbar_wrapper worktime_tue" id="worktimeset_seekbar_tuesday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -286,7 +286,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div>  
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_wednesday">
+            <div class="pters_seekbar_wrapper worktime_wed" id="worktimeset_seekbar_wednesday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -328,7 +328,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div> 
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_thursday">
+            <div class="pters_seekbar_wrapper worktime_thu" id="worktimeset_seekbar_thursday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -370,7 +370,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div> 
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_friday">
+            <div class="pters_seekbar_wrapper worktime_fri" id="worktimeset_seekbar_friday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -412,7 +412,7 @@
                     <div class="switchball switchoff"></div>
                 </div>
             </div> 
-            <div class="pters_seekbar_wrapper" id="worktimeset_seekbar_saturday">
+            <div class="pters_seekbar_wrapper worktime_sat" id="worktimeset_seekbar_saturday">
                 <div class="pters_seekbar_bar">
                     <div class="pters_seekbar_segment"><span data-value="0">00</span></div>
                     <div class="pters_seekbar_segment"><span data-value="1">01</span></div>
@@ -500,7 +500,7 @@
         var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[5]);
         var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
 
-
+    /*
         initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),sun_Worktime["start"], sun_Worktime["end"],600)
         initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),mon_Worktime["start"], mon_Worktime["end"],600)
         initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),tue_Worktime["start"], tue_Worktime["end"],600)
@@ -509,7 +509,7 @@
         initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),fri_Worktime["start"], fri_Worktime["end"],600)
         initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),sat_Worktime["start"], sat_Worktime["end"],600)
         //업무 시간 설정 seekbar
-
+*/
 
         $('#id_setting_member_reserve_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00');
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
@@ -517,47 +517,70 @@
         $('#id_setting_member_reserve_prohibition').val(Options.reserve);
         $('#id_setting_schedule_auto_finish').val(Options.autocomplete)
 
-        if(Options.limit>0){ //근접시간 예약 금지 설정
+        if(Options.limit > 0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon');
             $('#switch1').find('.switchback').addClass('switchon-back');
             $('#memberDisableSetting').show();
             $("#timeSelect button").addClass("dropdown_selected").text(Options.limit/60+"시간 전").val(Options.limit);
-        }else if(Options.limit==0){
+        }else if(Options.limit == 0){
             $('#switch1').find('.switchball').removeClass('switchon');
             $('#switch1').find('.switchback').removeClass('switchon-back');
         }
-        if(Options.cancellimit>0){
+        if(Options.cancellimit > 0){
             $('#switch_cancel_limit').find('.switchball').removeClass('switchoff').addClass('switchon');
             $('#switch_cancel_limit').find('.switchback').addClass('switchon-back');
             $('#memberCancelDisableSetting').show();
             $("#timeSelect2 button").addClass("dropdown_selected").text(Options.cancellimit/60+"시간 전").val(Options.cancellimit);
-        }else if(Options.cancellimit==0){
+        }else if(Options.cancellimit == 0){
             $('#switch_cancel_limit').find('.switchball').removeClass('switchon');
             $('#switch_cancel_limit').find('.switchback').removeClass('switchon-back');
         }
 
-        if(Options.reserve==1){ //회원 예약 일시 정지
+        if(Options.reserve == 1){ //회원 예약 일시 정지
             $('#switch2').find('.switchball').removeClass('switchoff').addClass('switchon');
             $('#switch2').find('.switchback').addClass('switchon-back');
-        }else if(Options.reserve==0){
+        }else if(Options.reserve == 0){
             $('#switch2').find('.switchball').removeClass('switchon').addClass('switchoff');
             $('#switch2').find('.switchback').removeClass('switchon-back');
         }
 
-        if(Options.autocomplete==1){ //일정 자동 완료
+        if(Options.autocomplete == 1 ){ //일정 자동 완료
             $('#switch_autocomplete').find('.switchball').removeClass('switchoff').addClass('switchon');
             $('#switch_autocomplete').find('.switchback').addClass('switchon-back');
-        }else if(Options.autocomplete==0){
+        }else if(Options.autocomplete == 0 ){
             $('#switch_autocomplete').find('.switchball').removeClass('switchon').addClass('switchoff');
             $('#switch_autocomplete').find('.switchback').removeClass('switchon-back');
         }
 
-        if(Options.lecture_autocomplete==1){ //수강 정보 자동 완료
+        if(Options.lecture_autocomplete == 1 ){ //수강 정보 자동 완료
             $('#switch_autofinish').find('.switchball').removeClass('switchoff').addClass('switchon');
             $('#switch_autofinish').find('.switchback').addClass('switchon-back');
-        }else if(Options.lecture_autocomplete==0){
+        }else if(Options.lecture_autocomplete == 0 ){
             $('#switch_autofinish').find('.switchball').removeClass('switchon').addClass('switchoff');
             $('#switch_autofinish').find('.switchback').removeClass('switchon-back');
+        }
+
+        if(Options.worktimeWeeklyOn == 1){
+            $('#switch_worktime_weekly').find('.switchball').removeClass('switchoff').addClass('switchon');
+            $('#switch_worktime_weekly').find('.switchback').addClass('switchon-back');
+            initialize_worktime_weekly();
+        }else if(Optios.worktimeWeeklyOn == 0){
+            $('#switch_worktime_weekly').find('.switchball').removeClass('switchon').addClass('switchoff');
+            $('#switch_worktime_weekly').find('.switchback').removeClass('switchon-back');
+        }
+
+        var switches_weekly_dayoff = ['#switch_worktime_sun','#switch_worktime_mon','#switch_worktime_tue','#switch_worktime_wed','#switch_worktime_thu','#switch_worktime_fri','#switch_worktime_sat'];
+        var wrapper_weekly_dayoff = ['#worktimeset_seekbar_sunday','#worktimeset_seekbar_monday','#worktimeset_seekbar_tuesday','#worktimeset_seekbar_wednesday','#worktimeset_seekbar_thursday','#worktimeset_seekbar_friday','#worktimeset_seekbar_saturday']
+        var len_worktimeOffDay = Options.worktimeOffDay.length
+        for(var i=0; i<len_worktimeOffDay; i++){
+            if(Options.worktimeOffDay[i] == 1){
+                $(wrapper_weekly_dayoff[i]).css('display','none');
+                $(switches_weekly_dayoff[i]).find('.switchball').removeClass('switchoff').addClass('switchon');
+                $(switches_weekly_dayoff[i]).find('.switchback').addClass('switchon-back');
+            }else if(Options.worktimeOffDay[i] == 0){
+                $(switches_weekly_dayoff[i]).find('.switchball').removeClass('switchon').addClass('switchoff');
+                $(switches_weekly_dayoff[i]).find('.switchback').removeClass('switchon-back');
+            }
         }
 
 
@@ -753,16 +776,40 @@
             if($(this).find('.switchball').hasClass('switchoff')){
                 $('#trainerWorkTimeSetting_').hide();
             }else{
-                $('#trainerWorkTimeSetting_').show();
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),sun_Worktime["start"], sun_Worktime["end"],600)
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),mon_Worktime["start"], mon_Worktime["end"],600)
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),tue_Worktime["start"], tue_Worktime["end"],600)
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_wednesday'),wed_Worktime["start"], wed_Worktime["end"],600)
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_thursday'),thu_Worktime["start"], thu_Worktime["end"],600)
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),fri_Worktime["start"], fri_Worktime["end"],600)
-                initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),sat_Worktime["start"], sat_Worktime["end"],600)
+                initialize_worktime_weekly()
             }
         })
+
+        $('#switch_worktime_sun').click(function(){
+            var target = `.${$(this).attr('id').split('_')[1]}_${$(this).attr('id').split('_')[2]}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+            }else{
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        for(var i=0; i < switches_weekly_dayoff.length; i++ ){
+            $(switches_weekly_dayoff[i]).click(function(){
+                var target = `.${$(this).attr('id').split('_')[1]}_${$(this).attr('id').split('_')[2]}`
+                if($(this).find('.switchball').hasClass('switchoff')){
+                    $(this).parent('div').siblings(target).show();
+                }else{
+                    $(this).parent('div').siblings(target).hide();
+                }
+            })
+        }
+
+
+        function initialize_worktime_weekly(){
+            $('#trainerWorkTimeSetting_').show();
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),sun_Worktime["start"], sun_Worktime["end"],600)
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),mon_Worktime["start"], mon_Worktime["end"],600)
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),tue_Worktime["start"], tue_Worktime["end"],600)
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_wednesday'),wed_Worktime["start"], wed_Worktime["end"],600)
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_thursday'),thu_Worktime["start"], thu_Worktime["end"],600)
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),fri_Worktime["start"], fri_Worktime["end"],600)
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),sat_Worktime["start"], sat_Worktime["end"],600)
+        }
 
 
 

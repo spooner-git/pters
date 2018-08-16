@@ -153,10 +153,10 @@
 			}
 	.pters_seekbar_start_ball, .pters_seekbar_end_ball{
 		cursor: pointer;
-		top: 6px;
+		top: 7px;
 		position: absolute;
-		width: 30px;
-		height: 30px;
+		width: 25px;
+		height: 25px;
 		border-radius: 50%;
 		background-color: #fe4e65;
 		border:2px solid #282828;

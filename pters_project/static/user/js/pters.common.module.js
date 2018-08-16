@@ -41,6 +41,7 @@ $('.pters_switch').click(function(){
 							);
 		});
 		seek_divide.push($selector.find('.pters_seekbar_bar').width() + $segment.position().left)
+		console.log('seek_divide',seek_divide)
 		//각 세그먼트 좌표값 구해놓기
 
 		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
@@ -112,7 +113,6 @@ $('.pters_switch').click(function(){
 									'width': $endball.position().left - $startball.position().left
 									})
 				}
-				
 			})
 		})
 
