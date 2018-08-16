@@ -398,7 +398,7 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
                     var starttime = worktime_extract_hour(worktime_option[z])["start"];
                     var endtime = worktime_extract_hour(worktime_option[z])["end"]
                     if( i < starttime || i >= endtime  ){
-                        var worktime_disabling = " worktime_disable _on"
+                        var worktime_disabling = " worktime_disable"
                     }else{
                         var worktime_disabling = ""
                     }
@@ -2364,7 +2364,9 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
     }
 
     for(date in date_sorted){
-        $('#'+date).append(date_sorted[date].join(''))
+        if( $('#'+date).find('.classTime').length == 0 && $('#'+date).find('.offTime').length == 0 && $('#'+date).find('.groupTime').length == 0 ){
+            $('#'+date).append(date_sorted[date].join(''))
+        }
     }
 }
 
@@ -2452,7 +2454,7 @@ function ajaxClassTime(use, callfunction){
 
 
 function set_schedule_time(jsondata){
-    $('.classTime, .offTime, .groupTime').parent().html('<div class="blankbox"></div>');
+    //$('.classTime, .offTime, .groupTime').parent().html('<div class="blankbox"></div>');
     $('._on').removeClass('_on');
     initialJSON = jsondata;
     if(bodywidth > 600){
