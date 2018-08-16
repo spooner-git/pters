@@ -24,6 +24,9 @@ body{
 #trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
 	margin-top: 70px;
 }
+#trainerWorkTimeSetting_{
+	display: none;
+}
 
 #switch_autocomplete, #switch_autofinish, #switch1, #switch2, #switch_cancel_limit{
 	position: absolute;

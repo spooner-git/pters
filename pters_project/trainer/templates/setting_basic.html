@@ -73,7 +73,7 @@
         <p class="settingText2">설정된 업무 시간만 일정표에 노출됩니다.</p>
     </div>
     <div id="trainerWorkTimeSetting" class="settingBox wrap800" style="z-index: 10;">
-        <div class="iconText">
+        <div class="iconText" style="margin-bottom:0">
             <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 시작 시각</span>
             <div id="workTimehourSelect" class="dropdown">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -105,9 +105,7 @@
                 </ul>
             </div>
         </div>
-
-
-        <div class="iconText">
+        <div class="iconText" style="margin-bottom:0">
             <img src="/static/user/res/icon-start.png" alt="" class="icons"><span> 종료 시각</span>
             <div id="workTimehourSelect2" class="dropdown">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
@@ -142,10 +140,18 @@
                 </ul>
             </div>
         </div>
+
+        <div style="padding-bottom:10px;">
+            <span class="pters_switch_label">요일별 설정</span>
+            <div id="switch_worktime_weekly" class="pters_switch" style="transform: scale(0.7);">
+                <div class="switchback"></div>
+                <div class="switchball switchoff"></div>
+            </div>
+        </div>
     </div>
+
     <div id="trainerWorkTimeSetting_" class="settingBox wrap800" style="z-index: 9;">
         <div class="pters_seekbar_wrapper_wrap">
-            
             <div style="margin:0">
                 <span class="worktimeWeekly_dayname">일</span>
                 <span class="pters_switch_label">휴무</span>
@@ -741,6 +747,21 @@
                 $('#id_setting_lecture_auto_finish').val(1)
             }
             check_dropdown_selected();
+        })
+
+        $('#switch_worktime_weekly').click(function(){
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $('#trainerWorkTimeSetting_').hide();
+            }else{
+                $('#trainerWorkTimeSetting_').show();
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),sun_Worktime["start"], sun_Worktime["end"],600)
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),mon_Worktime["start"], mon_Worktime["end"],600)
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),tue_Worktime["start"], tue_Worktime["end"],600)
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_wednesday'),wed_Worktime["start"], wed_Worktime["end"],600)
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_thursday'),thu_Worktime["start"], thu_Worktime["end"],600)
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),fri_Worktime["start"], fri_Worktime["end"],600)
+                initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),sat_Worktime["start"], sat_Worktime["end"],600)
+            }
         })
 
 
