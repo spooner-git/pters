@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
-from payment.models import BillingInfoTb
+from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb
@@ -147,13 +147,17 @@ def get_setting_info(request):
 @register.simple_tag
 def get_function_auth(request):
     today = datetime.date.today()
+    merchandise_type_cd_list = []
+    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, next_payment_date__lt=today, use=USE)
+    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                start_date__lte=today, end_date__gte=today, use=USE)
 
-    billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
+    for billing_info in billing_data:
+        billing_info.state_cd = 'ST'
+        billing_info.use = UN_USE
+        billing_info.save()
 
-    if len(billing_data) > 0:
-        for billing_info in billing_data:
-            billing_info.state_cd = 'ST'
-            billing_info.use = UN_USE
-            billing_info.save()
+    for payment_info in payment_data:
+        merchandise_type_cd_list.append(payment_info.merchandise_type_cd)
 
-    return billing_data
+    return merchandise_type_cd_list

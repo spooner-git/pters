@@ -515,7 +515,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
 
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                        merchandise_type_cd__contains=merchandise_type_cd,
+                                                        merchandise_type_cd=merchandise_type_cd,
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
