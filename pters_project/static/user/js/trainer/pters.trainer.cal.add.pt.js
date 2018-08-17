@@ -503,6 +503,7 @@ $(document).ready(function(){
     var timeIndexY = [];
     var timePlanY = [];
     var timeIndexhour = [];
+
     function get_timeindex_Y(){
         timeIndexY = [];
         timeIndexhour = [];
@@ -2605,8 +2606,8 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
     }
 
-    var workStartTime_ = time_h_m_to_hh_mm(worktime.split('-')[0]);
-    var workEndTime_ = time_h_m_to_hh_mm(worktime.split('-')[1]);
+    var workStartTime_ = time_h_m_to_hh_mm(`${Options.workStartTime}:00`);
+    var workEndTime_ = time_h_m_to_hh_mm(`${Options.workEndTime}:00`);
     if(workEndTime_ == "23:59"){
         workEndTime_ = "24:00"
     }
@@ -3362,7 +3363,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
 
     var zz = 0
     durTimeList.html('');
-
+    
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
         zz++;
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
@@ -3788,8 +3789,6 @@ function add_scroll_arrow_to_addByList($selector){ //subpopup_addByList_thisgrou
     var selectorHeight = $selector.height();
     var groupMemberList = $selector.find('.list_addByList_padding')
     var groupMemberListHeight = groupMemberList.length * groupMemberList.outerHeight();
-
-    console.log(selectorHeight, groupMemberList.length, groupMemberList.outerHeight())
 
     if(groupMemberListHeight > selectorHeight  - 64){
         if($selectorSibling.find('.dropdown_scroll_arrow_top').length == 0){

@@ -611,6 +611,7 @@
         messageCommunicationWithWorker();
     }
     </script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 <script type="text/javascript">
     var class_id = '{{ request.session.class_id }}';
     var class_name = '{{ request.session.class_type_name }}';
@@ -815,13 +816,17 @@
         "auth_group":1,
         "auth_class":1,
         "auth_ads":1,
+    };
 
+    if(Options.worktimeWeeklyOn == 1){
+        Options.workStartTime =  worktime_extract_maxmin(Options.worktimeWeekly)["min"];
+        Options.workEndTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"];
     };
 
     //광고 제거
     if(Options.auth_ads == 1){
         $('.ads_wrap').empty()
-    }
+    };
     //광고 제거
 
     if(Options.language=="JPN"){
@@ -1079,7 +1084,7 @@
 <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.multi.language.set.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
+
 
 {% block local_js_footer %}
 {% endblock %}

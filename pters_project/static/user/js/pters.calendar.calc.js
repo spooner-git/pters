@@ -155,7 +155,6 @@ function compare_date(date1, date2){
 	var date1_num = year1+month1;
 	var date2_num = year2+month2;
 
-	console.log(date1_num, date2_num)
 	if(date1_num > date2_num){
 		return true;
 	}else{
@@ -192,7 +191,7 @@ function compare_date2(date1, date2){
 function find_max_date(dateArray){ //어레이 안에서 가장 최근 날짜를 찾아낸다.
 	var len = dateArray.length;
 	var dates = [];
-	console.log(dateArray)
+
 	for(var i=0; i<len; i++){
 		var date = dateArray[i]
 		if(date == '9999-12-31' || date == '소진시까지'){
