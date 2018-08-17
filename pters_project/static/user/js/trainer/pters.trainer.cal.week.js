@@ -1413,6 +1413,7 @@ function fake_show(){
 
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+    console.log('scheduleTime',jsondata)
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
     $('.blankSelected').removeClass('blankSelected');
@@ -2386,6 +2387,7 @@ function ajaxClassTime(use, callfunction){
     }else{
         beforeSend_ = function(){beforeSend()};
         completeSend_ = function(){completeSend()};
+        console.log('else');
     }
 
     var $weekNum4 = $('#weekNum_4').attr('data-date');
@@ -2406,6 +2408,7 @@ function ajaxClassTime(use, callfunction){
 
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata)
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -2459,6 +2462,7 @@ function ajaxClassTime(use, callfunction){
 
 function set_schedule_time(jsondata){
     //$('.classTime, .offTime, .groupTime').parent().html('<div class="blankbox"></div>');
+    $('.classTime, .offTime, .groupTime').remove();
     $('._on').removeClass('_on');
     initialJSON = jsondata;
     if(bodywidth > 600){
