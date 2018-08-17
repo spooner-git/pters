@@ -745,17 +745,18 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
@@ -806,17 +807,18 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+1])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+1])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
@@ -861,17 +863,18 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+2])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+2])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
@@ -916,17 +919,18 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+3])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+3])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
@@ -971,17 +975,18 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+4])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+4])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
@@ -1026,17 +1031,18 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+5])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+5])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
@@ -1081,17 +1087,19 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+6])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+6])["end"]-1;
-                if(time_disable_start == 0){
-                    time_disable_start = starttime+1;
-                }
+
+                /*
+                if(time_disable_start < starttime){
+                    time_disable_start = starttime;
+                }*/
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
-                /*
+                
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
-                */
+                
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
                 var hour_lastcell = $('.timeindex div.hour:last-child');
@@ -1175,8 +1183,8 @@ function time_index_set(size){
         afternoon = '<span class="ENtext">PM</span>';
     }
 
-    console.log(work_startTime, work_endTime)
-    for(var i=work_startTime; i<=work_endTime; i++){
+
+    for(var i=work_startTime; i<work_endTime; i++){
         if(i<12 && i == work_startTime){
             timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else if(i==12){
