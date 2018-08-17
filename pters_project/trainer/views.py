@@ -3756,31 +3756,31 @@ def update_setting_basic_logic(request):
                                                            setting_type_cd='LT_WORK_MON_TIME_AVAIL')
         except ObjectDoesNotExist:
             lt_work_mon_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_TUE_TIME_AVAIL', use=USE)
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_MON_TIME_AVAIL', use=USE)
         try:
             lt_work_tue_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
                                                            setting_type_cd='LT_WORK_TUE_TIME_AVAIL')
         except ObjectDoesNotExist:
             lt_work_tue_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_WED_TIME_AVAIL', use=USE)
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_TUE_TIME_AVAIL', use=USE)
         try:
             lt_work_wed_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
                                                            setting_type_cd='LT_WORK_WED_TIME_AVAIL')
         except ObjectDoesNotExist:
             lt_work_wed_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_THS_TIME_AVAIL', use=USE)
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_WED_TIME_AVAIL', use=USE)
         try:
             lt_work_ths_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
                                                            setting_type_cd='LT_WORK_THS_TIME_AVAIL')
         except ObjectDoesNotExist:
             lt_work_ths_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_FRI_TIME_AVAIL', use=USE)
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_THS_TIME_AVAIL', use=USE)
         try:
             lt_work_fri_time_avail = SettingTb.objects.get(member_id=request.user.id,  class_tb_id=class_id,
                                                            setting_type_cd='LT_WORK_FRI_TIME_AVAIL')
         except ObjectDoesNotExist:
             lt_work_fri_time_avail = SettingTb(member_id=request.user.id,
-                                               class_tb_id=class_id, setting_type_cd='LT_WORK_SAT_TIME_AVAIL', use=USE)
+                                               class_tb_id=class_id, setting_type_cd='LT_WORK_FRI_TIME_AVAIL', use=USE)
         try:
             lt_work_sat_time_avail = SettingTb.objects.get(member_id=request.user.id, class_tb_id=class_id,
                                                            setting_type_cd='LT_WORK_SAT_TIME_AVAIL')
