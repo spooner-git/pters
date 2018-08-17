@@ -574,13 +574,6 @@
             $('#switch_worktime_weekly').find('.switchball').removeClass('switchon').addClass('switchoff');
             $('#switch_worktime_weekly').find('.switchback').removeClass('switchon-back');
             enable_worktime_dropdown();
-
-            var work_start_h = $('#workTimehourSelect button').val()+':00';
-            var work_end_h = $('#workTimehourSelect2 button').val()+':00';
-            if(work_start_h == "24:00"){work_start_h = "23:59"};
-            if(work_end_h == "24:00"){work_end_h = "23:59"};
-            var worktimes = `${work_start_h}-${work_end_h}`;
-            for(var i=0; i<7; i++){$(worktime_week_form_Array[i]).val(worktimes)};
         }
 
         var switches_weekly_dayoff = ['#switch_worktime_sun','#switch_worktime_mon','#switch_worktime_tue','#switch_worktime_wed','#switch_worktime_thu','#switch_worktime_fri','#switch_worktime_sat'];
@@ -793,6 +786,12 @@
                 $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_OFF);
                 $('#trainerWorkTimeSetting_').hide();
                 enable_worktime_dropdown();
+                var work_start_h = $('#workTimehourSelect button').val()+':00';
+                var work_end_h = $('#workTimehourSelect2 button').val()+':00';
+                if(work_start_h == "24:00"){work_start_h = "23:59"};
+                if(work_end_h == "24:00"){work_end_h = "23:59"};
+                var worktimes = `${work_start_h}-${work_end_h}`;
+                for(var i=0; i<7; i++){$(worktime_week_form_Array[i]).val(worktimes)};
             }else{
                 $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_ON);
                 initialize_worktime_weekly();
