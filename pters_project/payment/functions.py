@@ -294,6 +294,7 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
+                                                        merchandise_type_cd=custom_data['merchandise_type_cd'],
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
