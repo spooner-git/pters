@@ -1427,6 +1427,7 @@ $(document).ready(function(){
                     success:function(data){
                         //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                         var jsondata = JSON.parse(data);
+                        console.log('repeatjson',jsondata)
                         initialJSON = jsondata;
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
@@ -1436,6 +1437,7 @@ $(document).ready(function(){
                         }else{
                             var repeat_info;
                             if(RepeatDuplicationDateArray.length>0 && (addTypeSelect == "repeatoffadd" || addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd")){
+                                draw_repeat_reg_list(jsondata);
                                 var total_count = Number(jsondata.repeatScheduleCounterArray[0])+RepeatDuplicationDateArray.length;
                                 if(total_count == RepeatDuplicationDateArray.length){
                                     alert('모든 일정이 기존 일정과 겹쳐 등록할 수 있는 일정이 없습니다.\n 일정을 다시 확인 후 등록해주세요.');
@@ -1464,6 +1466,7 @@ $(document).ready(function(){
                                 // alert('선택한 회원님의 등록 가능한 횟수가 부족합니다.\n 다시 확인 후 등록해주세요.')
                                 //completeSend(); //ajax 로딩 이미지 숨기기
                                 //}else{
+                                draw_repeat_reg_list(jsondata);
                                 repeat_info = popup_repeat_confirm();
                                 var day_info = repeat_info.day_info;
                                 var dur_info = jsondata.repeat_start_date + '~' + jsondata.repeat_end_date;
@@ -1524,6 +1527,43 @@ $(document).ready(function(){
             //입력값 확인 메시지 출력 가능
         }
     });
+    
+    $('#callbtn_repeat_reg_list').click(function(){
+        //반복일정 등록 되는 리스트 호출
+        $('#repeat_reg_list').show();
+    });
+    $(document).on('click','#close_repeat_reg_list',function(){
+        $('#repeat_reg_list').hide();
+    })
+
+    function draw_repeat_reg_list(jsondata){
+        var targetHTML = $('#repeat_reg_list');
+        var duplicatedDate = jsondata.RepeatDuplicationDateArray;
+        var successDate = jsondata.RepeatSuccessDateArray;
+
+        var htmlToJoin = [`<div id="close_repeat_reg_list">반복일정 등록 리스트<span>닫기</span></div>`]
+        var dupli_len = duplicatedDate.length;
+        for(var i=0; i<dupli_len; i++){
+            htmlToJoin.push(
+                                `<div class="repeat_reg_list_row repeat_failed_bg">
+                                    <div class="repeat_reg_list_cell">${duplicatedDate[i]}</div>
+                                    <div class="repeat_reg_list_cell"><img src="/static/user/res/member/icon-x-red.png" title="중복 일정">등록 실패</div>
+                                </div>`
+                            )
+        }
+
+        var succ_len = successDate.length;
+        for(var j=0; j<succ_len; j++){
+            htmlToJoin.push(
+                                `<div class="repeat_reg_list_row">
+                                    <div class="repeat_reg_list_cell">${successDate[j]}</div>
+                                    <div class="repeat_reg_list_cell"><img src="/static/user/res/btn-pt-complete.png" title="정상 등록">정상 등록</div>
+                                </div>`
+                            )
+        }
+
+        targetHTML.html(htmlToJoin.join(""))
+    };
 
     //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
     var ajax_block_during_repeat_confirm = true;
