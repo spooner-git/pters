@@ -571,7 +571,7 @@
             $('#switch_worktime_weekly').find('.switchback').addClass('switchon-back');
             initialize_worktime_weekly();
             disable_worktime_dropdown();
-        }else if(Optios.worktimeWeeklyOn == 0){
+        }else if(Options.worktimeWeeklyOn == 0){
             $('#switch_worktime_weekly').find('.switchball').removeClass('switchon').addClass('switchoff');
             $('#switch_worktime_weekly').find('.switchback').removeClass('switchon-back');
             enable_worktime_dropdown();
@@ -848,6 +848,7 @@
             for(var i=0; i<resultStartArray.length; i++){
                 $(worktime_week_form_Array[i]).val(`${resultStartArray[i]}-${resultEndArray[i]}`)
             }
+            check_dropdown_selected();
         };
 
 
@@ -1003,6 +1004,14 @@
             var autocomplete = $('#id_setting_schedule_auto_finish').val();
             var autofinish = $('#id_setting_lecture_auto_finish').val();
 
+            var week_mon = $('#setting_trainer_work_mon_time_avail').val();
+            var week_tue = $('#setting_trainer_work_tue_time_avail').val();
+            var week_wed = $('#setting_trainer_work_wed_time_avail').val();
+            var week_thu = $('#setting_trainer_work_ths_time_avail').val();
+            var week_fri = $('#setting_trainer_work_fri_time_avail').val();
+            var week_sat = $('#setting_trainer_work_sat_time_avail').val();
+            var week_sun = $('#setting_trainer_work_sun_time_avail').val();
+
             if(//availableTime == stoptime && 
                 //limit == Options.limit && 
                 //reservedisable == Options.reserve && 
@@ -1012,7 +1021,16 @@
                 //basicTimeDur == Options.timeDur && 
                 //startTime == Options.startTime && 
                 autocomplete == Options.autocomplete &&
-                autofinish == Options.lecture_autocomplete
+                autofinish == Options.lecture_autocomplete &&
+                week_sun == Options.worktimeWeekly[0] &&
+                week_mon == Options.worktimeWeekly[1] &&
+                week_tue == Options.worktimeWeekly[2] &&
+                week_wed == Options.worktimeWeekly[3] &&
+                week_thu == Options.worktimeWeekly[4] &&
+                week_fri == Options.worktimeWeekly[5] &&
+                week_sat == Options.worktimeWeekly[6] 
+
+
                  ){
                     $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                     select_all_check=false;
@@ -1020,6 +1038,13 @@
             }else{
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 select_all_check=true;
+                console.log(week_sun , Options.worktimeWeekly[0] ,
+                                week_mon , Options.worktimeWeekly[1] ,
+                                week_tue , Options.worktimeWeekly[2] ,
+                                week_wed , Options.worktimeWeekly[3] ,
+                                week_thu , Options.worktimeWeekly[4] ,
+                                week_fri , Options.worktimeWeekly[5] ,
+                                week_sat , Options.worktimeWeekly[6] )
                 console.log('true')
             }
         }
