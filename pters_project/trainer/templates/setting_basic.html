@@ -796,23 +796,118 @@
                 $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_ON);
                 initialize_worktime_weekly();
                 disable_worktime_dropdown();
+                for(var i=0; i<7; i++){$(worktime_week_form_Array[i]).val(Options.worktimeWeekly[i])};
             }
         })
 
-        for(var i=0; i < switches_weekly_dayoff.length; i++ ){
-            $(switches_weekly_dayoff[i]).click(function(){
+        /*
+        for(var t=0; t < switches_weekly_dayoff.length; t++ ){
+            $(switches_weekly_dayoff[t]).click(function(){
                 var dayname = $(this).attr('id').split('_')[2];
                 var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
                 if($(this).find('.switchball').hasClass('switchoff')){
                     $(this).parent('div').siblings(target).show();
                     initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
-                    $(worktime_week_form_Array[i]).val(target.attr('value'));
+                    console.log(t,'t')
+                    $(worktime_week_form_Array[t]).val(Options.worktimeWeekly[t]);
                 }else{
-                    $(worktime_week_form_Array[i]).val('0:00')
+                    $(worktime_week_form_Array[t]).val('0:00-0:00')
                     $(this).parent('div').siblings(target).hide();
                 }
             })
         };
+        */
+
+        $(switches_weekly_dayoff[0]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[0]).val(Options.worktimeWeekly[0]);
+            }else{
+                $(worktime_week_form_Array[0]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        $(switches_weekly_dayoff[1]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[1]).val(Options.worktimeWeekly[1]);
+            }else{
+                $(worktime_week_form_Array[1]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        $(switches_weekly_dayoff[2]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[2]).val(Options.worktimeWeekly[2]);
+            }else{
+                $(worktime_week_form_Array[2]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        $(switches_weekly_dayoff[3]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[3]).val(Options.worktimeWeekly[3]);
+            }else{
+                $(worktime_week_form_Array[3]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        $(switches_weekly_dayoff[4]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[4]).val(Options.worktimeWeekly[4]);
+            }else{
+                $(worktime_week_form_Array[4]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        $(switches_weekly_dayoff[5]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[5]).val(Options.worktimeWeekly[5]);
+            }else{
+                $(worktime_week_form_Array[5]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        $(switches_weekly_dayoff[6]).click(function(){
+            var dayname = $(this).attr('id').split('_')[2];
+            var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
+            if($(this).find('.switchball').hasClass('switchoff')){
+                $(this).parent('div').siblings(target).show();
+                initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                $(worktime_week_form_Array[6]).val(Options.worktimeWeekly[6]);
+            }else{
+                $(worktime_week_form_Array[6]).val('0:00-0:00')
+                $(this).parent('div').siblings(target).hide();
+            }
+        })
+        
+
+
+
+
+
 
         $('.pters_seekbar_wrapper').change(function(){
             worktime_seekbar_values_to_form();
@@ -881,16 +976,19 @@
         /*업무 시간 설정*/
         $("#ulWorkTimes li a").click(function(){
             $("#workTimehourSelect button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
-            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
-            $('#id_setting_trainer_work_time').val(availableTime)
             fill_dropdown_reserve_endtime($(this).attr('data-time'),$('#ulWorkTimes2'))
-
+            var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
+            for(var i=0; i<worktime_week_form_Array.length; i++){
+                $(worktime_week_form_Array[i]).val(availableTime)
+            }
             check_dropdown_selected();
         });
         $(document).on('click',"#ulWorkTimes2 li a",function(){
             $("#workTimehourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
             var availableTime = make_available_date_format($('#workTimehourSelect'),$('#workTimehourSelect2'))
-            $('#id_setting_trainer_work_time').val(availableTime)
+            for(var i=0; i<worktime_week_form_Array.length; i++){
+                $(worktime_week_form_Array[i]).val(availableTime)
+            }
             check_dropdown_selected();
         });
         /*업무 시간 설정*/
@@ -932,6 +1030,7 @@
 
         function fill_dropdown_reserve_endtime(starttime, target){
             var array = [];
+            var last;
             for(var i=Number(starttime)+1; i<=24; i++){
                 if(i==24){
                     array.push('<li><a data-time="'+i+'">오전 12시</a></li>');
@@ -942,9 +1041,9 @@
                 }else if(i>=12){
                     array.push('<li><a data-time="'+i+'">오후 '+(i-12)+'시</a></li>');
                 }
-            }
-            target.siblings('button').val('').text('')
+            }            
             target.html(array.join(''))
+            target.siblings('button').val(target.find('a').last().attr('data-time')).text(target.find('a').last().text())
         }
 
 
