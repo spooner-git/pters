@@ -75,7 +75,7 @@ def get_setting_info(request):
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
         request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
         request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
 
         request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
         request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
