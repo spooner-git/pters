@@ -148,8 +148,9 @@ def get_setting_info(request):
 def get_function_auth(request):
     today = datetime.date.today()
     merchandise_type_cd_list = []
-    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, next_payment_date__lt=today, use=USE)
-    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                next_payment_date__lt=today, use=USE)
+    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
                                                 start_date__lte=today, end_date__gte=today, use=USE)
 
     for billing_info in billing_data:
