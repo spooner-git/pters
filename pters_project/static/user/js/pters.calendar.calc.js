@@ -342,7 +342,10 @@ function worktime_extract_maxmin(worktimeArray){
 	var len = worktimeArray.length;
 	var extracted = [];
 	for(var i=0; i<len; i++){
-		extracted.push(worktime_extract_hour(worktimeArray[i])["start"], worktime_extract_hour(worktimeArray[i])["end"] )
+		if(worktime_extract_hour(worktimeArray[i])["start"] != 0 && worktime_extract_hour(worktimeArray[i])["end"] != 0 ){
+			extracted.push(worktime_extract_hour(worktimeArray[i])["start"], worktime_extract_hour(worktimeArray[i])["end"] )
+		}
+		
 	}
 
 	return {"max":Math.max.apply(null,extracted), "min":Math.min.apply(null,extracted)}
