@@ -805,8 +805,8 @@
 
         "worktime":'{{ request.session.setting_trainer_work_time_available }}',
         "worktimeWeeklyOn": 1,
-        "worktimeWeekly":['0:00-23:59', '5:00-21:00', '9:00-22:00', '9:00-22:00', '12:00-23:00', '7:00-13:00', '5:00-11:00'],
-        "worktimeOffDay":[1, 0, 0, 0, 0, 0, 0],
+        "worktimeWeekly":['0:00-0:00', '5:00-21:00', '9:00-22:00', '9:00-22:00', '12:00-23:00', '7:00-13:00', '5:00-11:00'],
+        "worktimeOffDay":[],
         "workStartTime":worktimeStart,
         "workEndTime":worktimeEnd,
 
@@ -818,10 +818,23 @@
         "auth_ads":1,
     };
 
+    //요일별 업무시간 설정이 활성화되어있을 경우 workStartTime과 workEndTime을 최대 최소값으로 맞춘다.
     if(Options.worktimeWeeklyOn == 1){
         Options.workStartTime =  worktime_extract_maxmin(Options.worktimeWeekly)["min"];
         Options.workEndTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"];
     };
+    //요일별 업무시간 설정이 활성화되어있을 경우 workStartTime과 workEndTime을 최대 최소값으로 맞춘다.
+
+    //요일별 업무시간을 보고 휴일날짜를 구한다.
+    for(var i=0; i<Options.worktimeWeekly.length; i++){
+        if(Options.worktimeWeekly[i].split('-')[0] == Options.worktimeWeekly[i].split('-')[1]){
+            Options.worktimeOffDay[i] = 1
+        }else{
+            Options.worktimeOffDay[i] = 0
+        };
+    };
+    //요일별 업무시간을 보고 휴일날짜를 구한다.
+
 
     //광고 제거
     if(Options.auth_ads == 1){
