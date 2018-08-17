@@ -512,16 +512,7 @@
         var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[5]);
         var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
         var worktime_Array = {"mon":mon_Worktime, "tue":tue_Worktime, "wed":wed_Worktime, "thu":thu_Worktime, "fri":fri_Worktime, "sat":sat_Worktime, "sun":sun_Worktime};
-    /*
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_sunday'),sun_Worktime["start"], sun_Worktime["end"],600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_monday'),mon_Worktime["start"], mon_Worktime["end"],600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_tuesday'),tue_Worktime["start"], tue_Worktime["end"],600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_wednesday'),wed_Worktime["start"], wed_Worktime["end"],600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_thursday'),thu_Worktime["start"], thu_Worktime["end"],600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_friday'),fri_Worktime["start"], fri_Worktime["end"],600)
-        initialize_pters_seekbar_module($('#worktimeset_seekbar_saturday'),sat_Worktime["start"], sat_Worktime["end"],600)
-        //업무 시간 설정 seekbar
-*/
+
 
         $('#id_setting_member_reserve_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00');
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
@@ -592,10 +583,11 @@
         for(var i=0; i<len_worktimeOffDay; i++){
             if(Options.worktimeOffDay[i] == 1){
                 $(wrapper_weekly_dayoff[i]).css('display','none');
+                $(switches_weekly_dayoff[i]).attr('value',PTERS_SWITCH_ON);
                 $(switches_weekly_dayoff[i]).find('.switchball').removeClass('switchoff').addClass('switchon');
                 $(switches_weekly_dayoff[i]).find('.switchback').addClass('switchon-back');
             }else if(Options.worktimeOffDay[i] == 0){
-
+                $(switches_weekly_dayoff[i]).attr('value',PTERS_SWITCH_OFF);
                 $(switches_weekly_dayoff[i]).find('.switchball').removeClass('switchon').addClass('switchoff');
                 $(switches_weekly_dayoff[i]).find('.switchback').removeClass('switchon-back');
             }
@@ -808,34 +800,53 @@
                 var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
                 if($(this).find('.switchball').hasClass('switchoff')){
                     $(this).parent('div').siblings(target).show();
-                    initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600)
+                    initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_array();})
                 }else{
                     $(this).parent('div').siblings(target).hide();
                 }
+                offday_switch_values_to_array();
             })
-        }
+        };
+
+        $('.pters_seekbar_wrapper').change(function(){
+            worktime_seekbar_values_to_array();
+        })
 
 
         function initialize_worktime_weekly(){
             $('#trainerWorkTimeSetting_').show();
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600)
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600)
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600)
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600)
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600)
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600)
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600)
-        }
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+        };
 
         function disable_worktime_dropdown(){
             $('#workTimehourSelect button, #workTimehourSelect2 button').attr('disabled',true).addClass('disabled_button');
-        }
+        };
 
         function enable_worktime_dropdown(){
             $('#workTimehourSelect button, #workTimehourSelect2 button').attr('disabled',false).removeClass('disabled_button');
-        }
+        };
 
+        function offday_switch_values_to_array(){
+            var resultArray = [];
+            $('#trainerWorkTimeSetting_ .pters_seekbar_wrapper_wrap .pters_switch').each(function(){
+                resultArray.push($(this).attr('value'))
+            })
+            $('#id_setting_trainer_work_time_weekly_offday').val(resultArray);
+        };
 
+        function worktime_seekbar_values_to_array(){
+            var resultArray = [];
+            $('#trainerWorkTimeSetting_ .pters_seekbar_wrapper').each(function(){
+                resultArray.push($(this).attr('value'))
+            })
+            $('#id_setting_trainer_work_time_weekly').val(resultArray);
+        };
 
 
         function make_available_date_format(hourselect, hourselect2){
@@ -855,7 +866,7 @@
             }
             var availableTime = starthour+'-'+endhour
             return availableTime
-        }
+        };
 
 
 

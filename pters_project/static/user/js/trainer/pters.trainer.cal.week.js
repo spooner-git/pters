@@ -376,8 +376,8 @@ function calTable_Set(Index,Year,Month,Dates,Week,append){ //선택한 Index를 
     var mm = String(currentPageMonth);
     var dd = String(currentDate);
     var today_date = yy+'_'+mm+'_'+dd;
-    var work_startTime = worktime_extract_maxmin(Options.worktimeWeekly)["min"]
-    var work_endTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"]
+    var work_startTime = Options.workStartTime;
+    var work_endTime = Options.workEndTime;
 
     for(var i=work_startTime; i<work_endTime; i++){
         var textToAppend = '<div id="'+Year+'_'+Month+'_'+currentDate+'_'+Week+'_'+i+'H'+'_00M'+'" class="time-row" style="height:'+(30*calendarSize)+'px;">';
@@ -1056,8 +1056,8 @@ function time_index_set(size){
     var start = Options.workStartTime;
     var end = Options.workEndTime;
 
-    var work_startTime = worktime_extract_maxmin(Options.worktimeWeekly)["min"]
-    var work_endTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"]
+    var work_startTime = Options.workStartTime;
+    var work_endTime = Options.workEndTime;
 
     var timelist = [];
 

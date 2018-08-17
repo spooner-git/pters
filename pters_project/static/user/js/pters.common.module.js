@@ -13,9 +13,11 @@ $('.pters_switch').click(function(){
     if($(this).find('.switchball').hasClass('switchoff')){
         $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
         $(this).find('.switchback').addClass('switchon-back')
+        $(this).attr('value',PTERS_SWITCH_ON);
     }else{
         $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
         $(this).find('.switchback').removeClass('switchon-back')
+        $(this).attr('value',PTERS_SWITCH_OFF);
     }
 });
 //피터스 On/Off 스위치
@@ -24,7 +26,7 @@ $('.pters_switch').click(function(){
 
 //작업중인 항목
 //피터스 seekbar 모듈
-	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint){
+	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint, callback){
 		var bodywidth = window.innerWidth
 		var $selector = selector;
 		var $segment = $selector.find('.pters_seekbar_segment');
@@ -119,6 +121,7 @@ $('.pters_switch').click(function(){
 									})
 					$selector.attr('value', `${index}:00-${$endball.attr('value')}:00` )
 				}
+				callback();
 			})
 		})
 
@@ -208,6 +211,7 @@ $('.pters_switch').click(function(){
 					}
 					$selector.attr('value', `${index-1}:00-${$endball.attr('value')}:00` )
 				}
+				callback();
 			})
 		})
 		//startBall을 끌고 당기는 Seekbar 액션
@@ -263,7 +267,7 @@ $('.pters_switch').click(function(){
 									})
 					$selector.attr('value', `${$startball.attr('value')}:00-${index}:00` )
 				}
-				
+				callback();
 			})
 			
 		})
@@ -352,6 +356,7 @@ $('.pters_switch').click(function(){
 					}
 					$selector.attr('value', `${$startball.attr('value')}:00-${index}:00` )
 				}
+				callback();
 			})
 		})
 		//endBall을 끌고 당기는 Seekbar 액션
