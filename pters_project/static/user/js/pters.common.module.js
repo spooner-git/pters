@@ -7,6 +7,8 @@
 //피터스 상단 셀렉트 박스 모듈
 
 //피터스 On/Off 스위치
+var PTERS_SWITCH_ON = 1;
+var PTERS_SWITCH_OFF = 0;
 $('.pters_switch').click(function(){
     if($(this).find('.switchball').hasClass('switchoff')){
         $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
@@ -23,8 +25,6 @@ $('.pters_switch').click(function(){
 //작업중인 항목
 //피터스 seekbar 모듈
 	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint){
-		console.log('this', selector.attr('id') )
-
 		var bodywidth = window.innerWidth
 		var $selector = selector;
 		var $segment = $selector.find('.pters_seekbar_segment');
@@ -45,14 +45,14 @@ $('.pters_switch').click(function(){
 							);
 		});
 		seek_divide.push($selector.find('.pters_seekbar_bar').width() + $segment.position().left)
-		console.log('seek_divide', seek_divide)
 		//각 세그먼트 좌표값 구해놓기
 
 		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
-		$startball.css({'left':seek_divide[initLoc_start] - $startball.outerWidth()/2 });
+		$startball.css({'left':seek_divide[initLoc_start] - $startball.outerWidth()/2 }).attr('value',initLoc_start);
 		$segment.find(`span[data-value="${initLoc_start}"]`).show().addClass('_startball');
-		$endball.css({'left':seek_divide[initLoc_end] - $startball.outerWidth()/2 });
+		$endball.css({'left':seek_divide[initLoc_end] - $startball.outerWidth()/2 }).attr('value',initLoc_end);
 		$segment.find(`span[data-value="${initLoc_end}"]`).show().addClass('_endball');
+		$selector.attr('value',`${initLoc_start}:00-${initLoc_end}:00`)
 		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
 
 
@@ -103,19 +103,21 @@ $('.pters_switch').click(function(){
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$startball.css({
 									'left':prev_val - $startball.width()/2
-									})
+									}).attr('value', index-1)
 					$lengthbar.css({
 									'left': $startball.position().left+$startball.outerWidth()/2,
 									'width': $endball.position().left - $startball.position().left
 									})
+					$selector.attr('value', `${index-1}:00-${$endball.attr('value')}:00` )
 				}else{
 					$startball.css({
 									'left':next_val - $startball.width()/2
-									})
+									}).attr('value', index)
 					$lengthbar.css({
 									'left':$startball.position().left+$startball.outerWidth()/2,
 									'width': $endball.position().left - $startball.position().left
 									})
+					$selector.attr('value', `${index}:00-${$endball.attr('value')}:00` )
 				}
 			})
 		})
@@ -182,7 +184,7 @@ $('.pters_switch').click(function(){
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$startball.css({
 									'left':prev_val - $startball.outerWidth()/2
-									})
+									}).attr('value', index-1)
 					$lengthbar.css({
 									'left': $startball.position().left+$startball.outerWidth()/2,
 									'width': $endball.position().left - $startball.position().left
@@ -191,10 +193,11 @@ $('.pters_switch').click(function(){
 					if(bodywidth < breakpoint){	
 						$segment.find(`span[data-value="${index-1}"]`).show().addClass('_startball');
 					}
+					$selector.attr('value', `${index-1}:00-${$endball.attr('value')}:00` )
 				}else{
 					$startball.css({
 									'left':next_val - $startball.outerWidth()/2
-									})
+									}).attr('value', index)
 					$lengthbar.css({
 									'left':$startball.position().left+$startball.outerWidth()/2,
 									'width': $endball.position().left - $startball.position().left
@@ -203,9 +206,8 @@ $('.pters_switch').click(function(){
 					if(bodywidth < breakpoint){
 						$segment.find(`span[data-value="${index}"]`).show().addClass('_startball');
 					}
+					$selector.attr('value', `${index-1}:00-${$endball.attr('value')}:00` )
 				}
-				
-				
 			})
 		})
 		//startBall을 끌고 당기는 Seekbar 액션
@@ -247,17 +249,19 @@ $('.pters_switch').click(function(){
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$endball.css({
 									'left':prev_val - $endball.width()/2
-									})
+									}).attr('value', index-1)
 					$lengthbar.css({
 									'width': $endball.position().left - startball_oriX
 									})
+					$selector.attr('value', `${$startball.attr('value')}:00-${index-1}:00` )
 				}else{
 					$endball.css({
 									'left':next_val - $endball.width()/2
-									})
+									}).attr('value',index)
 					$lengthbar.css({
 									'width': $endball.position().left - startball_oriX
 									})
+					$selector.attr('value', `${$startball.attr('value')}:00-${index}:00` )
 				}
 				
 			})
@@ -326,7 +330,7 @@ $('.pters_switch').click(function(){
 				if(finalDesitination - prev_val < next_val - finalDesitination){
 					$endball.css({
 									'left':prev_val - $endball.outerWidth()/2
-									})
+									}).attr('value', index-1)
 					$lengthbar.css({
 									'width': $endball.offset().left - startball_oriX
 									})
@@ -334,10 +338,11 @@ $('.pters_switch').click(function(){
 					if(bodywidth < breakpoint){
 						$segment.find(`span[data-value="${index-1}"]`).show().addClass('_endball');
 					}
+					$selector.attr('value', `${$startball.attr('value')}:00-${index-1}:00` )
 				}else{
 					$endball.css({
 									'left':next_val - $endball.outerWidth()/2
-									})
+									}).attr('value', index)
 					$lengthbar.css({
 									'width': $endball.offset().left - startball_oriX
 									})
@@ -345,6 +350,7 @@ $('.pters_switch').click(function(){
 					if(bodywidth < breakpoint){
 						$segment.find(`span[data-value="${index}"]`).show().addClass('_endball');
 					}
+					$selector.attr('value', `${$startball.attr('value')}:00-${index}:00` )
 				}
 			})
 		})
