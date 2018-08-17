@@ -209,7 +209,7 @@ $('.pters_switch').click(function(){
 					if(bodywidth < breakpoint){
 						$segment.find(`span[data-value="${index}"]`).show().addClass('_startball');
 					}
-					$selector.attr('value', `${index-1}:00-${$endball.attr('value')}:00` )
+					$selector.attr('value', `${index}:00-${$endball.attr('value')}:00` )
 				}
 				callback();
 			})
