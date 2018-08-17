@@ -55,7 +55,6 @@
                     $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1, 'top':cssthisTop});
                     small_plan = 0;
                 }else{
-                    console.log('small_plan',small_plan)
                     $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
                 }
            }else{
