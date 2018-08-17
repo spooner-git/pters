@@ -36,12 +36,15 @@ class PaymentInfoTb(TimeStampedModel):
 
 class BillingInfoTb(TimeStampedModel):
     billing_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    name = models.CharField(db_column='NAME', max_length=45,  blank=True, default='')
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     pay_method = models.CharField(db_column='PAY_METHOD', max_length=45, blank=True, default='')
     merchandise_type_cd = models.CharField(db_column='MERCHANDISE_TYPE_CD', max_length=45, blank=True, default='')
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, default='')
     merchant_uid = models.CharField(db_column='MERCHANT_UID', max_length=100,  blank=True, default='')
     customer_uid = models.CharField(db_column='CUSTOMER_UID', max_length=100, blank=True, default='')
+    price = models.IntegerField(db_column='PRICE', default=0)
+    card_name = models.CharField(db_column='CARD_NAME', max_length=45, blank=True, default='')
     payment_reg_date = models.DateField(db_column='PAYMENT_REG_DATE', blank=True, null=True)
     next_payment_date = models.DateField(db_column='NEXT_PAYMENT_DATE', blank=True, null=True)
     payed_date = models.IntegerField(db_column='PAYED_DATE', default=1)  # Field name made lowercase.
