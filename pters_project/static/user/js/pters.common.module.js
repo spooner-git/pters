@@ -23,6 +23,8 @@ $('.pters_switch').click(function(){
 //작업중인 항목
 //피터스 seekbar 모듈
 	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint){
+		console.log('this', selector.attr('id') )
+
 		var bodywidth = window.innerWidth
 		var $selector = selector;
 		var $segment = $selector.find('.pters_seekbar_segment');
@@ -30,6 +32,8 @@ $('.pters_switch').click(function(){
 		var $endball = $selector.find('.pters_seekbar_end_ball');
 		var $lengthbar = $selector.find('.pters_seekbar_length_bar');
 		var $mobileguide = $selector.find('.pters_seekbar_mobile_guide');
+		$startball.off('mousedown touchstart');
+		$endball.off('mousedown touchstart');
 		
 		//각 세그먼트 좌표값 구해놓기
 		var seek_divide = []; //각 세그먼트의 좌표 값
@@ -41,7 +45,7 @@ $('.pters_switch').click(function(){
 							);
 		});
 		seek_divide.push($selector.find('.pters_seekbar_bar').width() + $segment.position().left)
-		console.log('seek_divide',seek_divide)
+		console.log('seek_divide', seek_divide)
 		//각 세그먼트 좌표값 구해놓기
 
 		//Ball 위치를 initLoc_start,와 initLoc_end에 맞춰서 정렬시켜놓는다.
