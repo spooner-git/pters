@@ -1007,8 +1007,8 @@ $('#popup_delete_btn_yes').click(function(){
     //if(ajax_block_during_delete_weekcal == true){
     if(!$(this).hasClass('disabled_button')){
         //ajax_block_during_delete_weekcal = false;
-        disable_delete_btns_during_ajax();
         if(deleteTypeSelect == "groupMember_Substract_From_Group"){
+            disable_delete_btns_during_ajax();
             delete_groupmember_from_grouplist('callback',function(){
                 close_info_popup('cal_popup_plandelete');
             })
