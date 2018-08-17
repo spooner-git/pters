@@ -29,10 +29,6 @@
         <input type="hidden" name="setting_schedule_auto_finish"              id="id_setting_schedule_auto_finish" value=""> <!--시간이 지나면 일정을 자동으로 완료-->
         <input type="hidden" name="setting_lecture_auto_finish"               id="id_setting_lecture_auto_finish" value=""> <!--시간이 지나면 수강정보를 자동으로 완료-->
 
-        <input type="hidden" name="setting_trainer_work_time_weekly_switch"       id="id_setting_trainer_work_time_weekly_switch" value=""> <!-- 요일별 설정 on/off  -->
-        <input type="hidden" name="setting_trainer_work_time_weekly"              id="id_setting_trainer_work_time_weekly" value="">        <!-- 요일별 업무시간 -->
-        <input type="hidden" name="setting_trainer_work_time_weekly_offday"       id="id_setting_trainer_work_time_weekly_offday" value=""> <!-- 요일별 휴무일 -->
-
         <input type="hidden" name="setting_trainer_work_sun_time_avail" id="setting_trainer_work_sun_time_avail" value="">
         <input type="hidden" name="setting_trainer_work_mon_time_avail" id="setting_trainer_work_mon_time_avail" value="">
         <input type="hidden" name="setting_trainer_work_tue_time_avail" id="setting_trainer_work_tue_time_avail" value="">
@@ -513,15 +509,19 @@
         var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
         var worktime_Array = {"mon":mon_Worktime, "tue":tue_Worktime, "wed":wed_Worktime, "thu":thu_Worktime, "fri":fri_Worktime, "sat":sat_Worktime, "sun":sun_Worktime};
 
+        var worktime_week_form_Array = ["#setting_trainer_work_sun_time_avail", "#setting_trainer_work_mon_time_avail", "#setting_trainer_work_tue_time_avail", "#setting_trainer_work_wed_time_avail", "#setting_trainer_work_ths_time_avail", "#setting_trainer_work_fri_time_avail", "#setting_trainer_work_sat_time_avail"];
+        for(var i=0; i<worktime_week_form_Array.length; i++){
+            console.log(worktime_week_form_Array[i], Options.worktimeWeekly[i])
+            $(worktime_week_form_Array[i]).val(Options.worktimeWeekly[i])
+        };
 
         $('#id_setting_member_reserve_available_time').val(Options.stoptimeStart+':00-'+Options.stoptimeEnd+':00');
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
         $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit);
         $('#id_setting_member_reserve_prohibition').val(Options.reserve);
         $('#id_setting_schedule_auto_finish').val(Options.autocomplete);
-        $('#id_setting_trainer_work_time_weekly_switch').val(Options.worktimeWeeklyOn);
-        $('#id_setting_trainer_work_time_weekly').val(Options.worktimeWeekly);
-        $('#id_setting_trainer_work_time_weekly_offday').val(Options.worktimeOffDay);
+        $('#id_setting_lecture_auto_finish').val(Options.lecture_autocomplete);
+
 
         if(Options.limit > 0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon');
@@ -800,30 +800,29 @@
                 var target = `.${$(this).attr('id').split('_')[1]}_${dayname}`
                 if($(this).find('.switchball').hasClass('switchoff')){
                     $(this).parent('div').siblings(target).show();
-                    initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_array();})
+                    initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
+                    $(worktime_week_form_Array[i]).val(target.attr('value'));
                 }else{
+                    $(worktime_week_form_Array[i]).val('0:00')
                     $(this).parent('div').siblings(target).hide();
                 }
-                offday_switch_values_to_array();
             })
         };
 
         $('.pters_seekbar_wrapper').change(function(){
-            worktime_seekbar_values_to_array();
+            worktime_seekbar_values_to_form();
         })
 
 
         function initialize_worktime_weekly(){
             $('#trainerWorkTimeSetting_').show();
-            console.log(sun_Worktime["start"], sun_Worktime["end"],'sun_Worktime["start"], sun_Worktime["end"]')
-            console.log(mon_Worktime["start"], mon_Worktime["end"],'mon_Worktime["start"], mon_Worktime["end"]')
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
-            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_wed'),wed_Worktime["start"], wed_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_thu'),thu_Worktime["start"], thu_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_fri'),fri_Worktime["start"], fri_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
+            initialize_pters_seekbar_module($('#worktimeset_seekbar_sat'),sat_Worktime["start"], sat_Worktime["end"],600,function(){worktime_seekbar_values_to_form();})
         };
 
         function disable_worktime_dropdown(){
@@ -834,20 +833,21 @@
             $('#workTimehourSelect button, #workTimehourSelect2 button').attr('disabled',false).removeClass('disabled_button');
         };
 
-        function offday_switch_values_to_array(){
-            var resultArray = [];
-            $('#trainerWorkTimeSetting_ .pters_seekbar_wrapper_wrap .pters_switch').each(function(){
-                resultArray.push($(this).attr('value'))
-            })
-            $('#id_setting_trainer_work_time_weekly_offday').val(resultArray);
-        };
 
-        function worktime_seekbar_values_to_array(){
-            var resultArray = [];
+        function worktime_seekbar_values_to_form(){
+            var resultStartArray = [];
+            var resultEndArray = [];
             $('#trainerWorkTimeSetting_ .pters_seekbar_wrapper').each(function(){
-                resultArray.push($(this).attr('value'))
+                var starts = $(this).attr('value').split('-')[0];
+                var ends = $(this).attr('value').split('-')[1];
+                if(starts == "24:00"){starts = "23:59"};
+                if(ends == "24:00"){ends = "23:59"};
+                resultStartArray.push(starts);
+                resultEndArray.push(ends);
             })
-            $('#id_setting_trainer_work_time_weekly').val(resultArray);
+            for(var i=0; i<resultStartArray.length; i++){
+                $(worktime_week_form_Array[i]).val(`${resultStartArray[i]}-${resultEndArray[i]}`)
+            }
         };
 
 

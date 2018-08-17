@@ -82,7 +82,7 @@ $('.pters_switch').click(function(){
 				var destinationX = startball_oriX +  diffX;
 				var destinationW = endball_oriX - $startball.position().left;
 
-				if(destinationX >= hardstopX){
+				if(destinationX >= hardstopX && destinationX < $endball.position().left - $endball.width()/2 ){
 					$startball.css({
 									'left': destinationX
 									})
@@ -102,7 +102,7 @@ $('.pters_switch').click(function(){
 				var index = sortedlist.indexOf(finalDesitination);
 				var prev_val = sortedlist[index-1];
 				var next_val = sortedlist[index+1];
-				if(finalDesitination - prev_val < next_val - finalDesitination){
+				if(finalDesitination - prev_val < next_val - finalDesitination ){
 					$startball.css({
 									'left':prev_val - $startball.width()/2
 									}).attr('value', index-1)
@@ -138,7 +138,7 @@ $('.pters_switch').click(function(){
 
 				var destinationX = startball_oriX + diffX;
 
-				if(destinationX >= hardstopX - $startball.outerWidth()/2){
+				if(destinationX >= hardstopX - $startball.outerWidth()/2 && destinationX < $endball.offset().left - $endball.outerWidth()/2 ){
 					$startball.css({
 									'left': destinationX - hardstopX
 									}).attr('data-des',hardstopX - $startball.outerWidth()/2)
@@ -231,7 +231,7 @@ $('.pters_switch').click(function(){
 
 				var destinationX = endball_oriX + diffX;
 				var destinationW = endball_oriX - $endball.position().left;
-				if(destinationX <= hardstopX2 - $endball.width()/2){
+				if(destinationX <= hardstopX2 - $endball.width()/2 && destinationX > $startball.position().left + $startball.width()/2 ){
 					$endball.css({
 									'left': destinationX
 									})
@@ -287,7 +287,7 @@ $('.pters_switch').click(function(){
 				var destinationX = endball_oriX + diffX;
 				var destinationW = endball_oriX - $endball.position().left;
 
-				if(destinationX + $endball.outerWidth()/2 <= hardstopX2){
+				if(destinationX + $endball.outerWidth()/2 <= hardstopX2 && destinationX > $startball.offset().left + $startball.outerWidth()/2 ){
 					$endball.css({
 									//'left': endball_oriX + $endball.width()/2 + diffX
 									'left':destinationX - $selector.find('.pters_seekbar_bar').offset().left
