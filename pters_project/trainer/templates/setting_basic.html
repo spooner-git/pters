@@ -496,13 +496,13 @@
         var select_all_check = false;
 
         //업무 시간 설정 seekbar
-        var mon_Worktime = worktime_extract_hour(Options.worktimeWeekly[0]);
-        var tue_Worktime = worktime_extract_hour(Options.worktimeWeekly[1]);
-        var wed_Worktime = worktime_extract_hour(Options.worktimeWeekly[2]);
-        var thu_Worktime = worktime_extract_hour(Options.worktimeWeekly[3]);
-        var fri_Worktime = worktime_extract_hour(Options.worktimeWeekly[4]);
-        var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[5]);
-        var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
+        var sun_Worktime = worktime_extract_hour(Options.worktimeWeekly[0]);
+        var mon_Worktime = worktime_extract_hour(Options.worktimeWeekly[1]);
+        var tue_Worktime = worktime_extract_hour(Options.worktimeWeekly[2]);
+        var wed_Worktime = worktime_extract_hour(Options.worktimeWeekly[3]);
+        var thu_Worktime = worktime_extract_hour(Options.worktimeWeekly[4]);
+        var fri_Worktime = worktime_extract_hour(Options.worktimeWeekly[5]);
+        var sat_Worktime = worktime_extract_hour(Options.worktimeWeekly[6]);
         var worktime_Array = {"mon":mon_Worktime, "tue":tue_Worktime, "wed":wed_Worktime, "thu":thu_Worktime, "fri":fri_Worktime, "sat":sat_Worktime, "sun":sun_Worktime};
 
 
@@ -807,6 +807,8 @@
 
         function initialize_worktime_weekly(){
             $('#trainerWorkTimeSetting_').show();
+            console.log(sun_Worktime["start"], sun_Worktime["end"],'sun_Worktime["start"], sun_Worktime["end"]')
+            console.log(mon_Worktime["start"], mon_Worktime["end"],'mon_Worktime["start"], mon_Worktime["end"]')
             initialize_pters_seekbar_module($('#worktimeset_seekbar_sun'),sun_Worktime["start"], sun_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
             initialize_pters_seekbar_module($('#worktimeset_seekbar_mon'),mon_Worktime["start"], mon_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
             initialize_pters_seekbar_module($('#worktimeset_seekbar_tue'),tue_Worktime["start"], tue_Worktime["end"],600,function(){worktime_seekbar_values_to_array();})
