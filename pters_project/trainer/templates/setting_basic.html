@@ -29,6 +29,10 @@
         <input type="hidden" name="setting_schedule_auto_finish"              id="id_setting_schedule_auto_finish" value=""> <!--시간이 지나면 일정을 자동으로 완료-->
         <input type="hidden" name="setting_lecture_auto_finish"               id="id_setting_lecture_auto_finish" value=""> <!--시간이 지나면 수강정보를 자동으로 완료-->
 
+        <input type="hidden" name="setting_trainer_work_time_weekly_switch"       id="id_setting_trainer_work_time_weekly_switch" value=""> <!-- 요일별 설정 on/off  -->
+        <input type="hidden" name="setting_trainer_work_time_weekly"              id="id_setting_trainer_work_time_weekly" value="">        <!-- 요일별 업무시간 -->
+        <input type="hidden" name="setting_trainer_work_time_weekly_offday"       id="id_setting_trainer_work_time_weekly_offday" value=""> <!-- 요일별 휴무일 -->
+
         <input type="hidden" name="next_page" value = '{% url 'trainer:trainer_setting' %}'>
     </form>
 
@@ -515,7 +519,10 @@
         $('#id_setting_member_reserve_time_prohibition').val(Options.limit);
         $('#id_setting_member_cancel_time_prohibition').val(Options.cancellimit);
         $('#id_setting_member_reserve_prohibition').val(Options.reserve);
-        $('#id_setting_schedule_auto_finish').val(Options.autocomplete)
+        $('#id_setting_schedule_auto_finish').val(Options.autocomplete);
+        $('#id_setting_trainer_work_time_weekly_switch').val(Options.worktimeWeeklyOn);
+        $('#id_setting_trainer_work_time_weekly').val(Options.worktimeWeekly);
+        $('#id_setting_trainer_work_time_weekly_offday').val(Options.worktimeOffDay);
 
         if(Options.limit > 0){ //근접시간 예약 금지 설정
             $('#switch1').find('.switchball').removeClass('switchoff').addClass('switchon');
@@ -736,9 +743,9 @@
 
         $('#switch2').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#id_setting_member_reserve_prohibition').val(0)
+                $('#id_setting_member_reserve_prohibition').val(PTERS_SWITCH_OFF)
             }else{
-                $('#id_setting_member_reserve_prohibition').val(1)
+                $('#id_setting_member_reserve_prohibition').val(PTERS_SWITCH_ON)
             }
             check_dropdown_selected();
         });
@@ -757,42 +764,36 @@
 
         $('#switch_autocomplete').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#id_setting_schedule_auto_finish').val(0)
+                $('#id_setting_schedule_auto_finish').val(PTERS_SWITCH_OFF)
 
             }else{
-                $('#id_setting_schedule_auto_finish').val(1)
+                $('#id_setting_schedule_auto_finish').val(PTERS_SWITCH_ON)
             }
             check_dropdown_selected();
         })
 
         $('#switch_autofinish').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
-                $('#id_setting_lecture_auto_finish').val(0)
+                $('#id_setting_lecture_auto_finish').val(PTERS_SWITCH_OFF)
 
             }else{
-                $('#id_setting_lecture_auto_finish').val(1)
+                $('#id_setting_lecture_auto_finish').val(PTERS_SWITCH_ON)
             }
             check_dropdown_selected();
         })
 
         $('#switch_worktime_weekly').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
+                $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_OFF);
                 $('#trainerWorkTimeSetting_').hide();
                 enable_worktime_dropdown();
             }else{
+                $('#id_setting_trainer_work_time_weekly_switch').val(PTERS_SWITCH_ON);
                 initialize_worktime_weekly();
                 disable_worktime_dropdown();
             }
         })
 
-        $('#switch_worktime_sun').click(function(){
-            var target = `.${$(this).attr('id').split('_')[1]}_${$(this).attr('id').split('_')[2]}`
-            if($(this).find('.switchball').hasClass('switchoff')){
-                $(this).parent('div').siblings(target).show();
-            }else{
-                $(this).parent('div').siblings(target).hide();
-            }
-        })
         for(var i=0; i < switches_weekly_dayoff.length; i++ ){
             $(switches_weekly_dayoff[i]).click(function(){
                 var dayname = $(this).attr('id').split('_')[2];
