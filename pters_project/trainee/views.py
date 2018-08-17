@@ -1386,7 +1386,7 @@ def get_trainer_setting_data(context, user_id, class_id):
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
-    context['lt_res_04'] = lt_res_04
+    # context['lt_res_04'] = lt_res_04
     context['lt_work_sun_time_avail'] = lt_work_sun_time_avail
     context['lt_work_mon_time_avail'] = lt_work_mon_time_avail
     context['lt_work_tue_time_avail'] = lt_work_tue_time_avail
