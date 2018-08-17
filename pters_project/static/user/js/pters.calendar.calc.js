@@ -335,7 +335,7 @@ function worktime_extract_hour(worktimeformat){
     if(endmin == "59" && endhour == "23"){
         endhour = 24
     }
-    return {"start":starthour, "end":endhour}
+    return {"start": Number(starthour), "end":Number(endhour)}
 }
 
 function worktime_extract_maxmin(worktimeArray){

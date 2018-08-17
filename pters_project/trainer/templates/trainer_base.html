@@ -803,7 +803,7 @@
         "planChangePush":'-',
         "regErgentPush":'-',
 
-        "worktime":'{{ request.session.setting_trainer_work_time_available }}',
+        "worktime":'',
 
         "worktimeWeeklyOn": "",
         "worktimeWeekly":['{{ request.session.setting_trainer_work_sun_time_avail }}',
@@ -845,8 +845,9 @@
         Options.workStartTime =  worktime_extract_maxmin(Options.worktimeWeekly)["min"];
         Options.workEndTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"];
     }
+    Options.worktime = `${Options.workStartTime}:00-${Options.workEndTime}:00`
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
-
+    console.log(Options.worktime)
     //요일별 업무시간을 보고 휴일날짜를 구한다.
     for(var i=0; i<Options.worktimeWeekly.length; i++){
         if(Options.worktimeWeekly[i].split('-')[0] == Options.worktimeWeekly[i].split('-')[1]){
