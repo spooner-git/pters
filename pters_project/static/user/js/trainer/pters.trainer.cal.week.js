@@ -1099,9 +1099,6 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                     time_disable_end = endtime
                 }
 
-                console.log('time_disable_start',time_disable_start)
-                
-
                 var hour_firstcell = $('.timeindex div.hour:first-child');
                 var hour_lastcell = $('.timeindex div.hour:last-child');
 
