@@ -254,14 +254,53 @@ $(document).ready(function(){
     })
 
 
-    /*미니달력 관련*/
-    $("#datepicker_repeat_start").datepicker({
-        minDate : 0,
+    /*[미니달력] 구매에 따른 옵션 처리 관련*/
+    if(Options.auth_limit == 0){
+        $("#datepicker").datepicker("option",
+                                                 "minDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(substract_date(today_YY_MM_DD, -14),'-')
+                                                );
+        $("#datepicker").datepicker("option",
+                                                 "maxDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(today_YY_MM_DD, 14),'-')
+                                                );
+    }else{
+        $("#datepicker").datepicker({
+            minDate : 0,
+        });
+    }
 
-    });
-    $("#datepicker_repeat_end").datepicker({
-        minDate : 0,
-    });
+    if(Options.auth_limit == 0){
+        $("#datepicker_repeat_start").datepicker("option",
+                                                 "minDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(substract_date(today_YY_MM_DD, -14),'-')
+                                                );
+        $("#datepicker_repeat_start").datepicker("option",
+                                                 "maxDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(today_YY_MM_DD, 14),'-')
+                                                );
+    }else{
+        $("#datepicker_repeat_start").datepicker({
+            minDate : 0,
+        });
+    }
+    
+
+    if(Options.auth_limit == 0){
+        $("#datepicker_repeat_end").datepicker("option",
+                                                "minDate",
+                                                 date_format_yyyy_m_d_to_yyyy_mm_dd(substract_date(today_YY_MM_DD, -14),'-')
+                                               );
+        $("#datepicker_repeat_end").datepicker("option",
+                                                "maxDate",
+                                                 date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(today_YY_MM_DD, 14),'-')
+                                               );
+    }else{
+        $("#datepicker_repeat_end").datepicker({
+            minDate : 0,
+        });
+    }
+    
 
     $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',
