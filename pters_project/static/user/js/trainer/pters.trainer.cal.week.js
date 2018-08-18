@@ -745,10 +745,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z])["end"]-1;
-                /*
+                
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -807,10 +807,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+1])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+1])["end"]-1;
-                /*
+                
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -863,10 +863,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+2])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+2])["end"]-1;
-                /*
+                
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -919,10 +919,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+3])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+3])["end"]-1;
-                /*
+                
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -975,10 +975,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+4])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+4])["end"]-1;
-                /*
+                
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -1031,10 +1031,10 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
 
                 var time_disable_start = worktime_extract_hour(worktime_option[z+5])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+5])["end"]-1;
-                /*
+                
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -1088,10 +1088,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                 var time_disable_start = worktime_extract_hour(worktime_option[z+6])["start"];
                 var time_disable_end = worktime_extract_hour(worktime_option[z+6])["end"]-1;
 
-                /*
                 if(time_disable_start < starttime){
-                    time_disable_start = starttime;
-                }*/
+                    time_disable_start = starttime+1;
+                }
                 if(time_disable_end == -1 || time_disable_end == 0){
                     time_disable_end = starttime;
                 }
@@ -1099,6 +1098,8 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                 if(time_disable_end >= endtime){
                     time_disable_end = endtime
                 }
+
+                console.log('time_disable_start',time_disable_start)
                 
 
                 var hour_firstcell = $('.timeindex div.hour:first-child');
