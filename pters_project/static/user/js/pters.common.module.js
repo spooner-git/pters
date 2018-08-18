@@ -364,3 +364,69 @@ $('.pters_switch').click(function(){
 
 
 //피터스 seekbar 모듈
+
+
+
+
+
+
+//드랍다운 가속도 터치
+
+//드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+function set_list_overflow_scrolling(selector, selector_arrowParent){
+	//드랍다운 씹힘현상 해결
+	if($(selector).scrollTop() < 30 ){
+        $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');
+    };
+    $(selector).scroll(function(){
+        var scrollHeight = $(this).prop('scrollHeight');
+        var popupHeight = $(this).height();
+        var scrollLocation = $(this).scrollTop();
+        //scrollHeight = popupHeight + scrollLocation(끝)
+        if(popupHeight + scrollLocation == scrollHeight){
+            $(this).animate({scrollTop : scrollLocation-1},10)
+        }else if(popupHeight + scrollLocation == popupHeight){
+            $(this).animate({scrollTop : scrollLocation+1},10)
+        }
+
+        // 좌측 스크롤 애로우 보이기
+        if(popupHeight + scrollLocation < scrollHeight-30){
+            $(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','visible')
+        }else{
+            $(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden')
+        }
+        if(scrollLocation > 30){
+            $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','visible')
+        }else{
+            $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden')
+        }
+        //좌측 스크롤 애로우 보이기
+    });
+    //드랍다운 씹힘현상 해결
+    //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+
+    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+        $(document).on('click',`${selector_arrowParent} img.dropdown_scroll_arrow_top`,function(e){
+            e.stopPropagation();
+            var $thisparent = $(selector);
+            var $thisparent_scroll_height = $thisparent.prop('scrollHeight');
+            var $thisparent_display_height = $thisparent.height();
+            if($(this).css('visibility') == 'visible'){
+                $thisparent.animate({scrollTop: 0},200)
+            }
+        });
+    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+        $(document).on('click',`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`,function(e){
+            e.stopPropagation();
+            var $thisparent = $(selector);
+            var $thisparent_scroll_height = $thisparent.prop('scrollHeight');
+            var $thisparent_display_height = $thisparent.height();
+            if($(this).css('visibility') == 'visible'){
+                $thisparent.animate({scrollTop: $thisparent_scroll_height + $thisparent_display_height},200)
+            }
+        });
+    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+}
+    
+//드랍다운 가속도 터치

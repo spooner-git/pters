@@ -223,7 +223,8 @@ $(document).ready(function(){
     };
 
 
-    $('.dateButton').click(function(){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
+    $('.dateButton').click(function(e){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
+        e.preventDefault();
         var selectedDay = $(this).attr('data-date')
         if(!$(this).hasClass('dateButton_selected')){
             $(this).addClass('dateButton_selected')

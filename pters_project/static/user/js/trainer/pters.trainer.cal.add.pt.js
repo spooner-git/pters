@@ -1540,8 +1540,14 @@ $(document).ready(function(){
         var targetHTML = $('#repeat_reg_list');
         var duplicatedDate = jsondata.RepeatDuplicationDateArray;
         var successDate = jsondata.RepeatSuccessDateArray;
-
-        var htmlToJoin = [`<div id="close_repeat_reg_list">반복일정 등록 리스트<span>닫기</span></div>`]
+        var title = `<div id="close_repeat_reg_list">
+                            반복일정 등록 리스트
+                            <span>닫기</span>
+                            <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top">
+                            <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="bottom:-230px;">
+                    </div>
+                    <div class="repeat_list_wrapper">`
+        var htmlToJoin = [title];
         var dupli_len = duplicatedDate.length;
         for(var i=0; i<dupli_len; i++){
             htmlToJoin.push(
@@ -1561,9 +1567,16 @@ $(document).ready(function(){
                                 </div>`
                             )
         }
-
+        htmlToJoin.push(`</div>`)
         targetHTML.html(htmlToJoin.join(""))
+        
+        set_list_overflow_scrolling('.repeat_list_wrapper', '#close_repeat_reg_list');
     };
+
+
+
+
+
 
     //OFF반복일정 확인 팝업 "아니오" 눌렀을때 (선택지: 반복 설정 다시 하겠다)
     var ajax_block_during_repeat_confirm = true;
