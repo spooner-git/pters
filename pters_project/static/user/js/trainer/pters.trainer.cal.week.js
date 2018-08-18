@@ -2479,7 +2479,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
     }
 
     for(date in date_sorted){
-        if( $('#'+date).find('.classTime').length == 0 && $('#'+date).find('.offTime').length == 0 && $('#'+date).find('.groupTime').length == 0 ){
+        if( $('#'+date).find(`.${planColor}`).length == 0 ){
             $('#'+date).append(date_sorted[date].join(''))
         }
     }
@@ -2497,7 +2497,6 @@ function ajaxClassTime(use, callfunction){
     }else{
         beforeSend_ = function(){beforeSend()};
         completeSend_ = function(){completeSend()};
-        console.log('else');
     }
 
     var $weekNum4 = $('#weekNum_4').attr('data-date');
