@@ -108,7 +108,14 @@ $(document).ready(function(){
             var thisIDMin  = $(this).attr('id').split('_')[4];
 
             var thisIdDate_ = thisIDDate.replace(/_/gi,'-');
-            if( compare_date2(add_date(today_YY_MM_DD, 15), thisIdDate_)  &&  compare_date2(thisIdDate_ , substract_date(today_YY_MM_DD, -15)) ){
+            if( (compare_date2(thisIdDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIdDate_)) && Options.auth_limit == 0 ){
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+            }else{
                 if(Options.classDur == 30){
                     if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                         $('.blankSelected30').removeClass('blankSelected30');
@@ -214,13 +221,6 @@ $(document).ready(function(){
 
                     }
                 }
-            }else{
-                show_caution_popup(`<div style="margin-bottom:10px;">
-                                    베이직 기능 이용자께서는 <br>
-                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`)
             }
         });
     }
@@ -249,7 +249,14 @@ $(document).ready(function(){
 
     $(document).on('click','.td00',function(e){
         var thisIDDate = $(this).attr('id').replace(/_/gi,"-");
-        if( compare_date2(add_date(today_YY_MM_DD, 15), thisIDDate)  &&  compare_date2(thisIDDate , substract_date(today_YY_MM_DD, -15)) ){
+        if( (compare_date2(thisIDDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIDDate)) && Options.auth_limit == 0 ){
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+        }else{
             get_timeindex_Y();
 
             var thisOffsetTop = $(this).offset().top;
@@ -323,13 +330,6 @@ $(document).ready(function(){
                     console.log('너무 좁아')
                 }
             }
-        }else{
-            show_caution_popup(`<div style="margin-bottom:10px;">
-                                    베이직 기능 이용자께서는 <br>
-                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`)
         }
     })
 
@@ -2931,8 +2931,12 @@ function draw_time_graph(option, type, thisDate){  //type = '' and mini
     var thisdate = thisDate;
     var day = new Date(thisDate).getDay();
 
-    var work_start = worktime_extract_hour(Options.worktimeWeekly[day])["start"];
-    var work_end = worktime_extract_hour(Options.worktimeWeekly[day])["end"];
+    
+    var work_start = Options.workStartTime;
+    var work_end = Options.workEndTime;
+    var work_start_thisday = worktime_extract_hour(Options.worktimeWeekly[day])["start"];
+    var work_end_thisday = worktime_extract_hour(Options.worktimeWeekly[day])["end"];
+
 
     var targetHTML =  '';
     var types = '';
@@ -2954,21 +2958,29 @@ function draw_time_graph(option, type, thisDate){  //type = '' and mini
     if(option == "30"){
         for(var i=0; i<=24; i++){
             var display = "";
+            var worktime_disable = "";
             if(i<work_start || i >= work_end){
                 var display = 'display:none;'
             }
+            if( (i >= work_start && i < work_start_thisday) || ( i <= work_end && i >= work_end_thisday ) ){
+                var worktime_disable = "worktime_disable"
+            }
             tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
             //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
-            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
+            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00 ${worktime_disable}" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
         }
     }else if(option == "60"){
         for(var i=0; i<=24; i++){
             var display = "";
+            var worktime_disable = "";
             if(i<work_start || i >= work_end){
                 var display = 'display:none;'
             }
+            if( (i >= work_start && i < work_start_thisday) || ( i <= work_end && i >= work_end_thisday ) ){
+                var worktime_disable = "worktime_disable"
+            }
             tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
-            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
+            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00 ${worktime_disable}" style="width:${tdwidth}%;${display}"></div>`;
         }
     }
     var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');

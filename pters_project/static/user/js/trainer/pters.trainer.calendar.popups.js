@@ -81,7 +81,15 @@
         var yy=info[0];
         var mm=info[1];
         var dd=info[2];
-        if( compare_date2(add_date(today_YY_MM_DD, 15), `${yy}-${mm}-${dd}`)  &&  compare_date2( `${yy}-${mm}-${dd}` , substract_date(today_YY_MM_DD, -15)) ){
+        var thisIdDate_ = `${yy}-${mm}-${dd}`;
+        if( (compare_date2(thisIdDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIdDate_)) && Options.auth_limit == 0 ){
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+        }else{
             $('#float_btn_wrap').hide();
             shade_index(100);
             closeAlarm('pc');
@@ -201,13 +209,6 @@
                 selector_cal_popup_planinfo.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
             }
             //disable_window_scroll();
-        }else{
-            show_caution_popup(`<div style="margin-bottom:10px;">
-                                베이직 기능 이용자께서는 <br>
-                                일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                            </div>`)
         }
     });
 
@@ -218,7 +219,15 @@
         var yy=info[0];
         var mm=info[1];
         var dd=info[2];
-        if( compare_date2(add_date(today_YY_MM_DD, 15), `${yy}-${mm}-${dd}`)  &&  compare_date2( `${yy}-${mm}-${dd}` , substract_date(today_YY_MM_DD, -15)) ){
+        var thisIdDate_ = `${yy}-${mm}-${dd}`;
+        if( (compare_date2(thisIdDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIdDate_)) && Options.auth_limit == 0 ){
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+        }else{
             $('#float_btn_wrap').hide();
             shade_index(100);
             closeAlarm('pc');
@@ -299,13 +308,6 @@
                 selector_cal_popup_plan_info.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
             }
             //disable_window_scroll();
-        }else{
-            show_caution_popup(`<div style="margin-bottom:10px;">
-                                베이직 기능 이용자께서는 <br>
-                                일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                            </div>`)
         }
     });
 
@@ -316,7 +318,15 @@
         var yy=info[0];
         var mm=info[1];
         var dd=info[2];
-        if( compare_date2(add_date(today_YY_MM_DD, 15), `${yy}-${mm}-${dd}`)  &&  compare_date2( `${yy}-${mm}-${dd}` , substract_date(today_YY_MM_DD, -15)) ){
+        var thisIdDate_ = `${yy}-${mm}-${dd}`;
+        if( (compare_date2(thisIdDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIdDate_)) && Options.auth_limit == 0 ){
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+        }else{
             var bodywidth = window.innerWidth;
             var group_class_type_name = $(this).attr('data-group-type-cd-name');
             e.stopPropagation();
@@ -445,13 +455,6 @@
                 selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
             }
             //disable_window_scroll();
-        }else{
-            show_caution_popup(`<div style="margin-bottom:10px;">
-                                베이직 기능 이용자께서는 <br>
-                                일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                            </div>`)
         }
     });
 /////////////////////////////////////////////////////////////////////////////////////////////일정 클릭 이벤트
