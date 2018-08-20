@@ -30,7 +30,7 @@ def get_background_url_center(request):
 
 
 @register.simple_tag
-def get_background_type_cd(request):
+def get_background_type_cd_center(request):
     class_id = request.session.get('class_id', '')
     background_img_type_cd = []
     if class_id != '':
