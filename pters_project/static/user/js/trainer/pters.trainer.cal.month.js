@@ -252,7 +252,14 @@ $(document).ready(function(){
         $(document).on('click','.plan_raw',function(){
             var selectedDate = $('.popup_ymdText').text();
             var thisDate = date_format_to_yyyymmdd(selectedDate,'-');
-            if( compare_date2(add_date(today_YY_MM_DD, 15), thisDate)  &&  compare_date2(thisDate , substract_date(today_YY_MM_DD, -15)) ){
+            if( (compare_date2(thisDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisDate)) && Options.auth_limit == 0 ){
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+            }else{
                 var group_type_name = $(this).attr('data-group-type-cd-name');
                 var member = " 회원님의 ";
                 var yourplan = " 일정";
@@ -357,31 +364,24 @@ $(document).ready(function(){
                 }else{
                     $('#cal_popup_planinfo').css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
                 }
-            }else{
-                show_caution_popup(`<div style="margin-bottom:10px;">
-                                    베이직 기능 이용자께서는 <br>
-                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`)
             }
         })
 
         $(document).on('click','.plan_raw_add',function(){
             var thisDate = date_format_yyyy_m_d_to_yyyy_mm_dd($(this).attr('data-date'),'-');
-            if( compare_date2(add_date(today_YY_MM_DD, 15), thisDate)  &&  compare_date2(thisDate , substract_date(today_YY_MM_DD, -15)) ){
-                close_info_popup('cal_popup_plancheck')
-                clear_pt_off_add_popup()
-                open_pt_off_add_popup('ptadd', thisDate)
-                ajaxTimeGraphSet(thisDate)
-                shade_index(100)
-            }else{
+            if( (compare_date2(thisDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisDate)) && Options.auth_limit == 0 ){
                 show_caution_popup(`<div style="margin-bottom:10px;">
                                     베이직 기능 이용자께서는 <br>
                                     일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
                                     <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
                                 </div>`)
+            }else{
+                close_info_popup('cal_popup_plancheck')
+                clear_pt_off_add_popup()
+                open_pt_off_add_popup('ptadd', thisDate)
+                ajaxTimeGraphSet(thisDate)
+                shade_index(100)
             }
 
         })
