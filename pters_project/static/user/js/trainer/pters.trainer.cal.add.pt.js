@@ -96,288 +96,6 @@ $(document).ready(function(){
         }
     });
 
-
-    /*
-     //직접 진행시간 선택해서 추가
-     $(document).on('click','.td00, .td30', function(){ //주간달력 미니 팝업
-     closeAlarm('pc')
-     if($('._MINI_ptadd').css('display')=='inline'){
-     addTypeSelect = 'ptadd'
-     var compensate_off = 0
-     }else if($('._MINI_ptadd').css('display')=="none"){
-     addTypeSelect = 'offadd'
-     var compensate_off = +30
-     }
-     var toploc = $(this).offset().top;
-     var leftloc = $(this).offset().left;
-     var tdwidth = $(this).width();
-     var tdheight = $(this).height();
-     var minipopupwidth = 300;
-     var minipopupheight = 250;
-     var splitID = $(this).attr('id').split('_')
-     var weekID = $(this).attr('data-week')
-
-
-     //minipopup 위치 보정
-     if(splitID[3]>=(Options.workEndTime-5)){
-     //$('.dropdown_mini').addClass('dropup')
-     if(splitID[3]== (Options.workEndTime-1)){
-     if(Options.workEndTime - Options.workStartTime < 5){
-     var toploc = toploc
-     }else{
-     var toploc = toploc - minipopupheight + compensate_off
-     }
-     }else if(splitID[3] <= (Options.workStartTime+3)){
-     var toploc = toploc
-     }else{
-     var toploc = toploc - minipopupheight + compensate_off
-     }
-     }else{
-     $('.dropdown_mini').removeClass('dropup')
-     if(weekID==3){
-     var toploc = toploc + tdheight
-     }else{
-     var toploc = toploc + 30
-     }
-     }
-
-     if(weekID>=4){
-     var leftloc = leftloc-300-tdwidth
-     }else if(weekID==3){
-     var leftloc = leftloc
-     }
-     //minipopup 위치 보정
-     var thisIDSplitArray = $(this).attr('id').split('_')
-     if(thisIDSplitArray[4]=="30"){
-     var next30ID = '#'+thisIDSplitArray[0]+'_'+thisIDSplitArray[1]+'_'+thisIDSplitArray[2]+'_'+(Number(thisIDSplitArray[3])+1)+'_00'
-     }else if(thisIDSplitArray[4]=="00"){
-     var next30ID = '#'+thisIDSplitArray[0]+'_'+thisIDSplitArray[1]+'_'+thisIDSplitArray[2]+'_'+thisIDSplitArray[3]+'_30'
-     }
-     var thisTime = thisIDSplitArray[3] +'_'+ thisIDSplitArray[4]
-     //2018_5_13_23_30
-     if(Options.classDur == 60){
-     if(!$(this).find('div').hasClass('classTime')
-     && !$(this).find('div').hasClass('groupTime')
-     && !$(this).find('div').hasClass('offTime')
-     && $('#page-addplan-pc').css('display','none')
-     && !$(next30ID).find('div').hasClass('classTime')
-     && !$(next30ID).find('div').hasClass('groupTime')
-     && !$(next30ID).find('div').hasClass('offTime')
-     && !$(this).hasClass('_on')
-     && thisTime!=(Options.workEndTime-1)+'_30'){
-     //$('.td00').css('background','transparent')
-     closeMiniPopupByChange()
-     if(Options.classDur == 30){
-     $(this).find('div').addClass('blankSelected30')
-     $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
-     }else if(Options.classDur == 60){
-     if($(this).attr('id').split('_')[4]=='30'){
-     //if(!$('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').hasClass('_on')){
-     //$('#'+$(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2]+'_'+$(this).attr('id').split('_')[3]+'_00').find('div').addClass('blankSelected')
-     $(this).find('div').addClass('blankSelected')
-     $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
-     //}
-
-     }else{
-     $(this).find('div').addClass('blankSelected')
-     $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
-     //$(this).find('div').addClass('blankSelected30')
-     }
-
-     }
-     //$('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
-     $('.typeSelected').removeClass('typeSelected')
-     $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
-     if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-     $('._MINI_ptadd').css('display','inline')
-     //$('._MINI_offadd').hide()
-     }else if(addTypeSelect == "offadd"){
-     //$('._MINI_offadd').show()
-     $('._MINI_ptadd').css('display','none')
-     }
-     if(Options.hourunit == 30){
-     var tdinfo = $(this).attr('id').split('_');
-     var yy = tdinfo[0];
-     var mm = tdinfo[1];
-     var dd = tdinfo[2];
-     var hh = tdinfo[3];
-     var min = tdinfo[4];
-     //var min = '00'
-     //var hh1 = Number(tdinfo[3])+1;
-     //var min1 = '00'
-
-     if(min == '00'){
-     var hh1 = Number(tdinfo[3])+1;
-     var min1 = '00'
-     }else if(min == "30"){
-     var hh1 = Number(tdinfo[3])+1;
-     var min1 = '30'
-     }
-
-     var yy0 = tdinfo[0];
-     var mm0 = tdinfo[1];
-     var dd0 = tdinfo[2];
-     if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
-     if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
-     if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
-     if(Options.language == "KOR"){
-     var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "JPN"){
-     var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "ENG"){
-     var text = yy+'. '+mm+'. '+dd+'. '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }
-     $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
-     $('#durations_mini, #durations_mini').html('')
-     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-     timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
-     timeGraphSet("group","pink","mini", initialJSON);
-     timeGraphSet("off","grey","mini", initialJSON)
-     durTimeSet(hh,min,"mini");
-     $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time").val(hh+':'+min+'');
-     $("#id_time_duration").val(1*(Options.classDur/60))
-     $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time_off").val(hh+':'+min+'');
-
-     }else if(Options.hourunit == 60){
-     var tdinfo = $(this).attr('id').split('_');
-     var yy = tdinfo[0];
-     var mm = tdinfo[1];
-     var dd = tdinfo[2];
-     var hh = tdinfo[3];
-     var min = tdinfo[4];
-     var hh1 = Number(tdinfo[3])+1;
-     var min1 = '00'
-     var yy0 = tdinfo[0];
-     var mm0 = tdinfo[1];
-     var dd0 = tdinfo[2];
-     if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
-     if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
-     if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
-     if(Options.language == "KOR"){
-     var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "JPN"){
-     var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "ENG"){
-     var text = yy+'. '+mm+'. '+dd+'. '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }
-     $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
-     $('#durations_mini, #durations_mini').html('')
-     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-     timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
-     timeGraphSet("group","pink","mini", initialJSON);
-     timeGraphSet("off","grey","mini", initialJSON)
-     durTimeSet(hh,min,"mini");
-     $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time").val(hh+':'+min+'');
-     $("#id_time_duration").val(1*(Options.classDur/30))
-     $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time_off").val(hh+':'+min+'');
-
-     }
-     }
-     }else if(Options.classDur == 30){
-     if(!$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('groupTime') && !$(this).find('div').hasClass('offTime') && $('#page-addplan-pc').css('display','none')){
-     //$('.td00').css('background','transparent')
-     closeMiniPopupByChange()
-     if(Options.classDur == 30){
-     $(this).find('div').addClass('blankSelected30')
-     }else if(Options.classDur == 60){
-     $(this).find('div').addClass('blankSelected')
-     }
-     $('#page-addplan-pc').fadeIn().css({'top':toploc,'left':leftloc+tdwidth})
-     $('.typeSelected').removeClass('typeSelected')
-     $('#typeSelector_'+addTypeSelect).addClass('typeSelected')
-     if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-     $('._MINI_ptadd').css('display','inline')
-     //$('._MINI_offadd').hide()
-     }else if(addTypeSelect == "offadd"){
-     //$('._MINI_offadd').show()
-     $('._MINI_ptadd').css('display','none')
-     }
-     if(Options.hourunit == 30){
-     var tdinfo = $(this).attr('id').split('_');
-     var yy = tdinfo[0];
-     var mm = tdinfo[1];
-     var dd = tdinfo[2];
-     var hh = tdinfo[3];
-     var min = tdinfo[4];
-     if(min == '00'){
-     var hh1 = Number(tdinfo[3]);
-     var min1 = '30'
-     }else if(min == "30"){
-     var hh1 = Number(tdinfo[3])+1;
-     var min1 = '00'
-     }
-     var yy0 = tdinfo[0];
-     var mm0 = tdinfo[1];
-     var dd0 = tdinfo[2];
-     if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
-     if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
-     if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
-     if(Options.language == "KOR"){
-     var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "JPN"){
-     var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "ENG"){
-     var text = yy+'. '+mm+'. '+dd+'. '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }
-     $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
-     $('#durations_mini, #durations_mini').html('')
-     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-     timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
-     timeGraphSet("group","pink","mini", initialJSON);
-     timeGraphSet("off","grey","mini", initialJSON)
-     durTimeSet(hh,min,"mini");
-     $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time").val(hh+':'+min+'');
-     $("#id_time_duration").val(1*(Options.classDur/30))
-     $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time_off").val(hh+':'+min+'');
-
-     }else if(Options.hourunit == 60){
-     var tdinfo = $(this).attr('id').split('_');
-     var yy = tdinfo[0];
-     var mm = tdinfo[1];
-     var dd = tdinfo[2];
-     var hh = tdinfo[3];
-     var min = tdinfo[4];
-     var hh1 = Number(tdinfo[3])+1;
-     var min1 = '00'
-     var yy0 = tdinfo[0];
-     var mm0 = tdinfo[1];
-     var dd0 = tdinfo[2];
-     if(yy0.length<2){var yy0 = '0'+String(tdinfo[0])};
-     if(mm0.length<2){var mm0 = '0'+String(tdinfo[1])};
-     if(dd0.length<2){var dd0 = '0'+String(tdinfo[2])};
-     if(Options.language == "KOR"){
-     var text = yy+'년 '+mm+'월 '+dd+'일 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "JPN"){
-     var text = yy+'年 '+mm+'月 '+dd+'日 '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }else if(Options.language == "ENG"){
-     var text = yy+'. '+mm+'. '+dd+'. '+hh+':'+min+' ~ '+hh1+':'+ min1
-     }
-     $('#datetext_mini').text(text).val(yy0+'-'+mm0+'-'+dd0)
-     $('#durations_mini, #durations_mini').html('')
-     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft')
-     timeGraphSet("class","pink","mini", initialJSON);  //시간 테이블 채우기
-     timeGraphSet("group","pink","mini", initialJSON);
-     timeGraphSet("off","grey","mini", initialJSON)
-     durTimeSet(hh,min,"mini");
-     $("#id_training_date").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time").val(hh+':'+min+'');
-     $("#id_time_duration").val(1*(Options.classDur/30))
-     $("#id_training_date_off").val(yy0+'-'+mm0+'-'+dd0)
-     $("#id_training_time_off").val(hh+':'+min+'');
-
-     }
-     }
-     }
-     })
-     //직접 진행시간 선택해서 추가
-     */
-
     //긁어서 일정 추가
     if(bodywidth > 600 && (varUA.match('iphone') ==null && varUA.match('ipad')==null && varUA.match('ipod')==null && varUA.match('android') == null) ){
         $(document).on('mousedown','.td00, .td30', function(e){
@@ -389,111 +107,120 @@ $(document).ready(function(){
             var thisIDHour = $(this).attr('id').split('_')[3];
             var thisIDMin  = $(this).attr('id').split('_')[4];
 
-
-            if(Options.classDur == 30){
-                if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                    $('.blankSelected30').removeClass('blankSelected30');
-                    $(this).find('div').addClass('blankSelected30');
-                    $(document).on('mouseover','.td00, .td30', function(){
-                        var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-                        var overIDHour = $(this).attr('id').split('_')[3];
-                        var overIDMin  = $(this).attr('id').split('_')[4];
-                        var prevIDHour = overIDHour;
-                        var prevIDMin  = '00';
-                        var selector_blankSelected30 = $('.blankSelected30');
-                        if(overIDMin == '30'){
-                            prevIDHour = overIDHour;
-                            prevIDMin  = '00';
-                        }else if(overIDMin == '00'){
-                            prevIDHour = Number(overIDHour)-1;
-                            prevIDMin  = '30';
-                        }
-                        var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
-
-                        if(selector_blankSelected30.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected30') && !$(this).hasClass('_on')){
-                            $(this).find('div').addClass('blankSelected30')
-                        }else if($(this).hasClass('_on')){
-                            $(document).off('mouseover');
-                            show_mini_plan_add_popup(thisID, selector_blankSelected30.length);
-                            check_dropdown_selected_addplan();
-                        }
-                    });
-
-                    $(document).on('mouseup', '.td00, .td30', function(){
-                        $(document).off('mouseover');
-                        if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                            show_mini_plan_add_popup(thisID, $('.blankSelected30').length);
-                        }
-                        check_dropdown_selected_addplan();
-                    });
-
-                    $(document).on('mouseup','#gap',function(){
-                        closeAddPopup_mini();
+            var thisIdDate_ = thisIDDate.replace(/_/gi,'-');
+            if( compare_date2(add_date(today_YY_MM_DD, 15), thisIdDate_)  &&  compare_date2(thisIdDate_ , substract_date(today_YY_MM_DD, -15)) ){
+                if(Options.classDur == 30){
+                    if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
                         $('.blankSelected30').removeClass('blankSelected30');
-                    });
-                }
-            }else if(Options.classDur == 60){
-                var next30IDHour = Number(thisIDHour);
-                var next30IDMin  = '30';
-                if(thisIDMin == '00'){
-                    next30IDHour = Number(thisIDHour);
-                    next30IDMin  = '30';
-                }else if(thisIDMin == '30'){
-                    next30IDHour = Number(thisIDHour) + 1;
-                    next30IDMin  = '00';
-                }
-                var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
-                if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime') 
-                    && thisIDHour+'-'+thisIDMin != (Options.workEndTime-1)+'-30'){
-                    $('.blankSelected').removeClass('blankSelected');
-                    $(this).find('div').addClass('blankSelected');
+                        $(this).find('div').addClass('blankSelected30');
+                        $(document).on('mouseover','.td00, .td30', function(){
+                            var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
+                            var overIDHour = $(this).attr('id').split('_')[3];
+                            var overIDMin  = $(this).attr('id').split('_')[4];
+                            var prevIDHour = overIDHour;
+                            var prevIDMin  = '00';
+                            var selector_blankSelected30 = $('.blankSelected30');
+                            if(overIDMin == '30'){
+                                prevIDHour = overIDHour;
+                                prevIDMin  = '00';
+                            }else if(overIDMin == '00'){
+                                prevIDHour = Number(overIDHour)-1;
+                                prevIDMin  = '30';
+                            }
+                            var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
 
-                    $(document).on('mouseover','.td00, .td30', function(){
-                        var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
-                        var overIDHour = $(this).attr('id').split('_')[3];
-                        var overIDMin  = $(this).attr('id').split('_')[4];
-                        var prevIDHour = Number(overIDHour)-1;
-                        var prevIDMin  = '30';
-                        var nextIDHour = Number(overIDHour)+1;
-                        var nextIDMin  = '00';
-                        if(overIDMin == '30'){
-                            prevIDHour = Number(overIDHour)-1;
-                            prevIDMin  = '30';
-                            nextIDHour = Number(overIDHour)+1;
-                            nextIDMin  = '00';
-                        }else if(overIDMin == '00'){
-                            prevIDHour = Number(overIDHour)-1;
-                            prevIDMin  = '00';
-                            nextIDHour = Number(overIDHour);
-                            nextIDMin  = '30';
-                        }
-                        var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
-                        var $nextOvered = $('#'+overIDDate+'_'+nextIDHour+'_'+nextIDMin);
-                        var selector_blankSelected = $('.blankSelected');
-                        if(selector_blankSelected.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected') && !$(this).hasClass('_on') && !$nextOvered.hasClass('_on')){
-                            $(this).find('div').addClass('blankSelected');
-                        }else if($(this).hasClass('_on')){
+                            if(selector_blankSelected30.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected30') && !$(this).hasClass('_on')){
+                                $(this).find('div').addClass('blankSelected30')
+                            }else if($(this).hasClass('_on')){
+                                $(document).off('mouseover');
+                                show_mini_plan_add_popup(thisID, selector_blankSelected30.length);
+                                check_dropdown_selected_addplan();
+                            }
+                        });
+
+                        $(document).on('mouseup', '.td00, .td30', function(){
                             $(document).off('mouseover');
-                            show_mini_plan_add_popup(thisID, selector_blankSelected.length);
+                            if(!$(this).hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                                show_mini_plan_add_popup(thisID, $('.blankSelected30').length);
+                            }
                             check_dropdown_selected_addplan();
-                        }
-                    });
+                        });
 
-                    $(document).on('mouseup', '.td00, .td30', function(){
-                        $(document).off('mouseover');
-                        if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
-                            show_mini_plan_add_popup(thisID, $('.blankSelected').length);
-                        }
-                        check_dropdown_selected_addplan();
-                    });
-
-
-                    $(document).on('mouseup','#gap',function(){
-                        closeAddPopup_mini();
+                        $(document).on('mouseup','#gap',function(){
+                            closeAddPopup_mini();
+                            $('.blankSelected30').removeClass('blankSelected30');
+                        });
+                    }
+                }else if(Options.classDur == 60){
+                    var next30IDHour = Number(thisIDHour);
+                    var next30IDMin  = '30';
+                    if(thisIDMin == '00'){
+                        next30IDHour = Number(thisIDHour);
+                        next30IDMin  = '30';
+                    }else if(thisIDMin == '30'){
+                        next30IDHour = Number(thisIDHour) + 1;
+                        next30IDMin  = '00';
+                    }
+                    var $next30ID = $('#'+thisIDDate+'_'+next30IDHour+'_'+next30IDMin);
+                    if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime') 
+                        && thisIDHour+'-'+thisIDMin != (Options.workEndTime-1)+'-30'){
                         $('.blankSelected').removeClass('blankSelected');
-                    });
+                        $(this).find('div').addClass('blankSelected');
 
+                        $(document).on('mouseover','.td00, .td30', function(){
+                            var overIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
+                            var overIDHour = $(this).attr('id').split('_')[3];
+                            var overIDMin  = $(this).attr('id').split('_')[4];
+                            var prevIDHour = Number(overIDHour)-1;
+                            var prevIDMin  = '30';
+                            var nextIDHour = Number(overIDHour)+1;
+                            var nextIDMin  = '00';
+                            if(overIDMin == '30'){
+                                prevIDHour = Number(overIDHour)-1;
+                                prevIDMin  = '30';
+                                nextIDHour = Number(overIDHour)+1;
+                                nextIDMin  = '00';
+                            }else if(overIDMin == '00'){
+                                prevIDHour = Number(overIDHour)-1;
+                                prevIDMin  = '00';
+                                nextIDHour = Number(overIDHour);
+                                nextIDMin  = '30';
+                            }
+                            var $prevOvered = $('#'+overIDDate+'_'+prevIDHour+'_'+prevIDMin);
+                            var $nextOvered = $('#'+overIDDate+'_'+nextIDHour+'_'+nextIDMin);
+                            var selector_blankSelected = $('.blankSelected');
+                            if(selector_blankSelected.length != 0 && thisIDDate == overIDDate && $prevOvered.find('div').hasClass('blankSelected') && !$(this).hasClass('_on') && !$nextOvered.hasClass('_on')){
+                                $(this).find('div').addClass('blankSelected');
+                            }else if($(this).hasClass('_on')){
+                                $(document).off('mouseover');
+                                show_mini_plan_add_popup(thisID, selector_blankSelected.length);
+                                check_dropdown_selected_addplan();
+                            }
+                        });
+
+                        $(document).on('mouseup', '.td00, .td30', function(){
+                            $(document).off('mouseover');
+                            if(!$(this).hasClass('_on') && !$next30ID.hasClass('_on') && !$(this).find('div').hasClass('classTime') && !$(this).find('div').hasClass('offTime') && !$(this).find('div').hasClass('groupTime')){
+                                show_mini_plan_add_popup(thisID, $('.blankSelected').length);
+                            }
+                            check_dropdown_selected_addplan();
+                        });
+
+
+                        $(document).on('mouseup','#gap',function(){
+                            closeAddPopup_mini();
+                            $('.blankSelected').removeClass('blankSelected');
+                        });
+
+                    }
                 }
+            }else{
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
             }
         });
     }
@@ -521,78 +248,88 @@ $(document).ready(function(){
     }
 
     $(document).on('click','.td00',function(e){
-        get_timeindex_Y();
+        var thisIDDate = $(this).attr('id').replace(/_/gi,"-");
+        if( compare_date2(add_date(today_YY_MM_DD, 15), thisIDDate)  &&  compare_date2(thisIDDate , substract_date(today_YY_MM_DD, -15)) ){
+            get_timeindex_Y();
 
-        var thisOffsetTop = $(this).offset().top;
-        //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
-        if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
-            closeAddPopup_mini();
-            if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
+            var thisOffsetTop = $(this).offset().top;
+            //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
+            if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
+                closeAddPopup_mini();
+                if(Options.classDur == 30){var blankmark = 'blankSelected30'}else if(Options.classDur == 60){var blankmark = 'blankSelected'}
 
-            var localarray = timeIndexY.slice();
-            var localharray = timeIndexhour.slice();
-            var localparray = timePlanY.slice();
+                var localarray = timeIndexY.slice();
+                var localharray = timeIndexhour.slice();
+                var localparray = timePlanY.slice();
 
-            var $classTimes = $(this).find('.classTime');
-            var $offTimes = $(this).find('.offTime');
-            var $groupTimes = $(this).find('.groupTime');
+                var $classTimes = $(this).find('.classTime');
+                var $offTimes = $(this).find('.offTime');
+                var $groupTimes = $(this).find('.groupTime');
 
-            $classTimes.each(function(){
-                var thisLoc = $(this).offset().top;
-                var thisHeight = $(this).height();
-                var thisInfo = $(this).attr('class-time').split('_')
-                localarray.push(thisLoc, thisLoc+thisHeight);
-                localparray.push(thisLoc, thisLoc+thisHeight);
-                localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
-            })
-            
-            $offTimes.each(function(){
-                var thisLoc = $(this).offset().top;
-                var thisHeight = $(this).height();
-                var thisInfo = $(this).attr('off-time').split('_')
-                localarray.push(thisLoc, thisLoc+thisHeight);
-                localparray.push(thisLoc, thisLoc+thisHeight);
-                localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
-            })
+                $classTimes.each(function(){
+                    var thisLoc = $(this).offset().top;
+                    var thisHeight = $(this).height();
+                    var thisInfo = $(this).attr('class-time').split('_')
+                    localarray.push(thisLoc, thisLoc+thisHeight);
+                    localparray.push(thisLoc, thisLoc+thisHeight);
+                    localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
+                })
+                
+                $offTimes.each(function(){
+                    var thisLoc = $(this).offset().top;
+                    var thisHeight = $(this).height();
+                    var thisInfo = $(this).attr('off-time').split('_')
+                    localarray.push(thisLoc, thisLoc+thisHeight);
+                    localparray.push(thisLoc, thisLoc+thisHeight);
+                    localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
+                })
 
-            $groupTimes.each(function(){
-                var thisLoc = $(this).offset().top;
-                var thisHeight = $(this).height();
-                var thisInfo = $(this).attr('group-time').split('_')
-                localarray.push(thisLoc, thisLoc+thisHeight);
-                localparray.push(thisLoc, thisLoc+thisHeight);
-                localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
-            })
+                $groupTimes.each(function(){
+                    var thisLoc = $(this).offset().top;
+                    var thisHeight = $(this).height();
+                    var thisInfo = $(this).attr('group-time').split('_')
+                    localarray.push(thisLoc, thisLoc+thisHeight);
+                    localparray.push(thisLoc, thisLoc+thisHeight);
+                    localharray.push(time_h_format_to_hh(thisInfo[3])+'_'+thisInfo[4], time_h_format_to_hh(thisInfo[7])+'_'+thisInfo[8]);
+                })
 
-            $('.'+blankmark).removeClass(blankmark);
-            e.stopPropagation();
-            var thisID = getThisId(this);
-            var thisY = e.pageY;
+                $('.'+blankmark).removeClass(blankmark);
+                e.stopPropagation();
+                var thisID = getThisId(this);
+                var thisY = e.pageY;
 
-            localarray.push(thisY);
-            localparray.push(thisY);
-            var timeIndexY_ = localarray.sort(function(a,b){return a-b});
-            var planIndexY_ = localparray.sort(function(a,b){return a-b});
-            var timeHour = localharray.sort();
-            var thisIndex = timeIndexY_.indexOf(thisY);
-            var targetY = timeIndexY_[thisIndex-1];
-            var targetYLimit = timeIndexY_[thisIndex+1];
+                localarray.push(thisY);
+                localparray.push(thisY);
+                var timeIndexY_ = localarray.sort(function(a,b){return a-b});
+                var planIndexY_ = localparray.sort(function(a,b){return a-b});
+                var timeHour = localharray.sort();
+                var thisIndex = timeIndexY_.indexOf(thisY);
+                var targetY = timeIndexY_[thisIndex-1];
+                var targetYLimit = timeIndexY_[thisIndex+1];
 
-            var planNextto = localparray[localparray.indexOf(thisY)+1];
+                var planNextto = localparray[localparray.indexOf(thisY)+1];
 
-            if( (Options.classDur/30)*targetYLimit - targetY >= Options.classDur*calendarSize){
-                if(planNextto - targetY >= Options.classDur*calendarSize){
-                    $(this).find('div.blankbox').addClass(blankmark);
-                    $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
-                    show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
-                    //2018_8_6_0_00
+                if( (Options.classDur/30)*targetYLimit - targetY >= Options.classDur*calendarSize){
+                    if(planNextto - targetY >= Options.classDur*calendarSize){
+                        $(this).find('div.blankbox').addClass(blankmark);
+                        $('.'+blankmark).css({'top':targetY - thisOffsetTop-1,'height':Options.classDur*calendarSize+'px'});
+                        show_mini_plan_add_popup_tablet(thisID+'_'+timeHour[thisIndex-1],1) 
+                        //2018_8_6_0_00
+                    }else{
+                        console.log('클릭한 곳과 일정간 거리가 너무 짧음')
+                    }
+
                 }else{
-                    console.log('클릭한 곳과 일정간 거리가 너무 짧음')
+                    console.log('너무 좁아')
                 }
-
-            }else{
-                console.log('너무 좁아')
             }
+        }else{
+            show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
         }
     })
 
