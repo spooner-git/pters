@@ -1153,7 +1153,6 @@ function set_drag_drop_action_to_DOM(targetSelector){
                                     targetSelector+ ' p'
                                     , function(){
                         $(document).off('mousemove');
-                        console.log('click mouseup')
                     })
                      $(document).on('mousedown mousemove', 
                                     targetSelector+' canvas'

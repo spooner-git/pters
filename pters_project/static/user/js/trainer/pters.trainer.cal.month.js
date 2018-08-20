@@ -359,12 +359,20 @@ $(document).ready(function(){
 
         $(document).on('click','.plan_raw_add',function(){
             var thisDate = date_format_yyyy_m_d_to_yyyy_mm_dd($(this).attr('data-date'),'-');
-
-            close_info_popup('cal_popup_plancheck')
-            clear_pt_off_add_popup()
-            open_pt_off_add_popup('ptadd', thisDate)
-            ajaxTimeGraphSet(thisDate)
-            shade_index(100)
+            if( compare_date2(add_date(today_YY_MM_DD, 15), thisDate)  &&  compare_date2(thisDate , substract_date(today_YY_MM_DD, -15)) ){
+                close_info_popup('cal_popup_plancheck')
+                clear_pt_off_add_popup()
+                open_pt_off_add_popup('ptadd', thisDate)
+                ajaxTimeGraphSet(thisDate)
+                shade_index(100)
+            }else{
+                show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+            }
 
         })
 
@@ -1419,7 +1427,7 @@ function month_calendar(referencedate){
 
     monthText(); //상단에 연, 월 표시
     krHoliday(); //대한민국 공휴일
-    draw_time_graph(Options.hourunit,'')
+    //draw_time_graph(Options.hourunit,'')
     ajaxClassTime()
 }
 /*
