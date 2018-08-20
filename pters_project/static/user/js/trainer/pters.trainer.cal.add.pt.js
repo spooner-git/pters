@@ -1906,7 +1906,7 @@ function ajaxTimeGraphSet(date, use, callback){
             }else{
                 //$('.plan_indicators').html('')
                 ajaxJSON_cache = jsondata;
-                draw_time_graph(60,'');
+                draw_time_graph(60,'',today_form);
                 timeGraphSet("class","pink","AddClass", jsondata);  //시간 테이블 채우기
                 timeGraphSet("group","pink","AddClass", jsondata);
                 timeGraphSet("off","grey","AddClass", jsondata);
@@ -2927,7 +2927,12 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
     $tableTarget.append(htmlToJoin.join(''))
 }
 */
-function draw_time_graph(option, type){  //type = '' and mini
+function draw_time_graph(option, type, thisDate){  //type = '' and mini
+    var thisdate = thisDate;
+    var day = new Date(thisDate).getDay();
+
+    var work_start = worktime_extract_hour(Options.worktimeWeekly[day])["start"];
+    var work_end = worktime_extract_hour(Options.worktimeWeekly[day])["end"];
 
     var targetHTML =  '';
     var types = '';
@@ -2939,17 +2944,17 @@ function draw_time_graph(option, type){  //type = '' and mini
         types = ''
     }
 
+    var tdwidth = (100/(work_end - work_start));
+    var tdwidth_ = (100/(work_end - work_start));
 
-    var tdwidth = (100/(Options.workEndTime-Options.workStartTime));
-    var tdwidth_ = (100/(Options.workEndTime-Options.workStartTime));
 
     var tr1 = [];
     var tr2 = [];
-    var i=Options.workStartTime;
+    var i = work_start
     if(option == "30"){
         for(var i=0; i<=24; i++){
             var display = "";
-            if(i<Options.workStartTime || i >= Options.workEndTime){
+            if(i<work_start || i >= work_end){
                 var display = 'display:none;'
             }
             tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
@@ -2959,7 +2964,7 @@ function draw_time_graph(option, type){  //type = '' and mini
     }else if(option == "60"){
         for(var i=0; i<=24; i++){
             var display = "";
-            if(i<Options.workStartTime || i >= Options.workEndTime){
+            if(i<work_start || i >= work_end){
                 var display = 'display:none;'
             }
             tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
