@@ -1,0 +1,38 @@
+    {
+        "classIdArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "centerNameArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.center_tb.center_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "subjectCodeArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.subject_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "subjectNameArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.subject_type_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "startDateArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "endDateArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "stateCodeArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "stateNameArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.state_cd_name.common_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "classHourArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.class_hour }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "classHourUnitArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.start_hour_unit }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "classMemberNumArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.class_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "modDtArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "regDtArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+        "classInProgressMemberNumArray":
+      [{% for class_info in class_data %}"{{ class_info.class_tb.total_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+        "currentClassId":
+      ["{{ request.session.class_id }}"],
+
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

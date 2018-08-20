@@ -1,0 +1,54 @@
+    {
+        "total_member_num":
+      ["{{ total_member_num }}"],
+        "current_total_member_num":
+      ["{{ current_total_member_num }}"],
+        "new_member_num":
+      ["{{ new_member_num }}"],
+        "end_schedule_num":
+      ["{{ end_schedule_num }}"],
+
+        "next_schedule_start_dt":
+      ["{{ next_schedule_start_dt }}"],
+        "next_schedule_end_dt":
+      ["{{ next_schedule_end_dt }}"],
+
+        "id":
+      ["{{ request.user.username }}"],
+        "name":
+      ["{{ member_info.name }}"],
+        "phone":
+      ["{{ member_info.phone }}"],
+        "birthday_dt":
+      ["{{ member_info.birthday_dt }}"],
+        "country":
+      ["{{ member_info.country }}"],
+        "address":
+      ["{{ member_info.address }}"],
+        "reg_dt":
+      ["{{ member_info.reg_dt }}"],
+        "center_name":
+      ["{{ center_name }}"],
+        "email":
+      ["{{ request.user.email }}"],
+
+        "off_repeat_schedule_id_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.repeat_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_type_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.repeat_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_week_info_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.week_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_start_date_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_end_date_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_start_time_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.start_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_end_time_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.end_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "off_repeat_schedule_time_duration_data":
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.time_duration }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

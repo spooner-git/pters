@@ -1,0 +1,76 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body{
+	padding-top: 50px;
+	background-color: #eeeeee;
+	font-family: 'Noto Sans KR';
+}
+
+
+
+
+#modifyInfo{
+	margin-bottom: 15px;
+	font-weight: bold;
+}
+
+.timePast{
+	float: right;
+	font-size: 12px;
+	padding-top: 2.5px;
+}
+
+.status{
+	color: #fe4e65;
+}
+
+#bell{
+	width: 15px;
+}
+
+#arrow{
+	width: 15px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#beforeInfo{
+	width: 100%;
+	text-align: center;
+	color: #666666;
+	display: inline-block;
+}
+
+#afterInfo{
+	width: 100%;
+	text-align: center;
+	color: #282828;
+	font-weight: 500;
+	display: inline-block;
+}
+
+.alarmBox{
+	width: 91.6%;
+	background-color: #ffffff;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	padding-top: 9.5px;
+	padding-bottom: 9.5px;
+	padding-right: 15px;
+	padding-left: 15px;
+	font-size: 14px;
+	max-width: 500px;
+}
+
+.unreadAlarm{
+	border: 15px solid black;
+	width: 100%;
+	background-color: #ffffff;
+	margin-top: 15px;
+	padding-top: 9.5px;
+	padding-bottom: 9.5px;
+	padding-right: 15px;
+	padding-left: 15px;
+	font-size: 14px;
+}

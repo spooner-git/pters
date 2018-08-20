@@ -1,0 +1,18 @@
+.pters_selectbox_wrapper{
+	margin-top: 50px;
+}
+@media(min-width:600px){
+	.pters_selectbox_wrapper{
+		margin-top: 20px;
+	}
+}
+
+#page_manage_employee{
+
+}
+#page_manage_branch{
+	display: none;
+}
+#page_manage_lecture{
+	display: none;
+}
