@@ -378,6 +378,9 @@ function set_list_overflow_scrolling(selector, selector_arrowParent){
 	if($(selector).scrollTop() < 30 ){
         $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');
     };
+    if($(selector).scrollTop() < $(selector).height() + 25 ){
+    	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
+    }
     $(selector).scroll(function(){
         var scrollHeight = $(this).prop('scrollHeight');
         var popupHeight = $(this).height();
