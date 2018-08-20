@@ -290,18 +290,18 @@
     */
 
     var worktime = '{{ lt_res_04 }}'
-    var worktimeStart = time_divider(worktime, 'start');
-    var worktimeEnd = time_divider(worktime, 'end');
+    var worktimeStart = worktime_extract_hour(worktime)["start"]
+    var worktimeEnd = worktime_extract_hour(worktime).["end"];
 
 
-    var class_background_img_url = []
+    var class_background_img_url = [];
 
     var Options = {  "hourunit" : 30,                       // 30 or 60
         "classDur" : {{ request.session.class_hour }},      // 30 or 60
         "timeDur" : {{ lt_res_member_time_duration }},
         "startTime": '{{ lt_res_member_start_time }}',
-        "stoptimeStart": time_divider('{{ lt_res_01 }}','start'),                    //강사가 설정한 예약불가 시간 (시작)
-        "stoptimeEnd": time_divider('{{ lt_res_01 }}','end') ,                        //강사가 설정한 예약불가 시간 (종료)
+        "stoptimeStart": worktime_extract_hour('{{ lt_res_01 }}')['start'],                    //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": worktime_extract_hour('{{ lt_res_01 }}')['end'] ,                        //강사가 설정한 예약불가 시간 (종료)
         "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
         "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
         "availDate":Number('{{ lt_res_05 }}'),
