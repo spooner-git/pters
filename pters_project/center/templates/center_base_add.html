@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}PTers-Trainer Mode {% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href={% static_url "common/css/bootstrap.min.css" %} rel="stylesheet">
+    <script>
+
+
+    </script>
+    <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
+    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+    {% block local_css %}
+    {% endblock %}
+
+</head>
+<body>
+{% block navbar %}
+    <div id="shade">
+    </div>
+    <nav class="navbar navbar-fixed-top navbar-default">
+        <div class="container" style="max-width:1000px;">
+            <div class="navbar-header">
+                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="javascript:history.back()">
+                    <img src={% static_url "user/res/ptadd/btn-x.png" %} style="width:90%;">
+                </button>
+                {% block nav_center_img %}
+                    <a id="uptext" class="uptext">레슨 일정등록</a>
+                {% endblock %}
+                <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
+                    <img src={% static_url "user/res/ptadd/btn-complete.png" %} style="width:100%;">
+                </button>
+            </div>
+        </div><!-- /.container -->
+    </nav><!-- /.navbar -->
+
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src={% static_url "common/js/bootstrap.min.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+{% block local_js_footer %}
+{% endblock %}
+
+</body>
+</html>

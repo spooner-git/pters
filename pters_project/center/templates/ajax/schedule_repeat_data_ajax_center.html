@@ -1,0 +1,30 @@
+    {
+
+      "repeatScheduleIdArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.repeat_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleTypeArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.repeat_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleWeekInfoArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.week_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleStartDateArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleEndDateArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleStartTimeArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.start_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleEndTimeArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.end_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleTimeDurationArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.time_duration }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleStateCdArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "repeatScheduleGroupTypeNameArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.get_group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "repeatScheduleGroupNameArray" :
+      [{% for repeat_schedule_info in repeat_schedule_data %}"{{ repeat_schedule_info.get_group_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+    }

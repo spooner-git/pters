@@ -1,0 +1,21 @@
+    {
+        "background_img_id":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.background_img_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "background_class_id":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.class_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "background_img_type_cd":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.background_img_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "background_img_type_name":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.background_img_type_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "url":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.url }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "reg_member_info":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.reg_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "mod_dt":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "reg_dt":
+      [{% for background_img_info in background_img_data %}"{{ background_img_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

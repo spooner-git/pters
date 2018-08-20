@@ -1,0 +1,26 @@
+    {
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "member_id" :
+      [{% for board_info in board_list %}"{{ board_info.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "board_type_cd" :
+      [{% for board_info in board_list %}"{{ board_info.board_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "title" :
+      [{% for board_info in board_list %}"{{ board_info.title }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "contents" :
+      [{% for board_info in board_list %}"{{ board_info.contents }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "to_member_type_cd" :
+      [{% for board_info in board_list %}"{{ board_info.to_member_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "hits" :
+      [{% for board_info in board_list %}"{{ board_info.hits }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "get" :
+      [{% for board_info in board_list %}"{{ board_info.get }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "mod_dt":
+      [{% for board_info in board_list %}"{{ board_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "reg_dt":
+      [{% for board_info in board_list %}"{{ board_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "use":
+      [{% for board_info in board_list %}"{{ board_info.use }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+    }

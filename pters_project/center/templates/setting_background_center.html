@@ -1,0 +1,221 @@
+{% extends "center_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/center/pters.center.background.setting.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+{% block content %}
+
+    <div id="ymdText">
+        <!--
+    <div class='arrowButton'>
+     <a style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="width: 7px;"></a>
+     <a style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/daycal_arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 7px;"></a>
+    </div>
+  -->
+        <div id="ymdTextWrap">
+            <div id="menuName">배경화면 설정
+            </div>
+            <div id="menuDescription">뒷 배경으로 변경을 원하는 사진을 선택하세요!
+            </div>
+        </div>
+    </div>
+
+    <div id="background_contents_wrap">
+        <div class="background_wrap bg_basic">
+            <label>기본</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_basic2">
+            <label>기본2</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_pilates">
+            <label>필라테스</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_weight">
+            <label>웨이트 트레이닝</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_ballet">
+            <label>발레</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_yoga">
+            <label>요가</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_golf">
+            <label>골프</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+
+        <div class="background_wrap bg_billiard">
+            <label>당구</label>
+            <div class="bg_wrapper"></div>
+            <div class="bg_select_button" data-bgcode=""><span>적용</span></div>
+        </div>
+    </div>
+
+
+    <!--
+    <div class="popupBtn_mini">
+        <button class="submitBtn _button_Prev">이전</button>
+        <button class="submitBtn _button_Next" style="display: none;">등록</button>
+    </div>
+-->
+
+    <form id="update_background_image" method="post" action="{% url 'center:update_background_img_info' %}" >
+        {% csrf_token %}
+        <input type="hidden" name="class_id" id="form_class_id" value="">
+        <input type="hidden" name="background_img_id" id="form_background_img_id" value="">
+        <input type="hidden" name="background_img_type_cd" id="form_background_img_type_cd" value="">
+        <input type="hidden" name="url" id="form_bg_url" value="">
+    </form>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <!-- for db by hk.kim 170805-->
+    <script>
+        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+
+        var offRepeatScheduleIdArray =  [{% for off_repeat_schedule_id_info in off_repeat_schedule_id_data %}'{{ off_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleTypeArray =  [{% for off_repeat_schedule_type_info in off_repeat_schedule_type_data %}'{{ off_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleWeekInfoArray =  [{% for off_repeat_schedule_week_info_info in off_repeat_schedule_week_info_data %}'{{ off_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleStartDateArray =  [{% for off_repeat_schedule_start_date_info in off_repeat_schedule_start_date_data %}'{{ off_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleEndDateArray =  [{% for off_repeat_schedule_end_date_info in off_repeat_schedule_end_date_data %}'{{ off_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleStartTimeArray =  [{% for off_repeat_schedule_start_time_info in off_repeat_schedule_start_time_data %}'{{ off_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offRepeatScheduleTimeDurationArray =  [{% for off_repeat_schedule_time_duration_info in off_repeat_schedule_time_duration_data %}'{{ off_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+
+        var background_img_type_code = [{% for common_cd_info in common_cd_data %}'{{ common_cd_info.common_cd }}'{% if forloop.last == False %},{% endif %}{% endfor %}];
+        var background_img_type_code_name = [{% for common_cd_info in common_cd_data %}'{{ common_cd_info.common_cd_nm }}'{% if forloop.last == False %},{% endif %}{% endfor %}];
+
+    </script>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script>
+        var bodywidth = $('body').width();
+        if(bodywidth < 600){
+            $('#page-base').css('display','block');
+            //$('#page-base-modifystyle').css('display','block')
+            $('#uptext3').text('배경화면 설정');
+            $('#uptext').text("배경화면 설정");
+            $('#upbutton-modify').hide();
+        }
+
+
+        $('#upbutton-x-modify, ._button_Prev').click(function(){
+            location.href="/center/center_setting/";
+        });
+
+        $(document).on('click','.bg_select_button' , function(){
+            if(!$(this).hasClass('disabled_button')){
+                $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
+                $('.ajaxloadingPC').css('display','block')
+                $('#form_class_id').val(class_id);
+                var url = $(this).parents('.background_wrap').css('background-image');
+                console.log(url);
+                var urlsplit = url.split('/');
+                var staticindex = urlsplit.indexOf('static');
+                var imageurlarray = [];
+                for(var i=staticindex; i<urlsplit.length; i++){
+                    imageurlarray.push(urlsplit[i]);
+                }
+                {# /static/user/res/pt.png #}
+                var imageurl = '/'+imageurlarray.join("/");
+                //$('#form_bg_url').val(imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg"));
+                //$('#form_bg_url_mobile').val(imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg"));
+                var url_pc = imageurl.replace(/-mobile\.jpg/gi,"-pc.jpg").replace(/"\)/gi,"")
+                var url_mobile = imageurl.replace(/-pc\.jpg/gi,"-mobile.jpg").replace(/"\)/gi,"")
+                var url_ymdText = imageurl.replace(/-pc\.jpg/gi,"-ymdText.png").replace(/-mobile\.jpg/gi,"-ymdText.png").replace(/"\)/gi,"")
+                
+                console.log(url_pc, url_mobile, url_ymdText);
+
+                
+                send_user_bg_set(class_id, url_pc, background_img_type_code[0]);
+                send_user_bg_set(class_id, url_mobile, background_img_type_code[1]);
+                send_user_bg_set(class_id, url_ymdText, background_img_type_code[2]);
+
+            }
+            
+            
+        });
+
+        function send_user_bg_set(class_id, imgurl, typecode){
+            console.log(class_id, imgurl, typecode);
+            $.ajax({
+                url: ' /center/update_background_img_info/',
+                type:'POST',
+                data:{"class_id":class_id, "background_img_id":"", "background_img_type_cd":typecode, "url":imgurl},
+                async:false,
+                dataType : 'html',
+
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    if(jsondata.messageArray.length>0){
+                        $('#errorMessageBar').show();
+                        $('#errorMessageText').text(jsondata.messageArray);
+                    }else{
+                       
+                    }
+                },
+
+                complete:function(){
+                    window.location.reload();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            })
+
+        }
+
+        var len = $('.bg_wrapper').length;
+        for(var i=1; i<len; i++){
+            var $loc = $('#background_contents_wrap .background_wrap:nth-of-type('+i+')').find('.bg_wrapper')
+            var wrapperimgurl = $loc.css('background-image').split('/')
+            var staticindex = wrapperimgurl.indexOf('static')
+            var myimgurlarray = []
+            for(var j=staticindex; j<wrapperimgurl.length; j++){
+                myimgurlarray.push(wrapperimgurl[j])
+            }
+            var myimgurl = "/" + myimgurlarray.join("/")
+            if(class_background_img_url.indexOf(myimgurl.replace(/"\)/gi,"")) != -1){
+                $loc.siblings('div.bg_select_button').find('span').text('현재 배경')
+                $loc.siblings('div.bg_select_button').addClass('disabled_button')
+            }
+        }
+
+
+
+
+
+    </script>
+
+{% endblock %}

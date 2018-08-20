@@ -1,0 +1,146 @@
+{% extends "center_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/center/pters.center.manage.center.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
+    <style type="text/css">
+
+        #ymdText{
+            top: 50px;
+            margin-bottom: 0;
+        }
+
+        @media(min-width: 600px){
+            html{
+                background: #ffffff;
+            }
+            body{
+                overflow-y: overlay;
+            }
+            #ymdText{
+                position: relative;
+                margin-bottom: 0px;
+                top: unset;
+            }
+
+        }
+        @media(min-width:1000px){
+            #ymdText{
+                margin-bottom: 20px;
+            }
+        }
+
+        #notice_popup{
+            display: none;
+            width: 95%;
+            max-width: 520px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #282828;
+            background: #f4f4f4;
+            padding:20px;
+            z-index: 98;
+        }
+        #notice_popup_close, #notice_popup_close_temp{
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
+
+    <!--플로팅 버튼-->
+    <div id="float_btn_wrap">
+        <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
+        </div>
+        <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('openlesson')">
+            <a class="KRtext">신규<br/>클래스</a><a class="JPtext">New<br/>Class</a><a class="ENtext">New<br/>Class</a>
+        </div>
+        <!--
+        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
+            <a class="KRtext">자유<br/>그룹</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
+        </div>
+        -->
+    </div>
+    <!--플로팅 버튼-->
+
+    <div id="instructPopup" class="instructPopup">
+
+    </div>
+
+    <div id="ymdText">
+        <div id="ymdTextWrap">
+            <div id="menuName" class="text-centermanage">
+            </div>
+            <div id="menuDescription">센터 (직원, 업무등) 관리
+            </div>
+        </div>
+    </div>
+
+    <div id="" class="pters_selectbox_wrapper">
+        <div id="manage_employee" onclick="" class="pters_selectbox_btn pters_selectbox_btn_selected">
+            <span class="KRtext">직원 관리</span>
+        </div>
+        <div id="manage_branch" onclick="" class="pters_selectbox_btn">
+            <span class="KRtext">지점 관리</span>
+        </div>
+        <div id="manage_lecture" onclick="" class="pters_selectbox_btn">
+            <span class="KRtext">수업 관리</span>
+        </div>
+    </div>
+
+
+    <div id="page_manage_employee" class="manage_page">
+        <p style="padding:10px;font-weight: bold;">직원 관리 컨텐츠 검토</p>
+        <p style="padding:10px;">1.직원 리스트 출력<br> -소속 지점(이동 가능)<br> -계약일<br> -계약만료일<br> -계약조건(출근요일, 담당시간대, 레슨유형)<br> -신규계약<br> -현재진행중인 계약<br> -급여</p>
+        <p style="padding:10px;">2.직원 추가<br> -강사 ID를 검색하여 연결<br> -임의 생성(오프라인)</p>
+        <p style="padding:10px;">3.직원 삭제(계약해지)</p>
+        <p style="padding:10px;">4.직원관련 검토필요 <br> 한 직원이 오전에는 A지점에서, 오후에는 B지점에서 업무를 하게 될 경우?</p>
+    </div>
+
+
+    <div id="page_manage_branch" class="manage_page">
+        <p style="padding:10px;font-weight: bold;">지점 관리 컨텐츠 검토 <br>(현재 들어와있는 지점과 관계없이 어느 지점으로 로그인 했던 관리자(Owner)는 모든 지점정보가 보임)</p>
+        <p style="padding:10px;">1.전체 지점 모아보기<br> -진행중 총 회원수 <br> -직원 수 <br> -이번달 신규계약 <br> -이번달 계약매출 <br> -이번달 완료현황</p>
+        <p style="padding:10px;">2.지점별 직원 배정 설정</p>
+        <p style="padding:10px;">3.지점별 통계<br> -회원성별, 나이대, 평균 등록횟수, 재계약율 <br> -지점별 최고 매출 직원</p>
+        <p style="padding:10px;">4.지점 운영 설정 <br> -회원이 지점간 예약 가능토록 할 것인지 <br> -브랜드 로고 설정 <br> -지점별 지점장 설정 (센터 관리 메뉴의 일부 기능 사용 권한 허가해줌)</p>
+        <p style="padding:10px;">5.단체 문자 or 공지기능 <br> -모든 회원에게 공지/문자 <br> -지점별 회원에게 공지/문자</p>
+    </div>
+
+
+    <div id="page_manage_lecture" class="manage_page">
+       <p style="padding:10px;font-weight: bold;">수업 관리 컨텐츠 검토</p>
+       <p style="padding:10px;">1. 클래스별 담당 직원 배정</p>
+       <p style="padding:10px;">2. 지점별 레슨 개설 현황 (클래스명, 그룹명, 1:1 모아 보는 기능) <br> -레슨유형별 참여율 <br> -</p>
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "user/js/center/pters.center.manage.center.js" %}></script>
+    <script>
+        $('a.__classmanage').css('color','#fe4e65;')
+        $('#uptext').html("센터 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>")
+{#        $('#uptext').html("센터 관리")#}
+        $('footer').hide()
+
+
+
+
+
+    </script>
+
+
+{% endblock %}

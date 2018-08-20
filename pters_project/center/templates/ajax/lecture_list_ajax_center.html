@@ -1,0 +1,60 @@
+    {
+      "lectureIdArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      
+      "memberViewStateArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.auth_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "memberViewStateNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.auth_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "lectureStateArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "lectureStateNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.get_state_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "priceArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "optionArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.option_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "noteArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "startArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "endArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "regCountArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "remCountArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "availCountArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "finishCountArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.lecture_finish_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "regDateTimeArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "modDateTimeArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "groupNameArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupTypeCdArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupMemberNumArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupStateCdArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupStateCdNmArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "groupNoteArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "classInfoArray":
+      ["{{ class_data.get_class_type_cd_name}}"],
+      "classIdArray":
+      ["{{ class_data.class_id }}"],
+      "trainerNameArray":
+      ["{{ class_data.trainer_info.name }}"],
+
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }
