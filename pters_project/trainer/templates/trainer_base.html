@@ -618,6 +618,7 @@
     var class_id = '{{ request.session.class_id }}';
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
+
     {% load background_data %}
     {% autoescape off %}
     var setting_info = {% get_setting_info request %};
@@ -850,7 +851,7 @@
     }
     Options.worktime = `${Options.workStartTime}:00-${Options.workEndTime}:00`
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
-    console.log(Options.worktime)
+
     //요일별 업무시간을 보고 휴일날짜를 구한다.
     for(var i=0; i<Options.worktimeWeekly.length; i++){
         if(Options.worktimeWeekly[i].split('-')[0] == Options.worktimeWeekly[i].split('-')[1]){

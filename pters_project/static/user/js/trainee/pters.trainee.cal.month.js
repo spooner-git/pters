@@ -851,7 +851,14 @@ $(document).ready(function(){
         targetHTML.html(tbody);
     }
     */
-    function draw_time_graph(option, temp, type){  //type = '' and mini
+    function draw_time_graph(option, temp, type, thisDate){  //type = '' and mini
+        var thisdate = thisDate;
+        var day = new Date(thisDate).getDay();
+
+        var work_start = Options.workStartTime;
+        var work_end = Options.workEndTime;
+        var work_start_thisday = worktime_extract_hour(Options.worktimeWeekly[day])["start"];
+        var work_end_thisday = worktime_extract_hour(Options.worktimeWeekly[day])["end"];
 
         var targetHTML =  '';
         var types = '';
@@ -863,9 +870,8 @@ $(document).ready(function(){
             types = ''
         }
 
-
-        var tdwidth = (100/(Options.workEndTime-Options.workStartTime));
-        var tdwidth_ = (100/(Options.workEndTime-Options.workStartTime));
+        var tdwidth = (100/(work_end - work_start));
+        var tdwidth_ = (100/(work_end - work_start));
 
         var tr1 = [];
         var tr2 = [];
@@ -873,21 +879,29 @@ $(document).ready(function(){
         if(option == "30"){
             for(var i=0; i<=24; i++){
                 var display = "";
+                var worktime_disable = "";
                 if(i<Options.workStartTime || i >= Options.workEndTime){
                     var display = 'display:none;'
                 }
+                if( (i >= work_start && i < work_start_thisday) || ( i <= work_end && i >= work_end_thisday ) ){
+                    var worktime_disable = "background-color:#cccccc !important;"
+                }
                 tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
                 //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
-                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}${worktime_disable}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
             }
         }else if(option == "60"){
             for(var i=0; i<=24; i++){
                 var display = "";
+                var worktime_disable = "";
                 if(i<Options.workStartTime || i >= Options.workEndTime){
                     var display = 'display:none;'
                 }
+                if( (i >= work_start && i < work_start_thisday) || ( i <= work_end && i >= work_end_thisday ) ){
+                    var worktime_disable = "background-color:#cccccc !important;"
+                }
                 tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
-                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
+                tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}${worktime_disable}"></div>`;
             }
         }
         var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
@@ -1187,7 +1201,6 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
                     $('#errorMessageText').text(jsondata.messageArray)
@@ -1206,7 +1219,7 @@ $(document).ready(function(){
 
                         // }
                         // else{
-                        draw_time_graph(60,tablewidth,'');
+                        draw_time_graph(60,tablewidth,'',today_form);
                         timeGraphSet("class","grey", "AddClass", jsondata);  //시간 테이블 채우기
                         timeGraphSet("off","grey", "AddClass", jsondata);
                             // $('#offStartTime').show();
@@ -1569,8 +1582,9 @@ $(document).ready(function(){
             plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
         }
 
-        var workStartTime_ = time_h_m_to_hh_mm(worktime.split('-')[0]);
-        var workEndTime_ = time_h_m_to_hh_mm(worktime.split('-')[1]);
+        var thisDay = new Date(selecteddate).getDay();
+        var workStartTime_ = time_h_m_to_hh_mm(Options.worktimeWeekly[thisDay].split('-')[0]);
+        var workEndTime_ = time_h_m_to_hh_mm(Options.worktimeWeekly[thisDay].split('-')[1]);
         if(workEndTime_ == "23:59"){
             workEndTime_ = "24:00"
         }
@@ -1582,7 +1596,6 @@ $(document).ready(function(){
         var sortedlist = plan_time.sort();
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
-        console.log(sortedlist)
         var semiresult = []
         for(var p=0; p<sortedlist.length/2; p++){
             var zz = 0;

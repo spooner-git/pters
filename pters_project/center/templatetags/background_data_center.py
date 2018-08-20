@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @register.simple_tag
-def get_background_url(request):
+def get_background_url_center(request):
     class_id = request.session.get('class_id', '')
     background_url = []
     if class_id != '':
@@ -42,7 +42,7 @@ def get_background_type_cd(request):
 
 
 @register.simple_tag
-def get_setting_info(request):
+def get_setting_info_center(request):
     context = {}
     now = timezone.now()
     class_id = request.session.get('class_id', '')
@@ -145,7 +145,7 @@ def get_setting_info(request):
 
 
 @register.simple_tag
-def get_function_auth(request):
+def get_function_auth_center(request):
     today = datetime.date.today()
     merchandise_type_cd_list = []
     billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
