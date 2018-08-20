@@ -2931,8 +2931,12 @@ function draw_time_graph(option, type, thisDate){  //type = '' and mini
     var thisdate = thisDate;
     var day = new Date(thisDate).getDay();
 
-    var work_start = worktime_extract_hour(Options.worktimeWeekly[day])["start"];
-    var work_end = worktime_extract_hour(Options.worktimeWeekly[day])["end"];
+    
+    var work_start = Options.workStartTime;
+    var work_end = Options.workEndTime;
+    var work_start_thisday = worktime_extract_hour(Options.worktimeWeekly[day])["start"];
+    var work_end_thisday = worktime_extract_hour(Options.worktimeWeekly[day])["end"];
+
 
     var targetHTML =  '';
     var types = '';
@@ -2954,21 +2958,29 @@ function draw_time_graph(option, type, thisDate){  //type = '' and mini
     if(option == "30"){
         for(var i=0; i<=24; i++){
             var display = "";
+            var worktime_disable = "";
             if(i<work_start || i >= work_end){
                 var display = 'display:none;'
             }
+            if( (i >= work_start && i < work_start_thisday) || ( i <= work_end && i >= work_end_thisday ) ){
+                var worktime_disable = "worktime_disable"
+            }
             tr1[i] = `<div colspan="2" style="width:${tdwidth_}'%;${display}" class="colspan">${i}</div>`;
             //tr2[i] = '<div id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00" style="width:'+tdwidth+'%;"></div><div id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30" style="width:'+tdwidth+'px;"></div>';
-            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
+            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00 ${worktime_disable}" style="width:${tdwidth}%;${display}"></div><div id="${i}g_30${types}" class="tdgraph_${option} tdgraph30" style="width:${tdwidth}px;"></div>`;
         }
     }else if(option == "60"){
         for(var i=0; i<=24; i++){
             var display = "";
+            var worktime_disable = "";
             if(i<work_start || i >= work_end){
                 var display = 'display:none;'
             }
+            if( (i >= work_start && i < work_start_thisday) || ( i <= work_end && i >= work_end_thisday ) ){
+                var worktime_disable = "worktime_disable"
+            }
             tr1[i] = `<div style="width:${tdwidth}%;${display}" class="colspan">${i}</div>`;
-            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00" style="width:${tdwidth}%;${display}"></div>`;
+            tr2[i] = `<div id="${i}g_00${types}" class="tdgraph_${option} tdgraph00 ${worktime_disable}" style="width:${tdwidth}%;${display}"></div>`;
         }
     }
     var tbody = '<div>'+tr1.join('')+'</div><div class="timegraph_display">'+tr2.join('');
