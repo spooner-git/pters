@@ -293,6 +293,13 @@
     var worktimeStart = time_divider(worktime, 'start');
     var worktimeEnd = time_divider(worktime, 'end');
 
+    var worktimeWeekly = ['{{ lt_work_sun_time_avail }}',
+                          '{{ lt_work_mon_time_avail }}',
+                          '{{ lt_work_tue_time_avail }}',
+                          '{{ lt_work_wed_time_avail }}',
+                          '{{ lt_work_ths_time_avail }}',
+                          '{{ lt_work_fri_time_avail }}',
+                          '{{ lt_work_sat_time_avail }}'];
 
     var class_background_img_url = []
 
