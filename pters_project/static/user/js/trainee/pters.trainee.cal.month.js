@@ -618,7 +618,6 @@ $(document).ready(function(){
             },
 
             success:function(data){
-                console.log(data);
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show()
@@ -910,6 +909,10 @@ $(document).ready(function(){
 
 
     function draw_time_group_graph(option, jsondata, dateinfo){
+        var day = new Date(date_format_yyyy_m_d_to_yyyy_mm_dd(dateinfo, '-')).getDay();
+        var worktime_today = Options.worktimeWeekly[day];
+        var work_start = worktime_extract_hour(worktime_today)["start"];
+        var work_end = worktime_extract_hour(worktime_today)["end"];
         var targetSelected;
         var $htmlTarget;
         if(option == "group"){
@@ -986,17 +989,19 @@ $(document).ready(function(){
                     var endtime = jsondata.group_schedule_end_datetime[i].split(' ')[1];
 
                     if(targetSelected == grouptypecd){
-                        htmlTojoin.push('<div style="line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
-                            '" data-time="'+starttime+'.000000'+
-                            '"data-endtime ="'+endtime+'.000000'+
-                            '" data-dur="'+planDura+
-                            '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class="'+myreservecheckbox1+myreservecheckbox2+'"></div></div><p class="plan_list_row">'+
-                            jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
-                            jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' : '+
-                            jsondata.group_schedule_group_name[i]+' ('+
-                            jsondata.group_schedule_current_member_num[i]+'/'+
-                            jsondata.group_schedule_max_member_num[i]+
-                            ')'+fulled+myreserve+'</p></div>')
+                        if(planHour >= work_start && planHour < work_end){
+                            htmlTojoin.push('<div style="line-height:18px;margin-bottom:7px;"><div class="ptersCheckbox '+myreservecheckbox1+disable+'" data-date="'+jsondata.group_schedule_start_datetime[i].split(' ')[0]+
+                                '" data-time="'+starttime+'.000000'+
+                                '"data-endtime ="'+endtime+'.000000'+
+                                '" data-dur="'+planDura+
+                                '" group-schedule-id="'+jsondata.group_schedule_id[i]+'"><div class="'+myreservecheckbox1+myreservecheckbox2+'"></div></div><p class="plan_list_row">'+
+                                jsondata.group_schedule_start_datetime[i].split(' ')[1].substr(0,5)+' ~ '+
+                                jsondata.group_schedule_end_datetime[i].split(' ')[1].substr(0,5) +' : '+
+                                jsondata.group_schedule_group_name[i]+' ('+
+                                jsondata.group_schedule_current_member_num[i]+'/'+
+                                jsondata.group_schedule_max_member_num[i]+
+                                ')'+fulled+myreserve+'</p></div>');
+                        }
                     }
                 //}
             }
@@ -1443,7 +1448,6 @@ $(document).ready(function(){
                         var timegraph_hourendwidth;
                         var timegraph_hourendoffset;
 
-                        console.log('#'+planEndHour+'g_00')
                         if(planEndHour == Options.workEndTime){
                             timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
                             timegraph_hourendoffset = $('#'+(planEndHour-1)+'g_00').position().left + timegraph_hourendwidth;
@@ -1826,7 +1830,6 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
-            console.log(initialJSON);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show()
                 $('#errorMessageText').text(jsondata.messageArray)
@@ -1858,8 +1861,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
                         temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
                     }
                 }
-                console.log(temp_text)
-                console.log(temp_count_text)
+
                 if(temp_text == '') {
                     temp_count_text = '0'
                 }
@@ -2003,39 +2005,48 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
 function groupDates(jsondata){	//그룹 PT가 있는 날짜에 표기
     var len = jsondata.group_schedule_id.length;
     for(var i=0; i<len; i++){
-        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0], '_')
-        var arr = classDate.split('_')
-        var yy = arr[0]
-        var mm = arr[1]
-        var dd = arr[2]
+        var classDate = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0], '_');
+        var classDateSplit = date_format_yyyy_mm_dd_to_yyyy_m_d(jsondata.group_schedule_start_datetime[i].split(' ')[0], '_').split('_');
+        var classTime = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':');
+        var yy = classDateSplit[0];
+        var mm = classDateSplit[1];
+        var dd = classDateSplit[2];
+        var hh = Number(classTime[0]);
+        var min = Number(classTime[1]);
         var omm = String(oriMonth)
         var odd = String(oriDate)
-        if(mm.length==1){
-            var mm = '0'+arr[1]
-        }
-        if(dd.length==1){
-            var dd='0'+arr[2]
-        }
-        if(omm.length==1){
-            var omm = '0'+oriMonth
-        }
-        if(odd.length==1){
-            var odd='0'+oriDate
-        }
+        var day = new Date(`${yy}-${mm}-${dd}`).getDay();
+        var worktime_today = Options.worktimeWeekly[day];
+        var work_start = worktime_extract_hour(worktime_today)["start"];
+        var work_end = worktime_extract_hour(worktime_today)["end"];
 
-        var group_plan_indicate = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate'>"
-        var group_plan_indicate_past = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate_past'>"
-
-        if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-            if($("td[data-date="+classDate+"] .group_plan_indicate_past").length == 0){
-                $("td[data-date="+classDate+"]").prepend(group_plan_indicate_past)
+        if(hh >= work_start && hh < work_end ){
+            if(mm.length==1){
+                var mm = '0'+classDateSplit[1]
             }
-        }else{
-            if($("td[data-date="+classDate+"] .group_plan_indicate").length == 0){
-                $("td[data-date="+classDate+"]").prepend(group_plan_indicate)
+            if(dd.length==1){
+                var dd='0'+classDateSplit[2]
+            }
+            if(omm.length==1){
+                var omm = '0'+oriMonth
+            }
+            if(odd.length==1){
+                var odd='0'+oriDate
+            }
+
+            var group_plan_indicate = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate'>"
+            var group_plan_indicate_past = "<img src='/static/user/res/icon-group-setting.png' class='group_plan_indicate_past'>"
+
+            if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
+                if($("td[data-date="+classDate+"] .group_plan_indicate_past").length == 0){
+                    $("td[data-date="+classDate+"]").prepend(group_plan_indicate_past)
+                }
+            }else{
+                if($("td[data-date="+classDate+"] .group_plan_indicate").length == 0){
+                    $("td[data-date="+classDate+"]").prepend(group_plan_indicate)
+                }
             }
         }
-
     }
 }
 
@@ -2052,7 +2063,7 @@ function classInfoProcessed(jsondata){ //일정 갯수 세기
         summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
         datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
     }
-    console.log(datasum)
+
     for(var i in summaryArray){ //개인일정 중복 제거된 배열
         summaryArrayResult.push(i)
     }
