@@ -339,7 +339,7 @@ def add_trainee_schedule_logic(request):
                     error = '이미 완료된 일정입니다.'
 
     if error is None:
-        error = func_check_schedule_setting(class_id, start_date, ADD_SCHEDULE)
+        error = func_check_schedule_setting(class_id, start_date, end_date, ADD_SCHEDULE)
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
@@ -479,7 +479,7 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         if error is None:
-            error = func_check_schedule_setting(class_id, start_date, DEL_SCHEDULE)
+            error = func_check_schedule_setting(class_id, start_date, end_date, DEL_SCHEDULE)
 
     if error is None:
         try:

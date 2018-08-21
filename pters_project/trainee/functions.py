@@ -526,10 +526,12 @@ def func_get_class_list(context, member_id):
     return context
 
 
-def func_check_schedule_setting(class_id, start_date, add_del_type):
+def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
     error = None
     disable_time = timezone.now()
     now_time = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
+    add_del_start_time = datetime.datetime.strptime(start_date.strftime('%H:%M'), '%H:%M')
+    add_del_end_time = datetime.datetime.strptime(end_date.strftime('%H:%M'), '%H:%M')
     today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     reserve_avail_date = 0
     class_info = None
@@ -542,9 +544,11 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
         lt_res_01 = '00:00-23:59'
         lt_res_02 = 0
         lt_res_03 = '0'
+        lt_res_04 = '00:00-23:59'
         lt_res_05 = 14
         lt_res_cancel_time = -1
         lt_res_enable_time = -1
+        lt_work_time_avail = ['', '', '', '', '', '', '']
         setting_data = SettingTb.objects.filter(member_id=class_info.member_id, class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
@@ -554,6 +558,22 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
                 lt_res_02 = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_03':
                 lt_res_03 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_04':
+                lt_res_04 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
+                lt_work_time_avail[0] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
+                lt_work_time_avail[1] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
+                lt_work_time_avail[2] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
+                lt_work_time_avail[3] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
+                lt_work_time_avail[4] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
+                lt_work_time_avail[5] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
+                lt_work_time_avail[6] = setting_info.setting_info
             if setting_info.setting_type_cd == 'LT_RES_05':
                 lt_res_05 = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
@@ -564,9 +584,29 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             lt_res_cancel_time = lt_res_02*60
         if lt_res_enable_time == -1:
             lt_res_enable_time = lt_res_02*60
+        if lt_work_time_avail[0] == '':
+            lt_work_time_avail[0] = lt_res_04
+        if lt_work_time_avail[1] == '':
+            lt_work_time_avail[1] = lt_res_04
+        if lt_work_time_avail[2] == '':
+            lt_work_time_avail[2] = lt_res_04
+        if lt_work_time_avail[3] == '':
+            lt_work_time_avail[3] = lt_res_04
+        if lt_work_time_avail[4] == '':
+            lt_work_time_avail[4] = lt_res_04
+        if lt_work_time_avail[5] == '':
+            lt_work_time_avail[5] = lt_res_04
+        if lt_work_time_avail[6] == '':
+            lt_work_time_avail[6] = lt_res_04
 
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
+
+        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0],
+                                                           '%H:%M')
+        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1],
+                                                         '%H:%M')
+        today + datetime.timedelta(hours=reserve_avail_date)
 
         reserve_stop = lt_res_03
         reserve_avail_date = lt_res_05
@@ -592,6 +632,19 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
                 else:
                     error = '예약 취소가 불가능합니다.'
             if now_time > reserve_avail_end_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '예약 등록이 불가능합니다.'
+                else:
+                    error = '예약 취소가 불가능합니다.'
+
+        if error is None:
+            if add_del_start_time < work_avail_start_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '예약 등록이 불가능합니다.'
+                else:
+                    error = '예약 취소가 불가능합니다.'
+
+            if add_del_end_time > work_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
                     error = '예약 등록이 불가능합니다.'
                 else:
