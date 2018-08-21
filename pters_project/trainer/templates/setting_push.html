@@ -151,12 +151,8 @@
         $('.pters_switch').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
                 $(this).addClass('sw_on').removeClass('sw_off');
-                $(this).find('.switchball').removeClass('switchoff').addClass('switchon');
-                $(this).find('.switchback').addClass('switchon-back');
             }else{
                 $(this).addClass('sw_off').removeClass('sw_on');
-                $(this).find('.switchball').removeClass('switchon').addClass('switchoff');
-                $(this).find('.switchback').removeClass('switchon-back');
             }
         });
 
@@ -181,6 +177,7 @@
                 $('#memberLessonNoticeSetting').css('display','none');
                 //수위치 껐을때 To-Do
             }
+            check_dropdown_selected();
         });
 
         $('#switch2').click(function(){
@@ -193,30 +190,33 @@
                 //수위치 껐을때 To-Do
                 $('#memberFinishAlertSetting').css('display','none');
             }
+            check_dropdown_selected();
         });
 
         $('#switch3').click(function(){
             if($(this).hasClass('sw_on')){
                 console.log('ononon')
                 //스위치 켰을때 To-Do
-                $('#id_setting_to_trainee_lesson_alarm').val(1);
+                $('#id_setting_to_trainee_lesson_alarm').val(0);
             }else if($(this).hasClass('sw_off')){
                 console.log('ofofof')
                 //수위치 껐을때 To-Do
-                $('#id_setting_to_trainee_lesson_alarm').val(0);
+                $('#id_setting_to_trainee_lesson_alarm').val(1);
             }
+            check_dropdown_selected()
         });
 
         $('#switch4').click(function(){
             if($(this).hasClass('sw_on')){
                 console.log('ononon')
                 //스위치 켰을때 To-Do
-                $('#id_setting_from_trainee_lesson_alarm').val(1);
+                $('#id_setting_from_trainee_lesson_alarm').val(0);
             }else if($(this).hasClass('sw_off')){
                 console.log('ofofof')
                 //수위치 껐을때 To-Do
-                $('#id_setting_from_trainee_lesson_alarm').val(0);
+                $('#id_setting_from_trainee_lesson_alarm').val(1);
             }
+            check_dropdown_selected()
         });
 
         $('#memberLessonNoticeSetting #ulTimes1 li a').click(function(){
@@ -301,15 +301,16 @@
 
         function check_dropdown_selected(){ //회원명, 날짜, 진행시간, 시작시간을 모두 선택했을때 상단 Bar의 체크 아이콘 활성화(색상변경: 검은색-->초록색)
             
-            var trainee_todaylesson_notice = $('#id_setting_trainee_todaylesson_notice');
-            var trainee_lessonfinish_alert = $('#id_setting_trainee_lessonfinish_alert');
-            var trainee_lessonchanged_alarm = $('#id_setting_to_trainee_lesson_alarm');
-            var trainer_lessonchanged_alarm = $('#id_setting_from_trainee_lesson_alarm');
+            var trainee_todaylesson_notice = $('#id_setting_trainee_todaylesson_notice').val();
+            var trainee_lessonfinish_alert = $('#id_setting_trainee_lessonfinish_alert').val();
+            var trainee_lessonchanged_alarm = $('#id_setting_to_trainee_lesson_alarm').val();
+            var trainer_lessonchanged_alarm = $('#id_setting_from_trainee_lesson_alarm').val();
 
             if(trainee_todaylesson_notice != lt_pus_01[0] || trainee_lessonfinish_alert != lt_pus_02[0] || trainee_lessonchanged_alarm != lt_pus_to_trainee_lesson_alarm || trainer_lessonchanged_alarm != lt_pus_from_trainee_lesson_alarm  ){
                 $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
                 select_all_check=true;
             }else{
+                $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
                 select_all_check=false;
             };
         };
