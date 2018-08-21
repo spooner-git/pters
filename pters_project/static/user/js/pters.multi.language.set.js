@@ -48,6 +48,16 @@ var multi_language_set = {
                                     "text-mypage":"마이페이지",
                                     "text-help":"이용문의",
 
+                                    "text-basicsetting":"기본 설정",
+                                    "text-programmanage":"프로그램 관리",
+                                    "text-reservesetting":"예약 관련",
+                                    "text-pushsetting":"푸시 알림 설정",
+                                    "text-bgsetting":"배경 설정",
+                                    "text-purchase":"이용권 구매",
+                                    "text-language":"Language/言語/언어",
+                                    "text-fromptersteam":"피터스 공지",
+                                    "text-aboutus":"About us",
+
                                     "text-yes":"예",
                                     "text-no":"아니오",
                                     "text-ok":"확인",
@@ -113,6 +123,16 @@ var multi_language_set = {
                                     "text-programselect":"プログラム選択",
                                     "text-mypage":"マイページ",
                                     "text-help":"ヘルプ",
+
+                                    "text-basicsetting":"基本設定",
+                                    "text-programmanage":"プログラム管理",
+                                    "text-reservesetting":"予約関連",
+                                    "text-pushsetting":"プッシュ通知設定",
+                                    "text-bgsetting":"背景設定",
+                                    "text-purchase":"利用券購買",
+                                    "text-language":"Language/言語/언어",
+                                    "text-fromptersteam":"お知らせ",
+                                    "text-aboutus":"About us",
 
                                     "text-yes":"はい",
                                     "text-no":"いいえ",
@@ -180,6 +200,16 @@ var multi_language_set = {
                                     "text-mypage":"My page",
                                     "text-help":"Help",
 
+                                    "text-basicsetting":"Basic Settings",
+                                    "text-programmanage":"Program Manage.",
+                                    "text-reservesetting":"Reserv. Settings",
+                                    "text-pushsetting":"Push Settings",
+                                    "text-bgsetting":"Background Settings",
+                                    "text-purchase":"Purchase membership",
+                                    "text-language":"Language/言語/언어",
+                                    "text-fromptersteam":"Notice from PTERS",
+                                    "text-aboutus":"About us",
+
                                     "text-yes":"Yes",
                                     "text-no":"No",
                                     "text-ok":"Ok",
@@ -238,6 +268,18 @@ $('.text-calSelect').text(multi_language_set[Options.language]["text-programsele
 $('.text-mypage').text(multi_language_set[Options.language]["text-mypage"]);
 $('.text-help').text(multi_language_set[Options.language]["text-help"]);
 $('.text-moveprogram').text(multi_language_set[Options.language]["text-moveprogram"])
+$('.text-programmanage').text(multi_language_set[Options.language]["text-programmanage"]);
+
+//Trainer setting menu
+$('.text-basicsetting').text(multi_language_set[Options.language]["text-basicsetting"]);
+$('.text-programmanage').text(multi_language_set[Options.language]["text-programmanage"]);
+$('.text-reservesetting').text(multi_language_set[Options.language]["text-reservesetting"]);
+$('.text-pushsetting').text(multi_language_set[Options.language]["text-pushsetting"]);
+$('.text-bgsetting').text(multi_language_set[Options.language]["text-bgsetting"]);
+$('.text-purchase').text(multi_language_set[Options.language]["text-purchase"]);
+$('.text-language').text(multi_language_set[Options.language]["text-language"]);
+$('.text-fromptersteam').text(multi_language_set[Options.language]["text-fromptersteam"]);
+$('.text-aboutus').text(multi_language_set[Options.language]["text-aboutus"]);
 
 
 //Trainer Base - Popups
