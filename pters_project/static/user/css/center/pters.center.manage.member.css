@@ -268,7 +268,7 @@ select:focus > option:checked {
 	display: none;
 }
 
-._countnum,._id,._email,._finday,._manage,._startdate{
+._countnum, ._id,._email, ._finday, ._manage, ._startdate{
 	display: none;
 }
 

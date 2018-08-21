@@ -283,23 +283,27 @@
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
-                            <a class="sidebar_text text-membermanage">
+                            <a class="sidebar_text text-employeemanage">
                             </a>
                         </div>
+                        <!--
                         <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-groupmanage">
                             </a>
                         </div>
+                        -->
+                        <!--
                         <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-classmanage">
                             </a>
                         </div>
-                        <!--
+                        -->
+                        
                         <div class="sidebar_div" onclick="sideGoPage('center_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-centermanage">
                             </a>
                         </div>
-                        -->
+                        
                         
                             <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
                                 <a href="{% url 'center:work_manage' %}" class="sidebar_text text-workmanage">
@@ -386,21 +390,24 @@
                     <a href="{% url 'center:cal_month' %}" class="centermenu_text text-monthplan"></a>
                 </div>
                 <div class="centermenu_div">
-                    <a href="{% url 'center:member_manage' %}" class="centermenu_text text-membermanage"></a>
-                </div>
-                <div class="centermenu_div">
-                    <a href="{% url 'center:group_manage' %}" class="centermenu_text text-groupmanage"></a>
-                </div>
-
-                <div class="centermenu_div">
-                    <a href="{% url 'center:class_manage' %}" class="centermenu_text text-classmanage"></a>
+                    <a href="{% url 'center:member_manage' %}" class="centermenu_text text-employeemanage"></a>
                 </div>
 
                 <!--
                 <div class="centermenu_div">
-                    <a href="{% url 'center:center_manage' %}" class="centermenu_text text-centermanage"></a>
+                    <a href="{% url 'center:group_manage' %}" class="centermenu_text text-groupmanage"></a>
+                </div>
+
+                
+                <div class="centermenu_div">
+                    <a href="{% url 'center:class_manage' %}" class="centermenu_text text-classmanage"></a>
                 </div>
                 -->
+                
+                <div class="centermenu_div">
+                    <a href="{% url 'center:center_manage' %}" class="centermenu_text text-centermanage"></a>
+                </div>
+                
 
                 <div class="centermenu_div">
                     <a href="{% url 'center:work_manage' %}" class="centermenu_text text-workmanage"></a>

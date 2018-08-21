@@ -105,18 +105,18 @@ $(document).ready(function(){
         if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','name','no',jsondata);
+                    employeeListSet('current','name','no',jsondata);
                 });
             }else if($('#finishedMemberList').css('display') == "block"){
                 get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','name','no',jsondata);
+                    employeeListSet('finished','name','no',jsondata);
                 });
             }
             alignType = 'name'
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','count','yes',jsondata);
+                    employeeListSet('current','count','yes',jsondata);
                 });
             }else if($('#finishedMemberList').css('display') == "block"){
 
@@ -126,7 +126,7 @@ $(document).ready(function(){
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','count','no',jsondata);
+                    employeeListSet('current','count','no',jsondata);
                 });
             }else if($('#finishedMemberList').css('display') == "block"){
 
@@ -135,22 +135,22 @@ $(document).ready(function(){
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','date','no',jsondata);
+                    employeeListSet('current','date','no',jsondata);
                 });
             }else if($('#finishedMemberList').css('display') == "block"){
                 get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','date','no',jsondata);
+                    employeeListSet('finished','date','no',jsondata);
                 });
             }
             alignType = 'startP'
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','date','yes',jsondata);
+                    employeeListSet('current','date','yes',jsondata);
                 });
             }else if($('#finishedMemberList').css('display') == "block"){
                 get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','date','yes',jsondata);
+                    employeeListSet('finished','date','yes',jsondata);
                 });
             }
             alignType = 'startR'
@@ -1358,11 +1358,11 @@ function send_modified_member_base_data(){
                 $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                        employeeListSet('current','date','yes',jsondata);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                        employeeListSet('finished','date','yes',jsondata);
                     })
                 }
                 $('#startR').attr('selected','selected');
@@ -1844,7 +1844,7 @@ function grouptype_dropdown_set(grouplistJSON){
 }
 
 
-//DB데이터를 memberListSet에서 사용가능하도록 가공
+//DB데이터를 employeeListSet에서 사용가능하도록 가공
 function DataFormatting(jsondata){
 
     console.log(jsondata)
@@ -2155,8 +2155,8 @@ function get_member_list(use, callback){
                     callback(jsondata);
 
                 }else{
-                    //memberListSet('current','name','no',jsondata);
-                    //memberListSet('finished','name','no',jsondata);
+                    //employeeListSet('current','name','no',jsondata);
+                    //employeeListSet('finished','name','no',jsondata);
                 }
                 console.log('success');
             }
@@ -2213,7 +2213,7 @@ function get_member_ing_list(use, callback){
                     callback(jsondata);
 
                 }else{
-                    memberListSet('current','name','no',jsondata);
+                    employeeListSet('current','name','no',jsondata);
                 }
                 console.log('success');
             }
@@ -2269,7 +2269,7 @@ function get_member_end_list(use, callback){
                     callback(jsondata);
 
                 }else{
-                    memberListSet('finished','name','no',jsondata);
+                    employeeListSet('finished','name','no',jsondata);
                 }
                 console.log('success');
             }
@@ -2299,18 +2299,9 @@ $('#page_managemember').scroll(function(){
 //스크롤 맨 아래나 위로 올라가면 +0 or -1픽셀
 
 
-//회원목록을 테이블로 화면에 뿌리는 함수
-function memberListSet (type,option,Reverse, jsondata){
+//직원목록을 테이블로 화면에 뿌리는 함수
+function employeeListSet (type, option, Reverse, jsondata){
     var bodywidth = window.innerWidth;
-    var text = '소진시까지';
-    var text2 = '이번달 신규회원';
-    if(Options.language == "JPN"){
-        text = '残余回数終わるまで';
-        text2 = '今月新規メンバー';
-    }else if(Options.language == "ENG"){
-        text = '';
-        text2 = 'New Member this month';
-    }
 
     var tbodyStart = '<tbody>';
     var tbodyEnd = '</tbody>';
@@ -2332,7 +2323,7 @@ function memberListSet (type,option,Reverse, jsondata){
             $table = $('#currentMember');
             $tabletbody = $('#currentMember tbody');
             $membernum = $('#memberNumber_current_member');
-            text_membernum = "진행중인 회원 ";
+            text_membernum = "고용중인 직원 ";
             break;
         case 'finished':
             data = DataFormatting(jsondata);
@@ -2342,7 +2333,7 @@ function memberListSet (type,option,Reverse, jsondata){
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember tbody');
             $membernum = $('#memberNumber_finish_member');
-            text_membernum = "종료된 회원 ";
+            text_membernum = "고용 종료된 직원 ";
             break;
     }
 
@@ -2397,10 +2388,6 @@ function memberListSet (type,option,Reverse, jsondata){
             if(name.length>10){
                 name = array[2].substr(0,9)+'..';
             }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
             groupType = array[14];
             if(array[15]){
                 groupType2 = '/'+array[15];
@@ -2427,10 +2414,6 @@ function memberListSet (type,option,Reverse, jsondata){
             if(name.length>10){
                 name = array[0].substr(0,9)+'..';
             }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
             groupType = array[14];
             if(array[15]){
                 groupType2 = '/'+array[15];
@@ -2458,10 +2441,6 @@ function memberListSet (type,option,Reverse, jsondata){
             if(name.length>10){
                 name = array[1].substr(0,9)+'..';
             }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
             groupType = array[14];
             if(array[15]){
                 groupType2 = '/'+array[15];
@@ -2478,12 +2457,12 @@ function memberListSet (type,option,Reverse, jsondata){
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
         if(end == "9999.12.31"){
-            end = text;
+            end = "소진시까지";
         }
 
         var newReg = "";
         if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
-            newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
+            newReg = '<img src="/static/user/res/icon-new.png" title="이번달 신규" class="newRegImg">';
         }
 
         var phone;
@@ -2493,26 +2472,8 @@ function memberListSet (type,option,Reverse, jsondata){
             phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
         }
 
-        var npCountImg = "";
-        if(npCounts == 0 && rjCounts == 0){
-            npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
-        }else if(rjCounts > 0){
-            npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
-        }
-
-        var yetReg = "";
-        var yet = "";
-        if(yetRegCounts > 0){
-            yetReg = '(+'+yetRegCounts+')';
-        }
-        if(yetCounts > 0){
-            yet = '(+'+yetCounts+')';
-        }
-
-
-
-        count = remove_front_zeros(count);
-        regcount = remove_front_zeros(regcount);
+        count = Number(count);
+        regcount = Number(regcount);
 
         var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
@@ -2524,43 +2485,80 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
-        var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
+        var centernametd = '<td class="_centername" data-name="'+name+'">'+'강남지사'+'</td>';
+        var trainernametd = '<td class="_trainername" data-name="'+name+'">'+newReg+name+'</td>';
         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
+        var lessontypetd = '<td class="_lessontype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
+        var worktimetd = '<td class="_worktime">'+make_worktime_to_text(Options.worktimeWeekly)+'</td>';
+        var totalcontracttd = '<td class="_totalcontract">'+"30"+'</td>';
+        var thismonthcontracttd = '<td class="_thismonthcontract">'+"3"+'</td>';
+        var ongoingcontracttd = '<td class="_ongoingcontract">'+"9"+'</td>';
+        var averagewagetd = '<td class="_averagewage">'+"3,500,000"+'</td>';
+
         var emailtd = '<td class="_email">'+email+'</td>';
-        var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
-        var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
+        var regcounttd = '<td class="_regcount">'+regcount+'</td>';
+        var remaincounttd = '<td class="_remaincount">'+count+'</td>';
         var startdatetd = '<td class="_startdate">'+start+'</td>';
         var enddatetd = '<td class="_finday">'+end+'</td>';
         if(phoneToEdit != ""){
-            var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
+            var mobiletd = '<td class="_trainercontact">'+phoneimage+smsimage+'</td>';
         }else{
-            var mobiletd = '<td class="_contact">-'+'</td>';
+            var mobiletd = '<td class="_trainercontact">-'+'</td>';
         }
-        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
+        var pctd = '<td class="_trainerlistmanage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
         var scrolltd = '<td class="forscroll"></td>';
 
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
         // arrayResult[i] = td;
-        arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+        //arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+        arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+centernametd+trainernametd+lessontypetd+worktimetd+totalcontracttd+ongoingcontracttd+averagewagetd+mobiletd+pctd+'</tr>';
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
 
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
-        resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
+        resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 직원이 없습니다.</td>';
         if(bodywidth > 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();
         }
     }else if(type=="finished" && len ==0){
-        resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
+        resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">계약이 종료 된 직원이 없습니다.</td>';
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;
     $tabletbody.remove();
     $table.append(result);
+
+    function make_worktime_to_text(worktimeArray){
+        var len = worktimeArray.length;
+        var timeArray = [];
+        var textArray = [];
+        var week = multiLanguage[Options.language]["WeekSmpl"];
+
+        var timeresult = [];
+        var textresult = [];
+        for(var j=0; j<len; j++){
+            var timetext = worktimeArray[j];
+            if(timetext.split('-')[0] == timetext.split('-')[1]){
+                timetext = "휴무"
+            }
+            if(timeresult.indexOf(timetext) > -1 ){
+                textresult[timeresult.indexOf(timetext)] = textresult[timeresult.indexOf(timetext)] + ',' + week[j];
+            }else if(timeresult.indexOf(timetext) == -1){
+                timeresult.push(timetext);
+                textresult.push(week[j]);
+            }
+        }
+        
+        var result = [];
+        for(var k=0; k<textresult.length; k++){
+            result.push(`${textresult[k]}: ${timeresult[k]}`)
+        }
+
+        return result.join('<br>')
+    }
 }
 
 
@@ -3191,11 +3189,11 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageText').text('');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                        employeeListSet('current','date','yes',jsondata);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                        employeeListSet('finished','date','yes',jsondata);
                     })
                 }
                 get_member_lecture_list(dbID);
@@ -3244,11 +3242,11 @@ function complete_member_reg_data_pc(lectureID, dbID){
                 $('#startR').attr('selected','selected');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                        employeeListSet('current','date','yes',jsondata);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                        employeeListSet('finished','date','yes',jsondata);
                     })
                 }
                 if($('#calendar').length > 0){
@@ -3300,11 +3298,11 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 $('#startR').attr('selected','selected');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                        employeeListSet('current','date','yes',jsondata);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                        employeeListSet('finished','date','yes',jsondata);
                     })
                 }
                 get_member_lecture_list(dbID);
@@ -3364,11 +3362,11 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
                     $('#startR').attr('selected','selected');
                     if($('#currentMemberList').css('display') == "block"){
                         get_member_ing_list("callback",function(jsondata){
-                            memberListSet('current','date','yes',jsondata);
+                            employeeListSet('current','date','yes',jsondata);
                         })
                     }else if($('#finishedMemberList').css('display') == "block"){
                         get_member_end_list("callback",function(jsondata){
-                            memberListSet('finished','date','yes',jsondata);
+                            employeeListSet('finished','date','yes',jsondata);
                         })
                     }
                     if($('#calendar').length > 0){
@@ -3969,11 +3967,11 @@ function add_member_form_func(){
                 $('#startR').attr('selected','selected');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                        employeeListSet('current','date','yes',jsondata);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                        employeeListSet('finished','date','yes',jsondata);
                     })
                 }
 
@@ -4216,12 +4214,12 @@ function deleteMemberAjax(){
                     case 'name':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
-                                memberListSet ('current','name','no',json);
+                                employeeListSet ('current','name','no',json);
                                 $('#name').attr('selected','selected');
                             })
                         }else if($selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
-                                memberListSet('finished','name','no',json);
+                                employeeListSet('finished','name','no',json);
                                 $('#name').attr('selected','selected');
                             })
                         }
@@ -4229,12 +4227,12 @@ function deleteMemberAjax(){
                     case 'countH':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
-                                memberListSet('current','count','yes',json);
+                                employeeListSet('current','count','yes',json);
                                 $('#countH').attr('selected','selected');
                             })
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
-                                memberListSet('finished','count','yes',json);
+                                employeeListSet('finished','count','yes',json);
                                 $('#countH').attr('selected','selected');
                             })
                         }
@@ -4242,12 +4240,12 @@ function deleteMemberAjax(){
                     case 'countL':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
-                                memberListSet('current','count','no',json);
+                                employeeListSet('current','count','no',json);
                                 $('#countL').attr('selected','selected');
                             })
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
-                                memberListSet('finished','count','no',json);
+                                employeeListSet('finished','count','no',json);
                                 $('#countL').attr('selected','selected');
                             })
                         }
@@ -4259,23 +4257,23 @@ function deleteMemberAjax(){
 
                         }
                         get_member_ing_list('callback',function(json){
-                            memberListSet('current','date','no',json);
+                            employeeListSet('current','date','no',json);
                             $('#startP').attr('selected','selected');
                         })
                         get_member_end_list('callback',function(json){
-                            memberListSet('finished','date','no',json);
+                            employeeListSet('finished','date','no',json);
                             $('#startP').attr('selected','selected');
                         })
                         break;
                     case 'startR':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','yes',json);
+                                employeeListSet('current','date','yes',json);
                                 $('#startR').attr('selected','selected');
                             })
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','yes',json);
+                                employeeListSet('finished','date','yes',json);
                                 $('#startR').attr('selected','selected');
                             })
                         }
@@ -4283,12 +4281,12 @@ function deleteMemberAjax(){
                     case 'recent':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','yes',json);
+                                employeeListSet('current','date','yes',json);
                                 $('#recent').attr('selected','selected');
                             })
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','yes',json);
+                                employeeListSet('finished','date','yes',json);
                                 $('#recent').attr('selected','selected');
                             })
                         }

@@ -59,7 +59,7 @@
             
         </div>
         <div id="float_inner1" class="float_inner" onclick="float_btn_managemember(1)">
-            <a class="KRtext">회원<br/>추가</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+            <a class="KRtext">직원<br/>추가</a>
         </div>
         <!--
         <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
@@ -260,9 +260,9 @@
     <div id="page_managemember">
         <div id="ymdText">
             <div id="ymdTextWrap">
-                <div id="menuName">회원 관리
+                <div id="menuName">직원 관리
                 </div>
-                <div id="menuDescription">전체 회원 목록을 관리합니다.
+                <div id="menuDescription">소속 직원을 관리합니다.
                 </div>
             </div>
         </div>
@@ -294,15 +294,14 @@
                     <p>피터스의 기능들을 사용해보세요.</p>
                 </div>
                 <div class="ymdText-pc-add-member _memberaddbutton" onclick="pc_add_member(0)">
-                    <span class="KRtext">회원 추가</span>
-                    <span class="JPtext">メンバー追加</span>
-                    <span class="ENtext">New Contract</span>
+                    <span class="KRtext">직원 추가</span>
                 </div>
+                <!--
                 <div class="ymdText-pc-add-member-again _memberaddbutton" onclick="pc_add_member(1)">
-                    <span class="KRtext">재등록</span>
-                    <span class="JPtext">再登録</span>
-                    <span class="ENtext">Re-Contract</span>
+                    <span class="KRtext">계약 연장</span>
                 </div>
+                -->
+                
                 <!--
                 <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('group')" style="display: none; margin-left: 2px;">
                     <span class="KRtext">그룹 추가</span>
@@ -313,26 +312,19 @@
             </div>
 
             <select class="alignSelect _ALIGN_DROPDOWN">
+                <option id="name" class="KRtext">이름 가나다 순</option>
 
-                <option id="name" class="KRtext">회원명 가나다 순</option>
-                <option id="name" class="JPtext">名前順</option>
-                <option id="name" class="ENtext">Name</option>
+                <option id="countH" class="KRtext">계약건수 많은 순</option>
 
-                <option id="countH" class="KRtext">남은 횟수 많은 순</option>
-                <option id="countH" class="JPtext">残り回数が多い</option>
-                <option id="countH" class="ENtext">Remain Count(H)</option>
+                <option id="countL" class="KRtext">계약건수 적은 순</option>
 
-                <option id="countL" class="KRtext">남은 횟수 적은 순</option>
-                <option id="countL" class="JPtext">残り回数が少ない</option>
-                <option id="countL" class="ENtext">Remain Count(L)</option>
+                <option id="startP" class="KRtext">고용일자 과거 순</option>
 
-                <option id="startP" class="KRtext">시작 일자 과거 순</option>
-                <option id="startP" class="JPtext">開始が過去</option>
-                <option id="startP" class="ENtext">Start Date(P)</option>
+                <option id="startR" class="KRtext">고용일자 최근 순</option>
 
-                <option id="startR" class="KRtext">시작 일자 최근 순</option>
-                <option id="startR" class="JPtext">開始が最近</option>
-                <option id="startR" class="ENtext">Start Date(R)</option>
+                <option id="wageH" class="KRtext">급여 많은 순</option>
+
+                <option id="wageL" class="KRtext">급여 적은 순</option>
             </select>
             <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
 
@@ -346,37 +338,44 @@
             <thead>
             <tr style="border-bottom:0;">
                 <th class="_countnum">
-                    <span class="KRtext">순번</span><span class="JPtext">No.</span><span class="ENtext">No.</span>
+                    <span class="KRtext">No.</span>
                 </th>
-                <th class="_tdname">
-                    <span class="KRtext">회원명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
+                <th class="_centername">
+                    <span class="KRtext">지점</span>
                 </th>
-                <th class="_grouptype">
-                    <span class="KRtext">수강유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
+                <th class="_trainername">
+                    <span class="KRtext">직원명</span>
                 </th>
-                <th class="_id">
-                    <span class="KRtext">회원 ID</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
+                <!--
+                <th class="_trainerid">
+                    <span class="KRtext">ID</span>
                 </th>
-                <th class="_email">
-                    <span class="KRtext">E-mail</span><span class="JPtext">メールアドレス</span><span class="ENtext">E-mail</span>
+                -->
+                <th class="_lessontype">
+                    <span class="KRtext">담당</span>
                 </th>
-                <th class="_regcount">
-                    <span class="KRtext">등록 횟수</span><span class="JPtext">登録回数</span><span class="ENtext">Reg. Count</span>
+                <th class="_worktime">
+                    <span class="KRtext">업무시간</span>
                 </th>
-                <th class="_remaincount">
-                    <span class="KRtext">남은 횟수</span><span class="JPtext">残り回数</span><span class="ENtext">Rem. Count</span>
+                <th class="_totalcontract">
+                    <span class="KRtext">총 계약</span>
                 </th>
-                <th class="_startdate">
-                    <span class="KRtext">시작일</span><span class="JPtext">開始日</span><span class="ENtext">Start</span>
+                <!--
+                <th class="_thismonthcontract">
+                    <span class="KRtext">이번달 계약</span>
                 </th>
-                <th class="_finday">
-                    <span class="KRtext">종료일</span><span class="JPtext">終了日</span><span class="ENtext">End</span>
+                -->
+                <th class="_ongoingcontract">
+                    <span class="KRtext">진행중 계약</span>
                 </th>
-                <th class="_contact">
-                    <span class="KRtext">연락처</span><span class="JPtext">連絡先</span><span class="ENtext">Tel.</span>
+                <th class="_averagewage">
+                    <span class="KRtext">평균급여</span>
                 </th>
-                <th class="_manage">
-                    <span class="KRtext">관리</span><span class="JPtext">管理</span><span class="ENtext">Manage</span>
+                <th class="_trainercontact">
+                    <span class="KRtext">연락처</span>
+                </th>
+                <th class="_trainerlistmanage">
+                    <span class="KRtext">관리</span>
                 </th>
             </tr>
             </thead>
@@ -804,10 +803,10 @@
             <div style="padding-bottom: 20px;">
                 <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                     <label for="memberSearch" class="ptaddboxtext">
-                        <img class="icons"  style="width:13px;" src={% static_url "user/res/icon-earth.png" %}> 회원 아이디 검색
+                        <img class="icons"  style="width:13px;" src={% static_url "user/res/icon-earth.png" %}> 강사 아이디 검색
                         <!--<p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>-->
                     </label>
-                    <p class="icons_description _SEARCH_MEMBER_NEW">※회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
+                    <p class="icons_description _SEARCH_MEMBER_NEW">※강사님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
                     <div id="memberSearch" class="dropdown" style="border:0;">
                         <input  id="memberSearch_add" placeholder="검색할 아이디를 입력해주세요" value="">
                         <button class="memberSearchButton" id="memberSearchButton">
@@ -818,9 +817,9 @@
 
                 <div class="ptaddbox form-group _ADD_MEMBER_NEW">
                     <label for="memberNameSex" class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 강사명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
-                    <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
+                    <p class="icons_description" style="margin-bottom: 5px;"> 강사 초기 접속 ID는 강사등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
                     <div id="memberName_reg" class="dropdown pters_input_custom">
                         <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10">
                         <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="이름" maxlength="10">
@@ -965,7 +964,7 @@
 
                 <div class="_ADD_MEMBER_REG">
                     <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 수강 정보 <span style="color: #fe4e65;">*</span>
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 계약 정보 입력 <span style="color: #fe4e65;">*</span>
                     </label>
                     <div id="selectBox2" class="selectbox ">
                         <div id="btnCallSimple" href="#" class="btnCallSimple selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
@@ -975,7 +974,7 @@
                     <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 담당 레슨 유형
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
@@ -1161,7 +1160,7 @@
     <script type="text/javascript" src={% static_url "user/js/center/pters.center.manage.member.group.js" %}></script>
     <script>
         $('a.__membermanage').css('color','#fe4e65;')
-        $('#uptext').text("회원 관리")
+        $('#uptext').text("직원 관리")
         $('footer').hide()
 
         //var DB = {};
