@@ -2391,13 +2391,17 @@ function employeeListSet (type, option, Reverse, jsondata){
             groupType = array[14];
             if(array[15]){
                 groupType2 = '/'+array[15];
+                groupType2_ = '<br>'+array[15];
             }else{
                 groupType2 = '';
+                groupType2_ = '';
             }
             if(array[16]){
                 groupType3 = '/'+array[16];
+                groupType3_ = '<br>'+array[16];
             }else{
                 groupType3 = '';
+                groupType3_ = '';
             }
         }else if(option == "name"){
             array = nameLists[i].split('/');
@@ -2417,13 +2421,17 @@ function employeeListSet (type, option, Reverse, jsondata){
             groupType = array[14];
             if(array[15]){
                 groupType2 = '/'+array[15];
+                groupType2_ = '<br>'+array[15];
             }else{
                 groupType2 = '';
+                groupType2_ = '';
             }
             if(array[16]){
                 groupType3 = '/'+array[16];
+                groupType3_ = '<br>'+array[16];
             }else{
                 groupType3 = '';
+                groupType3_ = '';
             }
         }else if(option == "date"){
             array = dateLists[i].split('/');
@@ -2444,13 +2452,17 @@ function employeeListSet (type, option, Reverse, jsondata){
             groupType = array[14];
             if(array[15]){
                 groupType2 = '/'+array[15];
+                groupType2_ = '<br>'+array[15];
             }else{
                 groupType2 = '';
+                groupType2_ = '';
             }
             if(array[16]){
                 groupType3 = '/'+array[16];
+                groupType3_ = '<br>'+array[16];
             }else{
                 groupType3 = '';
+                groupType3_ = '';
             }
         }
 
@@ -2487,8 +2499,8 @@ function employeeListSet (type, option, Reverse, jsondata){
 
         var centernametd = '<td class="_centername" data-name="'+name+'">'+'강남지사'+'</td>';
         var trainernametd = '<td class="_trainername" data-name="'+name+'">'+newReg+name+'</td>';
-        var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
-        var lessontypetd = '<td class="_lessontype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
+        var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'" style="display:none;">'+id+'</td>';
+        var lessontypetd = '<td class="_lessontype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2_+groupType3_+'</td>';
         var worktimetd = '<td class="_worktime">'+make_worktime_to_text(Options.worktimeWeekly)+'</td>';
         var totalcontracttd = '<td class="_totalcontract">'+"30"+'</td>';
         var thismonthcontracttd = '<td class="_thismonthcontract">'+"3"+'</td>';
@@ -2511,7 +2523,7 @@ function employeeListSet (type, option, Reverse, jsondata){
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
         // arrayResult[i] = td;
         //arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
-        arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+centernametd+trainernametd+lessontypetd+worktimetd+totalcontracttd+ongoingcontracttd+averagewagetd+mobiletd+pctd+'</tr>';
+        arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+centernametd+idtd+trainernametd+lessontypetd+worktimetd+totalcontracttd+ongoingcontracttd+averagewagetd+mobiletd+pctd+'</tr>';
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
 

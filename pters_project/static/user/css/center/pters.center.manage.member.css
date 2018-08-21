@@ -268,80 +268,11 @@ select:focus > option:checked {
 	display: none;
 }
 
-._countnum, ._id,._email, ._finday, ._manage, ._startdate{
+._countnum{
 	display: none;
 }
 
 ._countnum{
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._tdname, ._tdnamee{
-	position: relative;
-	width: 40%;
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._grouptype{
-	display: none;
-}
-
-._id{
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._email{
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._regcount{
-	width: 23%;
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._remaincount{
-	width: 23%;
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._startdate{
-	width: 25%;
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._finday{
-	line-height: 19px;
-	vertical-align: middle !important;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
-._contact{
-	width: 25%;
-}
-
-._manage{
 	line-height: 19px;
 	vertical-align: middle !important;
 	padding-top: 8px;
@@ -1454,74 +1385,44 @@ span.summaryInnerBoxText_Repeatendtext{
 		overflow-y: overlay;
 	}
 
-	.npCountImg_wait{
-		width:17px;
-		position:absolute;
-		margin-top:7px;
-		margin-left:5px;
-	}
 
-	.npCountImg_x{
-		width:14px;
-		position:absolute;
-		margin-top:4px;
-		margin-left:6px;
-	}
-
-	._countnum, ._id, ._email, ._startdate, ._finday, ._manage{
+	._countnum{
 		display: table-cell;
 	}
 
-	._manage img._info_view,._manage img._info_modify{
+	._trainerlistmanage img._info_view, ._trainerlistmanage img._info_modify{
 		display: none;
 	}
 
 	._countnum{
-		width: 30px;
+		width: 4%;
 	}
-
-	._grouptype{
-		width: 60px;
+	._centername{
+		width: 11%;
 	}
-
-	._tdname,._tdnamee{
-		width: 85px;
+	._trainername{
+		width: 11%;
 	}
-
-	._id{
-		width: 65px;
+	._lessontype{
+		width: 10%;
 	}
-
-	._email{
-		width: 115px;
-		display: none;
+	._worktime{
+		width: 17%;
 	}
-
-	._regcount{
-		width: 45px;
+	._totalcontract{
+		width: 5%;
 	}
-
-	._remaincount{
-		width: 45px;
-		line-height: 19px;
-		vertical-align: middle !important;
+	._ongoingcontract{
+		width: 5%;
 	}
-
-	._startdate{
-		width: 50px;
+	._averagewage{
+		width: 10%;
 	}
-
-	._finday{
-		width: 50px;
+	._trainercontact{
+		width: 10%;
 	}
-
-	._contact{
-		width: 70px;
-
-	}
-
-	._manage{
-		width: 55px;
+	._trainerlistmanage{
+		width: 10%;
 	}
 
 	#page_managemember table, #page_managemember td{
