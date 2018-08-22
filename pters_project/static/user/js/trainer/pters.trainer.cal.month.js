@@ -150,46 +150,58 @@ $(document).ready(function(){
 
     $(document).on('click','#calendar td',function(){
         closeAlarm('pc')
-        if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
-            deleteTypeSelect = ''
-            var $cal_popup_plancheck = $('#cal_popup_plancheck');
-            //$cal_popup_plancheck.css('display','block');
-            $('#float_btn_wrap').hide();
-            shade_index(100)
-            var info = $(this).attr('data-date').split('_')
-            var yy=info[0]
-            var mm=info[1]
-            var dd=info[2]
-            var dayobj = new Date(yy,mm-1,dd)
-            var dayraw = dayobj.getDay();
-            var dayarry = ['일','월','화','수','목','금','토']
-            var day = dayarry[dayraw];
-            var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
-            var countNum = $(this).find('._classTime').text()
-            $('#countNum').text(countNum)
-            $('.popup_ymdText').html(infoText)
-            plancheck(yy+'_'+mm+'_'+dd, initialJSON)
-            if(bodywidth > 600){
-                $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
-            }else{
-                $cal_popup_plancheck.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+        var thisDate = $(this).attr('data-date');
+        var planDate_ = thisDate.replace(/_/gi,"-");
+        var info = thisDate.split('_')
+        if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+            show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+                                </div>`)
+        }else{
+            if(!$(this).hasClass('nextDates') && !$(this).hasClass('prevDates')){
+                deleteTypeSelect = ''
+                var $cal_popup_plancheck = $('#cal_popup_plancheck');
+                //$cal_popup_plancheck.css('display','block');
+                $('#float_btn_wrap').hide();
+                shade_index(100)
+
+                var yy=info[0]
+                var mm=info[1]
+                var dd=info[2]
+                var dayobj = new Date(yy,mm-1,dd)
+                var dayraw = dayobj.getDay();
+                var dayarry = ['일','월','화','수','목','금','토']
+                var day = dayarry[dayraw];
+                var infoText = yy+'년 '+mm+'월 '+dd+'일 '+'('+day+')'
+                var countNum = $(this).find('._classTime').text()
+                $('#countNum').text(countNum)
+                $('.popup_ymdText').html(infoText)
+                plancheck(yy+'_'+mm+'_'+dd, initialJSON)
+                if(bodywidth > 600){
+                    $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
+                }else{
+                    $cal_popup_plancheck.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+                }
+                //disable_window_scroll();
+                clicked_td_date_info = yy+'_'+mm+'_'+dd
             }
-            //disable_window_scroll();
-            clicked_td_date_info = yy+'_'+mm+'_'+dd
-        }
 
 
-        if($('.plan_raw').height()*$('.plan_raw').length > $('#cal_popup_plancheck').height() ){
-            if($('#cal_popup_plancheck > div:first-child').find('.scroll_arrow_top').length == 0){
-                $('#cal_popup_plancheck > div:first-child').append(
-                                                    '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_top">'+
-                                                    '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_bottom">'
-                                                 )
+            if($('.plan_raw').height()*$('.plan_raw').length > $('#cal_popup_plancheck').height() ){
+                if($('#cal_popup_plancheck > div:first-child').find('.scroll_arrow_top').length == 0){
+                    $('#cal_popup_plancheck > div:first-child').append(
+                                                        '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_top">'+
+                                                        '<img src="/static/user/res/btn-today-left.png" class="scroll_arrow_bottom">'
+                                                     )
+                }
+                $('.scroll_arrow_top, .scroll_arrow_bottom').css('visibility','visible');
+                if($('.popup_inner_month').scrollTop() < 30 ){
+                    $('.scroll_arrow_top').css('visibility','hidden');
+                };
             }
-            $('.scroll_arrow_top, .scroll_arrow_bottom').css('visibility','visible');
-            if($('.popup_inner_month').scrollTop() < 30 ){
-                $('.scroll_arrow_top').css('visibility','hidden');
-            };
         }
     })
 
@@ -1024,6 +1036,7 @@ function classDatesTrainer(jsondata){
     var countResult = planInfo.countResult
     var len = planInfo.dateResult.length
     for(var i=0; i<len; i++){
+        var planDate_ = dateResult[i];
         var yy = dateResult[i].split('-')[0]
         var mm = dateResult[i].split('-')[1]
         var dd = dateResult[i].split('-')[2]
@@ -1037,13 +1050,19 @@ function classDatesTrainer(jsondata){
         }
         var dateTarget = yy+'_'+Number(mm)+'_'+Number(dd)
         if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
-            $("td[data-date="+dateTarget+"]").attr('schedule-id',jsondata.scheduleIdArray[i])
-            $("td[data-date="+dateTarget+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
-            $("td[data-date="+dateTarget+"] div._classDate").addClass('greydateMytime')
+            if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+            }else{
+                $("td[data-date="+dateTarget+"]").attr('schedule-id',jsondata.scheduleIdArray[i])
+                $("td[data-date="+dateTarget+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
+                $("td[data-date="+dateTarget+"] div._classDate").addClass('greydateMytime')
+            }
         }else{
-            $("td[data-date="+dateTarget+"]").attr('schedule-id',jsondata.scheduleIdArray[i])
-            $("td[data-date="+dateTarget+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
-            $("td[data-date="+dateTarget+"] div._classDate").addClass('dateMytime')
+            if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+            }else{
+                $("td[data-date="+dateTarget+"]").attr('schedule-id',jsondata.scheduleIdArray[i])
+                $("td[data-date="+dateTarget+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
+                $("td[data-date="+dateTarget+"] div._classDate").addClass('dateMytime')
+            }
         }
     };
 }
