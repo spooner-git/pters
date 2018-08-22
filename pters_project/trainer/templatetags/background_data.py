@@ -160,6 +160,8 @@ def get_function_auth(request):
         billing_info.save()
 
     for payment_info in payment_data:
-        merchandise_type_cd_list.append(payment_info.merchandise_type_cd)
+        merchandise_type_cd_data = payment_info.merchandise_type_cd.split('/')
+        for merchandise_type_cd_info in merchandise_type_cd_data:
+            merchandise_type_cd_list.append(merchandise_type_cd_info)
 
     return merchandise_type_cd_list
