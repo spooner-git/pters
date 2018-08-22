@@ -52,7 +52,7 @@ var multi_language_set = {
                                     "text-programmanage":"프로그램 관리",
                                     "text-reservesetting":"예약 관련",
                                     "text-pushsetting":"푸시 알림 설정",
-                                    "text-bgsetting":"배경 설정",
+                                    "text-bgsetting":"배경화면 설정",
                                     "text-purchase":"이용권 구매",
                                     "text-language":"Language/言語/언어",
                                     "text-fromptersteam":"피터스 공지",
