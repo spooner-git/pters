@@ -91,11 +91,13 @@
 }
 
 #subject-selector{
-	max-height: 300px;
+	/*max-height: 300px;*/
+	max-height: 250px;
 	overflow-y: auto;
 }
 #popup_lecture_select .lecture_select_table_list{
-	max-height: 300px;
+	/*max-height: 300px;*/
+	max-height: 250px;
 	overflow-y: auto;
 }
 
@@ -677,6 +679,7 @@
 
 
 	#myInfo{
+		position: relative;
 		margin-top: 5px;
 		padding-left: 10px;
 		border-bottom: 1px solid #cccccc;

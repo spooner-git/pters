@@ -42,6 +42,7 @@ button.classAdd{
 	width: 100%;
 }
 #popup_lecture_select p{
+	position: relative;
 	font-size: 18px;
 	font-weight: bold;
 	margin-top: 10px;

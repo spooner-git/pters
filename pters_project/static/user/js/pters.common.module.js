@@ -373,6 +373,18 @@ $('.pters_switch').click(function(){
 //드랍다운 가속도 터치
 
 //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
+    var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
+    var top_offset = 0 + user_offset_topArrow
+    if($(selector).find('.dropdown_scroll_arrow_top').length == 0 ){
+        $(selector_arrowParent).append(
+                                        `<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="top:${top_offset}px;">
+                                        <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="bottom: -${bottom_offset}px;">`
+                                        )
+    }
+}
+
+
 function set_list_overflow_scrolling(selector, selector_arrowParent){
 	//드랍다운 씹힘현상 해결
 	if($(selector).scrollTop() < 30 ){
