@@ -1268,6 +1268,7 @@ $(document).ready(function(){
     $('#callbtn_repeat_reg_list').click(function(){
         //반복일정 등록 되는 리스트 호출
         $('#repeat_reg_list').show();
+        set_list_overflow_scrolling('.repeat_list_wrapper', '#close_repeat_reg_list');
     });
     $(document).on('click','#close_repeat_reg_list',function(){
         $('#repeat_reg_list').hide();
@@ -1307,7 +1308,7 @@ $(document).ready(function(){
         htmlToJoin.push(`</div>`)
         targetHTML.html(htmlToJoin.join(""))
         
-        set_list_overflow_scrolling('.repeat_list_wrapper', '#close_repeat_reg_list');
+        //set_list_overflow_scrolling('.repeat_list_wrapper', '#close_repeat_reg_list');
     };
 
 
