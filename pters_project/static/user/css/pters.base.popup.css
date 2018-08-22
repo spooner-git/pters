@@ -90,6 +90,15 @@
 
 }
 
+#subject-selector{
+	max-height: 300px;
+	overflow-y: auto;
+}
+#popup_lecture_select .lecture_select_table_list{
+	max-height: 300px;
+	overflow-y: auto;
+}
+
 
 #cal_popup_planinfo{
 	display: none;

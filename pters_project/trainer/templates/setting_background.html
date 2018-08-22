@@ -114,15 +114,14 @@
     <script>
         var bodywidth = $('body').width();
         if(bodywidth < 600){
-            $('#page-base').css('display','block');
-            //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('배경화면 설정');
-            $('#uptext').text("배경화면 설정");
-            $('#upbutton-modify').hide();
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            $('#uptext, #uptext2, #uptext3').text('배경화면 설정');
+            $('#upbutton-check').hide();
         }
 
 
-        $('#upbutton-x-modify, ._button_Prev').click(function(){
+        $('#upbutton-x, ._button_Prev').click(function(){
             location.href="/trainer/trainer_setting/";
         });
 
@@ -132,7 +131,6 @@
                 $('.ajaxloadingPC').css('display','block')
                 $('#form_class_id').val(class_id);
                 var url = $(this).parents('.background_wrap').css('background-image');
-                console.log(url);
                 var urlsplit = url.split('/');
                 var staticindex = urlsplit.indexOf('static');
                 var imageurlarray = [];
