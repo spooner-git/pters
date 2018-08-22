@@ -176,7 +176,7 @@ body{
 	position: absolute;
 	top: 50px;
 	width:100%;
-	max-width: 450px !important;
+	max-width: 600px !important;
 	background: #f4f4f4;
 	z-index: 350;
 }
@@ -1252,6 +1252,14 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	#page_addmember{
 		top: unset;
+		max-width: 600px !important;
+	}
+
+	#page_addmember_input_wrap{
+		overflow-y: auto;
+		position: relative;
+		border-top: 1px solid #cccccc;
+		border-bottom: 1px solid #cccccc;
 	}
 
 	#float_btn_wrap{
