@@ -386,6 +386,7 @@ function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offse
 
 
 function set_list_overflow_scrolling(selector, selector_arrowParent){
+	$(selector).addClass('pters_overflow_scrolling')
 	//드랍다운 씹힘현상 해결
 	if($(selector).scrollTop() < 30 ){
         $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');

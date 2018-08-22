@@ -104,6 +104,30 @@
 	}
 /*피터스 On/Off 스위치*/
 
+
+/*피터스 가속도 스크롤 화살표*/
+.pters_overflow_scrolling{
+	-webkit-overflow-scrolling:touch;
+}
+img.dropdown_scroll_arrow_top{
+			position: absolute;
+			right: 0;
+			margin:5px;
+			padding: 10px;
+			top: 30px;
+			transform: rotate(90deg);
+}
+img.dropdown_scroll_arrow_bottom{
+	position: absolute;
+	right: 0;
+	margin: 5px;
+	padding: 10px;
+	bottom: -270px;
+	transform:rotate(270deg);
+}
+/*피터스 가속도 스크롤 화살표*/
+
+
 /*피터스 Seekbar 모듈*/
 	.pters_seekbar_wrapper_wrap{
 		height: auto;
