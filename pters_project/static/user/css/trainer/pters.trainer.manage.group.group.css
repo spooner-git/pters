@@ -25,6 +25,7 @@
 }
 #groupname{
 	width: 50%;
+	height: 35px;
 }
 #grouptype{
 	height: 26px;
@@ -32,7 +33,7 @@
 }
 #groupcapacity{
 	width: 20%;
-	height: 26px;
+	height: 35px;
 }
 
 

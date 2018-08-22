@@ -22,8 +22,6 @@ $('.pters_switch').click(function(){
 });
 //피터스 On/Off 스위치
 
-
-
 //작업중인 항목
 //피터스 seekbar 모듈
 	function initialize_pters_seekbar_module(selector, initLoc_start, initLoc_end, breakpoint, callback){
@@ -361,17 +359,9 @@ $('.pters_switch').click(function(){
 		})
 		//endBall을 끌고 당기는 Seekbar 액션
 	}; 
-
-
 //피터스 seekbar 모듈
 
-
-
-
-
-
 //드랍다운 가속도 터치
-
 //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
     var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
@@ -452,3 +442,45 @@ function set_list_overflow_scrolling(selector, selector_arrowParent){
 }
     
 //드랍다운 가속도 터치
+
+
+//피터스 input 커스텀
+//placeholder는 회색으로, 사용자가 입력하면 검정색으로 바꾸기 (iphone때문에..)
+$('input').keyup(function(e){
+	var $this = $(this);
+	if($this.val().length > 0){
+		$this.css({
+ 					"-webkit-text-fill-color":'#282828'
+		})
+	}else{
+		$this.css({
+ 					"-webkit-text-fill-color":'#cccccc'
+		})
+	}
+});
+
+$('input').change(function(e){
+	var $this = $(this);
+	if($this.val().length > 0){
+		$this.css({
+ 					"-webkit-text-fill-color":'#282828'
+		})
+	}else{
+		$this.css({
+ 					"-webkit-text-fill-color":'#cccccc'
+		})
+	}
+})
+//피터스 input 커스텀
+
+//피터스 jqeury 미니달력 커스텀
+//날짜 선택하면 글씨를 검정색으로 바꾸기..
+$("p.datepicktext input").datepicker({
+    //minDate : 0,
+    onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+    											$(this).css({
+													 					"-webkit-text-fill-color":'#282828'
+															})
+    										}
+ })
+//피터스 jquery 미니달력 커스텀

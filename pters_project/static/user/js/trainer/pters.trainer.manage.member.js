@@ -1781,10 +1781,10 @@ function priceInput(price, type, selector){
     if(type == "sum"){
         var priceInputValue = selector_lecturPrice_add_select.val().replace(/,/g, "");
         priceInputValue = price + Number(priceInputValue);
-        selector_lecturPrice_add_select.val(numberWithCommas(priceInputValue)).attr('readonly',true);
+        selector_lecturPrice_add_select.val(numberWithCommas(priceInputValue)).attr('readonly',true).css('-webkit-text-fill-color','#282828');
         $('#lecturePrice_add_value'+loc).val(priceInputValue);
     }else if(type == "del"){
-        selector_lecturPrice_add_select.val("").attr('readonly',false);
+        selector_lecturPrice_add_select.val("").attr('readonly',false).css('-webkit-text-fill-color','#cccccc');
         $('#lecturePrice_add_value'+loc).val(0);
     }
     check_dropdown_selected();
