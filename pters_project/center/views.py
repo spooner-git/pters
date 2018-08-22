@@ -596,6 +596,13 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
         month_first_day = None
         if end_date == '' or end_date is None:
             finish_date = timezone.now()
+            this_year = int(finish_date.strftime('%Y'))
+            next_month = (int(finish_date.strftime('%m'))+1) % 12
+            if next_month == 0:
+                next_month = 12
+            finish_date = finish_date.replace(month=next_month, day=1)
+            finish_date = finish_date - datetime.timedelta(days=1)
+            finish_date = finish_date.replace(year=this_year)
         else:
             try:
                 finish_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
@@ -606,16 +613,16 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
 
         if start_date == '' or start_date is None:
             month_first_day = finish_date.replace(day=1)
-
-            for i in range(1, 3):
-                before_year = int(month_first_day.strftime('%Y')) - 1
-                before_month = (int(month_first_day.strftime('%m')) - 1) % 13
-                if before_month == 0:
-                    before_month = 12
-                before_month_first_day = month_first_day.replace(month=before_month)
-                if before_month == 12:
-                    before_month_first_day = before_month_first_day.replace(year=before_year)
-                month_first_day = before_month_first_day
+            # default 통계값
+            # for i in range(1, 3):
+            #     before_year = int(month_first_day.strftime('%Y')) - 1
+            #     before_month = (int(month_first_day.strftime('%m')) - 1) % 13
+            #     if before_month == 0:
+            #         before_month = 12
+            #     before_month_first_day = month_first_day.replace(month=before_month)
+            #     if before_month == 12:
+            #         before_month_first_day = before_month_first_day.replace(year=before_year)
+            #     month_first_day = before_month_first_day
         else:
             try:
                 month_first_day = datetime.datetime.strptime(start_date, '%Y-%m-%d')
