@@ -709,14 +709,14 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                                                         # payment_type_cd='SINGLE',
                                                         end_date__gte=today,
                                                         status='paid',
-                                                        price__gt=0,
+                                                        # price__gt=0,
                                                         use=USE)
 
             period_payment_data = PaymentInfoTb.objects.filter(Q(status='reserve') | Q(status='cancelled'),
                                                                member_id=request.user.id,
                                                                merchandise_type_cd=product_info.merchandise_type_cd,
                                                                end_date__gte=today,
-                                                               price__gt=0,
+                                                               # price__gt=0,
                                                                payment_type_cd='PERIOD').order_by('-end_date',
                                                                                                   '-payment_info_id')
             if len(period_payment_data) > 0:
@@ -823,8 +823,8 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
         payment_data_history = PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                             # status='paid',
-                                                            price__gt=0,
-                                                            use=USE).order_by('-end_date')
+                                                            # price__gt=0,
+                                                            use=USE).exclude(status='pre_paid').order_by('-end_date')
         for payment_info in payment_data_history:
             if payment_info.status == 'cancelled':
                 payment_info.status_name = '결제 취소'
