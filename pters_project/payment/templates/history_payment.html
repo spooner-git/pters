@@ -536,13 +536,13 @@
                                         initialJSON = jsondata;
                                         console.log('/payment/update_period_billing_logic/::'+jsondata);
                                         if(jsondata.messageArray.length>0){
-                                            msg = 'update_period_billing_logic 실패하였습니다.';
+                                            msg = '결제 정보 변경에 실패하였습니다.';
                                             msg += '에러내용 : ' + jsondata.messageArray;
                                         }else {
-                                            msg = 'update_period_billing_logic 완료되었습니다.';
+                                            msg = '결제 정보 변경이 완료되었습니다.';
                                         }
                                         alert(msg);
-
+                                        window.location.reload(true);
                                     },
 
                                     complete:function(){
