@@ -388,10 +388,16 @@ function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offse
 function set_list_overflow_scrolling(selector, selector_arrowParent){
 	$(selector).addClass('pters_overflow_scrolling')
 	//드랍다운 씹힘현상 해결
+	console.log('scrollTop',$(selector).scrollTop(), 'height',$(selector).height(), 'scrollHeight',$(selector).prop('scrollHeight'))
 	if($(selector).scrollTop() < 30 ){
         $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');
     };
+    /*
     if($(selector).scrollTop() < $(selector).height() + 25 ){
+    	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
+    }
+    */
+    if($(selector).height() + 20  >  $(selector).prop('scrollHeight') ){
     	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
     }
     $(selector).scroll(function(){
