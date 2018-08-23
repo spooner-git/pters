@@ -7,19 +7,19 @@
 //피터스 상단 셀렉트 박스 모듈
 
 //피터스 On/Off 스위치
-var PTERS_SWITCH_ON = 1;
-var PTERS_SWITCH_OFF = 0;
-$('.pters_switch').click(function(){
-    if($(this).find('.switchball').hasClass('switchoff')){
-        $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-        $(this).find('.switchback').addClass('switchon-back')
-        $(this).attr('value',PTERS_SWITCH_ON);
-    }else{
-        $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-        $(this).find('.switchback').removeClass('switchon-back')
-        $(this).attr('value',PTERS_SWITCH_OFF);
-    }
-});
+	var PTERS_SWITCH_ON = 1;
+	var PTERS_SWITCH_OFF = 0;
+	$('.pters_switch').click(function(){
+	    if($(this).find('.switchball').hasClass('switchoff')){
+	        $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
+	        $(this).find('.switchback').addClass('switchon-back')
+	        $(this).attr('value',PTERS_SWITCH_ON);
+	    }else{
+	        $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
+	        $(this).find('.switchback').removeClass('switchon-back')
+	        $(this).attr('value',PTERS_SWITCH_OFF);
+	    }
+	});
 //피터스 On/Off 스위치
 
 //작업중인 항목
@@ -363,84 +363,83 @@ $('.pters_switch').click(function(){
 
 //드랍다운 가속도 터치
 //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
-function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
-    var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
-    var top_offset = 0 + user_offset_topArrow
-    if($(selector).find('.dropdown_scroll_arrow_top').length == 0 ){
-        $(selector_arrowParent).append(
-                                        `<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="top:${top_offset}px;">
-                                        <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="bottom: -${bottom_offset}px;">`
-                                        )
-    }
-}
+	function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
+	    var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
+	    var top_offset = 0 + user_offset_topArrow
+	    if($(selector).find('.dropdown_scroll_arrow_top').length == 0 ){
+	        $(selector_arrowParent).append(
+	                                        `<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="top:${top_offset}px;">
+	                                        <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="bottom: -${bottom_offset}px;">`
+	                                        )
+	    }
+	}
 
 
-function set_list_overflow_scrolling(selector, selector_arrowParent){
-	$(selector).addClass('pters_overflow_scrolling')
-	//드랍다운 씹힘현상 해결
-	console.log('scrollTop',$(selector).scrollTop(), 'height',$(selector).height(), 'scrollHeight',$(selector).prop('scrollHeight'))
-	if($(selector).scrollTop() < 30 ){
-        $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');
-    };
-    /*
-    if($(selector).scrollTop() < $(selector).height() + 25 ){
-    	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
-    }
-    */
-    if($(selector).height() + 20  >  $(selector).prop('scrollHeight') ){
-    	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
-    }
-    $(selector).scroll(function(){
-        var scrollHeight = $(this).prop('scrollHeight');
-        var popupHeight = $(this).height();
-        var scrollLocation = $(this).scrollTop();
-        //scrollHeight = popupHeight + scrollLocation(끝)
-        if(popupHeight + scrollLocation == scrollHeight){
-            $(this).animate({scrollTop : scrollLocation-1},10)
-        }else if(popupHeight + scrollLocation == popupHeight){
-            $(this).animate({scrollTop : scrollLocation+1},10)
-        }
+	function set_list_overflow_scrolling(selector, selector_arrowParent){
+		$(selector).addClass('pters_overflow_scrolling')
+		//드랍다운 씹힘현상 해결
+		console.log('scrollTop',$(selector).scrollTop(), 'height',$(selector).height(), 'scrollHeight',$(selector).prop('scrollHeight'))
+		if($(selector).scrollTop() < 30 ){
+	        $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');
+	    };
+	    /*
+	    if($(selector).scrollTop() < $(selector).height() + 25 ){
+	    	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
+	    }
+	    */
+	    if($(selector).height() + 20  >  $(selector).prop('scrollHeight') ){
+	    	$(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden');
+	    }
+	    $(selector).scroll(function(){
+	        var scrollHeight = $(this).prop('scrollHeight');
+	        var popupHeight = $(this).height();
+	        var scrollLocation = $(this).scrollTop();
+	        //scrollHeight = popupHeight + scrollLocation(끝)
+	        if(popupHeight + scrollLocation == scrollHeight){
+	            $(this).animate({scrollTop : scrollLocation-1},10)
+	        }else if(popupHeight + scrollLocation == popupHeight){
+	            $(this).animate({scrollTop : scrollLocation+1},10)
+	        }
 
-        // 좌측 스크롤 애로우 보이기
-        if(popupHeight + scrollLocation < scrollHeight-30){
-            $(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','visible')
-        }else{
-            $(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden')
-        }
-        if(scrollLocation > 30){
-            $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','visible')
-        }else{
-            $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden')
-        }
-        //좌측 스크롤 애로우 보이기
-    });
-    //드랍다운 씹힘현상 해결
-    //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+	        // 좌측 스크롤 애로우 보이기
+	        if(popupHeight + scrollLocation < scrollHeight-30){
+	            $(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','visible')
+	        }else{
+	            $(`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`).css('visibility','hidden')
+	        }
+	        if(scrollLocation > 30){
+	            $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','visible')
+	        }else{
+	            $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden')
+	        }
+	        //좌측 스크롤 애로우 보이기
+	    });
+	    //드랍다운 씹힘현상 해결
+	    //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 
-    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
-        $(document).on('click',`${selector_arrowParent} img.dropdown_scroll_arrow_top`,function(e){
-            e.stopPropagation();
-            var $thisparent = $(selector);
-            var $thisparent_scroll_height = $thisparent.prop('scrollHeight');
-            var $thisparent_display_height = $thisparent.height();
-            if($(this).css('visibility') == 'visible'){
-                $thisparent.animate({scrollTop: 0},200)
-            }
-        });
-    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
-    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
-        $(document).on('click',`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`,function(e){
-            e.stopPropagation();
-            var $thisparent = $(selector);
-            var $thisparent_scroll_height = $thisparent.prop('scrollHeight');
-            var $thisparent_display_height = $thisparent.height();
-            if($(this).css('visibility') == 'visible'){
-                $thisparent.animate({scrollTop: $thisparent_scroll_height + $thisparent_display_height},200)
-            }
-        });
-    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
-}
-    
+	    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+	        $(document).on('click',`${selector_arrowParent} img.dropdown_scroll_arrow_top`,function(e){
+	            e.stopPropagation();
+	            var $thisparent = $(selector);
+	            var $thisparent_scroll_height = $thisparent.prop('scrollHeight');
+	            var $thisparent_display_height = $thisparent.height();
+	            if($(this).css('visibility') == 'visible'){
+	                $thisparent.animate({scrollTop: 0},200)
+	            }
+	        });
+	    //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
+	    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+	        $(document).on('click',`${selector_arrowParent} img.dropdown_scroll_arrow_bottom`,function(e){
+	            e.stopPropagation();
+	            var $thisparent = $(selector);
+	            var $thisparent_scroll_height = $thisparent.prop('scrollHeight');
+	            var $thisparent_display_height = $thisparent.height();
+	            if($(this).css('visibility') == 'visible'){
+	                $thisparent.animate({scrollTop: $thisparent_scroll_height + $thisparent_display_height},200)
+	            }
+	        });
+	    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
+	}
 //드랍다운 가속도 터치
 
 
@@ -470,7 +469,7 @@ $('input').change(function(e){
  					"-webkit-text-fill-color":'#cccccc'
 		})
 	}
-})
+});
 //피터스 input 커스텀
 
 //피터스 jqeury 미니달력 커스텀

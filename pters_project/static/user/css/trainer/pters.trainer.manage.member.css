@@ -621,6 +621,9 @@ select:focus > option:checked {
 	border-radius: 3px;
 	border: 1px solid #cccccc;
 }
+	#memberInfoPopup_PC input{
+		-webkit-text-fill-color:#282828;
+	}
 
 .infopopup_pc > label{
 	font-size: 17px;
@@ -1245,8 +1248,8 @@ span.summaryInnerBoxText_Repeatendtext{
 	#page_addmember_input_wrap{
 		overflow-y: auto;
 		position: relative;
-		border-top: 1px solid #cccccc;
-		border-bottom: 1px solid #cccccc;
+		border-top: 2px solid #cccccc;
+		border-bottom: 2px solid #cccccc;
 	}
 
 	.memberline{
