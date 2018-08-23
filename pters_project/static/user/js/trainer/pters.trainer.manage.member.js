@@ -1440,15 +1440,18 @@ function float_btn_managemember(option){
         $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
     }else if(option == "group"){
         initialize_add_member_sheet();
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#page_addmember').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#float_btn_wrap').hide();
 
         scrollToDom($('#page_addmember'));
-        if(bodywidth<600){
-            $('#page_managemember').hide();
-            $('#page-base').hide();
-            $('#page-base-addstyle').show();
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
         }
 
         $('#grouptype').hide()
@@ -1468,6 +1471,7 @@ function float_btn_managemember(option){
 
     }else if(option == "openlesson"){
         initialize_add_member_sheet();
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#page_addmember').show();
         $('#shade').hide();
         $('#shade3').show();
@@ -1475,10 +1479,12 @@ function float_btn_managemember(option){
         $('#float_btn_wrap').hide();
 
         scrollToDom($('#page_addmember'));
-        if(bodywidth<600){
-            $('#page_managemember').hide();
-            $('#page-base').hide();
-            $('#page-base-addstyle').show();
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
         }
 
         $('#grouptype').hide();
@@ -1495,15 +1501,18 @@ function float_btn_managemember(option){
         shade_index(100);
     }else if(option == "groupmember"){
         initialize_add_member_sheet();
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         selector_page_addmember.show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
         $('#float_btn_wrap').hide();
 
         scrollToDom(selector_page_addmember);
-        if($('body').width()<600){
-            $('#page_managemember').hide();
-            $('#page-base').hide();
-            $('#page-base-addstyle').show();
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
         }
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
@@ -4477,7 +4486,6 @@ function closePopup(option){
                 close_info_popup('cal_popup_planinfo');
             }
         }
-
     }else if(option == 'member_info_PC'){
         $('body').css('overflow-y','auto')
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')

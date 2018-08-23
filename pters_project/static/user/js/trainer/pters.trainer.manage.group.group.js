@@ -613,7 +613,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname')
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity')
     if(bodywidth < 600){
-        float_btn_managemember("groupmember")
+        float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember')
     }
