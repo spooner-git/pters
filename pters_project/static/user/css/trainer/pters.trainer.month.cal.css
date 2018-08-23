@@ -916,7 +916,7 @@ img,a,div,span,p{
 	position: relative;
 	/*min-height: 300px;
 	max-height: 400px;*/
-	height: 378px;
+	height: 398px;
 	overflow-y: auto;
 	-webkit-overflow-scrolling:touch;
 }

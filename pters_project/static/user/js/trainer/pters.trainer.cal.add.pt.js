@@ -3118,6 +3118,7 @@ function send_add_groupmember_plan(use, callback){
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
+                enable_group_member_add_after_ajax();
             }else{
                 if(jsondata.push_lecture_id.length>0){
                     for(var i=0; i<jsondata.push_lecture_id.length; i++) {

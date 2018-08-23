@@ -148,12 +148,10 @@ $(document).on('click','img.add_listedMember',function(){
     if($('#calendar').length != 0 ){
         $('#form_add_member_group_plan_memberid').val(selected_dbid);
         send_add_groupmember_plan('callback', function(data){
-
-
             var group_schedule_id = $('#cal_popup_planinfo').attr('schedule_id')
             var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid')
             var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
-
+            
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                 if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
                     for(var i=0; i<jsondata.scheduleIdArray.length; i++){
@@ -169,6 +167,9 @@ $(document).on('click','img.add_listedMember',function(){
                                 set_schedule_time(json);
                                 get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
                                 alert('지난 클래스 일정 참석자 정상 등록되었습니다.')
+                                if(bodywidth<600){
+                                    $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                                }
                                 /*
                                  if(z==len){
                                  completeSend();
@@ -188,6 +189,9 @@ $(document).on('click','img.add_listedMember',function(){
                     scheduleTime('group', data)
                     draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
                     alert('클래스 일정 참석자 정상 등록되었습니다.')
+                    if(bodywidth<600){
+                        $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                    }
                 }
 
 
