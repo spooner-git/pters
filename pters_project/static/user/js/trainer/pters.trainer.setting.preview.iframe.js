@@ -1971,7 +1971,8 @@ $(document).ready(function(){
 
         for(starttime in  plan_starttime){
             var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
-            if( compare_time(thistime, workStartTime_) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
+                                                                                            //workEndTime <= thistime
+            if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
                 
             }else{
                 plan_time.push(thistime)
@@ -1979,7 +1980,7 @@ $(document).ready(function(){
         }
         for(endtime in plan_endtime){
             var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
-            if( compare_time(thistime, workStartTime_) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+            if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
                 
             }else{
                 plan_time.push(thistime)
@@ -1991,6 +1992,12 @@ $(document).ready(function(){
 
         //var sortedlist = plan_time.sort(function(a,b){return a-b;})
         var sortedlist = plan_time.sort();
+        if(sortedlist[0] == workStartTime_ && sortedlist.length%2 == 1){
+            sortedlist.unshift(workStartTime_)
+        }
+        if(sortedlist.length == 2){
+            sortedlist = [];
+        }
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         console.log(sortedlist)
