@@ -361,8 +361,8 @@
 	}; 
 //피터스 seekbar 모듈
 
-//드랍다운 가속도 터치
-//드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
+//피터스 Scrolling 모듈
+	//드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 	function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
 		console.log('a;sodfj;aoehgoaihseg')
 	    var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
@@ -440,7 +440,7 @@
 	        });
 	    //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
 	}
-//드랍다운 가속도 터치
+//피터스 Scrolling 모듈
 
 
 //피터스 input 커스텀
