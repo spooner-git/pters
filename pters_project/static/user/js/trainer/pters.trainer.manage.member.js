@@ -4500,6 +4500,7 @@ function closePopup(option){
         selector_float_btn_member_add.css('display','block');
         $('#page-base').css('display','block');
         $('#page-base-addstyle').css('display','none');
+        $('#page_addmember_input_wrap .buttonGroup button').removeClass('disabled_button');
 
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         var selector_birth_year_month_date = $('#birth_year, #birth_month, #birth_date');
