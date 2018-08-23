@@ -364,6 +364,7 @@
 //드랍다운 가속도 터치
 //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
 	function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
+		console.log('a;sodfj;aoehgoaihseg')
 	    var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
 	    var top_offset = 0 + user_offset_topArrow
 	    if($(selector).find('.dropdown_scroll_arrow_top').length == 0 ){
@@ -378,7 +379,6 @@
 	function set_list_overflow_scrolling(selector, selector_arrowParent){
 		$(selector).addClass('pters_overflow_scrolling')
 		//드랍다운 씹힘현상 해결
-		console.log('scrollTop',$(selector).scrollTop(), 'height',$(selector).height(), 'scrollHeight',$(selector).prop('scrollHeight'))
 		if($(selector).scrollTop() < 30 ){
 	        $(`${selector_arrowParent} img.dropdown_scroll_arrow_top`).css('visibility','hidden');
 	    };
