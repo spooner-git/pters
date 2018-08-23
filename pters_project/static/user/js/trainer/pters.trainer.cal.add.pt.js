@@ -1167,7 +1167,6 @@ $(document).ready(function(){
                     success:function(data){
                         //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
                         var jsondata = JSON.parse(data);
-                        console.log('repeatjson',jsondata)
                         initialJSON = jsondata;
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
                         repeatArray = jsondata.repeatArray;
@@ -2392,6 +2391,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
                 semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
                 zz++
                 if(zz>1450){ //하루 24시간 --> 1440분
+                    alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
                     break;
                 }
             }
@@ -2720,6 +2720,9 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     }
 
     var plansArray=[];
+    if(allplans.length == 0){
+        plansArray = [time_h_m_to_hh_mm(`${Options.workStartTime}:00`), time_h_m_to_hh_mm(`${Options.workEndTime}:00`)]
+    }
     for(var j=0; j<allplans.length;j++){
         plansArray.push(allplans[j])
     };
@@ -2727,6 +2730,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     if(plansArray.indexOf(selectedTime+':'+selectedMin) == -1){
         plansArray.push(selectedTime+':'+selectedMin);
     }
+
     var sortedlist = plansArray.sort();
     var index = sortedlist.indexOf(selectedTime+':'+selectedMin);
 
@@ -2734,8 +2738,14 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     durTimeList.html('');
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
         zz = zz + 5;
+        //console.log(zz)
+        //console.log(add_time(selectedTime+':'+selectedMin, '00:0'+zz) , sortedlist[index+1])
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
             durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
+        }
+        if(zz > 1440){
+            alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
+            break;
         }
     }
     
@@ -2843,17 +2853,13 @@ function addGraphIndicator(durmin){
     var planDura = durmin;
     var workstart = Options.workStartTime;
     
-    console.log( planHour+':'+planMinute, '00:'+durmin, planend )
-
+ 
     var timegraph_hourwidth = $('#'+planHour+'g_00').width();
     var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
     var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
 
     var timegraph_hourendwidth;
     var timegraph_hourendoffset;
-
-
-    console.log('#'+(planEndHour-1)+'g_00', '#'+planEndHour+'g_00')
 
     if(planEndHour == Options.workEndTime){
         timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
