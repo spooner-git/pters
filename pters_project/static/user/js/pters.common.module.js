@@ -474,12 +474,13 @@ $('input').change(function(e){
 
 //피터스 jqeury 미니달력 커스텀
 //날짜 선택하면 글씨를 검정색으로 바꾸기..
+/*
 $("p.datepicktext input").datepicker({
     //minDate : 0,
     onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
-    											$(this).css({
-													 					"-webkit-text-fill-color":'#282828'
-															})
+    											
     										}
  })
+ */
+ //문제 : 일정 등록시 날짜 선택이 동작 안함
 //피터스 jquery 미니달력 커스텀

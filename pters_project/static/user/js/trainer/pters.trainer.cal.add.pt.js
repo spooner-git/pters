@@ -33,6 +33,9 @@ $(document).ready(function(){
         //minDate : 0,
         onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
+                $(this).css({
+                                        "-webkit-text-fill-color":'#282828'
+                            })
                 $(this).parent('p').addClass("dropdown_selected");
                 var selector_timeGraph = $('#timeGraph');
                 var selector_datepicker = $("#datepicker");
@@ -2352,6 +2355,11 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             var option = "_mini"
             break;
     }
+    var workStartTime_ = time_h_m_to_hh_mm(`${Options.workStartTime}:00`);
+    var workEndTime_ = time_h_m_to_hh_mm(`${Options.workEndTime}:00`);
+    if(workEndTime_ == "23:59"){
+        workEndTime_ = "24:00"
+    }
     var plan_starttime = {};
     var plan_endtime = {};
     for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
@@ -2386,25 +2394,31 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
 
     var plan_time = [];
-    var plan_stime = [];
-    var plan_etime = [];
 
 
     for(starttime in  plan_starttime){
-        plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
+        var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
+        if( compare_time(thistime, workStartTime_) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
+            
+        }else{
+            plan_time.push(thistime)
+        }
     }
     for(endtime in plan_endtime){
-        plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
+        var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
+        if( compare_time(thistime, workStartTime_) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+            
+        }else{
+            plan_time.push(thistime)
+        }
     }
 
-    var workStartTime_ = time_h_m_to_hh_mm(`${Options.workStartTime}:00`);
-    var workEndTime_ = time_h_m_to_hh_mm(`${Options.workEndTime}:00`);
-    if(workEndTime_ == "23:59"){
-        workEndTime_ = "24:00"
-    }
 
     plan_time.push(workEndTime_)
     plan_time.unshift(workStartTime_)
+
+
+    console.log(plan_time)
 
     //var sortedlist = plan_time.sort(function(a,b){return a-b;})
     var sortedlist = plan_time.sort();
@@ -3135,6 +3149,7 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 
 
 function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
+
     var durTimeList;
     var options;
     switch(option){
@@ -3172,8 +3187,14 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     var zz = 0
     durTimeList.html('');
     
+    console.log(    
+                    sortedlist,
+                    add_time(selectedTime+':'+selectedMin, '00:0'+zz) , sortedlist[index+1]
+                )
+
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
-        zz++;
+        zz = zz + 5;
+        console.log('while문 실행', add_time(selectedTime+':'+selectedMin, '00:0'+zz)  )
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
             durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>')
         }
@@ -3283,6 +3304,7 @@ function addGraphIndicator(durmin){
     var planDura = durmin;
     var workstart = Options.workStartTime;
     
+    console.log( planHour+':'+planMinute, '00:'+durmin, planend )
 
     var timegraph_hourwidth = $('#'+planHour+'g_00').width();
     var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
@@ -3290,6 +3312,9 @@ function addGraphIndicator(durmin){
 
     var timegraph_hourendwidth;
     var timegraph_hourendoffset;
+
+
+    console.log('#'+(planEndHour-1)+'g_00', '#'+planEndHour+'g_00')
 
     if(planEndHour == Options.workEndTime){
         timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();

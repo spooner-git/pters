@@ -1917,9 +1917,14 @@ $(document).ready(function(){
                 var option = "_mini"
                 break;
         }
+        var workStartTime_ = time_h_m_to_hh_mm(time_divider(workTimeOption,'full').split('-')[0]);
+        var workEndTime_ = time_h_m_to_hh_mm(time_divider(workTimeOption,'full').split('-')[1]);
+        if(workEndTime_ == "23:59"){
+            workEndTime_ = "24:00"
+        }
+
         var plan_starttime = {};
         var plan_endtime = {};
-
         for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
             if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
                 plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
@@ -1956,16 +1961,29 @@ $(document).ready(function(){
         var plan_time = [];
         var plan_stime = [];
         var plan_etime = [];
+        /*
         for(starttime in  plan_starttime){
             plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
         }
         for(endtime in plan_endtime){
             plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
+        }*/
+
+        for(starttime in  plan_starttime){
+            var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
+            if( compare_time(thistime, workStartTime_) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
+                
+            }else{
+                plan_time.push(thistime)
+            }
         }
-        var workStartTime_ = time_h_m_to_hh_mm(time_divider(workTimeOption,'full').split('-')[0]);
-        var workEndTime_ = time_h_m_to_hh_mm(time_divider(workTimeOption,'full').split('-')[1]);
-        if(workEndTime_ == "23:59"){
-            workEndTime_ = "24:00"
+        for(endtime in plan_endtime){
+            var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
+            if( compare_time(thistime, workStartTime_) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+                
+            }else{
+                plan_time.push(thistime)
+            }
         }
 
         plan_time.push(workEndTime_)

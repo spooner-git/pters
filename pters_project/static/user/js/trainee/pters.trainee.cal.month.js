@@ -1543,6 +1543,12 @@ $(document).ready(function(){
                 var option = "_mini"
                 break;
         }
+        var thisDay = new Date(selecteddate).getDay();
+        var workStartTime_ = time_h_m_to_hh_mm(Options.worktimeWeekly[thisDay].split('-')[0]);
+        var workEndTime_ = time_h_m_to_hh_mm(Options.worktimeWeekly[thisDay].split('-')[1]);
+        if(workEndTime_ == "23:59"){
+            workEndTime_ = "24:00"
+        }
         var plan_starttime = {};
         var plan_endtime = {};
         for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
@@ -1579,19 +1585,34 @@ $(document).ready(function(){
         var plan_time = [];
         var plan_stime = [];
         var plan_etime = [];
+
+        /*
         for(starttime in  plan_starttime){
             plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
         }
         for(endtime in plan_endtime){
             plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
         }
+        */
 
-        var thisDay = new Date(selecteddate).getDay();
-        var workStartTime_ = time_h_m_to_hh_mm(Options.worktimeWeekly[thisDay].split('-')[0]);
-        var workEndTime_ = time_h_m_to_hh_mm(Options.worktimeWeekly[thisDay].split('-')[1]);
-        if(workEndTime_ == "23:59"){
-            workEndTime_ = "24:00"
+        for(starttime in  plan_starttime){
+            var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
+            if( compare_time(thistime, workStartTime_) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
+                
+            }else{
+                plan_time.push(thistime)
+            }
         }
+        for(endtime in plan_endtime){
+            var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
+            if( compare_time(thistime, workStartTime_) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+                
+            }else{
+                plan_time.push(thistime)
+            }
+        }
+
+        
 
         plan_time.push(workEndTime_)
         plan_time.unshift(workStartTime_)
