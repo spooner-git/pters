@@ -1565,11 +1565,15 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         selector_datepicker.parent('p').addClass('dropdown_selected');
         selector_datepicker_repeat_start.datepicker('setDate', date);
         selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
+        selector_datepicker.css('-webkit-text-fill-color','#282828');
+        selector_datepicker_repeat_start.css('-webkit-text-fill-color','#282828');
     }else{
         selector_datepicker.datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate);
         selector_datepicker.parent('p').addClass('dropdown_selected');
         selector_datepicker_repeat_start.datepicker('setDate', currentYear+'-'+(currentMonth+1)+'-'+currentDate);
         selector_datepicker_repeat_start.parent('p').addClass('dropdown_selected');
+        selector_datepicker.css('-webkit-text-fill-color','#282828');
+        selector_datepicker_repeat_start.css('-webkit-text-fill-color','#282828');
     }
 
     if(option == "ptadd"){

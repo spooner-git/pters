@@ -3602,8 +3602,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                     finishCount_group_personal.push(jsondata.finishCountArray[i]);
                 }
             }
-            var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>';
-
+            //var whatGroupType = '<div class="whatGroupType_PC"><select data-leid="'+jsondata.lectureIdArray[i]+'" disabled><option value="1" selected>'+yourgroup+'</option></select></div>';
+            var whatGroupType = '<div class="whatGroupType_PC"><span data-leid="'+jsondata.lectureIdArray[i]+'">'+yourgroup+'</span></div>';
 
 
             
