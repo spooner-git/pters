@@ -2,7 +2,7 @@
 {% load static_url %}
 
 {% block local_css %}
-    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.group.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.group.group.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.mini.cal.css" %}>
@@ -293,10 +293,10 @@
         </div>
 
          <div id="" class="pters_selectbox_wrapper">
-            <div id="btnCallCurrent" onclick="shiftMemberList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
+            <div id="btnCallCurrent" onclick="shiftGroupClassList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
                 <span class="KRtext">진행중</span>
             </div>
-            <div id="btnCallFinished" onclick="shiftMemberList('finished')" class="pters_selectbox_btn">
+            <div id="btnCallFinished" onclick="shiftGroupClassList('finished')" class="pters_selectbox_btn">
                 <span class="KRtext">종료</span>
             </div>
         </div>
@@ -332,7 +332,7 @@
                 -->
             </div>
 
-            <select class="alignSelect _ALIGN_DROPDOWN">
+            <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">
 
                 <option id="name" class="KRtext">회원명 가나다 순</option>
                 <option id="name" class="JPtext">名前順</option>
@@ -354,7 +354,7 @@
                 <option id="startR" class="JPtext">開始が最近</option>
                 <option id="startR" class="ENtext">Start Date(R)</option>
             </select>
-            <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
+            <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">
 
             <!--
             <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
@@ -1157,7 +1157,7 @@
 
 
 {% block local_js_footer %}
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.group.js" %}></script>
     <script>
         $('a.__groupmanage').css('color','#fe4e65;')

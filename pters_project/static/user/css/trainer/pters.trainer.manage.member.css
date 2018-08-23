@@ -265,7 +265,7 @@ select:focus > option:checked {
 */
 
 ._GROUP_THEAD{
-	display: none;
+	
 }
 
 ._countnum,._id,._email,._finday,._manage,._startdate{
@@ -365,7 +365,15 @@ select:focus > option:checked {
 	width: 91.6%;
 }
 
-#finishedMemberList, #currentGroupList, #finishedGroupList{
+#finishedMemberList, #finishedGroupList{
+	display: none;
+}
+
+#currentGroupList, #finishedGroupList{
+	width: 91.6%;
+}
+
+#finishedGroupList{
 	display: none;
 }
 
@@ -1163,6 +1171,10 @@ span.summaryInnerBoxText_Repeatendtext{
 	margin-right: 8px;
 	cursor: pointer;
 }
+._info_cancel{
+	display: none;
+	height: 14px;
+}
 
 
 #upperImg{
@@ -1439,7 +1451,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._GROUP_THEAD{
-		display: none;
+		
 	}
 
 	.centeralign{

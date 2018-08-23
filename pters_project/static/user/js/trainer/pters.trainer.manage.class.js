@@ -890,6 +890,10 @@ $(document).ready(function(){
     $("#datepicker_add, #datepicker2_add").datepicker({
         //minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+            $(this).css({
+                             "-webkit-text-fill-color":'#282828'
+                        })
+
             $(this).addClass("dropdown_selected");
             $("#datepicker2_add").datepicker('option','minDate',$("#datepicker_add").val());
             $("#datepicker_add").datepicker('option','maxDate',$("#datepicker2_add").val());
@@ -901,6 +905,10 @@ $(document).ready(function(){
     $("#datepicker_fast").datepicker({
         //minDate : 0,
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+            $(this).css({
+                             "-webkit-text-fill-color":'#282828'
+                        })
+            
             $(this).addClass("dropdown_selected");
             autoDateInput();
             check_dropdown_selected();
@@ -2600,6 +2608,9 @@ function autoDateInput(){
     if($('#memberDue_add_2').val()!=text2 && $('#memberDue_add_2').val()!="" ){
         $('#memberDue_add_2').addClass("dropdown_selected");
     }
+    selector_memberDue_add_2.css({
+                                     "-webkit-text-fill-color":'#282828'
+                                })
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
 }
 
