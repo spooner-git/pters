@@ -914,8 +914,9 @@ img,a,div,span,p{
 }
 #subpopup_addByList_thisgroup, #subpopup_addByList_whole{
 	position: relative;
-	min-height: 300px;
-	max-height: 400px;
+	/*min-height: 300px;
+	max-height: 400px;*/
+	height: 378px;
 	overflow-y: auto;
 	-webkit-overflow-scrolling:touch;
 }

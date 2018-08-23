@@ -363,14 +363,14 @@
 
 //피터스 Scrolling 모듈
 	//드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
-	function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow){
+	function append_dropdown_scroll_arrow(selector, selector_arrowParent, user_offset_topArrow ,user_offset_bottomArrow, user_topArrowStyle, user_bottomArrowStyle){
 		console.log('a;sodfj;aoehgoaihseg')
 	    var bottom_offset = $(selector).height() + $(selector_arrowParent).height() + user_offset_bottomArrow;
-	    var top_offset = 0 + user_offset_topArrow
+	    var top_offset = 0 + user_offset_topArrow;
 	    if($(selector).find('.dropdown_scroll_arrow_top').length == 0 ){
 	        $(selector_arrowParent).append(
-	                                        `<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="top:${top_offset}px;">
-	                                        <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="bottom: -${bottom_offset}px;">`
+	                                        `<img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_top" style="top:${top_offset}px;${user_topArrowStyle}">
+	                                        <img src="/static/user/res/btn-today-left.png" class="dropdown_scroll_arrow_bottom" style="bottom: -${bottom_offset}px;${user_bottomArrowStyle}">`
 	                                        )
 	    }
 	}
