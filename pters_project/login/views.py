@@ -152,10 +152,10 @@ def logout_trainer(request):
 
 
 # 회원가입 api
-class ResendEmailAuthenticationView(RegistrationView, View):
+class NewMemberResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = RegistrationForm(request.POST, request.FILES)
         user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
@@ -218,6 +218,44 @@ class ResendEmailAuthenticationView(RegistrationView, View):
             messages.error(request, error)
         else:
             logger.error(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
+
+        return render(request, self.template_name)
+
+
+# 회원가입 api
+class ResendEmailAuthenticationView(RegistrationView, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_id = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        member_id = request.POST.get('member_id', '')
+        error = None
+        user = None
+        username = None
+        if member_id is None or member_id == '':
+            error = 'ID를 입력해주세요.'
+        if error is None:
+            try:
+                user = User.objects.get(id=member_id)
+            except ObjectDoesNotExist:
+                error = '가입되지 않은 회원입니다.'
+
+        if error is None:
+            # user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    error = '이미 인증된 ID 입니다.'
+                else:
+                    self.send_activation_email(user)
+            else:
+                error = 'ID가 존재하지 않습니다.'
+
+        if error is not None:
+            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
+            messages.error(request, error)
+        else:
+            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 회원가입 완료')
 
         return render(request, self.template_name)
 

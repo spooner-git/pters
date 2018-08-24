@@ -682,7 +682,7 @@
             {#          $form = $('#submit_input form');#}
             $form = $('#add-member-id-form');
             $.ajax({
-                url:'/login/resend_email_authentication/',
+                url:'/login/new_member_resend_email_authentication/',
                 type:'POST',
                 data:$form.serialize(),
                 dataType : 'html',
