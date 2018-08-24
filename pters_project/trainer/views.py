@@ -361,6 +361,7 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
 
     def get(self, request):
         context = {}
+        cancel_redirect_url = request.GET.get('cancel_redirect_url', '/login/')
         # context = super(AddClassView, self).get_context_data(**kwargs)
         class_type_cd_data = CommonCdTb.objects.filter(common_cd='TR', use=USE).order_by('order')
         class_type_cd_data |= CommonCdTb.objects.filter(common_cd='ETC', use=USE).order_by('order')
@@ -374,6 +375,7 @@ class AddClassView(LoginRequiredMixin, AccessTestMixin, View):
 
         context['center_list'] = center_list
         context['class_type_cd_data'] = class_type_cd_data
+        context['cancel_redirect_url'] = cancel_redirect_url
 
         return render(request, self.template_name, context)
 
