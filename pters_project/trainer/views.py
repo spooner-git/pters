@@ -3109,7 +3109,6 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
         error = None
         class_info = None
-
         if class_id is None or class_id == '':
             error = '프로그램 정보를 불러오지 못했습니다.'
 
@@ -3125,7 +3124,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             class_info.save()
 
         if error is None:
-            if class_id == class_id_session:
+            if str(class_id) == str(class_id_session):
                 request.session['class_id'] = ''
                 request.session['class_type_code'] = ''
                 request.session['class_type_name'] = ''
@@ -3152,6 +3151,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
     def post(self, request):
         class_id = request.POST.get('class_id', '')
+        class_id_session = request.session.get('class_id', '')
         subject_cd = request.POST.get('subject_cd', '')
         subject_detail_nm = request.POST.get('subject_detail_nm', '')
         start_date = request.POST.get('start_date', '')
@@ -3197,9 +3197,10 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             class_info.save()
 
         if error is None:
-            request.session['class_type_code'] = class_info.subject_cd
-            request.session['class_type_name'] = class_info.subject_detail_nm
-            request.session['class_hour'] = class_info.class_hour
+            if str(class_id) == str(class_id_session):
+                request.session['class_type_code'] = class_info.subject_cd
+                request.session['class_type_name'] = class_info.subject_detail_nm
+                request.session['class_hour'] = class_info.class_hour
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
