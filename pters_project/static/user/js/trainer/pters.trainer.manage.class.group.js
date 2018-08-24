@@ -1007,6 +1007,7 @@ function modify_group_status(group_id, option){
 
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
+    console.log("클래스_groupListSet",jsondata)
     switch(option){
         case 'current':
             var $membernum = $('#memberNumber_current_group')
@@ -1071,7 +1072,8 @@ function groupListSet(option, jsondata){ //option : current, finished
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
     }
-    if(groupNum == 0){
+
+    if(htmlToJoin.length == 0){
         if(option == "current"){
             htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 클래스가 없습니다.</div>')
         }else if(option == "finished"){

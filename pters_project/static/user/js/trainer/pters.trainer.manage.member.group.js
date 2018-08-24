@@ -845,6 +845,7 @@ function groupListSet(option, jsondata){ //option : current, finished
             '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>';
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist);
     }
+    console.log("groupNum",groupNum)
     if(groupNum == 0){
         if(option == "current"){
             htmlToJoin.push('<div class="groupWrap">추가 된 그룹이 없습니다.</div>')
