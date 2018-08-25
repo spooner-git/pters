@@ -1922,7 +1922,7 @@ $(document).ready(function(){
         if(workEndTime_ == "23:59"){
             workEndTime_ = "24:00"
         }
-
+        /*
         var plan_starttime = {};
         var plan_endtime = {};
         for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
@@ -1959,19 +1959,8 @@ $(document).ready(function(){
 
 
         var plan_time = [];
-        var plan_stime = [];
-        var plan_etime = [];
-        /*
-        for(starttime in  plan_starttime){
-            plan_time.push(starttime.split(':')[0]+':'+starttime.split(':')[1])
-        }
-        for(endtime in plan_endtime){
-            plan_time.push(endtime.split(':')[0]+':'+endtime.split(':')[1])
-        }*/
-
         for(starttime in  plan_starttime){
             var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
-                                                                                            //workEndTime <= thistime
             if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
                 
             }else{
@@ -1986,6 +1975,93 @@ $(document).ready(function(){
                 plan_time.push(thistime)
             }
         }
+        */
+
+        var plan_time = [];
+        for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
+
+            var plan_start_date = jsondata.classTimeArray_start_date[i].split(' ')[0];
+            var plan_start_time = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[0]+':'+jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[1];
+            var plan_end_date = jsondata.classTimeArray_end_date[i].split(' ')[0];
+            var plan_end_time = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0]+':'+jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0];
+
+            if(plan_start_date == selecteddate){
+                if(plan_time.indexOf(plan_start_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push(plan_start_time)
+                }
+            }
+            if(plan_end_date == selecteddate && plan_end_time != "00:00"){
+                if(plan_time.indexOf(plan_end_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push(plan_end_time)
+                }
+            }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
+                if(plan_time.indexOf(plan_end_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push('24:00');
+                }
+            }
+        }
+        for(var j=0; j<jsondata.group_schedule_start_datetime.length; j++){
+            
+            var plan_start_date = jsondata.group_schedule_start_datetime[i].split(' ')[0];
+            var plan_start_time = jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[0]+':'+jsondata.group_schedule_start_datetime[i].split(' ')[1].split(':')[1];
+            var plan_end_date = jsondata.group_schedule_end_datetime[i].split(' ')[0];
+            var plan_end_time = jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[0]+':'+jsondata.group_schedule_end_datetime[i].split(' ')[1].split(':')[1];
+
+            if(plan_start_date == selecteddate){
+                if(plan_time.indexOf(plan_start_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push(plan_start_time)
+                }
+            }
+            if(plan_end_date == selecteddate && plan_end_time != "00:00"){
+                if(plan_time.indexOf(plan_end_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push(plan_end_time)
+                }
+            }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
+                if(plan_time.indexOf(plan_end_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push('24:00');
+                }
+            }
+        }
+        for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
+            var plan_start_date = jsondata.offTimeArray_start_date[i].split(' ')[0];
+            var plan_start_time = jsondata.offTimeArray_start_date[i].split(' ')[1].split(':')[0]+':'+jsondata.offTimeArray_start_date[i].split(' ')[1].split(':')[1];
+            var plan_end_date = jsondata.offTimeArray_end_date[i].split(' ')[0];
+            var plan_end_time = jsondata.offTimeArray_end_date[i].split(' ')[1].split(':')[0]+':'+jsondata.offTimeArray_end_date[i].split(' ')[1].split(':')[1];
+
+            if(plan_start_date == selecteddate){
+                if(plan_time.indexOf(plan_start_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push(plan_start_time)
+                }
+            }
+            if(plan_end_date == selecteddate && plan_end_time != "00:00"){
+                if(plan_time.indexOf(plan_end_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push(plan_end_time)
+                }
+            }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
+                if(plan_time.indexOf(plan_end_time) > 0 || (compare_time(plan_start_time, workStartTime_) == false || compare_time(workEndTime_, plan_end_time) == false) ){
+                        
+                }else{
+                    plan_time.push('24:00');
+                }
+            }
+        }
+        
 
         plan_time.push(workEndTime_)
         plan_time.unshift(workStartTime_)
@@ -1995,12 +2071,14 @@ $(document).ready(function(){
         if(sortedlist[0] == workStartTime_ && sortedlist.length%2 == 1){
             sortedlist.unshift(workStartTime_)
         }
+        /*
         if(sortedlist.length == 2){
             sortedlist = [];
         }
+        */
+
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
-        console.log(sortedlist)
         var semiresult = []
         for(var p=0; p<sortedlist.length/2; p++){
             var zz = 0;

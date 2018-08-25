@@ -2314,6 +2314,8 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     if(workEndTime_ == "23:59"){
         workEndTime_ = "24:00"
     }
+
+    /*
     var plan_starttime = {};
     var plan_endtime = {};
     for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
@@ -2365,18 +2367,45 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             plan_time.push(thistime)
         }
     }
+    */
+    var plan_time = [];
 
-    plan_time.push(workEndTime_)
-    plan_time.unshift(workStartTime_)
+    //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
+    var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
+    var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
+    var groupTimeArray_start_date = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
+    var groupTimeArray_end_date = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
 
-    //var sortedlist = plan_time.sort(function(a,b){return a-b;})
+    calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
+    calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
+    calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date)
+
+    function calc_and_make_plan_time(startArray, endArray){
+        for(var i=0; i<startArray.length; i++){
+            var plan_start_date = startArray[i].split(' ')[0];
+            var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
+            var plan_end_date = endArray[i].split(' ')[0];
+            var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
+
+            if(plan_start_date == selecteddate){
+                plan_time.push(plan_start_time);
+            }
+            if(plan_end_date == selecteddate && plan_end_time != "00:00"){
+                plan_time.push(plan_end_time);
+            }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
+                plan_time.push('24:00');
+            }
+        }
+    }
+
+    //if(plan_time.indexOf("00:00") < 0){
+        plan_time.push("00:00")
+    //}
+    //if(plan_time.indexOf("24:00") < 0){
+        plan_time.push("24:00")
+    //}
+
     var sortedlist = plan_time.sort();
-    if(sortedlist[0] == workStartTime_ && sortedlist.length%2 == 1){
-        sortedlist.unshift(workStartTime_)
-    }
-    if(sortedlist.length == 2){
-        sortedlist = [];
-    }
 
     console.log("sortedlist",sortedlist)
     //all_plans = sortedlist;
@@ -2388,7 +2417,9 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
             compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
             while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
-                semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
+                if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( substract_time(workEndTime_,"00:00"), add_time(sortedlist[p*2],'0:'+zz)) ){
+                    semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
+                }
                 zz++
                 if(zz>1450){ //하루 24시간 --> 1440분
                     alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
@@ -2424,8 +2455,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             //}
         }
     }
-
-    console.log("addOkArrayList",addOkArrayList)
 
     allplans = sortedlist
     return {"addOkArray":addOkArrayList, "allplans":sortedlist}

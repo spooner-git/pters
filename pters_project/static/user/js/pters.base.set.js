@@ -329,6 +329,33 @@ var multiLanguage = { 'KOR':
         }
 };
 
+//Array에서 중복요소 제거
+function remove_duplicate_in_list(arraylist){
+    var dict_remove_duplicated = {};
+    var list_removed_duplicate = [];
+    var classlen = arraylist.length;
+    for(var i=0; i<classlen; i++){
+        dict_remove_duplicated[arraylist[i]] = ""
+    }
+    for(i in dict_remove_duplicated){
+        list_removed_duplicate.push(i);
+    }
+    return list_removed_duplicate;
+}
+
+//Array 두개를 비교해서 중복제거
+//compareArray에 없는 targetArray의 값만으로 array를 만들어 출력
+function remove_duplicate_compared_to(targetArray, compareArray){
+    var len = targetArray.length;
+    var resultArray = [];
+    for(var i=0; i<len; i++){
+        if(compareArray.indexOf(targetArray[i]) == -1 ){
+            resultArray.push(targetArray[i])
+        };
+    };
+    return resultArray;
+};
+
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
 function date_format_to_hangul(yyyymmdd){
     var date = yyyymmdd;
