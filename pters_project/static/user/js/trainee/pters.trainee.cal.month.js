@@ -1597,7 +1597,7 @@ $(document).ready(function(){
         }
         for(endtime in plan_endtime){
             var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
-            if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+            if( compare_time(thistime, workStartTime_) == false || compare_time(thistime, workEndTime_) ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
                 
             }else{
                 plan_time.push(thistime)

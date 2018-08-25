@@ -2348,11 +2348,10 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
 
     var plan_time = [];
-
     for(starttime in  plan_starttime){
         var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
                                                                                         //workEndTime <= thistime
-        if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
+        if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 업무시간 외에 있으면 넣지 않는다.
             
         }else{
             plan_time.push(thistime)
@@ -2360,7 +2359,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
     for(endtime in plan_endtime){
         var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
-        if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+        if( compare_time(thistime, workStartTime_) == false || compare_time(thistime, workEndTime_ )  ){  //일정 종료시간이 업무시간 외에 있으면 넣지 않는다.
             
         }else{
             plan_time.push(thistime)
@@ -2379,6 +2378,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         sortedlist = [];
     }
 
+    console.log("sortedlist",sortedlist)
     //all_plans = sortedlist;
     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
     var semiresult = []
@@ -2424,6 +2424,8 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             //}
         }
     }
+
+    console.log("addOkArrayList",addOkArrayList)
 
     allplans = sortedlist
     return {"addOkArray":addOkArrayList, "allplans":sortedlist}
