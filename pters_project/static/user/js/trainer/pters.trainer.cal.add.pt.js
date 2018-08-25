@@ -663,7 +663,6 @@ $(document).ready(function(){
 
 
     function planAddView(duration){ //미니팝업으로 진행시간 표기 미리 보기
-
         /*
         var mi = selectedTime[4];
         var yy = Number(selectedTime[0]);
@@ -681,7 +680,7 @@ $(document).ready(function(){
             $('.'+blankbox).css({'height':Options.classDur*duration*calendarSize})
         }else{
             if(Options.classDur == 60){
-                var selectedDuration = Number(duration)/2;
+                var selectedDuration = Number(duration);
                 var blankSelected = 'blankSelected';
                 var selector_blankSelected = $('.'+blankSelected);
                 var selector_blankSelected_first_child = $('.'+blankSelected+':first-child');
@@ -689,7 +688,7 @@ $(document).ready(function(){
                 var selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
 
 
-                selectedDuration = Number(duration)/2;
+                selectedDuration = Number(duration);
                 blankSelected = 'blankSelected';
                 selectedTime = selector_blankSelected.parent('div').attr('id').split('_');
                 selectedTimeID = selector_blankSelected_first_child.parent('div').attr('id');
@@ -1260,7 +1259,6 @@ $(document).ready(function(){
             if($('#countsSelected').text() == 0){
                 //alert('회원님의 남은 예약 가능 횟수가 없습니다.')
             }
-            console.log('else');
             //alert('빠진 항목 체크해봐야함')
             //$('#inputError').fadeIn('slow')
             //입력값 확인 메시지 출력 가능
@@ -2315,66 +2313,15 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         workEndTime_ = "24:00"
     }
 
-    /*
-    var plan_starttime = {};
-    var plan_endtime = {};
-    for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
-        if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
-            plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
-        }
-        if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate && jsondata.classTimeArray_end_date[i].split(' ')[1] != "00:00:00"){
-            plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
-        }else if(jsondata.classTimeArray_end_date[i].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.classTimeArray_end_date[i].split(' ')[1] == "00:00:00"){
-            plan_endtime['24:00:00'] = ""
-        }
-    }
-    for(var j=0; j<jsondata.group_schedule_start_datetime.length; j++){
-        if(jsondata.group_schedule_start_datetime[j].split(' ')[0] == selecteddate){
-            plan_starttime[jsondata.group_schedule_start_datetime[j].split(' ')[1]] = ""
-        }
-        if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate && jsondata.group_schedule_end_datetime[j].split(' ')[1] != "00:00:00" ){
-            plan_endtime[jsondata.group_schedule_end_datetime[j].split(' ')[1]] = ""
-        }else if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.group_schedule_end_datetime[j].split(' ')[1] == "00:00:00"){
-            plan_endtime['24:00:00'] = ""
-        }
-    }
-    for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
-        if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
-            plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
-        }
-        if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate && jsondata.offTimeArray_end_date[j].split(' ')[1] != "00:00:00" ){
-            plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
-        }else if(jsondata.offTimeArray_end_date[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.offTimeArray_end_date[j].split(' ')[1] == "00:00:00"){
-            plan_endtime['24:00:00'] = ""
-        }
-    }
-
-    var plan_time = [];
-    for(starttime in  plan_starttime){
-        var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
-                                                                                        //workEndTime <= thistime
-        if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 업무시간 외에 있으면 넣지 않는다.
-            
-        }else{
-            plan_time.push(thistime)
-        }
-    }
-    for(endtime in plan_endtime){
-        var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
-        if( compare_time(thistime, workStartTime_) == false || compare_time(thistime, workEndTime_ )  ){  //일정 종료시간이 업무시간 외에 있으면 넣지 않는다.
-            
-        }else{
-            plan_time.push(thistime)
-        }
-    }
-    */
     var plan_time = [];
 
     //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
     var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
     var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
-    var groupTimeArray_start_date = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
-    var groupTimeArray_end_date = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
+    var groupTimeArray_start_date_ = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
+    var groupTimeArray_end_date_ = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
+    var groupTimeArray_start_date = remove_duplicate_compared_to(groupTimeArray_start_date_, jsondata.offTimeArray_start_date)
+    var groupTimeArray_end_date = remove_duplicate_compared_to(groupTimeArray_end_date_, jsondata.offTimeArray_end_date)
 
     calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
     calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
@@ -2407,7 +2354,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
 
     var sortedlist = plan_time.sort();
 
-    console.log("sortedlist",sortedlist)
     //all_plans = sortedlist;
     //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
     var semiresult = []
@@ -2416,8 +2362,9 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         //일정 시작시간이 일정 종료시간보다 작으면,
         if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
             compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
+            
             while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
-                if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( substract_time(workEndTime_,"00:00"), add_time(sortedlist[p*2],'0:'+zz)) ){
+                if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false ){
                     semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
                 }
                 zz++
@@ -2425,11 +2372,11 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
                     alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
                     break;
                 }
+
             }
 
         }
     }
-    
 
     //offAddOkArray = []
     if(Timeunit == 60){
@@ -2456,8 +2403,17 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         }
     }
 
-    allplans = sortedlist
-    return {"addOkArray":addOkArrayList, "allplans":sortedlist}
+    allplans = [];
+    for(var j=0; j<sortedlist.length; j++){
+        if(sortedlist[j] == "00:00"){
+            allplans.push(workStartTime_)
+        }else if(sortedlist[j] == "24:00"){
+            allplans.push(workEndTime_)
+        }else{
+            allplans.push(sortedlist[j])
+        };
+    };
+    return {"addOkArray":addOkArrayList, "allplans":allplans}
 }
 
 var allplans = [];

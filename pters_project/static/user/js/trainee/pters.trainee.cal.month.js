@@ -1549,74 +1549,134 @@ $(document).ready(function(){
         if(workEndTime_ == "23:59"){
             workEndTime_ = "24:00"
         }
-        var plan_starttime = {};
-        var plan_endtime = {};
-        for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
-            if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
-                plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
+        /*
+            var plan_starttime = {};
+            var plan_endtime = {};
+            for(var i=0; i<jsondata.classTimeArray_start_date.length; i++){
+                if(jsondata.classTimeArray_start_date[i].split(' ')[0] == selecteddate){
+                    plan_starttime[jsondata.classTimeArray_start_date[i].split(' ')[1]] = ""
+                }
+                if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate && jsondata.classTimeArray_end_date[i].split(' ')[1] != "00:00:00"){
+                    plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
+                }else if(jsondata.classTimeArray_end_date[i].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.classTimeArray_end_date[i].split(' ')[1] == "00:00:00"){
+                    plan_endtime['24:00:00'] = ""
+                }
             }
-            if(jsondata.classTimeArray_end_date[i].split(' ')[0] == selecteddate && jsondata.classTimeArray_end_date[i].split(' ')[1] != "00:00:00"){
-                plan_endtime[jsondata.classTimeArray_end_date[i].split(' ')[1]] = ""
-            }else if(jsondata.classTimeArray_end_date[i].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.classTimeArray_end_date[i].split(' ')[1] == "00:00:00"){
-                plan_endtime['24:00:00'] = ""
+            for(var j=0; j<jsondata.group_schedule_start_datetime.length; j++){
+                if(jsondata.group_schedule_start_datetime[j].split(' ')[0] == selecteddate){
+                    plan_starttime[jsondata.group_schedule_start_datetime[j].split(' ')[1]] = ""
+                }
+                if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate && jsondata.group_schedule_end_datetime[j].split(' ')[1] != "00:00:00"){
+                    plan_endtime[jsondata.group_schedule_end_datetime[j].split(' ')[1]] = ""
+                }else if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.group_schedule_end_datetime[j].split(' ')[1] == "00:00:00"){
+                    plan_endtime['24:00:00'] = ""
+                }
             }
-        }
-        for(var j=0; j<jsondata.group_schedule_start_datetime.length; j++){
-            if(jsondata.group_schedule_start_datetime[j].split(' ')[0] == selecteddate){
-                plan_starttime[jsondata.group_schedule_start_datetime[j].split(' ')[1]] = ""
+            for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
+                if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
+                    plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
+                }
+                if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate && jsondata.offTimeArray_end_date[j].split(' ')[1] != "00:00:00"){
+                    plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
+                }else if(jsondata.offTimeArray_end_date[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.offTimeArray_end_date[j].split(' ')[1] == "00:00:00"){
+                    plan_endtime['24:00:00'] = ""
+                }
             }
-            if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == selecteddate && jsondata.group_schedule_end_datetime[j].split(' ')[1] != "00:00:00"){
-                plan_endtime[jsondata.group_schedule_end_datetime[j].split(' ')[1]] = ""
-            }else if(jsondata.group_schedule_end_datetime[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.group_schedule_end_datetime[j].split(' ')[1] == "00:00:00"){
-                plan_endtime['24:00:00'] = ""
-            }
-        }
-        for(var j=0; j<jsondata.offTimeArray_start_date.length; j++){
-            if(jsondata.offTimeArray_start_date[j].split(' ')[0] == selecteddate){
-                plan_starttime[jsondata.offTimeArray_start_date[j].split(' ')[1]] = ""
-            }
-            if(jsondata.offTimeArray_end_date[j].split(' ')[0] == selecteddate && jsondata.offTimeArray_end_date[j].split(' ')[1] != "00:00:00"){
-                plan_endtime[jsondata.offTimeArray_end_date[j].split(' ')[1]] = ""
-            }else if(jsondata.offTimeArray_end_date[j].split(' ')[0] == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && jsondata.offTimeArray_end_date[j].split(' ')[1] == "00:00:00"){
-                plan_endtime['24:00:00'] = ""
-            }
-        }
 
+            var plan_time = [];
+            var plan_stime = [];
+            var plan_etime = [];
+
+            for(starttime in  plan_starttime){
+                var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
+                                                                                                //workEndTime <= thistime
+                if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
+                    
+                }else{
+                    plan_time.push(thistime)
+                }
+            }
+            for(endtime in plan_endtime){
+                var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
+                if( compare_time(thistime, workStartTime_) == false || compare_time(thistime, workEndTime_) ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
+                    
+                }else{
+                    plan_time.push(thistime)
+                }
+            }
+
+            
+            plan_time.push(workEndTime_)
+            plan_time.unshift(workStartTime_)
+
+            //var sortedlist = plan_time.sort(function(a,b){return a-b;})
+            var sortedlist = plan_time.sort();
+            if(sortedlist[0] == workStartTime_ && sortedlist.length%2 == 1){
+                sortedlist.unshift(workStartTime_)
+            }
+            if(sortedlist.length == 2){
+                sortedlist = [];
+            }
+
+            //all_plans = sortedlist;
+            //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
+            var semiresult = []
+            for(var p=0; p<sortedlist.length/2; p++){
+                var zz = 0;
+                //일정 시작시간이 일정 종료시간보다 작으면,
+                if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
+                    compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
+                    while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
+                        semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
+                        zz++
+                        if(zz>1450){ //하루 24시간 --> 1440분
+                            break;
+                        }
+                    }
+
+                }
+            }
+        */
         var plan_time = [];
-        var plan_stime = [];
-        var plan_etime = [];
 
-        for(starttime in  plan_starttime){
-            var thistime = starttime.split(':')[0]+':'+starttime.split(':')[1];
-                                                                                            //workEndTime <= thistime
-            if( compare_time(thistime, workStartTime_) == false || compare_time(workEndTime_, thistime) == false ){ // 일정시작시간이 이 시작시간보다 작으면 넣지 않는다.
-                
-            }else{
-                plan_time.push(thistime)
+        //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
+        var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
+        var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
+        var groupTimeArray_start_date_ = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
+        var groupTimeArray_end_date_ = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
+        var groupTimeArray_start_date = remove_duplicate_compared_to(groupTimeArray_start_date_, jsondata.offTimeArray_start_date)
+        var groupTimeArray_end_date = remove_duplicate_compared_to(groupTimeArray_end_date_, jsondata.offTimeArray_end_date)
+
+        calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
+        calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
+        calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date)
+
+        function calc_and_make_plan_time(startArray, endArray){
+            for(var i=0; i<startArray.length; i++){
+                var plan_start_date = startArray[i].split(' ')[0];
+                var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
+                var plan_end_date = endArray[i].split(' ')[0];
+                var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
+
+                if(plan_start_date == selecteddate){
+                    plan_time.push(plan_start_time);
+                }
+                if(plan_end_date == selecteddate && plan_end_time != "00:00"){
+                    plan_time.push(plan_end_time);
+                }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
+                    plan_time.push('24:00');
+                }
             }
         }
-        for(endtime in plan_endtime){
-            var thistime = endtime.split(':')[0]+':'+endtime.split(':')[1];
-            if( compare_time(thistime, workStartTime_) == false || compare_time(thistime, workEndTime_) ){  //일정 종료시간이 시작시간보다 작으면 넣지 않는다.
-                
-            }else{
-                plan_time.push(thistime)
-            }
-        }
 
-        
-        plan_time.push(workEndTime_)
-        plan_time.unshift(workStartTime_)
+        //if(plan_time.indexOf("00:00") < 0){
+            plan_time.push("00:00")
+        //}
+        //if(plan_time.indexOf("24:00") < 0){
+            plan_time.push("24:00")
+        //}
 
-        //var sortedlist = plan_time.sort(function(a,b){return a-b;})
         var sortedlist = plan_time.sort();
-        if(sortedlist[0] == workStartTime_ && sortedlist.length%2 == 1){
-            sortedlist.unshift(workStartTime_)
-        }
-        if(sortedlist.length == 2){
-            sortedlist = [];
-        }
-
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
         var semiresult = []
@@ -1625,12 +1685,17 @@ $(document).ready(function(){
             //일정 시작시간이 일정 종료시간보다 작으면,
             if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
                 compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
+                
                 while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
-                    semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
+                    if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false ){
+                        semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
+                    }
                     zz++
                     if(zz>1450){ //하루 24시간 --> 1440분
+                        alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
                         break;
                     }
+
                 }
 
             }
@@ -1674,7 +1739,16 @@ $(document).ready(function(){
 
             }
         }
-        allplans = sortedlist
+        allplans = [];
+        for(var j=0; j<sortedlist.length; j++){
+            if(sortedlist[j] == "00:00"){
+                allplans.push(workStartTime_)
+            }else if(sortedlist[j] == "24:00"){
+                allplans.push(workEndTime_)
+            }else{
+                allplans.push(sortedlist[j])
+            };
+        };
         return {"addOkArray":addOkArrayList, "allplans":sortedlist}
     }
 
