@@ -2682,7 +2682,7 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 
 
 function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
-
+    var timelist = remove_duplicate_in_list(allplans);
     var durTimeList;
     var options;
     switch(option){
@@ -2707,11 +2707,11 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     }
 
     var plansArray=[];
-    if(allplans.length == 0){
+    if(timelist.length == 0){
         plansArray = [time_h_m_to_hh_mm(`${Options.workStartTime}:00`), time_h_m_to_hh_mm(`${Options.workEndTime}:00`)]
     }
-    for(var j=0; j<allplans.length;j++){
-        plansArray.push(allplans[j])
+    for(var j=0; j<timelist.length;j++){
+        plansArray.push(timelist[j])
     };
 
     if(plansArray.indexOf(selectedTime+':'+selectedMin) == -1){
@@ -2724,7 +2724,7 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
     var zz = 0
     durTimeList.html('');
     while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
-        zz = zz + 5;
+        zz++;
         //console.log(zz)
         //console.log(add_time(selectedTime+':'+selectedMin, '00:0'+zz) , sortedlist[index+1])
         if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
@@ -2829,6 +2829,8 @@ function addGraphIndicator(durmin){
     }else{
 
     }
+
+
     
     var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
     var daymorning = starttext[0];
@@ -2839,14 +2841,14 @@ function addGraphIndicator(durmin){
     var planEndMin  = Number(planend.split(':')[1]);
     var planDura = durmin;
     var workstart = Options.workStartTime;
-    
- 
+
     var timegraph_hourwidth = $('#'+planHour+'g_00').width();
     var timegraph_houroffset = $('#'+planHour+'g_00').position().left + timegraph_hourwidth*(planMinute/60);
     var timegraph_houroffsetb = $('#'+planHour+'g_00').position().top;
 
     var timegraph_hourendwidth;
     var timegraph_hourendoffset;
+
 
     if(planEndHour == Options.workEndTime){
         timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
