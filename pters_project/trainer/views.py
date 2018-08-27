@@ -3120,6 +3120,12 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 error = '프로그램 정보를 불러오지 못했습니다.'
 
         if error is None:
+            # class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id).count()
+            # if len(class_lecture_data) == 0:
+            #     class_setting_data = SettingTb.objects.filter(class_tb_id=class_id)
+            #     class_setting_data.delete()
+            #     class_info.delete()
+            # else:
             class_info.auth_cd = 'DELETE'
             class_info.save()
 
