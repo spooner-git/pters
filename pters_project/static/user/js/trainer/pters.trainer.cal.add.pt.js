@@ -1607,6 +1607,8 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $(".pt_memo_guide").css('display','none');
     }
 
+    $('#page-addplan-pc').css('display','none');
+    $('.blankSelected').removeClass('blankSelected');
     if(bodywidth <= 600){
         $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
@@ -1618,7 +1620,6 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }else{
         selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});
-        $('#page-addplan-pc').css('display','none');
         //disable_window_scroll();
     }
 
@@ -2425,6 +2426,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray ì±
             allplans.push(sortedlist[j]);
         }
     }
+    console.log("allplans",allplans);
     return {"addOkArray":addOkArrayList, "allplans":allplans};
 }
 
