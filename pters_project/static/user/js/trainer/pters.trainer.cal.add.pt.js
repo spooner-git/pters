@@ -2360,14 +2360,14 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     for(var p=0; p<sortedlist.length/2; p++){
         var zz = 0;
         //일정 시작시간이 일정 종료시간보다 작으면,
-        if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
-            compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
+        // if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
+        //     compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
             
-            while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
+            while(!compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00'))){
                 if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false ){
                     semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
                 }
-                zz++
+                zz += Timeunit
                 if(zz>1450){ //하루 24시간 --> 1440분
                     alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
                     break;
@@ -2375,7 +2375,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
 
             }
 
-        }
+        // }
     }
 
     //offAddOkArray = []
@@ -2411,8 +2411,8 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             allplans.push(workEndTime_)
         }else{
             allplans.push(sortedlist[j])
-        };
-    };
+        }
+    }
     return {"addOkArray":addOkArrayList, "allplans":allplans}
 }
 
