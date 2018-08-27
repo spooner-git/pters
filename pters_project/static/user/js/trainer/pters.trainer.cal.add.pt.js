@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */ 
 $(document).ready(function(){
 
     //바로 실행
@@ -2426,7 +2427,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             allplans.push(sortedlist[j]);
         }
     }
-    console.log("allplans",allplans);
     return {"addOkArray":addOkArrayList, "allplans":allplans};
 }
 
