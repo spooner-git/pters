@@ -1627,7 +1627,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
-        
         //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
         if(compare_time(planHour+':'+planMinute, Options.workStartTime+':00') == false && compare_time(planEndHour+':'+planEndMin, Options.workStartTime+':00') ){
             planHour = Options.workStartTime;

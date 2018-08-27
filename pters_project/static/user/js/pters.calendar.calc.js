@@ -315,7 +315,7 @@ function compare_time(time1, time2){
 	var time1_num = hour1+min1;
 	var time2_num = hour2+min2;
 
-	if(time1_num > time2_num){
+	if(Number(time1_num) > Number(time2_num) ){
 		return true;
 	}else{
 		return false;
