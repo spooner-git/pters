@@ -1546,14 +1546,16 @@ def export_excel_member_info_logic(request):
                 else:
                     group_check = 0
 
+                lecture_list_info.group_info = ''
+
                 if lecture_info.use != UN_USE:
-                    if lecture_info.state_cd == 'IP':
-                        if group_check == 0:
-                            lecture_list_info.group_info = '1:1 레슨'
-                        elif group_check == 1:
-                            lecture_list_info.group_info = '[그룹]'+lecture_list_info.group_name
-                        else:
-                            lecture_list_info.group_info = '[클래스]'+lecture_list_info.group_name
+                    # if lecture_info.state_cd == 'IP':
+                    if group_check == 0:
+                        lecture_list_info.group_info = '1:1 레슨'
+                    elif group_check == 1:
+                        lecture_list_info.group_info = '[그룹]'+lecture_list_info.group_name
+                    else:
+                        lecture_list_info.group_info = '[클래스]'+lecture_list_info.group_name
 
                 if '\r\n' in lecture_info.note:
                     lecture_info.note = lecture_info.note.replace('\r\n', ' ')
