@@ -158,6 +158,7 @@ function close_info_popup(option){
     else if(option =="page-addplan"){
         $('#'+option).css('display','none');
         $('#calendar').css('position','relative');
+        $('.add_time_unit').removeClass('checked');
         shade_index(-100);
         enable_window_scroll();
     }

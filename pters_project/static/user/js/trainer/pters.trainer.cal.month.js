@@ -105,7 +105,7 @@ $(document).ready(function(){
             $('#page-addplan').css('display','none');
             if(bodywidth < 600){
                 //$('#calendar').css('display','block');
-                $('#calendar').css('height','100%')
+                $('#calendar').css('height','100%');
             }
             $('#float_btn_wrap').show();
             $('#float_btn').removeClass('rotate_btn');
@@ -124,6 +124,8 @@ $(document).ready(function(){
                 text1 = 'Choose member';
                 text2 = 'Choose';
             }
+            $('.add_time_unit').removeClass('checked');
+            $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
             $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
             $("#countsSelected,.countsSelected").text("");
             //$("#dateSelector p").removeClass("dropdown_selected");
