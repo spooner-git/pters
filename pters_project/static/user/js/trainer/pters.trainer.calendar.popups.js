@@ -751,6 +751,8 @@
                 text1 = 'Choose member';
                 text2 = 'Choose';
             }
+            $('.add_time_unit').removeClass('checked');
+            $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
             $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
             $("#countsSelected,.countsSelected").text("");
             //$("#dateSelector p").removeClass("dropdown_selected");

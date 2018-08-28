@@ -2261,6 +2261,8 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
 function closeAddPopup(){
     //$('body').css('overflow-y','overlay');
     $('#page-addplan').hide('fast','swing');
+    $('.add_time_unit').removeClass('checked');
+    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
     if(bodywidth<=600){
         $('#float_btn_wrap').show();
         $('#float_btn').removeClass('rotate_btn');
