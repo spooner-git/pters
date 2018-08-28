@@ -36,6 +36,7 @@ var multi_language_set = {
                                     "text-membermanage":"회원 관리",
                                     "text-groupmanage":"그룹 관리",
                                     "text-classmange":"클래스 관리",
+                                    "text-lecturemanage":"수업 관리",
                                     "text-centermanage":"센터 관리",
                                     "text-employeemanage":"직원 관리",
                                     "text-analytics":"통계",
@@ -112,6 +113,7 @@ var multi_language_set = {
                                     "text-membermanage":"会員管理",
                                     "text-groupmanage":"グループ管理",
                                     "text-classmange":"クラス管理",
+                                    "text-lecturemanage":"수업 관리",
                                     "text-centermanage":"センター管理",
                                     "text-employeemanage":"직원 관리",
                                     "text-analytics":"統計",
@@ -188,8 +190,9 @@ var multi_language_set = {
                                     "text-membermanage":"Members",
                                     "text-groupmanage":"Groups",
                                     "text-centermanage":"Center",
-                                    "text-employeemanage":"employee",
+                                    "text-employeemanage":"Employee",
                                     "text-classmange":"Classes",
+                                    "text-lecturemanage":"Lectures",
                                     "text-analytics":"Analytics",
                                     "text-setting":"Settings",
                                     "text-nameAttach":"",
@@ -257,6 +260,7 @@ $('.text-membermanage').text(multi_language_set[Options.language]["text-memberma
 $('.text-groupmanage').html(multi_language_set[Options.language]["text-groupmanage"]);
 $('.text-classmanage').html(multi_language_set[Options.language]["text-classmange"]);
 $('.text-centermanage').html(multi_language_set[Options.language]["text-centermanage"]);
+$('.text-lecturemanage').text(multi_language_set[Options.language]["text-lecturemanage"]);
 $('.text-employeemanage').html(multi_language_set[Options.language]["text-employeemanage"]);
 $('.text-workmanage').text(multi_language_set[Options.language]["text-analytics"]);
 $('.text-setting').text(multi_language_set[Options.language]["text-setting"]);
