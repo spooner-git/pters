@@ -791,9 +791,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`;
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
                                                       height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
@@ -853,9 +853,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
                                                       height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`
@@ -909,9 +909,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`;
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
                                                       height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
@@ -965,9 +965,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`;
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
                                                       height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
@@ -1021,9 +1021,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`;
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
                                                       height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
@@ -1077,9 +1077,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`;
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
                                                       height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
@@ -1131,9 +1131,9 @@ function calTable_Set_Mobile(Index,Year,Month,Dates,Week,append){ //선택한 In
                                                       class="worktime_disable">
                                           </div>`;
                 workend_disabling = `<div style="position:absolute;
-                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       width:100%;
-                                                      height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top  }px;
+                                                      height:${ hour_lastcell.position().top- $(`#hour${time_disable_end}`).position().top }px;
+                                                      top:${$(`#hour${time_disable_end}`).position().top + $(`#hour${time_disable_end}`).height() }px;
                                                       opacity:0.8;" 
                                                       class="worktime_disable">
                                           </div>`;
