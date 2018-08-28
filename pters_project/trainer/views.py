@@ -258,6 +258,15 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
+#단순화 1:1/그룹/클래스 통합 테스트 180828
+class ManageLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_lecture.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageLectureView, self).get_context_data(**kwargs)
+        return context
+#단순화 1:1/그룹/클래스 통합 테스트 180828
+
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
 
