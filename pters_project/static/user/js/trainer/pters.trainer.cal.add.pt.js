@@ -2339,7 +2339,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
 
     var disable_time_array_start_date = remove_duplicate_in_list(all_start_date_time);
     var disable_time_array_end_date = remove_duplicate_in_list(all_end_date_time);
-
     calc_and_make_plan_time(disable_time_array_start_date, disable_time_array_end_date);
 
     // var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
@@ -2398,7 +2397,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
                 }
             }
             // Timeunit 만큼 더해준다.
-            zz += Timeunit;
+            zz += 1;
             // 방어 코드
             if(zz>1450){ //하루 24시간 --> 1440분
                 alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
@@ -2411,14 +2410,14 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     }
 
     //offAddOkArray = []
-    // if(Timeunit == 60){
-    //     Timeunit = 30;
-    // }
-    // var addOkArrayList = [];
-    // for(var t=0; t<semiresult.length; t++){
-    //     if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
-    //         addOkArrayList.push(semiresult[t]);
-    //     }
+    if(Timeunit == 60){
+        Timeunit = 30;
+    }
+    var addOkArrayList = [];
+    for(var t=0; t<semiresult.length; t++){
+        if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
+            addOkArrayList.push(semiresult[t]);
+        }
     //     //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
     //     if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우
     //         //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false           //업무시간
@@ -2435,8 +2434,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     //             }
     //         //}
     //     }
-    // }
-
+    }
     allplans = [];
     // 업무 시작시각과 종료시각에만 영향 가도록 변경 -> side effect 줄이기 위해
     for(var j=0; j<sortedlist.length; j++){
@@ -2450,7 +2448,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             allplans.push(sortedlist[j]);
         }
     }
-    return {"addOkArray":semiresult, "allplans":allplans};
+    return {"addOkArray":addOkArrayList, "allplans":allplans};
 }
 
 var allplans = [];
