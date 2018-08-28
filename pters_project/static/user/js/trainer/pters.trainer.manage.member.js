@@ -15,7 +15,7 @@ $(document).ready(function(){
 
     $(document).on('click','.phonesms',function(e){
         e.stopPropagation();
-    })
+    });
 
     $('form button').click(function(e){
         e.preventDefault();
@@ -1774,7 +1774,10 @@ function shiftMemberList(type){
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN');
     switch(type){
         case "current":
-            get_member_ing_list();
+        console.log('asdfsdf11')
+            get_member_ing_list("callback", function(jsondata){
+                memberListSet('current','name','no',jsondata);
+            });
             $('#currentMemberList, #memberNumber_current_member').css('display','block');
             $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
@@ -1782,7 +1785,9 @@ function shiftMemberList(type){
             break;
         case "finished":
             //if($('#btnCallMemberList').hasClass('list_switch_selected')){
-            get_member_end_list();
+            get_member_end_list("callback", function(jsondata){
+                memberListSet('finished','name','no',jsondata);
+            });
             $('#finishedMemberList, #memberNumber_finish_member').css('display','block');
             $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
@@ -2309,7 +2314,7 @@ function get_member_ing_list(use, callback){
                     callback(jsondata);
 
                 }else{
-                    memberListSet('current','name','no',jsondata);
+                    //memberListSet('current','name','no',jsondata);
                 }
                 console.log('success');
             }
@@ -2365,7 +2370,7 @@ function get_member_end_list(use, callback){
                     callback(jsondata);
 
                 }else{
-                    memberListSet('finished','name','no',jsondata);
+                    //memberListSet('finished','name','no',jsondata);
                 }
                 console.log('success');
             }

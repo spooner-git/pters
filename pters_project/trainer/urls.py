@@ -171,6 +171,8 @@ urlpatterns = [
     url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
     # 월간 일정 페이지
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    # 회원/그룹/클래스 통합 뷰 페이지
+    url(r'^lecture_manage/$', views.ManageLectureView.as_view(), name='lecture_manage'),
     # 회원 관리 페이지
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     # 그룹 관리 페이지

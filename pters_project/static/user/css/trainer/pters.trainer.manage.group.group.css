@@ -460,6 +460,9 @@ div._manage{
 	div.memberline div{
 		width: 12.5%;
 	}
+	tr.memberline td{
+		width: 12.5%;
+	}
 }
 
 /*그룹을 클릭해서 나오는 그룹멤버 리스트 테이블*/
