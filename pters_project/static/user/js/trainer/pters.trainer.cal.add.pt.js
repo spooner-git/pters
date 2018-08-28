@@ -2332,16 +2332,28 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
     var plan_time = [];
 
     //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
-    var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
-    var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
-    var groupTimeArray_start_date_ = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
-    var groupTimeArray_end_date_ = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
-    var groupTimeArray_start_date = remove_duplicate_compared_to(groupTimeArray_start_date_, jsondata.offTimeArray_start_date);
-    var groupTimeArray_end_date = remove_duplicate_compared_to(groupTimeArray_end_date_, jsondata.offTimeArray_end_date);
+    var all_start_date_time;
+    var all_end_date_time;
+    all_start_date_time = jsondata.classTimeArray_start_date.concat(jsondata.group_schedule_start_datetime);
+    all_end_date_time = jsondata.classTimeArray_end_date.concat(jsondata.group_schedule_end_datetime);
+    all_start_date_time = all_start_date_time.concat(jsondata.offTimeArray_start_date);
+    all_end_date_time = all_end_date_time.concat(jsondata.offTimeArray_end_date);
 
-    calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
-    calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
-    calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date);
+    var disable_time_array_start_date = remove_duplicate_in_list(all_start_date_time);
+    var disable_time_array_end_date = remove_duplicate_in_list(all_end_date_time);
+
+    calc_and_make_plan_time(disable_time_array_start_date, disable_time_array_end_date);
+
+    // var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
+    // var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
+    // var groupTimeArray_start_date_ = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
+    // var groupTimeArray_end_date_ = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
+    // var groupTimeArray_start_date = remove_duplicate_compared_to(groupTimeArray_start_date_, jsondata.offTimeArray_start_date);
+    // var groupTimeArray_end_date = remove_duplicate_compared_to(groupTimeArray_end_date_, jsondata.offTimeArray_end_date);
+
+    // calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
+    // calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
+    // calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date);
 
     function calc_and_make_plan_time(startArray, endArray){
         for(var i=0; i<startArray.length; i++){
@@ -2349,13 +2361,12 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
             var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
             var plan_end_date = endArray[i].split(' ')[0];
             var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
-
             if(plan_start_date == selecteddate){
                 plan_time.push(plan_start_time);
             }
-            if(plan_end_date == selecteddate && plan_end_time != "00:00"){
+            if (plan_end_date == selecteddate && plan_end_time != "00:00") {
                 plan_time.push(plan_end_time);
-            }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
+            } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate, 1), '-') && plan_end_time == "00:00") {
                 plan_time.push('24:00');
             }
         }
@@ -2378,61 +2389,74 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         //일정 시작시간이 일정 종료시간보다 작으면,
         // if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
         //     compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
-            
-            while(!compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00'))){
-                if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false ){
+
+        // while 조건 : 검사하는 시작시각이 이미 존재하는 일정의 시작시각보다 작을때 동작
+        while(!compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00'))){
+            // 업무 시작시각보다 큰 시작사각만 추가
+            if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false){
+                // 업무 종료시각 - Timeunit 보다 작은 시작시각만 추가
+                if (compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false){
                     semiresult.push(add_time(sortedlist[p*2],'0:'+zz));
                 }
-                zz += Timeunit;
-                if(zz>1450){ //하루 24시간 --> 1440분
-                    alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
-                    break;
-                }
-
             }
+            // Timeunit 만큼 더해준다.
+            zz += Timeunit;
+            // 방어 코드
+            if(zz>1450){ //하루 24시간 --> 1440분
+                alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
+                break;
+            }
+
+        }
 
         // }
     }
 
     //offAddOkArray = []
-    if(Timeunit == 60){
-        Timeunit = 30;
-    }
-
-    var addOkArrayList = [];
-    for(var t=0; t<semiresult.length; t++){
-        //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
-        if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우 
-            //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false           //업무시간
-                //&& compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){              
-                if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
-                    addOkArrayList.push(semiresult[t]);
-                }
-            //}
-        }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
-            //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false 
-                //&& compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
-                if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
-                    addOkArrayList.push(semiresult[t]);
-                }
-            //}
-        }
-    }
+    // if(Timeunit == 60){
+    //     Timeunit = 30;
+    // }
+    // var addOkArrayList = [];
+    // for(var t=0; t<semiresult.length; t++){
+    //     if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
+    //         addOkArrayList.push(semiresult[t]);
+    //     }
+    //     //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
+    //     if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우
+    //         //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false           //업무시간
+    //             //&& compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){
+    //             if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
+    //                 addOkArrayList.push(semiresult[t]);
+    //             }
+    //         //}
+    //     }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
+    //         //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
+    //             //&& compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
+    //             if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
+    //                 addOkArrayList.push(semiresult[t]);
+    //             }
+    //         //}
+    //     }
+    // }
 
     allplans = [];
+    // 업무 시작시각과 종료시각에만 영향 가도록 변경 -> side effect 줄이기 위해
     for(var j=0; j<sortedlist.length; j++){
-        if(sortedlist[j] == "00:00"){
+        if(j==0) {
+            // if(sortedlist[j] == "00:00"){
             allplans.push(workStartTime_);
-        }else if(sortedlist[j] == "24:00"){
+        }else if(j==sortedlist.length-1){
+        // }else if(sortedlist[j] == "24:00"){
             allplans.push(workEndTime_);
         }else{
             allplans.push(sortedlist[j]);
         }
     }
-    return {"addOkArray":addOkArrayList, "allplans":allplans};
+    return {"addOkArray":semiresult, "allplans":allplans};
 }
 
 var allplans = [];
+
 function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
     var sArraySet =  startTimeArraySet(selecteddate, jsondata, Timeunit); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
     var addOkArray = sArraySet.addOkArray;
@@ -2696,10 +2720,11 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 }
 
 
-function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
+function durTimeSet(selectedTime, selectedMin, option, Timeunit){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
     var timelist = remove_duplicate_in_list(allplans);
     var durTimeList;
     var options;
+    var plansArray=[];
     switch(option){
         case "class" :
             durTimeList = $('#durations');
@@ -2714,37 +2739,47 @@ function durTimeSet(selectedTime,selectedMin,option, Timeunit){ // durAddOkArray
             options = "_mini";
             break;
     }
+    // 시간이 1:00 로 들어오는 경우 01:00으로 바꿈
     if(selectedTime.length < 2){
         selectedTime = '0'+selectedTime;
     }
     if(selectedMin.length < 2){
         selectedMin = '0' + selectedMin;
     }
+    var selected_time = selectedTime + ':' + selectedMin;
 
-    var plansArray=[];
     if(timelist.length == 0){
         plansArray = [time_h_m_to_hh_mm(`${Options.workStartTime}:00`), time_h_m_to_hh_mm(`${Options.workEndTime}:00`)];
     }
-    for(var j=0; j<timelist.length;j++){
-        plansArray.push(timelist[j]);
+    else{
+        for(var j=0; j<timelist.length; j++){
+            plansArray.push(timelist[j]);
+        }
     }
 
-    if(plansArray.indexOf(selectedTime+':'+selectedMin) == -1){
-        plansArray.push(selectedTime+':'+selectedMin);
+    // 내가 선택한 시작시각이 list에 없는경우 추가
+    if(plansArray.indexOf(selected_time) == -1){
+        plansArray.push(selected_time);
     }
 
     var sortedlist = plansArray.sort();
-    var index = sortedlist.indexOf(selectedTime+':'+selectedMin);
+    var index = sortedlist.indexOf(selected_time);
 
-    var zz = 0;
+    var zz = Timeunit;
+    // var zz = 0;
     durTimeList.html('');
-    while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
-        zz++;
+
+    // while 동작 조건 내가 선택한 시작시각에 진행시각 더한값이 다음 일정 시작시각을 넘지 않는 경우 동작
+    // while(add_time(selectedTime+':'+selectedMin, '00:0'+zz) != sortedlist[index+1]){
+    while(!compare_time(add_time(selected_time, '00:0'+zz), sortedlist[index+1])){
+        // zz++;
         //console.log(zz)
         //console.log(add_time(selectedTime+':'+selectedMin, '00:0'+zz) , sortedlist[index+1])
-        if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
-            durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+'" class="pointerList">'+duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selectedTime+':'+selectedMin, '00:0'+zz)+')'+'</a></li>');
-        }
+        // if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
+        durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selected_time, '00:0'+zz)+'" class="pointerList">'
+            +duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selected_time, '00:0'+zz)+')'+'</a></li>');
+        // }
+        zz += Timeunit;
         if(zz > 1440){
             alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
             break;
