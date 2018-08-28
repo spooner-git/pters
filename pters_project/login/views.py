@@ -62,6 +62,9 @@ def login_trainer(request):
         next_page = '/trainer/'
     request.session['push_token'] = ''
     if not error:
+        # if password == 'kakao_login':
+        #     user = authenticate(username=username)
+        # else:
         user = authenticate(username=username, password=password)
 
         if user is not None and user.is_active:
