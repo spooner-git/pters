@@ -1816,6 +1816,45 @@ function shiftGroupClassList(type){
     }
 }
 
+//진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
+function shiftPtGroupClassList(type){
+    switch(type){
+        case "current":
+            get_member_ing_list("callback", function(jsondata){
+                var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                var member_Html = memberlist.html;
+                var group_class_Html;
+
+                get_group_ing_list("callback", function(jsondata){
+                    group_class_Html = group_class_ListHtml('current', jsondata);
+                    $('#currentGroupList').html(group_class_Html);
+            }); //그룹 + 클래스
+        });
+            $('#currentGroupList, #memberNumber_current_group').css('display','block');
+            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display','none')
+            $('._GROUP_THEAD, ._groupaddbutton').show()
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
+            break;
+        case "finished":
+            get_member_end_list("callback", function(jsondata){
+                var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                var member_Html = memberlist.html;
+                var group_class_Html;
+
+                get_group_end_list("callback", function(jsondata){
+                    console.log(jsondata)
+                    group_class_Html = group_class_ListHtml('finished', jsondata);
+                    $('#finishedGroupList').html(group_class_Html);
+                }); //그룹 + 클래스
+            });
+            $('#finishedGroupList, #memberNumber_finish_group').css('display','block');
+            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display','none')
+            $('._GROUP_THEAD, ._groupaddbutton').show()
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
+            break;
+    }
+}
+
 
 
 
@@ -2334,7 +2373,6 @@ function get_member_end_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
         url:'/trainer/get_member_end_list/',
-
         dataType : 'html',
 
         beforeSend:function(){

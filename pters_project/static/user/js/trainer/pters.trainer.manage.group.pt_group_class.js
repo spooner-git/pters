@@ -469,10 +469,15 @@ $(document).on('click','div.groupWrap',function(e){
         }else if(group_id == "1:1"){
             $(this).addClass('groupWrap_selected')
             memberlist.addClass('groupMembersWrap_selected').show();
-            get_member_ing_list("callback", function(jsondata){
-                console.log("ptmember_ListHtml('current', 'name', 'no', jsondata)",ptmember_ListHtml('current', 'name', 'no', jsondata))
-                memberlist.html('<table style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</table>');
-            });
+            if( $('#btnCallCurrent').hasClass('pters_selectbox_btn_selected') ){
+                get_member_ing_list("callback", function(jsondata){
+                    memberlist.html('<table style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</table>');
+                });
+            }else if( $('#btnCallFinished').hasClass('pters_selectbox_btn_selected') ){
+                get_member_end_list("callback", function(jsondata){
+                    memberlist.html('<table style="width:100%;">'+ptmember_ListHtml('finished', 'name', 'no', jsondata).html+'</table>');
+                });
+            }
         }
     }else{
         $(this).removeClass('groupWrap_selected')
@@ -1060,7 +1065,6 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
         nameLists = nameList.sort();
         dateLists = dateList.sort();
     }
-
     var len = countLists.length;
     var arrayResult = [];
     var array;
@@ -1084,7 +1088,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var groupType3;
     var member_number = 0;
     for(var i=0; i<len; i++){
-        if(jsondata.groupInfoArray[i].split('/').indexOf('1:1')){
+        if(jsondata.groupInfoArray[i].split('/').indexOf('1:1') >= 0){
             member_number++
             if(option == "count"){
                 array = countLists[i].split('/');
@@ -1197,21 +1201,6 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
                 phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
             }
 
-            var npCountImg = "";
-            if(npCounts == 0 && rjCounts == 0){
-                npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
-            }else if(rjCounts > 0){
-                npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
-            }
-
-            var yetReg = "";
-            var yet = "";
-            if(yetRegCounts > 0){
-                yetReg = '(+'+yetRegCounts+')';
-            }
-            if(yetCounts > 0){
-                yet = '(+'+yetCounts+')';
-            }
 
             count = remove_front_zeros(count);
             regcount = remove_front_zeros(regcount);
@@ -1227,11 +1216,11 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
             var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
-            var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
+            var nametd = '<td class="_tdname" data-name="'+name+'">'+/*newReg+*/name+'</td>';
             var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
             var emailtd = '<td class="_email">'+email+'</td>';
-            var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
-            var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
+            var regcounttd = '<td class="_regcount">'+regcount+'</td>';
+            var remaincounttd = '<td class="_remaincount">'+count+'</td>';
             var startdatetd = '<td class="_startdate">'+start+'</td>';
             var enddatetd = '<td class="_finday">'+end+'</td>';
             if(phoneToEdit != ""){
@@ -1275,6 +1264,9 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     }
 
     var resultToAppend = arrayResult.join("");
+
+    console.log('len', len)
+
     if(type=='current' && len == 0){
         resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
         if(bodywidth > 600){
@@ -1282,7 +1274,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
         }else{
             $('#please_add_member').show();
         }
-    }else if(type=="finished" && len ==0){
+    }else if(type=="finished" && len == 0){
         resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;

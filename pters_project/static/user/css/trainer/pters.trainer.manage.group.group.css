@@ -350,9 +350,14 @@ div._groupmanage img._info_delete{
 	border-bottom:1px solid #cccccc;
 	font-size: 12.5px;
 }
-.groupMembersWrap .memberline, .groupMembersWrap .groupmemberline_thead{
+.groupMembersWrap .memberline{
 	background: #f9f9f9;
 }
+.groupMembersWrap .groupmemberline_thead{
+	background: #444444;
+	color: #ffffff;
+}
+
 .groupMembersWrap_selected{
 	border-left: 1px solid #fe4e65;
 	border-right: 1px solid #fe4e65;
