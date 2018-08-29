@@ -1,1 +1,1 @@
-PTers : 가입 인증 메일 입니다! ( {{site.name}} )
+[PTERS] PTERS 계정 가입 인증 메일
