@@ -1255,17 +1255,14 @@ span.summaryInnerBoxText_Repeatendtext{
 	#page_addmember{
 		top: unset;
 		max-width: 600px !important;
-		background-color: 	#ffffff;
 	}
 
 	#page_addmember_input_wrap{
-		background-color: 	white;
 		overflow-y: auto;
 		position: relative;
 		border-top: 2px solid #cccccc;
 		border-bottom: 2px solid #cccccc;
 	}
-
 
 	.memberline{
 		height: 35px;

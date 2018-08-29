@@ -845,7 +845,7 @@
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                         <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
-                    <div id="memberBirth">
+                    <div id="memberBirth" class="dropdown">
                         <!--
                         <input type="text" class="dropdown form-control" id="memberBirthYear" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
                         <div id="memberBirthMonthSelected" class="dropdown">
@@ -963,7 +963,7 @@
 
 
 
-                <div class="_ADD_MEMBER_REG">
+                <div class="_ADD_MEMBER_REG" style="margin-top: 20px;">
                     <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 수강 정보 <span style="color: #fe4e65;">*</span>
                     </label>
@@ -991,7 +991,7 @@
                                 <input type="tel" class="form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
                             </div>
                         </div>
-                        <div class="ptaddbox form-group">
+                        <div class="ptaddbox form-group price_wrap">
                             <label for="lecturePrice" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                             </label>
@@ -1000,7 +1000,7 @@
                                 <input type="tel" class="form-control" id="lecturePrice_add" placeholder="숫자만 입력해주세요." maxlength="11">
                                 <span class="inputunit">원</span>
                             </div>
-                            <div class="pricebutton">
+                            <div class="pricebutton dropdown">
                                 <div class="pricebuttonchild" id="price1" onclick="priceInput(1000000,'sum',1)">100만원</div>
                                 <div class="pricebuttonchild" id="price2" onclick="priceInput(500000,'sum',1)">50만원</div>
                                 <div class="pricebuttonchild" id="price3" onclick="priceInput(100000,'sum',1)">10만원</div>
@@ -1046,7 +1046,7 @@
                                 <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 횟수
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
-                            <div>
+                            <div class="dropdown" style="border: 0;">
                                 <table>
                                     <tbody>
                                     <tr>
@@ -1061,7 +1061,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="ptaddbox form-group">
+                        <div class="ptaddbox form-group price_wrap">
                             <label for="lecturePrice" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                             </label>
@@ -1070,7 +1070,7 @@
                                 <input type="tel" class="form-control" id="lecturePrice_add_2" placeholder="숫자만 입력해주세요." maxlength="11">
                                 <span class="inputunit">원</span>
                             </div>
-                            <div class="pricebutton">
+                            <div class="pricebutton dropdown">
                                 <div class="pricebuttonchild" id="price1_2" onclick="priceInput(1000000,'sum',2)">100만원</div>
                                 <div class="pricebuttonchild" id="price2_2" onclick="priceInput(500000,'sum',2)">50만원</div>
                                 <div class="pricebuttonchild" id="price3_2" onclick="priceInput(100000,'sum',2)">10만원</div>
@@ -1079,11 +1079,11 @@
                                 <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;" onclick="priceInput(0,'del',2)">X</div>
                             </div>
                         </div>
-                        <div class="ptaddbox form-group _due">
+                        <div class="ptaddbox form-group _due dur_wrap">
                             <label for="memberDue" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 기간
                             </label>
-                            <div>
+                            <div class="dropdown" style="border: 0;">
                                 <table>
                                     <tbody>
                                     <tr>
