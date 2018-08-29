@@ -645,7 +645,8 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                         lecture_info.state_cd = 'PE'
                         lecture_info.lecture_avail_count = 0
                         lecture_info.lecture_rem_count = 0
-                        lecture_info.use = UN_USE
+                        # 굳이 UN_USE로 바꿀 필요 없을듯
+                        # lecture_info.use = UN_USE
                         lecture_info.save()
 
                 if len(group_data) > 0:
