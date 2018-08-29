@@ -59,7 +59,7 @@
             
         </div>
         <div id="float_inner1" class="float_inner" onclick="float_btn_managemember(1)">
-            <a class="KRtext">회원<br/>추가</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+            <a class="text-memberadd"></a>
         </div>
         <!--
         <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
@@ -146,29 +146,19 @@
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
         <div class="popup_inner _complete" data-stat="complete">
-            <span style="color:#fe4e65;font-weight: 500;" class="KRtext">진행 완료</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="JPtext">はい</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="ENtext">Yes</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="text-processend"></span>
         </div>
         <div class="popup_inner _resume" data-stat="resume">
-            <span style="color:#282828;font-weight: 500;" class="KRtext">재개</span>
-            <span style="color:#282828;font-weight: 500;" class="JPtext">はい</span>
-            <span style="color:#282828;font-weight: 500;" class="ENtext">Yes</span>
+            <span style="color:#282828;font-weight: 500;" class="text-resume"></span>
         </div>
         <div class="popup_inner _refund" data-stat="refund">
-            <span style="color:#8c8763;font-weight: 500;" class="KRtext">환불</span>
-            <span style="color:#8c8763;font-weight: 500;" class="JPtext">はい</span>
-            <span style="color:#8c8763;font-weight: 500;" class="ENtext">Yes</span>
+            <span style="color:#8c8763;font-weight: 500;" class="text-refund"></span>
         </div>
         <div class="popup_inner _delete" data-stat="delete">
-            <span style="color:#fe4e65;" class="KRtext">삭제</span>
-            <span style="color:#fe4e65;" class="JPtext">はい</span>
-            <span style="color:#fe4e65;" class="ENtext">Yes</span>
+            <span style="color:#fe4e65;" class="text-delete"></span>
         </div>
         <div class="popup_inner _cancel">
-            <span class="KRtext">취소</span>
-            <span class="JPtext">いいえ</span>
-            <span class="ENtext">No</span>
+            <span class="text-cancel"></span>
         </div>
     </div>
 
@@ -187,14 +177,10 @@
             <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span style="color:#8c8763;font-weight: 500;" class="KRtext refund">환불</span>
-            <span style="color:#8c8763;font-weight: 500;" class="JPtext refund">はい</span>
-            <span style="color:#8c8763;font-weight: 500;" class="ENtext refund">Yes</span>
+            <span style="color:#8c8763;font-weight: 500;" class="text-refund refund"></span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span class="KRtext cancel_refund">취소</span>
-            <span class="JPtext cancel_refund">戻す</span>
-            <span class="ENtext cancel_refund">Cancel</span>
+            <span class="text-cancel cancel_refund"></span>
         </div>
     </div>
 
@@ -208,14 +194,10 @@
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
         <div class="popup_inner popup_inner_resend" data-stat="DELETE">
-            <span style="color:#fe4e65;font-weight: 500;" class="KRtext connectchange">연결해제</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="JPtext connectchange">はい</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="ENtext connectchange">Yes</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="text-unconnect connectchange"></span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span class="KRtext cancel_connectchange">취소</span>
-            <span class="JPtext cancel_connectchange">いいえ</span>
-            <span class="ENtext cancel_connectchange">No</span>
+            <span class="text-cancel cancel_connectchange"></span>
         </div>
     </div>
 
@@ -229,14 +211,10 @@
         <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
         <div class="ENtext confirmText">The member disconnected the calendar.</div>
         <div class="popup_inner popup_inner_resend">
-            <span style="color:#fe4e65;font-weight: 500;" class="KRtext resend">연결요청</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="JPtext resend">連結要請</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="ENtext resend">Send Request</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="text-connectrequest resend"></span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span class="KRtext cancel_resend">취소</span>
-            <span class="JPtext cancel_resend">いいえ</span>
-            <span class="ENtext cancel_resend">No</span>
+            <span class="text-cancel cancel_resend"></span>
         </div>
         <!--
         <div class="popup_inner popup_inner_resend">
@@ -269,10 +247,10 @@
 
         <div id="" class="pters_selectbox_wrapper">
             <div id="btnCallCurrent" onclick="shiftMemberList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
-                <span class="KRtext">진행중</span>
+                <span class="text-inprogress">진행중</span>
             </div>
             <div id="btnCallFinished" onclick="shiftMemberList('finished')" class="pters_selectbox_btn">
-                <span class="KRtext">종료</span>
+                <span class="text-finish">종료</span>
             </div>
         </div>
 
@@ -282,9 +260,7 @@
             <span id="memberNumber_current_group" class="memberNum"></span>
             <span id="memberNumber_finish_group" class="memberNum"></span>
             <div id="align_type_text">
-                <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>
-                <span class="memberAlign JPtext">並べ替え</span>
-                <span class="memberAlign ENtext">Sort by</span>
+                <span class="memberAlign text-sort _ALIGN_DROPDOWN">정렬 기준</span>
             </div>
             <div class="ymdText-pc-add-member-wrap">
                 <div id="please_add_member_pc">
@@ -294,14 +270,10 @@
                     <p>피터스의 기능들을 사용해보세요.</p>
                 </div>
                 <div class="ymdText-pc-add-member _memberaddbutton" onclick="pc_add_member(0)">
-                    <span class="KRtext">회원 추가</span>
-                    <span class="JPtext">メンバー追加</span>
-                    <span class="ENtext">New Contract</span>
+                    <span class="text-memberadd_full"></span>
                 </div>
                 <div class="ymdText-pc-add-member-again _memberaddbutton" onclick="pc_add_member(1)">
-                    <span class="KRtext">재등록</span>
-                    <span class="JPtext">再登録</span>
-                    <span class="ENtext">Re-Contract</span>
+                    <span class="text-memberreadd"></span>
                 </div>
                 <!--
                 <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('group')" style="display: none; margin-left: 2px;">
@@ -346,37 +318,37 @@
             <thead>
             <tr style="border-bottom:0;">
                 <th class="_countnum">
-                    <span class="KRtext">순번</span><span class="JPtext">No.</span><span class="ENtext">No.</span>
+                    <span class="text-ordernum">순번</span>
                 </th>
                 <th class="_tdname">
-                    <span class="KRtext">회원명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
+                    <span class="text-membername">회원명</span>
                 </th>
                 <th class="_grouptype">
-                    <span class="KRtext">수강유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
+                    <span class="text-grouptype">수강유형</span>
                 </th>
                 <th class="_id">
-                    <span class="KRtext">회원 ID</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
+                    <span class="text-memberid">회원 ID</span>
                 </th>
                 <th class="_email">
-                    <span class="KRtext">E-mail</span><span class="JPtext">メールアドレス</span><span class="ENtext">E-mail</span>
+                    <span class="text-email">E-mail</span>
                 </th>
                 <th class="_regcount">
-                    <span class="KRtext">등록 횟수</span><span class="JPtext">登録回数</span><span class="ENtext">Reg. Count</span>
+                    <span class="text-regcount">등록 횟수</span>
                 </th>
                 <th class="_remaincount">
-                    <span class="KRtext">남은 횟수</span><span class="JPtext">残り回数</span><span class="ENtext">Rem. Count</span>
+                    <span class="text-remaincount">남은 횟수</span>
                 </th>
                 <th class="_startdate">
-                    <span class="KRtext">시작일</span><span class="JPtext">開始日</span><span class="ENtext">Start</span>
+                    <span class="text-startdate">시작일</span>
                 </th>
                 <th class="_finday">
-                    <span class="KRtext">종료일</span><span class="JPtext">終了日</span><span class="ENtext">End</span>
+                    <span class="text-enddate">종료일</span>
                 </th>
                 <th class="_contact">
-                    <span class="KRtext">연락처</span><span class="JPtext">連絡先</span><span class="ENtext">Tel.</span>
+                    <span class="text-contact">연락처</span>
                 </th>
                 <th class="_manage">
-                    <span class="KRtext">관리</span><span class="JPtext">管理</span><span class="ENtext">Manage</span>
+                    <span class="text-manage">관리</span>
                 </th>
             </tr>
             </thead>
@@ -760,7 +732,7 @@
             <p><img src="/static/user/res/icon-link.png" class="link-icon" style="width:30px;"> 표시가 있는 항목은 회원님께도 보이는 항목</p>
             <p><span style="color: #fe4e65;">*(별표)</span> 표시 항목은 필수 입력 항목입니다.</p>
             <br>
-            <p style="text-align: center;cursor: pointer;" id="_close_how_to_add_member">닫기</p>
+            <p style="text-align: center;cursor: pointer;" id="_close_how_to_add_member" class="text-close"></p>
         </div>
 
         <div id="inputError" class="errorMessage">
@@ -950,7 +922,7 @@
 
                 </div>
                 <div id="subpopup_addBySearch" class="subpopup_addGroup wrap">
-                    <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span>닫기</span></div>
+                    <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span class="text-close"></span></div>
                     <input type="text" name="searchID" id="addBySearch_input">
                     <button id="addBySearch_search">찾기</button>
                     <div id="searchedMemberListBox">
@@ -1144,9 +1116,9 @@
                 <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
             </div>
             <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
-                <button id="pcBtn" class="submitBtn">등록</button>
+                <button id="pcBtn" class="submitBtn text-register"></button>
                 <button class="submitBtn" style="display: none;">수정</button>
-                <button class="submitBtn" onclick="closePopup('member_add')">닫기</button>
+                <button class="submitBtn text-close" onclick="closePopup('member_add')"></button>
             </div>
         </form>
     </div>

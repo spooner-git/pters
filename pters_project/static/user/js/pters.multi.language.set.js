@@ -25,9 +25,13 @@ var multi_language_set = {
                                     "text-lesson":"레슨",
                                     "text-off":"OFF",
                                     "text-add":"추가",
+                                    "text-register":"등록",
                                     "text-plan":"일정",
                                     "text-lessonplan":"레슨<br>일정",
                                     "text-offplan":"OFF<br>일정",
+                                    "text-memberadd":"회원<br>추가",
+                                    "text-memberadd_full":"회원 추가",
+                                    "text-memberreadd":"재등록",
                                     "text-addlessonplan":"+ 레슨 일정 등록",
                                     "text-addoffplan":"+ OFF 일정 등록",
                                     "text-todayplan":"오늘 일정",
@@ -62,7 +66,19 @@ var multi_language_set = {
                                     "text-yes":"예",
                                     "text-no":"아니오",
                                     "text-ok":"확인",
+                                    "text-cancel":"취소",
+                                    "text-delete":"삭제",
                                     "text-close":"닫기",
+
+                                    "text-inprogress":"진행중",
+                                    "text-finish":"종료",
+                                    "text-processend":"진행 완료",
+                                    "text-resume":"재개",
+                                    "text-refund":"환불",
+                                    "text-unconnect":"연결해제",
+                                    "text-connectrequest":"연결요청",
+
+                                    "text-sort":"정렬 기준",
 
                                     "text-plancomplete":"일정 완료",
                                     "text-plancancel":"일정 취소",
@@ -78,6 +94,17 @@ var multi_language_set = {
                                     "text-deletequestion-plan":"정말 일정을 취소하시겠습니까?",
 
                                     "text-memberinfo":"회원 정보",
+                                    "text-ordernum":"순번",
+                                    "text-membername":"회원명",
+                                    "text-grouptype":"수강유형",
+                                    "text-memberid":"회원 ID",
+                                    "text-email":"이메일",
+                                    "text-regcount":"등록 횟수",
+                                    "text-remaincount":"남은 횟수",
+                                    "text-startdate":"시작일",
+                                    "text-enddate":"종료일",
+                                    "text-contact":"연락처",
+                                    "text-manage":"관리",
 
                                     "text-refresh":"새로고침",
                                     "text-zoomin":"일정 확대 보기",
@@ -102,9 +129,13 @@ var multi_language_set = {
                                     "text-lesson":"レッスン",
                                     "text-off":"OFF",
                                     "text-add":"追加",
+                                    "text-register":"등록",
                                     "text-plan":"日程",
                                     "text-lessonplan":"レッスン<br>追加",
                                     "text-offplan":"OFF<br>追加",
+                                    "text-memberadd":"회원<br>추가",
+                                    "text-memberadd_full":"회원 추가",
+                                    "text-memberreadd":"재등록",
                                     "text-addlessonplan":"+ レッスン プラン 追加",
                                     "text-addoffplan":"+ OFF プラン 追加",
                                     "text-todayplan":"今日の日程",
@@ -139,8 +170,20 @@ var multi_language_set = {
                                     "text-yes":"はい",
                                     "text-no":"いいえ",
                                     "text-ok":"確認",
+                                    "text-cancel":"취소",
+                                    "text-delete":"삭제",
                                     "text-close":"閉じる",
 
+                                    "text-processend":"진행 완료",
+                                    "text-resume":"재개",
+                                    "text-refund":"환불",
+                                    "text-unconnect":"연결해제",
+                                    "text-connectrequest":"연결요청",
+
+                                    "text-sort":"並べ替え",
+
+                                    "text-inprogress":"진행중",
+                                    "text-finish":"종료",
                                     "text-plancomplete":"日程完了",
                                     "text-plancancel":"日程削除",
                                     "text-completesign":"完了署名",
@@ -155,6 +198,17 @@ var multi_language_set = {
                                     "text-deletequestion-plan":"日程を削除しますか",
 
                                     "text-memberinfo":"メンバー情報",
+                                    "text-ordernum":"순번",
+                                    "text-membername":"회원명",
+                                    "text-grouptype":"수강유형",
+                                    "text-memberid":"회원 ID",
+                                    "text-email":"이메일",
+                                    "text-regcount":"등록 횟수",
+                                    "text-remaincount":"남은 횟수",
+                                    "text-startdate":"시작일",
+                                    "text-enddate":"종료일",
+                                    "text-contact":"연락처",
+                                    "text-manage":"관리",
 
                                     "text-refresh":"Refresh",
                                     "text-zoomin":"拡大して見る",
@@ -179,11 +233,15 @@ var multi_language_set = {
                                     "text-lesson":"Plan",
                                     "text-off":"OFF",
                                     "text-add":"Add",
+                                    "text-register":"등록",
                                     "text-plan":"Plan",
                                     "text-lessonplan":"Add<br>Plan",
                                     "text-offplan":"Add<br>OFF",
                                     "text-addlessonplan":"+ Add Plan",
                                     "text-addoffplan":"+ Add OFF",
+                                    "text-memberadd":"회원<br>추가",
+                                    "text-memberadd_full":"회원 추가",
+                                    "text-memberreadd":"재등록",
                                     "text-todayplan":"Day Cal.",
                                     "text-weekplan" :"Week Cal.",
                                     "text-monthplan":"Month Cal.",
@@ -216,7 +274,19 @@ var multi_language_set = {
                                     "text-yes":"Yes",
                                     "text-no":"No",
                                     "text-ok":"Ok",
+                                    "text-cancel":"취소",
+                                    "text-delete":"삭제",
                                     "text-close":"Close",
+
+                                    "text-inprogress":"진행중",
+                                    "text-finish":"종료",
+                                    "text-processend":"진행 완료",
+                                    "text-resume":"재개",
+                                    "text-refund":"환불",
+                                    "text-unconnect":"연결해제",
+                                    "text-connectrequest":"연결요청",
+
+                                    "text-sort":"Sort by",
 
                                     "text-plancomplete":"Complete",
                                     "text-plancancel":"Delete",
@@ -232,6 +302,17 @@ var multi_language_set = {
                                     "text-deletequestion-plan":"Are you sure to cancel the schedule?",
 
                                     "text-memberinfo":"Member Info.",
+                                    "text-ordernum":"순번",
+                                    "text-membername":"회원명",
+                                    "text-grouptype":"수강유형",
+                                    "text-memberid":"회원 ID",
+                                    "text-email":"이메일",
+                                    "text-regcount":"등록 횟수",
+                                    "text-remaincount":"남은 횟수",
+                                    "text-startdate":"시작일",
+                                    "text-enddate":"종료일",
+                                    "text-contact":"연락처",
+                                    "text-manage":"관리",
 
                                     "text-refresh":"Refresh",
                                     "text-zoomin":"Zoom in",
@@ -239,8 +320,8 @@ var multi_language_set = {
                                     "text-youcan-usecal":"Manage schedule by week calendar",
 
                                     "text-dd":"매일", "text-ww":"매주", "text-2w":"격주",
-                                    "text-sunday":"Sunday", "text-monday":"Monday","text-tuesday":"Tuesday","text-wednesday":"Wednesday","text-thursday":"Thursday","text-friday":"Friday","text-saturday":"Saturday",
-                                    "text-sundaymin":"SUN","text-mondaymin":"MON","text-tuesdaymin":"TUE","text-wednesdaymin":"WED","text-thursdaymin":"THU","text-fridaymin":"FRI","text-saturdaymin":"SAT",
+                                    "text-sunday":"Sunday", "text-monday":"Monday", "text-tuesday":"Tuesday", "text-wednesday":"Wednesday", "text-thursday":"Thursday", "text-friday":"Friday", "text-saturday":"Saturday",
+                                    "text-sundaymin":"SUN", "text-mondaymin":"MON", "text-tuesdaymin":"TUE", "text-wednesdaymin":"WED", "text-thursdaymin":"THU", "text-fridaymin":"FRI", "text-saturdaymin":"SAT",
                                     
                                     "text-footerdisplay":"none",
                                     "text-company":"About us",
@@ -293,9 +374,12 @@ $('.text-participants').text(multi_language_set[Options.language]["text-particip
 $('.text-completesign').text(multi_language_set[Options.language]["text-completesign"]);
 
 $('.text-ok').text(multi_language_set[Options.language]["text-ok"]);
+$('.text-cancel').text(multi_language_set[Options.language]["text-cancel"]);
+$('.text-delete').text(multi_language_set[Options.language]["text-delete"]);
 $('.text-yes').text(multi_language_set[Options.language]["text-yes"]);
 $('.text-no').text(multi_language_set[Options.language]["text-no"]);
 $('.text-close').text(multi_language_set[Options.language]["text-close"]);
+$('.text-register').text(multi_language_set[Options.language]["text-register"]);
 
 $('.text-deletequestion-plan').text(multi_language_set[Options.language]["text-deletequestion-plan"])
 $('.text-memberinfo').text(multi_language_set[Options.language]["text-memberinfo"]);
@@ -318,6 +402,28 @@ $('.text-lessonplan').html(multi_language_set[Options.language]["text-lessonplan
 $('.text-offplan').html(multi_language_set[Options.language]["text-offplan"]);
 $('.text-addoffplan').text(multi_language_set[Options.language]["text-addoffplan"]);
 $('.text-addlessonplan').text(multi_language_set[Options.language]["text-addlessonplan"]);
+
+//member_manage
+$('.text-memberadd').text(multi_language_set[Options.language]["text-memberadd"]);
+$('.text-processend').text(multi_language_set[Options.language]["text-processend"]);
+$('.text-resume').text(multi_language_set[Options.language]["text-resume"]);
+$('.text-refund').text(multi_language_set[Options.language]["text-refund"]);
+$('.text-unconnect').text(multi_language_set[Options.language]["text-unconnect"]);
+$('.text-connectrequest').text(multi_language_set[Options.language]["text-connectrequest"]);
+$('.text-memberadd_full').text(multi_language_set[Options.language]["text-memberadd_full"]);
+$('.text-memberreadd').text(multi_language_set[Options.language]["text-memberreadd"]);
+$('.text-sort').text(multi_language_set[Options.language]["text-sort"]);
+$('.text-ordernum').text(multi_language_set[Options.language]["text-ordernum"]);
+$('.text-membername').text(multi_language_set[Options.language]["text-membername"]);
+$('.text-grouptype').text(multi_language_set[Options.language]["text-grouptype"]);
+$('.text-memberid').text(multi_language_set[Options.language]["text-memberid"]);
+$('.text-email').text(multi_language_set[Options.language]["text-email"]);
+$('.text-regcount').text(multi_language_set[Options.language]["text-regcount"]);
+$('.text-remaincount').text(multi_language_set[Options.language]["text-remaincount"]);
+$('.text-startdate').text(multi_language_set[Options.language]["text-startdate"]);
+$('.text-enddate').text(multi_language_set[Options.language]["text-enddate"]);
+$('.text-contact').text(multi_language_set[Options.language]["text-contact"]);
+$('.text-manage').text(multi_language_set[Options.language]["text-manage"]);
 
 
 //Footer
