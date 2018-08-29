@@ -52,7 +52,7 @@ $(document).ready(function(){
     });
 
     $('.list_switch').click(function(){
-        $(this).addClass("list_switch_selected").siblings().removeClass("list_switch_selected")
+        $(this).addClass("list_switch_selected").siblings().removeClass("list_switch_selected");
     });
 
 
@@ -112,7 +112,7 @@ $(document).ready(function(){
                     memberListSet('finished','name','no',jsondata);
                 });
             }
-            alignType = 'name'
+            alignType = 'name';
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
@@ -952,7 +952,6 @@ $(document).ready(function(){
                     id_search_memberId = jsondata.idInfo;
                     id_search_memberSex = jsondata.sexInfo;
                     $('#id_username_info').val(jsondata.idInfo);
-                    console.log(jsondata.dbIdInfo);
                     $('#id_user_id').val(jsondata.dbIdInfo);
                     var selectore_memberSex = $('#memberSex .selectboxopt');
                     selectore_memberSex.removeClass('selectbox_checked');
@@ -1774,7 +1773,6 @@ function shiftMemberList(type){
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN');
     switch(type){
         case "current":
-        console.log('asdfsdf11')
             get_member_ing_list("callback", function(jsondata){
                 memberListSet('current','name','no',jsondata);
             });
@@ -1842,7 +1840,6 @@ function shiftPtGroupClassList(type){
                 var group_class_Html;
 
                 get_group_end_list("callback", function(jsondata){
-                    console.log(jsondata)
                     group_class_Html = group_class_ListHtml('finished', jsondata);
                     $('#finishedGroupList').html(group_class_Html);
                 }); //그룹 + 클래스
@@ -1986,8 +1983,6 @@ function grouptype_dropdown_set(grouplistJSON){
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
 function DataFormatting(jsondata){
-
-    console.log(jsondata)
 
     var countListResult = [];
     var nameListResult = [];
@@ -4858,7 +4853,6 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);

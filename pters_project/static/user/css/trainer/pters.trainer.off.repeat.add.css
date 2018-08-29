@@ -96,6 +96,7 @@ body{
 	margin-top: 10px;
 }
 
+
 .dateButton{
 	display: table-cell;
 	height: 100%;
@@ -103,8 +104,15 @@ body{
 	font-size: 14.5px;
 	text-align: center;
 	vertical-align: middle;
-	border-right: 1px solid #f4f4f4;
-	border-left: 1px solid #f4f4f4;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+}
+.dateButton:first-child{
+
+}
+.dateButton:last-child{
+	border-right: 1px solid #cccccc;
 }
 
 .dateButton_selected{

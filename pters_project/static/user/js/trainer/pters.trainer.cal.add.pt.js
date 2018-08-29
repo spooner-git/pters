@@ -1565,9 +1565,12 @@ function float_btn_addplan(option){
 function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     addTypeSelect = option;
     var bodywidth = window.innerWidth;
+    var window_height = $(window).height();
     var selector_page_addplan = $('#page-addplan');
     var selector_datepicker = $('#datepicker');
     var selector_datepicker_repeat_start = $('#datepicker_repeat_start');
+    var title_height = 47//$('#addpopup_pc_label_new').height();
+    var buttonwrap_height = 55//$('#page_addmember .member_info_PC_buttons_wrap').height();
 
     if(date != undefined){
         selector_datepicker.datepicker('setDate', date);
@@ -1619,8 +1622,15 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#calendar').css('height','0');
         $('#upbutton-x').attr('data-page','addplan');
     }else{
-        selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});
+        $('#page_addplan_input_wrap').css('height', window_height - 100 - title_height - buttonwrap_height);
+        var centerLoc = (($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop());
+        selector_page_addplan.show().css({'top':centerLoc,
+                                            'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())
+                                            });
+
+
+        /*selector_page_addplan.css({'display':'block','top':(($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-selector_page_addplan.outerWidth())/2+$(window).scrollLeft())});*/
         //disable_window_scroll();
     }
 
