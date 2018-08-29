@@ -136,11 +136,11 @@
                     {% csrf_token %}
                     <div id="idinput">
                         <img id="idimg" alt="피터스 아이디" src={% static_url "user/res/login/icon-user.png" %}>
-                        <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
+                        <input type="text" class="loginboxstyle form-control" name="username" id="username_id" placeholder="아이디" autofocus>
                     </div>
                     <div id="pwinput" style="margin-top:5%;">
                         <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
-                        <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
+                        <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
                     </div>
                     <div class="checkbox" style="margin-top:15px;margin-left:27px;">
                         <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
@@ -179,7 +179,6 @@
         <div class="button_next_view"><img src="/static/user/res/btn_next.png" style="transform: rotate(90deg);" onclick="goSlide(780)"></div>
         -->
     </div>
-
     <!--
     <div class="pters_login_promote_box_sub bg-light">
         <div>
@@ -348,6 +347,7 @@
         }
         var csrftoken = getCookie('csrftoken');
     </script>
+
 {% endblock %}
 
 <!--
