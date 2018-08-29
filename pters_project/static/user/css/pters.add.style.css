@@ -85,7 +85,7 @@ ul a{
 	max-width: 600px;
 	margin:0 auto;
 	padding-left: 12px;
-	border-bottom: 1px solid #cccccc;
+	border-bottom: 1px solid #eaeaea;
 	margin-top: 20px;
 }
 
@@ -602,6 +602,9 @@ ul a{
 #timeGraph{
 	position: relative;
 }
+.timegraph_display{
+	background-color: #eaeaea;
+}
 .timegraphtext{
 	font-size: 11px;
 	text-align: center;
@@ -663,7 +666,7 @@ ul a{
 	/*background: #cacaca;*/
 	background: #ffffff;
 	/*background: #282828;*/
-	border-left : 0.5px solid #f4f4f4;
+	border-left : 0.5px solid #eaeaea;
 }
 
 .colspan{
@@ -674,7 +677,7 @@ ul a{
 	display: inline-table;
 	height: 8px;
 	background: #ffffff;
-	border-left : 0.5px solid #f4f4f4;
+	border-left : 0.5px solid #eaeaea;
 }
 
 .tdgraph30{
@@ -1409,7 +1412,16 @@ option{
 		position: absolute;
 		width: 400px;
 		margin-bottom: 50px;
+		background:white;
 	}
+	#page_addplan_input_wrap{
+		border-top:  2px solid #cccccc;
+		border-bottom: 2px solid #cccccc;
+		overflow-y: auto;
+		position: relative;
+		max-height: 500px;
+	}
+
 
 	#page-addplan-pc{
 		position: absolute;
