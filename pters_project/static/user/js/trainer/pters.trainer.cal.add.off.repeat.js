@@ -154,12 +154,24 @@ $(document).ready(function(){
         position_absolute_addplan_if_mobile($('#repeatdurationsSelected'));
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-    $(document).on('click','#repeatdurationsSelected button',function(e){
+    $(document).on('click', '#repeatdurationsSelected button', function(){
         if(!$('#repeatstarttimesSelected button').hasClass('dropdown_selected')){
             $('.dropdown-backdrop').css('display','none');
             position_absolute_addplan_if_mobile($('#repeatstarttimesSelected'));
         }
-    })
+
+        if(bodywidth > 600){
+            scrollToDom_custom('#page_addplan_input_wrap', '#repeatdurationsSelected');
+            //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
+        }
+    });
+
+    $(document).on('click', '#repeatstarttimesSelected button', function(){
+        if(bodywidth > 600){
+            scrollToDom_custom('#page_addplan_input_wrap', '#repeatstarttimesSelected');
+            //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
+        }
+    });
 
 
 
