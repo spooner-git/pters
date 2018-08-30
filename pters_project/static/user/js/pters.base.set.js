@@ -1,11 +1,11 @@
 //플로팅 버튼 스크롤시 숨기기 Start
 var ts;
 var selector_body = $("body");
-selector_body.bind("touchstart",function(e){
+selector_body.bind("touchstart", function(e){
     ts = e.originalEvent.touches[0].clientY;
 });
 
-$(document).on("touchend",'html',function(e){
+$(document).on("touchend", 'html', function(e){
     var te = e.originalEvent.changedTouches[0].clientY;
     if(ts>te+5 && $('#mshade').css('z-index')<0){
         downTouchEvent();
@@ -25,35 +25,35 @@ $(window).keydown(function(event){
 
 
 function beforeSend(use, callback){
-    $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
-    $('.ajaxloadingPC').css('display','block')
+    $('#upbutton-check img').attr('src', '/static/user/res/ajax/loading.gif');
+    $('.ajaxloadingPC').css('display', 'block');
     if(use == "callback"){
-        callback()
+        callback();
     }
 }
 
 function completeSend(use, callback){
-    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-    $('.ajaxloadingPC').css('display','none');
+    $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+    $('.ajaxloadingPC').css('display', 'none');
     if(use == "callback"){
-        callback()
+        callback();
     }
 }
 
 function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
-        $("#float_btn_wrap").show()
+        $("#float_btn_wrap").show();
     }
 
 }
 function downTouchEvent(){
-    $("#float_btn_wrap").hide()
+    $("#float_btn_wrap").hide();
 
 }
 
 function sideGoPage(page){
     //$('.ajaxloadingPC').show()
-    location.href="/trainer/"+page+'/'
+    location.href="/trainer/"+page+'/';
 }
 
 
@@ -69,13 +69,13 @@ function shade_index(option){
     if(bodywidth > 600){
         if(option<0){
             if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
-                $('#pshade').css({'z-index':150,'display':'block'});
+                $('#pshade').css({'z-index':150, 'display':'block'});
             }else{
-                $('#pshade').css({'z-index':option,'display':'none'});
+                $('#pshade').css({'z-index':option, 'display':'none'});
             }
 
         }else{
-            $('#pshade').css({'z-index':option,'display':'block'});
+            $('#pshade').css({'z-index':option, 'display':'block'});
         }
 
     }else if(bodywidth <= 600){
@@ -85,38 +85,36 @@ function shade_index(option){
         var selector_memberInfoPopup = $('#memberInfoPopup');
         if(option<0){
             if(selector_page_addplan.css('display') == 'block'){
-                $('#mshade_popup').css({'display':'none','z-index':selector_page_addplan.css('z-index')});
+                $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addplan.css('z-index')});
             }else if(selector_page_addmember.css('display') == 'block'){
-                $('#mshade_popup').css({'display':'none','z-index':selector_page_addmember.css('z-index')});
+                $('#mshade_popup').css({'display':'none', 'z-index':selector_page_addmember.css('z-index')});
             }else{
-                $('#mshade_popup').css({'display':'none','z-index':option});
+                $('#mshade_popup').css({'display':'none', 'z-index':option});
             }
-            $('#mshade').css({'display':'none','z-index':option});
+            $('#mshade').css({'display':'none', 'z-index':option});
         }else{
             if(selector_page_addplan.css('display') == 'block'){
-                $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'),'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_page_addplan.css('z-index'), 'display':'block'});
             }
             if(selector_page_addmember.css('display') == 'block'){
-                $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'),'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_page_addmember.css('z-index'), 'display':'block'});
             }
             if(selector_float_btn_wrap.css('display')=='block' && !$('#float_btn').hasClass('rotate_btn')){
                 selector_float_btn_wrap.hide();
             }
             if(selector_memberInfoPopup.css('display')=='block'){
-                $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'),'display':'block'});
+                $('#mshade_popup').css({'z-index':selector_memberInfoPopup.css('z-index'), 'display':'block'});
             }
             if($('#cal_popup_planinfo').css('display')=="block"){
                 $('#mshade_popup').css({'display':'none'});
             }
-            $('#mshade').css({'z-index':option,'display':'block'});
+            $('#mshade').css({'z-index':option, 'display':'block'});
         }
     }
 }
 
 function show_caution_popup(messageHtml){
-    $('#base_popup_check_finished_member_notice .caution_message').html(                                                                            
-                                                                            messageHtml
-                                                                         )
+    $('#base_popup_check_finished_member_notice .caution_message').html(messageHtml);
     $('#base_popup_check_finished_member_notice').show();
     $('#shade_caution').show();
 }
@@ -144,30 +142,25 @@ function close_info_popup(option){
             enable_window_scroll();
         }
         //$('body').css('overflow-y','overlay');
-    }
-    else if(option =="cal_popup_plandelete"){
+    }else if(option =="cal_popup_plandelete"){
         $("#"+option).css({'display':'none'});
         if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
             shade_index(100);
-        }
-        else if($('#pshade').css('z-index')== 300 || $('#mshade').css('z-index') == 300){
+        }else if($('#pshade').css('z-index')== 300 || $('#mshade').css('z-index') == 300){
             shade_index(100);
-        }
-        else{
+        }else{
             shade_index(-100);
         }
         enable_window_scroll();
         //$('body').css('overflow-y','overlay');
-    }
-    else if(option =="page-addplan"){
-        $('#'+option).css('display','none');
-        $('#calendar').css('position','relative');
+    }else if(option =="page-addplan"){
+        $('#'+option).css('display', 'none');
+        $('#calendar').css('position', 'relative');
         $('.add_time_unit').removeClass('checked');
         shade_index(-100);
         enable_window_scroll();
-    }
-    else if(option =="cal_popup_repeatconfirm"){
-        $('#'+option).css('display','none');
+    }else if(option =="cal_popup_repeatconfirm"){
+        $('#'+option).css('display', 'none');
         //$('#calendar').css('position','relative')
         if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
             shade_index(100);
@@ -175,15 +168,14 @@ function close_info_popup(option){
             shade_index(-100);
         }
         if(bodywidth>=600){
-            $('#calendar').css('position','relative');
+            $('#calendar').css('position', 'relative');
         }else{
             //$('._calmonth').css({'height':'90%','position':'fixed'})
             //$('body').css('overflow-y','overlay');
         }
         enable_window_scroll();
-    }
-    else if(option = "cal_popup_plancheck"){
-        $('#'+option).css('display','none');
+    }else if(option == "cal_popup_plancheck"){
+        $('#'+option).css('display', 'none');
         shade_index(-100);
         enable_window_scroll();
     }
@@ -199,22 +191,22 @@ function toggleGroupParticipantsList(onoff){
             toggleGroupParticipants = 'on';
             //selector_grouopParticipants.animate({'height':'200px'},200);
             //$('#groupParticipants').css('height','200px')
-            selector_popup_btn_viewGroupParticipants_img.css('transform','rotate(180deg)');
+            selector_popup_btn_viewGroupParticipants_img.css('transform', 'rotate(180deg)');
             var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
             var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
             var group_schedule_id = selector_popup_btn_viewGroupParticipants.attr('group-schedule-id');
             $('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button');
-            get_group_plan_participants(group_schedule_id,'callback',function(jsondata){
+            get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
                 draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
-                selector_grouopParticipants.css({'height':'auto'})
+                selector_grouopParticipants.css({'height':'auto'});
                 completeSend();
             });
             break;
         case 'off':
             toggleGroupParticipants = 'off';
             selector_grouopParticipants.css({'height':0}).html('');
-            selector_popup_btn_viewGroupParticipants_img.css('transform','rotate(0deg)');
+            selector_popup_btn_viewGroupParticipants_img.css('transform', 'rotate(0deg)');
             break;
     }
 }
@@ -254,14 +246,12 @@ $(document).ready(function(){
         closeNav(); //Sidebar가 열렸을때 회색 영역을 터치해도 Sidebar가 닫힘
     });
 
-
-
     if($('meta[name="upperText"]').attr('content') == "main_trainer"){ //상단바에 텍스트 표시. 각 페이지의 Meta를 읽어와서 upperText를 셋팅
         //	 	  $('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
         var selector_uptext = $('#uptext');
         selector_uptext.text(upText);
-        $('.icon-bar').css('background-color','white');
-        selector_uptext.css({'color':'#fe4e65','font-size':'16px'});
+        $('.icon-bar').css('background-color', 'white');
+        selector_uptext.css({'color':'#fe4e65', 'font-size':'16px'});
     }else{
         //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
     }
@@ -289,7 +279,7 @@ $(document).ready(function(){
     $('#alarm button').click(function(){
         var bodywidth = window.innerWidth;
         /*$('#alarm').css('transform','translate(-50%,-200%)');*/
-        $('#alarm').css('height','0');
+        $('#alarm').css('height', '0');
         if(bodywidth>600){
             shade_index(-100);
         }else{
@@ -308,29 +298,29 @@ var currentMinute = date.getMinutes();
 
 
 var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
-var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate,'-')
+var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate, '-');
 var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate;
-var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
 if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
     lastDay[1] = 29;
 }else{
     lastDay[1] = 28;
-};
+}
 
 var multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
-        'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일',
-        "WeekSmpl":['일','월','화','수','목','금','토']
+        'SUN':'일요일', 'MON':'월요일', 'TUE':'화요일', 'WED':'수요일', 'THS':'목요일', 'FRI':'금요일', 'SAT':'토요일',
+        "WeekSmpl":['일', '월', '화', '수', '목', '금', '토']
     },
     'JPN':
         {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-            'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日',
-            "WeekSmpl":['日','月','火','水','木','金','土']
+            'SUN':'日曜日', 'MON':'月曜日', 'TUE':'火曜日', 'WED':'水曜日', 'THS':'木曜日', 'FRI':'金曜日', 'SAT':'土曜日',
+            "WeekSmpl":['日', '月', '火', '水', '木', '金', '土']
         },
     'ENG':
         {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-            'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat',
-            "WeekSmpl":['Sun','Mon','Tue','Wed','Ths','Fri','Sat']
+            'SUN':'Sun', 'MON':'Mon', 'TUE':'Tue', 'WED':'Wed', 'THS':'Thr', 'FRI':'Fri', 'SAT':'Sat',
+            "WeekSmpl":['Sun', 'Mon', 'Tue', 'Wed', 'Ths', 'Fri', 'Sat']
         }
 };
 
@@ -340,7 +330,7 @@ function remove_duplicate_in_list(arraylist){
     var list_removed_duplicate = [];
     var classlen = arraylist.length;
     for(var i=0; i<classlen; i++){
-        dict_remove_duplicated[arraylist[i]] = ""
+        dict_remove_duplicated[arraylist[i]] = "";
     }
     for(i in dict_remove_duplicated){
         list_removed_duplicate.push(i);
@@ -355,11 +345,11 @@ function remove_duplicate_compared_to(targetArray, compareArray){
     var resultArray = [];
     for(var i=0; i<len; i++){
         if(compareArray.indexOf(targetArray[i]) == -1 ){
-            resultArray.push(targetArray[i])
-        };
-    };
+            resultArray.push(targetArray[i]);
+        }
+    }
     return resultArray;
-};
+}
 
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
 function date_format_to_hangul(yyyymmdd){
@@ -372,11 +362,11 @@ function date_format_to_hangul(yyyymmdd){
         hangul_year = date.split('-')[0];
         hangul_month = date.split('-')[1];
         hangul_date = date.split('-')[2];
-        if(hangul_month.substr(0,1) == '0' && hangul_month.length == 2){
-            hangul_month = hangul_month.substr(1,2);
+        if(hangul_month.substr(0, 1) == '0' && hangul_month.length == 2){
+            hangul_month = hangul_month.substr(1, 2);
         }
-        if(hangul_date.substr(0,1) == '0' && hangul_date.length == 2){
-            hangul_date = hangul_date.substr(1,2);
+        if(hangul_date.substr(0, 1) == '0' && hangul_date.length == 2){
+            hangul_date = hangul_date.substr(1, 2);
         }
         hangul_result = hangul_year +'년 ' + hangul_month +'월 '+ hangul_date + '일';
 
@@ -384,24 +374,24 @@ function date_format_to_hangul(yyyymmdd){
         hangul_year = date.split('_')[0];
         hangul_month = date.split('_')[1];
         hangul_date = date.split('_')[2];
-        if(hangul_month.substr(0,1) == '0' && hangul_month.length == 2){
-            hangul_month = hangul_month.substr(1,2);
+        if(hangul_month.substr(0, 1) == '0' && hangul_month.length == 2){
+            hangul_month = hangul_month.substr(1, 2);
         }
-        if(hangul_date.substr(0,1) == '0' && hangul_date.length == 2){
-            hangul_date = hangul_date.substr(1,2);
+        if(hangul_date.substr(0, 1) == '0' && hangul_date.length == 2){
+            hangul_date = hangul_date.substr(1, 2);
         }
         hangul_result = hangul_year +'년 ' + hangul_month +'월 '+ hangul_date + '일';
 
     }else if(date.split('-').length==1 && date.length == 8){ //20180823
-        hangul_year = date.substr(0,4);
-        hangul_month = date.substr(4,2);
-        hangul_date = date.substr(6,2);
+        hangul_year = date.substr(0, 4);
+        hangul_month = date.substr(4, 2);
+        hangul_date = date.substr(6, 2);
 
-        if(hangul_month.substr(0,1) == '0' && hangul_month.length == 2){
-            hangul_month = hangul_month.substr(1,2);
+        if(hangul_month.substr(0, 1) == '0' && hangul_month.length == 2){
+            hangul_month = hangul_month.substr(1, 2);
         }
-        if(hangul_date.substr(0,1) == '0' && hangul_date.length == 2){
-            hangul_date = hangul_date.substr(1,2);
+        if(hangul_date.substr(0, 1) == '0' && hangul_date.length == 2){
+            hangul_date = hangul_date.substr(1, 2);
         }
         hangul_result = hangul_year +'년 ' + hangul_month +'월 '+ hangul_date + '일';
     }
@@ -416,11 +406,11 @@ function date_format_to_user_hangul(yyyy_mm_dd, minimize){
     if(minimize!=undefined){
         dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'-'+Number(yyyy_mm_dd.split(' ')[0].split('-')[2]);
         day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = yyyy_mm_dd.split(' ')[1].substr(0,5);
+        time = yyyy_mm_dd.split(' ')[1].substr(0, 5);
     }else{
         dates = yyyy_mm_dd.split(' ')[0].split('-')[0]+'년 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[1])+'월 '+Number(yyyy_mm_dd.split(' ')[0].split('-')[2])+'일';
         day =  ' ('+multiLanguage[Options.language].WeekSmpl[new Date(yyyy_mm_dd.split(' ')[0]).getDay()]+') ';
-        time = yyyy_mm_dd.split(' ')[1].substr(0,5);
+        time = yyyy_mm_dd.split(' ')[1].substr(0, 5);
     }
 
     return dates+day+time;
@@ -433,7 +423,7 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
     var mm   = '';
     var dd   = '';
     if(hanguldate!='None'){
-        var replaced =  hanguldate.replace(/년 |월 |일|:|_| /gi,'-').split('-');
+        var replaced =  hanguldate.replace(/년 |월 |일|:|_| /gi, '-').split('-');
         yyyy = String(replaced[0]);
         mm   = String(replaced[1]);
         dd   = String(replaced[2]);
@@ -452,7 +442,7 @@ function date_format_to_yyyymmdd(hanguldate, resultSplit){
 
 
 //20180511 을 2018-5-11, 2018/5/11 등 원하는 split
-function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
+function date_format_yyyymmdd_to_split(yyyymmdd, resultSplit){
     if(String(yyyymmdd).length==8){
         var yyyy = yyyymmdd.substr(0,4);
         var mm = yyyymmdd.substr(4,2);
@@ -463,7 +453,7 @@ function date_format_yyyymmdd_to_split(yyyymmdd,resultSplit){
 }
 
 //2018-05-11등을 2018.05.11, 2018/05/11 등 원하는 split
-function date_format_yyyymmdd_to_yyyymmdd_split(yyyymmdd,resultSplit){
+function date_format_yyyymmdd_to_yyyymmdd_split(yyyymmdd, resultSplit){
     var splitChar = yyyymmdd.substr(4,1);
     var yyyy = yyyymmdd.split(splitChar)[0];
     var mm = yyyymmdd.split(splitChar)[1];
@@ -487,7 +477,7 @@ function date_format_yyyy_m_d_to_yyyymmdd(yyyy_m_d){
 
 //2018-05-11 을 2018-5-11
 function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
-    var splitChar = yyyy_mm_dd.substr(4,1);
+    var splitChar = yyyy_mm_dd.substr(4, 1);
     var yyyy = String(yyyy_mm_dd.split(splitChar)[0]);
     var mm = Number(yyyy_mm_dd.split(splitChar)[1]);
     var dd = Number(yyyy_mm_dd.split(splitChar)[2]);
@@ -496,8 +486,7 @@ function date_format_yyyy_mm_dd_to_yyyy_m_d(yyyy_mm_dd, resultSplit){
 }
 
 
-
-function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d,resultSplit){
+function date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_m_d, resultSplit){
     var yyyy = '';
     var mm = '';
     var dd = '';
@@ -541,13 +530,14 @@ function time_format_to_hangul(timedata){
         hourText = '오전';
     }
     if(min<10){
-        min = '0'+min
+        min = '0'+min;
     }
     if(hour<10){
-        hour = '0'+hour
+        hour = '0'+hour;
     }
+    var hangul_time = hourText + ' ' + hour + '시 '+min+'분';
 
-    return hangul_time = hourText + ' ' + hour + '시 '+min+'분';
+    return hangul_time;
 }
 
 
@@ -572,23 +562,23 @@ function time_format_to_hangul2(timedata){
         hourText = '오전';
     }
     if(min<10){
-        min = '0'+min
+        min = '0'+min;
     }
     if(hour<10){
-        hour = '0'+hour
+        hour = '0'+hour;
     }
-
-    return hangul_time = hourText + ' ' + hour + ':'+min;
+    var hangul_time = hourText + ' ' + hour + ':'+min;
+    return hangul_time;
 }
 
 function time_h_m_to_hh_mm(time){
     var hour = Number(time.split(':')[0]);
     var min = Number(time.split(':')[1]);
     if(hour < 10){
-        var hour = '0' + Number(time.split(':')[0]);
+        hour = '0' + Number(time.split(':')[0]);
     }
     if(min < 10){
-        var min = '0' + Number(time.split(':')[1]);
+        min = '0' + Number(time.split(':')[1]);
     }
     return hour + ':' + min;
 }
@@ -602,7 +592,7 @@ function time_h_format_to_hh(time){
     return result;
 }
 
-//2018년 3월 29일 3:00 오후 --> 2018년 3월 29일 오후 3:00 
+//2018년 3월 29일 3:00 오후 --> 2018년 3월 29일 오후 3:00
 function db_datatimehangul_format_realign(dbhangul){
     var data = dbhangul.split(' ');
     var len = data.length;
@@ -625,7 +615,7 @@ function db_datatimehangul_format_realign(dbhangul){
 
 
 function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함)
-    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
         lastDay[1] = 29;
     }else{
@@ -643,7 +633,7 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
     var planEndHour = Number(planEndTime.split(':')[0]);
     var planEndMin  =        planEndTime.split(':')[1];
     var planDura = "0.5";
-    if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00 
+    if(Math.abs(Number(planEndMin) - Number(planMinute)) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
         if(planEndHour-planHour == 0){
             planDura = "0.5";
         }else if(planEndHour > planHour && Number(planEndMin)-Number(planMinute) == -30 ){
@@ -668,7 +658,7 @@ function calc_duration_by_start_end(planStartDate, planStartTime, planEndDate, p
 }
 
 function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate, planEndTime){ //반복일정 요약에 진행시간 계산 (시작시간이랑 종료시간으로 구함) // 분단위로 아웃풋
-    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
         lastDay[1] = 29;
     }else{
@@ -681,9 +671,9 @@ function calc_duration_by_start_end_2(planStartDate, planStartTime, planEndDate,
     var planHour    = Number(planStartTime.split(':')[0]);
     var planMinute  = Number(planStartTime.split(':')[1]);
 
-    var planETime = planEndTime
+    var planETime = planEndTime;
     if(planEndTime == "00:00:00"){
-        planETime = "24:00"
+        planETime = "24:00";
     }
     var planEDate   = Number(planEndDate.split('-')[2]);
     var planEndHour = Number(planETime.split(':')[0]);
@@ -719,9 +709,9 @@ function duration_number_to_hangul_minute(minute){
     if(minute < 60){
         nums_result = minute + ' 분';
     }else if(minute%60 == 0){
-        nums_result = minute/60+' 시간'
+        nums_result = minute/60+' 시간';
     }else { //125
-        nums_result = parseInt(minute/60)+ ' 시간 '+ (minute-60*parseInt(minute/60)) + '분'
+        nums_result = parseInt(minute/60)+ ' 시간 '+ (minute-60*parseInt(minute/60)) + '분';
     }
     return nums_result;
 }
@@ -743,7 +733,7 @@ function count_format_to_nnnn(rawData){
 function count_format_to_nnnn_Array(rawDataArray){
     var maxlen = String(Math.max.apply(null, rawDataArray)).length;
     var result = [];
-    for(var i=0;i<rawDataArray.length ;i++){
+    for(var i=0; i<rawDataArray.length; i++){
         var repeat =  Number(maxlen)-Number(String(rawDataArray[i]).length);
         var data = rawDataArray[i];
         for(var j=0; j<repeat; j++){
@@ -776,18 +766,18 @@ function startTime_to_hangul(options_starttime){
     var type_text;
     var time_text;
     if(type == 'A'){
-        type_text = '매 '
+        type_text = '매 ';
         if(time == '0'){
-            time_text = '정시에'    
+            time_text = '정시에';
         }else{
-            time_text = '시각 '+time+'분에'
+            time_text = '시각 '+time+'분에';
         }
     }else if(type == "E"){
-        type_text = ''
-        time_text = time+'분 간격으로'
+        type_text = '';
+        time_text = time+'분 간격으로';
     }
 
-    return type_text+time_text
+    return type_text+time_text;
 }
 
 
@@ -950,7 +940,7 @@ function scrollToDom(dom){
     if(dom != undefined){
         var offset = dom.offset();
         if(offset != undefined){
-            $('body, html').animate({scrollTop : offset.top-180},10);
+            $('body, html').animate({scrollTop : offset.top-180}, 10);
         }
     }
 }
@@ -959,27 +949,25 @@ function scrollToDom_custom(parentselector, dom){
     if($(dom) != undefined){
         var offset = $(dom).offset();
         if(offset != undefined){
-            $(parentselector).animate({scrollTop : offset.top},10);
-            console.log('asdfasdf')
+            $(parentselector).animate({scrollTop : offset.top}, 10);
         }
     }
 }
 
 function disable_window_scroll(){
     if(bodywidth < 600){
-       $('#calendar').css('position','fixed'); 
+       $('#calendar').css('position', 'fixed');
     }
-    
-    $('body, #calendar').on('scroll touchmove mousewheel',function(e){
+    $('body, #calendar').on('scroll touchmove mousewheel', function(e){
         e.preventDefault();
         e.stopPropagation();
         return false;
-    })
+    });
 }
 
 function enable_window_scroll(){
     if(bodywidth < 600){
-       $('#calendar').css('position','relative'); 
+       $('#calendar').css('position','relative');
     }
 
     $('body, #calendar').off('scroll touchmove mousewheel');
@@ -988,21 +976,21 @@ function enable_window_scroll(){
 function sumarray(array){
     var result = 0;
     for(var i=0; i<array.length; i++){
-        result = result+Number(array[i])
+        result = result+Number(array[i]);
     }
     return result;
 }
 
 //알림창에 얼마전에 뜬 알람인지 계산
 function date_calculator(yyyy_mm_dd_hh_mm_ss){
-    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss.split(' ')[0],''));
+    var yyyymmdd = Number(date_format_yyyy_m_d_to_yyyy_mm_dd(yyyy_mm_dd_hh_mm_ss.split(' ')[0], ''));
     var yyyy = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[0]);
     var mm = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[1]);
     var dd = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[0].split('-')[2]);
     var hh = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[0]);
     var mms = Number(yyyy_mm_dd_hh_mm_ss.split(' ')[1].split(':')[1]);
     var today = Number(todayYYYYMMDD);
-    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
+    var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
     var message = '';
     if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
         lastDay[1] = 29;
@@ -1028,7 +1016,7 @@ function date_calculator(yyyy_mm_dd_hh_mm_ss){
             message = (currentMinute - mms) + ' 분 전';
         }
     }
-    return message
+    return message;
 }
 //
 
@@ -1040,10 +1028,6 @@ function alarm_change_easy_read(data){ // data : 2018-04-11 02:00:00/2018-04-11 
     var timeDiff = endTime - startTime;
     return date_format_to_user_hangul(data.split('/')[0]) + ' ~ ' + data.split(' ')[2].substr(0, 5) + ' (' + timeDiff + ' 시간)';
 }
-
-
-
-
 
 
 ///////////////////////////////////////////////////여기서부터 회원모드!!///////////////////////////////////////////////////
@@ -1081,7 +1065,7 @@ function get_trainee_participate_group(use, callback){
         error:function(){
             console.log('server error');
         }
-    })
+    });
 }
 
 
@@ -1126,22 +1110,19 @@ function numberWithCommas(x) { //천단위 콤마 찍기
 }
 
 
-
-
 set_drag_drop_action_to_DOM('#page-addplan');
 set_drag_drop_action_to_DOM('#cal_popup_planinfo');
 set_drag_drop_action_to_DOM('#cal_popup_plancheck');
 set_drag_drop_action_to_DOM('#page_addmember');
-set_drag_drop_action_to_DOM('#memberInfoPopup_PC')
+set_drag_drop_action_to_DOM('#memberInfoPopup_PC');
 ///////////////skkim test//////////////////드래그앤 드랍 함수
-
+/*
 function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
     if(bodywidth > 600 ){
         $(targetSelector).mousedown(function(event){
             //event.stopPropagation();
-                var $this = $(this)
-                    
+                var $this = $(this);
 
                     $this.mouseup(function(event){
                         $this.css({'box-shadow':'unset'});
@@ -1158,7 +1139,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
                     var oriY = event.pageY;
 
                     $(document).on('mousemove', 'body', function(e){
-                        e.stopPropagation()
+                        e.stopPropagation();
                         var moveX = e.pageX;
                         var moveY = e.pageY;
 
@@ -1172,17 +1153,17 @@ function set_drag_drop_action_to_DOM(targetSelector){
                         var resultY = thisOriY - diffY;
 
                         if(Math.abs(diffX) > 10 || Math.abs(diffY) > 10){
-                            $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});   
+                            $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});
                         }
 
-                        $(targetSelector).css({'top':resultY+'px','left':resultX+'px'});
+                        $(targetSelector).css({'top':resultY+'px', 'left':resultX+'px'});
                         $(document).on('mouseup click', 'body', function(){
                             $(document).off('mousemove');
                         });
                     });
 
 
-                     $(document).on('click mouseup', 
+                     $(document).on('click mouseup',
                                     targetSelector+ ' textarea,'+
                                     targetSelector+ ' button,'+
                                     targetSelector+ ' input,'+
@@ -1195,17 +1176,102 @@ function set_drag_drop_action_to_DOM(targetSelector){
                                     targetSelector+ ' p'
                                     , function(){
                         $(document).off('mousemove');
-                    })
-                     $(document).on('mousedown mousemove', 
-                                    targetSelector+' canvas'
+                    });
+                     $(document).on('mousedown mousemove',
+                                    targetSelector+ ' canvas'
                                     , function(){
                         $(document).off('mousemove');
-                    })
-
-            
+                    });
         });
-    };
-};
+    }
+}
+*/
+
+function set_drag_drop_action_to_DOM(targetSelector){
+    //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
+    if(bodywidth > 600 ){
+        var click_state = 0;
+        $(targetSelector).mousedown(function(event){
+            //event.stopPropagation();
+            click_state = 0;
+            var click_time = setTimeout(function(){     var this_ori_top = Number($this.css('top').replace(/px/gi,""));
+                                                        var this_ori_left = Number($this.css('left').replace(/px/gi,""));
+                                                        click_state = 1;
+                                                        $this.animate({
+                                                                    "left": this_ori_left + 5 + "px",
+                                                                    "top": this_ori_top - 5 + "px"
+                                                        }, 70, function(){
+                                                            $this.animate({
+                                                                    "left": this_ori_left + "px",
+                                                                    "top": this_ori_top + "px"
+                                                            }, 70);
+                                                            $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});
+                                                        });
+                                                        
+                                                    }, 500);
+            var $this = $(this);
+            $this.mouseup(function(){
+                $this.css({'box-shadow':'unset'});
+                clearTimeout(click_time);
+            });
+
+            $this.mouseleave(function(){
+                $this.css({'box-shadow':'unset'});
+            });
+
+            var thisOriX = $this.offset().left;
+            var thisOriY = $this.offset().top;
+
+            var oriX = event.pageX;
+            var oriY = event.pageY;
+
+            $(document).on('mousemove', 'body', function(e){
+                if(click_state == 1){
+                    e.stopPropagation();
+                    var moveX = e.pageX;
+                    var moveY = e.pageY;
+
+                    var diffX = oriX - moveX;
+                    var diffY = oriY - moveY;
+
+                    var resultX = thisOriX - diffX;
+                    var resultY = thisOriY - diffY;
+
+                    if(Math.abs(diffX) > 10 || Math.abs(diffY) > 10){
+                        $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});
+                    }
+
+                    $(targetSelector).css({'top':resultY+'px', 'left':resultX+'px'});
+                    $(document).on('mouseup click', 'body', function(){
+                        $(document).off('mousemove');
+                    });
+                }
+            });
+
+
+            $(document).on('click mouseup',
+                            targetSelector+ ' textarea,'+
+                            targetSelector+ ' button,'+
+                            targetSelector+ ' input,'+
+                            targetSelector+ ' table,'+
+                            targetSelector+ ' span,'+
+                            targetSelector+ ' div,'+
+                            targetSelector+ ' img,'+
+                            targetSelector+ ' td,'+
+                            targetSelector+ ' tr,'+
+                            targetSelector+ ' p'
+                            , function(){
+                $(document).off('mousemove');
+            });
+            $(document).on('mousedown mousemove',
+                            targetSelector+ ' canvas'
+                            , function(){
+                $(document).off('mousemove');
+            });
+        });
+    }
+}
+
 
 
 //set_drag_drop_action_to_DOM_partial('#page-addplan',{grabHeight:'40px', grabWidth:'40px'});
@@ -1214,7 +1280,7 @@ function set_drag_drop_action_to_DOM(targetSelector){
 function set_drag_drop_action_to_DOM_partial(targetSelector, options){
     var $target = $(targetSelector);
     var $drag_bar = $(targetSelector+' .drag_drop_target');
-    set_hover_behavior_to_drag_drop_target('.drag_drop_target')
+    set_hover_behavior_to_drag_drop_target('.drag_drop_target');
 
     if(options == undefined){
         var options = {
@@ -1223,31 +1289,42 @@ function set_drag_drop_action_to_DOM_partial(targetSelector, options){
                         'grabZindex':'100',
                         'grabTop':'0',
                         'grabLeft':'0',
-                        'grabPosition':'absolute',
-                   }
+                        'grabPosition':'absolute'
+                   };
     }else{
-        if(options.grabPosition==undefined){options.grabPosition = 'absolute'};
-        if(options.grabWidth==undefined){options.grabWidth = '100%'};
-        if(options.grabHeight==undefined){options.grabHeight = '50px'};
-        if(options.grabTop==undefined){options.grabTop = '0'};
-        if(options.grabLeft==undefined){options.grabLeft = '0'};
-        if(options.grabZindex==undefined){options.grabZindex = '100'};
+        if(options.grabPosition==undefined){
+            options.grabPosition = 'absolute';
+        }
+        if(options.grabWidth==undefined)
+            {options.grabWidth = '100%';
+        }
+        if(options.grabHeight==undefined)
+            {options.grabHeight = '50px';
+        }
+        if(options.grabTop==undefined)
+            {options.grabTop = '0';
+        }
+        if(options.grabLeft==undefined)
+            {options.grabLeft = '0';
+        }
+        if(options.grabZindex==undefined)
+            {options.grabZindex = '100';
+        }
     }
-    
 
     if(bodywidth > 600){
         $(targetSelector).append('<div class="drag_drop_target" ' +
             'style="position:${options.grabPosition}; width:${options.grabWidth}; height:${options.grabHeight}; top:${options.grabTop}; left:${options.grabLeft}; z-index:${options.grabZindex}"> ' +
-            '</div>')
+            '</div>');
 
-        $(document).on('mousedown',targetSelector+' .drag_drop_target',function(event){
-            $target.css({'box-shadow':'1px 1px 5px 1px #fe4e65'});   
+        $(document).on('mousedown', targetSelector+' .drag_drop_target', function(event){
+            $target.css({'box-shadow':'1px 1px 5px 1px #fe4e65'});
 
-            $(document).on('mouseup',targetSelector+' .drag_drop_target',function(event){
+            $(document).on('mouseup', targetSelector+' .drag_drop_target', function(event){
                 $target.css({'box-shadow':'unset'});
             });
 
-            $(document).on('mouseleave',targetSelector+' .drag_drop_target',function(event){
+            $(document).on('mouseleave', targetSelector+' .drag_drop_target', function(event){
                 $target.css({'box-shadow':'unset'});
             });
 
@@ -1274,29 +1351,29 @@ function set_drag_drop_action_to_DOM_partial(targetSelector, options){
                 $(document).on('mouseup click', 'body', function(){
                     $(document).off('mousemove');
                 });
-            });           
+            });
         });
-    };
-};
+    }
+}
 
 function set_hover_behavior_to_drag_drop_target(drag_drop_target){
     var $target = $(drag_drop_target);
-    $(document).on('mouseover',drag_drop_target,function(){
-        $(this).css({'background':'transparent','border':'1px solid #fe4e65'})
+    $(document).on('mouseover', drag_drop_target, function(){
+        $(this).css({'background':'transparent', 'border':'1px solid #fe4e65'});
     });
-    $(document).on('mouseout',drag_drop_target,function(){
-        $(this).css({'background':'transparent', 'border-color':'transparent'})
+    $(document).on('mouseout', drag_drop_target, function(){
+        $(this).css({'background':'transparent', 'border-color':'transparent'});
     });
 }
 
 ///////////////skkim test//////////////////드래그앤 드랍 함수
 
 function popup_locate_center_of_display(targetSelector){
-    var $targetSelector = $(targetSelector)
+    var $targetSelector = $(targetSelector);
     if(bodywidth > 600){
-        $targetSelector.css({'display':'block','top':(($(window).height()-$targetSelector.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$targetSelector.outerWidth())/2+$(window).scrollLeft())});
+        $targetSelector.css({'display':'block', 'top':(($(window).height()-$targetSelector.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-$targetSelector.outerWidth())/2+$(window).scrollLeft())});
     }else{
-        $targetSelector.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+        $targetSelector.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
     }
 }
 
@@ -1333,7 +1410,7 @@ function clear_badge_counter(){
             //alert('error clear_badge_counter')
             //console.log('error:clear_badge_counter')
         }
-    })
+    });
 }
 
 function update_push_token(token, device_id) {
@@ -1351,7 +1428,7 @@ function update_push_token(token, device_id) {
 
         //통신성공시 처리
         success:function(){
-            console.log('토큰 등록 완료')
+            console.log('토큰 등록 완료');
         },
 
         //보내기후 팝업창 닫기
@@ -1393,7 +1470,6 @@ function body_position_fixed_set(){
     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
         $('body').addClass('bodyfixed');
     }
-    
 }
 function body_position_fixed_unset(){
     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
