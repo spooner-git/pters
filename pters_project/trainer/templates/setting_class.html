@@ -144,14 +144,19 @@
 {#                }#}
 
                 $('#popup_delete_btn_yes').click(function(){
-                    ajax_del_lecture_info(class_id)
-                    $(this).parents('.popups').hide()
+                    console.log("btn_yes")
+                    ajax_del_lecture_info(class_id);
+                    $(this).parents('.popups').hide();
                     $('#shade').hide()
+                    $("#popup_delete_btn_yes").off()
+                    $('#popup_delete_btn_no, .popup_close_x_button').off()
                 })
 
                 $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
                     $(this).parents('.popups').hide()
                     $('#shade').hide()
+                    $("#popup_delete_btn_yes").off()
+                    $('#popup_delete_btn_no, .popup_close_x_button').off()
                 })
             }
             
