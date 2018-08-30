@@ -512,6 +512,7 @@ $(document).on('click', '._groupmanage img._info_delete', function(e){
             group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'));
         }
         group_delete_JSON.group_id = group_id;
+        shade_index(150);
     }else{
         alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.');
     }
@@ -1557,7 +1558,7 @@ $(document).on('click','img.substract_groupMember',function(e){
     $('#cal_popup_plandelete').css('display','block');
     $('#popup_delete_question').text(`${groupname}에서 ${groupmember_name}님을 제외 하시겠습니까?`);
     deleteTypeSelect = "groupMember_Substract_From_Group";
-
+    shade_index(150);
 });
 
 $('#popup_delete_btn_yes').click(function(){
