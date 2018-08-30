@@ -149,7 +149,11 @@ function close_info_popup(option){
         $("#"+option).css({'display':'none'});
         if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
             shade_index(100);
-        }else{
+        }
+        else if($('#pshade').css('z-index')== 300 || $('#mshade').css('z-index') == 300){
+            shade_index(100);
+        }
+        else{
             shade_index(-100);
         }
         enable_window_scroll();

@@ -298,6 +298,7 @@ $(document).ready(function(){
         //$('.confirmPopup').fadeIn('fast');
         $('#cal_popup_plandelete').show();
         $('#shade3').show('fast');
+        shade_index(150);
     })
 
     //PC & Mobile 회원삭제버튼 (회원정보창에서)
@@ -305,7 +306,8 @@ $(document).ready(function(){
         //$('.confirmPopup').fadeIn('fast');
         deleteTypeSelect = "memberinfodelete";
         $('#cal_popup_plandelete').show();
-        $('#popup_delete_question').text('정말 회원님을 삭제하시겠습니까?')
+        $('#popup_delete_question').html('정말 회원님을 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
+        shade_index(300);
     })
 
 

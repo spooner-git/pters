@@ -404,8 +404,8 @@ $('.text-addoffplan').text(multi_language_set[Options.language]["text-addoffplan
 $('.text-addlessonplan').text(multi_language_set[Options.language]["text-addlessonplan"]);
 
 //member_manage
-$('.text-memberadd').text(multi_language_set[Options.language]["text-memberadd"]);
-$('.text-processend').text(multi_language_set[Options.language]["text-processend"]);
+$('.text-memberadd').html(multi_language_set[Options.language]["text-memberadd"]);
+$('.text-processend').html(multi_language_set[Options.language]["text-processend"]);
 $('.text-resume').text(multi_language_set[Options.language]["text-resume"]);
 $('.text-refund').text(multi_language_set[Options.language]["text-refund"]);
 $('.text-unconnect').text(multi_language_set[Options.language]["text-unconnect"]);
