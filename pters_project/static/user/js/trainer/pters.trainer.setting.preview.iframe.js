@@ -1979,32 +1979,28 @@ $(document).ready(function(){
         var plan_time = [];
 
         //중복 제거 (그룹 일정때문에 중복으로 들어오는 것들)
-        var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
-        var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
-        var groupTimeArray_start_date_ = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
-        var groupTimeArray_end_date_ = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
-        var groupTimeArray_start_date = remove_duplicate_compared_to(groupTimeArray_start_date_, jsondata.offTimeArray_start_date)
-        var groupTimeArray_end_date = remove_duplicate_compared_to(groupTimeArray_end_date_, jsondata.offTimeArray_end_date)
+        var all_start_date_time;
+        var all_end_date_time;
+        all_start_date_time = jsondata.classTimeArray_start_date.concat(jsondata.group_schedule_start_datetime);
+        all_end_date_time = jsondata.classTimeArray_end_date.concat(jsondata.group_schedule_end_datetime);
+        all_start_date_time = all_start_date_time.concat(jsondata.offTimeArray_start_date);
+        all_end_date_time = all_end_date_time.concat(jsondata.offTimeArray_end_date);
 
-        calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
-        calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
-        calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date)
-
-        function calc_and_make_plan_time(startArray, endArray){
-            for(var i=0; i<startArray.length; i++){
-                var plan_start_date = startArray[i].split(' ')[0];
-                var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
-                var plan_end_date = endArray[i].split(' ')[0];
-                var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
-
-                if(plan_start_date == selecteddate){
-                    plan_time.push(plan_start_time);
-                }
-                if(plan_end_date == selecteddate && plan_end_time != "00:00"){
-                    plan_time.push(plan_end_time);
-                }else if(plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate,1),'-') && plan_end_time == "00:00"){
-                    plan_time.push('24:00');
-                }
+        var disable_time_array_start_date = remove_duplicate_in_list(all_start_date_time);
+        var disable_time_array_end_date = remove_duplicate_in_list(all_end_date_time);
+        // calc_and_make_plan_time(disable_time_array_start_date, disable_time_array_end_date);
+        for(var i=0; i<disable_time_array_start_date.length; i++){
+            var plan_start_date = disable_time_array_start_date[i].split(' ')[0];
+            var plan_start_time = disable_time_array_start_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_start_date[i].split(' ')[1].split(':')[1];
+            var plan_end_date = disable_time_array_end_date[i].split(' ')[0];
+            var plan_end_time = disable_time_array_end_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_end_date[i].split(' ')[1].split(':')[1];
+            if(plan_start_date == selecteddate){
+                plan_time.push(plan_start_time);
+            }
+            if (plan_end_date == selecteddate && plan_end_time != "00:00") {
+                plan_time.push(plan_end_time);
+            } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate, 1), '-') && plan_end_time == "00:00") {
+                plan_time.push('24:00');
             }
         }
 
@@ -2016,28 +2012,36 @@ $(document).ready(function(){
         //}
 
         var sortedlist = plan_time.sort();
+
         //all_plans = sortedlist;
         //index 사이 1-2, 3-4, 5-6, 7-8, 9-10, 11-12, 13-14
-        var semiresult = []
+        var semiresult = [];
         for(var p=0; p<sortedlist.length/2; p++){
             var zz = 0;
             //일정 시작시간이 일정 종료시간보다 작으면,
-            if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
-                compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
-                
-                while(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)) != add_time(sortedlist[p*2+1],'0:01')){
-                    if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false && compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false ){
-                        semiresult.push(add_time(sortedlist[p*2],'0:'+zz))
-                    }
-                    zz++
-                    if(zz>1450){ //하루 24시간 --> 1440분
-                        alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.')
-                        break;
-                    }
+            // if(compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00')) ==false &&
+            //     compare_time( add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(workEndTime_ ,'00:00')) == false  ){
 
+            // while 조건 : 검사하는 시작시각이 이미 존재하는 일정의 시작시각보다 작을때 동작
+            while(!compare_time(add_time(sortedlist[p*2],'0:'+Number(zz+Timeunit)), add_time(sortedlist[p*2+1],'0:00'))){
+                // 업무 시작시각보다 큰 시작사각만 추가
+                if( compare_time( workStartTime_, add_time(sortedlist[p*2],'0:'+zz) ) == false){
+                    // 업무 종료시각 - Timeunit 보다 작은 시작시각만 추가
+                    if (compare_time( add_time(sortedlist[p*2],'0:'+zz), substract_time(workEndTime_, `00:${Timeunit}`) ) ==false){
+                        semiresult.push(add_time(sortedlist[p*2],'0:'+zz));
+                    }
+                }
+                // Timeunit 만큼 더해준다.
+                zz += 1;
+                // 방어 코드
+                if(zz>1450){ //하루 24시간 --> 1440분
+                    alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
+                    break;
                 }
 
             }
+
+            // }
         }
 
         //offAddOkArray = []
@@ -2080,15 +2084,18 @@ $(document).ready(function(){
             }
         }
         allplans = [];
+        // 업무 시작시각과 종료시각에만 영향 가도록 변경 -> side effect 줄이기 위해
         for(var j=0; j<sortedlist.length; j++){
-            if(sortedlist[j] == "00:00"){
-                allplans.push(workStartTime_)
-            }else if(sortedlist[j] == "24:00"){
-                allplans.push(workEndTime_)
+            if(j==0) {
+                // if(sortedlist[j] == "00:00"){
+                allplans.push(workStartTime_);
+            }else if(j==sortedlist.length-1){
+            // }else if(sortedlist[j] == "24:00"){
+                allplans.push(workEndTime_);
             }else{
-                allplans.push(sortedlist[j])
-            };
-        };
+                allplans.push(sortedlist[j]);
+            }
+        }
         return {"addOkArray":addOkArrayList, "allplans":sortedlist}
     }
 

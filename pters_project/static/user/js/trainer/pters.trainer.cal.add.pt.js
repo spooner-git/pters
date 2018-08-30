@@ -2363,7 +2363,21 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray ì±
 
     var disable_time_array_start_date = remove_duplicate_in_list(all_start_date_time);
     var disable_time_array_end_date = remove_duplicate_in_list(all_end_date_time);
-    calc_and_make_plan_time(disable_time_array_start_date, disable_time_array_end_date);
+    // calc_and_make_plan_time(disable_time_array_start_date, disable_time_array_end_date);
+    for(var i=0; i<disable_time_array_start_date.length; i++){
+        var plan_start_date = disable_time_array_start_date[i].split(' ')[0];
+        var plan_start_time = disable_time_array_start_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_start_date[i].split(' ')[1].split(':')[1];
+        var plan_end_date = disable_time_array_end_date[i].split(' ')[0];
+        var plan_end_time = disable_time_array_end_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_end_date[i].split(' ')[1].split(':')[1];
+        if(plan_start_date == selecteddate){
+            plan_time.push(plan_start_time);
+        }
+        if (plan_end_date == selecteddate && plan_end_time != "00:00") {
+            plan_time.push(plan_end_time);
+        } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate, 1), '-') && plan_end_time == "00:00") {
+            plan_time.push('24:00');
+        }
+    }
 
     // var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
     // var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
@@ -2376,22 +2390,22 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray ì±
     // calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
     // calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date);
 
-    function calc_and_make_plan_time(startArray, endArray){
-        for(var i=0; i<startArray.length; i++){
-            var plan_start_date = startArray[i].split(' ')[0];
-            var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
-            var plan_end_date = endArray[i].split(' ')[0];
-            var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
-            if(plan_start_date == selecteddate){
-                plan_time.push(plan_start_time);
-            }
-            if (plan_end_date == selecteddate && plan_end_time != "00:00") {
-                plan_time.push(plan_end_time);
-            } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate, 1), '-') && plan_end_time == "00:00") {
-                plan_time.push('24:00');
-            }
-        }
-    }
+    // function calc_and_make_plan_time(startArray, endArray){
+    //     for(var i=0; i<startArray.length; i++){
+    //         var plan_start_date = startArray[i].split(' ')[0];
+    //         var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
+    //         var plan_end_date = endArray[i].split(' ')[0];
+    //         var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
+    //         if(plan_start_date == selecteddate){
+    //             plan_time.push(plan_start_time);
+    //         }
+    //         if (plan_end_date == selecteddate && plan_end_time != "00:00") {
+    //             plan_time.push(plan_end_time);
+    //         } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate, 1), '-') && plan_end_time == "00:00") {
+    //             plan_time.push('24:00');
+    //         }
+    //     }
+    // }
 
     //if(plan_time.indexOf("00:00") < 0){
         plan_time.push("00:00");
