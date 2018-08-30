@@ -946,7 +946,17 @@ function scrollToDom(dom){
     if(dom != undefined){
         var offset = dom.offset();
         if(offset != undefined){
-            $('body, html').animate({scrollTop : offset.top-180},10)
+            $('body, html').animate({scrollTop : offset.top-180},10);
+        }
+    }
+}
+
+function scrollToDom_custom(parentselector, dom){
+    if($(dom) != undefined){
+        var offset = $(dom).offset();
+        if(offset != undefined){
+            $(parentselector).animate({scrollTop : offset.top},10);
+            console.log('asdfasdf')
         }
     }
 }

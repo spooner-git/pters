@@ -1302,6 +1302,13 @@ option{
 	.pters_dropdown_custom_list div:first-child{
 		display: none;
 	}
+	.pters_dropdown_custom_list li{
+		height: 35px;
+	}
+	.pters_dropdown_custom_list li a{
+		line-height: 35px;
+		padding: 0;
+	}
 
 	.dropdown-backdrop{
 		background-color: unset;
@@ -1410,18 +1417,18 @@ option{
 
 	#page-addplan{
 		position: absolute;
-		width: 400px;
+		width: 500px;
 		margin-bottom: 50px;
 		background:white;
 	}
+
 	#page_addplan_input_wrap{
 		border-top:  2px solid #cccccc;
 		border-bottom: 2px solid #cccccc;
-		overflow-y: auto;
+		overflow-y: scroll;
 		position: relative;
 		max-height: 500px;
 	}
-
 
 	#page-addplan-pc{
 		position: absolute;

@@ -1011,13 +1011,25 @@ $(document).ready(function(){
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
 
-    $(document).on('click','#page-addplan #durationsSelected button',function(e){
+    $(document).on('click', '#page-addplan #durationsSelected button', function(){
         if($('#durations li').length == 0){
-            $('.dropdown-backdrop').css('display','none');
+            $('.dropdown-backdrop').css('display', 'none');
             position_absolute_addplan_if_mobile($('#starttimesSelected'));
         }
-        $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
+
+        
+        if(bodywidth > 600){
+            scrollToDom_custom('#page_addplan_input_wrap', '#durationsSelected');
+            //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
+        }
     });
+
+    $(document).on('click', '#starttimesSelected button', function(){
+        if(bodywidth > 600){
+            scrollToDom_custom('#page_addplan_input_wrap', '#durationsSelected');
+            //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
+        }
+    })
 
 
     //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
@@ -3345,7 +3357,7 @@ function position_fixed_addplan_if_mobile(){
 }
 function position_absolute_addplan_if_mobile(scrolltoDom){
     if(bodywidth < 600){
-        $('#page-addplan').css('position','absolute');
+        $('#page-addplan').css('position', 'absolute');
         scrollToDom(scrolltoDom);
     }
 }
