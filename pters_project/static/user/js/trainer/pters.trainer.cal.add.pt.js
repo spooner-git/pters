@@ -1026,10 +1026,10 @@ $(document).ready(function(){
 
     $(document).on('click', '#starttimesSelected button', function(){
         if(bodywidth > 600){
-            scrollToDom_custom('#page_addplan_input_wrap', '#durationsSelected');
+            scrollToDom_custom('#page_addplan_input_wrap', '#starttimesSelected');
             //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
         }
-    })
+    });
 
 
     //드랍다운에서 가속도 스크롤을 같은방향으로 더 튕겼을때 드랍다운 멈추는 형상 해결
