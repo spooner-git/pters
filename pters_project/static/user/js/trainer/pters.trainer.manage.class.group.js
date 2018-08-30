@@ -112,6 +112,12 @@ $('button#addByList, button#addBySearch').click(function(e){
     e.stopPropagation()
     
     if(!$(this).hasClass('disabled_button')){
+        shade_index(400);
+        var page_add_member_popup_top = $('#page_addmember').css('top').replace('px', '');
+        var page_add_member_popup_width = $('#page_addmember').css('width');
+        page_add_member_popup_top = Number(page_add_member_popup_top) + 40;
+        $('#subpopup_addByList').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
+        $('#subpopup_addBySearch').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
         $(this).siblings('button').addClass('disabled_button');
         $('#subpopup_'+$(this).attr('id')).show();
         if($(this).attr('id')=="addByList"){
@@ -127,6 +133,11 @@ $(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEM
     if($('#subpopup_addByList').css('display') == "block"){
         $('#subpopup_addByList').hide()
         $('.groupMemberAddBox button').removeClass('disabled_button');
+        if($('#pshade').css('z-index')==400) {
+            shade_index(300);
+        }else{
+            shade_index(-100);
+        }
     }
 })
 
@@ -366,6 +377,11 @@ $('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(fun
         $('#searchedMemberListBox').html('')
         $('#addBySearch_input').val('')
         $('.groupMemberAddBox button').removeClass('disabled_button');
+        if($('#pshade').css('z-index')==400) {
+            shade_index(300);
+        }else{
+            shade_index(-100);
+        }
     }
 })
 
