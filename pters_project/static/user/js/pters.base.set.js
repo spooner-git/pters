@@ -1194,8 +1194,9 @@ function set_drag_drop_action_to_DOM(targetSelector){
         $(targetSelector).mousedown(function(event){
             //event.stopPropagation();
             click_state = 0;
-            var click_time = setTimeout(function(){     var this_ori_top = Number($this.css('top').replace(/px/gi,""));
-                                                        var this_ori_left = Number($this.css('left').replace(/px/gi,""));
+            var click_time = setTimeout(function(){
+                                                        var this_ori_top = Number($this.css('top').replace(/px/gi, ""));
+                                                        var this_ori_left = Number($this.css('left').replace(/px/gi, ""));
                                                         click_state = 1;
                                                         $this.animate({
                                                                     "left": this_ori_left + 5 + "px",
@@ -1207,7 +1208,6 @@ function set_drag_drop_action_to_DOM(targetSelector){
                                                             }, 70);
                                                             $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});
                                                         });
-                                                        
                                                     }, 500);
             var $this = $(this);
             $this.mouseup(function(){
