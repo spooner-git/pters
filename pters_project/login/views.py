@@ -151,7 +151,7 @@ def logout_trainer(request):
     if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name
                          + '[' + str(request.user.id) + ']' + error)
-    return redirect('/')
+    return redirect('/login/')
 
 
 # 회원가입 api
