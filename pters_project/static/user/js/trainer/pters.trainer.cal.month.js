@@ -490,7 +490,9 @@ $(document).ready(function(){
                 }else if(deleteTypeSelect == "ptoffdelete"){
                     if(schedule_on_off==1){
                         //PT 일정 취소시
-                        send_plan_delete('pt','callback',function(){
+                        var dbid = $('#id_member_dbid_delete').val();
+                        var lecture_id = $("#id_lecture_id_delete").val();
+                        send_plan_delete('pt', 'callback', function(){
                             enable_delete_btns_after_ajax();
                             get_member_lecture_list(dbid, "callback", function(jsondata){
                                 var index = jsondata.lectureIdArray.indexOf(lecture_id);
@@ -504,7 +506,7 @@ $(document).ready(function(){
                         });
                     }else{
                         //OFF 일정 취소
-                        send_plan_delete('off','callback',function(){
+                        send_plan_delete('off', 'callback', function(){
                             enable_delete_btns_after_ajax();
                         })
                         $('#members_mobile, #members_pc').html('');

@@ -1858,8 +1858,6 @@ function set_group_dropdown_list(jsondata){
 
 
 
-
-
 function ajaxRepeatConfirmSend(use, callback){
     ajax_block_during_repeat_confirm = false;
     var serverURL;
