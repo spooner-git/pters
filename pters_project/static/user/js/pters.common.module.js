@@ -444,42 +444,54 @@
 
 //피터스 input 커스텀
 //placeholder는 회색으로, 사용자가 입력하면 검정색으로 바꾸기 (iphone때문에..)
-$('input').keyup(function(e){
-	var $this = $(this);
-	if($this.val().length > 0){
-		$this.css({
- 					"-webkit-text-fill-color":'#282828'
-		})
-	}else{
-		$this.css({
- 					"-webkit-text-fill-color":'#cccccc'
-		})
-	}
-});
+	$('input').keyup(function(e){
+		var $this = $(this);
+		if($this.val().length > 0){
+			$this.css({
+	 					"-webkit-text-fill-color":'#282828'
+			})
+		}else{
+			$this.css({
+	 					"-webkit-text-fill-color":'#cccccc'
+			})
+		}
+	});
 
-$('input').change(function(e){
-	var $this = $(this);
-	if($this.val().length > 0){
-		$this.css({
- 					"-webkit-text-fill-color":'#282828'
-		})
-	}else{
-		$this.css({
- 					"-webkit-text-fill-color":'#cccccc'
-		})
-	}
-});
+	$('input').change(function(e){
+		var $this = $(this);
+		if($this.val().length > 0){
+			$this.css({
+	 					"-webkit-text-fill-color":'#282828'
+			})
+		}else{
+			$this.css({
+	 					"-webkit-text-fill-color":'#cccccc'
+			})
+		}
+	});
 //피터스 input 커스텀
 
 //피터스 jqeury 미니달력 커스텀
 //날짜 선택하면 글씨를 검정색으로 바꾸기..
-/*
-$("p.datepicktext input").datepicker({
-    //minDate : 0,
-    onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
-    											
-    										}
- })
- */
+	/*
+	$("p.datepicktext input").datepicker({
+	    //minDate : 0,
+	    onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+	    											
+	    										}
+	 })
+	 */
  //문제 : 일정 등록시 날짜 선택이 동작 안함
 //피터스 jquery 미니달력 커스텀
+
+//피터스 팝업 화면 중앙 위치
+function locate_this_to_center(selector){
+	var $selector = $(selector);
+	var centerLoc = (($(window).height()-$selector.outerHeight())/2+$(window).scrollTop());
+	$selector.show().css({'top':centerLoc,
+	                      'left':(($(window).width()-$selector.outerWidth())/2+$(window).scrollLeft()),
+	                      "transform":"unset"
+	                     });
+}
+
+//피터스 팝업 화면 중앙 위치

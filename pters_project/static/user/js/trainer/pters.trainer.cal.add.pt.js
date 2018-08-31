@@ -1302,6 +1302,9 @@ $(document).ready(function(){
         var targetHTML = $('#repeat_reg_list');
         var duplicatedDate = jsondata.RepeatDuplicationDateArray;
         var successDate = jsondata.RepeatSuccessDateArray;
+        var dupli_len = duplicatedDate.length;
+        var succ_len = successDate.length;
+
         var title = `<div id="close_repeat_reg_list">
                             반복일정 등록 리스트
                             <span>닫기</span>
@@ -1310,7 +1313,7 @@ $(document).ready(function(){
                     </div>
                     <div class="repeat_list_wrapper">`;
         var htmlToJoin = [title];
-        var dupli_len = duplicatedDate.length;
+        
         for(var i=0; i<dupli_len; i++){
             htmlToJoin.push(
                                 `<div class="repeat_reg_list_row repeat_failed_bg">
@@ -1320,7 +1323,7 @@ $(document).ready(function(){
                             );
         }
 
-        var succ_len = successDate.length;
+        
         for(var j=0; j<succ_len; j++){
             htmlToJoin.push(
                                 `<div class="repeat_reg_list_row">
@@ -2229,7 +2232,8 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
             {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                 'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
     };
-    $('#cal_popup_repeatconfirm').css('display','block');
+    $('#cal_popup_repeatconfirm').css('display', 'block');
+    locate_this_to_center('#cal_popup_repeatconfirm');
     shade_index(200);
     var $id_repeat_freq ='';
     // var $id_repeat_start_date = '';
