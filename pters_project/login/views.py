@@ -526,7 +526,7 @@ class CheckMemberIdView(TemplateView):
         else:
             if form.is_valid():
                 if User.objects.filter(username=user_id).exists():
-                    self.error = '사용중인 아이디 입니다.'
+                    self.error = '사용 불가'
             else:
                 for field in form:
                     if field.errors:
@@ -543,7 +543,7 @@ class CheckMemberIdView(TemplateView):
         if self.error != '':
             self.error = self.error.replace("이름", "ID")
             if self.error == '해당 사용자 ID은 이미 존재합니다.':
-                self.error = '사용중인 이이디 입니다.'
+                self.error = '사용 불가'
 
         if self.error != '':
             context['error'] = self.error
@@ -564,12 +564,12 @@ class CheckMemberEmailView(TemplateView):
         else:
 
             if User.objects.filter(email=user_email).exists():
-                self.error = '사용중인 Email 입니다.'
+                self.error = '사용 불가'
 
             if self.error is None or self.error == '':
                 if form.is_valid():
                     if User.objects.filter(email=user_email).exists():
-                        self.error = '사용중인 Email 입니다.'
+                        self.error = '사용 불가'
                 else:
                     for field in form:
                         if field.errors:

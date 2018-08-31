@@ -1242,6 +1242,7 @@
 {#            $('.email_confirm').text('')#}
             var selector_email_input = $('#email_input');
             if(selector_email_input.val().length>0){
+                $('#id_email').attr('value', selector_email_input.val()+'@'+$(this).val());
                 check_email();
             }else{
                 $('#id_email').attr('value',"");
