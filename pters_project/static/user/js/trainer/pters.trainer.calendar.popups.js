@@ -75,7 +75,7 @@
 
 
 
-    $(document).on('click','div.classTime',function(e){ //일정을 클릭했을때 팝업 표시
+    $(document).on('click', 'div.classTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
         var info = $(this).attr('class-time').split('_');
         var yy=info[0];
@@ -179,6 +179,7 @@
             $("#id_member_name_finish").val($(this).attr('data-memberName')); //회원 이름 저장
             $('#id_member_dbid_finish').val($(this).attr('data-dbid'));//member id 정보 저장
             $("#id_repeat_member_id").val($(this).attr('data-dbid')); //member id 정보 저장
+            $('#id_lecture_id_delete').val($(this).attr('data-lectureId'));
             $("#id_repeat_lecture_id").val($(this).attr('data-lectureId')); //lecture id 정보 저장
             $("#id_lecture_id_modify").val($(this).attr('data-lectureId')); //lecture id 정보 저장
             $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
@@ -626,7 +627,7 @@
                     }
                     var groupid = $('#membersSelected button').attr('data-groupid');
                     get_groupmember_list(groupid, 'callback', function(jsondata){
-                        draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'))
+                        draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'));
                     });
                 });
 
@@ -639,13 +640,21 @@
             }else if(deleteTypeSelect == "ptoffdelete"){
                 if(schedule_on_off==1){
                     //PT 일정 삭제시
+                    var dbid = $('#id_member_dbid_delete').val();
+                    var lecture_id = $("#id_lecture_id_delete").val();
                     send_plan_delete('pt', 'callback', function(){
                         //ajax_block_during_delete_weekcal = true
                         enable_delete_btns_after_ajax();
+                        get_member_lecture_list(dbid, "callback", function(jsondata){
+                            var index = jsondata.lectureIdArray.indexOf(lecture_id);
+                            if(jsondata.remCountArray[index] == "1"){
+                                notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index]);
+                            }
+                        });
+                        $('#members_mobile, #members_pc').html('');
+                        get_current_member_list();
+                        get_current_group_list();
                     });
-                    $('#members_mobile, #members_pc').html('');
-                    get_current_member_list();
-                    get_current_group_list();
                 }else{
                     //OFF 일정 삭제
                     send_plan_delete('off', 'callback', function(){
@@ -688,6 +697,7 @@
             }
         }
     });
+
 /////////////////////////////////////////////////////////////////////////////////////////////삭제 확인 팝업
 
 
