@@ -3633,6 +3633,10 @@ function get_member_lecture_list(dbID, use, callback){
     })
 }
 
+function notice_lecture_status_changed_to_inprogress(lecturename){
+    show_caution_popup(`모든 횟수를 소진하여 자동 종료되었던<br> <span style="color:#fe4e65;font-weight:500";>수강정보 [${lecturename}]이</span> <br> <span style="color:green">진행중</span>으로 상태가 변경됩니다.<p></p>`);
+}
+
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
     var bodywidth = window.innerWidth;
