@@ -98,9 +98,9 @@
 
             <div class="outerbox">
                 <input type="text" name="" placeholder="새로운 ID" id="id_input" maxlength="20">
-                <button class="register_button" onclick="check_id();">중복 확인</button>
+{#                <button class="register_button" onclick="check_id();">중복 확인</button>#}
                 <span class="id_confirm"></span>
-                <p class="pw_notice">최소 4자이상 영문, 숫자 그리고 ./-/_만 가능합니다.</p>
+                <p class="pw_notice">최소 4자이상 영문, 숫자 그리고 @/./-/_만 가능합니다.</p>
             </div>
 
             <div class="outerbox">
@@ -116,7 +116,7 @@
                         <option id="self">직접 입력</option>
                     </select>
                 </div>
-                <button class="register_button" onclick="check_email();">중복 확인</button>
+{#                <button class="register_button" onclick="check_email();">중복 확인</button>#}
                 <span class="email_confirm" style="margin-top: 0;"></span>
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
             </div>
@@ -1029,12 +1029,12 @@
                 }else if(duplicate_check_email == 0){
                     alert('사용할 수 없는 email입니다.');
                 }else if(duplicate_check_email == 'none'){
-                    alert('email 중복을 확인해 주세요.');
+                    alert('email 정보를 확인해 주세요.');
                 }
             }else if(duplicate_check == 0){
                 alert('사용할 수 없는 아이디입니다.');
             }else if(duplicate_check == 'none'){
-                alert('id 중복을 확인해주세요.');
+                alert('id 정보를 확인해주세요.');
             }
         });
 
@@ -1107,6 +1107,20 @@
             var userinput = $(this).val();
             $('#id_username').attr('value',userinput);
             $form.find('#newid2').attr('value',userinput);
+            check_id();
+        });
+
+        $('#pw_input').keyup(function(){
+            $('#pw_input_re').val("");
+            $('.pw_confirm').css({'display':'none'});
+            $('#id_password1').attr('value',$('#pw_input').val());
+            $('#id_password2').attr('value',$('#pw_input').val());
+            if($(this).val().length>=8) {
+                check_password();
+            }
+            else{
+                $('.pw_confirm').text('8자 이상 입력').css({'display':'inline','color':'#fe4e65'});
+            }
         });
 
         $('#pw_input_re').keyup(function(){
@@ -1212,12 +1226,26 @@
 
         $('#email_input').keyup(function(){
             $('#email_duplicate_check').val('none');
-            $('.email_confirm').text('')
+{#            $('.email_confirm').text('')#}
             var selector_email_input_re = $('#email_input_re');
             if(selector_email_input_re.val().length>0){
                 $('#id_email').attr('value', $(this).val()+'@'+selector_email_input_re.val());
+                check_email();
             }else{
                 $('#id_email').attr('value',"");
+                $('.email_confirm').text('');
+            }
+        });
+
+        $('#email_input_re').keyup(function(){
+            $('#email_duplicate_check').val('none');
+{#            $('.email_confirm').text('')#}
+            var selector_email_input = $('#email_input');
+            if(selector_email_input.val().length>0){
+                check_email();
+            }else{
+                $('#id_email').attr('value',"");
+                $('.email_confirm').text('');
             }
         });
 
@@ -1242,10 +1270,19 @@
 
             if(selector_email_input.val().length>0){
                 $('#id_email').attr('value', selector_email_input.val()+'@'+selector_email_input_re.val());
+                if(selector_email_input_re.val().length>0){
+                    check_email();
+                }
+                else{
+                    $('.email_confirm').text('');
+                }
             }else{
                 $('#id_email').attr('value',"");
+                $('.email_confirm').text('');
             }
         });
+
+
 
         $('#birth_year, #birth_month, #birth_date').change(function(){
             //input_birth_to_form();
@@ -1341,7 +1378,7 @@
             var inputLimit = /^[A-Za-z]+[a-z0-9.-_]{3,19}$/g;
             var userIDinput = $('#id_input').val();
             if(inputLimit.test(userIDinput)!=true){
-                alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.');
+{#                alert('4자이상 20자 이내 영문과 숫자, 허용된 특수문자만 입력해주세요. \n 아이디는 반드시 영문으로 시작 해야합니다.');#}
                 $('.id_confirm').text('사용 불가').css({'display':'inline','color':'#fe4e65'});
                 $('#add-member-id-form').find('#id_duplicate_check').val(0);
             }else{
@@ -1423,7 +1460,42 @@
                 }
             })
         }
+        function check_password(){
+            var $form = $('#add-member-id-form');
+            var serializeArray = $form.serializeArray();
+            $.ajax({
+                url:'/login/check_member_password_form_validation/',
+                type:'POST',
+                data:serializeArray,
+                dataType : 'html',
 
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result;
+                    if(id_check_message[0].length>0){
+                        $('.pw_confirm').text(id_check_message[0]).css({'display':'inline','color':'#fe4e65'});
+
+                    }else{
+                        $('.pw_confirm').text('사용 가능 비밀번호').css({'display':'inline','color':'green'});
+
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패");
+                }
+            })
+        }
     </script>
 {% endblock %}
 

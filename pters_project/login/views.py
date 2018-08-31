@@ -615,6 +615,31 @@ class CheckMemberValidationView(View):
         return render(request, self.template_name, context)
 
 
+class CheckMemberPasswordValidationView(View):
+    template_name = 'ajax/id_check_ajax.html'
+    error = ''
+
+    def post(self, request):
+        context = {}
+        # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
+        form = RegistrationForm(self.request.POST, self.request.FILES)
+        if form.is_valid():
+            self.error = ''
+        else:
+            for field in form:
+                if field.errors:
+                    for err in field.errors:
+                        if self.error is None or self.error == '':
+                            if field.name == 'password2':
+                                self.error = err
+                        else:
+                            if field.name == 'password2':
+                                self.error += err
+        if self.error != '':
+            context['error'] = self.error
+        return render(request, self.template_name, context)
+
+
 class RegisterErrorView(TemplateView):
     template_name = 'ajax/registration_error_ajax.html'
 
