@@ -26,14 +26,18 @@ class MemberTbAdmin(admin.ModelAdmin):
                     'address', 'job', 'contents', 'reg_dt', 'mod_dt', 'use')
 
     def get_user_group(self, obj):
+        group_name = ''
         if obj.user is None:
             group_data = ''
         else:
-            try:
-                group_data = obj.user.groups.get(user=obj.user)
-            except ObjectDoesNotExist:
-                group_data = ''
-        return group_data
+            group_data = obj.user.groups.filter(user=obj.user)
+            for group_info in group_data:
+                if group_name == '':
+                    group_name = group_info.name
+                else:
+                    group_name += '/' + group_info.name
+
+        return group_name
     get_user_group.short_description = 'Group'
 
 
