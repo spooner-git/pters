@@ -20,8 +20,6 @@ $(document).ready(function(){
 
 
     //var select_all_check = false;
-    var offset_for_canvas;
-
     var date = new Date();
     var currentYear = date.getFullYear(); //현재 년도
     var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
@@ -1420,24 +1418,20 @@ $(document).ready(function(){
         x: -1,
         y: -1
     };
-    $('#popup_text0, #popup_btn_complete').click(function(){
-        setTimeout(function(){offset_for_canvas = $('#canvas').offset();}, 250);
-        //$('body').css({'overflow-y':'hidden'})
-        //$('#calendar').css({'position':'fixed'})
-    });
+
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext("2d");
 
 
-    canvas.addEventListener("mousedown",listener);
-    canvas.addEventListener("mousemove",listener);
-    canvas.addEventListener("mouseup",listener);
-    canvas.addEventListener("mouseout",listener);
-    canvas.addEventListener("touchstart",listener);
-    canvas.addEventListener("touchmove",listener);
-    canvas.addEventListener("touchend",listener);
-    canvas.addEventListener("touchcancel",listener);
+    canvas.addEventListener("mousedown", listener);
+    canvas.addEventListener("mousemove", listener);
+    canvas.addEventListener("mouseup", listener);
+    canvas.addEventListener("mouseout", listener);
+    canvas.addEventListener("touchstart", listener);
+    canvas.addEventListener("touchmove", listener);
+    canvas.addEventListener("touchend", listener);
+    canvas.addEventListener("touchcancel", listener);
 
     $("canvas").attr("width", 324).attr("height", 200);
     $(document).on('click', 'div.classTime, div.plan_raw, div.groupTime, #popup_btn_sign_close', function(){
@@ -1452,7 +1446,7 @@ $(document).ready(function(){
             case "touchstart":
                 initDraw(event);
                 selector_canvas.css({'border-color':'#fe4e65'});
-                selector_pupup_text0_popup_btn_complete.css({'color':'#ffffff','background':'#fe4e65'}).val('filled');
+                selector_pupup_text0_popup_btn_complete.css({'color':'#ffffff', 'background':'#fe4e65'}).val('filled');
                 break;
 
             case "touchmove":
@@ -1468,7 +1462,7 @@ $(document).ready(function(){
             case "mousedown":
                 initDraw(event);
                 selector_canvas.css({'border-color':'#fe4e65'});
-                selector_pupup_text0_popup_btn_complete.css({'color':'#ffffff','background':'#fe4e65'}).val('filled');
+                selector_pupup_text0_popup_btn_complete.css({'color':'#ffffff', 'background':'#fe4e65'}).val('filled');
                 break;
             case "mousemove":
                 if(pos.drawable){
@@ -1512,12 +1506,13 @@ $(document).ready(function(){
     function getPosition(event){
         var x;
         var y;
+        var offset_for_canvas__ = $('#canvas').offset();
         if(touch_or_mouse=="touch"){
-            x = event.touches[0].pageX - offset_for_canvas.left;
-            y = event.touches[0].pageY - offset_for_canvas.top;
+            x = event.touches[0].pageX - offset_for_canvas__.left;
+            y = event.touches[0].pageY - offset_for_canvas__.top;
         }else{
-            x = event.pageX - offset_for_canvas.left;
-            y = event.pageY - offset_for_canvas.top;
+            x = event.pageX - offset_for_canvas__.left;
+            y = event.pageY - offset_for_canvas__.top;
         }
         return {X:x, Y:y};
     }

@@ -956,7 +956,10 @@ function scrollToDom_custom(parentselector, dom){
 
 function disable_window_scroll(){
     if(bodywidth < 600){
-       $('#calendar').css('position', 'fixed');
+       //$('#calendar').css('position', 'fixed');
+       $('html, body').css({"overflow": "hidden",
+                            "position": "relative"
+                            });
     }
     $('body, #calendar').on('scroll touchmove mousewheel', function(e){
         e.preventDefault();
@@ -967,7 +970,10 @@ function disable_window_scroll(){
 
 function enable_window_scroll(){
     if(bodywidth < 600){
-       $('#calendar').css('position','relative');
+       //$('#calendar').css('position','relative');
+       $('html, body').css({"overflow": "unset",
+                            "position": "unset"
+                            });
     }
 
     $('body, #calendar').off('scroll touchmove mousewheel');
@@ -1468,11 +1474,11 @@ var csrftoken = getCookie('csrftoken');
 
 function body_position_fixed_set(){
     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('body').addClass('bodyfixed');
+        $('html, body').addClass('bodyfixed');
     }
 }
 function body_position_fixed_unset(){
     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('body').removeClass('bodyfixed');
+        $('html, body').removeClass('bodyfixed');
     }
 }
