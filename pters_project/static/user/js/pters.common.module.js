@@ -440,7 +440,7 @@
 
 //피터스 input 커스텀
 //placeholder는 회색으로, 사용자가 입력하면 검정색으로 바꾸기 (iphone때문에..)
-	$('input').keyup(function(e){
+	$(document).on('keyup', 'input', function(e){
 		var $this = $(this);
 		if($this.val().length > 0){
 			$this.css({
@@ -453,7 +453,7 @@
 		}
 	});
 
-	$('input').change(function(e){
+	$(document).on('change', 'input', function(e){
 		var $this = $(this);
 		if($this.val().length > 0){
 			$this.css({
