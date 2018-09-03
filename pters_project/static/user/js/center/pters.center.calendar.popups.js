@@ -432,7 +432,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////일정 완료 관련 이벤트
     //일정 완료
     $("#popup_btn_complete").click(function(){  //사인 전 일정 완료 버튼 클릭
-        body_position_fixed_unset();
+        //body_position_fixed_unset();
         $('#canvas, #canvasWrap').css('display','block');
         $('#inner_shade_planinfo').css('display','block');
         $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
@@ -505,7 +505,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////일정 취소 관련 이벤트
     //일정 취소
     $("#popup_btn_delete").click(function(){  //일정 취소 버튼 클릭
-        body_position_fixed_unset();
+        //body_position_fixed_unset();
         if(!$(this).hasClass('disabled_button')){
             if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
                 deleteTypeSelect = "groupptdelete";
@@ -524,12 +524,12 @@
     //미니 팝업 메모수정
     $('#popup_info3_memo_modify').click(function(){
         if($(this).attr('data-type') == "view"){
-            body_position_fixed_set();
+            //body_position_fixed_set();
             //$('html,body').css({'position':'fixed'})
             $('#popup_info3_memo').attr('readonly',false).css({'border':'1px solid #fe4e65'});
             $(this).attr({'src':'/static/user/res/btn-pt-complete.png','data-type':'modify'});
         }else if($(this).attr('data-type') == "modify"){
-            body_position_fixed_unset();
+            //body_position_fixed_unset();
             //$('html,body').css({'position':'relative'})
             $('#popup_info3_memo').attr('readonly',true).css({'border':'0'});
             $(this).attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
@@ -663,7 +663,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////이름 눌러 회원 정보 팝업 띄우기
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
     $(document).on('click','.memberNameForInfoView, .groupParticipantsRow span',function(){
-        body_position_fixed_unset();
+        //body_position_fixed_unset();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
         $('.popups').hide();
