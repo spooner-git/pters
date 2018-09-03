@@ -1196,10 +1196,16 @@ $(document).ready(function(){
                                             date += ','+RepeatDuplicationDateArray[i];
                                         }
                                     }
-                                    $('._repeatconfirmQuestion').text('총 '+total_count+' 건의 일정 중 '+RepeatDuplicationDateArray.length + '건의 일정이 겹칩니다.');
+                                    $('._repeatconfirmQuestion').text('총 '+jsondata.repeatScheduleCounterArray[0]+' 건의 일정이 등록됩니다.');
+                                    // $('._repeatconfirmQuestion').text('총 '+total_count+' 건의 일정 중 '+RepeatDuplicationDateArray.length + '건의 일정이 겹칩니다.');
                                     repeat_info = popup_repeat_confirm();
-                                    $('#repeat_confirm_day').text(date);
-                                    $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?');
+                                    var day_info = repeat_info.day_info;
+                                    var dur_info = jsondata.repeat_start_date + '~' + jsondata.repeat_end_date;
+                                    // $('#repeat_confirm_day').text(date);
+                                    // $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?');
+                                    // $('#repeat_confirm_day').text(day_info);
+                                    $('#repeat_confirm_day').text('등록불가 일정이 포함되어 있습니다.');
+                                    $('#repeat_confirm_dur').text(dur_info);
                                     $('#id_repeat_schedule_id_confirm').val(repeatArray);
                                     completeSend(); //ajax 로딩 이미지 숨기기
                                     shade_index(200);
@@ -1300,7 +1306,7 @@ $(document).ready(function(){
             htmlToJoin.push(
                                 `<div class="repeat_reg_list_row repeat_failed_bg">
                                     <div class="repeat_reg_list_cell">${duplicatedDate[i]}</div>
-                                    <div class="repeat_reg_list_cell"><img src="/static/user/res/member/icon-x-red.png" title="중복 일정">등록 실패</div>
+                                    <div class="repeat_reg_list_cell"><img src="/static/user/res/member/icon-x-red.png" title="중복 일정">등록 불가</div>
                                 </div>`
                             );
         }
