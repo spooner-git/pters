@@ -2203,7 +2203,6 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
                 'SUN':'Sun', 'MON':'Mon', 'TUE':'Tue', 'WED':'Wed', 'THS':'Thr', 'FRI':'Fri', 'SAT':'Sat'}
     };
     $('#cal_popup_repeatconfirm').css('display', 'block');
-    locate_this_to_center('#cal_popup_repeatconfirm');
     shade_index(200);
     var $id_repeat_freq ='';
     // var $id_repeat_start_date = '';
@@ -2245,6 +2244,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
         day_info : repeat_input_day_info
         // dur_info : repeat_input_dur_info
     };
+    locate_this_to_center('#cal_popup_repeatconfirm');
 }
 
 
