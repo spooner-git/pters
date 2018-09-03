@@ -642,6 +642,7 @@
                     //PT 일정 삭제시
                     var dbid = $('#id_member_dbid_delete').val();
                     var lecture_id = $("#id_lecture_id_delete").val();
+                    var member_name = $('#id_member_name_delete').val();
                     var data_prev;
                     get_member_lecture_list(dbid, "callback", function(jsondata){
                         var index = jsondata.lectureIdArray.indexOf(lecture_id);
@@ -653,7 +654,7 @@
                             get_member_lecture_list(dbid, "callback", function(jsondata){
                                 var index = jsondata.lectureIdArray.indexOf(lecture_id);
                                 if(jsondata.remCountArray[index] == "1" && data_prev == "0"){
-                                    notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index]);
+                                    notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index], member_name);
                                 }
                             });
                             $('#members_mobile, #members_pc').html('');
