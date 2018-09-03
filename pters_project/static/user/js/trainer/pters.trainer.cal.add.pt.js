@@ -1520,14 +1520,15 @@ $(document).ready(function(){
 
 
 function float_btn_addplan(option){
+    var $page_addplan = $('#page-addplan');
     if(option == 0){
         if($('#mshade').css('display')=='none'){
-            $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
-            $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
+            $('#float_inner1').animate({'opacity':'1', 'bottom':'85px'}, 120);
+            $('#float_inner2').animate({'opacity':'1', 'bottom':'145px'}, 120);
             $('#float_btn').addClass('rotate_btn');
             shade_index(100);
         }else{
-            $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+            $('#float_inner1,#float_inner2').animate({'opacity':'0', 'bottom':'25px'}, 10);
             $('#float_btn').removeClass('rotate_btn');
             shade_index(-100);
         }
@@ -1536,6 +1537,7 @@ function float_btn_addplan(option){
         clear_pt_off_add_popup();
         open_pt_off_add_popup('ptadd');
         ajaxTimeGraphSet(today_YY_MM_DD);
+        scrollToDom($page_addplan);
         shade_index(100);
         //scrollToDom($('#calendar'))
 
@@ -1545,6 +1547,7 @@ function float_btn_addplan(option){
         //addTypeSelect = "offadd"
         get_repeat_info("");
         ajaxTimeGraphSet(today_YY_MM_DD);
+        scrollToDom($page_addplan);
         shade_index(100);
         //scrollToDom($('#calendar'))
     }
