@@ -1250,7 +1250,6 @@ $(document).ready(function(){
     }
 
 
-
     function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래프 채우기
         //1. option인자 : "class", "off"
         //2. CSS테마인자 : "grey", "pink"
@@ -1473,8 +1472,6 @@ $(document).ready(function(){
                         }
                     }
                 }
-
-
 
             htmlToJoin.push('<div class="'+cssClass+'" style="width:'+planWidth+'px;left:'+planLoc+'px;top:'+timegraph_houroffsetb+'px;" data-type="'+type+'" data-typeg="'+Page+'"></div>')
 
