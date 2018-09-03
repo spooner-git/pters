@@ -1528,12 +1528,12 @@ $(document).ready(function(){
 function float_btn_addplan(option){
     if(option == 0){
         if($('#mshade').css('display')=='none'){
-            $('#float_inner1').animate({'opacity':'1','bottom':'85px'},120);
-            $('#float_inner2').animate({'opacity':'1','bottom':'145px'},120);
+            $('#float_inner1').animate({'opacity':'1', 'bottom':'85px'}, 120);
+            $('#float_inner2').animate({'opacity':'1', 'bottom':'145px'}, 120);
             $('#float_btn').addClass('rotate_btn');
             shade_index(100);
         }else{
-            $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+            $('#float_inner1,#float_inner2').animate({'opacity':'0', 'bottom':'25px'}, 10);
             $('#float_btn').removeClass('rotate_btn');
             shade_index(-100);
         }
@@ -1608,14 +1608,17 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
 
     $('#page-addplan-pc').css('display','none');
     $('.blankSelected').removeClass('blankSelected');
+
+    
     if(bodywidth <= 600){
         $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
-        selector_page_addplan.css('top',50);
+        selector_page_addplan.css('top', 50);
         $('#float_btn').removeClass('rotate_btn');
         $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
-        $('#calendar').css('height','0');
-        $('#upbutton-x').attr('data-page','addplan');
+        $('#calendar').css('height', '0');
+        $('#upbutton-x').attr('data-page', 'addplan');
+        scrollToDom(selector_page_addplan);
     }else{
         $('#page_addplan_input_wrap').css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop());
@@ -1630,8 +1633,9 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     }
 
     $('#page-addplan #timeGraph').show();
-
     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder'); //선택된 시간 반짝이
+
+    
     /*ajaxTimeGraphSet($('#datepicker').val(), function(){
      startTimeSet('class');
      })*/
@@ -2209,7 +2213,6 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
                 'SUN':'Sun', 'MON':'Mon', 'TUE':'Tue', 'WED':'Wed', 'THS':'Thr', 'FRI':'Fri', 'SAT':'Sat'}
     };
     $('#cal_popup_repeatconfirm').css('display', 'block');
-    locate_this_to_center('#cal_popup_repeatconfirm');
     shade_index(200);
     var $id_repeat_freq ='';
     // var $id_repeat_start_date = '';
@@ -2251,6 +2254,7 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
         day_info : repeat_input_day_info
         // dur_info : repeat_input_dur_info
     };
+    locate_this_to_center('#cal_popup_repeatconfirm');
 }
 
 

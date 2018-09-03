@@ -158,7 +158,7 @@ $(document).ready(function(){
 
 //#####################회원정보 팝업 //#####################
 
-    $(document).on('click','.memberline',function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click', '.memberline', function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         var bodywidth = window.innerWidth;
         var dbID = $(this).find('._id').attr('data-dbid');
         shade_index(100);

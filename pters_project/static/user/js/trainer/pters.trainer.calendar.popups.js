@@ -642,18 +642,24 @@
                     //PT 일정 삭제시
                     var dbid = $('#id_member_dbid_delete').val();
                     var lecture_id = $("#id_lecture_id_delete").val();
-                    send_plan_delete('pt', 'callback', function(){
-                        //ajax_block_during_delete_weekcal = true
-                        enable_delete_btns_after_ajax();
-                        get_member_lecture_list(dbid, "callback", function(jsondata){
-                            var index = jsondata.lectureIdArray.indexOf(lecture_id);
-                            if(jsondata.remCountArray[index] == "1"){
-                                notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index]);
-                            }
+                    var data_prev;
+                    get_member_lecture_list(dbid, "callback", function(jsondata){
+                        var index = jsondata.lectureIdArray.indexOf(lecture_id);
+                        data_prev = jsondata.remCountArray[index];
+                        
+                        send_plan_delete('pt', 'callback', function(){
+                            //ajax_block_during_delete_weekcal = true
+                            enable_delete_btns_after_ajax();
+                            get_member_lecture_list(dbid, "callback", function(jsondata){
+                                var index = jsondata.lectureIdArray.indexOf(lecture_id);
+                                if(jsondata.remCountArray[index] == "1" && data_prev == "0"){
+                                    notice_lecture_status_changed_to_inprogress(jsondata.groupNameArray[index]);
+                                }
+                            });
+                            $('#members_mobile, #members_pc').html('');
+                            get_current_member_list();
+                            get_current_group_list();
                         });
-                        $('#members_mobile, #members_pc').html('');
-                        get_current_member_list();
-                        get_current_group_list();
                     });
                 }else{
                     //OFF 일정 삭제
