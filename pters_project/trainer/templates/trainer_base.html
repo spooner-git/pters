@@ -7,7 +7,7 @@
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
     <!--Google Adsense-
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -542,21 +542,20 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
 
-    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
-    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
-    <link rel="manifest" href={% static_url "manifest.json" %}>
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+<link rel="manifest" href={% static_url "manifest.json" %}>
 <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
-    <audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
-    <script>
-    function playSound() {
-          var sound = document.getElementById("audio");
-          sound.loop = false;
-          sound.play();
-      }
-    </script>
-    <script type="text/javascript">
-
-// var requestButton = document.querySelector(".request-btn");
+<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
+<script>
+function playSound() {
+      var sound = document.getElementById("audio");
+      sound.loop = false;
+      sound.play();
+  }
+</script>
+<script type="text/javascript">
+    // var requestButton = document.querySelector(".request-btn");
 
     //});
     //const messageChannel = new MessageChannel();
@@ -639,7 +638,7 @@
     var class_background_type_cd = {% get_background_type_cd request %};
     var function_auth = {% get_function_auth request %}
     {% endautoescape %}
-{#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
+    {#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
 
     {#            open_lecture_select_popup_pc()#}
 
@@ -659,7 +658,7 @@
         //window.location.reload()
         $('#errorMessageBar').fadeOut();
         $('#errorMessageText').text('');
-{#        $('html').css("cursor","auto");#}
+    {#        $('html').css("cursor","auto");#}
         $('.ajaxloadingPC').hide();
 
         if($('body').width()>600){
@@ -1139,7 +1138,6 @@
 
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///
-
 </script>
 <script type="text/javascript" src={% static_url "common/js/jquery.cookie.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
