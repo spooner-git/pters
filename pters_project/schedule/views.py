@@ -748,8 +748,9 @@ def add_repeat_schedule_logic(request):
             if error_date is not None:
                 repeat_duplication_date_data.append(error_date)
             else:
-                repeat_success_date_data.append(str(repeat_schedule_date_info).split(' ')[0]
-                                                + week_info[int(repeat_schedule_date_info.strftime('%w'))])
+                if schedule_check == 1:
+                    repeat_success_date_data.append(str(repeat_schedule_date_info).split(' ')[0]
+                                                    + week_info[int(repeat_schedule_date_info.strftime('%w'))])
 
     if error is None:
         if pt_schedule_input_counter == 0:
