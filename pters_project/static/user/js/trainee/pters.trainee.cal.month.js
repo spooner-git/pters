@@ -2058,7 +2058,8 @@ function groupDates(jsondata){	//그룹 PT가 있는 날짜에 표기
         var min = Number(classTime[1]);
         var omm = String(oriMonth);
         var odd = String(oriDate);
-        var day = new Date(`${yy}-${mm}-${dd}`).getDay();
+
+        var day = new Date(yy, mm, dd).getDay();
         var worktime_today = Options.worktimeWeekly[day];
         var work_start = worktime_extract_hour(worktime_today)["start"];
         var work_end = worktime_extract_hour(worktime_today)["end"];
