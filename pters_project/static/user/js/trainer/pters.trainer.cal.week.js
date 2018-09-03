@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */ 
+/*jshint esversion: 6 */
 /*달력 만들기
 
  1. 각달의 일수를 리스트로 만들어 둔다.
@@ -6,9 +6,10 @@
  2. 4년마다 2월 윤달(29일)
  year를 4로 나누었을때 0이 되는 year에는 2월을 29일로 계산
  3. Date() 클래스의 getDay를 이용해서 무슨 요일인지 구한다.
- Sunday is 0, Monday is 1 
+ Sunday is 0, Monday is 1
 
  */
+ 
 $(document).ready(function(){
     $('#uptext').text("주간 일정");
 

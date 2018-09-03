@@ -30,8 +30,7 @@ $(document).ready(function(){
         if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {
             //mobile
             platform_check = 'mobile';
-        }
-        else {
+        }else{
             //pc
             platform_check = 'pc';
         }
@@ -2892,7 +2891,6 @@ function limit_char(e){
 }
 
 
-
 //회원정보////////////////////////////////////////////////////////
 //서버로부터 회원의 기본정보를 받아온다.
 function get_indiv_member_info(dbID){
@@ -2974,7 +2972,6 @@ function open_member_info_popup_pc(dbID, jsondata){
             $('button._info_baseedit').css('visibility','visible');
         }
     }
-
 
     function about_member_window_show2(){
         var selector_memberInfoPopup_PC = $('#memberInfoPopup_PC');
