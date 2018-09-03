@@ -1204,7 +1204,7 @@ $(document).ready(function(){
                                     // $('#repeat_confirm_day').text(date);
                                     // $('#repeat_confirm_dur').text('중복 항목은 건너뛰고 등록하시겠습니까?');
                                     // $('#repeat_confirm_day').text(day_info);
-                                    $('#repeat_confirm_day').text('등록불가 일정이 포함되어 있습니다.');
+                                    $('#repeat_confirm_day').text('등록불가 일정을 확인해주세요.');
                                     $('#repeat_confirm_dur').text(dur_info);
                                     $('#id_repeat_schedule_id_confirm').val(repeatArray);
                                     completeSend(); //ajax 로딩 이미지 숨기기
