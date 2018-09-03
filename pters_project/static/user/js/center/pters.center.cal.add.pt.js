@@ -1290,7 +1290,7 @@ $(document).ready(function(){
             htmlToJoin.push(
                                 `<div class="repeat_reg_list_row repeat_failed_bg">
                                     <div class="repeat_reg_list_cell">${duplicatedDate[i]}</div>
-                                    <div class="repeat_reg_list_cell"><img src="/static/user/res/member/icon-x-red.png" title="중복 일정">등록 실패</div>
+                                    <div class="repeat_reg_list_cell"><img src="/static/user/res/member/icon-x-red.png" title="중복 일정">등록 불가</div>
                                 </div>`
                             )
         }
