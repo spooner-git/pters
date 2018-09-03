@@ -216,6 +216,10 @@ function substract_time(starttime, subvalue){
 	var smin = Number(starttime.split(':')[1]);
 	var subhour = Number(subvalue.split(':')[0]);
 	var submin = Number(subvalue.split(':')[1]);
+	if(submin > 60){
+		subhour = subhour + parseInt(submin/60);
+		submin = submin%60;
+	}
 
 	if(smin - submin >= 0){
 		if(shour - subhour >= 0){
@@ -225,22 +229,35 @@ function substract_time(starttime, subvalue){
 			var resultHour = 24 + (shour - subhour);
 			var resultMin = smin - submin;
 		}
-		
+
 	}else if(smin - submin < 0){
 		if(shour - subhour > 0){
 			var resultHour = shour - subhour - 1;
-			var resultMin = smin + (60 - submin)
+			var resultMin = smin + (60 - submin);
+			// var hourminus = parseInt( (submin + smin)/60 );
+			// var resultHour = shour - subhour - hourminus - 1;
+			// var resultMin = (smin - submin)%60;
+			// if(resultMin < 0){
+			// 	resultMin = 60 + resultMin;
+			// }
+
 		}else if(shour - subhour <= 0){
 			var resultHour = 24 + (shour - subhour) - 1;
-			var resultMin = smin + (60 - submin)
+			var resultMin = smin + (60 - submin);
+			// var hourminus = parseInt( (smin - submin)/60 );
+			// var resultHour = shour - subhour + hourminus - 1;
+			// var resultMin = (smin - submin)%60;
+			// if(resultMin < 0){
+			// 	resultMin = 60 + resultMin;
+			// }
 		}
 	}
 
 	if(resultHour<10){
-		var resultHour = '0' + resultHour
+		var resultHour = '0' + resultHour;
 	}
 	if(resultMin<10){
-		var resultMin = '0' + resultMin
+		var resultMin = '0' + resultMin;
 	}
 
 
@@ -269,17 +286,16 @@ function add_time(starttime, addvalue){
 	if(smin + addmin >= 60){
 		if(shour + addhour >= 24){  // 23 + 4 --> 3
 			if(shour + addhour == 24){
-				var resultHour = 25
+				var resultHour = 25;
 			}else{
 				var resultHour = addhour - (24-shour);
 			}
 			var resultMin = smin + addmin - 60;
 		}else if(shour + addhour < 24){
-			var hourplus = parseInt((smin + addmin)/60)
+			var hourplus = parseInt((smin + addmin)/60);
 			var resultHour = shour + addhour + hourplus;
 			var resultMin = (smin + addmin)%60;
 		}
-		
 	}else if(smin + addmin < 60){
 		if(shour + addhour >= 24){  //23 + 1 --> 00
 			if(shour + addhour == 24){
@@ -289,16 +305,16 @@ function add_time(starttime, addvalue){
 			}
 			var resultMin = smin + addmin;
 		}else if(shour + addhour < 24){
-			var resultHour = shour + addhour ;
+			var resultHour = shour + addhour;
 			var resultMin = smin + addmin;
 		}
 	}
 
 	if(resultHour<10){
-		var resultHour = '0' + resultHour
+		var resultHour = '0' + resultHour;
 	}
 	if(resultMin<10){
-		var resultMin = '0' + resultMin
+		var resultMin = '0' + resultMin;
 	}
 
 
