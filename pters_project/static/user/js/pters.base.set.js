@@ -173,7 +173,7 @@ function close_info_popup(option){
             //$('._calmonth').css({'height':'90%','position':'fixed'})
             //$('body').css('overflow-y','overlay');
         }
-        enable_window_scroll();
+        //enable_window_scroll();
     }else if(option == "cal_popup_plancheck"){
         $('#'+option).css('display', 'none');
         shade_index(-100);
@@ -960,12 +960,15 @@ function disable_window_scroll(){
        $('html, body').css({"overflow": "hidden",
                             "position": "relative"
                             });
+    }else{
+        $('body').css('overflow-y', 'hidden');
     }
-    $('body, #calendar').on('scroll touchmove mousewheel', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    });
+
+    // $('body, #calendar').on('scroll touchmove mousewheel', function(e){
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     return false;
+    // });
 }
 
 function enable_window_scroll(){
@@ -974,9 +977,11 @@ function enable_window_scroll(){
        $('html, body').css({"overflow": "unset",
                             "position": "unset"
                             });
+    }else{
+        $('body').css('overflow-y', 'unset');
     }
 
-    $('body, #calendar').off('scroll touchmove mousewheel');
+    //$('body, #calendar').off('scroll touchmove mousewheel');
 }
 
 function sumarray(array){

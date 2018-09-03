@@ -1242,12 +1242,13 @@ $(document).ready(function(){
 
                                 closeAddPopup();
                                 closeAddPopup_mini();
+                                enable_window_scroll();
                                 completeSend();
                                 shade_index(-100);
                                 var selector_calendar = $('#calendar');
-                                selector_calendar.css('height','100%');
+                                selector_calendar.css('height', '100%');
                                 if(bodywidth >= 600){
-                                    selector_calendar.css('position','relative');
+                                    selector_calendar.css('position', 'relative');
                                 }
                             }
                         }
@@ -1359,7 +1360,7 @@ $(document).ready(function(){
              }
              */
             close_info_popup('cal_popup_repeatconfirm');
-            ajaxRepeatConfirmSend('callback',function(){
+            ajaxRepeatConfirmSend('callback', function(){
                 clear_repeat_add_popup();
                 check_dropdown_selected_addplan();
                 var id;
@@ -1389,7 +1390,7 @@ $(document).ready(function(){
                         }
                         $("#countsSelected").text(availCount_personal);
                     });
-                    get_current_group_list('callback',function(jsondata){
+                    get_current_group_list('callback', function(jsondata){
                         set_group_dropdown_list(jsondata);
                         var selector_members_mobile_a_data_group_id = $('#members_mobile a[data-groupid="'+id+'"]');
                         $('#grouptypenumInfo').text(selector_members_mobile_a_data_group_id.attr('data-grouptypecd_nm') +' '+ selector_members_mobile_a_data_group_id.attr('data-groupmembernum') + ' / ' + selector_members_mobile_a_data_group_id.attr('data-membernum'));
@@ -1585,7 +1586,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
 
     if(option == "ptadd"){
         $('#remainCount, #groupInfo, #groupmembersInfo').css('display','none');
-        $('#memberName').css('display','block');
+        $('#memberName').css('display', 'block');
         $('#uptext2').text('레슨 일정 등록');
         $('#id_training_date, #id_training_end_date').val(selector_datepicker.val());
         $('#id_repeat_start_date').val(selector_datepicker_repeat_start.val());
@@ -1620,6 +1621,7 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
         $('#upbutton-x').attr('data-page', 'addplan');
         scrollToDom(selector_page_addplan);
     }else{
+        disable_window_scroll();
         $('#page_addplan_input_wrap').css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addplan.outerHeight())/2+$(window).scrollTop());
         selector_page_addplan.show().css({'top':centerLoc,
