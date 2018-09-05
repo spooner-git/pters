@@ -3,17 +3,18 @@ $(document).ready(function(){
     //ESC키를 눌러서 팝업 닫기
     $(document).keyup(function(e){
         if(e.keyCode == 27){
-            if($('#memberInfoPopup_PC').css('display') == 'block'){
+            if($('#page_addmember').css('display') == 'block'){
+                closePopup('member_add');
+            }else if($('#memberInfoPopup_PC').css('display') == 'block'){
                 closePopup('member_info_PC');
             }else{
                 close_info_popup('cal_popup_plandelete');
-                closePopup('member_add');
             }
         }
     });
     //ESC키를 눌러서 팝업 닫기
 
-    $(document).on('click','.phonesms',function(e){
+    $(document).on('click', '.phonesms', function(e){
         e.stopPropagation();
     });
 
@@ -1005,7 +1006,13 @@ $(document).ready(function(){
 
     $("#memberDue_add_2_fast").datepicker({
         //minDate : 0,
-        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+        onSelect:function(dateText, inst){  //달력날짜 선택시 하단에 핑크선
+            var $datepicker = $('div._due');
+            $datepicker.find('.checked').removeClass('checked ptersCheckboxInner');
+            $datepicker.find('td[data-check="0"]').find('.ptersCheckbox').addClass('checked');
+            $datepicker.find('td[data-check="0"]').find('.ptersCheckbox').find('div').addClass('checked ptersCheckboxInner');
+
+
             $(this).css({
                             "-webkit-text-fill-color":'#282828'
                         });
@@ -2983,6 +2990,10 @@ function autoDateInput(){
 
     if(selectedD==undefined){
         selector_memberDue_add_2_fast.val(text2);
+    }
+
+    if(selectedD == 0){
+
     }
 
     if(selector_memberDue_add_2_fast.val()!=text2 && selector_memberDue_add_2_fast.val()!="" ){
