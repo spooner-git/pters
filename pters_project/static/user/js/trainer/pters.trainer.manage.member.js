@@ -753,7 +753,7 @@ $(document).ready(function(){
             if($("._calmonth").length ==1 ){
 
             }else{
-                shade_index(200);
+                shade_index(300);
             }
         }else if($(this).attr('data-deletetype') == 'class'){
             deleteTypeSelect = 'repeatptdelete';
