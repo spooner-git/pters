@@ -959,11 +959,11 @@
 
 
 
-                <div class="_ADD_MEMBER_REG">
+                <div class="_ADD_MEMBER_REG" style="margin-top: 20px;">
                     <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 등록 정보 <span style="color: #fe4e65;">*</span>
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 수강 정보 <span style="color: #fe4e65;">*</span>
                     </label>
-                    <div id="selectBox2" class="selectbox ">
+                    <div id="selectBox2" class="selectbox" style="display: none;">
                         <div id="btnCallSimple" href="#" class="btnCallSimple selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
                         <div id="btnCallManual" href="#" class="btnCallManual selectboxopt selectboxopt_right">세부 설정 방식</div>
                     </div>
@@ -971,7 +971,7 @@
                     <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 그룹 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
@@ -987,7 +987,7 @@
                                 <input type="tel" class="form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
                             </div>
                         </div>
-                        <div class="ptaddbox form-group">
+                        <div class="ptaddbox form-group price_wrap">
                             <label for="lecturePrice" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                             </label>
@@ -996,7 +996,7 @@
                                 <input type="tel" class="form-control" id="lecturePrice_add" placeholder="숫자만 입력해주세요." maxlength="11">
                                 <span class="inputunit">원</span>
                             </div>
-                            <div class="pricebutton">
+                            <div class="pricebutton dropdown">
                                 <div class="pricebuttonchild" id="price1" onclick="priceInput(1000000,'sum',1)">100만원</div>
                                 <div class="pricebuttonchild" id="price2" onclick="priceInput(500000,'sum',1)">50만원</div>
                                 <div class="pricebuttonchild" id="price3" onclick="priceInput(100000,'sum',1)">10만원</div>
@@ -1029,7 +1029,7 @@
                     <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 그룹 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
@@ -1038,11 +1038,14 @@
                         </div>
                         <div class="ptaddbox form-group _count">
                             <label for="memberCount" class="ptaddboxtext">
-                                <input type="hidden" id="memberCount_add_fast" name="counts_fast" >
+                                <!-- <input type="hidden" id="memberCount_add_fast" name="counts_fast" > -->
                                 <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 횟수
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
-                            <div>
+                            <div class="dropdown pters_input_custom">
+                                <input type="tel" class="form-control" id="memberCount_add_fast" name="counts_fast" placeholder="등록 횟수를 입력해주세요" maxlength="5">
+                            </div>
+                            <div class="dropdown regCountSelect" style="border: 0;">
                                 <table>
                                     <tbody>
                                     <tr>
@@ -1052,12 +1055,14 @@
                                         <td class="checkboxtext" >20회</td>
                                         <td><div class="ptersCheckbox" data-count="30"><div></div></div></td>
                                         <td class="checkboxtext">30회</td>
+                                        <td><div class="ptersCheckbox" data-count="" id="userInputCount"><div></div></div></td>
+                                        <td class="checkboxtext">직접<br>입력</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="ptaddbox form-group">
+                        <div class="ptaddbox form-group price_wrap">
                             <label for="lecturePrice" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                             </label>
@@ -1066,7 +1071,7 @@
                                 <input type="tel" class="form-control" id="lecturePrice_add_2" placeholder="숫자만 입력해주세요." maxlength="11">
                                 <span class="inputunit">원</span>
                             </div>
-                            <div class="pricebutton">
+                            <div class="pricebutton dropdown">
                                 <div class="pricebuttonchild" id="price1_2" onclick="priceInput(1000000,'sum',2)">100만원</div>
                                 <div class="pricebuttonchild" id="price2_2" onclick="priceInput(500000,'sum',2)">50만원</div>
                                 <div class="pricebuttonchild" id="price3_2" onclick="priceInput(100000,'sum',2)">10만원</div>
@@ -1075,11 +1080,11 @@
                                 <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;" onclick="priceInput(0,'del',2)">X</div>
                             </div>
                         </div>
-                        <div class="ptaddbox form-group _due">
+                        <div class="ptaddbox form-group _due dur_wrap">
                             <label for="memberDue" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 기간
                             </label>
-                            <div>
+                            <div class="dropdown" style="border: 0;">
                                 <table>
                                     <tbody>
                                     <tr>
@@ -1113,8 +1118,9 @@
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <div class="dropdown pters_input_custom">
-                                <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast">
-                                <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly>
+                                <!-- <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast"> -->
+                                <!-- <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly> -->
+                                <input type="tel" class="form-control" id="memberDue_add_2_fast" name="end_date_fast" placeholder="선택" maxlength="3" style="font-size:13.5px;">
                             </div>
                         </div>
 

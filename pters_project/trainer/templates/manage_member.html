@@ -723,6 +723,20 @@
     </div>
 
 
+    <!-- <div id="subpopup_addByList" class="subpopup_addGroup wrap">
+
+    </div>
+    <div id="subpopup_addBySearch" class="subpopup_addGroup wrap">
+        <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span>닫기</span></div>
+        <input type="text" name="searchID" id="addBySearch_input">
+        <button id="addBySearch_search">찾기</button>
+        <div id="searchedMemberListBox">
+
+
+        </div>
+    </div> -->
+
+
     <div id="page_addmember" class="popups" style="display: none;">
         <div id="how_to_add_member">
             <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;margin-top:5px;">
@@ -873,10 +887,10 @@
 
                 <div class="ptaddbox _ADD_GROUP_NEW">
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 신규 그룹 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}><span id="addgrouptypename">신규 그룹</span><span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div id="groupNameInput">
-                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹 이름을 입력해주세요." maxlength="10">
+                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹명을 입력해주세요." maxlength="10">
                         <select id="grouptype">
                             <option selected disabled>그룹 타입</option>
                             <option value="NORMAL">정해진 멤버만</option>
@@ -898,7 +912,33 @@
                             <option value="13">13명</option>
                             <option value="14">14명</option>
                             <option value="15">15명</option>
+                            <option value="16">16명</option>
+                            <option value="17">17명</option>
+                            <option value="18">18명</option>
+                            <option value="19">19명</option>
+                            <option value="20">20명</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="ptaddbox _ADD_GROUP_NEW">
+                    <div id="explain_group_lesson">
+                        <p style="font-size: 12.5px;">정해진 멤버들로 고정적으로 운영되는 방식입니다.</p>
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 그룹?</p>
+                        <p style="font-size: 14px;">그룹은 <span style="color:#fe4e65">미리 그룹과 그룹원을 구성</span>해두고, 일정표에 일정을 추가하는 방식으로 운영합니다.<br>
+                        일정표에 <span style="color:#fe4e65">그룹 일정을 추가</span>하면,<br> 해당 그룹에 속한 그룹원이 <span style="color:#fe4e65">자동으로 그 일정</span>에 <span style="color:#fe4e65">추가 </span>됩니다.</p>
+                        <p style="font-size: 13px;">
+                            <span style="color:#fe4e65;font-weight: bold;">그룹</span>은 <span style="color:#fe4e65;font-weight: bold;">정해진 정원 숫자</span> 만큼만 회원을 하위에 추가 할 수 있습니다.
+                        </p>
+                    </div>
+
+                    <div id="explain_open_lesson">
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 클래스?</p>
+                        <p style="font-size: 14px;">클래스는 회원들이 신청을 원하는 <span style="color:#fe4e65">클래스의 정원을 확인하여 참석 신청</span>을 하는 방식으로 운영합니다.<br>
+                        한 타임당 <span style="color:#fe4e65">수업 정원을 설정</span>하고, 이 클래스에 <span style="color:#fe4e65">예약이 가능한 회원</span>들을 <span style="color:#fe4e65">하위에 추가</span>하여 사용합니다.</p>
+                        <p style="font-size: 13px;">
+                            <span style="color:#fe4e65;font-weight: bold;">클래스</span>는 하위에 회원을 <span style="color:#fe4e65;font-weight: bold;">숫자 제한 없이</span> 추가 가능합니다. </p>
+                        
                     </div>
                 </div>
 
@@ -908,9 +948,9 @@
                     </label>
                     <div class="groupMemberAddBox">
                         <div class="buttonGroup">
-                            <button id="addByNew">신규 회원으로 추가</button>
-                            <button id="addByList">내 리스트에서 추가</button>
-                            <button id="addBySearch">PTERS 검색으로 추가</button>
+                            <button id="addByNew">신규 회원</button>
+                            <button id="addByList">회원 리스트</button>
+                            <button id="addBySearch">ID 검색</button>
                         </div>
                         <div id="addedMemberListBox">
                             <span></span>
@@ -918,18 +958,6 @@
                     </div>
                 </div>
 
-                <div id="subpopup_addByList" class="subpopup_addGroup wrap">
-
-                </div>
-                <div id="subpopup_addBySearch" class="subpopup_addGroup wrap">
-                    <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span class="text-close"></span></div>
-                    <input type="text" name="searchID" id="addBySearch_input">
-                    <button id="addBySearch_search">찾기</button>
-                    <div id="searchedMemberListBox">
-
-
-                    </div>
-                </div>
 
 
                 <div class="_ADD_MEMBER_REG" style="margin-top: 20px;">
