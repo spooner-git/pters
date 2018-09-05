@@ -1054,6 +1054,7 @@ button._info_baseedit_img{
 .checkboxtext{
 	text-align: left;
 	font-size: 13.5px;
+	width: 15% !important;
 }
 
 #simpleReg tr{
@@ -1067,7 +1068,7 @@ button._info_baseedit_img{
 #simpleReg td{
 	background: #f4f4f4;
 	/*width: 16.67%;*/
-	width: 12.5%;
+	width: 8%;
 }
 
 #memberSearch_add{

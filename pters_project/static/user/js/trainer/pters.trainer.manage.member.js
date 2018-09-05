@@ -1005,7 +1005,13 @@ $(document).ready(function(){
 
     $("#memberDue_add_2_fast").datepicker({
         //minDate : 0,
-        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+        onSelect:function(dateText, inst){  //달력날짜 선택시 하단에 핑크선
+            var $datepicker = $('div._due');
+            $datepicker.find('.checked').removeClass('checked ptersCheckboxInner');
+            $datepicker.find('td[data-check="0"]').find('.ptersCheckbox').addClass('checked');
+            $datepicker.find('td[data-check="0"]').find('.ptersCheckbox').find('div').addClass('checked ptersCheckboxInner');
+
+
             $(this).css({
                             "-webkit-text-fill-color":'#282828'
                         });
@@ -2983,6 +2989,10 @@ function autoDateInput(){
 
     if(selectedD==undefined){
         selector_memberDue_add_2_fast.val(text2);
+    }
+
+    if(selectedD == 0){
+
     }
 
     if(selector_memberDue_add_2_fast.val()!=text2 && selector_memberDue_add_2_fast.val()!="" ){
