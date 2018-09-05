@@ -414,23 +414,29 @@ $(document).ready(function(){
         $("#popup_btn_delete").click(function(){
             if(!$(this).hasClass('disabled_button')){
                 if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
-                    deleteTypeSelect = "groupptdelete"
+                    deleteTypeSelect = "groupptdelete";
                 }else{
-                    deleteTypeSelect = "ptoffdelete"
+                    deleteTypeSelect = "ptoffdelete";
                 }
-                shade_index(200)
-                $('#cal_popup_planinfo').hide()
-                $('#cal_popup_plandelete').css('display','block').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule-id')})
+                shade_index(200);
+                //$('#cal_popup_planinfo').hide()
+                //$('#cal_popup_plandelete').css('display','block').attr({'schedule-id': $(this).parent('#cal_popup_planinfo').attr('schedule-id')})
+                pop_up_delete_confirm( $(this).parent('#cal_popup_planinfo').attr('schedule-id') );
             }
+        });
 
-        })
+        function pop_up_delete_confirm(schedule_id){
+            $('#popup_delete_question').html('정말 일정을 취소하시겠습니까?');
+            $('#cal_popup_planinfo').hide();
+            $('#cal_popup_plandelete').css('display', 'block').attr({"schedule-id":schedule_id});
+        }
 
         //일정 취소 확인 팝업 아니오 버튼 눌렀을때 팝업 닫기
         $('#popup_delete_btn_no').click(function(){
             if($('#cal_popup_plandelete').css('display')=='block'){
-                $("#cal_popup_plandelete").css({'display':'none'})
+                $("#cal_popup_plandelete").css({'display':'none'});
             }
-        })
+        });
 
 
 

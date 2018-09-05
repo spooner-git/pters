@@ -731,37 +731,44 @@ $(document).ready(function(){
         if($btn.css('width')=='0px'){
             $btn.animate({'width':'40px'},300);
             $btn.find('img').css({'display':'block'});
-            $('.deleteBtnBin').not($btn).animate({'width':'0px'},230);
+            $('.deleteBtnBin').not($btn).animate({'width':'0px'}, 230);
             $('.deleteBtnBin img').not($btn.find('img')).css({'display':'none'});
         }
     });
 
 
-    $(document).on('click','div.deleteBtnBin',function(e){
+    $(document).on('click', 'div.deleteBtnBin', function(e){
         e.stopPropagation();
         var id_info = $(this).parents('div.summaryInnerBox').attr('data-id');
         $('#id_repeat_schedule_id_confirm').val(id_info);
         $('#cal_popup_plandelete').show().attr({'data-repeatid':$(this).attr('data-repeatid'), 'data-dbid':$(this).attr('data-dbid'), 'data-groupid':$(this).attr('data-groupid')});
+        $('#popup_delete_title').text('');
+        $('#popup_delete_question').html('선택한 반복 일정을 취소 하시겠습니까?');
+
         if($(this).attr('data-deletetype') == 'grouprepeatinfo'){
             deleteTypeSelect = 'grouprepeatinfodelete';
-            shade_index(100)
+            shade_index(100);
         }else if($(this).attr('data-deletetype') == 'repeatinfo'){
             deleteTypeSelect = 'repeatinfodelete';
-            shade_index(200)
+            if($("._calmonth").length ==1 ){
+
+            }else{
+                shade_index(200);
+            }
         }else if($(this).attr('data-deletetype') == 'class'){
             deleteTypeSelect = 'repeatptdelete';
-            shade_index(200)
+            shade_index(200);
         }else if($(this).attr('data-deletetype') == 'off'){
             deleteTypeSelect = 'repeatoffdelete';
-            shade_index(200)
+            shade_index(200);
         }else if($(this).attr('data-deletetype') == 'group'){
             deleteTypeSelect = 'repeatgroupptdelete';
-            shade_index(200)
+            shade_index(200);
         }
 
     });
 
-    $(document).on('click','.summaryInnerBox',function(e){ //반복일정 텍스트 누르면 휴지통 닫힘
+    $(document).on('click', '.summaryInnerBox', function(e){ //반복일정 텍스트 누르면 휴지통 닫힘
         e.stopPropagation();
         var $btn = $('.deleteBtnBin');
         $btn.animate({'width':'0px'},230);

@@ -576,11 +576,13 @@
             }else{
                 deleteTypeSelect = "ptoffdelete";
             }
+            //$('#popup_delete_title').text('반복 일정 취소');
             pop_up_delete_confirm($(this).parent('#cal_popup_planinfo').attr("schedule-id"));
         }
     });
 
     function pop_up_delete_confirm(schedule_id){
+        $('#popup_delete_question').html('정말 일정을 취소하시겠습니까?');
         $('#cal_popup_planinfo').hide();
         $('#cal_popup_plandelete').css('display', 'block').attr({"schedule-id":schedule_id});
     }
