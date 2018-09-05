@@ -13,7 +13,7 @@
         //var eventend = 'touchend'
     //}
 
-    $(document).on(eventstart,'div.classTime, div.offTime, div.groupTime',function(e){
+    $(document).on(eventstart, 'div.classTime, div.offTime, div.groupTime', function(e){
         e.stopPropagation();
         e.preventDefault();
         var thisWidth = $(this).width();
@@ -63,17 +63,51 @@
                 }else{
                     $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
                 }
-                
            }
-            
             if($memberName.hasClass('_hided')){
                 $memberName.removeClass('_hided').addClass('hideelement');
                 $memberTime.removeClass('_hided').addClass('hideelement');
             }
-        })
-    })
+        });
+    });
 
-
+    $(document).on('contextmenu', function(){
+        return false;
+    });
+    $(document).on('mousedown', 'div.classTime', function(e){
+        if(e.which == 3 || e.button == 2){
+            //alert('오른쪽 클릭');
+            schedule_on_off = 1;
+            $("#id_schedule_id").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
+            $("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
+            $('#id_member_dbid_delete').val($(this).attr('data-dbid'));       //회원 dbid를 저장
+            $('#id_lecture_id_delete').val($(this).attr('data-lectureId'));
+            pop_up_delete_confirm($(this).attr('class-schedule-id'));
+            deleteTypeSelect = "ptoffdelete";
+            shade_index(100);
+        }
+    });
+    $(document).on('mousedown', 'div.groupTime', function(e){
+        if(e.which == 3 || e.button == 2){
+            //alert('오른쪽 클릭');
+            schedule_on_off = 2;
+            $("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
+            $("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
+            pop_up_delete_confirm($(this).attr('group-schedule-id'));
+            deleteTypeSelect = "groupptdelete";
+            shade_index(100);
+        }
+    });
+    $(document).on('mousedown', 'div.offTime', function(e){
+        if(e.which == 3 || e.button == 2){
+            //alert('오른쪽 클릭');
+            schedule_on_off = 0;
+            $("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
+            pop_up_delete_confirm($(this).attr('off-schedule-id'));
+            deleteTypeSelect = "ptoffdelete";
+            shade_index(100);
+        }
+    });
 
     $(document).on('click', 'div.classTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
@@ -88,13 +122,13 @@
                                     일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
                                     <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`)
+                                </div>`);
         }else{
             $('#float_btn_wrap').hide();
             shade_index(100);
             closeAlarm('pc');
             toggleGroupParticipantsList('off');
-            $('.pt_memo_guide_popup').css('display','block');
+            $('.pt_memo_guide_popup').css('display', 'block');
             $('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide();
             deleteTypeSelect = '';
             addTypeSelect ='ptadd';
@@ -113,7 +147,7 @@
                 classdurMin = "";
             }
             var dur = '('+classdurTime + classdurMin+')';
-            var dayobj = new Date(yy,mm-1,dd);
+            var dayobj = new Date(yy, mm-1, dd);
             var dayraw = dayobj.getDay();
             var dayarryKR = ['일','월','화','수','목','금','토'];
             var dayarryJP = ['日','月','火','水','木','金','土'];
@@ -150,7 +184,7 @@
 
             $('#page-addplan-pc').hide();
             //selector_cal_popup_planinfo.css('display','block');
-            
+
             //shade_index(100)
             //closeAlarm('pc')
 
@@ -168,7 +202,7 @@
             $('#popup_info').text(infoText);
             $('#popup_info2').html(infoText2);
             selector_popup_info3_memo.text(infoText3).val(infoText3);
-            selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'),'data-grouptype':'class'});
+            selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'), 'data-grouptype':'class'});
             $("#id_schedule_id").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
             $("#id_schedule_id_modify").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
             $("#id_schedule_id_finish").val($(this).attr('class-schedule-id')); // shcedule 정보 저장
@@ -214,7 +248,7 @@
     });
 
     //Off 일정 클릭시 팝업 Start
-    $(document).on('click','div.offTime',function(e){ //일정을 클릭했을때 팝업 표시
+    $(document).on('click', 'div.offTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
         var info = $(this).attr('off-time').split('_');
         var yy=info[0];
@@ -300,7 +334,7 @@
             $("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
             $("#id_off_schedule_id_modify").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
             selector_popup_btn_complete.hide();
-            $("#popup_sign_img").css("display","none");
+            $("#popup_sign_img").css("display", "none");
             schedule_on_off = 0;
 
             if(bodywidth > 600){
@@ -313,7 +347,7 @@
     });
 
     //스케쥴 클릭시 팝업 Start
-    $(document).on('click','div.groupTime',function(e){ //일정을 클릭했을때 팝업 표시
+    $(document).on('click', 'div.groupTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
         var info = $(this).attr('group-time').split('_');
         var yy=info[0];
@@ -540,15 +574,19 @@
     $("#popup_btn_delete").click(function(){  //일정 취소 버튼 클릭
         //body_position_fixed_unset();
         if(!$(this).hasClass('disabled_button')){
-            if($(this).parent('#cal_popup_planinfo').attr('data-grouptype') == "group"){
+            if($('#cal_popup_planinfo').attr('data-grouptype') == "group"){
                 deleteTypeSelect = "groupptdelete";
             }else{
                 deleteTypeSelect = "ptoffdelete";
             }
-            $('#cal_popup_planinfo').hide();
-            $('#cal_popup_plandelete').css('display','block').attr({"schedule-id":$(this).parent('#cal_popup_planinfo').attr("schedule-id")});
+            pop_up_delete_confirm($(this).parent('#cal_popup_planinfo').attr("schedule-id"));
         }
     });
+
+    function pop_up_delete_confirm(schedule_id){
+        $('#cal_popup_planinfo').hide();
+        $('#cal_popup_plandelete').css('display', 'block').attr({"schedule-id":schedule_id});
+    }
 /////////////////////////////////////////////////////////////////////////////////////////////일정 취소 관련 이벤트
 
 
@@ -673,34 +711,13 @@
                     get_current_group_list();
                 }
             }else if(deleteTypeSelect == "groupptdelete"){
-                // var group_schedule_id = $(this).parent('#cal_popup_plandelete').attr('schedule-id');
-                // get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-                //  for(var i=0; i<jsondata.scheduleIdArray.length; i++){
-                //      $('#id_member_dbid_delete').val(jsondata.db_id[i])
-                //      $('#id_schedule_id').val(jsondata.scheduleIdArray[i])
-                //      send_plan_delete('pt', 'callback', function(){
-                //          if(i == jsondata.scheduleIdArray.length-1){
-                //              super_ajaxClassTime();
-                //                // set_schedule_time(jsondata)
-                //                close_info_popup('cal_popup_plandelete')
-                //                if($('._calmonth').length == 1){
-                //                  shade_index(100)
-                //                }else if($('._calweek').length == 1){
-                //                  shade_index(-100)
-                //                }
-                //          }else{
-                //              super_ajaxClassTime();
-                //          }
-                //      })
-                //  }
-                // })
                 send_plan_delete('group', 'callback', function(){
                     //ajax_block_during_delete_weekcal = true
                     enable_delete_btns_after_ajax();
                     $('#members_mobile, #members_pc').html('')
                     get_current_member_list();
                     get_current_group_list();
-                })
+                });
             }
         }
     });
