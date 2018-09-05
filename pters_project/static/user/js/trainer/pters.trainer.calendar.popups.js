@@ -6,8 +6,8 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////일정 클릭 이벤트
     //if(bodywidth > 600){
-        var eventstart = 'mouseenter'
-        var eventend = 'mouseleave'
+        var eventstart = 'mouseenter';
+        var eventend = 'mouseleave';
     //}else{
         //var eventstart = 'touchstart'
         //var eventend = 'touchend'
@@ -149,9 +149,9 @@
             var dur = '('+classdurTime + classdurMin+')';
             var dayobj = new Date(yy, mm-1, dd);
             var dayraw = dayobj.getDay();
-            var dayarryKR = ['일','월','화','수','목','금','토'];
-            var dayarryJP = ['日','月','火','水','木','金','土'];
-            var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
+            var dayarryKR = ['일', '월', '화', '수', '목', '금', '토'];
+            var dayarryJP = ['日', '月', '火', '水', '木', '金', '土'];
+            var dayarryEN = ['Sun', 'Mon', 'Tue', 'Wed', 'Ths', 'Fri', 'Sat'];
 
             var member = " 님 ";
             var yourplan = " 일정";
@@ -175,12 +175,12 @@
             var selector_popup_btn_complete = $('#popup_btn_complete');
             var selector_popup_info3_memo = $('#popup_info3_memo');
             $('#popup_planinfo_title').text(text);
-            selector_popup_btn_complete.css({'color':'#282828','background':'#ffffff'}).val('');
-            selector_popup_info3_memo.attr('readonly',true).css({'border':'0'});
-            $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
+            selector_popup_btn_complete.css({'color':'#282828', 'background':'#ffffff'}).val('');
+            selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+            $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
             $('#canvas').hide().css({'border-color':'#282828'});
             $('#canvasWrap').css({'display':'none'});
-            $('#inner_shade_planinfo').css('display','none');
+            $('#inner_shade_planinfo').css('display', 'none');
 
             $('#page-addplan-pc').hide();
             //selector_cal_popup_planinfo.css('display','block');
@@ -192,8 +192,8 @@
             var schedule_finish_check = $(this).attr('data-schedule-check');
 
             var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
-            var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
-            var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
+            var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
+            var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
             var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+info[6]+'</span>'+member+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
             var infoText3 = $(this).attr('data-memo');
             if($(this).attr('data-memo') == undefined){
@@ -219,29 +219,28 @@
             $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
             if(schedule_finish_check=="0"){
                 selector_popup_btn_complete.show();
-                $("#popup_text1").css("display","block");
-                $("#popup_sign_img").css("display","none");
-            }
-            else{
+                $("#popup_text1").css("display", "block");
+                $("#popup_sign_img").css("display", "none");
+            }else{
                 selector_popup_btn_complete.hide();
-                $("#popup_text1").css("display","none");
-                $("#popup_sign_img").css("display","block");
+                $("#popup_text1").css("display", "none");
+                $("#popup_sign_img").css("display", "block");
                 // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
-                $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
+                $("#id_sign_img").attr('src', 'https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('class-schedule-id')+'.png');
                 var myImage = document.getElementById("id_sign_img");
                 myImage.onerror = function(){
                     /*this.src="";
                     */
-                    $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
+                    $("#id_sign_img").attr('src', '/static/user/res/auto_complete.png');
                    // $("#popup_sign_img").css("display","none");
 
-                }
+                };
             }
             schedule_on_off = 1;
             if(bodywidth > 600){
-                selector_cal_popup_planinfo.css({'display':'block','top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
+                selector_cal_popup_planinfo.css({'display':'block', 'top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
             }else{
-                selector_cal_popup_planinfo.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+                selector_cal_popup_planinfo.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
             }
             //disable_window_scroll();
         }
@@ -261,13 +260,13 @@
                                     일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
                                     <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`)
+                                </div>`);
         }else{
             $('#float_btn_wrap').hide();
             shade_index(100);
             closeAlarm('pc');
             toggleGroupParticipantsList('off');
-            $('.pt_memo_guide_popup').css('display','none');
+            $('.pt_memo_guide_popup').css('display', 'none');
             $('#subpopup_addByList_plan, #popup_btn_viewGroupParticipants').hide();
             deleteTypeSelect = '';
             addTypeSelect ='ptadd';
@@ -276,11 +275,11 @@
                 time = 0;
             }
             var minute = info[4];
-            var dayobj = new Date(yy,mm-1,dd);
+            var dayobj = new Date(yy, mm-1, dd);
             var dayraw = dayobj.getDay();
-            var dayarryKR = ['일','월','화','수','목','금','토'];
-            var dayarryJP = ['日','月','火','水','木','金','土'];
-            var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
+            var dayarryKR = ['일', '월', '화', '수', '목', '금', '토'];
+            var dayarryJP = ['日', '月', '火', '水', '木', '金', '土'];
+            var dayarryEN = ['Sun', 'Mon', 'Tue', 'Wed', 'Ths', 'Fri', 'Sat'];
 
             var comment = "";
             var yourplan = " OFF 일정";
@@ -304,23 +303,22 @@
             var selector_popup_info3_memo = $('#popup_info3_memo');
             var selector_popup_btn_complete = $("#popup_btn_complete");
             $('#popup_planinfo_title').text(text);
-            selector_popup_btn_complete.css({'color':'#282828','background':'#ffffff'}).val('');
-            selector_popup_info3_memo.attr('readonly',true).css({'border':'0'});
-            $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
+            selector_popup_btn_complete.css({'color':'#282828', 'background':'#ffffff'}).val('');
+            selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+            $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
             $('#canvas').hide().css({'border-color':'#282828'});
             $('#canvasWrap').css({'display':'none'});
-            $('#inner_shade_planinfo').css('display','none');
+            $('#inner_shade_planinfo').css('display', 'none');
 
             $('#page-addplan-pc').hide();
             //$('.td00').css('background','transparent')
             //selector_cal_popup_plan_info.css('display','block');
-            
 
             $('#popup_info3_memo,#popup_info3_memo_modify').show();
 
             var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')';
-            var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
-            var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
+            var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
+            var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
 
             var infoText2 = '<span>'+yourplan +'</span><br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
             var infoText3 = $(this).attr('data-memo');
@@ -338,9 +336,9 @@
             schedule_on_off = 0;
 
             if(bodywidth > 600){
-                selector_cal_popup_plan_info.css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+                selector_cal_popup_plan_info.css({'display':'block', 'top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
             }else{
-                selector_cal_popup_plan_info.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+                selector_cal_popup_plan_info.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
             }
             //disable_window_scroll();
         }
@@ -360,7 +358,7 @@
                                     일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
                                     <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`)
+                                </div>`);
         }else{
             var bodywidth = window.innerWidth;
             var group_class_type_name = $(this).attr('data-group-type-cd-name');
@@ -378,10 +376,10 @@
             }else{
                 //$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
             }
-            $('.pt_memo_guide_popup').css('display','block');
+            $('.pt_memo_guide_popup').css('display', 'block');
             deleteTypeSelect = '';
             addTypeSelect ='ptadd';
-            
+
             var time = info[3];
             if(time == 24){
                 time = 0;
@@ -396,11 +394,11 @@
                 classdurMin = "";
             }
             var dur = '('+classdurTime + classdurMin+')';
-            var dayobj = new Date(yy,mm-1,dd);
+            var dayobj = new Date(yy, mm-1, dd);
             var dayraw = dayobj.getDay();
-            var dayarryKR = ['일','월','화','수','목','금','토'];
-            var dayarryJP = ['日','月','火','水','木','金','土'];
-            var dayarryEN = ['Sun','Mon','Tue','Wed','Ths','Fri','Sat'];
+            var dayarryKR = ['일', '월', '화', '수', '목', '금', '토'];
+            var dayarryJP = ['日', '月', '火', '水', '木', '金', '土'];
+            var dayarryEN = ['Sun', 'Mon', 'Tue', 'Wed', 'Ths', 'Fri', 'Sat'];
             var member = " 님의 ";
             var yourplan = " 일정";
             var day = dayarryKR[dayraw];
@@ -423,12 +421,12 @@
             var selector_popup_info3_memo = $('#popup_info3_memo');
             var selector_popup_btn_complete = $("#popup_btn_complete");
             $('#popup_planinfo_title').text(text);
-            selector_popup_btn_complete.css({'color':'#282828','background':'#ffffff'}).val('');
-            selector_popup_info3_memo.attr('readonly',true).css({'border':'0'});
-            $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png','data-type':'view'});
+            selector_popup_btn_complete.css({'color':'#282828', 'background':'#ffffff'}).val('');
+            selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+            $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
             $('#canvas').hide().css({'border-color':'#282828'});
             $('#canvasWrap').css({'display':'none'});
-            $('#inner_shade_planinfo').css('display','none');
+            $('#inner_shade_planinfo').css('display', 'none');
 
             $('#page-addplan-pc').hide();
             //selector_cal_popup_plan_info.css('display','block').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
@@ -440,8 +438,8 @@
             var group_max_member_num = $(this).attr('data-membernum');
 
             var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
-            var stime_text = time_format_to_hangul(add_time(time+':'+minute,'00:00'));
-            var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8],'00:00'));
+            var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
+            var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
             var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_class_type_name+'">['+group_class_type_name+'] '+info[6]+' ('+group_current_member_num+'/'+group_max_member_num+')</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
             var infoText3 = $(this).attr('data-memo');
             if($(this).attr('data-memo') == undefined){
@@ -466,28 +464,27 @@
             $("#id_lecture_id_finish").val($(this).attr('data-lectureId')); //lecture id 정보 저장
             if(schedule_finish_check=="0"){
                 selector_popup_btn_complete.show();
-                $("#popup_text1").css("display","block");
-                $("#popup_sign_img").css("display","none");
-            }
-            else{
-                selector_cal_popup_plan_info.attr('group_schedule_finish_check',1);
+                $("#popup_text1").css("display", "block");
+                $("#popup_sign_img").css("display", "none");
+            }else{
+                selector_cal_popup_plan_info.attr('group_schedule_finish_check', 1);
                 selector_popup_btn_complete.hide();
-                $("#popup_text1").css("display","none");
-                $("#popup_sign_img").css("display","block");
+                $("#popup_text1").css("display", "none");
+                $("#popup_sign_img").css("display", "block");
                 // $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image//spooner_test/'+$(this).attr('schedule-id')+'.png');
-                $("#id_sign_img").attr('src','https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('group-schedule-id')+'.png');
+                $("#id_sign_img").attr('src', 'https://s3.ap-northeast-2.amazonaws.com/pters-image/'+$(this).attr('group-schedule-id')+'.png');
                 var myImage = document.getElementById("id_sign_img");
                 myImage.onerror = function() {
                     //this.src="";
-                    $("#id_sign_img").attr('src','/static/user/res/auto_complete.png');
-                }
+                    $("#id_sign_img").attr('src', '/static/user/res/auto_complete.png');
+                };
             }
             schedule_on_off = 2;
             //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
             if(bodywidth > 600){
-                selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+                selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block', 'top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
             }else{
-                selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
+                selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check')}).css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
             }
             //disable_window_scroll();
         }
@@ -500,15 +497,15 @@
     //일정 완료
     $("#popup_btn_complete").click(function(){  //사인 전 일정 완료 버튼 클릭
         //body_position_fixed_unset();
-        $('#canvas, #canvasWrap').css('display','block');
-        $('#inner_shade_planinfo').css('display','block');
-        $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
+        $('#canvas, #canvasWrap').css('display', 'block');
+        $('#inner_shade_planinfo').css('display', 'block');
+        $("#popup_btn_sign_complete").css({'color':'#282828', 'background':'#ffffff'}).val('');
         var $popup = $('#cal_popup_planinfo');
         var $signcomplete_button = $('#popup_btn_sign_complete');
         if($popup.attr('data-grouptype') == "class"){
-            $signcomplete_button.attr('data-signtype','class')
+            $signcomplete_button.attr('data-signtype', 'class');
         }else if($popup.attr('data-grouptype') == "group"){
-            $signcomplete_button.attr('data-signtype','group')
+            $signcomplete_button.attr('data-signtype', 'group');
         }
         disable_window_scroll();
     });
@@ -517,7 +514,7 @@
     $('#popup_btn_sign_complete').click(function(){
         enable_window_scroll();
         if($(this).val()!="filled" && !$(this).hasClass('disabled_button')){
-            $('#canvas, #canvasWrap').css('display','block');
+            $('#canvas, #canvasWrap').css('display', 'block');
             if(schedule_on_off == 2){
                 toggleGroupParticipantsList('on');
             }
@@ -526,14 +523,14 @@
             //ajax_block_during_complete_weekcal = false
             if(schedule_on_off==1){
                 //PT 일정 완료 처리시
-                send_plan_complete('callback',function(json, senddata){
+                send_plan_complete('callback', function(json, senddata){
                     send_memo("blank");
                     signImageSend(senddata);
                     close_info_popup('cal_popup_planinfo');
                     completeSend();
                     super_ajaxClassTime();
                     enable_popup_btns_after_ajax();
-                })
+                });
             }else if(schedule_on_off == 2){
                 var groupOrMember = $('#popup_btn_sign_complete').attr('data-signtype');
                 $('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'));
@@ -553,7 +550,7 @@
                         signImageSend(senddata);
                         completeSend();
                         super_ajaxClassTime();
-                        close_sign_popup()
+                        close_sign_popup();
                         enable_popup_btns_after_ajax();
                     });
                 }
@@ -633,7 +630,7 @@
                     get_current_member_list();
                     get_current_group_list();
                     if(deleteTypeSelect == "repeatptdelete"){
-                        get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function (jsondata){
+                        get_member_lecture_list($('#cal_popup_plandelete').attr('data-dbid'), 'callback', function(jsondata){
                             var availCount_personal = 0;
                             for (var i = 0; i < jsondata.availCountArray.length; i++) {
                                 if (jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨") {
@@ -646,7 +643,7 @@
                     if(bodywidth >= 600){
                         $('#calendar').css('position','relative');
                     }
-                })
+                });
 
             }else if(deleteTypeSelect == "repeatgroupptdelete"){
                 repeat_schedule_id = $('#id_repeat_schedule_id_confirm').val();
@@ -661,7 +658,7 @@
                     get_current_member_list();
                     get_current_group_list();
                     if(bodywidth >= 600){
-                        $('#calendar').css('position','relative');
+                        $('#calendar').css('position', 'relative');
                     }
                     var groupid = $('#membersSelected button').attr('data-groupid');
                     get_groupmember_list(groupid, 'callback', function(jsondata){
@@ -685,7 +682,7 @@
                     get_member_lecture_list(dbid, "callback", function(jsondata){
                         var index = jsondata.lectureIdArray.indexOf(lecture_id);
                         data_prev = jsondata.remCountArray[index];
-                        
+
                         send_plan_delete('pt', 'callback', function(){
                             //ajax_block_during_delete_weekcal = true
                             enable_delete_btns_after_ajax();
@@ -714,7 +711,7 @@
                 send_plan_delete('group', 'callback', function(){
                     //ajax_block_during_delete_weekcal = true
                     enable_delete_btns_after_ajax();
-                    $('#members_mobile, #members_pc').html('')
+                    $('#members_mobile, #members_pc').html('');
                     get_current_member_list();
                     get_current_group_list();
                 });
@@ -736,7 +733,7 @@
         if(bodywidth < 600){
             beforeSend();
             //$('#calendar').css('display','none')
-            $('#calendar').css('height','0');
+            $('#calendar').css('height', '0');
             get_indiv_member_info(dbID);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -763,14 +760,14 @@
         var bodywidth = window.innerWidth;
         //$('#calendar').css('height','90%')
         if($(this).attr('data-page') == "addplan"){
-            $('#page-addplan').css('display','none');
+            $('#page-addplan').css('display', 'none');
             if(bodywidth < 600){
                 //$('#calendar').css('display','block');
-                $('#calendar').css('height','100%')
+                $('#calendar').css('height', '100%');
             }
             $('#float_btn_wrap').show().removeClass('rotate_btn');
-            $('#page-base').css('display','block');
-            $('#page-base-addstyle').css('display','none');
+            $('#page-base').css('display', 'block');
+            $('#page-base-addstyle').css('display', 'none');
 
             var text1 = '회원/그룹/클래스 선택';
             var text2 = '선택';
@@ -797,14 +794,14 @@
 
             $('#page-addplan .dropdown_selected').removeClass('dropdown_selected');
             $('.dateButton').removeClass('dateButton_selected');
-            $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate',null);
+            $("#datepicker_repeat_start, #datepicker_repeat_end").datepicker('setDate', null);
             $('#repeattypeSelected button, #repeatstarttimesSelected button, #repeatdurationsSelected button').html("<span style='color:#cccccc;'>"+text2+"</span>");
             //$('#page-addplan form input').val('');
             selectedDayGroup = [];
 
-            $('._NORMAL_ADD_wrap').css('display','block');
-            $('._REPEAT_ADD_wrap').css('display','none');
-            $('#timeGraph').css('display','none');
+            $('._NORMAL_ADD_wrap').css('display', 'block');
+            $('._REPEAT_ADD_wrap').css('display', 'none');
+            $('#timeGraph').css('display', 'none');
             shade_index(-100);
         }
     });
@@ -820,7 +817,7 @@
             $('.blankSelected, .blankSelected30').removeClass('blankSelected blankSelected30 blankSelected_addview');
             $('.submitBtn').removeClass('submitBtnActivated');
             $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected');
-            $('#submitBtn_mini').css('background','#282828');
+            $('#submitBtn_mini').css('background', '#282828');
             $('#memo_mini').val("");
 
             $("#membersSelected button").removeClass("dropdown_selected");
@@ -887,7 +884,7 @@
     //PC버전 새로고침 버튼
 
     //일정 없음 안내 팝업 닫기
-    $(document).on('click','.fake_for_blankpage',function(){
+    $(document).on('click', '.fake_for_blankpage', function(){
         $(this).fadeOut('fast');
     });
     //일정 없음 안내 팝업 닫기
@@ -936,7 +933,7 @@
             //통신 실패시 처리
             error:function(){
             }
-        })
+        });
     }
 
     function send_group_plan_complete(use, callback){
@@ -978,7 +975,7 @@
             //통신 실패시 처리
             error:function(){
             }
-        })
+        });
     }
 
     function send_memo(option){
@@ -987,7 +984,7 @@
         $.ajax({
             url:'/schedule/update_memo_schedule/',
             type:'POST',
-            data:{"schedule_id":schedule_id,"add_memo":memo},
+            data:{"schedule_id":schedule_id, "add_memo":memo},
 
             beforeSend:function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -1014,7 +1011,7 @@
             error:function(){
 
             }
-        })
+        });
     }
 
     function signImageSend(send_data){
@@ -1051,7 +1048,7 @@
                 alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.");
                 console.log('sign_image_save_fail');
             }
-        })
+        });
     }
 
     function close_sign_popup(){
@@ -1060,25 +1057,25 @@
         $('#canvas').css({'border-color':'#282828','display':'none'});
         $("#popup_btn_sign_complete").css({'color':'#282828','background':'#ffffff'}).val('');
         $('#inner_shade_planinfo').css('display','none');//사인 창 닫기 함수
-    };
+    }
 
     function disable_popup_btns_during_ajax(){ //일정 팝업의 [일정취소, 일정완료] 버튼 잠금
         $("#popup_btn_sign_complete, #popup_btn_delete").addClass('disabled_button');
-    };
+    }
 
     function enable_popup_btns_after_ajax(){ //일정 팝업의 [일정취소, 일정완료] 버튼 잠금해제
         $("#popup_btn_sign_complete, #popup_btn_delete").removeClass('disabled_button');
-    };
+    }
 
     function disable_delete_btns_during_ajax(){ //일정 삭제 팝업의 [예, 아니요] 버튼 잠금
         $('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button');
         //ajax_block_during_delete_weekcal = false;
-    };
+    }
 
     function enable_delete_btns_after_ajax(){ //일정 삭제 팝업의 [예, 아니요] 버튼 잠금해제
         $('#popup_delete_btn_yes, #popup_delete_btn_no').removeClass('disabled_button');
         //ajax_block_during_delete_weekcal = false;
-    };
+    }
 
     function super_ajaxClassTime(){
         var selector_calendar = $('#calendar');
@@ -1091,8 +1088,5 @@
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////함수 모음
-
-
-
 
 
