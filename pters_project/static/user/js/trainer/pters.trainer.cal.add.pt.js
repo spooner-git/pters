@@ -816,7 +816,7 @@ $(document).ready(function(){
             $('#remainCount_mini, #remainCount_mini_text, #countsSelected_mini').hide();
             $('#groupInfo, #groupmembersInfo, #groupInfo_mini, #groupInfo_mini_text, #groupInfoSelected').show();
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype', 'group');
-            $('#grouptypenumInfo, #groupInfoSelected').text('('+$(this).attr('data-grouptypecd_nm')+' 정원'+$(this).attr('data-membernum')+'명)');
+            $('#grouptypenumInfo, #groupInfoSelected').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
             $("#id_group_id").val($(this).attr('data-groupid'));
         }
 
