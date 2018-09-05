@@ -3,17 +3,18 @@ $(document).ready(function(){
     //ESC키를 눌러서 팝업 닫기
     $(document).keyup(function(e){
         if(e.keyCode == 27){
-            if($('#memberInfoPopup_PC').css('display') == 'block'){
+            if($('#page_addmember').css('display') == 'block'){
+                closePopup('member_add');
+            }else if($('#memberInfoPopup_PC').css('display') == 'block'){
                 closePopup('member_info_PC');
             }else{
                 close_info_popup('cal_popup_plandelete');
-                closePopup('member_add');
             }
         }
     });
     //ESC키를 눌러서 팝업 닫기
 
-    $(document).on('click','.phonesms',function(e){
+    $(document).on('click', '.phonesms', function(e){
         e.stopPropagation();
     });
 
