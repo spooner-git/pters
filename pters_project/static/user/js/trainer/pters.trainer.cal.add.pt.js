@@ -2789,7 +2789,8 @@ function durTimeSet(selectedTime, selectedMin, option, Timeunit){ // durAddOkArr
             +duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selected_time, '00:0'+zz)+')'+'</a></li>');
         // }
         zz += Timeunit;
-        if(zz > 1440){
+
+        if(zz > 1600){
             alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
             break;
         }

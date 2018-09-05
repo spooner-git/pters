@@ -513,11 +513,11 @@ $(document).ready(function(){
                                                             'data-dbid':$(this).attr('data-dbid'),
                                                             'data-username':$(this).parents('._member_info_popup').attr('data-username'),
                                                             'data-userid':$(this).parents('._member_info_popup').attr('data-userid')});
-        $('._resume, ._delete').css('display','none');
+        $('._resume, ._delete').css('display', 'none');
         if(bodywidth > 600){
-            $('._complete, ._refund').css('display','inline-block');
+            $('._complete, ._refund').css('display', 'inline-block');
         }else{
-            $('._complete, ._refund').css('display','block');
+            $('._complete, ._refund').css('display', 'block');
         }
         selector_lectureStateChangeSelectPopup.find('._explain').html('※진행완료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
         show_shadow_reponsively();
@@ -540,7 +540,7 @@ $(document).ready(function(){
             $('._resume, ._delete').css('display','block');
         }
         selector_lectureStateChangeSelectPopup.find('._explain').html('※재개 : 남은 횟수를 다시 가져옵니다.');
-        
+
         //수강자동 완료처리가 ON일떄 재개 버튼을 막는다.
         var enddate_thislect = $(this).siblings('div').find('.lec_end_date').val().replace(/\./gi,'-')
         if(Options.lecture_autocomplete == 0){                  //수강 자동완료 기능 OFF
@@ -640,7 +640,7 @@ $(document).ready(function(){
                                         '<p>- 옵션에서 수강 자동완료 해제 혹은<br>- 종료일자를 오늘 이후 날짜로 설정해주세요.</p>'+
                                     '</div>'+
                                 '<p>확인 후 다시 시도해주세요.</p>'
-                                )
+                                );
         }
     });
 
@@ -650,7 +650,7 @@ $(document).ready(function(){
         var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
         var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
         delete_member_reg_data_pc(lectureID, dbID);
-        selectore_lectureStateChangeSelectPopup.css('display','none');
+        selectore_lectureStateChangeSelectPopup.css('display', 'none');
         $('#shade_caution').hide();
     });
 
@@ -3284,20 +3284,20 @@ function open_member_info_popup_mobile(dbID, jsondata){
         $('#memberFemale_info').addClass('selectbox_checked');
     }
 
-    $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled',true);
-    selector_memberName_info.css('display','block');
-    $('#memberName_info_lastName, #memberName_info_firstName').css('display','none');
+    $('#memberInfoPopup input, #memberInfoPopup select').removeClass('input_available').attr('disabled', true);
+    selector_memberName_info.css('display', 'block');
+    $('#memberName_info_lastName, #memberName_info_firstName').css('display', 'none');
     //$('#shade3').fadeIn('fast');
     //scrollToDom($('#page_managemember'));
     if(bodywidth < 600){
         //$('#page_managemember').hide();
-        $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
+        $('#page_managemember').css({'height':'0', 'overflow-y':'hidden'});
         if($('._calmonth').length != 0 || $('._calweek').length != 0){
             $('#upbutton-modify, #mobile_basic_info .member_info_tool').css('display','none');
         }
     }
 
-    $('#inputError_info').css('display','none');
+    $('#inputError_info').css('display', 'none');
     $('#fast_check').val('0');
     $('#form_birth').val('');
     $('#id_phone').val('');
@@ -3309,18 +3309,18 @@ function modify_member_lec_info_pc(){
     $(document).on('keyup','.lec_reg_count',function(){
         var remainCount = $(this).parent('div').siblings('.lec_rem_count').text();
         if(Number($(this).val()) >= Number(remainCount)){
-            $(this).css('color','#282828');
+            $(this).css('color', '#282828');
             $('#form_lecture_reg_count').val($(this).val());
         }else{
-            $(this).css('color','red');
+            $(this).css('color', 'red');
             $('#form_lecture_reg_count').val($(this).val());
         }
     });
-    $(document).on('keyup','#regPrice',function(){
+    $(document).on('keyup', '#regPrice', function(){
         $('#form_price').val($(this).val());
     });
 
-    $(document).on('keyup','#lectureNote',function(){
+    $(document).on('keyup', '#lectureNote', function(){
         if($(this).val()==''){
             $('#form_note').val(' ');
         }else{
@@ -3401,8 +3401,7 @@ function resend_member_reg_data_pc(lectureID, dbID){
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
-            }
-            else{
+            }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
 
@@ -3442,7 +3441,7 @@ function delete_member_reg_data_pc(lectureID, dbID){
 
         //통신성공시 처리
         success:function(data){
-            var jsondata = JSON.parse(data)
+            var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -3451,13 +3450,23 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if($('#currentMemberList').css('display') == "block"){
-                    get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
-                    })
+                    get_member_ing_list("callback", function(jsondata){
+                        memberListSet('current', 'date', 'yes', jsondata);
+                    });
                 }else if($('#finishedMemberList').css('display') == "block"){
-                    get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
-                    })
+                    get_member_end_list("callback", function(jsondata){
+                        memberListSet('finished', 'date', 'yes', jsondata);
+                    });
+                }else if($("#calendar").length > 0 ){
+                    $('#members_mobile, #members_pc').html('');
+                    get_current_member_list();
+                    get_current_group_list();
+                }
+                if($('#calendar').length > 0){
+                    ajaxClassTime();
+                    close_info_popup('cal_popup_planinfo');
+                    close_info_popup('cal_popup_plancheck');
+                    shade_index(100);
                 }
                 get_member_lecture_list(dbID);
                 console.log('success');
@@ -3506,11 +3515,15 @@ function complete_member_reg_data_pc(lectureID, dbID){
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
                         memberListSet('current','date','yes',jsondata);
-                    })
+                    });
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
                         memberListSet('finished','date','yes',jsondata);
-                    })
+                    });
+                }else if($("#calendar").length > 0 ){
+                    $('#members_mobile, #members_pc').html('');
+                    get_current_member_list();
+                    get_current_group_list();
                 }
                 if($('#calendar').length > 0){
                     ajaxClassTime();
@@ -3554,19 +3567,22 @@ function resume_member_reg_data_pc(lectureID, dbID){
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
-            }
-            else{
+            }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                $('#startR').attr('selected','selected');
+                $('#startR').attr('selected', 'selected');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                        memberListSet('current', 'date', 'yes', jsondata);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                        memberListSet('finished', 'date', 'yes', jsondata);
                     })
+                }else if($("#calendar").length > 0 ){
+                    $('#members_mobile, #members_pc').html('');
+                    get_current_member_list();
+                    get_current_group_list();
                 }
                 get_member_lecture_list(dbID);
                 console.log('success');
@@ -3578,7 +3594,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 //회원 환불 정보를 전송한다.
@@ -3614,7 +3630,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
 
             //통신성공시 처리
             success:function(data){
-                var jsondata = JSON.parse(data)
+                var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
@@ -3622,15 +3638,19 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
                 else{
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
-                    $('#startR').attr('selected','selected');
+                    $('#startR').attr('selected', 'selected');
                     if($('#currentMemberList').css('display') == "block"){
-                        get_member_ing_list("callback",function(jsondata){
-                            memberListSet('current','date','yes',jsondata);
-                        })
+                        get_member_ing_list("callback", function(jsondata){
+                            memberListSet('current', 'date', 'yes', jsondata);
+                        });
                     }else if($('#finishedMemberList').css('display') == "block"){
-                        get_member_end_list("callback",function(jsondata){
-                            memberListSet('finished','date','yes',jsondata);
-                        })
+                        get_member_end_list("callback", function(jsondata){
+                            memberListSet('finished', 'date', 'yes', jsondata);
+                        });
+                    }else if($("#calendar").length > 0 ){
+                        $('#members_mobile, #members_pc').html('');
+                        get_current_member_list();
+                        get_current_group_list();
                     }
                     if($('#calendar').length > 0){
                         ajaxClassTime();
@@ -4653,8 +4673,8 @@ function closePopup(option){
             }
         }
     }else if(option == 'member_info_PC'){
-        $('body').css('overflow-y','auto')
-        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')
+        $('body').css('overflow-y','auto');
+        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         $('#memberInfoPopup_PC').removeClass('display_block');
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
 
