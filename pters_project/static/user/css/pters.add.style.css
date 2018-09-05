@@ -1066,7 +1066,8 @@ button._info_baseedit_img{
 
 #simpleReg td{
 	background: #f4f4f4;
-	width: 16.67%;
+	/*width: 16.67%;*/
+	width: 12.5%;
 }
 
 #memberSearch_add{
@@ -1172,6 +1173,10 @@ option{
 	line-height: 40px;
 	top: 0px;
 	right: 25px;
+}
+
+.regCountSelect{
+
 }
 
 .pricebutton{
@@ -1393,8 +1398,15 @@ option{
 		height: 80px;
 	}
 
+	._count{
+		height: 80px;
+	}
 	.pricebutton{
 		margin-top: 25px !important;
+	}
+
+	.regCountSelect{
+		margin-top: 28px !important;
 	}
 
 	.dropdown_birth{

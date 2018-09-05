@@ -995,10 +995,22 @@ $(document).ready(function(){
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
             $(this).css({
                             "-webkit-text-fill-color":'#282828'
-                        })
+                        });
 
             $(this).addClass("dropdown_selected");
             autoDateInput();
+            check_dropdown_selected();
+        }
+    });
+
+    $("#memberDue_add_2_fast").datepicker({
+        //minDate : 0,
+        onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+            $(this).css({
+                            "-webkit-text-fill-color":'#282828'
+                        });
+
+            $(this).addClass("dropdown_selected");
             check_dropdown_selected();
         }
     });
@@ -1172,6 +1184,7 @@ $(document).ready(function(){
     });
 
     //등록횟수(빠른입력방식) 선택
+    /*
     $('._count .ptersCheckbox').parent('td').click(function(){
         $('._count div.checked').removeClass('checked ptersCheckboxInner');
         var pterscheckbox = $(this).find('div');
@@ -1182,10 +1195,30 @@ $(document).ready(function(){
         selector_memberCount_add_fast.addClass("dropdown_selected");
         check_dropdown_selected();
     });
+    */
+    $('._count .ptersCheckbox').parent('td').click(function(){
+        $('._count div.checked').removeClass('checked ptersCheckboxInner');
+        var pterscheckbox = $(this).find('div');
+        $(this).find('div:nth-child(1)').addClass('checked');
+        pterscheckbox.find('div').addClass('ptersCheckboxInner');
+
+        var selector_memberCount_add_fast = $('#memberCount_add_fast');
+        selector_memberCount_add_fast.val(pterscheckbox.attr('data-count')).css({"-webkit-text-fill-color":'#282828'});
+        selector_memberCount_add_fast.addClass("dropdown_selected");
+        check_dropdown_selected();
+    });
+
+    $('#memberCount_add_fast').keyup(function(e){
+        $('._count div.checked').removeClass('checked ptersCheckboxInner');
+        var pterscheckbox = $("#userInputCount");
+        pterscheckbox.addClass('checked');
+        pterscheckbox.find('div').addClass('checked ptersCheckboxInner');
+    });
+
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
-        $('#form_member_groupid').val($(this).val())
+        $('#form_member_groupid').val($(this).val());
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
@@ -1454,13 +1487,13 @@ function float_btn_managemember(option){
             shade_index(100);
         }
 
-        $('#grouptype').hide()
-        $('#explain_group_lesson').show()
-        $('#explain_open_lesson').hide()
+        $('#grouptype').hide();
+        $('#explain_group_lesson').show();
+        $('#explain_open_lesson').hide();
 
-        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
-        $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 그룹')
+        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('NORMAL');
+        $('#addgrouptypename').text('신규 그룹');
 
         $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
@@ -1488,11 +1521,11 @@ function float_btn_managemember(option){
         }
 
         $('#grouptype').hide();
-        $('#explain_open_lesson').show()
-        $('#explain_group_lesson').hide()
-        $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true})
-        $('#form_grouptype').val('EMPTY')
-        $('#addgrouptypename').text('신규 클래스')
+        $('#explain_open_lesson').show();
+        $('#explain_group_lesson').hide();
+        $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('EMPTY');
+        $('#addgrouptypename').text('신규 클래스');
 
         $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
@@ -1644,7 +1677,7 @@ function pc_add_member(option){
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
 
-        selector_memberSearchButton.attr('data-type','');
+        selector_memberSearchButton.attr('data-type', '');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
         /*회원정보창에서 수강추가를 했을때 회원검색란에 아이디를 넣어준다.*/
         if($('#memberInfoPopup_PC').css('display') == 'block'){
@@ -1656,12 +1689,12 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
         var regEnddate = [];
         $('.lec_end_date').each(function(index){
-            regEnddate.push($(this).val().replace(/\./gi,'-'))
-        })
-        
-        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+            regEnddate.push($(this).val().replace(/\./gi,'-'));
+        });
+
+        $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option', 'minDate', find_max_date(regEnddate));
 
         check_dropdown_selected();
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
@@ -1674,8 +1707,8 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
 
         float_btn_managemember(1);
@@ -1871,10 +1904,12 @@ function priceInput(price, type, selector){
     if(type == "sum"){
         var priceInputValue = selector_lecturPrice_add_select.val().replace(/,/g, "");
         priceInputValue = price + Number(priceInputValue);
-        selector_lecturPrice_add_select.val(numberWithCommas(priceInputValue)).attr('readonly',true).css('-webkit-text-fill-color','#282828');
+        // selector_lecturPrice_add_select.val(numberWithCommas(priceInputValue)).attr('readonly',true).css('-webkit-text-fill-color','#282828');
+        selector_lecturPrice_add_select.val(numberWithCommas(priceInputValue)).css('-webkit-text-fill-color', '#282828');
         $('#lecturePrice_add_value'+loc).val(priceInputValue);
     }else if(type == "del"){
-        selector_lecturPrice_add_select.val("").attr('readonly',false).css('-webkit-text-fill-color','#cccccc');
+        // selector_lecturPrice_add_select.val("").attr('readonly',false).css('-webkit-text-fill-color', '#cccccc');
+        selector_lecturPrice_add_select.val("").css('-webkit-text-fill-color', '#cccccc');
         $('#lecturePrice_add_value'+loc).val(0);
     }
     check_dropdown_selected();
@@ -2861,21 +2896,21 @@ function autoDateInput(){
     }
     var selector_memberDue_add_2 = $('#memberDue_add_2');
     var selector_memberDue_add_2_fast = $('#memberDue_add_2_fast');
-    selector_memberDue_add_2.val(finishDate);
+    //selector_memberDue_add_2.val(finishDate);
     selector_memberDue_add_2_fast.val(finishDate);
     if(selectedD==99){
-        selector_memberDue_add_2.val(text);
+        selector_memberDue_add_2_fast.text(text);
         selector_memberDue_add_2_fast.val("9999-12-31");
     }
 
     if(selectedD==undefined){
-        selector_memberDue_add_2.val(text2);
+        selector_memberDue_add_2_fast.val(text2);
     }
 
-    if(selector_memberDue_add_2.val()!=text2 && selector_memberDue_add_2.val()!="" ){
-        selector_memberDue_add_2.addClass("dropdown_selected");
+    if(selector_memberDue_add_2_fast.val()!=text2 && selector_memberDue_add_2_fast.val()!="" ){
+        selector_memberDue_add_2_fast.addClass("dropdown_selected");
     }
-    selector_memberDue_add_2.css({
+    selector_memberDue_add_2_fast.css({
                                      "-webkit-text-fill-color":'#282828'
                                 })
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
