@@ -2931,7 +2931,7 @@ function check_dropdown_selected(){
 //빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택
 function autoDateInput(){
     var text = '소진시까지';
-    var text2 = '진행기간을 선택해주세요';
+    var text2 = '선택';
     if(Options.language == "JPN"){
         text = '残余回数終わるまで';
         text2 = '進行期間を選んでください。';

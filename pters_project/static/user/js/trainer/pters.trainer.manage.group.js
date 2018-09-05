@@ -2564,7 +2564,7 @@ function check_dropdown_selected(){
 function autoDateInput(){
     if(Options.language == "KOR"){
         var text = '소진시까지'
-        var text2 = '진행기간을 선택해주세요'
+        var text2 = '선택'
     }else if(Options.language == "JPN"){
         var text = '残余回数終わるまで'
         var text2 = '進行期間を選んでください。'
