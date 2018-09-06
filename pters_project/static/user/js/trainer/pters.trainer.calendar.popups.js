@@ -18,8 +18,9 @@
         e.preventDefault();
         var thisWidth = $(this).width();
         var thisHeight = $(this).height();
+        var thisLeft = $(this).css('left');
         var thisTop = $(this).offset().top;
-        var cssthisTop = Number($(this).css('top').replace(/px/gi,""))
+        var cssthisTop = Number($(this).css('top').replace(/px/gi, ""));
         var thisZindex = $(this).css('z-index');
 
         var hoverHeight;
@@ -35,10 +36,10 @@
 
         var small_plan = 0;
         if(calbottom - thisTop < 25 ){
-            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0, 'top': cssthisTop + calbottom - hoveredBottomLoc });
+            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':thisLeft-1, 'top': cssthisTop + calbottom - hoveredBottomLoc });
             small_plan = 1;
         }else{
-            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':0});
+            $(this).css({'height':hoverHeight, 'width':hoverWidth, 'z-index':150, 'border':'2px solid #fe4e65', 'left':thisLeft-1});
         }
 
         var $memberName = $(this).find('.memberName');
@@ -49,19 +50,19 @@
         }
 
 
-        $(document).on(eventend,'div.classTime, div.offTime, div.groupTime',function(e){
+        $(document).on(eventend, 'div.classTime, div.offTime, div.groupTime', function(e){
             if(bodywidth > 600){
                 if(small_plan == 1){
-                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1, 'top':cssthisTop});
+                    $(this).css({'height':thisHeight, 'width':thisWidth, 'z-index':thisZindex, 'border':'0', 'left':thisLeft, 'top':cssthisTop});
                     small_plan = 0;
                 }else{
-                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'left':1}); 
+                    $(this).css({'height':thisHeight, 'width':thisWidth, 'z-index':thisZindex, 'border':'0', 'left':thisLeft});
                 }
            }else{
                 if(small_plan == 1){
-                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0', 'top':cssthisTop}); 
+                    $(this).css({'height':thisHeight, 'width':thisWidth, 'z-index':thisZindex, 'border':'0', 'left':thisLeft, 'top':cssthisTop});
                 }else{
-                    $(this).css({'height':thisHeight, 'width':'99%', 'z-index':thisZindex, 'border':'0'}); 
+                    $(this).css({'height':thisHeight, 'width':thisWidth, 'z-index':thisZindex, 'border':'0', 'left':thisLeft});
                 }
            }
             if($memberName.hasClass('_hided')){
