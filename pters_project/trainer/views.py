@@ -458,11 +458,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                     start_date = ''
                     for class_lecture_info in total_class_lecture_list:
                         lecture_info = class_lecture_info.lecture_tb
-                        end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                      group_tb__isnull=True,
-                                                                      lecture_tb_id=class_lecture_info.lecture_tb_id,
-                                                                      en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
-                                                                      use=USE).count()
                         if lecture_info.state_cd == 'IP':
                             current_total_member_num += 1
                             # for lecture_info_data in class_lecture_list:
@@ -475,11 +470,23 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                                 if month_first_day <= start_date < next_month_first_day:
                                     new_member_num += 1
 
-            end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,  group_tb__isnull=False,
+                            break
+
+            query_class_auth_cd \
+                = "select `AUTH_CD` from CLASS_LECTURE_TB as D" \
+                  " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.CLASS_TB_ID = " + class_id
+            end_schedule_num += ScheduleTb.objects.select_related(
+                'lecture_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__isnull=True,
+                                                 lecture_tb__isnull=False, en_dis_type=ON_SCHEDULE_TYPE,
+                                                 state_cd='PE', use=USE
+                                                 ).annotate(class_auth_cd=RawSQL(query_class_auth_cd, [])
+                                                            ).filter(class_auth_cd='VIEW').count()
+
+            end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                          group_tb__isnull=False,
                                                           lecture_tb__isnull=True,
                                                           en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
                                                           use=USE).count()
-
         if error is None:
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
             context['total_member_num'] = total_member_num
