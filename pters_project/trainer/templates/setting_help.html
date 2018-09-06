@@ -178,8 +178,9 @@
                               </div>`];
             
             var len = jsondata.question_id.length;
+            var counter = len;
             for(var i=0; i<len; i++){
-                var number = `<div class="myquestion_history_table_cell _qatable_no">${i+1}</div>`
+                var number = `<div class="myquestion_history_table_cell _qatable_no">${counter--}.</div>`
                 var qa_type = `<div class="myquestion_history_table_cell _qatable_type">${jsondata.qa_type_cd_name[i]}</div>`
                 var qa_title = `<div class="myquestion_history_table_cell _qatable_title"><p>${jsondata.title[i]}</p></div>`
                 var qa_regdt = `<div class="myquestion_history_table_cell _qatable_regdt">${date_format_to_user_hangul(jsondata.reg_dt[i],'minimize')}</div>`
