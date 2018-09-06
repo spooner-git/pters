@@ -481,9 +481,13 @@
 //피터스 jquery 미니달력 커스텀
 
 //피터스 팝업 화면 중앙 위치
-function locate_this_to_center(selector){
+function locate_this_to_center(selector, position){ //position:fixed 이면 $(window).scrollTop()이 빠져야한다.
 	var $selector = $(selector);
-	var centerLoc = (($(window).height()-$selector.outerHeight())/2+$(window).scrollTop());
+	if(position == "fixed"){
+		var centerLoc = (($(window).height()-$selector.outerHeight())/2);
+	}else{
+		var centerLoc = (($(window).height()-$selector.outerHeight())/2+$(window).scrollTop());
+	}
 	$selector.show().css({'top':centerLoc,
 	                      'left':(($(window).width()-$selector.outerWidth())/2+$(window).scrollLeft()),
 	                      "transform":"unset"

@@ -183,7 +183,7 @@ $(document).ready(function(){
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 $('.plan_raw_add').hide();
                 shade_index(100);
-                 popup_locate_center_of_display('#cal_popup_plancheck');
+                locate_this_to_center('#cal_popup_plancheck', "fixed");
                 adjust_starttime_list_height();
             }else if($(this).hasClass('available')){
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
@@ -197,7 +197,7 @@ $(document).ready(function(){
                     $('.plan_raw_add').show();
                 }
                 shade_index(100);
-                popup_locate_center_of_display('#cal_popup_plancheck');
+                locate_this_to_center('#cal_popup_plancheck', "fixed");
                 adjust_starttime_list_height();
             }else{
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
@@ -207,7 +207,7 @@ $(document).ready(function(){
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 $('.plan_raw_add').hide();
                 shade_index(100);
-                popup_locate_center_of_display('#cal_popup_plancheck');
+                locate_this_to_center('#cal_popup_plancheck', "fixed");
                 adjust_starttime_list_height();
             }/*else{
              shade_index(100)
