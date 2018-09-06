@@ -165,8 +165,10 @@
 
         function draw_myquestion_list(jsondata, targetSelector){
             var targetHtml = targetSelector;
+            var email = "{{ request.user.email }}";
+{#            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>#}
 
-            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>
+            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${email}</span> 로 발송 드립니다.</div>
                               <div class="myquestion_history_table_title">
                                     <div class="myquestion_history_table_cell_title _qatable_no">No.</div>
                                     <div class="myquestion_history_table_cell_title _qatable_type">문의유형</div>
