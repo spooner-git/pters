@@ -707,8 +707,8 @@
     $('#legal_complete').click(function(){
         if($('#checkbox2').is(':checked') && $('#checkbox1').is(':checked')){
             $('#legal_popup').fadeOut('fast');
-            $('.registerbox_add').css('transform','translateX(-50%)');
-            $('._step2_label').css('transform','translateX(-50%)');
+            $('.registerbox_add').css('transform','translateX(-50%)').fadeIn('slow');
+            $('._step2_label').css('transform','translateX(-50%)').fadeIn('slow');
         }else{
             alert('피터스 이용을 위해서는 약관에 동의하셔야 가능합니다.');
         }
@@ -723,8 +723,8 @@
     }
 
     function goPrev(){
-        $('.registerbox_add').css('transform','translateX(50%)');
-        $('._step2_label').css('transform','translateX(50%)');
+        $('.registerbox_add').css({'transform':'translateX(150%)'}).fadeOut('slow');
+        $('._step2_label').css({'transform':'translateX(150%)'}).fadeOut('slow');
         $('#legal_popup').fadeIn('fast');
     }
 
