@@ -26,9 +26,10 @@
 	display: none;
 	width: 100%;
 	height: 100%;
-	z-index: 299;
+	z-index: 400;
 	background: black;
 	opacity: 0.5;
+	top: 0;
 }
 /*
 	#pshade{

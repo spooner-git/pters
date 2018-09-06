@@ -1014,6 +1014,22 @@ $(document).ready(function(){
     $("#memberDue_add_2_fast").datepicker({
         //minDate : 0,
         onSelect:function(dateText, inst){  //달력날짜 선택시 하단에 핑크선
+            var selectedStartDate = $('#datepicker_fast').val();
+            if( selectedStartDate == undefined || selectedStartDate.length == 0 ){
+                $(this).datepicker('setDate', null).removeClass("dropdown_selected");
+                show_caution_popup('<p style="color:#fe4e65;">날짜 선택</p>'+
+                                    '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                        '<p>시작 일자를 먼저 선택해주세요</p>'+
+                                    '</div>');
+            }else if(compare_date2( dateText, selectedStartDate ) == false){
+                $(this).datepicker('setDate', selectedStartDate).removeClass("dropdown_selected");
+                show_caution_popup('<p style="color:#fe4e65;">종료일자가 시작일자보다 앞섭니다.</p>'+
+                                    '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                        '<p>종료일자는 시작날짜 이후로 선택해주세요.</p>'+
+                                    '</div>');
+            }else{
+                $(this).addClass("dropdown_selected");
+            }
             var $datepicker = $('div._due');
             $datepicker.find('.checked').removeClass('checked ptersCheckboxInner');
             $datepicker.find('td[data-check="0"]').find('.ptersCheckbox').addClass('checked');
@@ -1024,7 +1040,6 @@ $(document).ready(function(){
                             "-webkit-text-fill-color":'#282828'
                         });
 
-            $(this).addClass("dropdown_selected");
             check_dropdown_selected();
         }
     });
@@ -1714,6 +1729,7 @@ function pc_add_member(option){
         });
 
         $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#memberDue_add_2_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker_add').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker2_add').datepicker('option', 'minDate', find_max_date(regEnddate));
 

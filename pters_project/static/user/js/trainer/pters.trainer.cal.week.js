@@ -1667,7 +1667,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
         var tdPlanStart = $("#"+planStart+" div");
         var tdPlan = $("#"+planStart);
-        tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
+        tdPlan.parent('div').siblings('.fake_for_blankpage').css('display', 'none');
 
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
@@ -2187,8 +2187,11 @@ function ajaxClassTime(use, callfunction){
             completeSend_();
 
             $('.ymdText-pc-add div').removeClass('disabled_button');
-            $('.ymdText-pc-add-pt').attr('onclick','float_btn_addplan(1)');
-            $('.ymdText-pc-add-off').attr('onclick','float_btn_addplan(2)');
+            $('.ymdText-pc-add-pt').attr('onclick', 'float_btn_addplan(1)');
+            $('.ymdText-pc-add-off').attr('onclick', 'float_btn_addplan(2)');
+
+            //console.log( know_duplicated_plans(jsondata) );
+
         },
 
         complete:function(){
@@ -2200,6 +2203,60 @@ function ajaxClassTime(use, callfunction){
         }
     });
 }
+
+//중복일정 계산하기
+function know_duplicated_plans(jsondata){
+    var testArray_start = ["2018-08-22 01:00:00", "2018-08-22 02:00:00", "2018-08-22 00:00:00"];
+    var testArray_end = ["2018-08-22 05:00:00", "2018-08-22 03:00:00", "2018-08-22 02:00:00"];
+    var duplicate_num = [];
+
+    var len1 = testArray_start.length;
+    var len2 = testArray_end.length;
+    for(var i=0; i<len1; i++){
+        var plan = testArray_start[i].split(' ');
+        var date = plan[0];
+        var time = plan[1];
+        var endplan = testArray_end[i].split(' ');
+        var enddate = endplan[0];
+        var endtime = endplan[1];
+        var duplicated = 0;
+        for(var j=0; j<len1; j++){
+            var plan_c = testArray_start[j].split(' ');
+            var date_c = plan_c[0];
+            var time_c = plan_c[1];
+            var endplan_c = testArray_end[j].split(' ');
+            var enddate_c = endplan_c[0];
+            var endtime_c = endplan_c[1];
+            if(date_c == date){
+                //겹치는 걸 센다.
+
+                if( compare_time(time_c, time) && compare_time(endtime, endtime_c)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
+                    duplicated++;
+                    console.log("대상안에 쏙")
+                }else if( compare_time(time, time_c) == false && compare_time(endtime, time_c)  ){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
+                    duplicated++;
+                    console.log("시작시간이 대상안에")
+                }else if( compare_time(endtime_c, time) && compare_time(endtime_c, endtime) == false ){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+                    duplicated++;
+                }else if( compare_time(time_c, time) == false && compare_time(endtime, endtime_c) == false ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
+                    duplicated++;
+                    console.log("대상을 완전히 감싼다")
+                }else if(time == time_c && endtime == endtime_c){ //비교 대상 시간이 똑같을 때
+                    duplicated++;
+                    console.log("완전히 같다")
+                }
+            }
+        }
+        duplicate_num.push(duplicated);
+    }
+    return duplicate_num;
+}
+//중복일정 계산하기
+
+
+
+
+
 // function getTimeStamp() {
 //   var d = new Date();
 //   var s =
