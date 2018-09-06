@@ -148,9 +148,9 @@ $(document).on('click','img.add_listedMember',function(){
                     enable_group_member_add_after_ajax();
                     
                     if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
-                        alert('지난 그룹일정 참석자 정상 등록되었습니다.');
+                        alert('지난 일정 참석자 정상 등록되었습니다.');
                     }else{
-                        alert('그룹일정 참석자 정상 등록되었습니다.');
+                        alert('일정 참석자 정상 등록되었습니다.');
                     }
 
                 });

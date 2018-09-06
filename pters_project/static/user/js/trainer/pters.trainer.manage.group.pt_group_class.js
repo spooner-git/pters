@@ -180,7 +180,7 @@ $(document).on('click', 'img.add_listedMember', function(){
                                 completeSend();
                                 set_schedule_time(json);
                                 get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max);});
-                                alert('지난 그룹일정 참석자 정상 등록되었습니다.');
+                                alert('지난 일정 참석자 정상 등록되었습니다.');
                                 if(bodywidth < 600){
                                     $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2});
                                 }
@@ -202,7 +202,7 @@ $(document).on('click', 'img.add_listedMember', function(){
                     scheduleTime('off', data);
                     scheduleTime('group', data);
                     draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max);
-                    alert('그룹일정 참석자 정상 등록되었습니다.');
+                    alert('일정 참석자 정상 등록되었습니다.');
                     if(bodywidth < 600){
                         $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height() - $('#subpopup_addByList_plan').height())/2});
                     }
