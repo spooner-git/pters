@@ -1521,6 +1521,11 @@ function fake_show(){
 
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+    
+    //중복일정 ㅇㄷ
+    var duplicate_check = know_duplicated_plans(jsondata).result;
+    //중복일정 ㅇㄷ    
+
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
     $('.blankSelected').removeClass('blankSelected');
@@ -1706,6 +1711,15 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         }
         var planHeight = Number(planDura*planheight-1);
 
+        //중복 일정 ㅇㄷ
+        // var planWidth;
+        // var planLeft;
+        // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
+        //     planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
+        //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])
+        // }
+        //중복 일정 ㅇㄷ
+
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
 
         //if(planStartDiv.length>0){
@@ -1735,6 +1749,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     //'left:'+planLeft+'%;'+
+                                                     //'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
@@ -1766,6 +1782,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     //'left:'+planLeft+'%;'+
+                                                     //'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
                                                         '<p class="groupnametag">'+planCode+memberName+'</p>'+
@@ -1796,6 +1814,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     //'left:'+planLeft+'%;'+
+                                                     //'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
@@ -2190,8 +2210,6 @@ function ajaxClassTime(use, callfunction){
             $('.ymdText-pc-add-pt').attr('onclick', 'float_btn_addplan(1)');
             $('.ymdText-pc-add-off').attr('onclick', 'float_btn_addplan(2)');
 
-            //console.log( know_duplicated_plans(jsondata) );
-
         },
 
         complete:function(){
@@ -2206,9 +2224,21 @@ function ajaxClassTime(use, callfunction){
 
 //중복일정 계산하기
 function know_duplicated_plans(jsondata){
-    var testArray_start = ["2018-08-22 01:00:00", "2018-08-22 02:00:00", "2018-08-22 00:00:00"];
-    var testArray_end = ["2018-08-22 05:00:00", "2018-08-22 03:00:00", "2018-08-22 02:00:00"];
+    var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
+    var testArray_end = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
+    var classlen = jsondata.classTimeArray_start_date.length;
+    for(var i=0; i<classlen; i++){
+        if(testArray_start.indexOf(jsondata.classTimeArray_start_date[i]) == -1 && testArray_end.indexOf(jsondata.classTimeArray_end_date[i]) == -1){
+            testArray_start.push(jsondata.classTimeArray_start_date[i]);
+            testArray_end.push(jsondata.classTimeArray_end_date[i]);
+        }
+    }
+
+
     var duplicate_num = [];
+    var duplicate_dic = {};
+
+    //console.log("testArray_start",testArray_start)
 
     var len1 = testArray_start.length;
     var len2 = testArray_end.length;
@@ -2220,6 +2250,7 @@ function know_duplicated_plans(jsondata){
         var enddate = endplan[0];
         var endtime = endplan[1];
         var duplicated = 0;
+        duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]] = [];
         for(var j=0; j<len1; j++){
             var plan_c = testArray_start[j].split(' ');
             var date_c = plan_c[0];
@@ -2229,32 +2260,48 @@ function know_duplicated_plans(jsondata){
             var endtime_c = endplan_c[1];
             if(date_c == date){
                 //겹치는 걸 센다.
-
                 if( compare_time(time_c, time) && compare_time(endtime, endtime_c)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
+                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
                     duplicated++;
-                    console.log("대상안에 쏙")
                 }else if( compare_time(time, time_c) == false && compare_time(endtime, time_c)  ){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
+                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
                     duplicated++;
-                    console.log("시작시간이 대상안에")
                 }else if( compare_time(endtime_c, time) && compare_time(endtime_c, endtime) == false ){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
                     duplicated++;
                 }else if( compare_time(time_c, time) == false && compare_time(endtime, endtime_c) == false ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
+                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
                     duplicated++;
-                    console.log("대상을 완전히 감싼다")
                 }else if(time == time_c && endtime == endtime_c){ //비교 대상 시간이 똑같을 때
+                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
                     duplicated++;
-                    console.log("완전히 같다")
                 }
             }
         }
         duplicate_num.push(duplicated);
     }
-    return duplicate_num;
+
+    for(var plan in duplicate_dic){
+        var planlength = duplicate_dic[plan].length;
+        for(var plans in duplicate_dic){
+            if(duplicate_dic[plans].indexOf(plan) >= 0 && planlength < duplicate_dic[plans].length ){
+                console.log('여기')
+                delete duplicate_dic[plan];
+            }
+        }
+    }
+
+    var result = {};
+    for(var plan_ in duplicate_dic){
+        var len = duplicate_dic[plan_].length;
+        for(var i=0; i<len; i++){
+            result[duplicate_dic[plan_][i]] = [i, len];
+        }
+    }
+    console.log("dic", duplicate_dic)
+    return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
 //중복일정 계산하기
-
-
-
 
 
 // function getTimeStamp() {
@@ -2294,7 +2341,6 @@ function set_schedule_time(jsondata){
             scheduleTime_Mobile('class', jsondata, calendarSize);
             scheduleTime_Mobile('off', jsondata, calendarSize);
             scheduleTime_Mobile('group', jsondata, calendarSize);
-            //get_timeindex_Y();
         }else{
             scheduleTime('class', jsondata, calendarSize);
             scheduleTime('off', jsondata, calendarSize);
@@ -2305,6 +2351,73 @@ function set_schedule_time(jsondata){
         scheduleTime_Mobile('class', jsondata, calendarSize);
         scheduleTime_Mobile('off', jsondata, calendarSize);
         scheduleTime_Mobile('group', jsondata, calendarSize);
-        //fake_show();
     }
 }
+
+
+
+
+//중복일정 ㅇㄷ
+    // var testArray = {
+    //   "offScheduleIdArray" :
+    //   ["53134", "47521", "53165"],
+    //   "offTimeArray_start_date" :
+    //   ["2018-09-06 00:00:00", "2018-09-06 01:00:00", "2018-09-06 02:00:00"],
+    //   "offTimeArray_end_date" :
+    //   ["2018-09-06 05:00:00", "2018-09-06 03:00:00", "2018-09-06 08:00:00"],
+    //   "offScheduleNoteArray":
+    //   ["", "", ""],
+
+    //   "scheduleIdArray" :
+    //   ["52655", "53110", "53371"],
+    //   "classArray_lecture_id" :
+    //   ["1209", "1209", "1309"],
+    //   "classTimeArray_member_name" :
+    //   ["한지민", "한지민", "스노우멤버"],
+    //   "classTimeArray_member_id" :
+    //   ["1275", "1275", "482"],
+    //   "classTimeArray_start_date" :
+    //   ["2018-09-06 13:00:00", "2018-09-06 14:00:00", "2018-09-06 12:00:00"],
+    //   "classTimeArray_end_date" :
+    //   ["2018-09-06 18:00:00", "2018-09-06 15:00:00", "2018-09-06 16:00:00"],
+    //   "scheduleFinishArray":
+    //   ["1", "1", "1"],
+    //   "scheduleNoteArray":
+    //   ["", "", ""],
+    //   "scheduleIdxArray":
+    //   ["1", "2", "3"],
+
+    //   "group_schedule_id":
+    //   ["53472", "53478", "53849"],
+    //   "group_schedule_group_id":
+    //   ["92", "92", "108"],
+    //   "group_schedule_group_name":
+    //   ["1:1 개설형", "1:1 개설형", "20:1 단체"],
+    //   "group_schedule_max_member_num":
+    //   ["1", "1", "20"],
+    //   "group_schedule_current_member_num":
+    //   ["0", "0", "12"],
+    //   "group_schedule_group_type_cd_name":
+    //   ["클래스", "클래스", "클래스"],
+    //   "group_schedule_start_datetime":
+    //   ["2018-09-07 17:00:00", "2018-09-06 19:00:00", "2018-09-06 20:00:00"],
+    //   "group_schedule_end_datetime":
+    //   ["2018-09-07 22:00:00", "2018-09-06 21:00:00", "2018-09-06 23:00:00"],
+    //   "group_schedule_finish_check":
+    //   ["1", "1", "1"],
+    //   "group_schedule_note":
+    //   ["", "", "asdfasdf"],
+
+    //   "messageArray" :
+    //   [],
+    //   "RepeatDuplicationDateArray" :
+    //   [],
+
+    //   "repeatArray" :
+    //   [""],
+    //   "repeatScheduleCounterArray" :
+    //   [""]
+
+    // };
+//중복일정 ㅇㄷ
+
