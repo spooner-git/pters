@@ -42,38 +42,64 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         schedule_data = ScheduleTb.objects.select_related(
             'lecture_tb__member', 'group_tb'
         ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                 start_dt__gte=start_date, start_dt__lt=end_date
+                 start_dt__gte=start_date, start_dt__lt=end_date,
+                 lecture_tb__use=USE
                  ).annotate(group_type_cd_name=RawSQL('IFNULL(( '+query_group_type_cd_name+' ), \'1:1 레슨\')', []),
                             group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', []),
                             member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt')
-    else:
-        schedule_data = ScheduleTb.objects.select_related(
-            'lecture_tb__member', 'group_tb'
-        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
-                 ).annotate(group_type_cd_name=RawSQL('IFNULL(('+query_group_type_cd_name+'), \'1:1 레슨\')', []),
-                            group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', []),
-                            member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt')
+                            ).filter(member_auth_cd='VIEW').order_by('start_dt')
+        idx1 = 0
+        idx2 = 1
+        lecture_id = None
+        for schedule_info in schedule_data:
+            if lecture_id != schedule_info.lecture_tb_id:
+                lecture_id = schedule_info.lecture_tb_id
+                idx1 += 1
+                idx2 = 1
+            schedule_info.idx = str(idx1)+'-'+str(idx2)
+            pt_schedule_list.append(schedule_info)
+            idx2 += 1
 
-    idx1 = 0
-    idx2 = 1
-    lecture_id = None
-    for schedule_info in schedule_data:
-        if lecture_id != schedule_info.lecture_tb_id:
-            lecture_id = schedule_info.lecture_tb_id
-            idx1 += 1
-            idx2 = 1
-        schedule_info.idx = str(idx1)+'-'+str(idx2)
-        pt_schedule_list.append(schedule_info)
-        idx2 += 1
-
-        if now <= schedule_info.start_dt:
-            if next_schedule == '':
-                next_schedule = schedule_info.start_dt
-            else:
-                if next_schedule > schedule_info.start_dt:
+            if now <= schedule_info.start_dt:
+                if next_schedule == '':
                     next_schedule = schedule_info.start_dt
+                else:
+                    if next_schedule > schedule_info.start_dt:
+                        next_schedule = schedule_info.start_dt
+    else:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                     lecture_tb__member_id=user_id,
+                                                     lecture_tb__use=USE
+                                                     ).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+
+        idx1 = 0
+        for lecture_info in lecture_list:
+            try:
+                lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW',
+                                                                member_id=user_id,
+                                                                lecture_tb=lecture_info.lecture_tb_id)
+            except ObjectDoesNotExist:
+                lecture_info_data = None
+
+            if lecture_info_data is not None:
+                idx1 += 1
+                idx2 = 1
+                schedule_data = ScheduleTb.objects.select_related('lecture_tb__member', 'group_tb'
+                                                                  ).filter(class_tb_id=class_id,
+                                                                           en_dis_type=ON_SCHEDULE_TYPE,
+                                                                           lecture_tb_id=lecture_info_data.lecture_tb_id
+                                                                           ).order_by('start_dt')
+                for schedule_info in schedule_data:
+                    schedule_info.idx = str(idx1) + '-' + str(idx2)
+                    pt_schedule_list.append(schedule_info)
+                    idx2 += 1
+
+                    if now <= schedule_info.start_dt:
+                        if next_schedule == '':
+                            next_schedule = schedule_info.start_dt
+                        else:
+                            if next_schedule > schedule_info.start_dt:
+                                next_schedule = schedule_info.start_dt
 
     context['pt_schedule_data'] = pt_schedule_list
     context['next_schedule'] = next_schedule
@@ -383,6 +409,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     # except ObjectDoesNotExist:
                     #     error = '그룹 정보를 불러오지 못했습니다.'
 
+                print('lecture_list:' + str(lecture_info_data.lecture_tb_id) + ':' + str(lecture_info_data.lecture_tb.start_date))
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list
