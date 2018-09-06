@@ -827,7 +827,7 @@
                 initialize_pters_seekbar_module($(target), worktime_Array[dayname]["start"], worktime_Array[dayname]["end"],600,function(){worktime_seekbar_values_to_form();})
                 $(worktime_week_form_Array[0]).val(Options.worktimeWeekly[0]);
             }else{
-                $(worktime_week_form_Array[0]).val('0:00-0:00')
+                $(worktime_week_form_Array[0]).val('0:00-0:00');
                 $(this).parent('div').siblings(target).hide();
             }
             check_dropdown_selected();
@@ -950,9 +950,14 @@
                 var ends = $(this).attr('value').split('-')[1];
                 if(starts == "24:00"){starts = "23:59"};
                 if(ends == "24:00"){ends = "23:59"};
+                var dayname = $(this).attr('id').split("_")[2];
+                if($('#switch_worktime_'+dayname).attr('value') == 1 ){
+                    starts = "0:00";
+                    ends = "0:00";
+                }
                 resultStartArray.push(starts);
                 resultEndArray.push(ends);
-            })
+            });
             for(var i=0; i<resultStartArray.length; i++){
                 $(worktime_week_form_Array[i]).val(`${resultStartArray[i]}-${resultEndArray[i]}`)
             }
