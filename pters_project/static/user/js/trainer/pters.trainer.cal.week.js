@@ -9,245 +9,183 @@
  Sunday is 0, Monday is 1
 
  */
- 
-$(document).ready(function(){
-    $('#uptext').text("주간 일정");
 
-    setInterval(function(){
-        // ajaxCheckSchedule();
-        //todayFinderArrow();
-        addcurrentTimeIndicator_blackbox();
-    }, 60000);// 자동 ajax 새로고침(일정가져오기)
+$('#uptext').text("주간 일정");
 
-    function ajaxCheckSchedule(){
+setInterval(function(){
+    // ajaxCheckSchedule();
+    //todayFinderArrow();
+    addcurrentTimeIndicator_blackbox();
+}, 60000);// 자동 ajax 새로고침(일정가져오기)
 
-        $.ajax({
-            url: '/schedule/check_schedule_update/',
-            dataType : 'html',
+function ajaxCheckSchedule(){
 
-            beforeSend:function(){
-                //beforeSend();
-            },
+    $.ajax({
+        url: '/schedule/check_schedule_update/',
+        dataType : 'html',
 
-            success:function(data){
-                var jsondata = JSON.parse(data);
-                // console.log(jsondata)
-                if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show();
-                    $('#errorMessageText').text(jsondata.messageArray);
-                }else{
-                    var update_data_changed = jsondata.data_changed;
-                    if(update_data_changed[0]=="1"){
-                        ajaxClassTime();
-                    }
+        beforeSend:function(){
+            //beforeSend();
+        },
+
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            // console.log(jsondata)
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                var update_data_changed = jsondata.data_changed;
+                if(update_data_changed[0]=="1"){
+                    ajaxClassTime();
                 }
-
-            },
-
-            complete:function(){
-                //completeSend();
-            },
-
-            error:function(){
-                console.log('server error');
             }
-        });
-    }
 
-    var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
-    //상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
+        },
 
-    function send_push(push_server_id, intance_id, title, message, badge_counter){
+        complete:function(){
+            //completeSend();
+        },
 
-        $.ajax({
-            url: 'https://fcm.googleapis.com/fcm/send',
-            type : 'POST',
-            contentType : 'application/json',
-            dataType: 'json',
-            headers : {
-                Authorization : 'key=' + push_server_id
-            },
-            data: JSON.stringify({
-                "to": intance_id,
-                "notification": {
-                    "title":title,
-                    "body":message,
-                    "badge":badge_counter,
-                    "sound": "default"
-                }
-            }),
+        error:function(){
+            console.log('server error');
+        }
+    });
+}
 
-            beforeSend:function(){
-                console.log('test_ajax');
+var schedule_on_off = 0; //0 : OFF Schedule / 1 : PT Schedule
+//상단바 터치시 주간달력에 회원명/시간 표시 ON OFF
 
-            },
+var firstDayInfoPrevMonth = new Date(currentYear, currentMonth-1, 1);
+var firstDayPrevMonth = firstDayInfoPrevMonth.getDay(); //전달 1일의 요일
+var firstDayInfoNextMonth = new Date(currentYear, currentMonth+1, 1);
+var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
+var currentPageMonth = currentMonth+1; //현재 달
 
-            success:function(response){
-                console.log(response);
-            },
-
-            complete:function(){
-
-            },
-
-            error:function(){
-                //alert("Server Error: \nSorry for inconvenience. \nPTERS server is unstable now.")
-                console.log(push_server_id);
-                console.log(intance_id);
-                console.log('server error');
-            }
-        });
-    }
-
-
-    var date = new Date();
-    var currentYear = date.getFullYear(); //현재 년도
-    var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-    var currentDate = date.getDate(); //오늘 날짜
-    var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
-    var currentHour = date.getHours();
-    var currentMinute = date.getMinutes();
-
-    var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
-    if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
-        lastDay[1] = 29;
-    }else{
-        lastDay[1] = 28;
-    }
-
-    var weekDay = ['일', '월', '화', '수', '목', '금', '토'];
-    var firstDayInfoPrevMonth = new Date(currentYear, currentMonth-1, 1);
-    var firstDayPrevMonth = firstDayInfoPrevMonth.getDay(); //전달 1일의 요일
-    var firstDayInfoNextMonth = new Date(currentYear, currentMonth+1, 1);
-    var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요일
-    var currentPageMonth = currentMonth+1; //현재 달
-
-    var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
+var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
 
 // ############################구동시 실행################################################################################
 // ****************************구동시 실행********************************************************************************
 
-    /*
-    if(bodywidth > 600){
-        //week_calendar(today_YY_MM_DD)
+/*
+if(bodywidth > 600){
+    //week_calendar(today_YY_MM_DD)
 
-    }else if(bodywidth<=600){
-        //week_calendar_mobile(today_YY_MM_DD)
-    }
-    */
+}else if(bodywidth<=600){
+    //week_calendar_mobile(today_YY_MM_DD)
+}
+*/
 
-    //위 코드를 구동을 원하는 html의 script내에 복사
+//위 코드를 구동을 원하는 html의 script내에 복사
 
 
 // ****************************구동시 실행********************************************************************************
 // ############################구동시 실행################################################################################
 
-    //다음페이지로 슬라이드 했을때 액션
-    myswiper.on('onSlideNextEnd', function(){
-        closeAddPopup_mini();
-        slideControl.append();
-        weekNum_Set_fixed();
-        toDay();
-        addcurrentTimeIndicator_blackbox();
-        dateText();
-        reserveAvailable();
-        todayFinderArrow();
-        //krHoliday();
-    });
+//다음페이지로 슬라이드 했을때 액션
+myswiper.on('onSlideNextEnd', function(){
+    close_planadd_popup_mini();
+    slideControl.append();
+    weekNum_Set_fixed();
+    toDay();
+    addcurrentTimeIndicator_blackbox();
+    dateText();
+    reserveAvailable();
+    todayFinderArrow();
+    //krHoliday();
+});
 
-    //이전페이지로 슬라이드 했을때 액션
-    myswiper.on('onSlidePrevEnd', function(){
-        closeAddPopup_mini();
-        slideControl.prepend();
-        weekNum_Set_fixed();
-        toDay();
-        addcurrentTimeIndicator_blackbox();
-        dateText();
-        reserveAvailable();
-        todayFinderArrow();
-        //krHoliday();
+//이전페이지로 슬라이드 했을때 액션
+myswiper.on('onSlidePrevEnd', function(){
+    close_planadd_popup_mini();
+    slideControl.prepend();
+    weekNum_Set_fixed();
+    toDay();
+    addcurrentTimeIndicator_blackbox();
+    dateText();
+    reserveAvailable();
+    todayFinderArrow();
+    //krHoliday();
 
-    });
+});
 
 
-    //페이지 이동에 대한 액션 클래스
-    var slideControl = {
-        'append' : function(){ //다음페이지로 넘겼을때
-            var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
-            var lastdateinfo = selector_swiper_slide_last_child.find('.td00').attr('id').split('_');
-            var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi,""));
-            var lastYY = Number(lastdateinfo[0]);
-            var lastMM = Number(lastdateinfo[1]);
-            var lastDD = Number(lastdateinfo[2]);
-            myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
-            myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
-            if(bodywidth > 600){
-                if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                    calTable_Set_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
-                    if($('#hidetoggle').attr('data-type') == '1'){
-                        $('.td00, .td30').css({'background':'unset',
-                                              'background-image':'url("/static/user/res/calendar_hour_day2.png")',
-                                              'background-size':'60px '+ ($('.hour').height()+1)+'px'});
-                    }
-                }else{
-                    calTable_Set(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
-                    if($('#hidetoggle').attr('data-type') == '1'){
-                        $('.td00, .td30').css({'background':'unset',
-                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
-                                            'background-size':'60px '+$('.td00').height()+'px'});
-                    }
-                }
-            }else if(bodywidth<=600){
+//페이지 이동에 대한 액션 클래스
+var slideControl = {
+    'append' : function(){ //다음페이지로 넘겼을때
+        var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
+        var lastdateinfo = selector_swiper_slide_last_child.find('.td00').attr('id').split('_');
+        var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi,""));
+        var lastYY = Number(lastdateinfo[0]);
+        var lastMM = Number(lastdateinfo[1]);
+        var lastDD = Number(lastdateinfo[2]);
+        myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
+        myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
+        if(bodywidth > 600){
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 calTable_Set_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
                 if($('#hidetoggle').attr('data-type') == '1'){
                     $('.td00, .td30').css({'background':'unset',
                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                           'background-size':'60px '+ ($('.hour').height()+1)+'px'});
                 }
-            }
-            ajaxClassTime();
-        },
-
-        'prepend' : function(){
-            var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
-            var firstdateinfo = selector_swiper_slide_first_child.find('.td00').attr('id').split('_');
-            var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi,""));
-            var firstYY = Number(firstdateinfo[0]);
-            var firstMM = Number(firstdateinfo[1]);
-            var firstDD = Number(firstdateinfo[2]);
-            myswiper.removeSlide(4);
-            myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
-            if(bodywidth > 600){
-                if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                    calTable_Set_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
-                    if($('#hidetoggle').attr('data-type') == '1'){
-                        $('.td00, .td30').css({'background':'unset',
-                                              'background-image':'url("/static/user/res/calendar_hour_day2.png")',
-                                              'background-size':'60px '+ ($('.hour').height()+1)+'px'});
-                    }
-                }else{
-                    calTable_Set(first-1, firstYY, firstMM, firstDD, -7, 0);
-                    if($('#hidetoggle').attr('data-type') == '1'){
-                        $('.td00, .td30').css({'background':'unset',
-                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
-                                            'background-size':'60px '+$('.td00').height()+'px'});
-                    }
+            }else{
+                calTable_Set(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
+                if($('#hidetoggle').attr('data-type') == '1'){
+                    $('.td00, .td30').css({'background':'unset',
+                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                        'background-size':'60px '+$('.td00').height()+'px'});
                 }
+            }
+        }else if(bodywidth<=600){
+            calTable_Set_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
+            if($('#hidetoggle').attr('data-type') == '1'){
+                $('.td00, .td30').css({'background':'unset',
+                                      'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                      'background-size':'60px '+ ($('.hour').height()+1)+'px'});
+            }
+        }
+        ajaxClassTime();
+    },
 
-            }else if(bodywidth<=600){
+    'prepend' : function(){
+        var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
+        var firstdateinfo = selector_swiper_slide_first_child.find('.td00').attr('id').split('_');
+        var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi,""));
+        var firstYY = Number(firstdateinfo[0]);
+        var firstMM = Number(firstdateinfo[1]);
+        var firstDD = Number(firstdateinfo[2]);
+        myswiper.removeSlide(4);
+        myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
+        if(bodywidth > 600){
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 calTable_Set_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
                 if($('#hidetoggle').attr('data-type') == '1'){
                     $('.td00, .td30').css({'background':'unset',
                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                           'background-size':'60px '+ ($('.hour').height()+1)+'px'});
                 }
+            }else{
+                calTable_Set(first-1, firstYY, firstMM, firstDD, -7, 0);
+                if($('#hidetoggle').attr('data-type') == '1'){
+                    $('.td00, .td30').css({'background':'unset',
+                                       'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                        'background-size':'60px '+$('.td00').height()+'px'});
+                }
             }
 
-            ajaxClassTime();
+        }else if(bodywidth<=600){
+            calTable_Set_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
+            if($('#hidetoggle').attr('data-type') == '1'){
+                $('.td00, .td30').css({'background':'unset',
+                                      'background-image':'url("/static/user/res/calendar_hour_day2.png")',
+                                      'background-size':'60px '+ ($('.hour').height()+1)+'px'});
+            }
         }
-    };
 
-});//document(ready)
+        ajaxClassTime();
+    }
+};
 
 
 //작은달력 설정
@@ -2165,63 +2103,6 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
     }
 }
 
-function ajaxClassTime(use, callfunction){
-    var beforeSend_;
-    var completeSend_;
-    if(use == "callbefore"){
-        beforeSend_ = function(){beforeSend('callback', function(){callfunction();});};
-        completeSend_ = function(){completeSend();};
-    }else if(use == "callafter"){
-        beforeSend_ = function(){beforeSend();};
-        completeSend_ = function(){completeSend('callback', function(){callfunction();});};
-    }else{
-        beforeSend_ = function(){beforeSend();};
-        completeSend_ = function(){completeSend();};
-    }
-
-    var $weekNum4 = $('#weekNum_4').attr('data-date');
-    var today_form = $weekNum4.substr(0, 4)+'-'+$weekNum4.substr(4, 2)+'-'+$weekNum4.substr(6, 2);
-
-    //=var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts('/trainer/get_trainer_schedule/')
-    $.ajax({
-        url: '/trainer/get_trainer_schedule/',
-        type : 'GET',
-        data : {"date":today_form, "day":18},
-        dataType : 'html',
-
-        beforeSend:function(){
-            beforeSend_();
-            // console.log(getTimeStamp());
-            $('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick', '');
-        },
-
-        success:function(data){
-            var jsondata = JSON.parse(data);
-            if(jsondata.messageArray.length>0){
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray);
-            }else{
-                set_schedule_time(jsondata);
-            }
-
-            completeSend_();
-
-            $('.ymdText-pc-add div').removeClass('disabled_button');
-            $('.ymdText-pc-add-pt').attr('onclick', 'float_btn_addplan(1)');
-            $('.ymdText-pc-add-off').attr('onclick', 'float_btn_addplan(2)');
-
-        },
-
-        complete:function(){
-
-        },
-
-        error:function(){
-            console.log('server error');
-        }
-    });
-}
-
 //중복일정 계산하기
 function know_duplicated_plans(jsondata){
     var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
@@ -2329,32 +2210,6 @@ function know_duplicated_plans(jsondata){
 //   }
 //   return zero + n;
 // }
-
-
-function set_schedule_time(jsondata){
-    //$('.classTime, .offTime, .groupTime').parent().html('<div class="blankbox"></div>');
-    $('.classTime, .offTime, .groupTime').remove();
-    $('._on').removeClass('_on');
-    initialJSON = jsondata;
-    if(bodywidth > 600){
-        if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-            scheduleTime_Mobile('class', jsondata, calendarSize);
-            scheduleTime_Mobile('off', jsondata, calendarSize);
-            scheduleTime_Mobile('group', jsondata, calendarSize);
-        }else{
-            scheduleTime('class', jsondata, calendarSize);
-            scheduleTime('off', jsondata, calendarSize);
-            scheduleTime('group', jsondata, calendarSize);
-            fake_show();
-        }
-    }else if(bodywidth <= 600){
-        scheduleTime_Mobile('class', jsondata, calendarSize);
-        scheduleTime_Mobile('off', jsondata, calendarSize);
-        scheduleTime_Mobile('group', jsondata, calendarSize);
-    }
-}
-
-
 
 
 //중복일정 ㅇㄷ

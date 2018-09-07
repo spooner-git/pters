@@ -945,50 +945,6 @@
     <!-- for db by hk.kim 170805-->
     <script>
         $('a.text-monthplan').css('color','#fe4e65;');
-
-        var date = new Date();
-        var currentYear = date.getFullYear(); //현재 년도
-        var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-        var currentDate = date.getDate(); //오늘 날짜
-        var currentHour = date.getHours(); //현재시간
-        var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
-        var currentPageMonth = currentMonth+1; //현재 달
-        var date2 = new Date();
-        var oriYear = date.getFullYear();
-        var oriMonth = date.getMonth()+1;
-        var oriDate = date.getDate();
-
-        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-        var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-
-        var classDateArray = [];
-        var classStartArray = [];
-        var classNameArray = []; //2017_11_21_21_00_1_김선겸_22_00
-        var classTimeArray = [];
-        var offTimeArray = [];
-
-        var classDateData = []
-        var classTimeData = []
-        var offDateData=[]
-        var offTimeData = []
-
-        var offAddOkArray = [] //OFF 등록 시작 시간 리스트
-        var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-
-        var dateResult = []
-        var countResult = []
-
-        var addTypeSelect = "ptadd" //팝업 종류 선택 (PT or OFF)
-        var deleteTypeSelect;
-        var selectedDayGroup = [] //반복일정에서 요일 선택
-        var select_all_check;
-        var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
-    </script>
-
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.month.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
-    <script>
         var myswiper = new Swiper('.swiper-container',{
             initialSlide : 1,
             //speed : 120,
@@ -1000,11 +956,49 @@
             onlyExternal: true,
         });
 
+        // var date = new Date();
+        // var currentYear = date.getFullYear(); //현재 년도
+        // var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+        // var currentDate = date.getDate(); //오늘 날짜
+        // var currentHour = date.getHours(); //현재시간
+        // var lastDay = new Array(31,28,31,30,31,30,31,31,30,31,30,31);      //각 달의 일수
+        // var currentPageMonth = currentMonth+1; //현재 달
+        var date2 = new Date();
+        var oriYear = date.getFullYear();
+        var oriMonth = date.getMonth()+1;
+        var oriDate = date.getDate();
 
-        $(window).scroll(function(event){
-            event.stopPropagation();
-        })
+        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+        var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
+        // var classDateArray = [];
+        // var classStartArray = [];
+        // var classNameArray = []; //2017_11_21_21_00_1_김선겸_22_00
+        // var classTimeArray = [];
+        // var offTimeArray = [];
+
+        // var classDateData = []
+        // var classTimeData = []
+        // var offDateData=[]
+        // var offTimeData = []
+
+        // var offAddOkArray = [] //OFF 등록 시작 시간 리스트
+        // var durAddOkArray = [] //OFF 등록 시작시간 선택에 따른 진행시간 리스트
+
+        // var dateResult = []
+        // var countResult = []
+
+        var addTypeSelect = "ptadd" //팝업 종류 선택 (PT or OFF)
+        var deleteTypeSelect;
+        var selectedDayGroup = [] //반복일정에서 요일 선택
+        var select_all_check;
+        var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
+    </script>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.month.js" %}></script>
+    <script>
         $('#hidetoggle').click(function(){
             if($(this).attr('data-type') == '0'){
                 $(this).css({'padding-top':'12px','color':'#282828','background':'#f7f7f7'}).attr('data-type','1')
