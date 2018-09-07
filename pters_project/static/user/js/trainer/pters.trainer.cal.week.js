@@ -2353,6 +2353,7 @@ function set_schedule_time(jsondata){
         scheduleTime_Mobile('group', jsondata, calendarSize);
     }
 }
+<<<<<<< HEAD
 
 
 
@@ -2421,3 +2422,5 @@ function set_schedule_time(jsondata){
     // };
 //중복일정 ㅇㄷ
 
+=======
+>>>>>>> ee330e62781ae1dcbb721a247c69345bf858a640
