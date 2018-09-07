@@ -20,6 +20,21 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^login/$', views.login_trainer, name='login'),
     url(r'^logout/$', views.logout_trainer, name='logout'),
+
+    # 네이버 간편로그인
+    # 로그인 페이지
+    url(r'^login_simple/$', views.LoginSimpleView.as_view(), name='login_simple'),
+    # sns 회원가입 페이지
+    url(r'^new_member_sns_info/$', views.NewMemberSnsInfoView.as_view(), name='new_member_sns_info'),
+    # sns 회원가입 처리
+    url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
+    # sns 회원가입 처리
+    url(r'^add_old_member_sns_info/$', views.AddOldMemberSnsInfoView.as_view(), name='add_old_member_sns_info'),
+
+    # sns 회원가입 체크
+    url(r'^check_sns_member_info/$', views.CheckSnsMemberInfoView.as_view(), name='check_sns_member_info'),
+
+
     url(r'^register_trainer/$', views.RegisterTrainerView.as_view(), name='register_trainer'),
     url(r'^register_general/$', views.RegisterGeneralView.as_view(), name='register_general'),
     url(r'^register_business/$', views.RegisterBusinessView.as_view(), name='register_business'),
