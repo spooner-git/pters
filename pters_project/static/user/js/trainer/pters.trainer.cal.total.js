@@ -2426,19 +2426,19 @@ function classDatesTrainer(jsondata){
         if(yy+mm+dd < oriYear+omm+odd){  // 지난 일정은 회색으로, 앞으로 일정은 핑크색으로 표기
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                $("td[data-date="+dateTarget+"]").attr('schedule-id',jsondata.scheduleIdArray[i]);
+                $("td[data-date="+dateTarget+"]").attr('schedule-id', jsondata.scheduleIdArray[i]);
                 $("td[data-date="+dateTarget+"] div._classTime").addClass('balloon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
                 $("td[data-date="+dateTarget+"] div._classDate").addClass('greydateMytime');
             }
         }else{
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                $("td[data-date="+dateTarget+"]").attr('schedule-id',jsondata.scheduleIdArray[i]);
+                $("td[data-date="+dateTarget+"]").attr('schedule-id', jsondata.scheduleIdArray[i]);
                 $("td[data-date="+dateTarget+"] div._classTime").addClass('blackballoon_trainer').html('<img src="/static/user/res/icon-cal-mini.png">'+countResult[i])
                 $("td[data-date="+dateTarget+"] div._classDate").addClass('dateMytime');
             }
         }
-    };
+    }
 }
 
 function classInfoProcessed(jsondata){
@@ -2639,7 +2639,7 @@ function month_calendar(referencedate){
     monthText(); //상단에 연, 월 표시
     krHoliday(); //대한민국 공휴일
     //draw_time_graph(Options.hourunit,'')
-    ajaxClassTime()
+    ajaxClassTime();
 }
 
 function calTable_Set_Month(Index, Year, Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기

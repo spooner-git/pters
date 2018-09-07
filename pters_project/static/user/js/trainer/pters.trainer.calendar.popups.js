@@ -1045,7 +1045,6 @@
             today_form = yyyy+'-'+ mm +'-'+"01";
             searchdate = 46;
         }
-
         $.ajax({
             url: '/trainer/get_trainer_schedule/',
             type : 'GET',
