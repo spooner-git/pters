@@ -135,18 +135,19 @@
     </div> <!--월화수목금토일-->
 
     <div id="calendar" class="wrap _calmonth" > <!-- Calendar container-->
+        
         <div class="swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide" id="slide0"></div> <!--Index0-->
                 <div class="swiper-slide"></div> <!--Index1-->
                 <div class="swiper-slide" id="slide2"></div> <!--Index2-->
-            </div>  <!--Swiper-wrapper-->
-        </div> <!--Swiper-container-->
-        <!--Swiper-->
-        <!-- <div class="swiper-pagination"></div> -->
+            </div>
+        </div>
+
         <div id="cal_box" class="cal_box"></div>
         <div id="gap">
         </div>
+
         <div class="ads_cal_insideTop ads_wrap">
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <!-- 달력하단_반응형_디스플레이 -->
@@ -985,7 +986,8 @@
     </script>
 
     <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.month.js" %}></script> <!--달력에 대한 JS-->
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.month.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
     <script>
         var myswiper = new Swiper('.swiper-container',{
             initialSlide : 1,

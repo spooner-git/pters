@@ -174,49 +174,33 @@
         </div>
     </div>
 
+    <div id="date" class="week-style wrap" style="display: none;"> <!--월화수목금토일-->
+        <table class="calendar-style calendar-day-style">
+            <tr>
+                <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
+                <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
+                <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
+                <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
+                <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
+                <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
+                <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+            </tr>
+        </table>
+    </div> <!--월화수목금토일-->
 
-    <div id="calendar" class="wrap _calweek">
+    <div id="calendar" class="wrap _calweek _calmonth">
 
         <div class="swiper-container">
             <div id="timeIndicatorBar"></div>
             <div class="timeindex">
-                <!--
-                  <div class="hour" id="hour0"><span class="morningtext"><span class="KRtext">오전</span><span class="JPtext">午前</span><span class="ENtext">AM</span></span><span class="timeindex_time">00:00</span></div>
-                  <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
-                  <div class="hour" id="hour2"><span class="timeindex_time">02:00</span></div>
-                  <div class="hour" id="hour3"><span class="timeindex_time">03:00</span></div>
-                  <div class="hour" id="hour4"><span class="timeindex_time">04:00</span></div>
-                  <div class="hour" id="hour5"><span class="timeindex_time">05:00</span></div>
-                  <div class="hour" id="hour6"><span class="timeindex_time">06:00</span></div>
-                  <div class="hour" id="hour7"><span class="timeindex_time">07:00</span></div>
-                  <div class="hour" id="hour8"><span class="timeindex_time">08:00</span></div>
-                  <div class="hour" id="hour9"><span class="timeindex_time">09:00</span></div>
-                  <div class="hour" id="hour10"><span class="timeindex_time">10:00</span></div>
-                  <div class="hour" id="hour11"><span class="timeindex_time">11:00</span></div>
-                  <div class="hour" id="hour12"><span class="morningtext"><span class="KRtext">오후</span><span class="JPtext">午後</span><span class="ENtext">PM</span></span><span class="timeindex_time">12:00</span></div>
-                  <div class="hour" id="hour13"><span class="timeindex_time">13:00</span></div>
-                  <div class="hour" id="hour14"><span class="timeindex_time">14:00</span></div>
-                  <div class="hour" id="hour15"><span class="timeindex_time">15:00</span></div>
-                  <div class="hour" id="hour16"><span class="timeindex_time">16:00</span></div>
-                  <div class="hour" id="hour17"><span class="timeindex_time">17:00</span></div>
-                  <div class="hour" id="hour18"><span class="timeindex_time">18:00</span></div>
-                  <div class="hour" id="hour19"><span class="timeindex_time">19:00</span></div>
-                  <div class="hour" id="hour20"><span class="timeindex_time">20:00</span></div>
-                  <div class="hour" id="hour21"><span class="timeindex_time">21:00</span></div>
-                  <div class="hour" id="hour22"><span class="timeindex_time">22:00</span></div>
-                  <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
-                -->
             </div>
             <div class="swiper-wrapper">
                 <div class="swiper-slide" id="slide1"></div>
                 <div class="swiper-slide" id="slide2"></div>
                 <div class="swiper-slide" id="slide3"></div>
-                <!--
-                <div class="swiper-slide" id="slide4"></div>
-                <div class="swiper-slide" id="slide5"></div>
-              -->
             </div>
         </div>
+
         <div id="cal_box" class="cal_box"></div>
         <div id="gap">
         </div>
@@ -1189,7 +1173,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
-        $('a.text-weekplan').css('color','#fe4e65;');
+        $('a.text-plan').css('color','#fe4e65;');
 
         var date = new Date();
         var currentYear = date.getFullYear(); //현재 년도
