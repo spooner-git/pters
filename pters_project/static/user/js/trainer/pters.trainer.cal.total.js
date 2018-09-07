@@ -11,6 +11,35 @@
  */
 
 /////////////////////////////////////달력 공통//////////////////////////////////
+$('div.change_cal').click(function(){
+    var $calendar = $('#calendar');
+    var current_calendar_type;
+    if($calendar.hasClass('_calweek')){
+        current_calendar_type = "week";
+    }else if($calendar.hasClass('_calmonth')){
+        current_calendar_type = "month";
+    }
+
+    if(current_calendar_type == "month"){
+        $calendar.removeClass('_calmonth');
+        if(bodywidth > 600){
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                week_calendar_mobile(today_YY_MM_DD);
+            }else{
+                week_calendar(today_YY_MM_DD);
+            }
+        }else if(bodywidth<=600){
+            week_calendar_mobile(today_YY_MM_DD);
+        }
+    }else if(current_calendar_type == "week"){
+        $calendar.removeClass('_calweek');
+        month_calendar(today_YY_MM_DD);
+        $('.swiper-slide-active').css('width', $('#calendar').width());
+    }
+
+});
+
+
 //다음페이지로 슬라이드 했을때 액션
 if($('._calweek').length > 0){
     myswiper.on('onSlideNextEnd', function(){
@@ -223,9 +252,6 @@ var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> cl
 
 
 
-
-
-
 //작은달력 설정
 $.datepicker.setDefaults({
     dateFormat: 'yy-mm-dd',
@@ -242,6 +268,7 @@ $.datepicker.setDefaults({
 
 
 function week_calendar(referencedate){
+    $('#calendar').addClass('_calweek');
     var page1 = $('.swiper-slide:nth-of-type(1)');
     var page2 = $('.swiper-slide:nth-of-type(2)');
     var page3 = $('.swiper-slide:nth-of-type(3)');
@@ -278,6 +305,7 @@ function week_calendar_mobile(referencedate){
     time_index_set(calendarSize);
     $('div.timeindex').css('height', 'auto');
 
+    $('#calendar').addClass('_calweek');
     var page1 = $('.swiper-slide:nth-of-type(1)');
     var page2 = $('.swiper-slide:nth-of-type(2)');
     var page3 = $('.swiper-slide:nth-of-type(3)');
@@ -2213,7 +2241,7 @@ function know_duplicated_plans(jsondata){
             result[duplicate_dic[plan_][i]] = [i, len];
         }
     }
-    console.log("dic", duplicate_dic)
+    //console.log("dic", duplicate_dic)
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
 //중복일정 계산하기
@@ -2593,6 +2621,7 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 }
 
 function month_calendar(referencedate){
+    $('#calendar').addClass('_calmonth');
     var page1 = $('.swiper-slide:nth-of-type(1)');
     var page2 = $('.swiper-slide:nth-of-type(2)');
     var page3 = $('.swiper-slide:nth-of-type(3)');
@@ -2603,9 +2632,9 @@ function month_calendar(referencedate){
 
     var year = Number(referencedate.split('-')[0]);
     var month = Number(referencedate.split('-')[1]);
-    calTable_Set_Month(1,year,month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
-    calTable_Set_Month(2,year,month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
-    calTable_Set_Month(3,year,month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
+    calTable_Set_Month(1, year, month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
+    calTable_Set_Month(2, year, month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
+    calTable_Set_Month(3, year, month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
     monthText(); //상단에 연, 월 표시
     krHoliday(); //대한민국 공휴일
@@ -2615,11 +2644,11 @@ function month_calendar(referencedate){
 
 function calTable_Set_Month(Index, Year, Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
     if(Month>12){
-        var Month = Month-12
-        var Year = Year+1
+        var Month = Month-12;
+        var Year = Year+1;
     }else if(Month<1){
-        var Month = Month+12
-        var Year = Year-1
+        var Month = Month+12;
+        var Year = Year-1;
     }
 
     var $targetHTML = $('.swiper-slide:nth-child('+Index+')');

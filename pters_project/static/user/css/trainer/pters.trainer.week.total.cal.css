@@ -874,7 +874,7 @@ img,a,div,span,p{
 		left: 0;
 	}
 
-	.ymdText-pc-add-refresh{
+	.ymdText-pc-left-btn{
 		display: inline;
 		margin-right: 5px;
 		padding:5px 8px 5px 8px;
@@ -882,7 +882,7 @@ img,a,div,span,p{
 		border:1px solid #282828;
 		cursor: pointer;
 	}
-	.ymdText-pc-add-refresh:hover{
+	.ymdText-pc-left-btn:hover{
 		background-color: #282828;
 		color: #fe4e65;
 	}
