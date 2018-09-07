@@ -110,16 +110,17 @@ function close_info_popup(option){
 
 //일정추가 팝업 닫기 (pc)
 function close_planadd_popup(){
-    //$('body').css('overflow-y','overlay');
-    $('#page-addplan').hide('fast', 'swing');
+    $('#page-addplan').css('display', 'none');
+    $('#calendar').css('position', 'relative');
     $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
-    if(bodywidth<=600){
-        $('#float_btn_wrap').show();
-        $('#float_btn').removeClass('rotate_btn');
-        $('#page-base').show();
-        $('#page-base-addstyle').hide();
-    }
+    shade_index(-100);
+    enable_window_scroll();
+    // if(bodywidth<=600){
+    //     $('#float_btn_wrap').show();
+    //     $('#float_btn').removeClass('rotate_btn');
+    //     $('#page-base').show();
+    //     $('#page-base-addstyle').hide();
+    // }
 }
 //일정추가 팝업 닫기 (pc)
 

@@ -609,7 +609,7 @@
             <button class="submitBtn _info_modify" id="submitBtn_pt">
                 <span class="KRtext">일정 등록</span><span class="JPtext">登録</span><span class="ENtext">OK</span>
             </button>
-            <button class="submitBtn" onclick="close_info_popup('page-addplan')">
+            <button class="submitBtn" onclick="close_planadd_popup()">
                 <span class="KRtext">닫기</span><span class="JPtext">閉じる</span><span class="ENtext">Cancel</span>
             </button>
         </div>
@@ -908,7 +908,7 @@
             <input type="text" name="" id="memberName_info_PC">
             <input type="text" name="" id="memberName_info_lastName_PC" maxlength="4">
             <input type="text" name="" id="memberName_info_firstName_PC" maxlength="4">
-            <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
+            <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="close_manage_popup('member_info_PC')">
         </label>
 
         <div id="info_shift_base" class="info_shift_wrap">
@@ -1026,7 +1026,7 @@
         <div class="member_info_PC_buttons_wrap popupBtn_mini">
             <button class="submitBtn _info_delete" style="display: none;">삭제</button>
             <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
-            <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
+            <button class="submitBtn _btn_close_info_PC" onclick="close_manage_popup('member_info_PC')">닫기</button>
         </div>
     </div>
 
