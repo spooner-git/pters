@@ -63,14 +63,14 @@ var slideControl = {'week':{
                             myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
                             if(bodywidth > 600){
                                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                                    calTable_Set_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
+                                    calTable_Set_Week_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
                                     if($('#hidetoggle').attr('data-type') == '1'){
                                         $('.td00, .td30').css({'background':'unset',
                                                               'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                                               'background-size':'60px '+ ($('.hour').height()+1)+'px'});
                                     }
                                 }else{
-                                    calTable_Set(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
+                                    calTable_Set_Week(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
                                     if($('#hidetoggle').attr('data-type') == '1'){
                                         $('.td00, .td30').css({'background':'unset',
                                                            'background-image':'url("/static/user/res/calendar_hour_day2.png")',
@@ -78,7 +78,7 @@ var slideControl = {'week':{
                                     }
                                 }
                             }else if(bodywidth<=600){
-                                calTable_Set_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
+                                calTable_Set_Week_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
                                 if($('#hidetoggle').attr('data-type') == '1'){
                                     $('.td00, .td30').css({'background':'unset',
                                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
@@ -98,14 +98,14 @@ var slideControl = {'week':{
                             myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
                             if(bodywidth > 600){
                                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                                    calTable_Set_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
+                                    calTable_Set_Week_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
                                     if($('#hidetoggle').attr('data-type') == '1'){
                                         $('.td00, .td30').css({'background':'unset',
                                                               'background-image':'url("/static/user/res/calendar_hour_day2.png")',
                                                               'background-size':'60px '+ ($('.hour').height()+1)+'px'});
                                     }
                                 }else{
-                                    calTable_Set(first-1, firstYY, firstMM, firstDD, -7, 0);
+                                    calTable_Set_Week(first-1, firstYY, firstMM, firstDD, -7, 0);
                                     if($('#hidetoggle').attr('data-type') == '1'){
                                         $('.td00, .td30').css({'background':'unset',
                                                            'background-image':'url("/static/user/res/calendar_hour_day2.png")',
@@ -114,7 +114,7 @@ var slideControl = {'week':{
                                 }
 
                             }else if(bodywidth<=600){
-                                calTable_Set_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
+                                calTable_Set_Week_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
                                 if($('#hidetoggle').attr('data-type') == '1'){
                                     $('.td00, .td30').css({'background':'unset',
                                                           'background-image':'url("/static/user/res/calendar_hour_day2.png")',
@@ -135,7 +135,7 @@ var slideControl = {'week':{
                             myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
                             myswiper.appendSlide('<div class="swiper-slide"></div>'); //마지막 슬라이드에 새슬라이드 추가
                             //(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
-                            calTable_Set(3,lastYY,lastMM+1); //새로 추가되는 슬라이드에 달력 채우기
+                            calTable_Set_Month(3, lastYY, lastMM+1); //새로 추가되는 슬라이드에 달력 채우기
                             //dateDisabled();
                             monthText();
                             krHoliday();
@@ -152,7 +152,7 @@ var slideControl = {'week':{
                             myswiper.removeSlide(2);
                             myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
                             //(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
-                            calTable_Set(1, firstYY, firstMM-1);
+                            calTable_Set_Month(1, firstYY, firstMM-1);
                             //dateDisabled();
                             monthText();
                             krHoliday();
@@ -258,9 +258,9 @@ function week_calendar(referencedate){
     var month = Number(referencedate.split('-')[1]);
     var date = Number(referencedate.split('-')[2]);
     //calTable_Set(1,year,month,currentDate,-14); // 이번주-2
-    calTable_Set(page1_id_num, year, month, date, -7); // 이번주-1
-    calTable_Set(page2_id_num, year, month, date, 0); // 이번주
-    calTable_Set(page3_id_num, year, month, date, 7); // 이번주+1
+    calTable_Set_Week(page1_id_num, year, month, date, -7); // 이번주-1
+    calTable_Set_Week(page2_id_num, year, month, date, 0); // 이번주
+    calTable_Set_Week(page3_id_num, year, month, date, 7); // 이번주+1
     //calTable_Set(5,year,month,currentDate,14); // 이번주+2
 
     $('.swiper-slide-active').css('width', $('#week').width());
@@ -293,9 +293,9 @@ function week_calendar_mobile(referencedate){
     var year = Number(referencedate.split('-')[0]);
     var month = Number(referencedate.split('-')[1]);
     var date = Number(referencedate.split('-')[2]);
-    calTable_Set_Mobile(page1_id_num, year, month, date, -7); // 이번주-1
-    calTable_Set_Mobile(page2_id_num, year, month, date, 0); // 이번주
-    calTable_Set_Mobile(page3_id_num, year, month, date, 7); // 이번주+1
+    calTable_Set_Week_Mobile(page1_id_num, year, month, date, -7); // 이번주-1
+    calTable_Set_Week_Mobile(page2_id_num, year, month, date, 0); // 이번주
+    calTable_Set_Week_Mobile(page3_id_num, year, month, date, 7); // 이번주+1
 
     $('.swiper-slide-active').css('width', $('#week').width());
     weekNum_Set_fixed();
@@ -308,7 +308,7 @@ function week_calendar_mobile(referencedate){
     ajaxClassTime();
 }
 
-function calTable_Set(Index, Year, Month, Dates, Week, append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
+function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
     //Week 선택자 2E, 1E, 0W, 1L, 2L
     //주간달력 상단표시줄 (요일, 날짜, Today표식)
 
@@ -671,7 +671,7 @@ function calTable_Set(Index, Year, Month, Dates, Week, append){ //선택한 Inde
     time_index_set(calendarSize);
 } //calTable_Set
 
-function calTable_Set_Mobile(Index, Year, Month, Dates, Week, append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
+function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //선택한 Index를 가지는 슬라이드에 시간 테이블을 생성
     //Week 선택자 2E, 1E, 0W, 1L, 2L
     //주간달력 상단표시줄 (요일, 날짜, Today표식)
 
@@ -2603,9 +2603,9 @@ function month_calendar(referencedate){
 
     var year = Number(referencedate.split('-')[0]);
     var month = Number(referencedate.split('-')[1]);
-    calTable_Set(1,year,month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
-    calTable_Set(2,year,month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
-    calTable_Set(3,year,month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
+    calTable_Set_Month(1,year,month-1); //1번 슬라이드에 현재년도, 현재달 -1 달력채우기
+    calTable_Set_Month(2,year,month);  //2번 슬라이드에 현재년도, 현재달 달력 채우기
+    calTable_Set_Month(3,year,month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
     monthText(); //상단에 연, 월 표시
     krHoliday(); //대한민국 공휴일
@@ -2613,7 +2613,7 @@ function month_calendar(referencedate){
     ajaxClassTime()
 }
 
-function calTable_Set(Index, Year, Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
+function calTable_Set_Month(Index, Year, Month){ //선택한 Index를 가지는 슬라이드에 6개행을 생성 및 날짜 채우기
     if(Month>12){
         var Month = Month-12
         var Year = Year+1
