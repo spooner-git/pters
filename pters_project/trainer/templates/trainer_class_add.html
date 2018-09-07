@@ -646,7 +646,8 @@
                 $('#myClassSetting').css('display','block')
                 $('#myClassHourSetting').css('display','none')
             }else if(option == "home"){
-                location.href="{% url 'trainer:index' %}"
+{#                location.href="{% url 'trainer:index' %}"#}
+                location.href="{{ cancel_redirect_url }}"
             }
         }
 

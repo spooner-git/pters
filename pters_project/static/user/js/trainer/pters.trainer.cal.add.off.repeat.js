@@ -154,12 +154,24 @@ $(document).ready(function(){
         position_absolute_addplan_if_mobile($('#repeatdurationsSelected'));
     }); //진행시간 드랍다운 박스 - 선택시 선택한 아이템이 표시
 
-    $(document).on('click','#repeatdurationsSelected button',function(e){
+    $(document).on('click', '#repeatdurationsSelected button', function(){
         if(!$('#repeatstarttimesSelected button').hasClass('dropdown_selected')){
             $('.dropdown-backdrop').css('display','none');
             position_absolute_addplan_if_mobile($('#repeatstarttimesSelected'));
         }
-    })
+
+        if(bodywidth > 600){
+            scrollToDom_custom('#page_addplan_input_wrap', '#repeatdurationsSelected');
+            //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
+        }
+    });
+
+    $(document).on('click', '#repeatstarttimesSelected button', function(){
+        if(bodywidth > 600){
+            scrollToDom_custom('#page_addplan_input_wrap', '#repeatstarttimesSelected');
+            //dropdown_height_fit_to_parent('#page_addplan_input_wrap', '#durationsSelected');
+        }
+    });
 
 
 
@@ -223,7 +235,8 @@ $(document).ready(function(){
     };
 
 
-    $('.dateButton').click(function(){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
+    $('.dateButton').click(function(e){ // 반복일정 요일선택 (월/화/수/목/금/토/일)
+        e.preventDefault();
         var selectedDay = $(this).attr('data-date')
         if(!$(this).hasClass('dateButton_selected')){
             $(this).addClass('dateButton_selected')
@@ -253,14 +266,53 @@ $(document).ready(function(){
     })
 
 
-    /*미니달력 관련*/
-    $("#datepicker_repeat_start").datepicker({
-        minDate : 0,
+    /*[미니달력] 구매에 따른 옵션 처리 관련*/
+    if(Options.auth_limit == 0){
+        $("#datepicker").datepicker("option",
+                                                 "minDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(substract_date(today_YY_MM_DD, -14),'-')
+                                                );
+        $("#datepicker").datepicker("option",
+                                                 "maxDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(today_YY_MM_DD, 14),'-')
+                                                );
+    }else{
+        $("#datepicker").datepicker({
+            minDate : 0,
+        });
+    }
 
-    });
-    $("#datepicker_repeat_end").datepicker({
-        minDate : 0,
-    });
+    if(Options.auth_limit == 0){
+        $("#datepicker_repeat_start").datepicker("option",
+                                                 "minDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(substract_date(today_YY_MM_DD, -14),'-')
+                                                );
+        $("#datepicker_repeat_start").datepicker("option",
+                                                 "maxDate",
+                                                  date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(today_YY_MM_DD, 14),'-')
+                                                );
+    }else{
+        $("#datepicker_repeat_start").datepicker({
+            minDate : 0,
+        });
+    }
+    
+
+    if(Options.auth_limit == 0){
+        $("#datepicker_repeat_end").datepicker("option",
+                                                "minDate",
+                                                 date_format_yyyy_m_d_to_yyyy_mm_dd(substract_date(today_YY_MM_DD, -14),'-')
+                                               );
+        $("#datepicker_repeat_end").datepicker("option",
+                                                "maxDate",
+                                                 date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(today_YY_MM_DD, 14),'-')
+                                               );
+    }else{
+        $("#datepicker_repeat_end").datepicker({
+            minDate : 0,
+        });
+    }
+    
 
     $.datepicker.setDefaults({
         dateFormat: 'yy-mm-dd',

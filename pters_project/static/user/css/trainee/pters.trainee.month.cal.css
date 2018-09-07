@@ -12,7 +12,7 @@ body{
 	padding: 0;
 }
 
-.pshade,.mshade{
+.pshade, .mshade{
 	position: fixed;
 	display: none;
 	background: black;

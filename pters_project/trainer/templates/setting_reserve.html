@@ -34,7 +34,7 @@
         <input type="hidden" name="setting_member_reserve_prohibition"        id="id_setting_member_reserve_prohibition" value=""> <!--예약금지 활성 1, 비활성 0-->
         <input type="hidden" name="setting_member_reserve_date_available"     id="id_setting_member_reserve_available_date" value=""> <!--예약 가능 날짜 구간-->
 
-        <input type="hidden" name="next_page" value = '{% url 'trainer:trainer_setting' %}'>
+        <input type="hidden" name="next_page" value = '{% url 'trainer:reserve_setting' %}'>
     </form>
 
     <div id="shade_for_preview"></div>
@@ -521,15 +521,7 @@
 
 
 
-        $('.pters_switch').click(function(){
-            if($(this).find('.switchball').hasClass('switchoff')){
-                $(this).find('.switchball').removeClass('switchoff').addClass('switchon')
-                $(this).find('.switchback').addClass('switchon-back')
-            }else{
-                $(this).find('.switchball').removeClass('switchon').addClass('switchoff')
-                $(this).find('.switchback').removeClass('switchon-back')
-            }
-        });
+       
 
         $('#switch1').click(function(){
             if($(this).find('.switchball').hasClass('switchoff')){
@@ -682,7 +674,7 @@
             location.href="/trainer/trainer_setting/"
         });
 
-        $('._button_Preview, #ymdText').click(function(){
+        $('._button_Preview').click(function(){
             $('#preview_iframe_popup > iframe').attr('src','/trainer/iframe_preview');
 
 

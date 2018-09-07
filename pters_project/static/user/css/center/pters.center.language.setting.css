@@ -1,0 +1,87 @@
+body{
+	padding-top: 50px;
+	margin:0 auto;
+}
+
+.pters_dropdown_setting_custom{
+	display: inline-flex;
+	width: 26.4% !important;
+	height: 100%;
+	margin-top: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+li a{
+	cursor: pointer;
+}
+
+
+.dropdown ul{
+	width: 100%;
+	min-width: 80px;
+}
+
+
+
+.settingMenu{
+	position: relative;
+	height: 60.5px;
+	background: #ffffff;
+	font-size: 14.9px;
+	font-weight: 500;
+	color: #282828;
+	padding-top: 10px;
+}
+
+.settingBox{
+	position: relative;
+	height: 65px;
+}
+
+.settingText{
+	margin: 0;
+	margin-left: 14.5px;
+}
+
+.settingText2{
+	margin: 0;
+	font-weight: 400;
+	font-size: 13px;
+	margin-left: 14.5px;
+	margin-top: 4px;
+}
+
+.settingText3{
+	margin-left: 14.5px;
+	line-height: 60.5px;
+	vertical-align: middle;
+}
+
+
+.iconText{
+	position: relative;
+	font-size: 13.9px;
+	color: #3b3d3d;
+	margin-left: 14.5px;
+	margin-top: 10px;
+	height:35px;
+}
+
+.iconText span{
+	line-height: 35px;
+	vertical-align: middle;
+}
+
+
+.ulTimes{
+	height: 123px;
+	overflow-y: overlay;
+}
+
+.dropdown-menu li{
+	padding-top: 6.5px !important;
+	padding-bottom: 6.5px !important;
+}
+
+

@@ -34,6 +34,14 @@ $('.month_sel_btn').click(function(){
 });
 
 $('#call_sales_data_btn').click(function(){
+    if(Options.auth_limit == 0){
+        show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    통계조회를 <span style="font-weight:500;">이번달만 가능</span>합니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">조회기간 제한 없이 이용</span>해보세요!
+                                </div>`)
+    }else{
         if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
             if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined){
                 var start_date = $(this).attr('data-startdate');
@@ -57,10 +65,19 @@ $('#call_sales_data_btn').click(function(){
                 //}
             });
         };
+    } 
 });
 
 
 $('#call_member_data_btn').click(function(){
+    if(Options.auth_limit == 0){
+        show_caution_popup(`<div style="margin-bottom:10px;">
+                                    베이직 기능 이용자께서는 <br>
+                                    통계조회를 <span style="font-weight:500;">이번달만 가능</span>합니다. <br><br>
+                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                    <span style="color:#fe4e65;">조회기간 제한 없이 이용</span>해보세요!
+                                </div>`)
+    }else{
         if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'none'){
             if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined ){
                 var start_date = $(this).attr('data-startdate');
@@ -80,6 +97,7 @@ $('#call_member_data_btn').click(function(){
                 ajax_call_complete_monthly_data(class_id, start_date, end_date)
             });
         };
+    }
 });
 
 

@@ -76,7 +76,7 @@
     -->
 
     <div id="defaultFeeSetting" class="settingBox wrap800">
-        <p><button class="submitBtn classAdd" onclick="location.href='/trainer/add_class'">추가</button></p>
+        <p><button class="submitBtn classAdd" onclick="location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'">추가</button></p>
         <div class="pters_table pters_table_at_setting_page" style="background: #f7f7f7;">
             <div class="pters_table_cell_head table_center_name">센터</div>
             <div class="pters_table_cell_head table_lecture_name">프로그램</div>
@@ -95,7 +95,7 @@
 
     <div class="popupBtn_mini">
         <button class="submitBtn _button_Prev">이전</button>
-        <button class="submitBtn _button_Next" onclick="location.href='/trainer/add_class'">추가</button>
+        <button class="submitBtn _button_Next" onclick="location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'">추가</button>
     </div>
 
 {% endblock %}
@@ -133,24 +133,32 @@
         $(document).on('click','._icon_del',function(e){
             e.stopPropagation()
             if(!$(this).hasClass('disabled_button')){
-                var class_id = $(this).parent('div').attr('data-classid')
-                if(class_id != lec_select_currentClassId[0]){
+                var class_id = $(this).parent('div').attr('data-classid');
+{#                if(class_id != lec_select_currentClassId[0]){#}
                     $('#cal_popup_plandelete').fadeIn('fast')
                     $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
-                    $('#shade').show()
-                }else{
-                    alert('현재 활성화 되어있는 프로그램은 삭제 불가능합니다.\n 다른 프로그램으로 이동후 현재 프로그램이 삭제 가능합니다.')
-                }
+{#                    $('#shade').show()#}
+                    shade_index(100);
+{#                }#}
+{#                else{#}
+{#                    alert('현재 활성화 되어있는 프로그램은 삭제 불가능합니다.\n 다른 프로그램으로 이동후 현재 프로그램이 삭제 가능합니다.')#}
+{#                }#}
 
                 $('#popup_delete_btn_yes').click(function(){
-                    ajax_del_lecture_info(class_id)
-                    $(this).parents('.popups').hide()
-                    $('#shade').hide()
+
+                    console.log("btn_yes")
+                    ajax_del_lecture_info(class_id);
+                    $(this).parents('.popups').hide();
+                    shade_index(-100);
+                    $("#popup_delete_btn_yes").off()
+                    $('#popup_delete_btn_no, .popup_close_x_button').off()
                 })
 
                 $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
                     $(this).parents('.popups').hide()
-                    $('#shade').hide()
+                    shade_index(-100);
+                    $("#popup_delete_btn_yes").off()
+                    $('#popup_delete_btn_no, .popup_close_x_button').off()
                 })
             }
             
@@ -195,7 +203,7 @@
                         lec_select_classHour = jsondata.classHourArray;
 
                         if(lec_select_classIdArray.length == 0){
-                            location.href="{% url 'trainer:add_class' %}"
+                            location.href="/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/"
                         }else{
                             fill_lecture_select_page(jsondata)
                         }
@@ -234,7 +242,13 @@
                         $('#errorMessageBar').show()
                         $('#errorMessageText').text(jsondata.messageArray)
                     }else{
-                        ajax_read_lecture_info_from_db_PAGE()
+
+                        if(class_id != lec_select_currentClassId[0]){
+                            ajax_read_lecture_info_from_db_PAGE()
+                        }
+                        else{
+                            location.href='/trainer/';
+                        }
                     }
                 },
 
@@ -373,7 +387,8 @@
                         $('.pcwhere').text(className)
                         var table = '<div class="pters_table pters_table_at_setting_page '+borderCss+'" style="margin-top:0;" id="classid" data-classid="'+classId+'">'
                         var currentClass = 'currentClass'
-                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
+{#                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'#}
+                        var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
                         var selectionText = '<a style="cursor:default;">-</a>'
                         if(Number(classHour) == 60){
                             var selected30 = ""

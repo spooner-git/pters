@@ -65,7 +65,7 @@
                     <span id="uptext" class="uptext" style="cursor: default;" onclick="location.href='{% url 'trainee:cal_month_blank' %}'">{{ user.last_name }}{{ user.first_name }}님 일정</span>
                 {% endblock %}
                 <!--
-                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">
+{#                 <button id="upbutton-right" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'login:logout' %}'">#}
                     <a><img src={% static_url "user/res/icon-calendar-week.png" %} style="width:20px;"></a>
                  </button> 
                   -->
@@ -87,7 +87,7 @@
                     <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month_blank'%}'">달력</a>
                 </div>
                 <div class="centermenu_div">
-                    <a class="centermenu_text" onclick="open_lecture_select_popup()">클래스 선택</a>
+                    <a class="centermenu_text" onclick="open_lecture_select_popup()">프로그램 선택</a>
                     <!--<a class="centermenu_text" style="color: #cccccc">클래스 선택</a>-->
                 </div>
                 <div class="centermenu_div">
@@ -105,7 +105,7 @@
                 <span class="pcwhere"></span>
                 <span class="pcwho">{{ user.last_name }} {{user.first_name}} 님<span></span></span>
             </div>
-            <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
+            <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
             <span id="pters-version" style="position: absolute;top:55px;right:0%;color:#a2a2a2;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
         </div>
     </nav>
@@ -118,10 +118,10 @@
             <input type="hidden" name="class_id" id="id_class_id">
             <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:index' %}">
         </form>
-        <label>클래스 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
-        <p>일정 확인을 원하는 클래스를 선택해 주세요.</p>
+        <label>프로그램 선택<img src="/static/user/res/ptadd/btn-x.png" class="button_close_popup"></label>
+        <p>일정 확인을 원하는 프로그램을 선택해 주세요.</p>
         <div class="pters_table">
-            <div class="pters_table_cell_head table_lecture_name">클래스</div>
+            <div class="pters_table_cell_head table_lecture_name">프로그램</div>
             <div class="pters_table_cell_head table_trainer_name">강사</div>
             <!--<div class="pters_table_cell">연락처</div>-->
             <div class="pters_table_cell_head table_selection">선택</div>

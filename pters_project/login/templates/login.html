@@ -136,11 +136,11 @@
                     {% csrf_token %}
                     <div id="idinput">
                         <img id="idimg" alt="피터스 아이디" src={% static_url "user/res/login/icon-user.png" %}>
-                        <input type="text" class="loginboxstyle form-control" name="username" placeholder="아이디" autofocus>
+                        <input type="text" class="loginboxstyle form-control" name="username" id="username_id" placeholder="아이디" autofocus>
                     </div>
                     <div id="pwinput" style="margin-top:5%;">
                         <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
-                        <input type="password" class="loginboxstyle form-control" name="password" placeholder="비밀번호">
+                        <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
                     </div>
                     <div class="checkbox" style="margin-top:15px;margin-left:27px;">
                         <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
@@ -179,7 +179,6 @@
         <div class="button_next_view"><img src="/static/user/res/btn_next.png" style="transform: rotate(90deg);" onclick="goSlide(780)"></div>
         -->
     </div>
-
     <!--
     <div class="pters_login_promote_box_sub bg-light">
         <div>
@@ -303,13 +302,14 @@
     <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script>
+{#        delete_token('pc');#}
         var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
-            $('._company').css('display','none')
+            $('._company').css('display','none');
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            $('._company').css('display','none')
+            $('._company').css('display','none');
         }else{
-
+            $('#keyword').val('PC');
         }
 
 
@@ -325,29 +325,10 @@
             $('body, html').animate({scrollTop : offset},400)
         }
 
-        {#    Push.Permission.request(onGranted, onDenied);#}
-
-        {#    function onDenied() {#}
-        {#        console.log('알람 거절 상태')#}
-        {#    }#}
-        {#    function onGranted() {#}
-        {#        console.log('알람 승인 상태')#}
-        {#    }#}
 
         $('#errorMessageBar span:nth-child(2)').click(function(){
             $('#errorMessageBar').fadeOut('fast')
         });
-
-        {#    navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
-        {#      registrations.forEach(function(v) {#}
-        {#          if(v.active){#}
-        {#              if(v.scope=="http://localhost:8000/static/user/js/push/" || v.scope=="https://pters.co.kr/static/user/js/push/"){#}
-        {#                  v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
-        {#              }#}
-        {#          }#}
-        {#      });#}
-        {#    });#}
-
 
         function getCookie(name) {
             var cookieValue = null;
@@ -366,6 +347,7 @@
         }
         var csrftoken = getCookie('csrftoken');
     </script>
+
 {% endblock %}
 
 <!--

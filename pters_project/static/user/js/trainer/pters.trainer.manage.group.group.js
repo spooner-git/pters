@@ -29,33 +29,31 @@ $('#groupcapacity').change(function(){
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0
 $('button#addByNew').click(function(e){
-    var group_id = $('#form_member_groupid').val()
-    var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
-    var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
-    var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
-    var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
+    if(!$(this).hasClass('disabled_button')){
+        var group_id = $('#form_member_groupid').val()
+        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
+        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
+        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
+        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
 
-    console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type)
-    if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-        alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
-    }else{
-        addByNew_input_eventGroup()
-        e.preventDefault()
-        added_New_Member_Num++
-        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">'
-        var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">'
-        var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
-        var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
-        var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
-        var htmlend = '</div>'
+        if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+            alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
+        }else{
+            addByNew_input_eventGroup()
+            e.preventDefault()
+            added_New_Member_Num++
+            var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">'
+            var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">'
+            var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
+            var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
+            var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
+            var htmlend = '</div>'
 
-        var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend
-        $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
-        $('#addedMemberListBox').prepend(html)
+            var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend
+            $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
+            $('#addedMemberListBox').prepend(html)
+        }
     }
-
-
-
 })
 
 //회원추가된 항목에서 x버튼을 누르면 목록에서 뺀다.
@@ -112,18 +110,34 @@ function addByNew_input_eventGroup(){
 $('button#addByList, button#addBySearch').click(function(e){
     e.preventDefault()
     e.stopPropagation()
-    $('#subpopup_'+$(this).attr('id')).show()
-
-    if($(this).attr('id')=="addByList"){
-        draw_memberlist_for_addByList($('#subpopup_addByList'))
-    }else if($(this).attr('id')=="addBySearch"){
-        //
+    
+    if(!$(this).hasClass('disabled_button')){
+        shade_index(400);
+        var page_add_member_popup_top = $('#page_addmember').css('top').replace('px', '');
+        var page_add_member_popup_width = $('#page_addmember').css('width');
+        page_add_member_popup_top = Number(page_add_member_popup_top) + 40;
+        $('#subpopup_addByList').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
+        $('#subpopup_addBySearch').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
+        $(this).siblings('button').addClass('disabled_button');
+        $('#subpopup_'+$(this).attr('id')).show();
+        if($(this).attr('id')=="addByList"){
+            draw_memberlist_for_addByList($('#subpopup_addByList'))
+        }else if($(this).attr('id')=="addBySearch"){
+            //
+        }
+    
     }
 })
 
 $(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
     if($('#subpopup_addByList').css('display') == "block"){
         $('#subpopup_addByList').hide()
+        $('.groupMemberAddBox button').removeClass('disabled_button');
+        if($('#pshade').css('z-index')==400) {
+            shade_index(300);
+        }else{
+            shade_index(-100);
+        }
     }
 })
 
@@ -166,7 +180,10 @@ $(document).on('click','img.add_listedMember',function(){
                                 completeSend();
                                 set_schedule_time(json);
                                 get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
-                                alert('지난 그룹일정 참석자 정상 등록되었습니다.')
+                                alert('지난 일정 참석자 정상 등록되었습니다.')
+                                if(bodywidth<600){
+                                    $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                                }
                                 /*
                                  if(z==len){
                                  completeSend();
@@ -185,14 +202,13 @@ $(document).on('click','img.add_listedMember',function(){
                     scheduleTime('off', data)
                     scheduleTime('group', data)
                     draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
-                    alert('그룹일정 참석자 정상 등록되었습니다.')
+                    alert('일정 참석자 정상 등록되었습니다.')
+                    if(bodywidth<600){
+                        $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                    }
                 }
-
-
             })
         });
-
-
 
         //회원관리 : 리스트로 그룹회원 추가
     }else{
@@ -263,11 +279,10 @@ function draw_memberlist_for_addByList(targetHTML){
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    //$('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-
                 var len = jsondata.dIdArray.length;
                 var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가<span>닫기</span></div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>']
                 var addedNum = 0;
@@ -355,11 +370,17 @@ $('button#addBySearch_search').click(function(e){
     });
 })
 
-$('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(function(){
+$('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(function(e){
     if($('#subpopup_addBySearch').css('display') == "block"){
         $('#subpopup_addBySearch').hide()
         $('#searchedMemberListBox').html('')
         $('#addBySearch_input').val('')
+        $('.groupMemberAddBox button').removeClass('disabled_button');
+        if($('#pshade').css('z-index')==400) {
+            shade_index(300);
+        }else{
+            shade_index(-100);
+        }
     }
 })
 
@@ -491,6 +512,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
             group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'))
         }
         group_delete_JSON.group_id = group_id
+        shade_index(150);
     }else{
         alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.')
     }
@@ -609,7 +631,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname')
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity')
     if(bodywidth < 600){
-        float_btn_managemember("groupmember")
+        float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember')
     }
@@ -980,6 +1002,7 @@ function modify_group_status(group_id, option){
 
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
+    console.log("groupListSet",jsondata)
     switch(option){
         case 'current':
             var $membernum = $('#memberNumber_current_group')
@@ -1044,7 +1067,8 @@ function groupListSet(option, jsondata){ //option : current, finished
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
     }
-    if(groupNum == 0){
+    console.log("groupNum",groupNum)
+    if(htmlToJoin.length == 0){
         if(option == "current"){
             htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>')
         }else if(option == "finished"){
@@ -1229,6 +1253,7 @@ $(document).on('click','img.substract_groupMember',function(e){
     $('#cal_popup_plandelete').css('display','block');
     $('#popup_delete_question').text(`${groupname}에서 ${groupmember_name}님을 제외 하시겠습니까?`)
     deleteTypeSelect = "groupMember_Substract_From_Group"
+    shade_index(150);
 
 })
 

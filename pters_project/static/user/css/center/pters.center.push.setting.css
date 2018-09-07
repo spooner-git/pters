@@ -1,0 +1,176 @@
+body{
+	padding-top: 50px;
+	margin:0 auto;
+}
+
+.pters_dropdown_setting_custom{
+	display: inline-flex;
+	width: 26.4% !important;
+	height: 100%;
+	margin-top: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+#memberPushSettingText, #memberPushSetting, #centerPushSettingText, #centerPushSetting{
+	position: relative;
+}
+
+
+li a{
+	cursor: pointer;
+}
+
+.dropdown ul{
+	width: 100%;
+	min-width: 80px;
+}
+
+#pushTimeSet{
+	display: none;
+}
+
+#noRegMemberAlarm{
+	display: none;
+	text-align: center;
+}
+
+#noRegMemberAlarmSelect{
+	width: 55.416% !important;
+}
+
+#changedPlanAlarmSet{
+	display: none;
+	text-align: center;
+}
+
+#changedPlanAlarmSelect{
+	width: 91.527% !important;
+}
+
+#urgentAlarmSet{
+	display: none;
+	text-align: center;
+}
+
+#urgentMemberAlarmSelect{
+	width: 91.527% !important;
+}
+
+#urgentMemberAlarmWhenSelect{
+	width: 55.416% !important;
+}
+
+
+#time1, #time2{
+	height: 50px;
+	text-align: center;
+}
+
+#prevset{
+	display: inline-block;
+	width: 33.4% !important;
+	height: 40px;
+	background: #3b3d3d;
+	color: #ffffff;
+	margin-top: 0px;
+	font-size: 12px;
+	vertical-align: middle;
+	margin-bottom: 3px; /*??? 이거 의미를 모르겠음*/
+}
+
+#prevset div{
+	height: 40px;
+}
+
+#prevset span{
+	line-height: 40px;
+	vertical-align: middle;
+	font-size: 14.9px;
+	font-weight: 500;
+}
+
+.settingMenu{
+	height: 40px;
+	background: #ffffff;
+	font-size: 14.9px;
+	font-weight: 500;
+	color: #282828;
+}
+.settingText{
+	line-height: 40px;
+	vertical-align: middle;
+	margin-left: 14.5px;
+}
+
+.iconText{
+	position: relative;
+	font-size: 13.9px;
+	color: #3b3d3d;
+	margin-left: 14.5px;
+	margin-top: 10px;
+	height:35px;
+}
+
+.iconText span{
+	line-height: 35px;
+	vertical-align: middle;
+}
+
+.ulTimes{
+	height: 260px;
+	overflow-y: overlay;
+}
+
+.dropdown-menu li{
+	padding-top: 6.5px !important;
+	padding-bottom: 6.5px !important;
+}
+
+#centerPushSettingText{
+	margin-top: 25px;
+}
+
+
+
+/*스위치*/
+.pters_switch{
+	position: absolute;
+	display: inline-block;
+	width: 53.5px;
+	height: 35px;
+	top: 3px;
+	right: 14.5px;
+}
+
+.switchback{
+	position: absolute;
+	width:53.5px;
+	height: 100%;
+	border-radius: 27px;
+	border:0.5px solid #a2a2a2;
+	background: #cbc9c4;
+}
+
+.switchball{
+	position: absolute;
+	top: 3px;
+	width: 28px;
+	height: 28px;
+	border-radius: 14px;
+	border:2px solid #282828;
+}
+
+.switchoff{
+	background: grey;
+	left: 4px;
+}
+
+.switchon{
+	background: #fe4e65;
+	right: 4px;
+}
+
+.switchon-back{
+	background: #ffffff;
+}

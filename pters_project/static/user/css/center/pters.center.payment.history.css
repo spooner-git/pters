@@ -1,0 +1,869 @@
+html{
+	background: #ffffff;
+}
+body{
+	padding-top: 50px;
+	height: 300px;
+	background: #ffffff;
+}
+
+#ymdText{
+	position: fixed;
+	height: auto;
+	z-index: 4;
+	width: 100%;
+	/*
+	background-image: url('/static/user/res/bg.png');
+	background-size: 100%;
+	*/
+}
+
+#ymdTextWrap{
+	width: 100%;
+	text-align: center;
+	min-height: 50px;
+	padding-top: 5px;
+}
+
+
+#yearText{
+	position: relative;
+	display: inline;
+	color : #ffffff;
+	font-size: 15px;
+	width: 100%;
+	margin-right: 5px;
+}
+
+#monthText{
+	position: relative;
+	display: inline;
+	color : #fe4e65;
+	font-size: 19.5px;
+	font-weight: 700;
+	width: 100%;
+}
+
+#menuName{
+	display: none;
+	color : #fe4e65;
+	font-size: 15px;
+}
+
+.menuName{
+	display: inline;
+	font-size:14px;
+	font-weight: bold !important;
+	color: #282828;
+}
+
+.menuButton{
+	display: inline-block;
+	position: absolute;
+	line-height: 28px;
+	margin-left: 7px;
+}
+
+
+#menuDescription{
+	color: #ffffff;
+	font-size: 14px;
+	line-height: 40px;
+}
+
+#main_menu_wrap{
+	margin-top: 60px;
+}
+
+.main_label{
+	font-size: 30px;
+	font-weight: 700;
+}
+
+.centered{
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.main_menu_table{
+	width: 100%;
+	height: 30px;
+	display: table;
+	margin-top: 50px;
+}
+.main_menu_table_cell{
+	width: 20%;
+	text-align: center;
+	display: table-cell;
+	cursor: pointer;
+	font-weight: 500;
+	font-size: 13px;
+}
+.main_menu_table_cell:hover{
+	text-decoration: underline;
+	color: #fe4e65;
+}
+.main_cell_active{
+	font-weight: 600;
+	color:#fe4e65;
+	text-decoration: underline;
+}
+
+#page_wrap{
+
+}
+.page_content_wrap{
+	width: 100%;
+}
+#page_pay_history{
+	display: block;
+
+}
+#page_pay_change, #page_pay_method_change, #page_pay_cancel, #page_pay_restart{
+	display: none;
+
+}
+.page_menu_table{
+	display: table;
+	width: 100%;
+	height: 30px;
+	margin-top: 50px;
+	font-size: 13px;
+	text-align: center;
+}
+.page_menu_table_cell{
+	display: table-cell;
+	width: 20%;
+	background: #f1f1f1;
+	border-left: 1px solid #cccccc;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	padding-top: 5px;
+	cursor: pointer;
+}
+.page_menu_table_cell_blank{
+	display: none;
+	width: 40%;
+	border-top: 0;
+	border-right: 0;
+	border-left: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	background: #ffffff;
+}
+.cell_active{
+	border-top:2px solid #fe4e65;
+	border-bottom-color: #ffffff;
+	background: #ffffff;
+	font-weight: 600;
+}
+
+
+#page_current_use{
+
+}
+
+.current_use_table_label{
+	display: table;
+	width: 100%;
+	height: 30px;
+	border-top:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+	text-align: center;
+	margin-top: 10px;
+	line-height: 30px;
+}
+.current_use_table_label div{
+	display: table-cell;
+	font-size: 13px;
+	font-weight: 500;
+	background: #fbfbfb;
+}
+.current_use_table_label div:nth-child(1){
+	width: 10%;
+	display: none;
+}
+.current_use_table_label div:nth-child(2){
+	width: 30%;
+}
+.current_use_table_label div:nth-child(3){
+	width: 30%;
+}
+.current_use_table_label div:nth-child(4){
+	width: 30%;
+}
+
+.current_use_table_content{
+	display: table;
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #cccccc;
+
+}
+.current_use_table_content div{
+	display: table-cell;
+	background: #ffffff;
+	text-align: center;
+	font-weight: 500;
+	font-size: 13px;
+	vertical-align: middle;
+}
+.current_use_table_content div p{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.current_use_table_content div:nth-child(1){
+	width: 10%;
+	display: none;
+}
+.current_use_table_content div:nth-child(2){
+	width: 30%;
+}
+.current_use_table_content div:nth-child(2) p:nth-child(1){
+
+}
+.current_use_table_content div:nth-child(2) p:nth-child(2){
+	color: #7d7d7d;
+	font-size: 12px;
+}
+.current_use_table_content div:nth-child(3){
+	width: 30%;
+	font-weight: 400;
+}
+.current_use_table_content div:nth-child(4){
+	width: 30%;
+}
+
+#page_mypay_history{
+	display: none;
+}
+.mypay_history_table_label{
+	display: table;
+	width: 100%;
+	height: 30px;
+	border-top:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+	text-align: center;
+	margin-top: 10px;
+	line-height: 30px;
+}
+.mypay_history_table_label div{
+	display: table-cell;
+	font-size: 13px;
+	font-weight: 500;
+	background: #fbfbfb;
+	vertical-align: middle;
+}
+.mypay_history_table_label div:nth-child(1){
+	display: none;
+	width: 5%;
+}
+.mypay_history_table_label div:nth-child(2){
+	width: 25%;
+}
+.mypay_history_table_label div:nth-child(3){
+	width: 15%;
+}
+.mypay_history_table_label div:nth-child(4){
+	width: 25%;
+}
+.mypay_history_table_label div:nth-child(5){
+	width: 10%;
+}
+.mypay_history_table_label div:nth-child(6){
+	width: 10%;
+}
+.mypay_history_table_label div:nth-child(7){
+	width: 10%;
+}
+
+.mypay_history_table_content{
+	display: table;
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #cccccc;
+
+}
+.mypay_history_table_content div{
+	display: table-cell;
+	background: #ffffff;
+	text-align: center;
+	font-weight: 500;
+	font-size: 13px;
+	vertical-align: middle;
+}
+.mypay_history_table_content div p{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.mypay_history_table_content div:nth-child(1){
+	display: none;
+	width: 5%;
+}
+.mypay_history_table_content div:nth-child(2){
+	width: 25%;
+}
+.mypay_history_table_content div:nth-child(2) p:nth-child(1){
+
+}
+.mypay_history_table_content div:nth-child(2) p:nth-child(2){
+	display: none;
+	color: #7d7d7d;
+	font-size: 12px;
+}
+.mypay_history_table_content div:nth-child(3){
+	width: 15%;
+	font-weight: 400;
+}
+.mypay_history_table_content div:nth-child(4){
+	width: 25%;
+}
+.mypay_history_table_content div:nth-child(4) span:nth-child(1){
+	display: none;
+	margin-right: 15px;
+}
+.mypay_history_table_content div:nth-child(4) span:nth-child(2){
+
+}
+.mypay_history_table_content div:nth-child(5){
+	width: 10%;
+}
+.mypay_history_table_content div:nth-child(6){
+	width: 10%;
+}
+.mypay_history_table_content div:nth-child(7){
+	width: 10%;
+}
+
+
+#page_monthly_pay_stop_history{
+	display: none;
+}
+.monthly_pay_stop_table_label{
+	display: table;
+	width: 100%;
+	height: 30px;
+	border-top:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+	text-align: center;
+	margin-top: 10px;
+	line-height: 30px;
+}
+.monthly_pay_stop_table_label div{
+	display: table-cell;
+	font-size: 13px;
+	font-weight: 500;
+	background: #fbfbfb;
+	vertical-align:middle;
+}
+.monthly_pay_stop_table_label div:nth-child(1){
+	display: none;
+	width: 4%;
+}
+.monthly_pay_stop_table_label div:nth-child(2){
+	width: 16%;
+}
+.monthly_pay_stop_table_label div:nth-child(3){
+	display: none;
+	width: 16%;
+}
+.monthly_pay_stop_table_label div:nth-child(4){
+	width: 16%;
+}
+.monthly_pay_stop_table_label div:nth-child(5){
+	width: 16%;
+}
+.monthly_pay_stop_table_label div:nth-child(6){
+	width: 16%;
+}
+.monthly_pay_stop_table_label div:nth-child(7){
+	width: 16%;
+}
+
+.monthly_pay_stop_table_content{
+	display: table;
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #cccccc;
+	min-height: 50px;
+
+}
+.monthly_pay_stop_table_content div{
+	display: table-cell;
+	background: #ffffff;
+	text-align: center;
+	font-weight: 500;
+	font-size: 12px;
+	vertical-align: middle;
+}
+.monthly_pay_stop_table_content div p{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.monthly_pay_stop_table_content div:nth-child(1){
+	display: none;
+	width: 4%;
+}
+.monthly_pay_stop_table_content div:nth-child(2){
+	width: 16%;
+}
+.monthly_pay_stop_table_content div:nth-child(3){
+	display: none;
+	width: 16%;
+}
+.monthly_pay_stop_table_content div:nth-child(4){
+	width: 16%;
+}
+.monthly_pay_stop_table_content div:nth-child(5){
+	width: 16%;
+}
+.monthly_pay_stop_table_content div:nth-child(6){
+	width: 16%;
+}
+.monthly_pay_stop_table_content div:nth-child(7){
+	width: 16%;
+}
+#monthly_pay_stop_annai1{
+	margin-top: 100px;
+	padding: 15px;
+	border: 1px solid #cccccc;
+}
+#monthly_pay_stop_annai1 p{
+	font-size: 12px;
+}
+#monthly_pay_stop_annai2{
+	padding: 15px;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	background: #f7f7f7;
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+#monthly_pay_stop_annai2 p{
+	font-size: 12px;
+	color: #464646;
+}
+
+
+#page_pay_method_change{
+	display: none;
+}
+#page_pay_method_change > p {
+	border-bottom: 1px solid #cccccc;
+}
+.pay_method_change_table_label{
+	display: none;
+	width: 100%;
+	height: 30px;
+	border-top:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+	text-align: center;
+	margin-top: 10px;
+	line-height: 30px;
+}
+.pay_method_change_table_label div{
+	display: table-cell;
+	font-size: 13px;
+	font-weight: 500;
+	background: #fbfbfb;
+	vertical-align: middle;
+}
+.pay_method_change_table_label div:nth-child(1){
+	width: 4%;
+}
+.pay_method_change_table_label div:nth-child(2){
+	width: 16%;
+}
+.pay_method_change_table_label div:nth-child(3){
+	width: 10%;
+}
+.pay_method_change_table_label div:nth-child(4){
+	width: 15%;
+}
+.pay_method_change_table_label div:nth-child(5){
+	width: 35%;
+}
+.pay_method_change_table_label div:nth-child(6){
+	width: 15%;
+}
+
+.pay_method_change_table_content{
+	display: block;
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #cccccc;
+	min-height: 60px;
+
+}
+.pay_method_change_table_content div{
+	display: table-cell;
+	background: #ffffff;
+	text-align: center;
+	font-weight: 500;
+	font-size: 13px;
+	vertical-align: middle;
+}
+.pay_method_change_table_content div p{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.pay_method_change_table_content div:nth-child(1){
+	display: none;
+	width: 4%;
+}
+.pay_method_change_table_content div:nth-child(2){
+	color: #fe4e65;
+	font-size: 20px;
+	width: 16%;
+}
+.pay_method_change_table_content div:nth-child(3){
+	width: 10%;
+}
+.pay_method_change_table_content div:nth-child(4){
+	width: 15%;
+}
+.pay_method_change_table_content div:nth-child(5){
+	width: 100%;
+	text-align: left;
+	display: block;
+	padding-left: 10px;
+}
+.pay_method_change_table_content div:nth-child(6){
+	width: 100%;
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.pay_method_changeButton{
+	font-size: 12px !important;
+	width: 50px !important;
+	height: 28px;
+	background: #282828 !important;
+	color: #ffffff;
+	margin: 0 auto;
+	display: block !important;
+	cursor: pointer;
+}
+.pay_method_changeButton span{
+	line-height: 28px;
+}
+.pay_method_changeButton:hover{
+	opacity:0.8;
+}
+
+#page_pay_cancel{
+
+}
+.pay_cancel_table_label{
+	display: table;
+	width: 100%;
+	height: 30px;
+	border-top:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+	text-align: center;
+	margin-top: 10px;
+	line-height: 30px;
+}
+.pay_cancel_table_label div{
+	display: table-cell;
+	font-size: 13px;
+	font-weight: 500;
+	background: #fbfbfb;
+}
+.pay_cancel_table_label div:nth-child(1){
+	display: none;
+	width: 10%;
+}
+.pay_cancel_table_label div:nth-child(2){
+	width: 25%;
+}
+.pay_cancel_table_label div:nth-child(3){
+	display: none;
+	width: 20%;
+}
+.pay_cancel_table_label div:nth-child(4){
+	width: 25%;
+}
+.pay_cancel_table_label div:nth-child(5){
+	width: 20%;
+}
+
+.pay_cancel_table_content{
+	display: table;
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #cccccc;
+
+}
+.pay_cancel_table_content div{
+	display: table-cell;
+	background: #ffffff;
+	text-align: center;
+	font-weight: 500;
+	font-size: 13px;
+	vertical-align: middle;
+}
+.pay_cancel_table_content div p{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.pay_cancel_table_content div:nth-child(1){
+	display: none;
+	width: 10%;
+}
+.pay_cancel_table_content div:nth-child(2){
+	width: 25%;
+}
+.pay_cancel_table_content div:nth-child(2) p:nth-child(1){
+
+}
+.pay_cancel_table_content div:nth-child(2) p:nth-child(2){
+	color: #7d7d7d;
+	font-size: 12px;
+}
+.pay_cancel_table_content div:nth-child(3){
+	display: none;
+	width: 20%;
+	font-weight: 400;
+}
+.pay_cancel_table_content div:nth-child(4){
+	width: 25%;
+}
+.pay_cancel_table_content div:nth-child(5){
+	width: 20%;
+}
+.pay_cancel_Button{
+	font-size: 12px !important;
+	width: 60px !important;
+	height: 28px;
+	background: #282828 !important;
+	color: #ffffff;
+	margin: 0 auto;
+	display: block !important;
+	cursor: pointer;
+}
+.pay_cancel_Button span{
+	line-height: 28px;
+}
+.pay_cancel_Button:hover{
+	opacity:0.8;
+}
+
+.pay_restart_Button{
+	font-size: 12px !important;
+	width: 60px !important;
+	height: 28px;
+	background: #282828 !important;
+	color: #ffffff;
+	margin: 0 auto;
+	display: block !important;
+	cursor: pointer;
+}
+.pay_restart_Button span{
+	line-height: 28px;
+}
+.pay_restart_Button:hover{
+	opacity:0.8;
+}
+#pay_cancel_survey{
+	display: none;
+	margin-top: 80px;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	background: #f7f7f7;
+	padding: 15px;
+	margin-bottom: 70px;
+}
+#pay_cancel_survey > p{
+	margin: 0;
+	font-size: 13px;
+
+}
+#survey_wrap{
+	margin-top: 10px;
+}
+.surver_answer_wrap{
+	display: inline-block;
+	width: 49%;
+	margin-top: 20px;
+}
+.surver_answer_wrap .ptersCheckbox{
+	display: inline-block;
+	margin-right: 10px;
+}
+.surver_answer_wrap span{
+	line-height: 18px;
+}
+#pay_cancel_survey textarea{
+	margin-top: 15px;
+	resize: none;
+	width: 100%;
+	min-height: 100px;
+}
+#submit_pay_cancel{
+	width: 120px;
+	height: 35px;
+	background: #ffffff;
+	color: #282828;
+	font-weight: bold;
+	margin: 0 auto;
+	margin-top: 10px;
+	border: 1px solid #282828;
+	text-align: center;
+}
+#submit_pay_cancel:hover{
+	opacity: 0.8;
+}
+#submit_pay_cancel span{
+	line-height: 35px;
+}
+.active{
+	color: #ffffff !important;
+	background: #fe4e65 !important;
+}
+
+
+
+.fixfooter {
+	display: none;
+}
+
+
+
+@media(min-width: 600px){
+	.page_menu_table_cell_blank{
+		display: table-cell;
+	}
+	#main_menu_wrap{
+		margin-top: 130px;
+	}
+	.main_menu_table_cell{
+		font-size: 15px;
+	}
+
+	.current_use_table_label{
+		display: table;
+	}
+	.current_use_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.current_use_table_content div:nth-child(1){
+		display: table-cell;
+	}
+
+	.mypay_history_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.mypay_history_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.mypay_history_table_content div:nth-child(2) p:nth-child(2){
+		display: block;
+	}
+	.mypay_history_table_content div:nth-child(4) span:nth-child(1){
+		display: inline;
+	}
+
+	.monthly_pay_stop_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.monthly_pay_stop_table_content div{
+		font-size: 13px;
+	}
+	.monthly_pay_stop_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.monthly_pay_stop_table_label div:nth-child(3){
+		display: table-cell;
+	}
+	.monthly_pay_stop_table_content div:nth-child(3){
+		display: table-cell;
+	}
+	#page_pay_method_change > p{
+		border-bottom: 0;
+	}
+	.pay_method_change_table_label{
+		display: table;
+	}
+	.pay_method_change_table_content{
+		display: table;
+	}
+	.pay_method_change_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.pay_method_change_table_content div:nth-child(2){
+		font-size: 13px;
+		color: unset;
+	}
+	.pay_method_change_table_content div:nth-child(5){
+		display: table-cell;
+		width:35%;
+		text-align:center;
+		padding-left: unset;
+	}
+	.pay_method_change_table_content div:nth-child(6){
+		display: table-cell;
+		width: 15%;
+		margin-top: unset;
+		margin-bottom: unset;
+	}
+
+	.pay_cancel_table_label div:nth-child(1){
+		display: table-cell;
+	}
+	.pay_cancel_table_content div:nth-child(1){
+		display: table-cell;
+	}
+	.pay_cancel_table_label div:nth-child(3){
+		display: table-cell;
+	}
+	.pay_cancel_table_content div:nth-child(3){
+		display: table-cell;
+	}
+
+	#ymdText{
+		height: 100px;
+	}
+
+	.gap{
+		height: 110px;
+	}
+
+	#yearText{
+		display: none;
+		font-size: 26px;
+		top: 15%;
+	}
+
+	#monthText{
+		display: none;
+		font-size: 21.5px;
+		top: 60%;
+	}
+
+	#menuName{
+		display: block;
+		color : #fe4e65;
+		font-size: 24px;
+		top: 20%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
+	}
+
+	#menuDescription{
+		display: block;
+		color : #ffffff;
+		font-size: 15px;
+		top: 60%;
+		width: 100%;
+		text-align: center;
+		position: absolute;
+		line-height: unset;
+	}
+
+
+	.fixfooter{
+		position: fixed;
+		margin-top: 50px;
+	}
+}

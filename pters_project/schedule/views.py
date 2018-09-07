@@ -166,7 +166,7 @@ def add_schedule_logic(request):
             error = error
 
     if error is None:
-        func_update_member_schedule_alarm(class_id)
+        # func_update_member_schedule_alarm(class_id)
 
         if en_dis_type == ON_SCHEDULE_TYPE:
             member_name = member_info.name
@@ -307,7 +307,7 @@ def delete_schedule_logic(request):
                              log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
             log_data.save()
 
-        func_update_member_schedule_alarm(class_id)
+        # func_update_member_schedule_alarm(class_id)
 
         push_info_schedule_start_date = str(start_dt).split(':')
         push_info_schedule_end_date = str(end_dt).split(' ')[1].split(':')
@@ -748,8 +748,9 @@ def add_repeat_schedule_logic(request):
             if error_date is not None:
                 repeat_duplication_date_data.append(error_date)
             else:
-                repeat_success_date_data.append(str(repeat_schedule_date_info).split(' ')[0]
-                                                + week_info[int(repeat_schedule_date_info.strftime('%w'))])
+                if schedule_check == 1:
+                    repeat_success_date_data.append(str(repeat_schedule_date_info).split(' ')[0]
+                                                    + week_info[int(repeat_schedule_date_info.strftime('%w'))])
 
     if error is None:
         if pt_schedule_input_counter == 0:
@@ -848,7 +849,7 @@ def add_repeat_schedule_confirm(request):
 
         else:
 
-            func_update_member_schedule_alarm(class_id)
+            # func_update_member_schedule_alarm(class_id)
 
             func_save_log_data(start_date, end_date, class_id, lecture_id,
                                request.user.last_name+request.user.first_name,
@@ -987,7 +988,7 @@ def delete_repeat_schedule_logic(request):
 
     if error is None:
 
-        func_update_member_schedule_alarm(class_id)
+        # func_update_member_schedule_alarm(class_id)
 
         if group_id is None or group_id == '':
             func_save_log_data(start_date, end_date, class_id, lecture_id,
@@ -1425,7 +1426,7 @@ def delete_group_schedule_logic(request):
 
     if error is None:
 
-        func_update_member_schedule_alarm(class_id)
+        # func_update_member_schedule_alarm(class_id)
         if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             context['push_lecture_id'] = push_lecture_id
             context['push_title'] = push_title
@@ -2219,7 +2220,7 @@ def add_group_repeat_schedule_confirm(request):
                 information = '반복 일정 등록이 취소됐습니다.'
 
         else:
-            func_update_member_schedule_alarm(class_id)
+            # func_update_member_schedule_alarm(class_id)
 
             log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
@@ -2490,7 +2491,7 @@ def delete_group_repeat_schedule_logic(request):
 
     if error is None:
 
-        func_update_member_schedule_alarm(class_id)
+        # func_update_member_schedule_alarm(class_id)
 
         log_data = LogTb(log_type='LR02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,

@@ -130,7 +130,7 @@ body{
 	border-color: transparent;
 	width: 80%;
 	max-width: 330px;
-	z-index: 350;
+	z-index: 400;
 	text-align: center;
 	top: 50%;
 	left: 50%;
@@ -138,14 +138,14 @@ body{
 	box-shadow: 1px 1px 5px 1px #cccccc;
 }
 
-.lectureRefundPopup,.lectureStateChangeSelectPopup, .lectureConnectStateChangePopup{
+.lectureRefundPopup, .lectureStateChangeSelectPopup, .lectureConnectStateChangePopup{
 	display: none;
 	position: fixed;
 	background: #ffffff;
 	box-shadow: 1px 1px 5px 1px #cccccc;
 	width: 80%;
 	max-width: 330px;
-	z-index: 350;
+	z-index: 400;
 	text-align: center;
 	top: 50%;
 	left: 50%;
@@ -170,7 +170,7 @@ body{
 	position: absolute;
 	top: 50px;
 	width:100%;
-	max-width: 700px !important;
+	max-width: 600px !important;
 	background: #f4f4f4;
 	z-index: 350;
 }
@@ -265,7 +265,7 @@ select:focus > option:checked {
 */
 
 ._GROUP_THEAD{
-	display: none;
+	
 }
 
 ._countnum,._id,._email,._finday,._manage,._startdate{
@@ -365,7 +365,15 @@ select:focus > option:checked {
 	width: 91.6%;
 }
 
-#finishedMemberList, #currentGroupList, #finishedGroupList{
+#finishedMemberList, #finishedGroupList{
+	display: none;
+}
+
+#currentGroupList, #finishedGroupList{
+	width: 91.6%;
+}
+
+#finishedGroupList{
 	display: none;
 }
 
@@ -621,6 +629,9 @@ select:focus > option:checked {
 	border-radius: 3px;
 	border: 1px solid #cccccc;
 }
+	#memberInfoPopup_PC input{
+		-webkit-text-fill-color:#282828;
+	}
 
 .infopopup_pc > label{
 	font-size: 17px;
@@ -1160,6 +1171,10 @@ span.summaryInnerBoxText_Repeatendtext{
 	margin-right: 8px;
 	cursor: pointer;
 }
+._info_cancel{
+	display: none;
+	height: 14px;
+}
 
 
 #upperImg{
@@ -1239,8 +1254,18 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	#page_addmember{
 		top: unset;
-		max-width: 500px !important;
+		max-width: 600px !important;
+		background-color: 	#ffffff;
 	}
+
+	#page_addmember_input_wrap{
+		background-color: 	white;
+		overflow-y: auto;
+		position: relative;
+		border-top: 2px solid #cccccc;
+		border-bottom: 2px solid #cccccc;
+	}
+
 
 	.memberline{
 		height: 35px;
@@ -1429,7 +1454,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 	._GROUP_THEAD{
-		display: none;
+		
 	}
 
 	.centeralign{

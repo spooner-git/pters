@@ -281,6 +281,7 @@ def func_add_billing_logic(custom_data, payment_result):
     empty_period_billing_check = False
     today = datetime.date.today()
     payment_name = ''
+    status = ''
     if error is None:
         try:
             customer_uid = custom_data['customer_uid']
@@ -294,6 +295,7 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
+                                                        merchandise_type_cd=custom_data['merchandise_type_cd'],
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
@@ -318,9 +320,11 @@ def func_add_billing_logic(custom_data, payment_result):
         if not empty_period_billing_check:
             payment_name = payment_result['name']
             end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, 1, date)
+            status = payment_result['status']
         else:
             payment_name = '정기결제 카드 등록'
             end_date = start_date
+            status = 'pre_paid'
 
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
@@ -346,7 +350,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              channel=payment_result['channel'],
                                              card_name=payment_result['card_name'],
                                              buyer_email=payment_result['buyer_email'],
-                                             status=payment_result['status'],
+                                             status=status,
                                              fail_reason=payment_result['fail_reason'],
                                              currency=payment_result['currency'],
                                              pay_method=payment_result['pay_method'],
@@ -373,6 +377,9 @@ def func_add_billing_logic(custom_data, payment_result):
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
+                                                 price=int(payment_result['amount']),
+                                                 name=payment_name,
+                                                 card_name=payment_result['card_name'],
                                                  pay_method=payment_result['pay_method'],
                                                  merchandise_type_cd=custom_data['merchandise_type_cd'],
                                                  payment_type_cd=custom_data['payment_type_cd'],
@@ -412,7 +419,11 @@ def func_update_billing_logic(payment_result):
                 payment_info.channel = payment_result['channel']
                 payment_info.card_name = payment_result['card_name']
                 payment_info.buyer_email = payment_result['buyer_email']
-                payment_info.status = payment_result['status']
+                if int(payment_result['amount']) == 0:
+                    payment_info.status = 'pre_paid'
+                else:
+                    payment_info.status = payment_result['status']
+                payment_info.price = int(payment_result['amount'])
                 payment_info.fail_reason = payment_result['fail_reason']
                 payment_info.currency = payment_result['currency']
                 payment_info.pay_method = payment_result['pay_method']
@@ -515,7 +526,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
 
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                        merchandise_type_cd__contains=merchandise_type_cd,
+                                                        merchandise_type_cd=merchandise_type_cd,
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None

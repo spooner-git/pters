@@ -1,0 +1,107 @@
+#popup_lecture_select{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform:translate(-50%, -50%);
+	display: none;
+	width: 450px;
+	border:1px solid #cccccc;
+	background:#ffffff;
+	z-index: 150;
+	padding:0 5px 10px 5px;
+}
+#popup_lecture_select label{
+	margin:10px 0 0 12px;
+	width: 100%;
+}
+#popup_lecture_select p{
+	margin-left: 15px;
+}
+#popup_lecture_select a{
+	cursor: pointer;
+}
+.pters_table{
+	display: table;
+	width: 100%;
+	margin-top: 10px;
+	text-align: center;
+}
+.pters_table_cell_head{
+	display: table-cell;
+	background:#f4f4f4;
+	border-left: 1px solid #ffffff;
+	font-weight: bold;
+}
+.pters_table_cell{
+	display: table-cell;
+	background:#ffffff;
+	border-bottom: 1px solid #f4f4f4;
+}
+.table_center_name{
+	width: 20%;
+}
+.table_lecture_name{
+	width: 30%;
+}
+.table_start_date{
+	width: 15%;
+}
+.table_lecture_status{
+	width: 10%;
+}
+.lecture_selection{
+	width: 10%;
+}
+
+
+
+
+._npOpen{
+	cursor: pointer;
+}
+
+.displayNone{
+	display: none;
+}
+
+.button_close_popup{
+	width: 15px;
+	float: right;
+	margin-right: 20px;
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+/*강의 셋팅 페이지*/
+.settingMenu{
+	position: relative;
+	height: 60.5px;
+	background: #ffffff;
+	font-size: 14.9px;
+	font-weight: 500;
+	color: #282828;
+	padding-top: 15px;
+}
+.settingText{
+	margin: 0;
+	margin-left: 14.5px;
+}
+.settingText2{
+	margin: 0;
+	font-weight: 400;
+	font-size: 13px;
+	margin-left: 14.5px;
+	margin-top: 4px;
+}
+.settingText3{
+	margin-left: 14.5px;
+	line-height: 60.5px;
+	vertical-align: middle;
+}

@@ -62,7 +62,7 @@ class GetQuestionDataView(LoginRequiredMixin, TemplateView):
         question_list = QATb.objects.filter(member_id=self.request.user.id, use=USE
                                             ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
                                                        status_type_cd_name=RawSQL(query_status, [])
-                                                       ).order_by('reg_dt')
+                                                       ).order_by('-reg_dt')
         context['question_data'] = question_list
 
         return context

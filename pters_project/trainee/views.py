@@ -339,7 +339,7 @@ def add_trainee_schedule_logic(request):
                     error = '이미 완료된 일정입니다.'
 
     if error is None:
-        error = func_check_schedule_setting(class_id, start_date, ADD_SCHEDULE)
+        error = func_check_schedule_setting(class_id, start_date, end_date, ADD_SCHEDULE)
 
     if error is None:
         if group_schedule_id == '' or group_schedule_id is None:
@@ -374,9 +374,9 @@ def add_trainee_schedule_logic(request):
                                   request, group_schedule_id)
 
     if error is None:
-        func_update_member_schedule_alarm(class_id)
-        class_info.schedule_check = 1
-        class_info.save()
+        # func_update_member_schedule_alarm(class_id)
+        # class_info.schedule_check = 1
+        # class_info.save()
 
         try:
             setting_data = SettingTb.objects.get(member_id=class_info.member_id, class_tb_id=class_id,
@@ -479,7 +479,7 @@ def delete_trainee_schedule_logic(request):
 
     if error is None:
         if error is None:
-            error = func_check_schedule_setting(class_id, start_date, DEL_SCHEDULE)
+            error = func_check_schedule_setting(class_id, start_date, end_date, DEL_SCHEDULE)
 
     if error is None:
         try:
@@ -518,9 +518,9 @@ def delete_trainee_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
-        func_update_member_schedule_alarm(class_id)
-        class_info.schedule_check = 1
-        class_info.save()
+        # func_update_member_schedule_alarm(class_id)
+        # class_info.schedule_check = 1
+        # class_info.save()
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
@@ -1313,6 +1313,13 @@ def get_trainer_setting_data(context, user_id, class_id):
     lt_res_02 = 0
     lt_res_03 = '0'
     lt_res_04 = '00:00-23:59'
+    lt_work_sun_time_avail = ''
+    lt_work_mon_time_avail = ''
+    lt_work_tue_time_avail = ''
+    lt_work_wed_time_avail = ''
+    lt_work_ths_time_avail = ''
+    lt_work_fri_time_avail = ''
+    lt_work_sat_time_avail = ''
     lt_res_05 = '14'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
@@ -1330,6 +1337,20 @@ def get_trainer_setting_data(context, user_id, class_id):
             lt_res_03 = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_04':
             lt_res_04 = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
+            lt_work_sun_time_avail = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
+            lt_work_mon_time_avail = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
+            lt_work_tue_time_avail = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
+            lt_work_wed_time_avail = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
+            lt_work_ths_time_avail = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
+            lt_work_fri_time_avail = setting_info.setting_info
+        if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
+            lt_work_sat_time_avail = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_05':
             lt_res_05 = setting_info.setting_info
         if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
@@ -1347,11 +1368,32 @@ def get_trainer_setting_data(context, user_id, class_id):
         lt_res_cancel_time = lt_res_02*60
     if lt_res_enable_time == -1:
         lt_res_enable_time = lt_res_02*60
+    if lt_work_sun_time_avail == '':
+        lt_work_sun_time_avail = lt_res_04
+    if lt_work_mon_time_avail == '':
+        lt_work_mon_time_avail = lt_res_04
+    if lt_work_tue_time_avail == '':
+        lt_work_tue_time_avail = lt_res_04
+    if lt_work_wed_time_avail == '':
+        lt_work_wed_time_avail = lt_res_04
+    if lt_work_ths_time_avail == '':
+        lt_work_ths_time_avail = lt_res_04
+    if lt_work_fri_time_avail == '':
+        lt_work_fri_time_avail = lt_res_04
+    if lt_work_sat_time_avail == '':
+        lt_work_sat_time_avail = lt_res_04
 
     context['lt_res_01'] = lt_res_01
     context['lt_res_02'] = lt_res_02
     context['lt_res_03'] = lt_res_03
-    context['lt_res_04'] = lt_res_04
+    # context['lt_res_04'] = lt_res_04
+    context['lt_work_sun_time_avail'] = lt_work_sun_time_avail
+    context['lt_work_mon_time_avail'] = lt_work_mon_time_avail
+    context['lt_work_tue_time_avail'] = lt_work_tue_time_avail
+    context['lt_work_wed_time_avail'] = lt_work_wed_time_avail
+    context['lt_work_ths_time_avail'] = lt_work_ths_time_avail
+    context['lt_work_fri_time_avail'] = lt_work_fri_time_avail
+    context['lt_work_sat_time_avail'] = lt_work_sat_time_avail
     context['lt_res_05'] = lt_res_05
     context['lt_res_enable_time'] = lt_res_enable_time
     context['lt_res_cancel_time'] = lt_res_cancel_time

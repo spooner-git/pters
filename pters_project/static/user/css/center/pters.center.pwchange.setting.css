@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+html,body{
+	font-family: 'Noto Sans KR',sans-serif !important;
+	padding-top: 50px;
+	margin:0 auto;
+}
+
+.pwchange_wrap{
+	margin: 0 auto;
+	max-width: 430px;
+	margin-top: 100px;
+	border: 1px solid #282828;
+	padding: 20px;
+}
+.pwchange_wrap label{
+	width: 120px;
+}
+.button_wrap{
+	text-align: center;
+}
+.submitBtn{
+	width: 100%;
+	display:inline-block;
+	height: 50px;
+	background: #ffffff;
+	color: #f4f4f4;
+	border:0.5px solid #cccccc;
+}
+.submitBtn{
+	width: 100px;
+	height: 30px;
+	margin: 0 auto;
+	margin-top: 9px;
+	background: #282828;
+}
+
+.submitBtn:active{
+	background: #282828;
+	color: #fe4e65;
+}
+.bgwhite{
+	background: #ffffff;
+	color: #282828;
+}

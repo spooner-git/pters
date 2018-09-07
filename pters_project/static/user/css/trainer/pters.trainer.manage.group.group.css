@@ -25,6 +25,7 @@
 }
 #groupname{
 	width: 50%;
+	height: 35px;
 }
 #grouptype{
 	height: 26px;
@@ -32,7 +33,7 @@
 }
 #groupcapacity{
 	width: 20%;
-	height: 26px;
+	height: 35px;
 }
 
 
@@ -42,6 +43,7 @@
 	padding:5px;
 	min-height: 90px;
 	background:#ffffff;
+	margin-bottom: 20px;
 }
 .groupMemberAddBox > .buttonGroup{
 	width: 100%;
@@ -49,7 +51,14 @@
 }
 .groupMemberAddBox > .buttonGroup > button{
 	width: 31%;
-	font-size:11px;
+	font-size:12.5px;
+	font-weight: 500;
+	height: 30px;
+	-webkit-appearance:none;
+	border-radius: 0;
+	border: 1px solid #cccccc;
+	background: #f4f4f4;
+	color: #fe4e65;
 }
 
 .subpopup_addGroup{
@@ -127,7 +136,7 @@ img.substract_addedMember{
 
 
 .list_addByList{
-	padding-left: 7px;
+	padding: 10px 0 7px 10px;
 	border-bottom: 1px solid #cccccc;
 }
 	.list_addByList_padding{
@@ -341,9 +350,14 @@ div._groupmanage img._info_delete{
 	border-bottom:1px solid #cccccc;
 	font-size: 12.5px;
 }
-.groupMembersWrap .memberline, .groupMembersWrap .groupmemberline_thead{
+.groupMembersWrap .memberline{
 	background: #f9f9f9;
 }
+.groupMembersWrap .groupmemberline_thead{
+	background: #444444;
+	color: #ffffff;
+}
+
 .groupMembersWrap_selected{
 	border-left: 1px solid #fe4e65;
 	border-right: 1px solid #fe4e65;
@@ -441,14 +455,16 @@ div._manage{
 
 @media(min-width: 600px){
 	.list_addByList_padding{
-		padding-top: 5px;
-		padding-bottom: 5px;
+		
 	}
 
 	div.groupmemberline_thead div{
 		width: 12.5%;
 	}
 	div.memberline div{
+		width: 12.5%;
+	}
+	tr.memberline td{
 		width: 12.5%;
 	}
 }

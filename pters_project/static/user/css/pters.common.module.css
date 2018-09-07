@@ -1,4 +1,6 @@
+/*피터스 드래그 앤 드랍*/
 
+/*피터스 드래그 앤 드랍*/
 
 /*피터스 상단 셀렉트 박스 모듈*/
 	.pters_selectbox_wrapper{
@@ -52,3 +54,163 @@
 	}
 /*피터스 상단 셀렉트 박스 모듈*/
 
+
+
+/*피터스 On/Off 스위치*/
+
+	.pters_switch{
+		position: relative;
+		display: inline-block;
+		width: 53.5px;
+		height: 35px;
+		top: 1px;
+		right: 3px;
+		margin-left: 4px;
+	}
+
+	.pters_switch_label{
+		margin-left: 10px;
+	}
+
+	.switchback{
+		position: absolute;
+		width:53.5px;
+		height: 100%;
+		border-radius: 27px;
+		border:0.5px solid #a2a2a2;
+		background: #cbc9c4;
+	}
+
+	.switchball{
+		position: absolute;
+		top: 3px;
+		width: 28px;
+		height: 28px;
+		border-radius: 14px;
+		border:2px solid #282828;
+		cursor: pointer;
+	}
+
+	.switchoff{
+		background: grey;
+		left: 4px;
+	}
+
+	.switchon{
+		background: #fe4e65;
+		right: 4px;
+	}
+
+	.switchon-back{
+		background: #ffffff;
+	}
+/*피터스 On/Off 스위치*/
+
+
+/*피터스 가속도 스크롤 화살표*/
+.pters_overflow_scrolling{
+	-webkit-overflow-scrolling:touch;
+}
+img.dropdown_scroll_arrow_top{
+			position: absolute;
+			right: 0;
+			margin:5px;
+			padding: 10px;
+			top: 30px;
+			transform: rotate(90deg);
+}
+img.dropdown_scroll_arrow_bottom{
+	position: absolute;
+	right: 0;
+	margin: 5px;
+	padding: 10px;
+	bottom: -270px;
+	transform:rotate(270deg);
+}
+/*피터스 가속도 스크롤 화살표*/
+
+
+/*피터스 Seekbar 모듈*/
+	.pters_seekbar_wrapper_wrap{
+		height: auto;
+		background:#ffffff;
+		padding-bottom:20px;
+		padding-left:10%;
+		padding-right:10%;
+		margin: 0 auto;
+		overflow-x:hidden;
+	}
+	.pters_seekbar_wrapper{
+		position: relative;
+		height: auto;
+		margin-bottom: 15px;
+		user-select: none;
+	}
+	.pters_seekbar_bar{
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+		height: 40px;
+		padding: 17px 0px 17px 0px;
+		user-select: none;
+	}
+		.pters_seekbar_segment{
+			user-select: none;
+			position: relative;
+			display: table-cell;
+			height: 100%;
+			width: auto;
+			border: 1px solid #cccccc;
+			border-left:0;
+		}
+		.pters_seekbar_segment:first-child{
+			border-left:1px solid #cccccc;
+		}
+		.pters_seekbar_segment:last-child{
+			width: 0;
+			border: 0;
+		}
+			.pters_seekbar_segment > span{
+				position: absolute;
+				font-size: 11px;
+				left: -6px;
+				bottom: -30px;
+				user-select: none;
+			}
+	.pters_seekbar_start_ball, .pters_seekbar_end_ball{
+		cursor: pointer;
+		top: 7px;
+		position: absolute;
+		width: 25px;
+		height: 25px;
+		border-radius: 50%;
+		background-color: #fe4e65;
+		border:2px solid #282828;
+	} 
+	.pters_seekbar_start_ball{
+		left: -10px;
+		z-index: 2;
+	}
+	.pters_seekbar_end_ball{
+		right: -10px;
+		z-index: 2;
+	}
+	.pters_seekbar_length_bar{
+		position: absolute;
+		background-color: #fe4e65;
+		z-index: 0;
+		opacity: 0.6;
+	}
+	.pters_seekbar_mobile_guide{
+		display: none;
+		z-index: 10;
+		position: absolute;
+		background-color: #ffffff;
+		border:1px solid #cccccc;
+		width: 10%;
+		height: 100%;
+		text-align: center;
+		font-size: 20px;
+		padding-top: 4px;
+	}
+/*피터스 Seekbar 모듈*/

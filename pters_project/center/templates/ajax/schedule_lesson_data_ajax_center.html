@@ -1,0 +1,29 @@
+    {
+
+      "scheduleIdArray" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classArray_lecture_id" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.lecture_tb.lecture_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "name" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "last_name" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.user.last_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "first_name" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.user.first_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "sexArray" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.sex }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "db_id" :
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.member_info.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_start_date" : 
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "classTimeArray_end_date" : 
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleFinishArray":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "scheduleNoteArray":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+    }

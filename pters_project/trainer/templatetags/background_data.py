@@ -6,7 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
-from payment.models import BillingInfoTb
+from login.models import PushInfoTb
+from payment.models import BillingInfoTb, PaymentInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb
@@ -45,7 +46,20 @@ def get_setting_info(request):
     context = {}
     now = timezone.now()
     class_id = request.session.get('class_id', '')
+    device_id = request.session.get('device_id', 'pc')
     if class_id != '':
+
+        token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
+        if len(token_data) == 0:
+            token_info = ''
+        elif len(token_data) == 1:
+            token_info = token_data[0].token
+        else:
+            token_data.delete()
+            token_info = ''
+
+        request.session['push_token'] = token_info
+
         try:
             class_info = ClassTb.objects.get(class_id=class_id)
         except ObjectDoesNotExist:
@@ -56,12 +70,22 @@ def get_setting_info(request):
             request.session['class_type_code'] = class_info.subject_cd
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             request.session['class_center_name'] = class_info.get_center_name()
+
         context = func_get_trainer_setting_list(context, request.user.id, class_id)
 
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
         request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
         request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+
+        request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
+        request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
+        request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
+        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+        request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
+        request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
+        request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
+
         request.session['setting_member_reserve_date_available'] = context['lt_res_05']
         request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
         request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
@@ -124,13 +148,20 @@ def get_setting_info(request):
 @register.simple_tag
 def get_function_auth(request):
     today = datetime.date.today()
+    merchandise_type_cd_list = []
+    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                next_payment_date__lt=today, use=USE)
+    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                start_date__lte=today, end_date__gte=today, use=USE)
 
-    billing_data = BillingInfoTb.objects.filter(next_payment_date__lt=today, use=USE)
+    for billing_info in billing_data:
+        billing_info.state_cd = 'ST'
+        billing_info.use = UN_USE
+        billing_info.save()
 
-    if len(billing_data) > 0:
-        for billing_info in billing_data:
-            billing_info.state_cd = 'ST'
-            billing_info.use = UN_USE
-            billing_info.save()
+    for payment_info in payment_data:
+        merchandise_type_cd_data = payment_info.merchandise_type_cd.split('/')
+        for merchandise_type_cd_info in merchandise_type_cd_data:
+            merchandise_type_cd_list.append(merchandise_type_cd_info)
 
-    return billing_data
+    return merchandise_type_cd_list

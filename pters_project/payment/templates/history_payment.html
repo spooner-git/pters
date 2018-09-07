@@ -75,24 +75,24 @@
                     </div>
                 {% endfor %}
 
-                {% for current_payment_info in current_billing_info %}
-                    <div class="current_use_table_content">
-                        <div>{{ current_payment_info.counter }} </div>
-                        <div>
-                            <p>{{ current_payment_info.name }}</p>
-                            <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
-                        </div>
-                        <div>
-                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                                <p>{{ payment_merchandise_info }}</p>
-                            {% endfor %}
-                        </div>
-                        <div>
-                            <p>{{ current_payment_info.name }}</p>
-                            <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>
-                        </div>
-                    </div>
-                {% endfor %}
+{#                {% for current_payment_info in current_billing_info %}#}
+{#                    <div class="current_use_table_content">#}
+{#                        <div>{{ current_payment_info.counter }} </div>#}
+{#                        <div>#}
+{#                            <p>{{ current_payment_info.name }}</p>#}
+{#                            <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>#}
+{#                        </div>#}
+{#                        <div>#}
+{#                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}#}
+{#                                <p>{{ payment_merchandise_info }}</p>#}
+{#                            {% endfor %}#}
+{#                        </div>#}
+{#                        <div>#}
+{#                            <p>{{ current_payment_info.name }}</p>#}
+{#                            <p style="color:#fe4e65;">{{ current_payment_info.billing_state_name }}: <span>{{ current_payment_info.next_payment_date }}</span> </p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
             </div>
 
             <div id="page_mypay_history" class="sub_pages">
@@ -252,7 +252,7 @@
                     <div>{{ forloop.counter }}</div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
+{#                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>#}
                     </div>
                     <div>
                         {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
@@ -329,7 +329,7 @@
                     <div>{{ forloop.counter }}</div>
                     <div>
                         <p>{{ cancel_period_payment_info.name }}</p>
-                        <p>{{ cancel_period_payment_info.start_date }} ~ {{ cancel_period_payment_info.end_date }}</p>
+{#                        <p>{{ cancel_period_payment_info.start_date }} ~ {{ cancel_period_payment_info.end_date }}</p>#}
                     </div>
                     <div>
                         {% for payment_merchandise_info in cancel_period_payment_info.merchandise_type_name %}
@@ -524,7 +524,10 @@
                                         customer_uid : before_customer_uid
                                     }),
 
-                                    beforeSend:function(){
+                                    beforeSend:function(xhr, settings) {
+                                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                        }
                                         beforeSend();
                                     },
 
@@ -533,13 +536,13 @@
                                         initialJSON = jsondata;
                                         console.log('/payment/update_period_billing_logic/::'+jsondata);
                                         if(jsondata.messageArray.length>0){
-                                            msg = 'update_period_billing_logic 실패하였습니다.';
+                                            msg = '결제 정보 변경에 실패하였습니다.';
                                             msg += '에러내용 : ' + jsondata.messageArray;
                                         }else {
-                                            msg = 'update_period_billing_logic 완료되었습니다.';
+                                            msg = '결제 정보 변경이 완료되었습니다.';
                                         }
                                         alert(msg);
-
+                                        window.location.reload(true);
                                     },
 
                                     complete:function(){

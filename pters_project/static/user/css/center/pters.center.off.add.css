@@ -1,0 +1,37 @@
+body{
+	padding-top: 50px;
+}
+
+.repeatbox{
+	background-color: #282828;
+	padding: 15px;
+	padding-top: 10px;
+}
+
+.repeatboxinner{
+	background-color: #ffffff;
+	border-top: 1px solid	#a2a2a2;
+	padding-top: 13.5px;
+	padding-bottom: 13.5px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.repeattext{
+	color: #ffffff;
+	margin-bottom: 5px;
+}
+
+.repeatstarttext{
+	color: #282828;
+	font-weight: 500;
+	font-size: 14px;
+	letter-spacing: -0.3px;
+}
+
+.repeatfinishtext{
+	float: right;
+	font-size: 12px;
+	color: #666666;
+	letter-spacing: -0.2px;
+}

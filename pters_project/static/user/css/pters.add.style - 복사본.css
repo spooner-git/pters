@@ -9,7 +9,15 @@ ul a{
 }
 
 ._on{
-
+	/*
+ 	background-color: #f1f1f1;
+	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 4px, rgba(255,255,255,.5) 6px);
+	*/
+}
+.worktime_disable{
+	background-color: #e8e8e8 !important;
+	/*background-color: red !important;*/
+	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 3px, rgba(255,255,255,.5) 7px) !important;
 }
 
 .disabled_button{
@@ -49,8 +57,23 @@ ul a{
 	top: 50px;
 }
 
+
 #page-addplan-pc{
 	display: none;
+	position: absolute;
+	width: 300px;
+	z-index: 3;
+	background: #ffffff;
+	width: 300px;
+	border: 1px solid #eaeaea;
+	padding-bottom: 5px;
+	/*box-shadow: 0px 0.5px 0.5px 0 rgba(0, 0, 0, 0.2);*/
+	box-shadow: 4px 6.5px 12.5px 0 rgba(0, 0, 0, 0.2);
+	z-index: 3;
+	/*
+	border-top-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	*/
 }
 
 #addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
@@ -96,6 +119,67 @@ ul a{
 	-webkit-overflow-scrolling:touch;
 }
 
+
+
+.pters_dropdown_custom_list{
+	font-family: 'Noto Sans KR';
+	max-height: 300px; /*144*/
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-top: 0;
+	padding-bottom: 0;
+	-webkit-overflow-scrolling:touch;
+	background: #282828;
+	
+	position: fixed;
+	/*
+	top: 38%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	*/
+	width: 90%;
+	max-width: 350px;
+	margin: 0;
+	border: 0;
+}
+	.pters_dropdown_custom_list li{
+		text-align: center;
+		font-size: 12.5px;
+		height: 45px;
+		border-bottom: 1px solid #a2a2a2;
+		background: #ffffff;
+	}
+		.pters_dropdown_custom_list div:first-child{
+			position: sticky;
+			position: -webkit-sticky;
+			top: 0;
+			left: 0;
+			background: #282828;
+			color: #ffffff;
+			font-size: 14px;
+			width: 100%;
+		}
+		.pters_dropdown_custom_list div:first-child a{
+			color: #ffffff;
+		}
+		.pters_dropdown_custom_list li a{
+			line-height: 45px;
+		}
+		
+
+	.pters_dropdown_custom_list div{
+		text-align: center;
+		height: 35px;
+		line-height: 35px;
+		vertical-align: middle;
+		background: #ffffff;
+	}
+
+.dropdown-backdrop{
+	background:black;
+	opacity: 0.7;
+}
+
 .toggleBtnWrap{
 	display: inline-block;
 	width: 40px;
@@ -127,7 +211,7 @@ ul a{
 
 #memberName_mini button{
 	position: relative;
-	width: 198px;
+	width: 160px;
 	border: 1px solid #cccccc;
 	overflow-x: hidden;
 }
@@ -164,7 +248,7 @@ ul a{
 }
 
 .dropdownlist_mini{
-	width: 180px;
+	width: 100%;
 	top:auto;
 	left: auto;
 	overflow-y:auto;
@@ -178,14 +262,29 @@ ul a{
 	padding-bottom:2px;
 }
 
+
 #durations_mini{
-	left: 93px;
+	left: 0px;
+}
+#classDuration_mini #durationsSelected{
+	position: relative;
+	margin-left: 7px;
+}
+#membersSelected_mini{
+	position: relative;
+	margin-left: 15px;
+}
+#memberName_mini .dropdown_mini{
+	margin-left: 6px;
 }
 
 #members_pc{
-	left: 93px;
+	left: 0px;
 	overflow-x: hidden;
 }
+	#members_pc li{
+		border-bottom: 1px solid #eaeaea;
+	}
 
 
 
@@ -223,27 +322,16 @@ ul a{
 	user-select: none;
 }
 
-.pters_dropdown_custom li{
-	text-align: center;
-	font-size: 12.5px;
-	padding-top:10px;
-	padding-bottom:10px;
-	box-shadow: 0 1px 0 0 #a2a2a2;
-	-webkit-box-shadow: 0 1px 0 0 #a2a2a2;
-}
 
-.pters_dropdown_custom div{
-	text-align: center;
-	height: 35px;
-	line-height: 35px;
-	vertical-align: middle;
-}
 
 .dropdownlist_mini div{
 	text-align: center;
 	height: 24px;
 	line-height: 24px;
 	vertical-align: middle;
+}
+.dropdownlist_mini div:first-child{
+	display: none;
 }
 
 .dropdown ul{
@@ -265,6 +353,7 @@ ul a{
 .pters_input_namefield{
 	width: 48%;
 	display: inline-block;
+	padding: 0;
 	/*height: 40px !important;*/ /*이거 대체 왜이래?? 그룹추가할때 40 important되어있으면 칸이 너무 크다.*/
 }
 
@@ -525,7 +614,7 @@ ul a{
 	position: absolute;
 	z-index: 1;
 	opacity: 0.8;
-	border-left: 0.5px solid #ffffff;
+	border-left: 1px solid #ffffff;
 
 	background: #fe4e65;
 	-webkit-animation-name:blink;
@@ -678,8 +767,8 @@ ul a{
 }
 
 .dropdown-menu>li:focus, .dropdown-menu>li:active{
-	background: #282828;
-	color: #fe4e65;
+	/*background: #282828;
+	color: #fe4e65;*/
 }
 
 
@@ -706,10 +795,7 @@ ul a{
 }
 
 
-#submitBtn{
-	height: 50px;
-	color: #3d3b3b;
-}
+
 
 button._info_delete_img{
 	position: absolute;
@@ -760,12 +846,7 @@ button._info_baseedit_img{
 	z-index: 1000;
 }
 
-.submitBtnActivated{
-	color: #ffffff !important;
-	background:#fe4e65 !important;
-	border:0 !important;
-	cursor: pointer;
-}
+
 
 .popupBtn{
 	text-align: center;
@@ -778,19 +859,38 @@ button._info_baseedit_img{
 	bottom: -23px;
 	right: -21px;
 	text-align: center;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 	border-top: 1px solid #cccccc;
+}
+
+#submitBtn{
+	height: 50px;
+	color: #3d3b3b;
 }
 
 .submitBtn{
 	display:none;
 	cursor: pointer;
 }
+.submitBtn_weekcalonly{
+	display: block;
+	color: #ffffff;
+	width: 80px;
+	margin: 0 auto;
+	height: 30px;
+	line-height: 30px;
+}
 
 .submitBtn_mini{
 	display:none;
 }
 
+.submitBtnActivated{
+	color: #ffffff !important;
+	background:#fe4e65 !important;
+	border:0 !important;
+	cursor: pointer;
+}
 .cancelBtn_mini{
 	cursor: pointer;
 }
@@ -951,7 +1051,7 @@ button._info_baseedit_img{
 }
 
 #memberSearch_add{
-	display: table-cell;
+	display: inline-block;
 	width: 78%;
 	height: 35px;
 	border:1px solid #8d8d8d;
@@ -1086,6 +1186,9 @@ option{
 	color: #ffffff;
 }
 
+.blankbox{
+	z-index: 1;
+}
 .blankSelected{
 	position: absolute;
 	top: 0;
@@ -1095,6 +1198,9 @@ option{
 	margin-left: 3px;
 	margin-top: 2px;
 	z-index: 1;
+
+	margin-left: 0;
+	width: 99%;
 }
 /*
 .blankSelected{
@@ -1115,6 +1221,9 @@ option{
 	border:2px solid #fe4e65;
 	margin-left: 3px;
 	margin-top: 2px;
+
+	margin-left: 0;
+	width: 99%;
 }
 
 #starttimesSelected button{
@@ -1146,12 +1255,37 @@ option{
 		left: 35%;
 		width: 53%;
 		height: 26px;
-		margin-left: 15px;
+		margin-left: 30px;
 		margin-top: 0;
 		border:1px solid #8d8d8d;
 		box-shadow: unset !important;
 	}
 
+	.pters_dropdown_custom_list{
+		position: absolute;
+		top: 100%;
+		left: 0;
+		transform: unset;
+		width: 100%;
+		max-width: unset;
+		max-height: 210px;
+		border-radius: 0;
+	}
+	.pters_dropdown_custom_list li:first-child{
+		position: relative;
+		top: unset;
+		background: unset;
+		color: unset;
+		font-size: 12.5px;
+	}
+	.pters_dropdown_custom_list div:first-child{
+		display: none;
+	}
+
+	.dropdown-backdrop{
+		background-color: unset;
+		opacity: unset;
+	}
 	.pters_input_custom input{
 		height: 100%;
 		width: 100% !important;
@@ -1163,14 +1297,11 @@ option{
 		height: 26px;
 	}
 	#memberSearch_add{
-		display: table-cell;
 		width: 78%;
 		height: 26px;
 	}
 
-	#membersSelected, #membersSelected_mini{
-		margin-left: 15px;
-	}
+	
 
 	#remainCount div:nth-child(2){
 		border-top: 1px solid #8d8d8d;
@@ -1185,17 +1316,13 @@ option{
 		width: 96.5%;
 	}
 
-	#memberName_mini .dropdown_mini{
-		margin-left: 6px;
-	}
+	
 
 	#durationsSelected{
 
 	}
 
-	#classDuration_mini #durationsSelected{
-		margin-left: 7px;
-	}
+	
 
 	#memberName_reg{
 		width: 54%;
@@ -1267,6 +1394,26 @@ option{
 		*/
 	}
 
+	.blankSelected{
+		width: 97%;
+		margin-left: 3px;
+	}
+	/*
+	.blankSelected{
+		position: absolute;
+		top: 0;
+		width: 97%;
+		height: 90%;
+		border:2px solid #fe4e65;
+		margin-left: 3px;
+		margin-top: 2px;
+	}
+	*/
+	.blankSelected30{
+		width: 97%;
+		margin-left: 3px;
+	}
+
 	.icondown{
 		right: 25px;
 		bottom: 12px;
@@ -1277,10 +1424,10 @@ option{
 	}
 
 
-	#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
-		font-size: 16px;
-		font-weight: bold;
-		text-align: center;
+	#addpopup_pc_label_pt ,#addpopup_pc_label_off, #addpopup_pc_label_new, #addpopup_pc_label_view{
+		font-size: 19px;
+		font-weight: 500;
+		text-align: left;
 		display: block;
 	}
 
@@ -1327,5 +1474,4 @@ option{
 		background: #282828 !important;
 		color: #fe4e65 !important;
 	}
-
 }

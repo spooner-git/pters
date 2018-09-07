@@ -1,0 +1,98 @@
+{% extends "center_base.html" %}
+{% load static_url %}
+
+{% block local_css %}
+    <link rel="stylesheet" href={% static_url "user/css/center/pters.center.setting.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
+{% endblock %}
+
+{% block content %}
+    <div id="upperImg">
+        <span class="KRtext">서비스 설정</span><span class="JPtext">サービス設定</span><span class="ENtext">Settings</span>
+    </div>
+    <div id="settingMenuBox">
+        <div id="myPage" class="settingMenu" onclick="location.href='{% url 'center:center_mypage' %}'">
+            <img src="/static/user/res/icon-user-setting.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">마이페이지</span><span class="JPtext">マイページ</span><span class="ENtext">My page</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'center:class_setting' %}'">
+            <img src="/static/user/res/icon-money.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">프로그램 관리</span><span class="JPtext">業務設定</span><span class="ENtext">Work</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="basicSetting" class="settingMenu" onclick="location.href='{% url 'center:basic_setting' %}'">
+            <img src="/static/user/res/ptadd/icon-start.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">기본 설정</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="reserveSetting" class="settingMenu" onclick="location.href='{% url 'center:reserve_setting' %}'">
+            <img src="/static/user/res/ptadd/icon-clock.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">예약 관련</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="pushSetting" class="settingMenu" onclick="location.href='{% url 'center:push_setting' %}'">
+            <img src="/static/user/res/icon-setting.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">푸시 알림 설정</span><span class="JPtext">プッシュ通知</span><span class="ENtext">Push Alarm</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="bgSetting" class="settingMenu" onclick="location.href='{% url 'center:background_setting' %}'">
+            <img src="/static/user/res/icon-setting.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">배경화면 설정</span><span class="JPtext"></span><span class="ENtext"></span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'" style="display: none;">
+            <img src="/static/user/res/icon-card@3x.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">이용권 구매</span><span class="JPtext">予約関連</span><span class="ENtext">Reservation</span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+        
+        <!--<div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'center:language_setting' %}'">-->
+        <div id="languageSetting" class="settingMenu" style="opacity: 0.5;">
+            <img src="/static/user/res/icon-earth.png" alt="" class="settingImg">
+            <span class="settingText">Language/言語/언어</span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="from_pters_team" class="settingMenu" onclick="location.href='{% url 'center:frompters_setting' %}'">
+            <img src="/static/user/res/PTERS_logo_pure.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">피터스 공지</span><span class="JPtext"></span><span class="ENtext"></span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+        <div id="about_us" class="settingMenu" onclick="location.href='{% url 'center:aboutus_setting' %}'">
+            <img src="/static/user/res/PTERS_logo_pure.png" alt="" class="settingImg">
+            <span class="settingText"><span class="KRtext">About us</span><span class="JPtext"></span><span class="ENtext"></span></span>
+            <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
+        </div>
+
+    </div>
+
+    <div id="logout">
+        <span onclick="location.href='{% url 'login:logout' %}'">로그아웃</span><img src="/static/user/res/icon-setting-arrow.png" alt="" class="logoutArrow">
+    </div>
+
+{% endblock %}
+
+
+
+
+{% block local_js_footer %}
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src={% static_url "user/js/center/pters.center.setting.js" %}></script>
+    <script>
+        $('a.__setting').css('color','#fe4e65;')
+        $('#languageSetting').click(function(){
+            alert("영어/일본어 서비스를 준비중입니다.")
+        })
+
+    </script>
+{% endblock %}

@@ -1,0 +1,418 @@
+html{
+	background:#f7f7f7;
+}
+body{
+	padding-top: 50px;
+	margin:0 auto;
+	background: #f7f7f7;
+}
+.wrap800{
+	width: 97%;
+}
+
+#ymdText{
+	z-index: 30;
+}
+#menuName{
+
+}
+
+#menuDescription{
+    line-height: 40px;
+}
+
+#centerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
+	margin-top: 70px;
+}
+#centerWorkTimeSetting_{
+	display: none;
+}
+
+#switch_autocomplete, #switch_autofinish, #switch1, #switch2, #switch_cancel_limit, #switch3, #switch4{
+	position: absolute;
+}
+#switch_worktime_sun, #switch_worktime_mon, #switch_worktime_tue, #switch_worktime_wed, #switch_worktime_thu, #switch_worktime_fri, #switch_worktime_sat{
+	transform: scale(0.6);
+}
+
+.worktimeWeekly_dayname{
+	font-weight: 500;
+	color: #282828;
+}
+
+.fixfooter{
+	position: relative;
+	margin-top: 30px;
+}
+.bottomfooter2 a{
+	color: #7d7d7d;
+}
+
+.pters_dropdown_setting_custom{
+	display: inline-flex;
+	width: 26.4% !important;
+	height: 100%;
+	margin-top: 10px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.dropdown-backdrop{
+	background: transparent !important;
+	border: 2px solid #fe4e65;
+}
+
+li a{
+	cursor: pointer;
+}
+
+
+.dropdown ul{
+	width: 100%;
+	min-width: 80px;
+}
+
+.dropdown button{
+
+}
+
+#memberReserveBasicHourSetting{
+	z-index: 7;
+}
+	#ulTimes_rsvHour{
+		height: auto;
+		max-height: 190px;
+	}
+
+#memberStartHourSetting{
+	z-index: 6;
+}
+	#ulTimes_mstart{
+		height: auto;
+	}
+
+#memberAvailDateSetting{
+	z-index: 5;
+}
+
+#memberReserveSetting{
+	z-index: 3;
+}
+
+#memberDisableSetting{
+	z-index: 2;
+}
+
+#memberCancelDisableSetting{
+	z-index: 1;
+}
+
+/*푸시 세팅 페이지*/
+#memberLessonNoticeSetting{
+	z-index: 20;
+}
+/*푸시 세팅 페이지*/
+
+
+#hourSelect, #hourSelect2, #workTimehourSelect, #workTimehourSelect2{
+	display: inline-block;
+	width: 50%;
+	min-width: 100px;
+	margin-top: 4px;
+}
+
+#timeSelect, #dateSelect, #timeSelect2, #rsvHourSelect, #mstartHourSelect{
+	left: 16%;
+	max-width: 170px;
+	display: inline-block;
+	margin-top: 4px;
+}
+
+#pushTimeSet{
+	display: none;
+}
+
+#noRegMemberAlarm{
+	display: none;
+	text-align: center;
+}
+
+#noRegMemberAlarmSelect{
+	width: 55.416% !important;
+}
+
+#changedPlanAlarmSet{
+	display: none;
+	text-align: center;
+}
+
+#changedPlanAlarmSelect{
+	width: 91.527% !important;
+}
+
+#urgentAlarmSet{
+	display: none;
+	text-align: center;
+}
+
+#urgentMemberAlarmSelect{
+	width: 91.527% !important;
+}
+
+#urgentMemberAlarmWhenSelect{
+	width: 55.416% !important;
+}
+
+
+#time1, #time2{
+	height: 50px;
+	text-align: center;
+}
+
+#prevset{
+	display: inline-block;
+	width: 33.4% !important;
+	height: 40px;
+	background: #3b3d3d;
+	color: #ffffff;
+	margin-top: 0px;
+	font-size: 12px;
+	vertical-align: middle;
+	margin-bottom: 52px; /*??? 이거 의미를 모르겠음*/
+}
+
+
+#prevset div{
+	height: 40px;
+}
+
+#prevset span{
+	line-height: 40px;
+	vertical-align: middle;
+	font-size: 14.9px;
+	font-weight: 500;
+}
+
+.settingMenu{
+	position: relative;
+	height: auto;
+	background: #ffffff;
+	font-size: 14.9px;
+	font-weight: 500;
+	color: #282828;
+	padding-top: 7px;
+	padding-bottom: 7px;
+
+	border: 1px solid #eaeaea;
+	margin-top: 20px;
+}
+
+.settingBox{
+	position: relative;
+	z-index: 2;
+	margin: 0;
+	background: #eaeaea;
+}
+
+
+.settingText{
+	font-size: 16.5px;
+	margin: 0;
+	margin-left: 14.5px;
+}
+
+.settingText2{
+	margin: 0;
+	font-weight: 400;
+	font-size: 13px;
+	margin-left: 14.5px;
+	margin-top: 4px;
+}
+
+.settingText3{
+	margin-left: 14.5px;
+	line-height: 60.5px;
+	vertical-align: middle;
+}
+
+
+.iconText{
+	display: inline-block;
+	width: 45%;
+	position: relative;
+	font-size: 13.9px;
+	color: #3b3d3d;
+	padding-left: 14.5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.iconText span{
+	line-height: 35px;
+	vertical-align: middle;
+}
+
+
+.ulTimes{
+	height: 260px;
+	overflow-y: overlay;
+}
+
+#ulTimes4{
+	max-height: 150px;
+}
+
+.dropdown-menu li{
+	padding-top: 6.5px !important;
+	padding-bottom: 6.5px !important;
+}
+
+#centerPushSettingText{
+	margin-bottom: 40px;
+}
+
+#centerAutoCompleteSettingText{
+	margin-bottom: 0;
+}
+
+
+.pters_seekbar_segment > span{
+	display: none;
+}
+@media(min-width: 600px){
+	.pters_seekbar_segment > span{
+		display: inline-block;
+	}
+}
+
+
+
+
+#mobile_preview_btn{
+	display: block;
+	position: absolute;
+	top: 110px;
+	right: 1.5%;
+	width: 85px;
+	height: 30px;
+	background: #fe4e65;
+	color: #ffffff;
+	border: 0;
+}
+
+#preview_iframe_popup{
+	position: fixed;
+	display: none;
+	width: 95%;
+	height: 70%;
+	max-width: 590px;
+	max-height: 660px;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 100;
+	background-image: url('/static/user/res/ajax/loading.gif');
+	background-size: 40px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: #ffffff;
+
+	overflow: auto;
+	-webkit-overflow-scrolling:touch;
+
+}
+	#preview_iframe_popup iframe{
+		position: fixed;
+		
+		border: 1px solid #ffffff;
+	}
+	#preview_iframe_popup p{
+		color: #282828;
+		text-align: center;
+		font-size: 13px;
+		margin-top: 10px;
+	}
+	#close_preview_iframe_popup{
+		position: absolute;
+		right: 3px;
+		top: 8px;
+		cursor: pointer;
+		color: #282828;
+		font-size: 14px;
+	}
+
+#shade_for_preview{
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background:black;
+	opacity: 0.7;
+	z-index: 20
+}
+
+#preview_option_values{
+	display: none;
+	text-align: center;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+}
+	#preview_option_values div{
+		display: inline-block;
+		width: 110px;
+		height: 45px;
+		vertical-align: top;
+	}
+	#preview_option_values div p:first-child{
+		font-size: 12px;
+		line-height: 20px;
+		margin: 0;
+	}
+	#preview_option_values div p:last-child{
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 20px;
+		margin: 0;
+	}
+
+@media(min-width: 345px){
+	.pters_switch{
+		top: 12px;
+	}
+}
+
+@media(min-width: 600px){
+	#preview_option_values{
+		display: block;
+		text-align: center;
+		border-top: 1px solid #cccccc;
+		border-bottom: 1px solid #cccccc;
+	}
+	.settingMenu{
+		height: auto;
+		padding-top: 10px;
+	}
+	#menuName{
+
+	}
+
+	#menuDescription{
+	    line-height: unset;
+	}
+	#centerWorkTimeSettingText ,#memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
+		margin-top: 120px;
+	}
+	.settingText{
+		font-size: 20px;
+	}
+	.settingText2{
+		font-size: 14px;
+	}
+
+	#mobile_preview_btn{
+		display: none;
+	}
+	
+}

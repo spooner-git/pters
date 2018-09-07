@@ -48,7 +48,8 @@
                 <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" placeholder=" 문의 제목을 입력해주세요."  maxlength="255"></div>
                 <div class="textarea_wrap">
                     <p>문의 내용: </p>
-                    <textarea class="textarea" placeholder=" 이 곳에 문의 내용을 작성해 주세요.(최대 1,000자)" name="inquire_body" maxlength="1000"></textarea>
+                    <textarea class="textarea" placeholder=" 이 곳에 문의 내용을 작성해 주세요.(최대 1,000자)" name="textarea_body" maxlength="1000" onkeyup="characterCheck()" onkeydown="characterCheck()"></textarea>
+                    <input type="hidden" name="inquire_body" id="id_inquire_body">
                 </div>
             </div>
 
@@ -90,17 +91,28 @@
             $('#id_inquire_type').attr('value',$(this).val())
         })
 
+        function characterCheck() {
+            var RegExp = /[ \{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
+            var obj = document.getElementsByName("textarea_body")[0]
+            if (RegExp.test(obj.value)) {
+                obj.value = obj.value.substring(0, obj.value.length - 1);//특수문자를 지우는 구문
+            }
+        }
 
-        $("#upbutton-check, ._button_Next").click(function(){
+        $("#upbutton-check, ._button_Next").click(function(e){
+            e.preventDefault();
             if($('#id_inquire_type').val().length == 0){
                 alert('유형을 선택해주세요')
             }else{
                 alert('문의를 전송 하였습니다.')
+                var content = $('textarea').val();
+                content = content.replace(/(?:\r\n|\r|\n)/g, '<br>')
+                $('#id_inquire_body').val(content)
                 document.getElementById('update-setting-inquire-form').submit();
-
             }
         })
 
+ 
         $('#upbutton-x, ._button_Prev').click(function(){
             location.href="/trainer/trainer_main/"
         })
@@ -129,6 +141,7 @@
                     },
 
                     success:function(data){
+                        console.log(data)
                         var jsondata = JSON.parse(data);
                         console.log(jsondata)
                         if(jsondata.messageArray.length>0){
@@ -152,8 +165,10 @@
 
         function draw_myquestion_list(jsondata, targetSelector){
             var targetHtml = targetSelector;
+            var email = "{{ request.user.email }}";
+{#            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>#}
 
-            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${jsondata.email_address[0]}</span> 로 발송 드립니다.</div>
+            var htmlToJoin = [`<div>답변은 <span style="font-weight:bold;color:#fe4e65">${email}</span> 로 발송 드립니다.</div>
                               <div class="myquestion_history_table_title">
                                     <div class="myquestion_history_table_cell_title _qatable_no">No.</div>
                                     <div class="myquestion_history_table_cell_title _qatable_type">문의유형</div>
@@ -163,8 +178,9 @@
                               </div>`];
             
             var len = jsondata.question_id.length;
+            var counter = len;
             for(var i=0; i<len; i++){
-                var number = `<div class="myquestion_history_table_cell _qatable_no">${i+1}</div>`
+                var number = `<div class="myquestion_history_table_cell _qatable_no">${counter--}.</div>`
                 var qa_type = `<div class="myquestion_history_table_cell _qatable_type">${jsondata.qa_type_cd_name[i]}</div>`
                 var qa_title = `<div class="myquestion_history_table_cell _qatable_title"><p>${jsondata.title[i]}</p></div>`
                 var qa_regdt = `<div class="myquestion_history_table_cell _qatable_regdt">${date_format_to_user_hangul(jsondata.reg_dt[i],'minimize')}</div>`

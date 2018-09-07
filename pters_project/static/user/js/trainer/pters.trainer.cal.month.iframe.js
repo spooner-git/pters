@@ -35,7 +35,7 @@ $(document).ready(function(){
     var schedule_on_off = 0;
 
 
-    setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
+    // setInterval(function(){ajaxCheckSchedule()}, 60000)// 자동 ajax 새로고침(일정가져오기)
 
 
     function ajaxCheckSchedule(){

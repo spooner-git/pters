@@ -1,0 +1,32 @@
+{
+    "dbIdInfo" :
+    ["{{ member_info.user.id }}"],
+    "idInfo" :
+    ["{{ member_info.user }}"],
+    "lastnameInfo" :
+    ["{{ member_info.user.last_name }}"],
+    "firstnameInfo" :
+    ["{{ member_info.user.first_name }}"],
+    "nameInfo" :
+    ["{{ member_info.name }}"],
+    "phoneInfo" :
+    ["{{ member_info.phone }}"],
+    "contentsInfo" :
+    ["{{ member_info.contents }}"],
+
+    "emailInfo" :
+    ["{{ member_info.user.email }}"],
+
+    "birthdayInfo" :
+    ["{{ member_info.birthday_dt }}"],
+    "sexInfo" :
+    ["{{ member_info.sex }}"],
+
+    "emailActiveInfo" :
+    ["{{ member_info.user.is_active }}"],
+
+    "messageArray" :
+    [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+
+
+}

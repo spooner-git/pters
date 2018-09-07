@@ -59,7 +59,7 @@
             
         </div>
         <div id="float_inner1" class="float_inner" onclick="float_btn_managemember(1)">
-            <a class="KRtext">회원<br/>추가</a><a class="JPtext">PT<br/>追加</a><a class="ENtext">Add<br/>PT</a>
+            <a class="text-memberadd"></a>
         </div>
         <!--
         <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('group')">
@@ -146,29 +146,19 @@
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
         <div class="popup_inner _complete" data-stat="complete">
-            <span style="color:#fe4e65;font-weight: 500;" class="KRtext">진행 완료</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="JPtext">はい</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="ENtext">Yes</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="text-processend"></span>
         </div>
         <div class="popup_inner _resume" data-stat="resume">
-            <span style="color:#282828;font-weight: 500;" class="KRtext">재개</span>
-            <span style="color:#282828;font-weight: 500;" class="JPtext">はい</span>
-            <span style="color:#282828;font-weight: 500;" class="ENtext">Yes</span>
+            <span style="color:#282828;font-weight: 500;" class="text-resume"></span>
         </div>
         <div class="popup_inner _refund" data-stat="refund">
-            <span style="color:#8c8763;font-weight: 500;" class="KRtext">환불</span>
-            <span style="color:#8c8763;font-weight: 500;" class="JPtext">はい</span>
-            <span style="color:#8c8763;font-weight: 500;" class="ENtext">Yes</span>
+            <span style="color:#8c8763;font-weight: 500;" class="text-refund"></span>
         </div>
         <div class="popup_inner _delete" data-stat="delete">
-            <span style="color:#fe4e65;" class="KRtext">삭제</span>
-            <span style="color:#fe4e65;" class="JPtext">はい</span>
-            <span style="color:#fe4e65;" class="ENtext">Yes</span>
+            <span style="color:#fe4e65;" class="text-delete"></span>
         </div>
         <div class="popup_inner _cancel">
-            <span class="KRtext">취소</span>
-            <span class="JPtext">いいえ</span>
-            <span class="ENtext">No</span>
+            <span class="text-cancel"></span>
         </div>
     </div>
 
@@ -187,14 +177,10 @@
             <span class="KRtext">　원</span><span class="JPtext"> 円</span><span class="ENtext">　＄</span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span style="color:#8c8763;font-weight: 500;" class="KRtext refund">환불</span>
-            <span style="color:#8c8763;font-weight: 500;" class="JPtext refund">はい</span>
-            <span style="color:#8c8763;font-weight: 500;" class="ENtext refund">Yes</span>
+            <span style="color:#8c8763;font-weight: 500;" class="text-refund refund"></span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span class="KRtext cancel_refund">취소</span>
-            <span class="JPtext cancel_refund">戻す</span>
-            <span class="ENtext cancel_refund">Cancel</span>
+            <span class="text-cancel cancel_refund"></span>
         </div>
     </div>
 
@@ -208,14 +194,10 @@
         <div class="JPtext confirmText">会員との日程連結を切りますか<br>望む状態を選択してください</div>
         <div class="ENtext confirmText">Do you want to disconnect calendar with the member?</div>
         <div class="popup_inner popup_inner_resend" data-stat="DELETE">
-            <span style="color:#fe4e65;font-weight: 500;" class="KRtext connectchange">연결해제</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="JPtext connectchange">はい</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="ENtext connectchange">Yes</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="text-unconnect connectchange"></span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span class="KRtext cancel_connectchange">취소</span>
-            <span class="JPtext cancel_connectchange">いいえ</span>
-            <span class="ENtext cancel_connectchange">No</span>
+            <span class="text-cancel cancel_connectchange"></span>
         </div>
     </div>
 
@@ -229,14 +211,10 @@
         <div class="JPtext confirmText">会員が日程連結を切りました<br>追加作業を選択してください</div>
         <div class="ENtext confirmText">The member disconnected the calendar.</div>
         <div class="popup_inner popup_inner_resend">
-            <span style="color:#fe4e65;font-weight: 500;" class="KRtext resend">연결요청</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="JPtext resend">連結要請</span>
-            <span style="color:#fe4e65;font-weight: 500;" class="ENtext resend">Send Request</span>
+            <span style="color:#fe4e65;font-weight: 500;" class="text-connectrequest resend"></span>
         </div>
         <div class="popup_inner popup_inner_resend">
-            <span class="KRtext cancel_resend">취소</span>
-            <span class="JPtext cancel_resend">いいえ</span>
-            <span class="ENtext cancel_resend">No</span>
+            <span class="text-cancel cancel_resend"></span>
         </div>
         <!--
         <div class="popup_inner popup_inner_resend">
@@ -269,10 +247,10 @@
 
         <div id="" class="pters_selectbox_wrapper">
             <div id="btnCallCurrent" onclick="shiftMemberList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
-                <span class="KRtext">진행중</span>
+                <span class="text-inprogress">진행중</span>
             </div>
             <div id="btnCallFinished" onclick="shiftMemberList('finished')" class="pters_selectbox_btn">
-                <span class="KRtext">종료</span>
+                <span class="text-finish">종료</span>
             </div>
         </div>
 
@@ -282,9 +260,7 @@
             <span id="memberNumber_current_group" class="memberNum"></span>
             <span id="memberNumber_finish_group" class="memberNum"></span>
             <div id="align_type_text">
-                <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>
-                <span class="memberAlign JPtext">並べ替え</span>
-                <span class="memberAlign ENtext">Sort by</span>
+                <span class="memberAlign text-sort _ALIGN_DROPDOWN">정렬 기준</span>
             </div>
             <div class="ymdText-pc-add-member-wrap">
                 <div id="please_add_member_pc">
@@ -294,14 +270,10 @@
                     <p>피터스의 기능들을 사용해보세요.</p>
                 </div>
                 <div class="ymdText-pc-add-member _memberaddbutton" onclick="pc_add_member(0)">
-                    <span class="KRtext">회원 추가</span>
-                    <span class="JPtext">メンバー追加</span>
-                    <span class="ENtext">New Contract</span>
+                    <span class="text-memberadd_full"></span>
                 </div>
                 <div class="ymdText-pc-add-member-again _memberaddbutton" onclick="pc_add_member(1)">
-                    <span class="KRtext">재등록</span>
-                    <span class="JPtext">再登録</span>
-                    <span class="ENtext">Re-Contract</span>
+                    <span class="text-memberreadd"></span>
                 </div>
                 <!--
                 <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('group')" style="display: none; margin-left: 2px;">
@@ -346,37 +318,37 @@
             <thead>
             <tr style="border-bottom:0;">
                 <th class="_countnum">
-                    <span class="KRtext">순번</span><span class="JPtext">No.</span><span class="ENtext">No.</span>
+                    <span class="text-ordernum">순번</span>
                 </th>
                 <th class="_tdname">
-                    <span class="KRtext">회원명</span><span class="JPtext">姓名</span><span class="ENtext">Name</span>
+                    <span class="text-membername">회원명</span>
                 </th>
                 <th class="_grouptype">
-                    <span class="KRtext">수강유형</span><span class="JPtext">分類</span><span class="ENtext">Type</span>
+                    <span class="text-grouptype">수강유형</span>
                 </th>
                 <th class="_id">
-                    <span class="KRtext">회원 ID</span><span class="JPtext">メンバーID</span><span class="ENtext">Member ID</span>
+                    <span class="text-memberid">회원 ID</span>
                 </th>
                 <th class="_email">
-                    <span class="KRtext">E-mail</span><span class="JPtext">メールアドレス</span><span class="ENtext">E-mail</span>
+                    <span class="text-email">E-mail</span>
                 </th>
                 <th class="_regcount">
-                    <span class="KRtext">등록 횟수</span><span class="JPtext">登録回数</span><span class="ENtext">Reg. Count</span>
+                    <span class="text-regcount">등록 횟수</span>
                 </th>
                 <th class="_remaincount">
-                    <span class="KRtext">남은 횟수</span><span class="JPtext">残り回数</span><span class="ENtext">Rem. Count</span>
+                    <span class="text-remaincount">남은 횟수</span>
                 </th>
                 <th class="_startdate">
-                    <span class="KRtext">시작일</span><span class="JPtext">開始日</span><span class="ENtext">Start</span>
+                    <span class="text-startdate">시작일</span>
                 </th>
                 <th class="_finday">
-                    <span class="KRtext">종료일</span><span class="JPtext">終了日</span><span class="ENtext">End</span>
+                    <span class="text-enddate">종료일</span>
                 </th>
                 <th class="_contact">
-                    <span class="KRtext">연락처</span><span class="JPtext">連絡先</span><span class="ENtext">Tel.</span>
+                    <span class="text-contact">연락처</span>
                 </th>
                 <th class="_manage">
-                    <span class="KRtext">관리</span><span class="JPtext">管理</span><span class="ENtext">Manage</span>
+                    <span class="text-manage">관리</span>
                 </th>
             </tr>
             </thead>
@@ -751,6 +723,20 @@
     </div>
 
 
+    <!-- <div id="subpopup_addByList" class="subpopup_addGroup wrap">
+
+    </div>
+    <div id="subpopup_addBySearch" class="subpopup_addGroup wrap">
+        <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span>닫기</span></div>
+        <input type="text" name="searchID" id="addBySearch_input">
+        <button id="addBySearch_search">찾기</button>
+        <div id="searchedMemberListBox">
+
+
+        </div>
+    </div> -->
+
+
     <div id="page_addmember" class="popups" style="display: none;">
         <div id="how_to_add_member">
             <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;margin-top:5px;">
@@ -760,7 +746,7 @@
             <p><img src="/static/user/res/icon-link.png" class="link-icon" style="width:30px;"> 표시가 있는 항목은 회원님께도 보이는 항목</p>
             <p><span style="color: #fe4e65;">*(별표)</span> 표시 항목은 필수 입력 항목입니다.</p>
             <br>
-            <p style="text-align: center;cursor: pointer;" id="_close_how_to_add_member">닫기</p>
+            <p style="text-align: center;cursor: pointer;" id="_close_how_to_add_member" class="text-close"></p>
         </div>
 
         <div id="inputError" class="errorMessage">
@@ -801,14 +787,13 @@
 
             <!--그룹추가 관련 Form-->
 
-            <div style="padding-top:20px;">
-                <p class="icons_description _SEARCH_MEMBER_NEW">※회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
+            <div id="page_addmember_input_wrap" style="padding-bottom: 20px;">
                 <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
-
                     <label for="memberSearch" class="ptaddboxtext">
                         <img class="icons"  style="width:13px;" src={% static_url "user/res/icon-earth.png" %}> 회원 아이디 검색
                         <!--<p class="icons_description"> <br>PTERS에 이미 가입되어있는 회원님의 정보를 가져옵니다.</p>-->
                     </label>
+                    <p class="icons_description _SEARCH_MEMBER_NEW">※회원님이 이미 PTERS 회원인 경우에는 아이디를 검색하여 추가하여 사용해주세요.</p>
                     <div id="memberSearch" class="dropdown" style="border:0;">
                         <input  id="memberSearch_add" placeholder="검색할 아이디를 입력해주세요" value="">
                         <button class="memberSearchButton" id="memberSearchButton">
@@ -846,7 +831,7 @@
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                         <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
-                    <div id="memberBirth">
+                    <div id="memberBirth" class="dropdown">
                         <!--
                         <input type="text" class="dropdown form-control" id="memberBirthYear" name="birthyear" placeholder="4자리 연도입력" maxlength="4">
                         <div id="memberBirthMonthSelected" class="dropdown">
@@ -902,10 +887,10 @@
 
                 <div class="ptaddbox _ADD_GROUP_NEW">
                     <label class="ptaddboxtext">
-                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 신규 그룹 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}><span id="addgrouptypename">신규 그룹</span><span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div id="groupNameInput">
-                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹 이름을 입력해주세요." maxlength="10">
+                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹명을 입력해주세요." maxlength="10">
                         <select id="grouptype">
                             <option selected disabled>그룹 타입</option>
                             <option value="NORMAL">정해진 멤버만</option>
@@ -927,7 +912,33 @@
                             <option value="13">13명</option>
                             <option value="14">14명</option>
                             <option value="15">15명</option>
+                            <option value="16">16명</option>
+                            <option value="17">17명</option>
+                            <option value="18">18명</option>
+                            <option value="19">19명</option>
+                            <option value="20">20명</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="ptaddbox _ADD_GROUP_NEW">
+                    <div id="explain_group_lesson">
+                        <p style="font-size: 12.5px;">정해진 멤버들로 고정적으로 운영되는 방식입니다.</p>
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 그룹?</p>
+                        <p style="font-size: 14px;">그룹은 <span style="color:#fe4e65">미리 그룹과 그룹원을 구성</span>해두고, 일정표에 일정을 추가하는 방식으로 운영합니다.<br>
+                        일정표에 <span style="color:#fe4e65">그룹 일정을 추가</span>하면,<br> 해당 그룹에 속한 그룹원이 <span style="color:#fe4e65">자동으로 그 일정</span>에 <span style="color:#fe4e65">추가 </span>됩니다.</p>
+                        <p style="font-size: 13px;">
+                            <span style="color:#fe4e65;font-weight: bold;">그룹</span>은 <span style="color:#fe4e65;font-weight: bold;">정해진 정원 숫자</span> 만큼만 회원을 하위에 추가 할 수 있습니다.
+                        </p>
+                    </div>
+
+                    <div id="explain_open_lesson">
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 클래스?</p>
+                        <p style="font-size: 14px;">클래스는 회원들이 신청을 원하는 <span style="color:#fe4e65">클래스의 정원을 확인하여 참석 신청</span>을 하는 방식으로 운영합니다.<br>
+                        한 타임당 <span style="color:#fe4e65">수업 정원을 설정</span>하고, 이 클래스에 <span style="color:#fe4e65">예약이 가능한 회원</span>들을 <span style="color:#fe4e65">하위에 추가</span>하여 사용합니다.</p>
+                        <p style="font-size: 13px;">
+                            <span style="color:#fe4e65;font-weight: bold;">클래스</span>는 하위에 회원을 <span style="color:#fe4e65;font-weight: bold;">숫자 제한 없이</span> 추가 가능합니다. </p>
+                        
                     </div>
                 </div>
 
@@ -937,9 +948,9 @@
                     </label>
                     <div class="groupMemberAddBox">
                         <div class="buttonGroup">
-                            <button id="addByNew">신규 회원으로 추가</button>
-                            <button id="addByList">내 리스트에서 추가</button>
-                            <button id="addBySearch">PTERS 검색으로 추가</button>
+                            <button id="addByNew">신규 회원</button>
+                            <button id="addByList">회원 리스트</button>
+                            <button id="addBySearch">ID 검색</button>
                         </div>
                         <div id="addedMemberListBox">
                             <span></span>
@@ -947,28 +958,13 @@
                     </div>
                 </div>
 
-                <div id="subpopup_addByList" class="subpopup_addGroup wrap">
-
-                </div>
-                <div id="subpopup_addBySearch" class="subpopup_addGroup wrap">
-                    <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">PTERS 검색으로 추가<span>닫기</span></div>
-                    <input type="text" name="searchID" id="addBySearch_input">
-                    <button id="addBySearch_search">찾기</button>
-                    <div id="searchedMemberListBox">
 
 
-                    </div>
-                </div>
-
-
-
-
-
-                <div class="_ADD_MEMBER_REG">
+                <div class="_ADD_MEMBER_REG" style="margin-top: 20px;">
                     <label for="" class="ptaddboxtext" style="padding-right: 5%;padding-left: 5%;">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-bell.png" %}> 레슨 수강 정보 <span style="color: #fe4e65;">*</span>
                     </label>
-                    <div id="selectBox2" class="selectbox ">
+                    <div id="selectBox2" class="selectbox" style="display: none;">
                         <div id="btnCallSimple" href="#" class="btnCallSimple selectboxopt selectboxopt_left selectbox_checked">빠른 입력 방식</div>
                         <div id="btnCallManual" href="#" class="btnCallManual selectboxopt selectboxopt_right">세부 설정 방식</div>
                     </div>
@@ -992,7 +988,7 @@
                                 <input type="tel" class="form-control" id="memberCount_add" name="counts" placeholder="등록 횟수를 입력해주세요" maxlength="3">
                             </div>
                         </div>
-                        <div class="ptaddbox form-group">
+                        <div class="ptaddbox form-group price_wrap">
                             <label for="lecturePrice" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                             </label>
@@ -1001,7 +997,7 @@
                                 <input type="tel" class="form-control" id="lecturePrice_add" placeholder="숫자만 입력해주세요." maxlength="11">
                                 <span class="inputunit">원</span>
                             </div>
-                            <div class="pricebutton">
+                            <div class="pricebutton dropdown">
                                 <div class="pricebuttonchild" id="price1" onclick="priceInput(1000000,'sum',1)">100만원</div>
                                 <div class="pricebuttonchild" id="price2" onclick="priceInput(500000,'sum',1)">50만원</div>
                                 <div class="pricebuttonchild" id="price3" onclick="priceInput(100000,'sum',1)">10만원</div>
@@ -1043,11 +1039,14 @@
                         </div>
                         <div class="ptaddbox form-group _count">
                             <label for="memberCount" class="ptaddboxtext">
-                                <input type="hidden" id="memberCount_add_fast" name="counts_fast" >
+                                <!-- <input type="hidden" id="memberCount_add_fast" name="counts_fast" > -->
                                 <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 등록 횟수
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
-                            <div>
+                            <div class="dropdown pters_input_custom">
+                                <input type="tel" class="form-control" id="memberCount_add_fast" name="counts_fast" placeholder="등록 횟수를 입력해주세요" maxlength="5">
+                            </div>
+                            <div class="dropdown regCountSelect" style="border: 0;">
                                 <table>
                                     <tbody>
                                     <tr>
@@ -1057,12 +1056,14 @@
                                         <td class="checkboxtext" >20회</td>
                                         <td><div class="ptersCheckbox" data-count="30"><div></div></div></td>
                                         <td class="checkboxtext">30회</td>
+                                        <td><div class="ptersCheckbox" data-count="" id="userInputCount"><div></div></div></td>
+                                        <td class="checkboxtext">직접<br>입력</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="ptaddbox form-group">
+                        <div class="ptaddbox form-group price_wrap">
                             <label for="lecturePrice" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-card.png" %}> 결제 요금
                             </label>
@@ -1071,7 +1072,7 @@
                                 <input type="tel" class="form-control" id="lecturePrice_add_2" placeholder="숫자만 입력해주세요." maxlength="11">
                                 <span class="inputunit">원</span>
                             </div>
-                            <div class="pricebutton">
+                            <div class="pricebutton dropdown">
                                 <div class="pricebuttonchild" id="price1_2" onclick="priceInput(1000000,'sum',2)">100만원</div>
                                 <div class="pricebuttonchild" id="price2_2" onclick="priceInput(500000,'sum',2)">50만원</div>
                                 <div class="pricebuttonchild" id="price3_2" onclick="priceInput(100000,'sum',2)">10만원</div>
@@ -1080,29 +1081,31 @@
                                 <div class="pricebuttonchild" id="price6_2" style="width: 7%;color: #fe4e65;" onclick="priceInput(0,'del',2)">X</div>
                             </div>
                         </div>
-                        <div class="ptaddbox form-group _due">
+                        <div class="ptaddbox form-group _due dur_wrap">
                             <label for="memberDue" class="ptaddboxtext">
                                 <img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 기간
                             </label>
-                            <div>
+                            <div class="dropdown" style="border: 0;">
                                 <table>
                                     <tbody>
-                                    <tr>
-                                        <td data-check="1"><div class="ptersCheckbox"><div></div></div></td>
-                                        <td class="checkboxtext">1개월</td>
-                                        <td data-check="2"><div class="ptersCheckbox"><div></div></div></td>
-                                        <td class="checkboxtext">2개월</td>
-                                        <td data-check="3"><div class="ptersCheckbox"><div></div></div></td>
-                                        <td class="checkboxtext">3개월</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-check="6"><div class="ptersCheckbox"><div></div></div></td>
-                                        <td class="checkboxtext">6개월</td>
-                                        <td data-check="12"><div class="ptersCheckbox"><div></div></div></td>
-                                        <td class="checkboxtext">12개월</td>
-                                        <td data-check="99"><div class="ptersCheckbox"><div></div></div></td>
-                                        <td class="checkboxtext">소진시까지</td>
-                                    </tr>
+                                        <tr>
+                                            <td data-check="1"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext">1개월</td>
+                                            <td data-check="2"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext">2개월</td>
+                                            <td data-check="3"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext">3개월</td>
+                                            <td data-check="6"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext">6개월</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-check="12"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext">12개월</td>
+                                            <td data-check="99"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext" style="font-size:12px;letter-spacing: -1px">소진시까지</td>
+                                            <td data-check="0"><div class="ptersCheckbox"><div></div></div></td>
+                                            <td class="checkboxtext" style="font-size:12px;letter-spacing: -1px">직접 입력</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1118,8 +1121,9 @@
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <div class="dropdown pters_input_custom">
-                                <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast">
-                                <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly>
+                                <!-- <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast"> -->
+                                <!-- <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly> -->
+                                <input type="tel" class="form-control" id="memberDue_add_2_fast" name="end_date_fast" placeholder="선택" maxlength="3" style="font-size:13.5px;">
                             </div>
                         </div>
 
@@ -1135,17 +1139,19 @@
                 </div>
             </div>
 
+            <!--
             <div class="ptaddbox form-group">
             </div>
-
+            -->
+            
             <div id="ptrepeat-btn">
                 <span>PT 반복 일정 등록</span>
                 <img class="icons-next-button" src={% static_url "user/res/ptadd/btn-next.png" %}>
             </div>
             <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
-                <button id="pcBtn" class="submitBtn">등록</button>
+                <button id="pcBtn" class="submitBtn text-register"></button>
                 <button class="submitBtn" style="display: none;">수정</button>
-                <button class="submitBtn" onclick="closePopup('member_add')">닫기</button>
+                <button class="submitBtn text-close" onclick="closePopup('member_add')"></button>
             </div>
         </form>
     </div>
@@ -1161,7 +1167,7 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script>
     <script>
-        $('a.__membermanage').css('color','#fe4e65;')
+        $('a.text-membermanage').css('color','#fe4e65;')
         $('#uptext').text("회원 관리")
         $('footer').hide()
 
@@ -1173,7 +1179,9 @@
         var alignType = "name"
         var select_all_check = false;
 
-        get_member_ing_list()
+        get_member_ing_list("callback",function(jsondata){
+            memberListSet('current','name','no',jsondata);
+        });
 
 
 

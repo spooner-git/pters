@@ -8,9 +8,10 @@ html,body{
 input{
     -webkit-appearance:none;
     -webkit-border-radius:0;
-    -webkit-text-fill-color:#282828;
+    -webkit-text-fill-color:#cccccc;
     -webkit-opacity:1;
 }
+
 
 .bodyfixed{
     position: fixed !important;

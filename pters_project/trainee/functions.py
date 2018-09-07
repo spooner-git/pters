@@ -42,38 +42,64 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
         schedule_data = ScheduleTb.objects.select_related(
             'lecture_tb__member', 'group_tb'
         ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE,
-                 start_dt__gte=start_date, start_dt__lt=end_date
+                 start_dt__gte=start_date, start_dt__lt=end_date,
+                 lecture_tb__use=USE
                  ).annotate(group_type_cd_name=RawSQL('IFNULL(( '+query_group_type_cd_name+' ), \'1:1 레슨\')', []),
                             group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', []),
                             member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt')
-    else:
-        schedule_data = ScheduleTb.objects.select_related(
-            'lecture_tb__member', 'group_tb'
-        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
-                 ).annotate(group_type_cd_name=RawSQL('IFNULL(('+query_group_type_cd_name+'), \'1:1 레슨\')', []),
-                            group_current_member_num=RawSQL('IFNULL(('+query_group_current_member_num+' ), 1)', []),
-                            member_auth_cd=RawSQL(query_member_auth_cd, [])
-                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt')
+                            ).filter(member_auth_cd='VIEW').order_by('start_dt')
+        idx1 = 0
+        idx2 = 1
+        lecture_id = None
+        for schedule_info in schedule_data:
+            if lecture_id != schedule_info.lecture_tb_id:
+                lecture_id = schedule_info.lecture_tb_id
+                idx1 += 1
+                idx2 = 1
+            schedule_info.idx = str(idx1)+'-'+str(idx2)
+            pt_schedule_list.append(schedule_info)
+            idx2 += 1
 
-    idx1 = 0
-    idx2 = 1
-    lecture_id = None
-    for schedule_info in schedule_data:
-        if lecture_id != schedule_info.lecture_tb_id:
-            lecture_id = schedule_info.lecture_tb_id
-            idx1 += 1
-            idx2 = 1
-        schedule_info.idx = str(idx1)+'-'+str(idx2)
-        pt_schedule_list.append(schedule_info)
-        idx2 += 1
-
-        if now <= schedule_info.start_dt:
-            if next_schedule == '':
-                next_schedule = schedule_info.start_dt
-            else:
-                if next_schedule > schedule_info.start_dt:
+            if now <= schedule_info.start_dt:
+                if next_schedule == '':
                     next_schedule = schedule_info.start_dt
+                else:
+                    if next_schedule > schedule_info.start_dt:
+                        next_schedule = schedule_info.start_dt
+    else:
+        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+                                                     lecture_tb__member_id=user_id,
+                                                     lecture_tb__use=USE
+                                                     ).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+
+        idx1 = 0
+        for lecture_info in lecture_list:
+            try:
+                lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW',
+                                                                member_id=user_id,
+                                                                lecture_tb=lecture_info.lecture_tb_id)
+            except ObjectDoesNotExist:
+                lecture_info_data = None
+
+            if lecture_info_data is not None:
+                idx1 += 1
+                idx2 = 1
+                schedule_data = ScheduleTb.objects.select_related('lecture_tb__member', 'group_tb'
+                                                                  ).filter(class_tb_id=class_id,
+                                                                           en_dis_type=ON_SCHEDULE_TYPE,
+                                                                           lecture_tb_id=lecture_info_data.lecture_tb_id
+                                                                           ).order_by('start_dt')
+                for schedule_info in schedule_data:
+                    schedule_info.idx = str(idx1) + '-' + str(idx2)
+                    pt_schedule_list.append(schedule_info)
+                    idx2 += 1
+
+                    if now <= schedule_info.start_dt:
+                        if next_schedule == '':
+                            next_schedule = schedule_info.start_dt
+                        else:
+                            if next_schedule > schedule_info.start_dt:
+                                next_schedule = schedule_info.start_dt
 
     context['pt_schedule_data'] = pt_schedule_list
     context['next_schedule'] = next_schedule
@@ -383,6 +409,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     # except ObjectDoesNotExist:
                     #     error = '그룹 정보를 불러오지 못했습니다.'
 
+                print('lecture_list:' + str(lecture_info_data.lecture_tb_id) + ':' + str(lecture_info_data.lecture_tb.start_date))
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list
@@ -480,7 +507,7 @@ def func_get_class_list(context, member_id):
         = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
           " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = "+str(member_id)
 
-    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `CLASS_LECTURE_TB`.`CLASS_TB_ID`"
+    query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `CLASS_TB`.`SUBJECT_CD`"
 
     class_lecture_data = ClassLectureTb.objects.select_related(
         'class_tb', 'lecture_tb').filter(
@@ -526,10 +553,12 @@ def func_get_class_list(context, member_id):
     return context
 
 
-def func_check_schedule_setting(class_id, start_date, add_del_type):
+def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
     error = None
     disable_time = timezone.now()
     now_time = datetime.datetime.strptime(disable_time.strftime('%H:%M'), '%H:%M')
+    add_del_start_time = datetime.datetime.strptime(start_date.strftime('%H:%M'), '%H:%M')
+    add_del_end_time = datetime.datetime.strptime(end_date.strftime('%H:%M'), '%H:%M')
     today = datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
     reserve_avail_date = 0
     class_info = None
@@ -542,9 +571,11 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
         lt_res_01 = '00:00-23:59'
         lt_res_02 = 0
         lt_res_03 = '0'
+        lt_res_04 = '00:00-23:59'
         lt_res_05 = 14
         lt_res_cancel_time = -1
         lt_res_enable_time = -1
+        lt_work_time_avail = ['', '', '', '', '', '', '']
         setting_data = SettingTb.objects.filter(member_id=class_info.member_id, class_tb_id=class_id, use=USE)
 
         for setting_info in setting_data:
@@ -554,6 +585,22 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
                 lt_res_02 = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_03':
                 lt_res_03 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_RES_04':
+                lt_res_04 = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SUN_TIME_AVAIL':
+                lt_work_time_avail[0] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_MON_TIME_AVAIL':
+                lt_work_time_avail[1] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_TUE_TIME_AVAIL':
+                lt_work_time_avail[2] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_WED_TIME_AVAIL':
+                lt_work_time_avail[3] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_THS_TIME_AVAIL':
+                lt_work_time_avail[4] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_FRI_TIME_AVAIL':
+                lt_work_time_avail[5] = setting_info.setting_info
+            if setting_info.setting_type_cd == 'LT_WORK_SAT_TIME_AVAIL':
+                lt_work_time_avail[6] = setting_info.setting_info
             if setting_info.setting_type_cd == 'LT_RES_05':
                 lt_res_05 = int(setting_info.setting_info)
             if setting_info.setting_type_cd == 'LT_RES_CANCEL_TIME':
@@ -564,9 +611,29 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
             lt_res_cancel_time = lt_res_02*60
         if lt_res_enable_time == -1:
             lt_res_enable_time = lt_res_02*60
+        if lt_work_time_avail[0] == '':
+            lt_work_time_avail[0] = lt_res_04
+        if lt_work_time_avail[1] == '':
+            lt_work_time_avail[1] = lt_res_04
+        if lt_work_time_avail[2] == '':
+            lt_work_time_avail[2] = lt_res_04
+        if lt_work_time_avail[3] == '':
+            lt_work_time_avail[3] = lt_res_04
+        if lt_work_time_avail[4] == '':
+            lt_work_time_avail[4] = lt_res_04
+        if lt_work_time_avail[5] == '':
+            lt_work_time_avail[5] = lt_res_04
+        if lt_work_time_avail[6] == '':
+            lt_work_time_avail[6] = lt_res_04
 
         reserve_avail_start_time = datetime.datetime.strptime(lt_res_01.split('-')[0], '%H:%M')
         reserve_avail_end_time = datetime.datetime.strptime(lt_res_01.split('-')[1], '%H:%M')
+
+        work_avail_start_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[0],
+                                                           '%H:%M')
+        work_avail_end_time = datetime.datetime.strptime(lt_work_time_avail[int(start_date.strftime('%w'))].split('-')[1],
+                                                         '%H:%M')
+        today + datetime.timedelta(hours=reserve_avail_date)
 
         reserve_stop = lt_res_03
         reserve_avail_date = lt_res_05
@@ -592,6 +659,19 @@ def func_check_schedule_setting(class_id, start_date, add_del_type):
                 else:
                     error = '예약 취소가 불가능합니다.'
             if now_time > reserve_avail_end_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '예약 등록이 불가능합니다.'
+                else:
+                    error = '예약 취소가 불가능합니다.'
+
+        if error is None:
+            if add_del_start_time < work_avail_start_time:
+                if add_del_type == ADD_SCHEDULE:
+                    error = '예약 등록이 불가능합니다.'
+                else:
+                    error = '예약 취소가 불가능합니다.'
+
+            if add_del_end_time > work_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
                     error = '예약 등록이 불가능합니다.'
                 else:

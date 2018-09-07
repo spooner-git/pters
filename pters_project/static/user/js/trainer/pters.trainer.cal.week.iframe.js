@@ -29,7 +29,7 @@ $(document).ready(function(){
 
 
     setInterval(function(){
-        ajaxCheckSchedule();
+        // ajaxCheckSchedule();
         //todayFinderArrow();
         addcurrentTimeIndicator_blackbox();
     }, 60000);// 자동 ajax 새로고침(일정가져오기)

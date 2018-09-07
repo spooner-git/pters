@@ -19,20 +19,32 @@ $('#groupcapacity').change(function(){
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0;
 $('button#addByNew').click(function(e){
-    addByNew_input_eventGroup();
-    e.preventDefault();
-    added_New_Member_Num++;
-    var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="">';
-    var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
-    var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
-    var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
-    var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';
-    var htmlend = '</div>';
+    if(!$(this).hasClass('disabled_button')){
+        var group_id = $('#form_member_groupid').val()
+        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
+        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
+        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
+        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
 
-    var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend;
-    $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
-    $('#addedMemberListBox').prepend(html);
-});
+        if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+            alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
+        }else{
+            addByNew_input_eventGroup()
+            e.preventDefault()
+            added_New_Member_Num++
+            var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">'
+            var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">'
+            var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>'
+            var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">'
+            var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">'
+            var htmlend = '</div>'
+
+            var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend
+            $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
+            $('#addedMemberListBox').prepend(html)
+        }
+    }
+})
 
 //회원추가된 항목에서 x버튼을 누르면 목록에서 뺀다.
 $(document).on('click','img.substract_addedMember',function(){
@@ -82,19 +94,27 @@ function addByNew_input_eventGroup(){
 
 /////////////리스트에서 추가 버튼 누르면 회원리스트 팝업//////////////////////////////////
 $('button#addByList, button#addBySearch').click(function(e){
-    e.preventDefault();
-    $('#subpopup_'+$(this).attr('id')).show();
-
-    if($(this).attr('id')=="addByList"){
-        draw_memberlist_for_addByList($('#subpopup_addByList'));
-    }else if($(this).attr('id')=="addBySearch"){
-        //
+    e.preventDefault()
+    e.stopPropagation()
+    
+    if(!$(this).hasClass('disabled_button')){
+        $(this).siblings('button').addClass('disabled_button');
+        $('#subpopup_'+$(this).attr('id')).show();
+        if($(this).attr('id')=="addByList"){
+            draw_memberlist_for_addByList($('#subpopup_addByList'))
+        }else if($(this).attr('id')=="addBySearch"){
+            //
+        }
+    
     }
-});
+})
 
-$(document).on('click','#subpopup_addByList .listTitle_addByList span',function(){
-    $('#subpopup_addByList').hide();
-});
+$(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
+    if($('#subpopup_addByList').css('display') == "block"){
+        $('#subpopup_addByList').hide()
+        $('.groupMemberAddBox button').removeClass('disabled_button');
+    }
+})
 
 function close_addByList_popup(){
     $('#subpopup_addByList').hide();
@@ -128,16 +148,22 @@ $(document).on('click','img.add_listedMember',function(){
                     enable_group_member_add_after_ajax();
                     
                     if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
-                        alert('지난 그룹일정 참석자 정상 등록되었습니다.');
+                        alert('지난 일정 참석자 정상 등록되었습니다.');
+                        if(bodywidth<600){
+                            $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                        }
                     }else{
-                        alert('그룹일정 참석자 정상 등록되었습니다.');
+                        alert('일정 참석자 정상 등록되었습니다.');
+                        if(bodywidth<600){
+                            $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                        }
                     }
 
                 });
             });
         }
 
-        //회원관리 : 리스트로 그룹회원 추가
+    //회원관리 : 리스트로 그룹회원 추가
     }else{
         var sexInfo = "-";
         if(selected_sex=="M"){
@@ -199,7 +225,7 @@ function draw_memberlist_for_addByList(targetHTML){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if($('body').width()<600){
-                    $('#page_managemember').show();
+                    //$('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -303,12 +329,14 @@ $('button#addBySearch_search').click(function(e){
     });
 });
 
-$('#subpopup_addBySearch .listTitle_addByList span').click(function(){
-    $('#subpopup_addBySearch').hide();
-    $('#searchedMemberListBox').html('');
-    $('#addBySearch_input').val('');
-
-});
+$('#subpopup_addBySearch .listTitle_addByList span, ._ADD_MEMBER_REG').click(function(e){
+    if($('#subpopup_addBySearch').css('display') == "block"){
+        $('#subpopup_addBySearch').hide()
+        $('#searchedMemberListBox').html('')
+        $('#addBySearch_input').val('')
+        $('.groupMemberAddBox button').removeClass('disabled_button');
+    }
+})
 
 function draw_memberlist_for_addBySearch(jsondata){
     var lastname = jsondata.lastnameInfo;
@@ -817,6 +845,7 @@ function groupListSet(option, jsondata){ //option : current, finished
             '<div class="_groupmanage">'+pceditimage+pcdownloadimage+pcdeleteimage+'</div>';
         htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist);
     }
+    console.log("groupNum",groupNum)
     if(groupNum == 0){
         if(option == "current"){
             htmlToJoin.push('<div class="groupWrap">추가 된 그룹이 없습니다.</div>')

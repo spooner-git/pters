@@ -14,6 +14,11 @@ ul a{
 	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 4px, rgba(255,255,255,.5) 6px);
 	*/
 }
+.worktime_disable{
+	background-color: #e8e8e8 !important;
+	/*background-color: red !important;*/
+	background-image: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(255,255,255,.5) 3px, rgba(255,255,255,.5) 7px) !important;
+}
 
 .disabled_button{
 	opacity: 0.4;
@@ -71,7 +76,7 @@ ul a{
 	*/
 }
 
-#addpopup_pc_label_pt,#addpopup_pc_label_off,#addpopup_pc_label_new,#addpopup_pc_label_view{
+#addpopup_pc_label_pt, #addpopup_pc_label_off, #addpopup_pc_label_new, #addpopup_pc_label_view{
 	display: none;
 }
 
@@ -80,7 +85,7 @@ ul a{
 	max-width: 600px;
 	margin:0 auto;
 	padding-left: 12px;
-	border-bottom: 1px solid #cccccc;
+	border-bottom: 1px solid #eaeaea;
 	margin-top: 20px;
 }
 
@@ -160,22 +165,7 @@ ul a{
 		.pters_dropdown_custom_list li a{
 			line-height: 45px;
 		}
-		img.dropdown_scroll_arrow_top{
-			position: absolute;
-			right: 0;
-			margin:5px;
-			padding: 10px;
-			top: 30px;
-			transform: rotate(90deg);
-		}
-		img.dropdown_scroll_arrow_bottom{
-			position: absolute;
-			right: 0;
-			margin: 5px;
-			padding: 10px;
-			bottom: -270px;
-			transform:rotate(270deg);
-		}
+		
 
 	.pters_dropdown_custom_list div{
 		text-align: center;
@@ -262,7 +252,7 @@ ul a{
 	top:auto;
 	left: auto;
 	overflow-y:auto;
-	max-height: 200px;
+	max-height: 130px;
 }
 
 .dropdownlist_mini li{
@@ -363,6 +353,7 @@ ul a{
 .pters_input_namefield{
 	width: 48%;
 	display: inline-block;
+	padding: 0;
 	/*height: 40px !important;*/ /*이거 대체 왜이래?? 그룹추가할때 40 important되어있으면 칸이 너무 크다.*/
 }
 
@@ -399,6 +390,10 @@ ul a{
 	padding-right: 5%;
 	padding-left: 5%;
 	margin-top: 5%;
+
+	padding-bottom: 	10px;
+	padding-top: 	10px;
+	margin: 	0;
 }
 
 #scheduleMemo, #repeatDurTime{  /*20180426*/
@@ -607,6 +602,9 @@ ul a{
 #timeGraph{
 	position: relative;
 }
+.timegraph_display{
+	background-color: #eaeaea;
+}
 .timegraphtext{
 	font-size: 11px;
 	text-align: center;
@@ -668,7 +666,7 @@ ul a{
 	/*background: #cacaca;*/
 	background: #ffffff;
 	/*background: #282828;*/
-	border-left : 0.5px solid #f4f4f4;
+	border-left : 0.5px solid #eaeaea;
 }
 
 .colspan{
@@ -679,7 +677,7 @@ ul a{
 	display: inline-table;
 	height: 8px;
 	background: #ffffff;
-	border-left : 0.5px solid #f4f4f4;
+	border-left : 0.5px solid #eaeaea;
 }
 
 .tdgraph30{
@@ -868,7 +866,7 @@ button._info_baseedit_img{
 	bottom: -23px;
 	right: -21px;
 	text-align: center;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 	border-top: 1px solid #cccccc;
 }
 
@@ -964,14 +962,26 @@ button._info_baseedit_img{
 	width: 91.67%;
 	margin:0 auto;
 	border: 1px solid #cccccc;
-	background: #e3e3e3;
+	background: #f4f4f4;
+
+	padding-bottom: 10px;
 }
 
 #simpleReg{
 	width: 91.67%;
 	margin:0 auto;
 	border: 1px solid #cccccc;
-	background: #e3e3e3;
+	background: #f4f4f4;
+
+	padding-bottom: 10px;
+}
+
+.price_wrap{
+	height: 110px;
+}
+
+.dur_wrap{
+	height: 110px;
 }
 
 .ptersCheckbox_wrapper{
@@ -1044,6 +1054,7 @@ button._info_baseedit_img{
 .checkboxtext{
 	text-align: left;
 	font-size: 13.5px;
+	width: 15% !important;
 }
 
 #simpleReg tr{
@@ -1056,7 +1067,8 @@ button._info_baseedit_img{
 
 #simpleReg td{
 	background: #f4f4f4;
-	width: 16.67%;
+	/*width: 16.67%;*/
+	width: 8%;
 }
 
 #memberSearch_add{
@@ -1164,12 +1176,18 @@ option{
 	right: 25px;
 }
 
+.regCountSelect{
+
+}
+
 .pricebutton{
 	width: 100%;
 	max-width: 450px;
 	height: 35px;
 	text-align: center;
 	margin:0 auto;
+	margin-top: 0px !important;
+	border: 0 !important;
 }
 
 
@@ -1195,6 +1213,9 @@ option{
 	color: #ffffff;
 }
 
+.blankbox{
+	z-index: 1;
+}
 .blankSelected{
 	position: absolute;
 	top: 0;
@@ -1287,6 +1308,13 @@ option{
 	.pters_dropdown_custom_list div:first-child{
 		display: none;
 	}
+	.pters_dropdown_custom_list li{
+		height: 35px;
+	}
+	.pters_dropdown_custom_list li a{
+		line-height: 35px;
+		padding: 0;
+	}
 
 	.dropdown-backdrop{
 		background-color: unset;
@@ -1332,7 +1360,12 @@ option{
 
 	#memberName_reg{
 		width: 54%;
-		border-color: #f4f4f4 !important;
+		border: 	0;
+	}
+
+	#memberBirth{
+		border: 	0;
+		width: 	54%;
 	}
 
 	#remainCount_mini div:nth-child(2){
@@ -1358,6 +1391,25 @@ option{
 		line-height: 24px;
 	}
 
+	.price_wrap{
+		height: 70px;
+	}
+
+	.dur_wrap{
+		height: 80px;
+	}
+
+	._count{
+		height: 80px;
+	}
+	.pricebutton{
+		margin-top: 25px !important;
+	}
+
+	.regCountSelect{
+		margin-top: 28px !important;
+	}
+
 	.dropdown_birth{
 		height: 26px;
 		border: 1px solid #8d8d8d;
@@ -1373,14 +1425,22 @@ option{
 	}
 
 	.ptaddbox{
-		margin-top: 2%;
-		margin-bottom: 10px;
+
 	}
 
 	#page-addplan{
 		position: absolute;
-		width: 400px;
+		width: 500px;
 		margin-bottom: 50px;
+		background:white;
+	}
+
+	#page_addplan_input_wrap{
+		border-top:  2px solid #cccccc;
+		border-bottom: 2px solid #cccccc;
+		overflow-y: scroll;
+		position: relative;
+		max-height: 500px;
 	}
 
 	#page-addplan-pc{
@@ -1430,11 +1490,15 @@ option{
 	}
 
 
-	#addpopup_pc_label_pt ,#addpopup_pc_label_off, #addpopup_pc_label_new, #addpopup_pc_label_view{
+	#addpopup_pc_label_pt, #addpopup_pc_label_off, #addpopup_pc_label_new, #addpopup_pc_label_view{
 		font-size: 19px;
 		font-weight: 500;
 		text-align: left;
 		display: block;
+		background-color: white;
+		margin: 0;
+		padding-top: 	10px;
+		padding-bottom: 	10px;
 	}
 
 
@@ -1449,6 +1513,7 @@ option{
 
 	.popupBtn_mini{
 		display: block;
+		background-color: transparent;
 	}
 
 	.popupBtn_mini .submitBtn{

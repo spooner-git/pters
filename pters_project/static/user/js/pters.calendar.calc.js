@@ -155,7 +155,6 @@ function compare_date(date1, date2){
 	var date1_num = year1+month1;
 	var date2_num = year2+month2;
 
-	console.log(date1_num, date2_num)
 	if(date1_num > date2_num){
 		return true;
 	}else{
@@ -192,7 +191,7 @@ function compare_date2(date1, date2){
 function find_max_date(dateArray){ //어레이 안에서 가장 최근 날짜를 찾아낸다.
 	var len = dateArray.length;
 	var dates = [];
-	console.log(dateArray)
+
 	for(var i=0; i<len; i++){
 		var date = dateArray[i]
 		if(date == '9999-12-31' || date == '소진시까지'){
@@ -217,6 +216,10 @@ function substract_time(starttime, subvalue){
 	var smin = Number(starttime.split(':')[1]);
 	var subhour = Number(subvalue.split(':')[0]);
 	var submin = Number(subvalue.split(':')[1]);
+	if(submin > 60){
+		subhour = subhour + parseInt(submin/60);
+		submin = submin%60;
+	}
 
 	if(smin - submin >= 0){
 		if(shour - subhour >= 0){
@@ -226,22 +229,35 @@ function substract_time(starttime, subvalue){
 			var resultHour = 24 + (shour - subhour);
 			var resultMin = smin - submin;
 		}
-		
+
 	}else if(smin - submin < 0){
 		if(shour - subhour > 0){
 			var resultHour = shour - subhour - 1;
-			var resultMin = smin + (60 - submin)
+			var resultMin = smin + (60 - submin);
+			// var hourminus = parseInt( (submin + smin)/60 );
+			// var resultHour = shour - subhour - hourminus - 1;
+			// var resultMin = (smin - submin)%60;
+			// if(resultMin < 0){
+			// 	resultMin = 60 + resultMin;
+			// }
+
 		}else if(shour - subhour <= 0){
 			var resultHour = 24 + (shour - subhour) - 1;
-			var resultMin = smin + (60 - submin)
+			var resultMin = smin + (60 - submin);
+			// var hourminus = parseInt( (smin - submin)/60 );
+			// var resultHour = shour - subhour + hourminus - 1;
+			// var resultMin = (smin - submin)%60;
+			// if(resultMin < 0){
+			// 	resultMin = 60 + resultMin;
+			// }
 		}
 	}
 
 	if(resultHour<10){
-		var resultHour = '0' + resultHour
+		var resultHour = '0' + resultHour;
 	}
 	if(resultMin<10){
-		var resultMin = '0' + resultMin
+		var resultMin = '0' + resultMin;
 	}
 
 
@@ -270,17 +286,16 @@ function add_time(starttime, addvalue){
 	if(smin + addmin >= 60){
 		if(shour + addhour >= 24){  // 23 + 4 --> 3
 			if(shour + addhour == 24){
-				var resultHour = 25
+				var resultHour = 25;
 			}else{
 				var resultHour = addhour - (24-shour);
 			}
 			var resultMin = smin + addmin - 60;
 		}else if(shour + addhour < 24){
-			var hourplus = parseInt((smin + addmin)/60)
+			var hourplus = parseInt((smin + addmin)/60);
 			var resultHour = shour + addhour + hourplus;
 			var resultMin = (smin + addmin)%60;
 		}
-		
 	}else if(smin + addmin < 60){
 		if(shour + addhour >= 24){  //23 + 1 --> 00
 			if(shour + addhour == 24){
@@ -290,16 +305,16 @@ function add_time(starttime, addvalue){
 			}
 			var resultMin = smin + addmin;
 		}else if(shour + addhour < 24){
-			var resultHour = shour + addhour ;
+			var resultHour = shour + addhour;
 			var resultMin = smin + addmin;
 		}
 	}
 
 	if(resultHour<10){
-		var resultHour = '0' + resultHour
+		var resultHour = '0' + resultHour;
 	}
 	if(resultMin<10){
-		var resultMin = '0' + resultMin
+		var resultMin = '0' + resultMin;
 	}
 
 
@@ -316,9 +331,39 @@ function compare_time(time1, time2){
 	var time1_num = hour1+min1;
 	var time2_num = hour2+min2;
 
-	if(time1_num > time2_num){
+	if(Number(time1_num) > Number(time2_num) ){
 		return true;
 	}else{
 		return false;
 	}
+}
+
+// "0:00-23:59" 형식에서 시간만 뽑아오기 (업무시간 설정)
+function worktime_extract_hour(worktimeformat){
+    var worktime = worktimeformat;
+    var starthour = worktime.split('-')[0].split(':')[0];
+    var endhour = worktime.split('-')[1].split(':')[0];
+    var startmin = worktime.split('-')[0].split(':')[1];
+    var endmin = worktime.split('-')[1].split(':')[1];
+    if(startmin == "59" && starthour == "23"){
+        starthour = 24
+    }
+    if(endmin == "59" && endhour == "23"){
+        endhour = 24
+    }
+    return {"start": Number(starthour), "end":Number(endhour)}
+}
+
+function worktime_extract_maxmin(worktimeArray){
+	var len = worktimeArray.length;
+	var extracted = [];
+	for(var i=0; i<len; i++){
+		if(worktime_extract_hour(worktimeArray[i])["start"] == 0 && worktime_extract_hour(worktimeArray[i])["end"] == 0 ){
+			
+		}else{
+			extracted.push(worktime_extract_hour(worktimeArray[i])["start"], worktime_extract_hour(worktimeArray[i])["end"] )
+		}
+		
+	}
+	return {"max":Math.max.apply(null,extracted), "min":Math.min.apply(null,extracted)}
 }

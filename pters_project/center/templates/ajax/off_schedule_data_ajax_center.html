@@ -1,0 +1,25 @@
+    {
+      "messageArray" :
+      [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "offRepeatScheduleIdArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.repeat_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleTypeArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.repeat_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleWeekInfoArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.week_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleStartDateArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.start_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleEndDateArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.end_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleStartTimeArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.start_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleEndTimeArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.end_time }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleTimeDurationArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.time_duration }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleStateCdArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "offRepeatScheduleStateCdNameArray" :
+      [{% for off_repeat_schedule_info in off_repeat_schedule_data %}"{{ off_repeat_schedule_info.get_state_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

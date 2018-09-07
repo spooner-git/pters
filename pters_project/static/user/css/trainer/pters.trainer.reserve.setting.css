@@ -24,7 +24,21 @@ body{
 #trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
 	margin-top: 70px;
 }
+#trainerWorkTimeSetting_{
+	display: none;
+}
 
+#switch_autocomplete, #switch_autofinish, #switch1, #switch2, #switch_cancel_limit, #switch3, #switch4{
+	position: absolute;
+}
+#switch_worktime_sun, #switch_worktime_mon, #switch_worktime_tue, #switch_worktime_wed, #switch_worktime_thu, #switch_worktime_fri, #switch_worktime_sat{
+	transform: scale(0.6);
+}
+
+.worktimeWeekly_dayname{
+	font-weight: 500;
+	color: #282828;
+}
 
 .fixfooter{
 	position: relative;
@@ -262,48 +276,17 @@ li a{
 }
 
 
-
-/*스위치*/
-.pters_switch{
-	position: absolute;
-	display: inline-block;
-	width: 53.5px;
-	height: 35px;
-	top: 1px;
-	right: 3px;
+.pters_seekbar_segment > span{
+	display: none;
+}
+@media(min-width: 600px){
+	.pters_seekbar_segment > span{
+		display: inline-block;
+	}
 }
 
-.switchback{
-	position: absolute;
-	width:53.5px;
-	height: 100%;
-	border-radius: 27px;
-	border:0.5px solid #a2a2a2;
-	background: #cbc9c4;
-}
 
-.switchball{
-	position: absolute;
-	top: 3px;
-	width: 28px;
-	height: 28px;
-	border-radius: 14px;
-	border:2px solid #282828;
-}
 
-.switchoff{
-	background: grey;
-	left: 4px;
-}
-
-.switchon{
-	background: #fe4e65;
-	right: 4px;
-}
-
-.switchon-back{
-	background: #ffffff;
-}
 
 #mobile_preview_btn{
 	display: block;
@@ -396,8 +379,7 @@ li a{
 
 @media(min-width: 345px){
 	.pters_switch{
-		top: 5px;
-		right: 5px;
+		top: 12px;
 	}
 }
 
@@ -429,10 +411,6 @@ li a{
 		font-size: 14px;
 	}
 
-	.pters_switch{
-		top: 13px;
-		right: 14.5px;
-	}
 	#mobile_preview_btn{
 		display: none;
 	}

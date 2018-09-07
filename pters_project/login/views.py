@@ -53,7 +53,6 @@ def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
-    keyword = request.POST.get('keyword', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
     next_page = request.POST.get('next_page')
     error = None
@@ -61,8 +60,11 @@ def login_trainer(request):
         next_page = '/trainer/'
     if next_page is None:
         next_page = '/trainer/'
-
+    request.session['push_token'] = ''
     if not error:
+        # if password == 'kakao_login':
+        #     user = authenticate(username=username)
+        # else:
         user = authenticate(username=username, password=password)
 
         if user is not None and user.is_active:
@@ -138,27 +140,25 @@ class RegisterTypeSelectView(TemplateView):
 # 로그아웃 api
 def logout_trainer(request):
     # logout 끝나면 login page로 이동
-    token = request.session.get('push_token', '')
+    # token = request.session.get('push_token', '')
+    device_id = request.session.get('device_id', 'pc')
     error = None
-    if token is not None and token != '':
-        try:
-            token_data = PushInfoTb.objects.get(member_id=request.user.id, token=token)
-            token_data.delete()
-        except ObjectDoesNotExist:
-            error = 'token data 없음 : PC 버전'
+    if device_id == 'pc':
+        token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id)
+        token_data.delete()
 
     logout(request)
     if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name
                          + '[' + str(request.user.id) + ']' + error)
-    return redirect('/')
+    return redirect('/login/')
 
 
 # 회원가입 api
-class ResendEmailAuthenticationView(RegistrationView, View):
+class NewMemberResendEmailAuthenticationView(RegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = RegistrationForm(request.POST, request.FILES)
         user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
@@ -221,6 +221,44 @@ class ResendEmailAuthenticationView(RegistrationView, View):
             messages.error(request, error)
         else:
             logger.error(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
+
+        return render(request, self.template_name)
+
+
+# 회원가입 api
+class ResendEmailAuthenticationView(RegistrationView, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_id = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        member_id = request.POST.get('member_id', '')
+        error = None
+        user = None
+        username = None
+        if member_id is None or member_id == '':
+            error = 'ID를 입력해주세요.'
+        if error is None:
+            try:
+                user = User.objects.get(id=member_id)
+            except ObjectDoesNotExist:
+                error = '가입되지 않은 회원입니다.'
+
+        if error is None:
+            # user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    error = '이미 인증된 ID 입니다.'
+                else:
+                    self.send_activation_email(user)
+            else:
+                error = 'ID가 존재하지 않습니다.'
+
+        if error is not None:
+            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
+            messages.error(request, error)
+        else:
+            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 회원가입 완료')
 
         return render(request, self.template_name)
 
@@ -488,7 +526,7 @@ class CheckMemberIdView(TemplateView):
         else:
             if form.is_valid():
                 if User.objects.filter(username=user_id).exists():
-                    self.error = '사용중인 아이디 입니다.'
+                    self.error = '사용 불가'
             else:
                 for field in form:
                     if field.errors:
@@ -505,7 +543,7 @@ class CheckMemberIdView(TemplateView):
         if self.error != '':
             self.error = self.error.replace("이름", "ID")
             if self.error == '해당 사용자 ID은 이미 존재합니다.':
-                self.error = '사용중인 이이디 입니다.'
+                self.error = '사용 불가'
 
         if self.error != '':
             context['error'] = self.error
@@ -526,12 +564,12 @@ class CheckMemberEmailView(TemplateView):
         else:
 
             if User.objects.filter(email=user_email).exists():
-                self.error = '사용중인 Email 입니다.'
+                self.error = '사용 불가'
 
             if self.error is None or self.error == '':
                 if form.is_valid():
                     if User.objects.filter(email=user_email).exists():
-                        self.error = '사용중인 Email 입니다.'
+                        self.error = '사용 불가'
                 else:
                     for field in form:
                         if field.errors:
@@ -571,6 +609,31 @@ class CheckMemberValidationView(View):
                                 self.error = err
                         else:
                             if field.name != 'username':
+                                self.error += err
+        if self.error != '':
+            context['error'] = self.error
+        return render(request, self.template_name, context)
+
+
+class CheckMemberPasswordValidationView(View):
+    template_name = 'ajax/id_check_ajax.html'
+    error = ''
+
+    def post(self, request):
+        context = {}
+        # context = super(CheckMemberValidationView, self).get_context_data(**kwargs)
+        form = RegistrationForm(self.request.POST, self.request.FILES)
+        if form.is_valid():
+            self.error = ''
+        else:
+            for field in form:
+                if field.errors:
+                    for err in field.errors:
+                        if self.error is None or self.error == '':
+                            if field.name == 'password2':
+                                self.error = err
+                        else:
+                            if field.name == 'password2':
                                 self.error += err
         if self.error != '':
             context['error'] = self.error
@@ -682,7 +745,7 @@ class AddPushTokenView(View):
 
     def post(self, request):
         keyword = request.POST.get('token_info', '')
-        device_id = request.POST.get('device_id', '')
+        device_id = request.POST.get('device_id', 'pc')
         user_agent = request.META['HTTP_USER_AGENT']
         add_token_check = False
         if keyword == '' or device_id == '' or keyword is None or device_id is None:
@@ -690,7 +753,11 @@ class AddPushTokenView(View):
 
         if self.error == '':
             if str(request.user) != 'AnonymousUser':
-                token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+                if device_id == 'pc':
+                    token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
+                else:
+                    token_data = PushInfoTb.objects.filter(device_id=device_id, use=USE)
+
                 if len(token_data) == 0:
                     add_token_check = True
                 elif len(token_data) == 1:
@@ -709,7 +776,7 @@ class AddPushTokenView(View):
                                             session_info=request.session.session_key, device_id=device_id,
                                             device_info=str(user_agent), use=USE)
                     token_info.save()
-
+                request.session['device_id'] = device_id
                 request.session['push_token'] = keyword
 
         return render(request, self.template_name, {'token_check': True})

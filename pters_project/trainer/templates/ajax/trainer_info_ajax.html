@@ -20,7 +20,7 @@
         "phone":
       ["{{ member_info.phone }}"],
         "birthday_dt":
-      ["{{ member_info.birthday_dt }}"],
+      ["{%if member_info.birthday_dt == None %} {% else %}{{ member_info.birthday_dt }}{% endif %}"],
         "country":
       ["{{ member_info.country }}"],
         "address":
