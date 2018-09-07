@@ -2,8 +2,8 @@
 {% load static_url %}
 
 {% block local_css %}
-    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.week.cal.css" %}>
-    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.month.cal.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.week.total.cal.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.month.total.cal.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.group.css" %}>
@@ -112,8 +112,11 @@
 
     <div id="ymdText-pc" class="wrap">
         <div class="ymdText-pc-refresh">
-            <div class="ymdText-pc-add-refresh">
+            <div class="ymdText-pc-left-btn ymdText-pc-add-refresh">
                 <span class="text-refresh"></span>
+            </div>
+            <div class="ymdText-pc-left-btn change_cal">
+                <span class="">달력 전환</span>
             </div>
         </div>
 
@@ -174,49 +177,33 @@
         </div>
     </div>
 
+    <div id="date" class="week-style wrap" style="display: none;"> <!--월화수목금토일-->
+        <table class="calendar-style calendar-day-style">
+            <tr>
+                <td id="sunday"><p class="calendar_image weekday_style sunday">일</p></td>
+                <td id="monday"><p class="calendar_image weekday_style weekdays">월</p></td>
+                <td id="tuesday"><p class="calendar_image weekday_style weekdays">화</p></td>
+                <td id="wednesday"><p class="calendar_image weekday_style weekdays">수</p></td>
+                <td id="thursday"><p class="calendar_image weekday_style weekdays">목</p></td>
+                <td id="friday"><p class="calendar_image weekday_style weekdays">금</p></td>
+                <td id="saturday"><p class="calendar_image weekday_style saturday">토</p></td>
+            </tr>
+        </table>
+    </div> <!--월화수목금토일-->
 
-    <div id="calendar" class="wrap _calweek">
+    <div id="calendar" class="wrap">
 
         <div class="swiper-container">
             <div id="timeIndicatorBar"></div>
             <div class="timeindex">
-                <!--
-                  <div class="hour" id="hour0"><span class="morningtext"><span class="KRtext">오전</span><span class="JPtext">午前</span><span class="ENtext">AM</span></span><span class="timeindex_time">00:00</span></div>
-                  <div class="hour" id="hour1"><span class="timeindex_time">01:00</span></div>
-                  <div class="hour" id="hour2"><span class="timeindex_time">02:00</span></div>
-                  <div class="hour" id="hour3"><span class="timeindex_time">03:00</span></div>
-                  <div class="hour" id="hour4"><span class="timeindex_time">04:00</span></div>
-                  <div class="hour" id="hour5"><span class="timeindex_time">05:00</span></div>
-                  <div class="hour" id="hour6"><span class="timeindex_time">06:00</span></div>
-                  <div class="hour" id="hour7"><span class="timeindex_time">07:00</span></div>
-                  <div class="hour" id="hour8"><span class="timeindex_time">08:00</span></div>
-                  <div class="hour" id="hour9"><span class="timeindex_time">09:00</span></div>
-                  <div class="hour" id="hour10"><span class="timeindex_time">10:00</span></div>
-                  <div class="hour" id="hour11"><span class="timeindex_time">11:00</span></div>
-                  <div class="hour" id="hour12"><span class="morningtext"><span class="KRtext">오후</span><span class="JPtext">午後</span><span class="ENtext">PM</span></span><span class="timeindex_time">12:00</span></div>
-                  <div class="hour" id="hour13"><span class="timeindex_time">13:00</span></div>
-                  <div class="hour" id="hour14"><span class="timeindex_time">14:00</span></div>
-                  <div class="hour" id="hour15"><span class="timeindex_time">15:00</span></div>
-                  <div class="hour" id="hour16"><span class="timeindex_time">16:00</span></div>
-                  <div class="hour" id="hour17"><span class="timeindex_time">17:00</span></div>
-                  <div class="hour" id="hour18"><span class="timeindex_time">18:00</span></div>
-                  <div class="hour" id="hour19"><span class="timeindex_time">19:00</span></div>
-                  <div class="hour" id="hour20"><span class="timeindex_time">20:00</span></div>
-                  <div class="hour" id="hour21"><span class="timeindex_time">21:00</span></div>
-                  <div class="hour" id="hour22"><span class="timeindex_time">22:00</span></div>
-                  <div class="hour" id="hour23"><span class="timeindex_time">23:00</span></div>
-                -->
             </div>
             <div class="swiper-wrapper">
                 <div class="swiper-slide" id="slide1"></div>
                 <div class="swiper-slide" id="slide2"></div>
                 <div class="swiper-slide" id="slide3"></div>
-                <!--
-                <div class="swiper-slide" id="slide4"></div>
-                <div class="swiper-slide" id="slide5"></div>
-              -->
             </div>
         </div>
+
         <div id="cal_box" class="cal_box"></div>
         <div id="gap">
         </div>
@@ -1189,44 +1176,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
-        $('a.text-weekplan').css('color','#fe4e65;');
-
-        var date = new Date();
-        var currentYear = date.getFullYear(); //현재 년도
-        var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-        var currentDate = date.getDate(); //오늘 날짜
-        var currentHour = date.getHours(); //현재시간
-        var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];      //각 달의 일수
-        var currentPageMonth = currentMonth+1; //현재 달
-        var date2 = new Date();
-        var oriYear = date.getFullYear();
-        var oriMonth = date.getMonth()+1;
-        var oriDate = date.getDate();
-        //front-end에서 다뤄야하는 데이터
-        var initialJSON;
-
-        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-        var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
-
-        var classDateData = [];
-        var classTimeData = [];
-        var offDateData=[];
-        var offTimeData = [];
-
-        //var offAddOkArray = []; //OFF 등록 시작 시간 리스트
-        //var durAddOkArray = []; //OFF 등록 시작시간 선택에 따른 진행시간 리스트
-        
-
-        var addTypeSelect = "ptadd"; //팝업 종류 선택 (PT or OFF)
-        var deleteTypeSelect;
-        var selectedDayGroup = []; //반복일정에서 요일 선택
-        var select_all_check;
-        var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
-    </script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.week.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
-    <script>
-        
+        $('a.text-plan').css('color','#fe4e65;');
         var myswiper = new Swiper('.swiper-container', {
             initialSlide : 1,
             //speed : 150,
@@ -1238,6 +1188,25 @@
             onlyExternal: true
         });
 
+        var date2 = new Date();
+        var oriYear = date.getFullYear();
+        var oriMonth = date.getMonth()+1;
+        var oriDate = date.getDate();
+        //front-end에서 다뤄야하는 데이터
+        var initialJSON;
+
+        var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+        var krHolidayNameList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
+
+        var addTypeSelect = "ptadd"; //팝업 종류 선택 (PT or OFF)
+        var deleteTypeSelect;
+        var selectedDayGroup = []; //반복일정에서 요일 선택
+        var select_all_check;
+        var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
+    </script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.total.js" %}></script>
+    <script>
         var calendarSize = 1;
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
