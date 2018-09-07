@@ -251,7 +251,7 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
         user = None
 
         try:
-            user = User.objects.get(username=email)
+            user = User.objects.get(email=email)
         except ObjectDoesNotExist:
             error = None
 
