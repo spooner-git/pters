@@ -22,6 +22,9 @@ $('div.change_cal').click(function(){
 
     if(current_calendar_type == "month"){
         $calendar.removeClass('_calmonth');
+        $('#week').css('display', 'table');
+        $('div.timeindex').css('display', 'block');
+        $('#date').css('display', 'none');
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 week_calendar_mobile(today_YY_MM_DD);
@@ -33,6 +36,9 @@ $('div.change_cal').click(function(){
         }
     }else if(current_calendar_type == "week"){
         $calendar.removeClass('_calweek');
+        $('#week').css('display', 'none');
+        $('div.timeindex').css('display', 'none');
+        $('#date').css('display','block');
         month_calendar(today_YY_MM_DD);
         $('.swiper-slide-active').css('width', $('#calendar').width());
     }
