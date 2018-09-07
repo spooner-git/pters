@@ -99,7 +99,7 @@ $(document).ready(function(){
     if(bodywidth > 600 && (varUA.match('iphone') ==null && varUA.match('ipad')==null && varUA.match('ipod')==null && varUA.match('android') == null) ){
         $(document).on('mousedown', '.td00, .td30', function(e){
             e.stopPropagation();
-            closeAddPopup_mini();
+            close_planadd_popup_mini();
             $(document).off('mouseup');
             var thisID     = $(this).attr('id');
             var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
@@ -153,7 +153,7 @@ $(document).ready(function(){
                         });
 
                         $(document).on('mouseup', '#gap', function(){
-                            closeAddPopup_mini();
+                            close_planadd_popup_mini();
                             $('.blankSelected30').removeClass('blankSelected30');
                         });
                     }
@@ -214,7 +214,7 @@ $(document).ready(function(){
 
 
                         $(document).on('mouseup', '#gap', function(){
-                            closeAddPopup_mini();
+                            close_planadd_popup_mini();
                             $('.blankSelected').removeClass('blankSelected');
                         });
 
@@ -261,7 +261,7 @@ $(document).ready(function(){
             var thisOffsetTop = $(this).offset().top;
             //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
             if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
-                closeAddPopup_mini();
+                close_planadd_popup_mini();
                 var blankmark;
                 if(Options.classDur == 30){blankmark = 'blankSelected30';}else if(Options.classDur == 60){blankmark = 'blankSelected';}
 
@@ -1240,8 +1240,8 @@ $(document).ready(function(){
                                 get_current_member_list();
                                 get_current_group_list();
 
-                                closeAddPopup();
-                                closeAddPopup_mini();
+                                close_planadd_popup();
+                                close_planadd_popup_mini();
                                 enable_window_scroll();
                                 completeSend();
                                 shade_index(-100);
@@ -2254,46 +2254,6 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
         // dur_info : repeat_input_dur_info
     };
     locate_this_to_center('#cal_popup_repeatconfirm');
-}
-
-
-function closeAddPopup(){
-    //$('body').css('overflow-y','overlay');
-    $('#page-addplan').hide('fast', 'swing');
-    $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
-    if(bodywidth<=600){
-        $('#float_btn_wrap').show();
-        $('#float_btn').removeClass('rotate_btn');
-        $('#page-base').show();
-        $('#page-base-addstyle').hide();
-    }
-}
-
-function closeAddPopup_mini(){
-    $('#page-addplan-pc').hide();
-    clear_pt_off_add_popup_mini();
-}
-
-function clear_pt_off_add_popup_mini(){
-    //핑크 버튼 활성화 초기화
-    $('#submitBtn_mini').css('background', '#282828');
-
-    //진행시간 선택 핑크 하단선 초기화
-    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected').html("<span style='color:#cccccc;'>선택</span>").val("");
-
-    //회원 선택 핑크 하단선 초기화
-    $("#membersSelected button, #membersSelected_mini button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹/클래스 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
-
-    //예약가능 횟수 내용 초기화
-    $("#countsSelected,.countsSelected").text("");
-    $('#remainCount_mini, #groupInfo_mini').hide();
-
-    //메모 초기화
-    $('#addmemo_mini input').val('').text('');
-
-    $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
-    select_all_check=false;
 }
 
 

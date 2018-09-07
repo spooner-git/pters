@@ -3,6 +3,7 @@
 
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.week.cal.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.month.cal.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.off.repeat.add.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.manage.member.group.css" %}>
@@ -1226,7 +1227,7 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
     <script>
         
-        var myswiper = new Swiper('.swiper-container',{
+        var myswiper = new Swiper('.swiper-container', {
             initialSlide : 1,
             //speed : 150,
             preventClicks : true,
@@ -1240,12 +1241,12 @@
         var calendarSize = 1;
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                week_calendar_mobile(today_YY_MM_DD)
+                week_calendar_mobile(today_YY_MM_DD);
             }else{
-                week_calendar(today_YY_MM_DD)
+                week_calendar(today_YY_MM_DD);
             }
         }else if(bodywidth<=600){
-            week_calendar_mobile(today_YY_MM_DD)
+            week_calendar_mobile(today_YY_MM_DD);
         }
 
 
@@ -1289,31 +1290,30 @@
                     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                         $(this).attr('data-type','0');
                         $(this).find('img').css('-webkit-transform','rotate(90deg)');
-                        week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                        week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'), '-'));
                         $('.td00, .td30').css({'background':'#f7f7f7',
                                            'background-image':'url("/static/user/res/calendar_hour.png")',
                                             'background-size':'60px 60px'})
                     }else{
-                        $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type','0');
+                        $(this).css({'margin-top':'75px','color':'#f4f4f4','background':'transparent'}).attr('data-type', '0');
                         $(this).find('img').css('-webkit-transform','rotate(90deg)');
                         $('#ymdText-pc').css({'margin-top':'100px'});
                         $('#week').css({'padding-top':'115px'});
                         $('#calendar').css('padding-top','99px');
                         $('#ymdText').css('display','block');
-                        week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                        week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                         $('.td00, .td30').css({'background':'#ffffff',
                                            'background-image':'unset',
-                                            'background-size':'unset'})
+                                            'background-size':'unset'});
                     }
                 }else if(bodywidth<=600){
                     $(this).attr('data-type','0');
                     $(this).find('img').css('-webkit-transform','rotate(90deg)');
-                    week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'))
+                    week_calendar_mobile(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                     $('.td00, .td30').css({'background':'#f7f7f7',
                                        'background-image':'url("/static/user/res/calendar_hour.png")',
                                         'background-size':'60px 60px'})
                 }
-                
             }
         });
 
@@ -1347,7 +1347,7 @@
         }
 
 
-        $('footer').css('display','none');
+        $('footer').css('display', 'none');
 
         $('td');
 
@@ -1381,20 +1381,16 @@
         $('#offFilter').click(function(){
             if(offVisible==true){
                 $('.offTime').hide();
-                $(this).css('background', '#fe4e65');
+                $(this).css('background','#fe4e65');
                 offVisible = false;
             }else{
                 $('.offTime').show();
-                $(this).css('background', '#eaeaea');
+                $(this).css('background','#eaeaea');
                 offVisible = true;
             }
         });
 
-        var DB = {};
-        var DBe = {};
-        var DB_All = {};
-
-        $('footer').css('display','none');
+        $('footer').css('display', 'none');
 
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>

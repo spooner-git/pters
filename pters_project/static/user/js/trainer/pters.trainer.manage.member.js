@@ -4,9 +4,9 @@ $(document).ready(function(){
     $(document).keyup(function(e){
         if(e.keyCode == 27){
             if($('#page_addmember').css('display') == 'block'){
-                closePopup('member_add');
+                close_manage_popup('member_add');
             }else if($('#memberInfoPopup_PC').css('display') == 'block'){
-                closePopup('member_info_PC');
+                close_manage_popup('member_info_PC');
             }else{
                 close_info_popup('cal_popup_plandelete');
             }
@@ -70,31 +70,6 @@ $(document).ready(function(){
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
 
-
-
-
-    $(document).on('click','#upbutton-x-modify',function(){
-        var bodywidth = window.innerWidth;
-        var selector_calendar = $('#calendar');
-        $('#uptext3').text('회원 정보');
-        $('#uptext-pc-modify').text('회원 정보');
-        closePopup('member_info');
-        if(bodywidth<600 && selector_calendar.length != 0){
-            //$('#calendar').css('display','block')
-            selector_calendar.css('height','100%');
-        }
-        enable_window_scroll();
-    });
-    $(document).on('click','#upbutton-x',function(){
-        var bodywidth = window.innerWidth;
-        if($(this).attr("data-page") == "memberadd"){
-            closePopup('member_add');
-            if(bodywidth < 600){
-                //$('#calendar').css('display','block')
-                $('#calendar').css('height','100%');
-            }
-        }
-    });
 
 
 
@@ -801,8 +776,8 @@ $(document).ready(function(){
         }else if(deleteTypeSelect == "memberinfodelete"){
             deleteMemberAjax();
             enable_delete_btns_after_ajax();
-            closePopup('member_info');
-            closePopup('member_info_PC');
+            close_manage_popup('member_info');
+            close_manage_popup('member_info_PC');
         }else if(deleteTypeSelect == "groupdelete"){
             var groupmember_fullnames = group_delete_JSON.fullnames;
             var groupmember_ids = group_delete_JSON.ids;
@@ -1423,7 +1398,7 @@ function send_modified_member_base_data(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    closePopup('member_info');
+                    close_manage_popup('member_info');
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
                 }
@@ -1770,7 +1745,7 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
 
         
-        closePopup('member_info');
+        close_manage_popup('member_info');
         $('#page_managemember').css({'height':'0','overflow-y':'hidden'});
         
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
@@ -4288,11 +4263,11 @@ function add_member_form_func(){
                     })
                 }
 
-                closePopup('member_add');
+                close_manage_popup('member_add');
                 if($('#memberInfoPopup_PC').css('display') == "block"){
-                    closePopup('member_info_PC');
+                    close_manage_popup('member_info_PC');
                 }else if($('#memberInfoPopup').css('display') == "block"){
-                    closePopup('member_info');
+                    close_manage_popup('member_info');
                 }
                 console.log('success');
             }
@@ -4408,7 +4383,7 @@ function add_group_form_func(){
                     groupListSet('finished',jsondata)
                 }
 
-                closePopup('member_add');
+                close_manage_popup('member_add');
                 console.log('success');
             }
         },
@@ -4480,7 +4455,7 @@ function add_groupmember_form_func(){
                     groupListSet('finished',jsondata)
                 }
                 $('#startR').attr('selected','selected');
-                closePopup('member_add');
+                close_manage_popup('member_add');
                 console.log('success');
             }
         },
@@ -4634,7 +4609,7 @@ function deleteMemberAjax(){
 
 
 //여러종류의 팝업을 닫는다.
-function closePopup(option){
+function close_manage_popup(option){
     var bodywidth = window.innerWidth;
     var text = '회원 정보 조회';
     if(Options.language == "JPN"){
@@ -4702,7 +4677,7 @@ function closePopup(option){
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
 
         }else{
-            shade_index(-100)
+            shade_index(-100);
         }
     }else if(option == 'member_add'){
         $('body').css('overflow-y','auto');

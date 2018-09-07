@@ -257,6 +257,13 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['holiday'] = HolidayTb.objects.filter(use=USE)
         return context
 
+class CalTotalView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'cal_total.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalTotalView, self).get_context_data(**kwargs)
+        context['holiday'] = HolidayTb.objects.filter(use=USE)
+        return context
 
 # 단순화 1:1/그룹/클래스 통합 테스트 180828
 class ManageLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):

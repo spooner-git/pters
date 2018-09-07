@@ -16,10 +16,8 @@ var multiLanguage = { 'KOR':
 };
 
 
-
-
 var multi_language_set = {
-                            "KOR":{  
+                            "KOR":{
                                     "text-hello":"안녕하세요!",
                                     "text-today":"오늘",
                                     "text-lesson":"레슨",
@@ -114,7 +112,7 @@ var multi_language_set = {
                                     "text-dd":"매일", "text-ww":"매주", "text-2w":"격주",
                                     "text-sunday":"일요일", "text-monday":"월요일","text-tuesday":"화요일","text-wednesday":"수요일","text-thursday":"목요일","text-friday":"금요일","text-saturday":"토요일",
                                     "text-sundaymin":"일","text-mondaymin":"월","text-tuesdaymin":"화","text-wednesdaymin":"수","text-thursdaymin":"목","text-fridaymin":"금","text-saturdaymin":"토",
-                                    
+
                                     "text-footerdisplay":"block",
                                     "text-company":"회사소개",
                                     "text-business":"제휴제안",
@@ -123,7 +121,7 @@ var multi_language_set = {
                                     "text-manual":"사용법 및 FQA"
                                  },
 
-                            "JPN":{  
+                            "JPN":{
                                     "text-hello":"Hello!",
                                     "text-today":"今日",
                                     "text-lesson":"レッスン",
@@ -218,7 +216,7 @@ var multi_language_set = {
                                     "text-dd":"毎日", "text-ww":"毎週", "text-2w":"隔週",
                                     "text-sunday":"日曜日", "text-monday":"月曜日","text-tuesday":"火曜日","text-wednesday":"水曜日","text-thursday":"木曜日","text-friday":"金曜日","text-saturday":"土曜日",
                                     "text-sundaymin":"日","text-mondaymin":"月","text-tuesdaymin":"火","text-wednesdaymin":"水","text-thursdaymin":"木","text-fridaymin":"金","text-saturdaymin":"土",
-                                    
+
                                     "text-footerdisplay":"none",
                                     "text-company":"会社紹介",
                                     "text-business":"提携",
@@ -322,7 +320,7 @@ var multi_language_set = {
                                     "text-dd":"매일", "text-ww":"매주", "text-2w":"격주",
                                     "text-sunday":"Sunday", "text-monday":"Monday", "text-tuesday":"Tuesday", "text-wednesday":"Wednesday", "text-thursday":"Thursday", "text-friday":"Friday", "text-saturday":"Saturday",
                                     "text-sundaymin":"SUN", "text-mondaymin":"MON", "text-tuesdaymin":"TUE", "text-wednesdaymin":"WED", "text-thursdaymin":"THU", "text-fridaymin":"FRI", "text-saturdaymin":"SAT",
-                                    
+
                                     "text-footerdisplay":"none",
                                     "text-company":"About us",
                                     "text-business":"Business",
@@ -335,6 +333,7 @@ var multi_language_set = {
 //Trainer base - Menu Name
 $('.text-hello').text(multi_language_set[Options.language]["text-hello"]);
 $('.text-todayplan').text(multi_language_set[Options.language]["text-todayplan"]);
+$('.text-plan').text(multi_language_set[Options.language]["text-plan"]);
 $('.text-weekplan').text(multi_language_set[Options.language]["text-weekplan"]);
 $('.text-monthplan').text(multi_language_set[Options.language]["text-monthplan"]);
 $('.text-membermanage').text(multi_language_set[Options.language]["text-membermanage"]);
