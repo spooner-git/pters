@@ -18,7 +18,7 @@ img,a,div,span,p{
 	padding-right: 15px;
 	padding-left: 15px;
 	height: auto;
-	z-index: 3;
+	z-index: 5;
 	background-color: #ffffff;
 	max-width: 1200px;
 	margin:0 auto;
@@ -26,6 +26,9 @@ img,a,div,span,p{
 	position: fixed;
 	top: 100px;
 }
+	#date .calendar-style{
+		background-color: #ffffff;
+	}
 
 .arrowButton{
 	position: absolute;
@@ -133,6 +136,7 @@ img,a,div,span,p{
 	width: 100%;
 	text-align: center;
 	height: 100%;
+	background-color: #f7f7f7;
 }
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */

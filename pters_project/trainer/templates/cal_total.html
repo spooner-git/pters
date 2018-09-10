@@ -1296,11 +1296,13 @@
 
         var count = 0 ;
         var count1 = 0;
-        $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
+        $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(e){
+            e.stopPropagation();
             left_page();
         });
 
-        $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
+        $('#ymdText-pc-next-btn, #rightArrowButton').click(function(e){
+            e.stopPropagation();
             right_page();
         });
 

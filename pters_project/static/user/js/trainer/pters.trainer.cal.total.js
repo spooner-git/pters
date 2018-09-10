@@ -11,7 +11,8 @@
  */
 
 /////////////////////////////////////달력 공통//////////////////////////////////
-$('div.change_cal').click(function(){
+$('div.change_cal, #ymdText').click(function(e){
+    e.stopPropagation();
     var $calendar = $('#calendar');
     var current_calendar_type;
     if($calendar.hasClass('_calweek')){
@@ -2678,7 +2679,10 @@ function calTable_Set_Month(Index, Year, Month){ //선택한 Index를 가지는 
 
     $targetHTML.html(htmltojoin.join(''))
 
-    calendarSetting(Year,Month);
+    calendarSetting(Year, Month);
+     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+       $('.swiper-slide').css('height', "auto");
+    }
 }; //calTable_Set
 
 
@@ -2768,7 +2772,7 @@ function monthText(){
     var textMonth = currentYMD.split('_')[2] //7
     $('#yearText, #ymdText-pc-year').text(textYear).attr({'data-year':textYear, 'data-month':textMonth});
     $('#monthText, #ymdText-pc-month').text(textMonth+'월');
-    todayFinderArrow(textYear, textMonth);
+    todayFinderArrow_month(textYear, textMonth);
 };
 
 function draw_time_graph(option, type){  //type = '' and mini
@@ -2798,7 +2802,7 @@ function draw_time_graph(option, type){  //type = '' and mini
     targetHTML.html(tbody)
 }
 
-function todayFinderArrow(Year, Month){
+function todayFinderArrow_month(Year, Month){
     var currentYY = String(oriYear)
     var pageYY = String(Year)
     var currentMM = String(oriMonth);
