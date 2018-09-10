@@ -47,8 +47,9 @@ $('div.change_cal').click(function(){
 
 
 //다음페이지로 슬라이드 했을때 액션
-if($('._calweek').length > 0){
-    myswiper.on('onSlideNextEnd', function(){
+
+myswiper.on('onSlideNextEnd', function(){
+    if($('._calweek').length > 0){
         close_planadd_popup_mini();
         slideControl.week.append();
         weekNum_Set_fixed();
@@ -58,10 +59,14 @@ if($('._calweek').length > 0){
         reserveAvailable();
         todayFinderArrow();
         //krHoliday();
-    });
+    }else if($('._calmonth') > 0){
+        slideControl.month.append();
+    }
+});
 
-    //이전페이지로 슬라이드 했을때 액션
-    myswiper.on('onSlidePrevEnd', function(){
+//이전페이지로 슬라이드 했을때 액션
+myswiper.on('onSlidePrevEnd', function(){
+    if($('._calweek').length > 0){
         close_planadd_popup_mini();
         slideControl.week.prepend();
         weekNum_Set_fixed();
@@ -71,19 +76,10 @@ if($('._calweek').length > 0){
         reserveAvailable();
         todayFinderArrow();
         //krHoliday();
-
-    });
-}else if($('._calmonth') > 0){
-    myswiper.on('onSlideNextEnd', function(){
-        slideControl.month.append();
-    });
-
-    //이전페이지로 슬라이드 했을때 액션
-    myswiper.on('onSlidePrevEnd', function(){
+    }else if($('._calmonth') > 0){
         slideControl.month.prepend();
-    });
-}
-
+    }
+});
 
 //페이지 이동에 대한 액션 클래스
 var slideControl = {'week':{
@@ -254,8 +250,6 @@ var firstDayNextMonth = firstDayInfoNextMonth.getDay(); //다음달 1일의 요�
 var currentPageMonth = currentMonth+1; //현재 달
 
 var $calendarWidth = $('#calendar').width(); //현재 달력 넓이계산 --> classTime과 offTime 크기조정을 위해
-
-
 
 
 //작은달력 설정
@@ -1319,7 +1313,6 @@ function weekNum_Set(Index){
 }
 
 function weekNum_Set_fixed(){
-
     var weekNum_1 = $('#weekNum_1');
     var weekNum_2 = $('#weekNum_2');
     var weekNum_3 = $('#weekNum_3');
@@ -1530,7 +1523,7 @@ function fake_show(){
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     
     //중복일정 ㅇㄷ
-    var duplicate_check = know_duplicated_plans(jsondata).result;
+    //var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ    
 
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
@@ -1756,6 +1749,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     //중복 일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      //'width:'+planWidth+'%'+
                                            '">'+
@@ -1789,6 +1783,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     //중복 일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      //'width:'+planWidth+'%'+
                                            '">'+
@@ -1821,6 +1816,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     //중복 일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      //'width:'+planWidth+'%'+
                                            '">'+
