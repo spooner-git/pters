@@ -274,8 +274,7 @@ img,a,div,span,p{
 }
 
 .holidayName{
-	display: none;
-	font-size:12px;
+	font-size: 0;
 	margin-right: 5px;
 }
 

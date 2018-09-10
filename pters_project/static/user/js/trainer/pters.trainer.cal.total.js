@@ -204,7 +204,7 @@ var slideControl = {'week':{
                             calTable_Set_Month(3, lastYY, lastMM+1); //새로 추가되는 슬라이드에 달력 채우기
                             //dateDisabled();
                             monthText();
-                            krHoliday();
+                            krHoliday_month();
                             //availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
                             ajaxClassTime();
                             myswiper.update(); //슬라이드 업데이트
@@ -223,7 +223,7 @@ var slideControl = {'week':{
                             calTable_Set_Month(1, firstYY, firstMM-1);
                             //dateDisabled();
                             monthText();
-                            krHoliday();
+                            krHoliday_month();
                             //availableDateIndicator(notAvailableStartTime,notAvailableEndTime);
                             ajaxClassTime();
                             myswiper.update(); //이전페이지로 넘겼을때
@@ -1285,7 +1285,8 @@ function dateText(){
     $('#ymdText-pc-date-end').text(dd_weekend+'일').attr('data-date', dd_weekend);
 }
 
-function krHoliday(){
+function krHoliday_week(){
+    console.log("krholiday")
     $('.holiday').removeClass('holiday');
     $('.holidayName').text('');
     for(var i=0; i<krHolidayList.length; i++){
@@ -2655,7 +2656,7 @@ function month_calendar(referencedate){
     calTable_Set_Month(3, year, month+1); //3번 슬라이드에 현재년도, 현재달 +1 달력 채우기
 
     monthText(); //상단에 연, 월 표시
-    krHoliday(); //대한민국 공휴일
+    krHoliday_month(); //대한민국 공휴일
     //draw_time_graph(Options.hourunit,'')
     ajaxClassTime();
 }
@@ -2751,14 +2752,14 @@ function calendarSetting(Year, Month){ //캘린더 테이블에 연월에 맞게
             }
         };
     }
-    for(i=1;i<=6;i++){
+    for(i=1; i<=6; i++){
         $('#week'+i+Year+Month+'child td:first-child').addClass('tdsunday'); //일요일 날짜는 Red 표기
         $('#week'+i+Year+Month+'child td:last-child').addClass('tdsaturday'); //토요일 날짜는 Blue 표기
     }
 }; //calendarSetting()
 
 
-function krHoliday(){ //대한민국 공휴일 날짜를 빨간색으로 표시
+function krHoliday_month(){ //대한민국 공휴일 날짜를 빨간색으로 표시
     for(var i=0; i<krHolidayList.length; i++){
         $("td[data-date="+krHolidayList[i]+"]").addClass('holiday');
         $("td[data-date="+krHolidayList[i]+"]").find('.holidayName').text(krHolidayNameList[i]);
@@ -2777,56 +2778,56 @@ function monthText(){
 
 function draw_time_graph(option, type){  //type = '' and mini
     if(type == 'mini'){
-        var targetHTML =  $('#timeGraph.ptaddbox_mini table')
-        var types = "_mini"
+        var targetHTML =  $('#timeGraph.ptaddbox_mini table');
+        var types = "_mini";
     }else{
-        var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table')
-        var types = ''
+        var targetHTML =  $('#timeGraph._NORMAL_ADD_timegraph table');
+        var types = '';
     }
 
-    var tr1 = []
-    var tr2 = []
+    var tr1 = [];
+    var tr2 = [];
 
     if(option == "30"){
         for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-            tr1[i] = '<td colspan="2">'+(i)+'</td>'
+            tr1[i] = '<td colspan="2">'+(i)+'</td>';
             tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td><td id="'+(i)+'g_30'+types+'" class="tdgraph_'+option+' tdgraph30"></td>'
         }
     }else if(option == "60"){
         for(var i=Options.workStartTime; i<Options.workEndTime; i++){
             tr1[i] = '<td>'+(i)+'</td>'
-            tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>'
+            tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>';
         }
     }
-    var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>'
+    var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>';
     targetHTML.html(tbody)
 }
 
 function todayFinderArrow_month(Year, Month){
-    var currentYY = String(oriYear)
-    var pageYY = String(Year)
+    var currentYY = String(oriYear);
+    var pageYY = String(Year);
     var currentMM = String(oriMonth);
-    var pageMM = String(Month)
+    var pageMM = String(Month);
     if(currentMM.length<2){
-        var currentMM = '0'+currentMM
+        var currentMM = '0'+currentMM;
     }
     if(pageMM.length<2){
-        var pageMM = '0'+pageMM
+        var pageMM = '0'+pageMM;
     }
-    var todayInfo = currentYY + currentMM
-    var pageInfo = pageYY + pageMM
+    var todayInfo = currentYY + currentMM;
+    var pageInfo = pageYY + pageMM;
 
     if(todayInfo<pageInfo){
-        $('._pinkarrowafter').addClass('setunVisible')
-        $('._pinkarrowbefore').removeClass('setunVisible')
-        $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+        $('._pinkarrowafter').addClass('setunVisible');
+        $('._pinkarrowbefore').removeClass('setunVisible');
+        $("#ymdText").removeClass('todayindi').addClass('nottodayindi');
     }else if(todayInfo>pageInfo){
-        $('._pinkarrowafter').removeClass('setunVisible')
-        $('._pinkarrowbefore').addClass('setunVisible')
-        $("#ymdText").removeClass('todayindi').addClass('nottodayindi')
+        $('._pinkarrowafter').removeClass('setunVisible');
+        $('._pinkarrowbefore').addClass('setunVisible');
+        $("#ymdText").removeClass('todayindi').addClass('nottodayindi');
     }else{
-        $('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible')
-        $("#ymdText").addClass('todayindi').removeClass('nottodayindi')
+        $('._pinkarrowbefore, ._pinkarrowafter').addClass('setunVisible');
+        $("#ymdText").addClass('todayindi').removeClass('nottodayindi');
     }
 }
 
