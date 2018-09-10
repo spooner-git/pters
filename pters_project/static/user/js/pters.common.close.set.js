@@ -183,14 +183,14 @@ function close_manage_popup(option){
         text = 'Member Info.';
     }
     if(option == 'member_info'){
-        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('')
+        $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         hide_this();
         if(bodywidth < 600){
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
+            base_show();
+            base_modify_hide();
         }
         float_btn_show();
-        base_show();
-        base_modify_hide();
 
         function float_btn_show(){
             $('#float_btn_wrap').show();
@@ -249,16 +249,15 @@ function close_manage_popup(option){
         var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();
+            $('#page-base').css('display','block');
+            $('#page-base-addstyle').css('display','none');
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
             $('#float_btn_wrap').show();
             selector_float_btn_member_add.removeClass('rotate_btn');
         }
         $('#page_addmember').css('display','none');
         selector_float_btn_member_add.css('display','block');
-        $('#page-base').css('display','block');
-        $('#page-base-addstyle').css('display','none');
         $('#page_addmember_input_wrap .buttonGroup button').removeClass('disabled_button');
-
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         var selector_birth_year_month_date = $('#birth_year, #birth_month, #birth_date');
         selector_birth_year_month_date.find('option:first').prop('selected', true);
@@ -275,18 +274,15 @@ function close_manage_popup(option){
         var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){
             //$('#page_managemember').show();
+            $('#page-base').css('display','block');
+                $('#page-base-addstyle').css('display','none');
             $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
             $('#float_btn_wrap').show();
             selector_float_btn_group_add.removeClass('rotate_btn');
         }
         $('#page_addgroup').css('display','block');
-
         selector_float_btn_group_add.css('display','block');
-        $('#page-base').css('display','block');
-        $('#page-base-addstyle').css('display','none');
-
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
-
         if($('#memberInfoPopup_PC').css('display')=="block"){
             shade_index(100);
         }else if($('#mshade').css('z-index')==150){
