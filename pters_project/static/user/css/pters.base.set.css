@@ -577,7 +577,7 @@ a:focus, a:hover{
 
 #page-base{
     display: block;
-    z-index: 99;
+    z-index: 400;
 }
 
 #page-base-addstyle{

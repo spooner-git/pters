@@ -770,22 +770,19 @@ $(document).ready(function(){
 
         var message = exist_past_reg.join('');
         if(exist_past_reg.length > 0){
-            $('#base_popup_check_finished_member_notice .caution_message').html(                                                                            
-                                                                                   '<p style="color:#fe4e65;">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
-                                                                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
-                                                                                            message+
-                                                                                        '</div>'+
-                                                                                    '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
-                                                                            );
-            $('#base_popup_check_finished_member_notice').show();
-            $('#shade_caution').show();
-            //$('#page-base-addstyle').css('z-index',151);
-            disable_window_scroll();
+            show_caution_popup(                                                                            
+                                   '<p style="color:#fe4e65;">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            message+
+                                        '</div>'+
+                                    '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
+                            );
+            //disable_window_scroll();
         }
     }
 
 
-    $(document).on('click',"#members_pc li a", function(){
+    $(document).on('click', "#members_pc li a", function(){
         //$('.tdgraph').removeClass('graphindicator')
         if($(this).attr('data-grouptype') == "personal"){
             addTypeSelect = "ptadd";

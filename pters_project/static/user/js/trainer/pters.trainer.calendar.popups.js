@@ -913,6 +913,8 @@
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
+            $('#page-base-addstyle').hide();
+            $('#page-base-modifystyle').show();
             shade_index(100);
         }else if(bodywidth >= 600){
             get_indiv_member_info(dbID);
