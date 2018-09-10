@@ -601,7 +601,7 @@
             <input type="" name="" id="memberName_info_PC">
             <input type="" name="" id="memberName_info_lastName_PC" maxlength="4">
             <input type="" name="" id="memberName_info_firstName_PC" maxlength="4">
-            <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
+            <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="close_manage_popup('member_info_PC')">
         </label>
 
         <div id="info_shift_base" class="info_shift_wrap">
@@ -719,7 +719,7 @@
         <div class="member_info_PC_buttons_wrap popupBtn_mini">
             <button class="submitBtn _info_delete" style="display: none;">삭제</button>
             <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
-            <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
+            <button class="submitBtn _btn_close_info_PC" onclick="close_manage_popup('member_info_PC')">닫기</button>
         </div>
     </div>
 
@@ -756,7 +756,7 @@
 
         <div class="ptaddbox" id="addpopup_pc_label_new">
             <span id="uptext2_PC"></span>
-            <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_add')" style="display: none;">
+            <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="close_manage_popup('member_add')" style="display: none;">
         </div>
 
         <form class="member-form" id="member-add-form-new">
@@ -1151,7 +1151,7 @@
             <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
                 <button id="pcBtn" class="submitBtn">등록</button>
                 <button class="submitBtn" style="display: none;">수정</button>
-                <button class="submitBtn" onclick="closePopup('member_add')">닫기</button>
+                <button class="submitBtn" onclick="close_manage_popup('member_add')">닫기</button>
             </div>
         </form>
     </div>
