@@ -238,6 +238,10 @@ img,a,div,span,p{
 	display: none;
 }
 
+#ymdText_weekcal{
+	display: inline-block;
+}
+
 .todayindi{
 	border-top:1.5px solid #fe4e65;
 }

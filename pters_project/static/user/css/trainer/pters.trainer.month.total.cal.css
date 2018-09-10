@@ -369,6 +369,10 @@ img,a,div,span,p{
 	font-weight: bold;
 }
 
+#ymdText_monthcal{
+	display: none;
+}
+
 #cal_popup_plancheck .popup_inner:hover{
 	background : white;
 }

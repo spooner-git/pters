@@ -21,26 +21,60 @@ $('div.change_cal').click(function(){
     }
 
     if(current_calendar_type == "month"){
+        var $ymdData = $('#ymdText-pc-year');
+        var yyyy_mm_dd;
+        var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
+        console.log("dd2_lastday",dd2_lastday)
+        var ymd1 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-01`;
+        var ymd2 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-${dd2_lastday}`;
+        if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
+            yyyy_mm_dd = today_YY_MM_DD
+        }else{
+            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
+        }
         $calendar.removeClass('_calmonth');
         $('#week').css('display', 'table');
-        $('div.timeindex').css('display', 'block');
+        $('div.timeindex, #timeIndicatorBar').css('display', 'block');
         $('#date').css('display', 'none');
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                week_calendar_mobile(today_YY_MM_DD);
+                week_calendar_mobile(yyyy_mm_dd);
             }else{
-                week_calendar(today_YY_MM_DD);
+                week_calendar(yyyy_mm_dd);
             }
+            $('#ymdText_weekcal').css('display', 'inline-block');
+            $('#ymdText_monthcal').css('display', 'none');
         }else if(bodywidth<=600){
-            week_calendar_mobile(today_YY_MM_DD);
+            week_calendar_mobile(yyyy_mm_dd);
         }
     }else if(current_calendar_type == "week"){
+        var $ymdText_start = $('#ymdText-pc-month-start');
+        var $ymdText_end = $('#ymdText-pc-month-end');
+        var $ymdText_day_start = $('#ymdText-pc-date-start');
+        var $ymdText_day_end = $('#ymdText-pc-date-end');
+        var yyyy_mm_dd;
+        var yyyy_1 = $ymdText_start.attr('data-year');
+        var yyyy_2 = $ymdText_end.attr('data-year');
+        var mm1    = $ymdText_start.attr('data-month');
+        var mm2    = $ymdText_end.attr('data-month');
+        var dd1    = $ymdText_day_start.attr('data-date');
+        var dd2    = $ymdText_day_end.attr('data-date');
+        var ymd1 = `${yyyy_1}-${mm1}-${dd1}`;
+        var ymd2 = `${yyyy_2}-${mm2}-${dd2}`;
+        if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
+            yyyy_mm_dd = today_YY_MM_DD;
+
+        }else{
+            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_1}-${mm1}-${dd1}`, '-');
+        }
         $calendar.removeClass('_calweek');
         $('#week').css('display', 'none');
-        $('div.timeindex').css('display', 'none');
-        $('#date').css('display','block');
-        month_calendar(today_YY_MM_DD);
+        $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+        $('#date').css('display', 'block');
+        month_calendar(yyyy_mm_dd);
         $('.swiper-slide-active').css('width', $('#calendar').width());
+        $('#ymdText_monthcal').css('display', 'inline-block');
+        $('#ymdText_weekcal').css('display', 'none');
     }
 
 });
@@ -59,7 +93,7 @@ myswiper.on('onSlideNextEnd', function(){
         reserveAvailable();
         todayFinderArrow();
         //krHoliday();
-    }else if($('._calmonth') > 0){
+    }else if($('._calmonth').length > 0){
         slideControl.month.append();
     }
 });
@@ -76,7 +110,7 @@ myswiper.on('onSlidePrevEnd', function(){
         reserveAvailable();
         todayFinderArrow();
         //krHoliday();
-    }else if($('._calmonth') > 0){
+    }else if($('._calmonth').length > 0){
         slideControl.month.prepend();
     }
 });
@@ -86,7 +120,7 @@ var slideControl = {'week':{
                         'append' : function(){ //다음페이지로 넘겼을때
                             var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
                             var lastdateinfo = selector_swiper_slide_last_child.find('.td00').attr('id').split('_');
-                            var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi,""));
+                            var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi, ""));
                             var lastYY = Number(lastdateinfo[0]);
                             var lastMM = Number(lastdateinfo[1]);
                             var lastDD = Number(lastdateinfo[2]);
@@ -121,7 +155,7 @@ var slideControl = {'week':{
                         'prepend' : function(){
                             var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
                             var firstdateinfo = selector_swiper_slide_first_child.find('.td00').attr('id').split('_');
-                            var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi,""));
+                            var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi, ""));
                             var firstYY = Number(firstdateinfo[0]);
                             var firstMM = Number(firstdateinfo[1]);
                             var firstDD = Number(firstdateinfo[2]);
@@ -160,11 +194,13 @@ var slideControl = {'week':{
                         'append' : function(){ //다음페이지로 넘겼을때
                             var selector_swiper_slide_last_child = $('.swiper-slide:last-child');
                             var lastdateinfo = selector_swiper_slide_last_child.find('.container-fluid').attr('id').split('_');
+                            var last = Number(selector_swiper_slide_last_child.attr('id').replace(/slide/gi, ""));
                             var lastYY = Number(lastdateinfo[1]);
                             var lastMM = Number(lastdateinfo[2]);
 
                             myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
-                            myswiper.appendSlide('<div class="swiper-slide"></div>'); //마지막 슬라이드에 새슬라이드 추가
+                            //myswiper.appendSlide('<div class="swiper-slide"></div>'); //마지막 슬라이드에 새슬라이드 추가
+                            myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
                             //(디버깅용 날짜 표시)myswiper.appendSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth+1)+'월'+' currentPageMonth: '+Number(currentPageMonth+1)+'</div>') //마지막 슬라이드에 새슬라이드 추가
                             calTable_Set_Month(3, lastYY, lastMM+1); //새로 추가되는 슬라이드에 달력 채우기
                             //dateDisabled();
@@ -177,11 +213,13 @@ var slideControl = {'week':{
                         'prepend' : function(){
                             var selector_swiper_slide_first_child = $('.swiper-slide:first-child');
                             var firstdateinfo = selector_swiper_slide_first_child.find('.container-fluid').attr('id').split('_');
+                            var first = Number(selector_swiper_slide_first_child.attr('id').replace(/slide/gi, ""));
                             var firstYY = Number(firstdateinfo[1]);
                             var firstMM = Number(firstdateinfo[2]);
 
                             myswiper.removeSlide(2);
-                            myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
+                            //myswiper.prependSlide('<div class="swiper-slide"></div>'); //맨앞에 새슬라이드 추가
+                            myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
                             //(디버깅용 날짜 표시)myswiper.prependSlide('<div class="swiper-slide">'+currentYear+'년'+Number(currentPageMonth-1)+'월'+' currentPageMonth: '+Number(currentPageMonth-1)+'</div>');
                             calTable_Set_Month(1, firstYY, firstMM-1);
                             //dateDisabled();
@@ -1203,35 +1241,13 @@ function time_index_set(size){
 function dateText(){
     var yymm = {};
     var yymmarry = [];
-    /*
-    for(var i=2; i<=8; i++){
-        var dataID = $('.swiper-slide-active div:nth-child(1)').find('.td00:nth-child('+i+')').attr('id').split('_');
-        var yy = dataID[0];
-        var mm = dataID[1];
-        yymm[yy+'_'+mm] = 'data';
-    }
-    for(i in yymm){
-        yymmarry.push(i);
-    }*/
-
     yymmarry = [$('#weekNum_1').attr('data-date'), $('#weekNum_7').attr('data-date')];
     //연도, 월 셋팅
     if(yymmarry.length>1){  // [2017_12, 2018_1] ,,  [2018_1, 2018_2]
-        /*
-        var yymm1 = yymmarry[0].split('_');
-        var yymm2 = yymmarry[1].split('_');
-        var yy1 = yymm1[0];
-        var mm1 = yymm1[1];
-        var yy2 = yymm2[0];
-        var mm2 = yymm2[1];
-        */
-
         var yy1 = yymmarry[0].substr(0, 4);
         var mm1 = Number(yymmarry[0].substr(4, 2));
         var yy2 = yymmarry[1].substr(0, 4);
         var mm2 = Number(yymmarry[1].substr(4, 2));
-
-
         if(yy1==yy2){
             if(mm1 == mm2){
                 $('#yearText').text(yy1+'년');
@@ -1240,13 +1256,13 @@ function dateText(){
                 $('#yearText').text(yy1+'년');
                 $('#monthText').text(mm1+'/'+mm2+'월');
             }
-            $('#ymdText-pc-month-start').text(mm1+'월');
-            $('#ymdText-pc-month-end').text(mm2+'월');
+            $('#ymdText-pc-month-start').text(mm1+'월').attr({'data-year': yy1, 'data-month':mm1});
+            $('#ymdText-pc-month-end').text(mm2+'월').attr({'data-year': yy2, 'data-month':mm2});
         }else if(yy1!=yy2){
             $('#yearText').text(yy1+'/'+yy2+'년');
             $('#monthText').text(mm1+'/'+mm2+'월');
-            $('#ymdText-pc-month-start').text(mm1+'월');
-            $('#ymdText-pc-month-end').text(mm2+'월');
+            $('#ymdText-pc-month-start').text(mm1+'월').attr({'data-year': yy1, 'data-month':mm1});
+            $('#ymdText-pc-month-end').text(mm2+'월').attr({'data-year': yy2, 'data-month':mm2});
         }
     }else{
         yymm = yymmarry[0].split('_');
@@ -1265,8 +1281,8 @@ function dateText(){
     if(dd_weekend.substr(0, 1)=='0'){
         dd_weekend = dd_weekend.substr(1, 1);
     }
-    $('#ymdText-pc-date-start').text(dd_weekstart+'일');
-    $('#ymdText-pc-date-end').text(dd_weekend+'일');
+    $('#ymdText-pc-date-start').text(dd_weekstart+'일').attr('data-date', dd_weekstart);
+    $('#ymdText-pc-date-end').text(dd_weekend+'일').attr('data-date', dd_weekend);
 }
 
 function krHoliday(){
@@ -2751,9 +2767,9 @@ function monthText(){
     //currentYMD 형식  ex : week120177
     var textYear = currentYMD.split('_')[1]
     var textMonth = currentYMD.split('_')[2] //7
-    $('#yearText, #ymdText-pc-year').text(textYear);
+    $('#yearText, #ymdText-pc-year').text(textYear).attr({'data-year':textYear, 'data-month':textMonth});
     $('#monthText, #ymdText-pc-month').text(textMonth+'월');
-    todayFinderArrow(textYear,textMonth);
+    todayFinderArrow(textYear, textMonth);
 };
 
 function draw_time_graph(option, type){  //type = '' and mini
