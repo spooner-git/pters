@@ -157,7 +157,7 @@ var slideControl = {'week':{
                             var firstYY = Number(firstdateinfo[0]);
                             var firstMM = Number(firstdateinfo[1]);
                             var firstDD = Number(firstdateinfo[2]);
-                            myswiper.removeSlide(4);
+                            myswiper.removeSlide(2);
                             myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
                             if(bodywidth > 600){
                                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
