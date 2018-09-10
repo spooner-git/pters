@@ -33,7 +33,6 @@ var multiLanguage = { 'KOR':
 };
 
 
-
 //플로팅 버튼 스크롤시 숨기기 Start
 var ts;
 var selector_body = $("body");

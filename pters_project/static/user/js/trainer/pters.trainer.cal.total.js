@@ -24,11 +24,10 @@ $('div.change_cal').click(function(){
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
         var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
-        console.log("dd2_lastday",dd2_lastday)
         var ymd1 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-01`;
         var ymd2 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-${dd2_lastday}`;
         if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
-            yyyy_mm_dd = today_YY_MM_DD
+            yyyy_mm_dd = today_YY_MM_DD;
         }else{
             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
         }
@@ -63,9 +62,8 @@ $('div.change_cal').click(function(){
         var ymd2 = `${yyyy_2}-${mm2}-${dd2}`;
         if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
             yyyy_mm_dd = today_YY_MM_DD;
-
         }else{
-            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_1}-${mm1}-${dd1}`, '-');
+            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
         }
         $calendar.removeClass('_calweek');
         $('#week').css('display', 'none');
@@ -382,6 +380,7 @@ function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한
     var W = Week;
     var slideIndex = $('#slide'+Index);
     var currentDates = Number(Dates)+W;
+    var currentMonth = Month-1;
     var dateinfo = new Date(Year, Month-1, currentDates);
     var currentDay_ = dateinfo.getDay();
     var monthdata = currentMonth;
