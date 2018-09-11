@@ -419,19 +419,9 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
-{#    var uri = encodeURI('http://localhost:8000/login/');#}
-    var uri = encodeURI('https://spooner-test.pters.co.kr/login/');
-    FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-            window.location.href=uri;
-            statusChangeCallback(response);
-        } else {
-            window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");
-        }
-    });
-{#  FB.getLoginStatus(function(response) {#}
-{#    statusChangeCallback(response);#}
-{#  }, true);#}
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  }, true);
 }
 
 function statusChangeCallback(response) {
