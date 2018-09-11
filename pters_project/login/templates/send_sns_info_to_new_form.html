@@ -16,6 +16,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <link rel="stylesheet" href={% static_url "user/css/pters.common.module.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
         <style type="text/css">
             .explaintype{
@@ -179,6 +180,22 @@
                 }
             }
 
+            #contract_privacy_text, #contract_main_text{
+                display: none;
+            }
+
+            #open_contract_privacy_text, #open_contract_main_text{
+                margin-left: 10px;
+                border: 1px solid #f4f4f4;
+                background-color: transparent;
+                color: #ffffff;
+                cursor: pointer;
+            }
+                #open_contract_privacy_text img, #open_contract_main_text img{
+                    transform: rotate(90deg);
+                    height: 10px;
+                }
+
             .contractread{
                 border:1px solid #ffffff;
             }
@@ -190,7 +207,7 @@
                 margin: 20px auto 0;
                 text-align: center;
                 cursor: pointer;
-                font-weight: bold;
+                font-weight: 500;
                 padding:  10px;
             }
             #legal_complete:hover,  #legal_complete:active,  #legal_complete:focus{
@@ -205,7 +222,7 @@
                 margin: 20px auto 0;
                 text-align: center;
                 cursor: pointer;
-                font-weight: bold;
+                font-weight: 500;
                 padding:  10px;
             }
 
@@ -228,6 +245,21 @@
                 font-size: 13px;
                 padding-left: 0;
             }
+            .pters_selectbox_btn_selected{
+                background-color: #fe4e65;
+            }
+
+            .type_explain_wrapper{
+                color: #ffffff;
+                text-align: center;
+                font-size: 14px;
+            }
+            .type_explain{
+                display: none;
+            }
+            .type_explain_selected{
+                display: block;
+            }
         </style>
 
     {% endblock %}
@@ -248,7 +280,7 @@
 
     <div id="legal_popup">
         <label><img src="/static/user/res/PTERS_logo_pure.png" style="height:17px;margin-top:11px;margin-left:  7px;"> <span style="font-size: 20px;">피터스 가입</span></label>
-        <p class="registerbox_smalllabel">가입 약관</p>
+        <p class="registerbox_smalllabel">가입 약관<button id="open_contract_main_text">펼치기 <img src="/static/user/res/btn_next.png"></button></p>
         <div class="contractread" id="contract_main_text">
             <div class="contract_main_text_long">
                 <p>피터스 서비스 이용약관</p>
@@ -497,8 +529,8 @@
         <div class="contractread_check">
             <input type="checkbox" name="" id="checkbox1" title="약관 동의"><span style="font-size: 12px;">위 약관에 동의합니다.</span>
         </div>
-        <p class="registerbox_smalllabel" style="margin-top:  15px;">개인정보 처리 방침</p>
-        <div class="contractread" id="contract_main_text">
+        <p class="registerbox_smalllabel" style="margin-top:  15px;">개인정보 처리 방침<button id="open_contract_privacy_text">펼치기 <img src="/static/user/res/btn_next.png"></button></p>
+        <div class="contractread" id="contract_privacy_text">
             <div class="contract_main_text_long">
                 <p>피터스 개인 정보 처리 방침</p>
                 <div>
@@ -609,6 +641,34 @@
             <input type="checkbox" name="" id="checkbox2" title="약관 동의"><span style="font-size: 12px;">위 방침에 동의합니다.</span>
         </div>
 
+        <p class="registerbox_smalllabel" style="margin-top:  15px;">가입 유형 선택</p>
+        <div id="" class="pters_selectbox_wrapper" style="margin-top: 10px;margin-bottom: 0px;">
+            <div id="" onclick="" class="pters_selectbox_btn">
+                <span class="" data-grouptype="center">대형 사업자</span>
+            </div>
+            <div id="" onclick="" class="pters_selectbox_btn pters_selectbox_btn_selected">
+                <span class="" data-grouptype="trainer">일반 강사</span>
+            </div>
+            <div id="" onclick="" class="pters_selectbox_btn">
+                <span class="" data-grouptype="trainee">수강 회원</span>
+            </div>
+        </div>
+        <div class="type_explain_wrapper" style="margin-bottom: 50px;">
+            <div id="explain_center" class="type_explain">
+                <p style="font-size:15px;font-weight: 500">여러개의 지점 및 직원을 관리하는 비즈니스 오너</p>
+                <p>지점관리, 직원관리, 지점별 통계 기능 제공</p>
+            </div>
+            <div id="explain_trainer" class="type_explain type_explain_selected">
+                <p style="font-size:15px;font-weight: 500">레슨 일정과 회원을 관리하는 일반 강사</p>
+                <p>일정관리, 회원관리, 수업관리, 그룹관리, 통계 기능 제공</p>
+            </div>
+            <div id="explain_trainee" class="type_explain">
+                <p style="font-size:15px;font-weight: 500">강사와 레슨 일정을 조율하고 싶은 일반 수강 회원</p>
+                <p>레슨 예약 및 취소, 내 활동 이력 보관 기능 제공</p>
+            </div>
+        </div>
+
+
         <div id="legal_complete">가입하기</div>
         <div id="legal_cancel">돌아가기</div>
     </div>
@@ -621,14 +681,52 @@
         <input type="hidden" name="sns_id" id="id_sns_id" value="{{ sns_id }}">
         <input type="hidden" name="sns_type" value="naver" value="{{ sns_type }}">
         <input type="hidden" name="sex" id="id_sns_sex" value="{{ sex }}">
-        <input type="hidden" name="group_type" id="id_group_type" value="">
+        <input type="hidden" name="group_type" id="id_group_type" value="trainer">
         <input type="hidden" name="next_page" value="{% url 'login:login' %}">
     </form>
 
 {% endblock %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
 <script>
+    $('.pters_selectbox_btn').click(function(){
+        var thisdata = $(this).find('span').attr('data-grouptype');
+        $('#id_group_type').val(thisdata);
+        $(`#explain_${thisdata}`).addClass('type_explain_selected');
+        $(`#explain_${thisdata}`).siblings('.type_explain').removeClass('type_explain_selected');
+
+    })
+
+    $('#open_contract_main_text').click(function(){
+        var $textbox = $('#contract_main_text');
+        if($textbox.css('display') == 'none'){
+            $textbox.show();
+        }else{
+            $textbox.hide();
+        }
+    });
+
+    $('#open_contract_privacy_text').click(function(){
+        var $textbox = $('#contract_privacy_text');
+        if($textbox.css('display') == 'none'){
+            $textbox.show();
+        }else{
+            $textbox.hide();
+        }
+    });
+
+
+    $('.contractread_check span').click(function(e){
+        e.stopPropagation();
+        var $checkbox = $(this).siblings('input');
+        if($checkbox.is(':checked')){
+            $checkbox.prop('checked', false);
+        }else{
+            $checkbox.prop('checked', true);
+        }
+        
+    })
 
     $('#legal_complete').click(function(){
         if($('#checkbox2').is(':checked') && $('#checkbox1').is(':checked')){
