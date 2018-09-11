@@ -121,6 +121,19 @@
         <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
                 <div>
+                    <span class="menuName">E-mail</span>
+                    <div class="menuButton">
+                        <button class="changeEmail changeMemberInfo" data-type="modify">변경</button>
+                        <button class="cancelEmail cancelMemberInfo">취소</button>
+                    </div>
+                </div>
+                <input type="text" name="newemail" class="modifyInfoTool" placeholder="새로운 E-mail 입력">
+                <span class="_emailInfo _originalInfo">{{ member_info.email }}</span>
+            </div>
+        </div>
+        <div id="trainerInfoWrap" class="boardWrap">
+            <div class="trainerInfo">
+                <div>
                     <span class="menuName">연락처</span>
                     <div class="menuButton">
                         <button class="changePhone changeMemberInfo" data-type="modify">변경</button>
@@ -152,7 +165,7 @@
                 <span class="_birthInfo _originalInfo">{{ member_info.birthday_dt }}</span>
             </div>
         </div>
-        <div id="trainerInfoWrap" class="boardWrap">
+        <!-- <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
                 <div>
                     <span class="menuName">지역</span>
@@ -442,7 +455,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> -->
         <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
                 <span class="menuName" style="line-height: 60px;">가입일</span><span>{{ request.user.date_joined }}</span>
@@ -527,6 +540,7 @@
         <input type="hidden" name="country" id="newcountry" value="" >
         <input type="hidden" name="address" id="newcity" value="" >
         <input type="hidden" name="phone" id="newphone" value="" >
+        <input type="hidden" name="email" id="newemail" value="" >
         <input type="hidden" name="contents" id="contents" value="" >
         <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:get_trainer_info' %}">
     </form>
@@ -539,58 +553,58 @@
     <script>
 
         if($('body').width()<600){
-            $('#page-base').css('display','none')
-            $('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('마이페이지')
-            $('#uptext').text("마이페이지")
-            $('#upbutton-modify').hide()
+            $('#page-base').css('display', 'none');
+            $('#page-base-modifystyle').css('display', 'block');
+            $('#uptext3').text('마이페이지');
+            $('#uptext').text("마이페이지");
+            $('#upbutton-modify').hide();
         }
 
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
-        })
+            location.href="/trainer/trainer_setting/";
+        });
 
-        regionChangeEventGroup()
-        birthChangeEventGroup()
+        regionChangeEventGroup();
+        birthChangeEventGroup();
 
         if('{{next_schedule_start_dt }}'.length>0){
-            var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}')
+            var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}');
 
         }else{
-            var trainee_next_schedule = "일정이 없습니다."
+            var trainee_next_schedule = "일정이 없습니다.";
         }
-        $('._Next_Info p:nth-child(2)').text(trainee_next_schedule)
+        $('._Next_Info p:nth-child(2)').text(trainee_next_schedule);
 
 
         $('button.changeMemberInfo').click(function(){
             if($(this).attr('data-type') == "modify"){
-                $(this).attr('data-type','complete')
-                $(this).siblings('button.cancelMemberInfo').show()
-                $(this).parents('.trainerInfo').find('._originalInfo').hide()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').show()
+                $(this).attr('data-type', 'complete');
+                $(this).siblings('button.cancelMemberInfo').show();
+                $(this).parents('.trainerInfo').find('._originalInfo').hide();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').show();
             }else if($(this).attr('data-type') == "complete"){
-                $(this).attr('data-type','modify')
-                $(this).siblings('button.cancelMemberInfo').hide()
-                $(this).parents('.trainerInfo').find('._originalInfo').show()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-                send_modified_member_info()
+                $(this).attr('data-type', 'modify');
+                $(this).siblings('button.cancelMemberInfo').hide();
+                $(this).parents('.trainerInfo').find('._originalInfo').show();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+                send_modified_member_info();
             }
-        })
+        });
 
         $('button.cancelMemberInfo').click(function(){
-            $(this).hide()
-            $(this).siblings('button.changeMemberInfo').attr('data-type','modify')
-            $(this).parents('.trainerInfo').find('._originalInfo').show()
-            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-        })
+            $(this).hide();
+            $(this).siblings('button.changeMemberInfo').attr('data-type', 'modify');
+            $(this).parents('.trainerInfo').find('._originalInfo').show();
+            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+        });
 
         $('input').keyup(function(){
-            var targetID = $('#'+$(this).attr('name'))
-            targetID.val($(this).val())
-        })
+            var targetID = $('#'+$(this).attr('name'));
+            targetID.val($(this).val());
+        });
 
-        send_modified_member_info()
+        send_modified_member_info();
         function send_modified_member_info(){
             $.ajax({
                 url:'/trainer/update_trainer_info/',
@@ -599,13 +613,15 @@
                 dataType : 'html',
 
                 beforeSend:function(){
+                    beforeSend();
                 },
 
                 //통신성공시 처리
                 success:function(data){
-                    var jsondata = JSON.parse(data)
-                    console.log(jsondata)
-                    fill_recieved_member_info(jsondata)
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata);
+                    fill_recieved_member_info(jsondata);
+                    completeSend();
                 },
 
                 //보내기후 팝업창 닫기
@@ -620,10 +636,11 @@
         }
 
         function fill_recieved_member_info(jsondata){
+            console.log("fill_recieved_member_info")
             $('._nameInfo').text(jsondata.name)
             $('._phoneInfo').text(jsondata.phone)
             $('._birthInfo').text(jsondata.birthday_dt)
-            console.log(jsondata.country)
+            console.log(jsondata)
             if(jsondata.country != ""){
                 var countryname = $('option[value='+jsondata.country+']').text()
                 $('._regionInfo').text(countryname+' '+jsondata.address)
@@ -778,7 +795,7 @@
 
         function goPage(option){
             if(option == 2){
-                location.href= "/accounts/password/change/"
+                location.href= "/accounts/password/change/";
 
             }else if(option == "delAccount"){
                 location.href="/trainer/delete_account/";
