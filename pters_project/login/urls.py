@@ -56,6 +56,8 @@ urlpatterns = [
         name='resend_email_authentication'),
     url(r'^register_error_ajax/$', views.RegisterErrorView.as_view(), name='register_error_ajax'),
 
+    url(r'^change_resend_email_authentication/$', views.ChangeResendEmailAuthenticationView.as_view(),
+        name='change_resend_email_authentication'),
 
     # 미인증 및 강사 회원가입 로그인시
     url(r'^send_email_member/$', views.NewMemberSendEmailView.as_view(), name='send_email_member'),
