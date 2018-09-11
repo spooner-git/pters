@@ -419,7 +419,7 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
-    var uri = encodeURI('http://localhost:8000/login/');
+    var uri = encodeURI('https://spooner-test.pters.co.kr/login/');
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
 {#            window.location.href=uri;#}
