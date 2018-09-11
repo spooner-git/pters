@@ -205,10 +205,12 @@ nav.main_nav{
 
 #naverIdLogin{
 	margin-top: 10px !important;
+	margin-bottom: 8px !important;
 }
 #naverIdLogin img{
 	width: auto;
 	max-height: 45px;
+	margin-right: 0 !important;
 }
 
 #loginboxbg{

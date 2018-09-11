@@ -156,7 +156,7 @@
 
                     <!-- 페이스북아이디로그인 버튼 노출 영역 -->
                     <fb:login-button
-                      scope="public_profile, email" onlogin="checkLoginState();">
+                      scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
                     </fb:login-button>
                     <!-- //페이스북아이디로그인 버튼 노출 영역 -->
 
@@ -385,7 +385,7 @@
 			callbackUrl: "http://localhost:8000/login/login_simple/",
 // {#			callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple/",#}
 			isPopup: false, /* 팝업을 통한 연동처리 여부 */
-			loginButton: {color: "green", type: 3, height: 35} /* 로그인 버튼의 타입을 지정 */
+			loginButton: {color: "green", type: 3, height: 39} /* 로그인 버튼의 타입을 지정 */
 		}
 	);
 
@@ -411,7 +411,7 @@ window.fbAsyncInit = function() {
      var js, fjs = d.getElementsByTagName(s)[0];
      if (d.getElementById(id)) {return;}
      js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     js.src = 'https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v3.1';
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 
