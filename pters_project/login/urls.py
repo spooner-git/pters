@@ -25,7 +25,7 @@ urlpatterns = [
     # 로그인 페이지
     url(r'^login_simple/$', views.LoginSimpleView.as_view(), name='login_simple'),
     # 로그인 페이지
-    url(r'^login_simple_facebook/$', views.LoginSimpleFacebookView.as_view(), name='login_simple_facebook'),
+    url(r'^login_simple_sns/$', views.LoginSimpleSnsView.as_view(), name='login_simple_sns'),
     # sns 회원가입 페이지
     url(r'^new_member_sns_info/$', views.NewMemberSnsInfoView.as_view(), name='new_member_sns_info'),
     # sns 회원가입 처리

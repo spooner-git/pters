@@ -33,7 +33,7 @@
         <input type="hidden" name="first_name" id="id_sns_first_name" value="{{ first_name }}">
         <input type="hidden" name="name" id="id_sns_name" value="{{ name }}">
         <input type="hidden" name="sns_id" id="id_new_sns_id" value="{{ sns_id }}">
-        <input type="hidden" name="sns_type" value="facebook">
+        <input type="hidden" name="sns_type" value="{{ sns_type }}">
         <input type="hidden" name="sex" id="id_sns_sex" value="{{ sex }}">
     </form>
 
@@ -45,7 +45,7 @@
         <input type="hidden" name="first_name" id="id_sns_first_name2" value="{{ first_name }}">
         <input type="hidden" name="name" id="id_sns_name2" value="{{ name }}">
         <input type="hidden" name="sns_id" id="id_new_sns_id2" value="{{ sns_id }}">
-        <input type="hidden" name="sns_type" value="facebook">
+        <input type="hidden" name="sns_type" value="{{ sns_type }}">
         <input type="hidden" name="sex" id="id_sns_sex2" value="{{ sex }}">
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
@@ -59,11 +59,18 @@
 	<!-- (2) LoginWithNaverId Javscript 설정 정보 및 초기화 -->
 	<script>
 
-
+        var sns_type_name = "페이스북";
 		/* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
 		window.addEventListener('load', function () {
 					/* (5) 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크 */
             check_sns_member_info();
+
+            if($('#id_sns_type').val()=='facebook'){
+                sns_type_name = "페이스북";
+
+            }else if($('#id_sns_type').val()=='google'){
+                sns_type_name = "구글";
+            }
 
 		});
 
@@ -95,7 +102,7 @@
                     else{
                         $('#id_username2').attr('value', id_username);
 {#                        console.log('기존 회원');#}
-                        if (confirm('기존 PTERS ID와 페이스북 아이디와 연동하시겠습니까?')) {
+                        if (confirm('기존 PTERS ID와 '+sns_type_name+' 아이디와 연동하시겠습니까?')) {
                             document.getElementById('old-member-sns-form').submit();
                         } else {
                             window.location.replace('/login/');
