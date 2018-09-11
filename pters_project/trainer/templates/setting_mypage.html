@@ -810,7 +810,7 @@
                     success:function(data){
                         var jsondata = JSON.parse(data);
                         if(jsondata.id_check_result[0] == "사용 가능"){
-                            send_modified_member_info();
+                            
                         }else{
                             show_caution_popup(
                                                 `<p>
@@ -833,6 +833,44 @@
                 });
             }
         });
+
+        function send_modified_email_info(newemail){
+            $.ajax({
+                    url:'/login/check_member_email',
+                    type:'GET',
+                    data : {"email":newemail_to_check},
+                    dataType : 'html',
+
+                    beforeSend:function(){
+                        beforeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        if(jsondata.id_check_result[0] == "사용 가능"){
+                            
+                        }else{
+                            show_caution_popup(
+                                                `<p>
+                                                    <span style="color:#fe4e65;font-weight:500">${jsondata.id_check_result[0]}</span>
+                                                    <p>확인후 다시 입력해주세요.</p>
+                                                </p>`
+                                                );
+                        }
+                        completeSend();
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+        }
 
         function goPage(option){
             if(option == 2){
