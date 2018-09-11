@@ -136,29 +136,34 @@
             <div>
                 <form action="{% url 'login:login' %}" id="login-form" method="post">
                     {% csrf_token %}
-                    <div id="idinput">
+                    <div id="idinput" class="pters_login_input">
                         <img id="idimg" alt="피터스 아이디" src={% static_url "user/res/login/icon-user.png" %}>
                         <input type="text" class="loginboxstyle form-control" name="username" id="username_id" placeholder="아이디" autofocus>
                     </div>
-                    <div id="pwinput" style="margin-top:5%;">
+                    <div id="pwinput" style="margin-top:5%;"  class="pters_login_input">
                         <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
                         <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
                     </div>
-                    <div class="checkbox" style="margin-top:15px;margin-left:27px;">
+                    <div class="checkbox" style="margin-top:15px;margin-left:27px;"  class="pters_login_input">
                         <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
                     </div>
-                    <div>
+                    <div  class="pters_login_input">
                         <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
                     </div>
                     <!-- 네이버아이디로로그인 버튼 노출 영역 -->
                     <div id="naverIdLogin"></div>
                     <!-- //네이버아이디로로그인 버튼 노출 영역 -->
 
+                    <!-- 구글아이디로그인 버튼 노출 영역 -->
+                    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div>
+                    <!-- //구글아이디로그인 버튼 노출 영역 -->
+
                     <!-- 페이스북아이디로그인 버튼 노출 영역 -->
                     <fb:login-button
                       scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
                     </fb:login-button>
                     <!-- //페이스북아이디로그인 버튼 노출 영역 -->
+                    
 
                     <input type="hidden" name="keyword" id="keyword">
                     <div class="innerbox">
@@ -170,9 +175,7 @@
                 </form>
             </div>
 
-            <!-- 구글아이디로그인 버튼 노출 영역 -->
-            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-            <!-- //구글아이디로그인 버튼 노출 영역 -->
+            
 
         </div>
 

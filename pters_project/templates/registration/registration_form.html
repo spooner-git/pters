@@ -16,7 +16,10 @@
     {% block local_css %}
 
         <meta name="registertrainer" content="trainer_register">
+        <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
         <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
 
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
 
@@ -43,12 +46,17 @@
             <div id="naver_registration" class="registration_select_button">
               <div id="naverIdLogin" style="float: left;margin-top:5px;margin-left:35px;"></div>네이버 ID로 가입하기
             </div>
+            <div id="google_registration" class="registration_select_button">
+                <!-- 구글아이디로그인 버튼 노출 영역 -->
+                <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-width="60" data-height="30" data-longtitle="false" style="float:left;margin-left: 35px;margin-top:5px;"></div>
+                구글 ID로 가입하기
+                <!-- //구글아이디로그인 버튼 노출 영역 -->
+            </div>
             <div id="facebook_registration" class="registration_select_button">
               <fb:login-button
                 scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center; margin-right: 10px;margin-left:35px;line-height: 29px;float: left;">
               </fb:login-button>페이스북 ID로 가입하기
             </div>
-            
         </div>
 
         <div class="registerbox_label" id="page1_label">
@@ -932,6 +940,7 @@
 {% block local_js_footer %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
 
         var varUA = navigator.userAgent.toLowerCase();
@@ -1626,7 +1635,36 @@
         {#        'Thanks for logging in, ' + response.name + '!';#}
             });
         }
-    
+
+      // <!-- 구글 로그인  Script -->
+    var google_login_check = false;
+    window.addEventListener('load', function () {
+        google_login_check = true;
+        google_signOut();
+    });
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        if(google_login_check == true){
+        var profile = googleUser.getBasicProfile();
+            $('#id_new_sns_id').attr('value', profile.getId());
+            $('#id_sns_username').attr('value', profile.getEmail());
+            $('#id_sns_email').attr('value', profile.getEmail());
+            $('#id_sns_last_name').attr('value', profile.getFamilyName());
+            $('#id_sns_first_name').attr('value', profile.getGivenName());
+            $('#id_sns_type').attr('value', 'google');
+            document.getElementById('sns-form').submit();
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+        }
+{#        console.log("ID Token: " + id_token);#}
+      }
+    function google_signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
+
     </script>
 {% endblock %}
 

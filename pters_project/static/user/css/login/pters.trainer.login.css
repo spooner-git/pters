@@ -248,8 +248,10 @@ nav.main_nav{
 	transform: translate(-50%,-50%);
 }
 
-#login-form div{
+.pters_login_input{
 	width: 300px;
+}
+#login-form div{
 	margin: 0 auto;
 	padding-left: 0;
 	text-align: center;
