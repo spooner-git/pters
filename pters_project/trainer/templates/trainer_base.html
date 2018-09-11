@@ -217,7 +217,7 @@
     </div>
     [월간전용] 알림 팝업 -->
 
-    <div id="base_popup_check_finished_member_notice" class="popups">
+    <div id="caution_popup" class="popups">
         <div class="caution_img"><img src="/static/user/res/stopmark.png"></div>
         <div class="caution_message">
 
@@ -232,6 +232,21 @@
             <span class="ENtext">No</span>
         </div>
         -->
+    </div>
+
+    <div id="caution_popup_yes_or_no" class="popups">
+        <div class="caution_img"><img src="/static/user/res/stopmark.png"></div>
+        <div class="caution_message">
+
+        </div>
+        <div id="caution_popup_yes" class="popup_inner popup_inner_delete">
+            <span style="color:#fe4e65;" class="text-yes"></span>
+        </div>
+
+        <div id="caution_popup_no" class="popup_inner" onclick="close_caution_popup()">
+            <span style="color:#282828;" class="text-no"></span>
+        </div>
+        
     </div>
 
 

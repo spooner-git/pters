@@ -128,6 +128,7 @@
                     </div>
                 </div>
                 <input type="text" name="newemail" class="modifyInfoTool" placeholder="새로운 E-mail 입력">
+                <span class="email_confirm" style="position: absolute;"></span>
                 <span class="_emailInfo _originalInfo">{{ request.user.email }}</span>
             </div>
         </div>
@@ -599,11 +600,15 @@
             $(this).siblings('button.changeMemberInfo').attr('data-type', 'modify');
             $(this).parents('.trainerInfo').find('._originalInfo').show();
             $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+            $('.email_confirm').hide();
         });
 
         $('input').keyup(function(){
             var targetID = $('#'+$(this).attr('name'));
             targetID.val($(this).val());
+            if($(this).attr('name') == "newemail"){
+                check_email($(this).val());
+            }
         });
 
         send_modified_member_info();
@@ -794,42 +799,21 @@
         }
 
         $('.changeEmail').click(function(){
-            if($(this).attr('data-type') == "modify"){
-                var newemail_to_check = $('._emailInfo').siblings('input').val();
-                $.ajax({
-                    url:'/login/check_member_email',
-                    type:'GET',
-                    data : {"email":newemail_to_check},
-                    dataType : 'html',
-
-                    beforeSend:function(){
-                        beforeSend();
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        var jsondata = JSON.parse(data);
-                        if(jsondata.id_check_result[0] == "사용 가능"){
-                            
-                        }else{
-                            show_caution_popup(
-                                                `<p>
-                                                    <span style="color:#fe4e65;font-weight:500">${jsondata.id_check_result[0]}</span>
-                                                    <p>확인후 다시 입력해주세요.</p>
-                                                </p>`
-                                                );
-                        }
-                        completeSend();
-                    },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-
-                    }
+            $('.email_confirm').hide();
+            if($(this).attr('data-type') == "modify" && email_change_varification == true){
+                //이메일 변경을 계속 할건지 예/아니오 팝업 출력
+                $('.email_confirm').hide();
+                show_caution_popup_yes_or_no(
+                                            `<p>이메일 주소를 변경합니다.</p>
+                                             <p>${$('._emailInfo').text()} <img src="/static/user/res/btn-today-right.png" style="width:10px;margin-left:6px;margin-right:6px;">
+                                                ${$('._emailInfo').siblings('input').val()}</p>
+                                             <p>변경후에는 자동으로 <span style="color:#fe4e65;font-weight:500">로그아웃</span>되며,<br> <span style="color:#fe4e65;font-weight:500">이메일 인증</span> 후 계속 사용이 가능합니다.</p>
+                                                <p>계속 하시겠습니까?</p>
+                                            `
+                                            );
+                $(document).on('#caution_popup_yes', 'click', function(){
+                    send_modified_email_info($('._emailInfo').siblings('input').val());
+                    $('#caution_popup_yes').off();
                 });
             }
         });
@@ -838,7 +822,7 @@
             $.ajax({
                     url:'/login/check_member_email',
                     type:'GET',
-                    data : {"email":newemail_to_check},
+                    data : {"email":newemail},
                     dataType : 'html',
 
                     beforeSend:function(){
@@ -849,7 +833,7 @@
                     success:function(data){
                         var jsondata = JSON.parse(data);
                         if(jsondata.id_check_result[0] == "사용 가능"){
-                            
+
                         }else{
                             show_caution_popup(
                                                 `<p>
@@ -870,6 +854,43 @@
 
                     }
                 });
+        }
+
+        var email_change_varification = false;
+        function check_email(newemail){
+            $.ajax({
+                url:'/login/check_member_email/',
+                type:'GET',
+                data:{"email" : newemail },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result;
+                    if(id_check_message[0].length>0){
+                        var error_msg = id_check_message[0];
+                        $('.email_confirm').text(error_msg).css({'display':'inline-block', 'color':'#fe4e65'});
+                        email_change_varification = false;
+                    }else{
+                        $('.email_confirm').text('사용 가능').css({'display':'inline-block', 'color':'green'});
+                        email_change_varification = true;
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패");
+                }
+            });
         }
 
         function goPage(option){

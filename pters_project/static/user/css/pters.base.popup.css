@@ -399,7 +399,7 @@
 		color: #282828;
 	}
 
-#base_popup_check_finished_member_notice{
+#caution_popup, #caution_popup_yes_or_no{
 	display: none;
 	position: fixed;
 	left: 50%;
@@ -412,14 +412,14 @@
 	background: #ffffff;
 	border:1px solid #cccccc;
 }
-	#base_popup_check_finished_member_notice .caution_img{
+	#caution_popup .caution_img, #caution_popup_yes_or_no .caution_img{
 		height: 50px;
 		padding: 10px;
 	}
-	#base_popup_check_finished_member_notice .caution_img img{
+	#caution_popup .caution_img img, #caution_popup_yes_or_no .caution_img img{
 		height: 100%;
 	}
-	#base_popup_check_finished_member_notice .caution_message{
+	#caution_popup .caution_message, #caution_popup_yes_or_no .caution_message{
 		font-size: 13px;
 	}
 
