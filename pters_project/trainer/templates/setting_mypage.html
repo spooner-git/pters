@@ -128,6 +128,7 @@
                     </div>
                 </div>
                 <input type="text" name="newemail" class="modifyInfoTool" placeholder="새로운 E-mail 입력">
+                <span class="email_confirm" style="position: absolute;"></span>
                 <span class="_emailInfo _originalInfo">{{ request.user.email }}</span>
             </div>
         </div>
@@ -599,11 +600,15 @@
             $(this).siblings('button.changeMemberInfo').attr('data-type', 'modify');
             $(this).parents('.trainerInfo').find('._originalInfo').show();
             $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+            $('.email_confirm').hide();
         });
 
         $('input').keyup(function(){
             var targetID = $('#'+$(this).attr('name'));
             targetID.val($(this).val());
+            if($(this).attr('name') == "newemail"){
+                check_email($(this).val());
+            }
         });
 
         send_modified_member_info();
@@ -638,14 +643,13 @@
         }
 
         function fill_recieved_member_info(jsondata){
-            console.log("fill_recieved_member_info")
-            $('._nameInfo').text(jsondata.name)
-            $('._phoneInfo').text(jsondata.phone)
-            $('._birthInfo').text(jsondata.birthday_dt)
-            console.log(jsondata)
+            $('._nameInfo').text(jsondata.name).attr('data-dbid', jsondata.db_id);
+            $('._phoneInfo').text(jsondata.phone);
+            $('._birthInfo').text(jsondata.birthday_dt);
+            console.log(jsondata);
             if(jsondata.country != ""){
-                var countryname = $('option[value='+jsondata.country+']').text()
-                $('._regionInfo').text(countryname+' '+jsondata.address)
+                var countryname = $('option[value='+jsondata.country+']').text();
+                $('._regionInfo').text(countryname+' '+jsondata.address);
             }
 
             var repeat_info_dict= { 'KOR':
@@ -657,59 +661,59 @@
                 'JAP':
                     {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                         'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-            }
-            var repeatList = []
+            };
+            var repeatList = [];
 
             if(jsondata.off_repeat_schedule_type_data.length>0){
                 for(var i=0; i<jsondata.off_repeat_schedule_type_data.length; i++){
-                    var off_type = repeat_info_dict[Options.language][jsondata.off_repeat_schedule_type_data[0]]
+                    var off_type = repeat_info_dict[Options.language][jsondata.off_repeat_schedule_type_data[0]];
                     var off_day = function(){
-                        var repeat_day_info_raw = jsondata.off_repeat_schedule_week_info_data[i].split('/')
-                        var repeat_day_info = ""
+                        var repeat_day_info_raw = jsondata.off_repeat_schedule_week_info_data[i].split('/');
+                        var repeat_day_info = "";
                         if(repeat_day_info_raw.length>1){
                             for(var j=0; j<repeat_day_info_raw.length; j++){
-                                var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+                                var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1);
                             }
                         }else if(repeat_day_info_raw.length == 1){
-                            var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                            var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]];
                         }
                         if(repeat_day_info.substr(0,1) == '/'){
-                            var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                            var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
                         }
-                        return repeat_day_info
+                        return repeat_day_info;
                     };
-                    var off_startdate = jsondata.off_repeat_schedule_start_date_data[i]
-                    var off_enddate = jsondata.off_repeat_schedule_end_date_data[i]
-                    var off_starttime = jsondata.off_repeat_schedule_start_time_data[i]
-                    var off_starttimehour = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
-                    var off_starttimemin = jsondata.off_repeat_schedule_start_time_data[i].split(':')[1]
-                    var off_endtime = jsondata.off_repeat_schedule_end_time_data[i]
-                    var off_endtimehour = jsondata.off_repeat_schedule_end_time_data[i].split(':')[0]
-                    var off_endtimemin = jsondata.off_repeat_schedule_end_time_data[i].split(':')[1]
-                    var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
+                    var off_startdate = jsondata.off_repeat_schedule_start_date_data[i];
+                    var off_enddate = jsondata.off_repeat_schedule_end_date_data[i];
+                    var off_starttime = jsondata.off_repeat_schedule_start_time_data[i];
+                    var off_starttimehour = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0];
+                    var off_starttimemin = jsondata.off_repeat_schedule_start_time_data[i].split(':')[1];
+                    var off_endtime = jsondata.off_repeat_schedule_end_time_data[i];
+                    var off_endtimehour = jsondata.off_repeat_schedule_end_time_data[i].split(':')[0];
+                    var off_endtimemin = jsondata.off_repeat_schedule_end_time_data[i].split(':')[1];
+                    var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0];
                     //var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
-                    var off_dur = calc_duration_by_start_end(off_startdate, off_starttime, off_enddate, off_endtime)
+                    var off_dur = calc_duration_by_start_end(off_startdate, off_starttime, off_enddate, off_endtime);
 
                     if(off_dur - parseInt(off_dur) == 0.5){
                         if(parseInt(off_dur) != 0){
-                            var off_dur = parseInt(off_dur)+'시간' + ' 30분'
+                            var off_dur = parseInt(off_dur)+'시간' + ' 30분';
                         }else if(parseInt(off_dur) == 0){
-                            var off_dur = '30분'
+                            var off_dur = '30분';
                         }
                     }else{
-                        var off_dur = off_dur + '시간'
+                        var off_dur = off_dur + '시간';
                     }
 
-                    var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_starttimehour+':'+off_starttimemin+' ~ '+off_endtimehour+':'+off_endtimemin+'</p>'
-                    var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>'
-                    repeatList.push(offText+offText2)
+                    var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_starttimehour+':'+off_starttimemin+' ~ '+off_endtimehour+':'+off_endtimemin+'</p>';
+                    var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>';
+                    repeatList.push(offText+offText2);
                     //$('._Repeat_Info p:nth-child(2)').text(offText)
                     //$('._Repeat_Info span').text(offText2)
-                }$('._Repeat_Info div').html(repeatList.join(''))
+                }$('._Repeat_Info div').html(repeatList.join(''));
 
             }else{
-                var offText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>'
-                $('._Repeat_Info div').html(offText)
+                var offText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>';
+                $('._Repeat_Info div').html(offText);
             }
         }
 
@@ -794,51 +798,32 @@
         }
 
         $('.changeEmail').click(function(){
-            if($(this).attr('data-type') == "modify"){
-                var newemail_to_check = $('._emailInfo').siblings('input').val();
-                $.ajax({
-                    url:'/login/check_member_email',
-                    type:'GET',
-                    data : {"email":newemail_to_check},
-                    dataType : 'html',
-
-                    beforeSend:function(){
-                        beforeSend();
-                    },
-
-                    //통신성공시 처리
-                    success:function(data){
-                        var jsondata = JSON.parse(data);
-                        if(jsondata.id_check_result[0] == "사용 가능"){
-                            
-                        }else{
-                            show_caution_popup(
-                                                `<p>
-                                                    <span style="color:#fe4e65;font-weight:500">${jsondata.id_check_result[0]}</span>
-                                                    <p>확인후 다시 입력해주세요.</p>
-                                                </p>`
-                                                );
-                        }
-                        completeSend();
-                    },
-
-                    //보내기후 팝업창 닫기
-                    complete:function(){
-                    },
-
-                    //통신 실패시 처리
-                    error:function(){
-
-                    }
+            $('.email_confirm').hide();
+            if($(this).attr('data-type') == "modify" && email_change_varification == true){
+                //이메일 변경을 계속 할건지 예/아니오 팝업 출력
+                $('.email_confirm').hide();
+                show_caution_popup_yes_or_no(
+                                            `<p>이메일 주소를 변경합니다.</p>
+                                             <p>${$('._emailInfo').text()} <img src="/static/user/res/btn-today-right.png" style="width:10px;margin-left:6px;margin-right:6px;">
+                                                ${$('._emailInfo').siblings('input').val()}</p>
+                                             <p>변경후에는 자동으로 <span style="color:#fe4e65;font-weight:500">로그아웃</span>되며,<br> <span style="color:#fe4e65;font-weight:500">이메일 인증</span> 후 계속 사용이 가능합니다.</p>
+                                                <p>계속 하시겠습니까?</p>
+                                            `
+                                            );
+                $(document).on('#caution_popup_yes', 'click', function(){
+                    send_modified_email_info($('._emailInfo').siblings('input').val());
+                    $('#caution_popup_yes').off();
                 });
             }
         });
 
         function send_modified_email_info(newemail){
+            var userid = $('._nameInfo').text();
+            var db_id = $('._nameInfo').attr('data-dbid');
             $.ajax({
-                    url:'/login/check_member_email',
-                    type:'GET',
-                    data : {"email":newemail_to_check},
+                    url:'/login/change_resend_email_authentication/',
+                    type:'POST',
+                    data : {"username":userid, "email":newemail, "member_id":db_id},
                     dataType : 'html',
 
                     beforeSend:function(){
@@ -848,16 +833,7 @@
                     //통신성공시 처리
                     success:function(data){
                         var jsondata = JSON.parse(data);
-                        if(jsondata.id_check_result[0] == "사용 가능"){
-                            
-                        }else{
-                            show_caution_popup(
-                                                `<p>
-                                                    <span style="color:#fe4e65;font-weight:500">${jsondata.id_check_result[0]}</span>
-                                                    <p>확인후 다시 입력해주세요.</p>
-                                                </p>`
-                                                );
-                        }
+                        alert('로그아웃 합니다.\n 이메일 인증 후 재로그인 해주세요.');
                         completeSend();
                     },
 
@@ -870,6 +846,43 @@
 
                     }
                 });
+        }
+
+        var email_change_varification = false;
+        function check_email(newemail){
+            $.ajax({
+                url:'/login/check_member_email/',
+                type:'GET',
+                data:{"email" : newemail },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result;
+                    if(id_check_message[0].length>0){
+                        var error_msg = id_check_message[0];
+                        $('.email_confirm').text(error_msg).css({'display':'inline-block', 'color':'#fe4e65'});
+                        email_change_varification = false;
+                    }else{
+                        $('.email_confirm').text('사용 가능').css({'display':'inline-block', 'color':'green'});
+                        email_change_varification = true;
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패");
+                }
+            });
         }
 
         function goPage(option){

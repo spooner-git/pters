@@ -149,13 +149,20 @@ function shade_index(option){
 }
 
 function show_caution_popup(messageHtml){
-    $('#base_popup_check_finished_member_notice .caution_message').html(messageHtml);
-    $('#base_popup_check_finished_member_notice').show();
+    $('#caution_popup .caution_message').html(messageHtml);
+    $('#caution_popup').show();
+    $('#shade_caution').show();
+}
+
+function show_caution_popup_yes_or_no(messageHtml){
+    $('#caution_popup_yes_or_no .caution_message').html(messageHtml);
+    $('#caution_popup_yes_or_no').show();
     $('#shade_caution').show();
 }
 
 function close_caution_popup(){
-    $('#base_popup_check_finished_member_notice').hide();
+    $('#caution_popup').hide();
+    $('#caution_popup_yes_or_no').hide();
     $('#shade_caution').hide();
     //$('#page-base-addstyle').css('z-index',150);
     //enable_window_scroll();
