@@ -118,8 +118,8 @@ class LoginSimpleView(TemplateView):
         return context
 
 
-class LoginSimpleFacebookView(TemplateView):
-    template_name = 'login_facebook_processing.html'
+class LoginSimpleSnsView(TemplateView):
+    template_name = 'login_sns_processing.html'
 
     def post(self, request):
         # context = super(LoginSimpleFacebookView, self).get_context_data(**kwargs)
@@ -129,7 +129,7 @@ class LoginSimpleFacebookView(TemplateView):
         email = request.POST.get('email', '')
         last_name = request.POST.get('last_name', '')
         first_name = request.POST.get('first_name', '')
-        sns_type = request.POST.get('sns_type', 'facebook')
+        sns_type = request.POST.get('sns_type', 'google')
         sex = request.POST.get('sex', '')
 
         context['username'] = username

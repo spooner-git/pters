@@ -26,6 +26,8 @@
     <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
     <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
     <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 피아노, 과외등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="751903262384-dbtt6ho5imk5gssgn1rqpe3vs3linq15.apps.googleusercontent.com">
 
     {% block local_css %}
 
@@ -151,9 +153,13 @@
                     <!-- 네이버아이디로로그인 버튼 노출 영역 -->
                     <div id="naverIdLogin"></div>
                     <!-- //네이버아이디로로그인 버튼 노출 영역 -->
+
+                    <!-- 페이스북아이디로그인 버튼 노출 영역 -->
                     <fb:login-button
                       scope="public_profile, email" onlogin="checkLoginState();">
                     </fb:login-button>
+                    <!-- //페이스북아이디로그인 버튼 노출 영역 -->
+
                     <input type="hidden" name="keyword" id="keyword">
                     <div class="innerbox">
                         <a href="{% url 'registration_register' %}"><div id="registerButton">회원 가입</div></a>
@@ -163,6 +169,11 @@
                     <input type="hidden" name="next_page" value = '{% url 'index' %}'>
                 </form>
             </div>
+
+            <!-- 구글아이디로그인 버튼 노출 영역 -->
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+            <!-- //구글아이디로그인 버튼 노출 영역 -->
+
         </div>
 
         <!--
@@ -304,20 +315,21 @@
 
 {% block local_js_footer %}
 
-    <form action="{% url 'login:login_simple_facebook' %}" id="sns-facebook-form" method="post">
+    <form action="{% url 'login:login_simple_sns' %}" id="sns-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="username" id="id_sns_username">
         <input type="hidden" name="email" id="id_sns_email">
         <input type="hidden" name="last_name" id="id_sns_last_name">
         <input type="hidden" name="first_name" id="id_sns_first_name">
         <input type="hidden" name="sns_id" id="id_new_sns_id">
-        <input type="hidden" name="sns_type" value="facebook">
+        <input type="hidden" name="sns_type" id="id_sns_type" >
         <input type="hidden" name="sex" id="id_sns_sex">
     </form>
     <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.login.js" %}></script>
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script>
@@ -382,6 +394,7 @@
     // <!--  네이버아이디로로그인 초기화 Script -->
 
 
+// <!-- 페이스북 로그인  Script -->
 window.fbAsyncInit = function() {
     FB.init({
       appId      : '291762354974046',
@@ -435,7 +448,8 @@ function statusChangeCallback(response) {
         $('#id_sns_email').attr('value', response.email);
         $('#id_sns_last_name').attr('value', response.last_name);
         $('#id_sns_first_name').attr('value', response.first_name);
-        document.getElementById('sns-facebook-form').submit();
+        $('#id_sns_type').attr('value', 'facebook');
+        document.getElementById('sns-form').submit();
 {#      document.getElementById('status').innerHTML =#}
 {#        'Thanks for logging in, ' + response.name + '!';#}
     });
@@ -468,6 +482,38 @@ function statusChangeCallback(response) {
     {#        'Thanks for logging in, ' + response.name + '!';#}
         });
     }
+
+// <!-- 페이스북 로그인  Script -->
+
+
+// <!-- 구글 로그인  Script -->
+    var google_login_check = false;
+    window.addEventListener('load', function () {
+        google_login_check = true;
+        google_signOut();
+    });
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        if(google_login_check == true){
+        var profile = googleUser.getBasicProfile();
+            $('#id_new_sns_id').attr('value', profile.getId());
+            $('#id_sns_username').attr('value', profile.getEmail());
+            $('#id_sns_email').attr('value', profile.getEmail());
+            $('#id_sns_last_name').attr('value', profile.getFamilyName());
+            $('#id_sns_first_name').attr('value', profile.getGivenName());
+            $('#id_sns_type').attr('value', 'google');
+            document.getElementById('sns-form').submit();
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+        }
+{#        console.log("ID Token: " + id_token);#}
+      }
+    function google_signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
     </script>
 
 {% endblock %}
