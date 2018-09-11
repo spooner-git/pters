@@ -14,12 +14,13 @@
         {% csrf_token %}
         <input type="hidden" name="email" id="id_email" value="">
         <input type="hidden" name="sns_id" id="id_sns_id" value="" >
+        <input type="hidden" name="sns_type" id="id_sns_type" value="naver" >
     </form>
 
     <form action="{% url 'login:login' %}" id="login-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="username" id="id_username">
-        <input type="hidden" name="social_login_check" id="id_social_login_check">
+        <input type="hidden" name="social_login_check" id="id_social_login_check" value="1">
         <input type="hidden" name="auto_login_check" value="1">
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
@@ -141,7 +142,7 @@
                     }
                     else{
                         $('#id_username2').attr('value', id_username);
-                        $('#id_social_login_check2').attr('value', '1');
+{#                        $('#id_social_login_check2').attr('value', '1');#}
 {#                        console.log('기존 회원');#}
                         if (confirm('기존 PTERS ID와 네이버 아이디와 연동하시겠습니까?')) {
                             document.getElementById('old-member-sns-form').submit();

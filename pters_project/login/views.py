@@ -23,7 +23,7 @@ from registration.backends.hmac.views import RegistrationView
 from registration.forms import RegistrationForm
 
 from configs import settings
-from configs.const import USE
+from configs.const import USE, UN_USE
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -118,6 +118,32 @@ class LoginSimpleView(TemplateView):
         return context
 
 
+class LoginSimpleFacebookView(TemplateView):
+    template_name = 'login_facebook_processing.html'
+
+    def post(self, request):
+        # context = super(LoginSimpleFacebookView, self).get_context_data(**kwargs)
+        context = {}
+        sns_id = request.POST.get('sns_id', '')
+        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        last_name = request.POST.get('last_name', '')
+        first_name = request.POST.get('first_name', '')
+        sns_type = request.POST.get('sns_type', 'facebook')
+        sex = request.POST.get('sex', '')
+
+        context['username'] = username
+        context['email'] = email
+        context['last_name'] = last_name
+        context['first_name'] = first_name
+        context['name'] = last_name + first_name
+        context['sns_id'] = sns_id
+        context['sns_type'] = sns_type
+        context['sex'] = sex
+
+        return render(request, self.template_name, context)
+
+
 class RegisterTrainerView(TemplateView):
     template_name = 'login_register_trainer.html'
 
@@ -177,6 +203,8 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
     def post(self, request, *args, **kwargs):
 
         email = request.POST.get('email', '')
+        last_name = request.POST.get('last_name', '')
+        first_name = request.POST.get('first_name', '')
         name = request.POST.get('name', '')
         sex = request.POST.get('sex', '')
         sns_id = request.POST.get('sns_id', '')
@@ -186,6 +214,11 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
 
         error = None
         user = None
+        if first_name == '' or first_name is None:
+            first_name = name
+
+        if last_name == '' or last_name is None:
+            last_name = ''
 
         try:
             user = User.objects.get(username=email)
@@ -199,7 +232,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
             try:
                 with transaction.atomic():
 
-                    user = User.objects.create_user(username=email, first_name=name, last_name='', email=email,
+                    user = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, email=email,
                                                     password=sns_id, is_active=1)
                     group = Group.objects.get(name=group_type)
                     user.groups.add(group)
@@ -296,6 +329,8 @@ class NewMemberSnsInfoView(TemplateView):
         context = {}
         context['username'] = self.request.POST.get('username')
         context['email'] = self.request.POST.get('email')
+        context['first_name'] = self.request.POST.get('first_name')
+        context['last_name'] = self.request.POST.get('last_name')
         context['name'] = self.request.POST.get('name')
         context['sns_id'] = self.request.POST.get('sns_id')
         context['sns_type'] = self.request.POST.get('sns_type')
@@ -312,11 +347,12 @@ class CheckSnsMemberInfoView(TemplateView):
         context = super(CheckSnsMemberInfoView, self).get_context_data(**kwargs)
         user_email = self.request.GET.get('email', '')
         sns_id = self.request.GET.get('sns_id', '')
+        sns_type = self.request.GET.get('sns_type', '')
         username = ''
 
         context['error'] = '0'
         try:
-            sns_info = SnsInfoTb.objects.select_related('member').get(sns_id=sns_id)
+            sns_info = SnsInfoTb.objects.select_related('member').get(sns_id=sns_id, sns_type=sns_type, use=USE)
             username = sns_info.member.user.username
             context['error'] = '1'
         except ObjectDoesNotExist:
@@ -439,7 +475,7 @@ class ResendEmailAuthenticationView(RegistrationView, View):
             logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 회원가입 완료')
+            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 이메일 재인증 요청')
 
         return render(request, self.template_name)
 
@@ -457,19 +493,25 @@ class ChangeResendEmailAuthenticationView(RegistrationView, View):
         username = None
         if member_id is None or member_id == '':
             error = 'ID를 입력해주세요.'
+
+        if error is None:
+            try:
+                User.objects.get(email=email)
+            except ObjectDoesNotExist:
+                error = '이미 가입된 email입니다.'
+
         if error is None:
             try:
                 user = User.objects.get(id=member_id)
+                user.email = email
+                user.save()
             except ObjectDoesNotExist:
                 error = '가입되지 않은 회원입니다.'
 
         if error is None:
             # user = authenticate(username=username, password=password)
             if user is not None:
-                if user.is_active:
-                    error = '이미 인증된 ID 입니다.'
-                else:
-                    self.send_activation_email(user)
+                self.send_activation_email(user)
             else:
                 error = 'ID가 존재하지 않습니다.'
 
@@ -477,7 +519,7 @@ class ChangeResendEmailAuthenticationView(RegistrationView, View):
             logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 회원가입 완료')
+            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
 
         return render(request, self.template_name)
 
@@ -913,6 +955,7 @@ def out_member_logic(request):
     member_id = request.user.id
     user = None
     member = None
+    sns_data = None
     if member_id == '':
         error = 'ID를 확인해 주세요.'
 
@@ -929,6 +972,9 @@ def out_member_logic(request):
         except ObjectDoesNotExist:
             error = 'ID를 확인해 주세요.'
 
+    if error is None:
+        sns_data = SnsInfoTb.objects.select_related('member').filter(member_id=member_id, use=USE)
+
     # if error is None:
     #    group = user.groups.get(user=request.user.id)
 
@@ -939,6 +985,8 @@ def out_member_logic(request):
                 user.save()
                 member.use = 0
                 member.save()
+                if len(sns_data) > 0:
+                    sns_data.update(use=UN_USE)
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
