@@ -419,18 +419,19 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
+{#    var uri = encodeURI('http://localhost:8000/login/');#}
     var uri = encodeURI('https://spooner-test.pters.co.kr/login/');
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-{#            window.location.href=uri;#}
+            window.location.href=uri;
             statusChangeCallback(response);
         } else {
-            window.location.href = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");
+            window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");
         }
-    }, true);
+    });
 {#  FB.getLoginStatus(function(response) {#}
 {#    statusChangeCallback(response);#}
-{#  });#}
+{#  }, true);#}
 }
 
 function statusChangeCallback(response) {
@@ -443,8 +444,8 @@ function statusChangeCallback(response) {
             checkFacebookPermission();
         } else {
           // The person is not logged into your app or we are unable to tell.
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app.';
+{#          document.getElementById('status').innerHTML = 'Please log ' +#}
+{#            'into this app.';#}
         }
   }
 
