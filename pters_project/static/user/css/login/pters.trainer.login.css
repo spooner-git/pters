@@ -207,8 +207,8 @@ nav.main_nav{
 	margin-top: 10px !important;
 }
 #naverIdLogin img{
-	width: 160px;
-	height: 40px;
+	width: auto;
+	max-height: 45px;
 }
 
 #loginboxbg{
