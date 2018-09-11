@@ -16,6 +16,8 @@
     {% block local_css %}
 
         <meta name="registertrainer" content="trainer_register">
+        <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
 
         <link rel="icon" href="/static/common/favicon.ico">
@@ -34,7 +36,16 @@
 
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
     <div class="typeselectbox registerbox">
-        <div class="registerbox_label">
+
+        <!--Page1 -->
+        <div id="select_registration_type_sns_or_local" style="height: auto;position: absolute;top: 50%;left:50%;transform: translate(-50%,-50%);z-index: 1500">
+            <div id="local_registration" class="registration_select_button"><img src="/static/user/res/PTERS_logo_pure.png" style="width: 55px;margin-right:10px;"> 새로운 ID로 가입하기</div>
+            <div id="naver_registration" class="registration_select_button">
+              <div id="naverIdLogin" style="float: left;margin-top:5px;margin-left:40px;"></div>네이버 ID로 가입하기
+            </div>
+        </div>
+
+        <div class="registerbox_label" id="page1_label">
             <img src="/static/user/res/daycal_arrow.png" onclick='goPrev()' class="back_arrow">
             <p class="_step1_label"><img src="/static/user/res/PTERS_logo_pure.png">가입 유형 선택
             <div class="registerbox_sublabel _step1_label">STEP 1<br>가입 회원 유형을 선택해주세요.</div>
@@ -44,9 +55,7 @@
             <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다.</div>
         </div>
 
-
-
-        <div class="outerbox_horizontal" data-view="init">
+        <div class="outerbox_horizontal" data-view="init" id="page1_content">
             <div class="explainbox _type_trainer">
                 <img src="/static/user/res/login/icon-reg-trainer.png" style="height: 20px;margin-bottom: 5px;margin-top: 20px;">
                 <p>레슨 업무 일정 및 회원 관리<br><span class="font-pink">강사</span></p>
@@ -86,7 +95,7 @@
             </div>
         </div>
 
-
+        <!--Page2  -->
         <div class="registerbox_add">
             <div id="global_error_msg"></div>
             <div class="outerbox">
@@ -434,6 +443,7 @@
             </div>
         </div>
 
+        <!--Page3  -->
         <div class="promise_wrap">
             <!--
             <p class="registerbox_smalllabel">개인정보 약관</p>
@@ -870,7 +880,6 @@
                 </button>
             </div>
         </div>
-
     </div>
 
     <form action="." id="add-member-id-form" method="post">
@@ -916,18 +925,31 @@
 
 {% block local_js_footer %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
     <script>
 
         var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
-            $('._company').css('display','none')
+            $('._company').css('display','none');
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            $('._company').css('display','none')
+            $('._company').css('display','none');
         }else{
 
         }
 
         var group_type, $form;
+
+        $('#local_registration').click(function(){
+            $('#page1_content').fadeIn();
+            $('#select_registration_type_sns_or_local').hide();
+        });
+
+        $('#naver_registration').click(function(e){
+            location.href = naverLogin.generateAuthorizeUrl();
+            e.stopPropagation();
+            e.preventDefault();
+            
+        });
 
         $('div.explainbox').click(function(){
             if($(this).find('.explaintype').css('height') == '0px'){
@@ -1497,6 +1519,21 @@
                 }
             })
         }
+    // <!-- 네이버아디디로로그인 초기화 Script -->
+    var naverLogin = new naver.LoginWithNaverId(
+      {
+        clientId: "h5MuvYzSFLlrFTs19g0V",
+        callbackUrl: "http://localhost:8000/login/login_simple/",
+    // {#     callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple/",#}
+        isPopup: false, /* 팝업을 통한 연동처리 여부 */
+        loginButton: {color: "white", type: 1, height: 30} /* 로그인 버튼의 타입을 지정 */
+      }
+    );
+
+    /* 설정정보를 초기화하고 연동을 준비 */
+    naverLogin.init();
+    // <!--  네이버아이디로로그인 초기화 Script -->
+    
     </script>
 {% endblock %}
 
