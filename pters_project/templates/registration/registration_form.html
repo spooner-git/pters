@@ -39,10 +39,16 @@
 
         <!--Page1 -->
         <div id="select_registration_type_sns_or_local" style="height: auto;position: absolute;top: 50%;left:50%;transform: translate(-50%,-50%);z-index: 1500">
-            <div id="local_registration" class="registration_select_button"><img src="/static/user/res/PTERS_logo_pure.png" style="width: 55px;margin-right:10px;"> 새로운 ID로 가입하기</div>
+            <div id="local_registration" class="registration_select_button"><img src="/static/user/res/PTERS_logo_pure.png" style="float:left;margin-left:35px;width: 60px;margin-top:10px;margin-right:0px;"> 새로운 ID로 가입하기</div>
             <div id="naver_registration" class="registration_select_button">
-              <div id="naverIdLogin" style="float: left;margin-top:5px;margin-left:40px;"></div>네이버 ID로 가입하기
+              <div id="naverIdLogin" style="float: left;margin-top:5px;margin-left:35px;"></div>네이버 ID로 가입하기
             </div>
+            <div id="facebook_registration" class="registration_select_button">
+              <fb:login-button
+                scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center; margin-right: 10px;margin-left:35px;line-height: 29px;float: left;">
+              </fb:login-button>페이스북 ID로 가입하기
+            </div>
+            
         </div>
 
         <div class="registerbox_label" id="page1_label">
@@ -1526,13 +1532,100 @@
         callbackUrl: "http://localhost:8000/login/login_simple/",
     // {#     callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple/",#}
         isPopup: false, /* 팝업을 통한 연동처리 여부 */
-        loginButton: {color: "white", type: 1, height: 30} /* 로그인 버튼의 타입을 지정 */
+        loginButton: {color: "white", type: 2, height: 23} /* 로그인 버튼의 타입을 지정 */
       }
     );
 
     /* 설정정보를 초기화하고 연동을 준비 */
     naverLogin.init();
     // <!--  네이버아이디로로그인 초기화 Script -->
+
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '291762354974046',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v3.1'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = 'https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v3.1';
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+
+
+    function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    }
+
+    function statusChangeCallback(response) {
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+            if (response.status === 'connected') {
+              // Logged into your app and Facebook.
+                checkFacebookPermission();
+            } else {
+              // The person is not logged into your app or we are unable to tell.
+              document.getElementById('status').innerHTML = 'Please log ' +
+                'into this app.';
+            }
+      }
+
+        // Here we run a very simple test of the Graph API after login is
+      // successful.  See statusChangeCallback() for when this call is made.
+      function testAPI(user_id) {
+        console.log('Welcome!  Fetching your information.... ');
+
+        FB.api('/me', {fields: 'id, email, last_name, first_name'}, function(response) {
+            $('#id_new_sns_id').attr('value', response.id);
+            $('#id_sns_username').attr('value', response.email);
+            $('#id_sns_email').attr('value', response.email);
+            $('#id_sns_last_name').attr('value', response.last_name);
+            $('#id_sns_first_name').attr('value', response.first_name);
+            document.getElementById('sns-facebook-form').submit();
+    {#      document.getElementById('status').innerHTML =#}
+    {#        'Thanks for logging in, ' + response.name + '!';#}
+        });
+      }
+        function checkFacebookPermission() {
+            var check_val = true;
+            FB.api('/me/permissions', function(response) {
+                console.log(response.data.length)
+                for(var i=0; i<response.data.length; i++){
+                    if(response.data[i].status=='declined'){
+                        check_val = false;
+                    }
+                }
+                if (check_val==false){
+                    FB.login(
+                      function(response) {
+                        console.log(response);
+                      },
+                      {
+                        scope: 'email',
+                        auth_type: 'rerequest'
+                      }
+                    );
+                }
+                else{
+                    testAPI();
+                }
+        {#      console.log('permission for: ' + );#}
+        {#      document.getElementById('status').innerHTML =#}
+        {#        'Thanks for logging in, ' + response.name + '!';#}
+            });
+        }
     
     </script>
 {% endblock %}
