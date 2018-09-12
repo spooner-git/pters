@@ -424,17 +424,17 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
-    var uri = encodeURI('https://spooner-test.pters.co.kr/login/login_simple_sns/');
-    console.log('checkLoginState function ');
-{#  FB.getLoginStatus(function(response) {#}
-{#    statusChangeCallback(response);#}
-{#  }, true);#}
+{#    var uri = encodeURI('https://spooner-test.pters.co.kr/login/login_simple_sns/');#}
+{#    console.log('checkLoginState function ');#}
   FB.getLoginStatus(function(response) {
-    if (response.status === 'connected') {
-        statusChangeCallback(response);
-    } else {
-        window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");
-    }
+    statusChangeCallback(response);
+  }, true);
+{#  FB.getLoginStatus(function(response) {#}
+{#    if (response.status === 'connected') {#}
+{#        statusChangeCallback(response);#}
+{#    } else {#}
+{#        window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");#}
+{#    }#}
 });
 }
 
