@@ -427,6 +427,7 @@ function checkLoginState() {
 {#    var uri = encodeURI('https://spooner-test.pters.co.kr/login/login_simple_sns/');#}
 {#    console.log('checkLoginState function ');#}
   FB.getLoginStatus(function(response) {
+    console.log('statusChangeCallback function test');
     console.log('statusChangeCallback function '+response.status);
         if (response.status === 'connected') {
           // Logged into your app and Facebook.
