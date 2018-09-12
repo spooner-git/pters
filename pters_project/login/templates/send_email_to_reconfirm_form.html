@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>(function(w, d, s, l, i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -18,6 +18,28 @@
         <meta name="login" content="send_initial_mail_confirm_login">
         <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.register.css" %}>
         <style type="text/css">
+            button:focus{
+                outline: 0;
+            }
+            .disabled_button{
+                opacity: 0.5 !important;
+                cursor: default !important;
+            }
+            #email_input_form{
+                background-color: transparent;
+                color: #ffffff;
+                border: 0;
+            }
+            .input_write_mode{
+                background-color: #ffffff !important;
+                color: #282828 !important;
+                border: 1px solid #fe4e65 !important;
+            }
+            .write_mode_ing{
+                border-color: #fe4e65 !important;
+                color: #fe4e65 !important;
+                background-color: #282828 !important;
+            }
             #submit_input{
                 overflow-y: hidden;
                 margin: 0;
@@ -33,7 +55,7 @@
                 padding-left: 20px;
                 font-size: 14px;
             }
-            .submit_email_reconfirm,.submit_go_home{
+            .submit_email_reconfirm, .submit_go_home, .submit_email_change{
                 position: relative !important;
                 margin: 0 auto !important;
                 margin-top: 10px !important;
@@ -75,6 +97,10 @@
             #inputError_info{
                 display: none;
             }
+            .email_confirm{
+                margin-top: 0;
+                padding-left: 50px;
+            }
 
         </style>
 
@@ -106,12 +132,15 @@
                     <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
                     <input type="hidden" name="username" value="{{ request.session.username }}">
                     <input type="hidden" name="member_type" value="re">
+                    <input type="hidden" name="email" value="" id="form_email">
 
                     <!--<input type="submit" value="{% trans 'Submit' %}" />-->
-                    <p>Email : {{ user_email }} </p>
+                    <p style="margin-bottom:0">Email : <input type="text" name="" autocomplete="off" id="email_input_form" disabled> </p>
+                    <p class="email_confirm"></p>
                     <p>인증 메일은 {{ activation_days }}일간 유효합니다.</p>
                 </form>
                 <button class="submit_email_reconfirm" >재인증 메일 보내기</button>
+                <button id="btn_change_email" class="submit_email_change">E-mail 변경</button>
                 <button class="submit_go_home" onclick="goHome()" style="margin-bottom:15px !important">뒤로</button>
                 <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC" id="ajaxloadingPC">
             </div>
@@ -128,59 +157,120 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
+    $(window).keydown(function(event){
+        if(event.which== 13) {
+          event.preventDefault();
+          return false;
+        }
+    });
 
+    $('#email_input_form').val("{{ user_email }}");
     $('button.submit_email_reconfirm').click(function(){
         //if($('.pw_confirm').attr('data-check') == 1){
-        $form = $('#submit_input form')
+        if(!$(this).hasClass('disabled_button')){
+            $("#form_email").val($('#email_input_form').val());
+            $form = $('#submit_input form');
+            $.ajax({
+                url:'/login/resend_email_authentication/',
+                type:'POST',
+                data: $form.serialize(),
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    beforeSend();
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                    completeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    $('#submit_complete').css('height', '200px');
+                    $('#submit_input').css('height', '0px');
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요");
+                }
+            });
+            //}else{
+            //  alert('비밀번호를 다시 확인해주세요')
+            //}
+        }
+    });
+
+    $('#btn_change_email').click(function(e){
+        e.preventDefault();
+        if($("#email_input_form").attr('disabled') == "disabled"){
+            $('#email_input_form').attr('disabled', false).addClass('input_write_mode');
+            $('#btn_change_email').addClass('write_mode_ing').text("E-mail 입력 완료");
+            $('button.submit_email_reconfirm').addClass('disabled_button');
+        }else{
+            $('#email_input_form').attr('disabled', true).removeClass('input_write_mode');
+            $('#btn_change_email').removeClass('write_mode_ing').text("E-mail 변경");
+            $('button.submit_email_reconfirm').removeClass('disabled_button');
+        }
+    });
+
+    $('#email_input_form').keydown(function(){
+        check_email($(this).val());
+    });
+
+    function check_email(newemail){
         $.ajax({
-            url:'/login/resend_email_authentication/',
-            type:'POST',
-            data:$form.serialize(),
+            url:'/login/check_member_email/',
+            type:'GET',
+            data:{"email" : newemail },
             dataType : 'html',
 
-            beforeSend:function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-                beforeSend()
-            },
-
-            //보내기후 팝업창 닫기
-            complete:function(){
-                completeSend()
+            beforeSend:function(){
             },
 
             //통신성공시 처리
             success:function(data){
-                $('#submit_complete').css('height','200px')
-                $('#submit_input').css('height','0px')
+                var jsondata = JSON.parse(data);
+                var id_check_message = jsondata.id_check_result;
+                if(id_check_message[0].length>0){
+                    var error_msg = id_check_message[0];
+                    $('.email_confirm').text(error_msg).css({'display':'block', 'color':'#fe4e65'});
+                    email_change_varification = false;
+                }else{
+                    $('.email_confirm').text('사용 가능').css({'display':'block', 'color':'green'});
+                    email_change_varification = true;
+                }
+            },
+
+            //보내기후 팝업창 닫기
+            complete:function(){
+
             },
 
             //통신 실패시 처리
             error:function(){
-                alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요")
-            },
-        })
-        //}else{
-        //  alert('비밀번호를 다시 확인해주세요')
-        //}
+                alert("에러: 서버 통신 실패");
+            }
+        });
+    }
 
-    })
 
     function beforeSend(){
-{#        $('html').css("cursor","wait");#}
-        $('#ajaxloadingPC').css('display','block');
-        $('#submit_input button').css('visibility','hidden')
+        $('#ajaxloadingPC').css('display', 'block');
+        $('#submit_input button').css('visibility', 'hidden');
     }
 
     function completeSend(){
-        //$('html').css("cursor","auto");
-        $('#ajaxloadingPC').css('display','none');
-        $('#submit_input button').css('visibility','visible')
+        $('#ajaxloadingPC').css('display', 'none');
+        $('#submit_input button').css('visibility', 'visible');
     }
 
     function goHome(){
-        location.href="{% url 'login:logout' %}"
+        location.href="{% url 'login:logout' %}";
     }
 
     function csrfSafeMethod(method) {
