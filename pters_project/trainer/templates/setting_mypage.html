@@ -810,7 +810,9 @@
                                                 <p>계속 하시겠습니까?</p>
                                             `
                                             );
-                $(document).on('#caution_popup_yes', 'click', function(){
+                $(document).on('click','#caution_popup_yes', function(e){
+                    console.log('yes')
+                    e.stopPropagation();
                     send_modified_email_info($('._emailInfo').siblings('input').val());
                     $('#caution_popup_yes').off();
                 });
@@ -826,7 +828,10 @@
                     data : {"username":userid, "email":newemail, "member_id":db_id},
                     dataType : 'html',
 
-                    beforeSend:function(){
+                    beforeSend:function(xhr, settings){
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
                         beforeSend();
                     },
 
@@ -834,6 +839,7 @@
                     success:function(data){
                         var jsondata = JSON.parse(data);
                         alert('로그아웃 합니다.\n 이메일 인증 후 재로그인 해주세요.');
+                        location.href = '/login/logout/';
                         completeSend();
                     },
 
