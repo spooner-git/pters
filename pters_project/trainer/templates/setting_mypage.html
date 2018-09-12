@@ -810,8 +810,7 @@
                                                 <p>계속 하시겠습니까?</p>
                                             `
                                             );
-                $(document).on('click','#caution_popup_yes', function(e){
-                    console.log('yes')
+                $(document).on('click', '#caution_popup_yes', function(e){
                     e.stopPropagation();
                     send_modified_email_info($('._emailInfo').siblings('input').val());
                     $('#caution_popup_yes').off();
