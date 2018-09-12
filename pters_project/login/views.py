@@ -504,6 +504,7 @@ class ChangeResendEmailAuthenticationView(RegistrationView, View):
             try:
                 user = User.objects.get(id=member_id)
                 user.email = email
+                user.is_active = 0
                 user.save()
             except ObjectDoesNotExist:
                 error = '가입되지 않은 회원입니다.'
