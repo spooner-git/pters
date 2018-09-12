@@ -452,7 +452,6 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         member_id = request.POST.get('member_id', '')
         error = None
         user = None
-        username = None
         if member_id is None or member_id == '':
             error = 'ID를 입력해주세요.'
         if error is None:
@@ -472,10 +471,10 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                 error = 'ID가 존재하지 않습니다.'
 
         if error is not None:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
+            logger.error(str(user_id) + '[' + str(email) + ']' + str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 이메일 재인증 요청')
+            logger.error(str(user_id) + '[' + str(email) + '] 이메일 재인증 요청')
 
         return render(request, self.template_name)
 
@@ -490,20 +489,21 @@ class ChangeResendEmailAuthenticationView(RegistrationView, View):
         member_id = request.POST.get('member_id', '')
         error = None
         user = None
-        username = None
         if member_id is None or member_id == '':
             error = 'ID를 입력해주세요.'
 
         if error is None:
             try:
                 User.objects.get(email=email)
-            except ObjectDoesNotExist:
                 error = '이미 가입된 email입니다.'
+            except ObjectDoesNotExist:
+                error = None
 
         if error is None:
             try:
                 user = User.objects.get(id=member_id)
                 user.email = email
+                user.is_active = 0
                 user.save()
             except ObjectDoesNotExist:
                 error = '가입되지 않은 회원입니다.'
@@ -516,10 +516,10 @@ class ChangeResendEmailAuthenticationView(RegistrationView, View):
                 error = 'ID가 존재하지 않습니다.'
 
         if error is not None:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
+            logger.error(str(user_id) + '[' + str(email) + ']' + str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
+            logger.error(str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
 
         return render(request, self.template_name)
 
