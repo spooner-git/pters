@@ -159,9 +159,12 @@
                     <!-- //구글아이디로그인 버튼 노출 영역 -->
 
                     <!-- 페이스북아이디로그인 버튼 노출 영역 -->
-                    <fb:login-button
-                      scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
-                    </fb:login-button>
+{#                    <fb:login-button#}
+{#                      scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">#}
+{#                    </fb:login-button>#}
+{#                    <a href="facebookSignin.do">#}
+                        <button type="button" class="btn btn-primary" id="facebook_login_btn" onclick="checkLoginState();">Facebook 로그인</button>
+{#                    </a>#}
                     <!-- //페이스북아이디로그인 버튼 노출 영역 -->
 
 
@@ -421,10 +424,18 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
+    var uri = encodeURI('https://spooner-test.pters.co.kr/login/login_simple_sns/');
     console.log('checkLoginState function ');
+{#  FB.getLoginStatus(function(response) {#}
+{#    statusChangeCallback(response);#}
+{#  }, true);#}
   FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  }, true);
+    if (response.status === 'connected') {
+        statusChangeCallback(response);
+    } else {
+        window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");
+    }
+});
 }
 
 function statusChangeCallback(response) {
