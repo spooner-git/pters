@@ -38,7 +38,18 @@
                 <span class="KRtext">페이스북</span>
             </div>
         </div>
-        <div id="how_to_disconnect_naver_explain" class="explain_page">네이버 연동 해제 방법</div>
+        <div id="how_to_disconnect_naver_explain" class="explain_page">
+            <label>네이버 연동 해제 방법</label>
+            <p style="color:#fe4e65;font-weight: bold;"><img src="/static/user/res/stopmark.png" style="width: 15px;">주의사항!<br>연동 해제 전 비밀번호를 재설정하셔야, 연동 해제 후 피터스에 정상적으로 로그인이 가능합니다.</p>
+            <p>1. 네이버 사이트에서 로그인 후, 내정보로 이동합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/1.png">
+            <p>2. 보안 설정 탭으로 이동합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/2.png">
+            <p>3. 외부 사이트 연결을 확인합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/3.png">
+            <p>4. 목록에서 PTERS의 연결 여부를 설정합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/4.png">
+        </div>
         <div id="how_to_disconnect_facebook_explain" class="explain_page">페이스북 연동 해제 방법</div>
     </div>
 
@@ -590,7 +601,9 @@
         birthChangeEventGroup();
 
         $('#btn_how_to_disconnect_sns_login').click(function(){
+            height_this_fit_to_display('#popup_how_to_disconnect_sns_login', 60);
             locate_this_to_center('#popup_how_to_disconnect_sns_login');
+
             $('body').css('overflow-y', 'hidden');
             $('#shade_caution').show();
         });

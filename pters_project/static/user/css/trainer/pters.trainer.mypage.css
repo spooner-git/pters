@@ -12,6 +12,7 @@ body{
 	background-color: #ffffff;
 	border: 1px solid #cccccc;
 	z-index: 450;
+	max-height: 700px;
 }
 	#how_to_disconnect_naver_explain{
 
@@ -20,11 +21,18 @@ body{
 		display: none;
 	}
 	.explain_page{
+		overflow-y: auto;
 		border-top: 1px solid #cccccc;
 		padding: 15px;
 		width: 100%;
 		background-color: #f4f4f4;
-		min-height: 500px;
+		height: 90%;
+	}
+	.explain_page p{
+		margin-top: 20px;
+	}
+	.explain_page img{
+		width: 100%;
 	}
 
 #ymdText{

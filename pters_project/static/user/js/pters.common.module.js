@@ -494,4 +494,14 @@ function locate_this_to_center(selector, position){ //position:fixed 이면 $(wi
 	                     });
 }
 
+function height_this_fit_to_display(selector, optionvalue){
+	var $selector = $(selector);
+	var window_height = $(window).height();
+	if(optionvalue == undefined){
+		$selector.css('height', window_height - 100 + 'px');
+	}else{
+		$selector.css('height', window_height - optionvalue - 100 + 'px');
+	}
+}
+
 //피터스 팝업 화면 중앙 위치
