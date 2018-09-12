@@ -420,6 +420,7 @@ window.fbAsyncInit = function() {
    }(document, 'script', 'facebook-jssdk'));
 
 
+var facebook_login_check = false;
 
 function checkLoginState() {
     console.log('checkLoginState function ');
@@ -485,6 +486,7 @@ function statusChangeCallback(response) {
                 );
             }
             else{
+                facebook_login_check = true;
                 testAPI();
             }
     {#      console.log('permission for: ' + );#}
@@ -492,7 +494,13 @@ function statusChangeCallback(response) {
     {#        'Thanks for logging in, ' + response.name + '!';#}
         });
     }
-
+    window.addEventListener('load', function () {
+        if (facebook_login_check == true){
+            testAPI();
+        }
+{#        google_login_check = true;#}
+{#        google_signOut();#}
+    });
 // <!-- 페이스북 로그인  Script -->
 
 
