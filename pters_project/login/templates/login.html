@@ -428,7 +428,7 @@ function checkLoginState() {
 {#    console.log('checkLoginState function ');#}
   FB.getLoginStatus(function(response) {
     statusChangeCallback(response);
-  }, true);
+  });
 {#  FB.getLoginStatus(function(response) {#}
 {#    if (response.status === 'connected') {#}
 {#        statusChangeCallback(response);#}
@@ -456,6 +456,14 @@ function statusChangeCallback(response) {
 
     // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
+window.addEventListener('load', function () {
+    FB.getLoginStatus(function(response) {
+        if(response.status=='connected'){
+
+            testAPI();
+        }
+      });
+});
   function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
 
