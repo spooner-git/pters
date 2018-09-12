@@ -422,6 +422,7 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
+    alert('test1');
   FB.getLoginStatus(function(response) {
     statusChangeCallback(response);
   }, true);
@@ -432,6 +433,7 @@ function statusChangeCallback(response) {
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
+        alert('test2::'+response.status);
         if (response.status === 'connected') {
           // Logged into your app and Facebook.
             checkFacebookPermission();
@@ -447,6 +449,7 @@ function statusChangeCallback(response) {
   function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
 
+        alert('test5::testAPI');
     FB.api('/me', {fields: 'id, email, last_name, first_name'}, function(response) {
         $('#id_new_sns_id').attr('value', response.id);
         $('#id_sns_username').attr('value', response.email);
@@ -464,11 +467,13 @@ function statusChangeCallback(response) {
         var check_val = true;
         FB.api('/me/permissions', function(response) {
             console.log(response.data.length)
+            alert('test3::'+response.data.length);
             for(var i=0; i<response.data.length; i++){
                 if(response.data[i].status=='declined'){
                     check_val = false;
                 }
             }
+            alert('test4::'+check_val);
             if (check_val==false){
                 FB.login(
                   function(response) {
