@@ -822,8 +822,6 @@
         function send_modified_email_info(newemail){
             var userid = "{{ request.user.username }}";
             var db_id = $('._nameInfo').attr('data-dbid');
-            console.log(userid)
-            console.log(db_id)
             $.ajax({
                     url:'/login/change_resend_email_authentication/',
                     type:'POST',
