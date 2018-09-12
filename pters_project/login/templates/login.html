@@ -162,9 +162,6 @@
                     <fb:login-button
                       scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
                     </fb:login-button>
-{#                    <a href="facebookSignin.do">#}
-{#                        <button type="button" class="btn btn-primary" id="facebook_login_btn" onclick="checkLoginState();">Facebook 로그인</button>#}
-{#                    </a>#}
                     <!-- //페이스북아이디로그인 버튼 노출 영역 -->
 
 
@@ -406,7 +403,8 @@ window.fbAsyncInit = function() {
       appId      : '291762354974046',
       cookie     : true,
       xfbml      : true,
-      version    : 'v3.1'
+      version    : 'v3.1',
+        status  : true
     });
 
     FB.AppEvents.logPageView();
@@ -423,36 +421,31 @@ window.fbAsyncInit = function() {
 
 
 function checkLoginState() {
-{#    var uri = encodeURI('https://spooner-test.pters.co.kr/login/login_simple_sns/');#}
-{#    console.log('checkLoginState function ');#}
+    console.log('checkLoginState function ');
   FB.getLoginStatus(function(response) {
-    console.log('statusChangeCallback function test');
+    statusChangeCallback(response);
+  }, true);
+
+}
+
+function statusChangeCallback(response) {
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
     console.log('statusChangeCallback function '+response.status);
         if (response.status === 'connected') {
           // Logged into your app and Facebook.
             checkFacebookPermission();
+        } else {
+          // The person is not logged into your app or we are unable to tell.
+{#          document.getElementById('status').innerHTML = 'Please log ' +#}
+{#            'into this app.';#}
         }
-  }, true);
-{#  FB.getLoginStatus(function(response) {#}
-{#    if (response.status === 'connected') {#}
-{#        statusChangeCallback(response);#}
-{#    } else {#}
-{#        window.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id=291762354974046&redirect_uri="+uri+"&response_type=token");#}
-{#    }#}
-{# }); #}
-}
-
+  }
 
     // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
-{#window.addEventListener('load', function () {#}
-{#    FB.getLoginStatus(function(response) {#}
-{#        if(response.status=='connected'){#}
-{##}
-{#            testAPI();#}
-{#        }#}
-{#      });#}
-{#});#}
   function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
 
@@ -464,9 +457,6 @@ function checkLoginState() {
         $('#id_sns_first_name').attr('value', response.first_name);
         $('#id_sns_type').attr('value', 'facebook');
 {#        document.getElementById('sns-form').submit();#}
-        setTimeout( function() {
-            window.location = 'http://google.com';
-        } , 0 );
         $('#sns-form').submit();
 {#      document.getElementById('status').innerHTML =#}
 {#        'Thanks for logging in, ' + response.name + '!';#}
