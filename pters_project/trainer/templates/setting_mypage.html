@@ -839,6 +839,7 @@
                     success:function(data){
                         var jsondata = JSON.parse(data);
                         alert('로그아웃 합니다.\n 이메일 인증 후 재로그인 해주세요.');
+                        location.href = '/login/logout/';
                         completeSend();
                     },
 
