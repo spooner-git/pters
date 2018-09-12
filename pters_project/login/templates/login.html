@@ -454,6 +454,7 @@ function statusChangeCallback(response) {
         $('#id_sns_last_name').attr('value', response.last_name);
         $('#id_sns_first_name').attr('value', response.first_name);
         $('#id_sns_type').attr('value', 'facebook');
+        alert('test::'+$('#id_new_sns_id').val());
         document.getElementById('sns-form').submit();
 {#      document.getElementById('status').innerHTML =#}
 {#        'Thanks for logging in, ' + response.name + '!';#}
