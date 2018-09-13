@@ -781,12 +781,12 @@ function playSound() {
         }
     }
     
-    
-
-
     var class_hour = '{{ request.session.class_hour }}';
     var social_login_check = '{{ request.session.social_login_check }}';
     var social_login_type = '{{ request.session.social_login_type }}';
+
+    var social_login_check = '1';
+    var social_login_type = 'NAVER';
 
     var worktime = '{{ request.session.setting_trainer_work_time_available }}';
     var stoptime = '{{ request.session.setting_member_reserve_time_available }}';
