@@ -2,6 +2,7 @@ import logging
 import random
 
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_done
@@ -12,6 +13,7 @@ from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
@@ -94,6 +96,7 @@ def login_trainer(request):
             if error is None:
                 if member.use == 1:
                     request.session['user_id'] = user.id
+                    request.session['username'] = user.username
                     if user.email is None or user.email == '':
                         next_page = '/login/send_email_member/'
                     else:
@@ -447,8 +450,30 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
         return render(request, self.template_name)
 
 
+class MyReRegistrationView(RegistrationView):
+    def send_activation_email(self, user):
+        """
+        Send the activation email. The activation key is the username,
+        signed using TimestampSigner.
+
+        """
+        activation_key = self.get_activation_key(user)
+        context = self.get_email_context(activation_key)
+        context.update({
+            'user': user,
+        })
+        subject = render_to_string('registration/activation_re_email_subject.txt',
+                                   context)
+        # Force subject to a single line to avoid header-injection
+        # issues.
+        subject = ''.join(subject.splitlines())
+        message = render_to_string('registration/activation_re_email.txt',
+                                   context)
+        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+
 # 회원가입 api
-class ResendEmailAuthenticationView(RegistrationView, View):
+class ResendEmailAuthenticationView(MyReRegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request):
@@ -485,13 +510,14 @@ class ResendEmailAuthenticationView(RegistrationView, View):
 
 
 # 회원가입 api
-class ChangeResendEmailAuthenticationView(RegistrationView, View):
+class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request):
         user_id = request.POST.get('username', '')
         email = request.POST.get('email', '')
         member_id = request.POST.get('member_id', '')
+
         error = None
         user = None
         if member_id is None or member_id == '':
@@ -520,11 +546,11 @@ class ChangeResendEmailAuthenticationView(RegistrationView, View):
             else:
                 error = 'ID가 존재하지 않습니다.'
 
-        if error is not None:
+        if error is None:
+            logger.info(str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
+        else:
             logger.error(str(user_id) + '[' + str(email) + ']' + str(error))
             messages.error(request, error)
-        else:
-            logger.error(str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
 
         return render(request, self.template_name)
 
@@ -1187,3 +1213,4 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     context['error'] = error
 
     return context
+
