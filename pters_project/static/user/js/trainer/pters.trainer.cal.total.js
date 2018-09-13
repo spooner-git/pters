@@ -11,72 +11,72 @@
  */
 
 /////////////////////////////////////달력 공통//////////////////////////////////
-// $('div.change_cal, #ymdText').click(function(e){
-//     e.stopPropagation();
-//     var $calendar = $('#calendar');
-//     var current_calendar_type;
-//     if($calendar.hasClass('_calweek')){
-//         current_calendar_type = "week";
-//     }else if($calendar.hasClass('_calmonth')){
-//         current_calendar_type = "month";
-//     }
+$('#ymdText').click(function(e){
+    e.stopPropagation();
+    var $calendar = $('#calendar');
+    var current_calendar_type;
+    if($calendar.hasClass('_calweek')){
+        current_calendar_type = "week";
+    }else if($calendar.hasClass('_calmonth')){
+        current_calendar_type = "month";
+    }
 
-//     if(current_calendar_type == "month"){
-//         var $ymdData = $('#ymdText-pc-year');
-//         var yyyy_mm_dd;
-//         var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
-//         var ymd1 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-01`;
-//         var ymd2 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-${dd2_lastday}`;
-//         if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
-//             yyyy_mm_dd = today_YY_MM_DD;
-//         }else{
-//             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
-//         }
-//         $calendar.removeClass('_calmonth');
-//         $('#week').css('display', 'table');
-//         $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-//         $('#date').css('display', 'none');
-//         if(bodywidth > 600){
-//             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-//                 week_calendar_mobile(yyyy_mm_dd);
-//             }else{
-//                 week_calendar(yyyy_mm_dd);
-//             }
-//             $('#ymdText_weekcal').css('display', 'inline-block');
-//             $('#ymdText_monthcal').css('display', 'none');
-//         }else if(bodywidth<=600){
-//             week_calendar_mobile(yyyy_mm_dd);
-//         }
-//     }else if(current_calendar_type == "week"){
-//         var $ymdText_start = $('#ymdText-pc-month-start');
-//         var $ymdText_end = $('#ymdText-pc-month-end');
-//         var $ymdText_day_start = $('#ymdText-pc-date-start');
-//         var $ymdText_day_end = $('#ymdText-pc-date-end');
-//         var yyyy_mm_dd;
-//         var yyyy_1 = $ymdText_start.attr('data-year');
-//         var yyyy_2 = $ymdText_end.attr('data-year');
-//         var mm1    = $ymdText_start.attr('data-month');
-//         var mm2    = $ymdText_end.attr('data-month');
-//         var dd1    = $ymdText_day_start.attr('data-date');
-//         var dd2    = $ymdText_day_end.attr('data-date');
-//         var ymd1 = `${yyyy_1}-${mm1}-${dd1}`;
-//         var ymd2 = `${yyyy_2}-${mm2}-${dd2}`;
-//         if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
-//             yyyy_mm_dd = today_YY_MM_DD;
-//         }else{
-//             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
-//         }
-//         $calendar.removeClass('_calweek');
-//         $('#week').css('display', 'none');
-//         $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-//         $('#date').css('display', 'block');
-//         month_calendar(yyyy_mm_dd);
-//         $('.swiper-slide-active').css('width', $('#calendar').width());
-//         $('#ymdText_monthcal').css('display', 'inline-block');
-//         $('#ymdText_weekcal').css('display', 'none');
-//     }
+    if(current_calendar_type == "month"){
+        var $ymdData = $('#ymdText-pc-year');
+        var yyyy_mm_dd;
+        var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
+        var ymd1 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-01`;
+        var ymd2 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-${dd2_lastday}`;
+        if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
+            yyyy_mm_dd = today_YY_MM_DD;
+        }else{
+            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
+        }
+        $calendar.removeClass('_calmonth');
+        $('#week').css('display', 'table');
+        $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+        $('#date').css('display', 'none');
+        if(bodywidth > 600){
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                week_calendar_mobile(yyyy_mm_dd);
+            }else{
+                week_calendar(yyyy_mm_dd);
+            }
+            $('#ymdText_weekcal').css('display', 'inline-block');
+            $('#ymdText_monthcal').css('display', 'none');
+        }else if(bodywidth<=600){
+            week_calendar_mobile(yyyy_mm_dd);
+        }
+    }else if(current_calendar_type == "week"){
+        var $ymdText_start = $('#ymdText-pc-month-start');
+        var $ymdText_end = $('#ymdText-pc-month-end');
+        var $ymdText_day_start = $('#ymdText-pc-date-start');
+        var $ymdText_day_end = $('#ymdText-pc-date-end');
+        var yyyy_mm_dd;
+        var yyyy_1 = $ymdText_start.attr('data-year');
+        var yyyy_2 = $ymdText_end.attr('data-year');
+        var mm1    = $ymdText_start.attr('data-month');
+        var mm2    = $ymdText_end.attr('data-month');
+        var dd1    = $ymdText_day_start.attr('data-date');
+        var dd2    = $ymdText_day_end.attr('data-date');
+        var ymd1 = `${yyyy_1}-${mm1}-${dd1}`;
+        var ymd2 = `${yyyy_2}-${mm2}-${dd2}`;
+        if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
+            yyyy_mm_dd = today_YY_MM_DD;
+        }else{
+            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
+        }
+        $calendar.removeClass('_calweek');
+        $('#week').css('display', 'none');
+        $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+        $('#date').css('display', 'block');
+        month_calendar(yyyy_mm_dd);
+        $('.swiper-slide-active').css('width', $('#calendar').width());
+        $('#ymdText_monthcal').css('display', 'inline-block');
+        $('#ymdText_weekcal').css('display', 'none');
+    }
 
-// });
+});
 
 $('#change_to_weekcal').click(function(e){
     e.stopPropagation();
@@ -299,7 +299,7 @@ var slideControl = {'week':{
 /////////////////////////////////////달력 공통//////////////////////////////////
 
 
-$('#uptext').text("주간 일정");
+$('#uptext').text("일정");
 
 setInterval(function(){
     // ajaxCheckSchedule();
