@@ -8,6 +8,14 @@
         .fixfooter{
             position: relative;
         }
+        .NAVER{
+            font-weight: 500 !important;
+            color: #2DB400; 
+        }
+        .Facebook{
+            font-weight: 500 !important;
+            color: #3b5998;
+        }
         @media(min-width:600px){
             .fixfooter{
                 position: relative;
@@ -121,12 +129,17 @@
             <img src="/static/user/res/member/icon-user.png" alt=""><span>가입 정보</span>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
-            <div class="trainerInfo">
+            <div class="trainerInfo" style="height: auto;">
                 <div>
                     <span class="menuName">ID</span>
                     <div class="menuButton"><button onclick="goPage('delAccount')">탈퇴</button></div>
                 </div>
-                <span>{{ request.user.username }}</span><img src="/static/user/res/icon-info.png" style="width:15px;margin:0;opacity: 0.5;cursor: pointer;" id="btn_how_to_disconnect_sns_login">
+                <span>{{ request.user.username }}</span>
+                <div id="is_this_sns_login" style="display: none;padding-bottom: 7px;">
+                    <div id="sns_type" style="display: inline-block;"></div>
+                    <img src="/static/user/res/icon-info.png" style="width:15px;margin:0;opacity: 0.5;cursor: pointer;" id="btn_how_to_disconnect_sns_login">
+                </div>
+                
             </div>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
@@ -599,6 +612,14 @@
 
         regionChangeEventGroup();
         birthChangeEventGroup();
+
+        if(Number(social_login_check) == 0){
+
+        }else if(Number(social_login_check) == 1){
+            $('#is_this_sns_login').show();
+            $('#sns_type').html(`<span class="${social_login_type}" style="margin:0">${social_login_type}</span> 계정으로 로그인 중`);
+        }
+        
 
         $('#btn_how_to_disconnect_sns_login').click(function(){
             height_this_fit_to_display('#popup_how_to_disconnect_sns_login', 60);
