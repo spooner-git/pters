@@ -21,6 +21,7 @@
         {% csrf_token %}
         <input type="hidden" name="username" id="id_username">
         <input type="hidden" name="social_login_check" id="id_social_login_check" value="1">
+        <input type="hidden" name="social_login_type" value="NAVER">
         <input type="hidden" name="auto_login_check" value="1">
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
@@ -58,7 +59,8 @@
 		var naverLogin = new naver.LoginWithNaverId(
 			{
                 clientId: "h5MuvYzSFLlrFTs19g0V",
-                callbackUrl: "http://localhost:8000/login/login_simple_naver/",
+                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",
+{#                callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
 				isPopup: false,
 				callbackHandle: true
 				/* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */

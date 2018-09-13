@@ -54,6 +54,7 @@ def login_trainer(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     social_login_check = request.POST.get('social_login_check', '0')
+    social_login_type = request.POST.get('social_login_type', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
     next_page = request.POST.get('next_page')
     error = None
@@ -63,11 +64,13 @@ def login_trainer(request):
         next_page = '/trainer/'
     request.session['push_token'] = ''
     request.session['social_login_check'] = social_login_check
+    request.session['social_login_type'] = social_login_type
     if not error:
         # if password == 'kakao_login':
         #     user = authenticate(username=username)
         # else:
         if social_login_check == '0':
+            request.session['social_login_type'] = ''
             user = authenticate(username=username, password=password)
         else:
             try:
