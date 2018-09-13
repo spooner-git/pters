@@ -246,6 +246,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
                     login(request, user)
                     request.session['social_login_check'] = '1'
+                    request.session['social_login_type'] = sns_type
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
                     return redirect('/trainer/')
@@ -300,6 +301,7 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
                     login(request, user)
                     request.session['social_login_check'] = '1'
+                    request.session['social_login_type'] = sns_type
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
                     return redirect('/trainer/')
