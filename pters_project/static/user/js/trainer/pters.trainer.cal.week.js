@@ -19,7 +19,6 @@ setInterval(function(){
 }, 60000);// 자동 ajax 새로고침(일정가져오기)
 
 function ajaxCheckSchedule(){
-
     $.ajax({
         url: '/schedule/check_schedule_update/',
         dataType : 'html',

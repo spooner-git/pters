@@ -2,8 +2,15 @@
 $(document).ready(function(){
 
     //바로 실행
-    get_current_member_list();
-    get_current_group_list();
+    get_current_member_list("callback", function(jsondata){
+        set_member_dropdown_list(jsondata);
+    });
+    get_current_group_list("callback", function(jsondata){
+        set_group_dropdown_list(jsondata);
+        //append_dropdown_scroll_arrow("#members_pc", "#members_pc", 0, 0, "", "");
+        set_list_overflow_scrolling("#members_pc", "#members_pc");
+        set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+    });
     //
 
     //유저가 터치인지 마우스 사용인지 알아낸다
@@ -17,7 +24,6 @@ $(document).ready(function(){
     //DBdataProcess(classTimeArray_start_date,classTimeArray_end_date,classDateData,"graph",classTimeData)
     //DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
     //초기에 미니 timegraph를 채워주기 위한 DBdataprocess
-
 
     //var select_all_check = false;
     var date = new Date();
