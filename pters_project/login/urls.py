@@ -23,7 +23,7 @@ urlpatterns = [
 
     # 네이버 간편로그인
     # 로그인 페이지
-    url(r'^login_simple/$', views.LoginSimpleView.as_view(), name='login_simple'),
+    url(r'^login_simple_naver/$', views.LoginSimpleNaverView.as_view(), name='login_simple_naver'),
     # 로그인 페이지
     url(r'^login_simple_sns/$', views.LoginSimpleSnsView.as_view(), name='login_simple_sns'),
     # sns 회원가입 페이지

@@ -14,7 +14,7 @@
         {% csrf_token %}
         <input type="hidden" name="email" id="id_email" value="">
         <input type="hidden" name="sns_id" id="id_sns_id" value="" >
-        <input type="hidden" name="sns_type" id="id_sns_type" value="naver" >
+        <input type="hidden" name="sns_type" id="id_sns_type" value="NAVER" >
     </form>
 
     <form action="{% url 'login:login' %}" id="login-form" method="post">
@@ -31,7 +31,7 @@
         <input type="hidden" name="email" id="id_sns_email">
         <input type="hidden" name="name" id="id_sns_name">
         <input type="hidden" name="sns_id" id="id_new_sns_id">
-        <input type="hidden" name="sns_type" value="naver">
+        <input type="hidden" name="sns_type" value="NAVER">
         <input type="hidden" name="sex" id="id_sns_sex">
     </form>
 
@@ -41,7 +41,7 @@
         <input type="hidden" name="email" id="id_sns_email2">
         <input type="hidden" name="name" id="id_sns_name2">
         <input type="hidden" name="sns_id" id="id_new_sns_id2">
-        <input type="hidden" name="sns_type" value="naver">
+        <input type="hidden" name="sns_type" value="NAVER">
         <input type="hidden" name="sex" id="id_sns_sex2">
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
@@ -58,7 +58,7 @@
 		var naverLogin = new naver.LoginWithNaverId(
 			{
                 clientId: "h5MuvYzSFLlrFTs19g0V",
-                callbackUrl: "http://localhost:8000/login/login_simple/",
+                callbackUrl: "http://localhost:8000/login/login_simple_naver/",
 				isPopup: false,
 				callbackHandle: true
 				/* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */

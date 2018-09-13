@@ -110,11 +110,11 @@ def login_trainer(request):
         return redirect(next_page)
 
 
-class LoginSimpleView(TemplateView):
+class LoginSimpleNaverView(TemplateView):
     template_name = 'login_naver_processing.html'
 
     def get_context_data(self, **kwargs):
-        context = super(LoginSimpleView, self).get_context_data(**kwargs)
+        context = super(LoginSimpleNaverView, self).get_context_data(**kwargs)
         return context
 
 
