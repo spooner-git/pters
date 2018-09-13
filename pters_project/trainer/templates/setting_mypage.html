@@ -620,6 +620,7 @@
         if(Number(social_login_check) == 0){
 
         }else if(Number(social_login_check) == 1){
+            $('.changeEmail').parent('.menuButton').hide();
             $('#is_this_sns_login').show();
             $('#sns_type').html(`<span class="${social_login_type}" style="margin:0">${social_login_type}</span> 계정으로 로그인 중`);
         }
