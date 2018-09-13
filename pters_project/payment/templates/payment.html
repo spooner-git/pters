@@ -18,7 +18,7 @@
         <div id="ymdTextWrap">
             <div id="menuName">이용권 구매
             </div>
-            <div id="menuDescription">나에게 꼭 맞는 추가기능 이용권을 선택하세요!
+            <div id="menuDescription">나에게 꼭 맞는 추가기능 이용권을 사용해보세요!
             </div>
         </div>
     </div>
@@ -26,40 +26,57 @@
 
     <div id="payment_contents_wrap">
         <div class="payment_function_wrap">
-            <label class="function_label">클래스 + 그룹 레슨</label>
-            <p>클래스 관리 메뉴 사용 + 개설형 클래스 기능 사용 <br>+ 그룹 관리 메뉴 사용 + 그룹 일정 관리 + 강사 및 소속 회원의 화면에서 광고 제거</p>
+            <label class="function_label">베이직</label>
+            <p>- 일정 조회 및 등록 시 기간 자유 선택 (2주 제한 해제) <br>- 강사 및 소속 회원의 화면에서 광고 제거</p>
             <div class="payment_monthly">
                 <label class="inner_label">정기 결제</label>
-                <p class="inner_explain"><span class="price_before">15,000원</span>
-                                        <span class="price_after"> → 매월 12,000원</span>
+                <p class="inner_explain"><span class="price_before">6,000원</span>
+                                        <span class="price_after"> → 매월 5,000원</span>
                 </p>
-                <button id="pay_class_group_function_monthly">정기 결제 구매</button>
+                <button id="pay_basic_function_monthly">정기 결제 구매</button>
             </div>
             <div class="seperator"></div>
             <div class="payment_instant">
                 <label class="inner_label">1개월 이용권</label>
-                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  15,000원</span></p>
-                <button id="pay_class_group_function_instant">구매</button>
+                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  6,000원</span></p>
+                <button id="pay_basic_function_instant">구매</button>
             </div>
         </div>
 
 
-
         <div class="payment_function_wrap">
-            <label class="function_label">그룹 레슨</label>
-            <p>그룹 관리 메뉴 사용 + 그룹 일정 관리 + 강사 및 소속 회원의 화면에서 광고 제거</p>
+            <label class="function_label">엘리트</label>
+            <p>- 베이직 기능 <br>- <span style="color:#fe4e65;text-decoration: underline;">지점 1개</span> 관리자 기능 (지점 관리 및 통계, 직원 관리, 직원 수업 배정)</p>
             <div class="payment_monthly">
                 <label class="inner_label">정기 결제</label>
                 <p class="inner_explain"><span class="price_before">12,000원</span>
                                         <span class="price_after"> → 매월 9,000원</span>
                 </p>
-                <button id="pay_group_function_monthly">정기 결제 구매</button>
+                <button id="pay_elite_function_monthly">정기 결제 구매</button>
             </div>
             <div class="seperator"></div>
             <div class="payment_instant">
                 <label class="inner_label">1개월 이용권</label>
                 <p class="inner_explain"><span class="price_instant">1회 1개월 이용  12,000원</span></p>
-                <button id="pay_group_function_instant">구매</button>
+                <button id="pay_elite_function_instant">구매</button>
+            </div>
+        </div>
+
+        <div class="payment_function_wrap">
+            <label class="function_label">프리미엄</label>
+            <p>- 베이직 기능 <br>- <span style="color:#fe4e65;text-decoration: underline;">지점 3개</span> 관리자 기능 (지점 관리 및 통계, 직원 관리, 직원 수업 배정)</p>
+            <div class="payment_monthly">
+                <label class="inner_label">정기 결제</label>
+                <p class="inner_explain"><span class="price_before">24,900원</span>
+                                        <span class="price_after"> → 매월 20,000원</span>
+                </p>
+                <button id="pay_premium_function_monthly">정기 결제 구매</button>
+            </div>
+            <div class="seperator"></div>
+            <div class="payment_instant">
+                <label class="inner_label">1개월 이용권</label>
+                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  24,900원</span></p>
+                <button id="pay_premium_function_instant">구매</button>
             </div>
         </div>
 
@@ -194,27 +211,39 @@
             location.href="/trainer/trainer_setting/"
         });
 
-        $('#pay_class_group_function_monthly').click(function(e){
+        $('#pay_basic_function_monthly').click(function(e){
             e.preventDefault();
-            purchase_popup_show('클래스 + 그룹 레슨 - 정기 결제', 'PERIOD', 'CLA/GRO/ADV', 12000);
+            purchase_popup_show('Basic(베이직) - 정기 결제', 'PERIOD', 'CLA/GRO/ADV', 5000);
             //check_payment('클래스 + 그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'CLA/GRO/ADV', 13200);
             //클래스 + 그룹 레슨 정기결제 버튼
         });
-        $('#pay_class_group_function_instant').click(function(e){
+        $('#pay_basic_function_instant').click(function(e){
             e.preventDefault();
-            purchase_popup_show('클래스 + 그룹 레슨 - 1개월 이용권', 'SINGLE', 'CLA/GRO/ADV', 15000);
+            purchase_popup_show('Basic(베이직) - 1개월 이용권', 'SINGLE', 'CLA/GRO/ADV', 6000);
             //check_payment('클래스 + 그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'CLA/GRO/ADV', 16500);
             //클래스 + 그룹 레슨 1개월 결제 버튼
         });
-        $('#pay_group_function_monthly').click(function(e){
+        $('#pay_elite_function_monthly').click(function(e){
             e.preventDefault();
-            purchase_popup_show('그룹 레슨 - 정기 결제', 'PERIOD', 'GRO/ADV', 9000);
+            purchase_popup_show('Elite(엘리트) - 정기 결제', 'PERIOD', 'GRO/ADV', 9000);
             //check_payment('그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'GRO/ADV', 9900);
             //그룹 레슨 정기결제 버튼
         });
-        $('#pay_group_function_instant').click(function(e){
+        $('#pay_elite_function_instant').click(function(e){
             e.preventDefault();
-            purchase_popup_show('그룹 레슨 - 1개월 이용권', 'SINGLE', 'GRO/ADV', 12000);
+            purchase_popup_show('Elite(엘리트) - 1개월 이용권', 'SINGLE', 'GRO/ADV', 12000);
+            //check_payment('그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'GRO/ADV', 13200);
+            //그룹 레슨 1개월 결제 버튼
+        });
+        $('#pay_premium_function_monthly').click(function(e){
+            e.preventDefault();
+            purchase_popup_show('Premium(프리미엄) - 정기 결제', 'PERIOD', 'GRO/ADV', 20000);
+            //check_payment('그룹 레슨 - 정기 결제', 'card', 'PERIOD', 'GRO/ADV', 9900);
+            //그룹 레슨 정기결제 버튼
+        });
+        $('#pay_premium_function_instant').click(function(e){
+            e.preventDefault();
+            purchase_popup_show('Premium(프리미엄) - 1개월 이용권', 'SINGLE', 'GRO/ADV', 24900);
             //check_payment('그룹 레슨 - 1개월 이용권', 'card', 'SINGLE', 'GRO/ADV', 13200);
             //그룹 레슨 1개월 결제 버튼
         });
