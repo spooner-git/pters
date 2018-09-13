@@ -129,6 +129,7 @@
             <div class="explaintype" id="submit_input">
                 <form method="post" action="../../templates/registration" style="text-align: center!important;padding-left: 20px;">
                     {% csrf_token %}
+                    <input type="hidden" name="prev_email" value="" id="prev_email">
                     <input type="hidden" name="member_id" value="{{ request.session.user_id }}">
                     <input type="hidden" name="username" value="{{ request.session.username }}">
                     <input type="hidden" name="member_type" value="re">
@@ -164,44 +165,83 @@
         }
     });
 
-    $('#email_input_form').val("{{ user_email }}");
+    $('#email_input_form, #prev_email').val("{{ user_email }}");
     $('button.submit_email_reconfirm').click(function(){
         //if($('.pw_confirm').attr('data-check') == 1){
         if(!$(this).hasClass('disabled_button')){
             $("#form_email").val($('#email_input_form').val());
-            $form = $('#submit_input form');
-            $.ajax({
-                url:'/login/change_resend_email_authentication/',
-                type:'POST',
-                data: $form.serialize(),
-                dataType : 'html',
+            if($("#form_email").val() != $('#prev_email').val()){
+                console.log("not")
+                $form = $('#submit_input form');
+                $.ajax({
+                    url:'/login/change_resend_email_authentication/',
+                    type:'POST',
+                    data: $form.serialize(),
+                    dataType : 'html',
 
-                beforeSend:function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    beforeSend:function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                        completeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        $('#submit_complete').css('height', '200px');
+                        $('#submit_input').css('height', '0px');
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요");
                     }
-                    beforeSend();
-                },
+                });
+                //}else{
+                //  alert('비밀번호를 다시 확인해주세요')
+                //}
+            }else if($("#form_email").val() == $('#prev_email').val()){
+                console.log("prev")
+                $form = $('#submit_input form');
+                $.ajax({
+                    url:'/login/resend_email_authentication/',
+                    type:'POST',
+                    data: $form.serialize(),
+                    dataType : 'html',
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-                    completeSend();
-                },
+                    beforeSend:function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
 
-                //통신성공시 처리
-                success:function(data){
-                    $('#submit_complete').css('height', '200px');
-                    $('#submit_input').css('height', '0px');
-                },
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                        completeSend();
+                    },
 
-                //통신 실패시 처리
-                error:function(){
-                    alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요");
-                }
-            });
-            //}else{
-            //  alert('비밀번호를 다시 확인해주세요')
-            //}
+                    //통신성공시 처리
+                    success:function(data){
+                        $('#submit_complete').css('height', '200px');
+                        $('#submit_input').css('height', '0px');
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+                        alert("서버 통신 에러가 발생하였습니다. 잠시후 다시 시도해주세요");
+                    }
+                });
+                //}else{
+                //  alert('비밀번호를 다시 확인해주세요')
+                //}
+            }
+            
         }
     });
 
