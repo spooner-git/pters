@@ -220,10 +220,10 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
 
         error = None
         user = None
-        if first_name == '' or first_name is None:
+        if first_name == '' or first_name == 'None' or first_name is None:
             first_name = name
 
-        if last_name == '' or last_name is None:
+        if last_name == '' or last_name == 'None' or last_name is None:
             last_name = ''
 
         try:
