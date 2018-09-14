@@ -27,7 +27,7 @@ img,a,div,span,p{
 	top: 100px;
 }
 	#date .calendar-style{
-		background-color: #ffffff;
+		background-color: #f7f7f7;
 	}
 
 .arrowButton{
@@ -136,7 +136,7 @@ img,a,div,span,p{
 	width: 100%;
 	text-align: center;
 	height: 100%;
-	background-color: #f7f7f7;
+	background-color: #ffffff;
 }
 
 .calendar-day-style{  /*왈화수목금토일 스타일 */
