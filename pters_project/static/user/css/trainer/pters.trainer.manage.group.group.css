@@ -374,7 +374,14 @@ div._groupmanage img._info_delete{
 	margin-top: 10px;
 	cursor: pointer;
 }
-
+@media(max-width:350px){
+	._groupstatus{
+		display: none !important;
+	}
+	._groupmanage img{
+		margin-left: 0 !important;
+	}
+}
 
 @media(max-width: 600px){
 	._groupnum, ._groupmemo, ._groupcreatedate{
@@ -401,8 +408,8 @@ div._groupmanage img._info_delete{
 
 
 	.groupWrap{
-		font-weight: bold;
-		font-size: 13px;
+		font-weight: 500;
+		font-size: 12px;
 	}
 }
 
