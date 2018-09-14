@@ -62,6 +62,9 @@
             .type_explain_selected{
                 display: block;
             }
+            #checkbox1, #checkbox2{
+              -webkit-text-fill-color: #282828 !important;
+            }
         </style>
 
     {% endblock %}
@@ -783,7 +786,8 @@
                 </div>
             </div>
             <div class="contractread_check">
-                <input type="checkbox" name="" id="checkbox1" title="약관 동의"><span style="font-size: 12px;">위 약관에 동의합니다.</span>
+                <input type="checkbox" name="checkbox1" id="checkbox1" title="약관 동의">
+                <span style="font-size: 12px;">위 약관에 동의합니다.</span>
             </div>
             <br/>
             <p class="registerbox_smalllabel">개인정보 처리 방침<button id="open_contract_privacy_text">펼치기 <img src="/static/user/res/btn_next.png"></button></p>
@@ -924,7 +928,7 @@
                 </div>
             </div>
             <div class="contractread_check">
-                <input type="checkbox" name="" id="checkbox2" title="약관 동의"><span style="font-size: 12px;">위 방침에 동의합니다.</span>
+                <input type="checkbox" name="checkbox2" id="checkbox2" title="약관 동의"><span style="font-size: 12px;">위 방침에 동의합니다.</span>
             </div>
 
             <p class="registerbox_smalllabel" style="margin-top:  15px;">가입 유형 선택</p>
@@ -1454,12 +1458,24 @@
             $form.find('#newcity').attr('value',$(this).val());
         });
 
+        $('.contractread_check span').click(function(e){
+            e.stopPropagation();
+            var $checkbox = $(this).siblings('input');
+            console.log($checkbox.is(':checked'))
+            if($checkbox.is(':checked')){
+                $checkbox.prop('checked', false);
+            }else{
+                $checkbox.prop('checked', true);
+            }
+        });
+
 
         $('button#registerMemberFinal').click(function(){
             if($('#checkbox2').is(':checked') && $('#checkbox1').is(':checked')){
                 //document.getElementById('add-member-id-form').submit();
                 var $form = $('#add-member-id-form');
                 var serializeArray = $form.serializeArray();
+                console.log(serializeArray)
                 $.ajax({
                     //url:'/accounts/register/',
                     url:'/login/add_member_info/',

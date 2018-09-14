@@ -471,7 +471,7 @@ function added_member_info_to_jsonformat(){
 
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
-$(document).on('click','div.groupWrap',function(e){
+$(document).on('click', 'div.groupWrap', function(e){
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
@@ -503,6 +503,7 @@ $(document).on('click','div.groupWrap',function(e){
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
     }
 });
+
 //그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
 $(document).on('click', 'div._groupmanage', function(e){
     e.stopPropagation();
