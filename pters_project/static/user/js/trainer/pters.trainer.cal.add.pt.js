@@ -1168,6 +1168,7 @@ $(document).ready(function(){
                     dataType : 'html',
 
                     beforeSend:function(){
+
                         beforeSend(); //ajax 로딩 이미지 출력
                     },
 
