@@ -767,6 +767,10 @@
         $('#legal_popup').fadeOut('fast');
     });
 
+    $('#naverIdLogin').click(function (){
+        window.location.href = "/login/?social_type=naver";
+    });
+
     function goHome(){
         location.href="{% url 'login:logout' %}";
     }
