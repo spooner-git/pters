@@ -154,22 +154,22 @@
         <div class="registerbox_add">
             <div id="global_error_msg"></div>
             <div class="outerbox">
-                <input type="text" name="" maxlength="15" placeholder="성" id="familyname_input">
-                <input type="text" name="" maxlength="15" placeholder="이름" id="lastname_input">
+                <input type="text" name="" maxlength="15" placeholder="성" id="familyname_input"  autocomplete="off">
+                <input type="text" name="" maxlength="15" placeholder="이름" id="lastname_input"  autocomplete="off">
                 <button class="selector_button" data-type="M">남</button>
                 <button class="selector_button" data-type="W">여</button>
             </div>
 
             <div class="outerbox">
-                <input type="text" name="" placeholder="새로운 ID" id="id_input" maxlength="20">
+                <input type="text" name="" placeholder="새로운 ID" id="id_input" maxlength="20"  autocomplete="off">
 {#                <button class="register_button" onclick="check_id();">중복 확인</button>#}
                 <span class="id_confirm"></span>
                 <p class="pw_notice">최소 4자이상 영문, 숫자 그리고 @/./-/_만 가능합니다.</p>
             </div>
 
             <div class="outerbox">
-                <input type="text" name="email_first" placeholder="이메일"  id="email_input"> @
-                <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re" readonly>
+                <input type="text" name="email_first" placeholder="이메일"  id="email_input"  autocomplete="off"> @
+                <input type="text" name="email_last" placeholder="이메일 뒷부분"  id="email_input_re"  autocomplete="off" readonly>
                 <div style="display: inline-block;">
                     <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:15px;margin-left:66px;opacity: 0.5;">
                     <select class="login_dropdown" id="email_option" title="email">
@@ -185,8 +185,8 @@
                 <p class="pw_notice">이메일 인증을 하셔야 정상 가입이 되오니 정확한 이메일을 입력해주세요</p>
             </div>
             <div class="outerbox">
-                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input">
-                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"><span class="pw_confirm"></span>
+                <input type="password" name="" placeholder="새 비밀번호"  id="pw_input"  autocomplete="off">
+                <input type="password" name="" placeholder="비밀번호 확인" id="pw_input_re" style="margin-left: 10px;"  autocomplete="off"><span class="pw_confirm"></span>
                 <p class="pw_notice">비밀번호는 특수문자, 영문 대소문자, 숫자를 혼합하여 8자이상 입력해주세요.</p>
             </div>
 
@@ -971,17 +971,17 @@
         <div style="display: none">
             {{ form.as_p }}
         </div>
-        <input type="hidden" name="id" id="newid2" value="" >
-        <input type="hidden" name="first_name" id="first_name" value="" >
-        <input type="hidden" name="last_name" id="last_name" value="" >
-        <input type="hidden" name="name" id="newname" value="" >
-        <input type="hidden" name="sex" id="newsex" value="" >
-        <input type="hidden" name="birthday" id="newbirth" value="" >
-        <input type="hidden" name="country" id="newcountry" value="" >
-        <input type="hidden" name="address" id="newcity" value="" >
-        <input type="hidden" id="id_duplicate_check" value="none" >
-        <input type="hidden" id="email_duplicate_check" value="none" >
-        <input type="hidden" name="group_type" id="id_group_type" value="trainer">
+        <input type="hidden" name="id" id="newid2" value=""  autocomplete="off">
+        <input type="hidden" name="first_name" id="first_name" value=""  autocomplete="off">
+        <input type="hidden" name="last_name" id="last_name" value=""  autocomplete="off">
+        <input type="hidden" name="name" id="newname" value=""  autocomplete="off">
+        <input type="hidden" name="sex" id="newsex" value=""  autocomplete="off">
+        <input type="hidden" name="birthday" id="newbirth" value=""  autocomplete="off">
+        <input type="hidden" name="country" id="newcountry" value=""  autocomplete="off">
+        <input type="hidden" name="address" id="newcity" value=""  autocomplete="off">
+        <input type="hidden" id="id_duplicate_check" value="none"  autocomplete="off">
+        <input type="hidden" id="email_duplicate_check" value="none"  autocomplete="off">
+        <input type="hidden" name="group_type" id="id_group_type" value="trainer" autocomplete="off">
     </form>
 
 
@@ -1576,7 +1576,7 @@
         function check_email(){
             var $form = $('#add-member-id-form');
             var serializeArray = $form.serializeArray();
-            console.log(serializeArray);
+            console.log(serializeArray)
             $.ajax({
                 url:'/login/check_member_email/',
                 type:'GET',
