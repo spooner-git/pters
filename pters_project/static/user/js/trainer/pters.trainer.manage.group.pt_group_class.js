@@ -1333,12 +1333,12 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
     var groupNum = jsondata.group_id.length;
     var ordernum = 0;
     for(var i=0; i<groupNum; i++){
-        var group_name = jsondata.name[i];
+        var group_name = jsondata.group_name[i];
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
         var group_type_nm = jsondata.group_type_cd_nm[i];
-        var group_createdate = date_format_to_yyyymmdd(jsondata.reg_dt[i].split(' ')[0]+' '+jsondata.reg_dt[i].split(' ')[1]+' '+jsondata.reg_dt[i].split(' ')[2], '-');
-        var group_memo = jsondata.note[i];
+        var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
+        var group_memo = jsondata.group_note[i];
         var group_memberlist = []
         var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];
@@ -1377,9 +1377,9 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
             manageimgs
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
-        if(group_type == "NORMAL"){
+        if(group_type == "EMPTY"){
             htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
-        }else if(group_type == "EMPTY"){
+        }else if(group_type == "NORMAL"){
             htmlToJoin2.push(htmlstart+main+htmlend+repeatlist+memberlist)
         }
         
@@ -1817,3 +1817,59 @@ $('#uptext2_PC').click(function(){
     console.log($('.addByNewRaw').length, $('.addByNewRaw:nth-child(1)').attr('data-name'), $('.addByNewRaw:nth-child(2)').attr('data-name'),$('.addByNewRaw:nth-child(3)').attr('data-name'));
     console.log('그룹원 추가',added_member_info_to_jsonformat());
 });
+
+
+//서버로부터 그룹 목록 가져오기
+function get_member_group_class_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_member_group_class_ing_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //groupListSet('current',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}

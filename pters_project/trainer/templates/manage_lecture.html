@@ -1179,17 +1179,24 @@
         var deleteTypeSelect;
         var alignType = "name";
         var select_all_check = false;
-
-        get_member_ing_list("callback", function(jsondata){
+        get_member_group_class_ing_list("callback", function(jsondata){
             var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
             var member_Html = memberlist.html;
-            var group_class_Html;
+            var group_class_Html = group_class_ListHtml('current', jsondata);
+            $('#currentGroupList').html(group_class_Html);
 
-            get_group_ing_list("callback", function(jsondata){
-                group_class_Html = group_class_ListHtml('current', jsondata);
-                $('#currentGroupList').html(group_class_Html);
-            }); //그룹 + 클래스
         });
+{#        get_member_ing_list("callback", function(jsondata){#}
+{#            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);#}
+{#            var member_Html = memberlist.html;#}
+{#            var group_class_Html;#}
+{##}
+{#            get_group_ing_list("callback", function(jsondata){#}
+{#                group_class_Html = group_class_ListHtml('current', jsondata);#}
+{#                $('#currentGroupList').html(group_class_Html);#}
+{#            }); //그룹 + 클래스#}
+{#        });#}
+
         
 
         $('html,body').click(function(){
