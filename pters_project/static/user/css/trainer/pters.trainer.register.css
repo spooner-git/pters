@@ -85,7 +85,7 @@ body{
 	left: 50%;
 	color: #ffffff;
 	transform: translateX(250%);
-	background: rgba(40, 40, 40, 0.5803921568627451);
+	background: rgba(40, 40, 40, 0.87);
 
 	-webkit-transform: translateX(250%);
 	margin-top: 160px;
@@ -154,6 +154,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	transition: 1s;
 	-webkit-transition: 1s;
 	color: #ffffff;
+	background-color: rgba(40, 40, 40, 0.87);
 }
 
 
@@ -284,7 +285,7 @@ div._step1_label, div._step2_label, div._step3_label{
 .pw_notice{
 	margin-top: 3px;
 	font-size: 11px;
-	color:#fe4e65;
+	color:#ffffff;
 }
 
 .register_button{
@@ -500,7 +501,8 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.promise_wrap{
-		margin-top: 170px;
+		margin-top: 230px;
+		margin-bottom: 200px;
 	}
 
 	.contractread{
