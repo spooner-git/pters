@@ -1899,8 +1899,6 @@ function shiftPtGroupClassList(type){
 }
 
 
-
-
 //간편 가격입력
 function priceInput(price, type, selector){
     var select = '';
@@ -1933,10 +1931,6 @@ $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
     $(this).siblings('input').val(priceInputValue);
     check_dropdown_selected();
 });
-
-
-
-
 
 
 
@@ -1997,7 +1991,7 @@ function birth_dropdown_set(){
 
     $('#birth_year, #birth_month, #birth_date').change(function(){
         $(this).addClass("dropdown_selected");
-        $(this).css('color','#282828');
+        $(this).css('color', '#282828');
         var year = $('#birth_year').val().replace(/년|\\.|年/gi,"");
         var month = $('#birth_month').val().replace(/월|\\.|月/gi,"");
         var date = $('#birth_date').val().replace(/일|日/gi,"");
@@ -2023,7 +2017,7 @@ function grouptype_dropdown_set(grouplistJSON){
     var len = grouplistJSON.group_id.length;
     var optionsToJoin = ['<option value="">1:1 레슨</option>'];
     for(var i=0; i<len; i++){
-        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.name[i]+'</option>');
+        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.group_name[i]+'</option>');
     }
     $('.grouptypeselect').html(optionsToJoin.join(''));
 }
