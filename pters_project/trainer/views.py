@@ -297,12 +297,14 @@ class ManageClassView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageClassView, self).get_context_data(**kwargs)
         return context
 
+
 class ManageCenterView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_center.html'
 
     def get_context_data(self, **kwargs):
         context = super(ManageCenterView, self).get_context_data(**kwargs)
         return context
+
 
 class HelpPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
@@ -313,6 +315,7 @@ class HelpPtersView(AccessTestMixin, TemplateView):
         context['qa_type_data'] = qa_type_list
         return context
 
+
 class FromPtersView(AccessTestMixin, TemplateView):
     template_name = 'setting_from_pters_team.html'
 
@@ -321,6 +324,7 @@ class FromPtersView(AccessTestMixin, TemplateView):
 
         return context
 
+
 class AboutUsView(AccessTestMixin, TemplateView):
     template_name = 'setting_about_us.html'
 
@@ -328,6 +332,7 @@ class AboutUsView(AccessTestMixin, TemplateView):
         context = super(AboutUsView, self).get_context_data(**kwargs)
 
         return context
+
 
 class BGSettingView(AccessTestMixin, View):
     template_name = 'setting_background.html'
@@ -3006,6 +3011,60 @@ class GetGroupMemberRepeatScheduleListViewAjax(LoginRequiredMixin, AccessTestMix
             group_repeat_schedule_info.start_date = str(group_repeat_schedule_info.start_date)
             group_repeat_schedule_info.end_date = str(group_repeat_schedule_info.end_date)
         context['repeat_schedule_data'] = group_repeat_schedule_data
+
+        return context
+
+
+class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/member_group_class_list_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetMemberGroupClassIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+
+        query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, [])
+                                                       ).order_by('-group_type_cd')
+        for group_info in group_data:
+            member_data = []
+            # try:
+            #     type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
+            #     group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
+            # except ObjectDoesNotExist:
+            #     error = '오류가 발생했습니다.'
+            # try:
+            #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
+            #     group_info.state_cd_nm = state_cd_nm.common_cd_nm
+            # except ObjectDoesNotExist:
+            #     error = '오류가 발생했습니다.'
+            lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
+            for lecture_info in lecture_list:
+                try:
+                    member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+                check_add_flag = 0
+                for member_test in member_data:
+                    if member_test.user.id == member_info.member.user.id:
+                        check_add_flag = 1
+
+                if check_add_flag == 0:
+                    member_data.append(member_info.member)
+
+            group_info.group_member_num = len(member_data)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
+        context['group_data'] = group_data
 
         return context
 

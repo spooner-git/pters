@@ -7,13 +7,13 @@
       [{% for group_info in group_data %}"{{ group_info.group_type_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "member_num":
       [{% for group_info in group_data %}"{{ group_info.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "name":
+      "group_name":
       [{% for group_info in group_data %}"{{ group_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "note":
+      "group_note":
       [{% for group_info in group_data %}"{{ group_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "reg_dt":
+      "group_reg_dt":
       [{% for group_info in group_data %}"{{ group_info.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "mod_dt":
+      "group_mod_dt":
       [{% for group_info in group_data %}"{{ group_info.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "state_cd":
       [{% for group_info in group_data %}"{{ group_info.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
