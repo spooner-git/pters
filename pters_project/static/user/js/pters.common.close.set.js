@@ -186,7 +186,7 @@ function close_manage_popup(option){
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         hide_this();
         if(bodywidth < 600){
-            $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
+            $('#page_managemember').css({'height':'100%'});
             base_show();
             base_modify_hide();
         }
@@ -251,7 +251,7 @@ function close_manage_popup(option){
             //$('#page_managemember').show();
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
-            $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
+            $('#page_managemember').css({'height':'100%'});
             $('#float_btn_wrap').show();
             selector_float_btn_member_add.removeClass('rotate_btn');
         }
@@ -276,7 +276,7 @@ function close_manage_popup(option){
             //$('#page_managemember').show();
             $('#page-base').css('display','block');
                 $('#page-base-addstyle').css('display','none');
-            $('#page_managemember').css({'height':'100%','overflow-y':'auto'});
+            $('#page_managemember').css({'height':'100%'});
             $('#float_btn_wrap').show();
             selector_float_btn_group_add.removeClass('rotate_btn');
         }
