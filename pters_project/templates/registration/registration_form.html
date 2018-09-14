@@ -1054,7 +1054,7 @@
 
         $('#local_registration').click(function(){
             //$('#page1_content').fadeIn();
-            $('#select_registration_type_sns_or_local').css('transform','translateX(-250%)');
+            $('#select_registration_type_sns_or_local').css('transform','translate(-250%, -50%)');
 
             var selector_outerbox_horizontal = $('.outerbox_horizontal');
             $('._step1_label').css('transform','translateX(-250%)');
@@ -1233,7 +1233,7 @@
         function goPrev(){
             var selector_outerbox_horizontal = $('.outerbox_horizontal');
             if(selector_outerbox_horizontal.attr('data-view')==0){
-                $('#select_registration_type_sns_or_local').css('transform','translateX(-50%)');
+                $('#select_registration_type_sns_or_local').css('transform','translate(-50%, -50%)');
                 $('._step1_label').css('transform','translateX(-50%)');
                 selector_outerbox_horizontal.css('transform','translateX(-50%)');
                 $('.registerbox_add').css('transform','translateX(250%)');
