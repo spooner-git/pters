@@ -257,6 +257,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context['holiday'] = HolidayTb.objects.filter(use=USE)
         return context
 
+
 class CalTotalView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'cal_total.html'
 
@@ -264,6 +265,7 @@ class CalTotalView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(CalTotalView, self).get_context_data(**kwargs)
         context['holiday'] = HolidayTb.objects.filter(use=USE)
         return context
+
 
 # 단순화 1:1/그룹/클래스 통합 테스트 180828
 class ManageLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -2637,35 +2639,47 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         context = super(GetGroupIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE).order_by('group_type_cd')
-        for group_info in group_data:
-            member_data = []
-            try:
-                type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
-                group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
-            try:
-                state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
-                group_info.state_cd_nm = state_cd_nm.common_cd_nm
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
 
-            lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
-            for lecture_info in lecture_list:
-                try:
-                    member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                check_add_flag = 0
-                for member_test in member_data:
-                    if member_test.user.id == member_info.member.user.id:
-                        check_add_flag = 1
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
-                if check_add_flag == 0:
-                    member_data.append(member_info.member)
-
-            group_info.group_member_num = len(member_data)
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, []),
+                                                       group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd')
+        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE).order_by('group_type_cd')
+        # for group_info in group_data:
+        #     member_data = []
+        #     try:
+        #         type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
+        #         group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
+        #     except ObjectDoesNotExist:
+        #         error = '오류가 발생했습니다.'
+        #     try:
+        #         state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
+        #         group_info.state_cd_nm = state_cd_nm.common_cd_nm
+        #     except ObjectDoesNotExist:
+        #         error = '오류가 발생했습니다.'
+        #
+        #     lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
+        #     for lecture_info in lecture_list:
+        #         try:
+        #             member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
+        #         except ObjectDoesNotExist:
+        #             error = '회원 정보를 불러오지 못했습니다.'
+        #         check_add_flag = 0
+        #         for member_test in member_data:
+        #             if member_test.user.id == member_info.member.user.id:
+        #                 check_add_flag = 1
+        #
+        #         if check_add_flag == 0:
+        #             member_data.append(member_info.member)
+        #
+        #     group_info.group_member_num = len(member_data)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -2684,35 +2698,47 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         context = super(GetGroupEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
-        for group_info in group_data:
-            member_data = []
-            try:
-                type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
-                group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
-            try:
-                state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
-                group_info.state_cd_nm = state_cd_nm.common_cd_nm
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
 
-            lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
-            for lecture_info in lecture_list:
-                try:
-                    member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                check_add_flag = 0
-                for member_test in member_data:
-                    if member_test.user.id == member_info.member.user.id:
-                        check_add_flag = 1
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
-                if check_add_flag == 0:
-                    member_data.append(member_info.member)
-
-            group_info.group_member_num = len(member_data)
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, []),
+                                                       group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd')
+        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
+        # for group_info in group_data:
+        #     member_data = []
+        #     try:
+        #         type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
+        #         group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
+        #     except ObjectDoesNotExist:
+        #         error = '오류가 발생했습니다.'
+        #     try:
+        #         state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
+        #         group_info.state_cd_nm = state_cd_nm.common_cd_nm
+        #     except ObjectDoesNotExist:
+        #         error = '오류가 발생했습니다.'
+        #
+        #     lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
+        #     for lecture_info in lecture_list:
+        #         try:
+        #             member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
+        #         except ObjectDoesNotExist:
+        #             error = '회원 정보를 불러오지 못했습니다.'
+        #         check_add_flag = 0
+        #         for member_test in member_data:
+        #             if member_test.user.id == member_info.member.user.id:
+        #                 check_add_flag = 1
+        #
+        #         if check_add_flag == 0:
+        #             member_data.append(member_info.member)
+        #
+        #     group_info.group_member_num = len(member_data)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3022,50 +3048,29 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         context = super(GetMemberGroupClassIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-
-        query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+        # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, [])
+                                                       state_cd_nm=RawSQL(query_state_cd, []),
+                                                       group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd')
-        for group_info in group_data:
-            member_data = []
-            # try:
-            #     type_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_type_cd)
-            #     group_info.group_type_cd_nm = type_cd_nm.common_cd_nm
-            # except ObjectDoesNotExist:
-            #     error = '오류가 발생했습니다.'
-            # try:
-            #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.state_cd)
-            #     group_info.state_cd_nm = state_cd_nm.common_cd_nm
-            # except ObjectDoesNotExist:
-            #     error = '오류가 발생했습니다.'
-            lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id, use=USE)
-            for lecture_info in lecture_list:
-                try:
-                    member_info = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-                except ObjectDoesNotExist:
-                    error = '회원 정보를 불러오지 못했습니다.'
-                check_add_flag = 0
-                for member_test in member_data:
-                    if member_test.user.id == member_info.member.user.id:
-                        check_add_flag = 1
-
-                if check_add_flag == 0:
-                    member_data.append(member_info.member)
-
-            group_info.group_member_num = len(member_data)
+        member_data = func_get_member_ing_list(class_id, self.request.user.id)
+        context['member_data'] = member_data
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
         context['group_data'] = group_data
-
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
         return context
 
 

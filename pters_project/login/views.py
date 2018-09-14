@@ -343,12 +343,6 @@ class NewMemberSnsInfoView(TemplateView):
         context['sns_id'] = self.request.POST.get('sns_id')
         context['sns_type'] = self.request.POST.get('sns_type')
         context['sex'] = self.request.POST.get('sex')
-        try:
-            user_info = User.objects.get(username=context['username'])
-            group = user_info.groups.get(user=user_info.id)
-            context['group_type'] = group.name
-        except ObjectDoesNotExist:
-            context['group_type'] = ''
 
         return render(request, self.template_name, context)
 

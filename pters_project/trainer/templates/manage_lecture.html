@@ -1187,6 +1187,8 @@
 
         });
 {#        get_member_ing_list("callback", function(jsondata){#}
+{#            var start_time = new Date().getTime();#}
+{#            console.log(start_time);#}
 {#            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);#}
 {#            var member_Html = memberlist.html;#}
 {#            var group_class_Html;#}
@@ -1194,6 +1196,9 @@
 {#            get_group_ing_list("callback", function(jsondata){#}
 {#                group_class_Html = group_class_ListHtml('current', jsondata);#}
 {#                $('#currentGroupList').html(group_class_Html);#}
+{#                var end_time = new Date().getTime();#}
+{#                console.log(end_time);#}
+{#                console.log(end_time-start_time);#}
 {#            }); //그룹 + 클래스#}
 {#        });#}
 
