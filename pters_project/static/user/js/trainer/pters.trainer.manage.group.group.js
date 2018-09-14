@@ -1002,7 +1002,6 @@ function modify_group_status(group_id, option){
 
 //그룹 목록을 화면에 뿌리기
 function groupListSet(option, jsondata){ //option : current, finished
-    console.log("groupListSet",jsondata)
     switch(option){
         case 'current':
             var $membernum = $('#memberNumber_current_group')
