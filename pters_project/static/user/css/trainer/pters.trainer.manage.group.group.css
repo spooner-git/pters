@@ -254,6 +254,11 @@ img.substract_addedMember{
 ._grouppartystatus{
 	width: 14%;
 }
+.group_member_current_num{
+	width: 40%;
+	display: inline-block;
+	text-align: right;
+}
 ._groupstatus span{
 	font-size: 12px;
 }
