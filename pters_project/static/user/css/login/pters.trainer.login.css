@@ -221,7 +221,7 @@ nav.main_nav{
 	top: 0;
 	left: 0;
 	background-color: #282828;
-	opacity: 0.6;
+	opacity: 0.4;
 	z-index: -1;
 	border-radius: 2px;
 }
@@ -331,6 +331,9 @@ nav.main_nav{
 	font-size: 18px !important;
 	font-weight: bold;
 }
+.innerbox > a > div:hover{
+	color: #fe4e65 !important;
+}
 
 
 /*Bootstrap 상속 수정*/
@@ -356,6 +359,7 @@ nav.main_nav{
 }
 
 .btn-primary:hover{
+	color: #ffffff !important;
 	background-color: transparent !important;
 	border-color: #ffffff !important;
 	border-radius: 0px !important;
@@ -451,8 +455,8 @@ nav.main_nav{
 		height: 100%;
 		top: 0;
 		left: 0;
-		background-color: #ffffff;
-		opacity: 0.15;
+		/*background-color: #ffffff;
+		opacity: 0.15;*/
 		z-index: -1;
 	}
 

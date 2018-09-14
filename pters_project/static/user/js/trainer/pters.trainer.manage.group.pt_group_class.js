@@ -697,7 +697,7 @@ function get_group_ing_list(use, callback){
                 if(use == "callback"){
                     callback(jsondata);
                 }else{
-                    //groupListSet('current',jsondata)
+                    //group_class_ListHtml('current',jsondata)
                 }
 
                 console.log('success');
@@ -753,7 +753,7 @@ function get_group_end_list(use, callback){
                 if(use == "callback"){
                     callback(jsondata);
                 }else{
-                    //groupListSet('finished',jsondata)
+                    //group_class_ListHtml('finished',jsondata)
                 }
 
                 console.log('success');
@@ -815,9 +815,9 @@ function delete_group_from_list(group_id){
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 if($('#currentGroupList').css('display') == "block"){
-                    groupListSet('current', jsondata);
+                    group_class_ListHtml('current', jsondata);
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    groupListSet('finished', jsondata);
+                    group_class_ListHtml('finished', jsondata);
                 }
 
                 console.log('success');
@@ -866,7 +866,7 @@ function delete_groupmember_from_grouplist(use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 get_group_ing_list("callback", function(json){
-                    groupListSet('current', json);
+                    group_class_ListHtml('current', json);
                 });
                 console.log('success');
                 if(use == "callback"){
@@ -924,9 +924,9 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 if($('#currentGroupList').css('display') == "block"){
-                    groupListSet('current', jsondata);
+                    group_class_ListHtml('current', jsondata);
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    groupListSet('finished', jsondata);
+                    group_class_ListHtml('finished', jsondata);
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true);
                 $('img._info_cancel').hide();
@@ -996,14 +996,14 @@ function modify_group_status(group_id, option){
 
                 if($('#currentGroupList').css('display') == "block"){
                     get_group_ing_list("callback", function(json){
-                        groupListSet('current', json);
+                        group_class_ListHtml('current', json);
                     });
-                    //groupListSet('current',jsondata)
+                    //group_class_ListHtml('current',jsondata)
                 }else if($('#finishedGroupList').css('display') == "block"){
                     get_group_end_list("callback", function(json){
-                        groupListSet('finished', json);
+                        group_class_ListHtml('finished', json);
                     });
-                    //groupListSet('finished',jsondata)
+                    //group_class_ListHtml('finished',jsondata)
                 }
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
 
@@ -1280,14 +1280,14 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var resultToAppend = arrayResult.join("");
 
     if(type=='current' && len == 0){
-        resultToAppend = '<div class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
+        resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
         if(bodywidth > 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();
         }
     }else if(type=="finished" && len == 0){
-        resultToAppend = '<div class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</div>';
+        resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</div>';
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;
     //$tabletbody.remove();
