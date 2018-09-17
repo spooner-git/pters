@@ -431,7 +431,7 @@
                 </div> -->
                 
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:lecture_manage' %}" class="centermenu_text text-lecturemanage">수업 관리</a>
+                    <a href="{% url 'trainer:lecture_manage' %}" class="centermenu_text text-lecturemanage"></a>
                 </div> 
 
                 
@@ -467,7 +467,7 @@
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
                 <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="text-nameAttach"></span></span>
             </div>
-            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'"></span>
+            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
             
             <div class="pcver-slide-menu_class">
@@ -857,7 +857,7 @@ function playSound() {
         "workEndTime":worktimeEnd,
 
         "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan",         //Korea, Japan, English, Chinese
+        "location" : "Korea",         //Korea, Japan, English, Chinese
 
         "auth_group":1,
         "auth_class":1,
