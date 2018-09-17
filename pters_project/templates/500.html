@@ -53,7 +53,7 @@
             <img src="/static/user/res/stopmark.png">
             <p>{% trans "처리중 오류가 발생했습니다. <br> 500. That’s an error." %}</p>
             <a href="{% url 'index' %}"><button>처음으로</button></a>
-            <a href="{% url 'index' %}"><button>로그아웃</button></a>
+            <a href="{% url 'login:logout' %}"><button>로그아웃</button></a>
         </div>
     </div>
 {% endblock %}
