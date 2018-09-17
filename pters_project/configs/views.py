@@ -23,7 +23,6 @@ def index(request):
         next_page = ''
 
     if next_page == '':
-        logout(request)
         return render(request, template_name)
     else:
         return redirect(next_page)
