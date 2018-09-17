@@ -65,12 +65,26 @@
                 margin-bottom: 20px;
             }
             #promote_1 .loginbox{
-                top: 41%;
+                top: 30%;
                 z-index: 1500;
             }
             #promote_1 #login-form button{
                 width: 100%;
                 margin-top: 5px !important;
+            }
+            #promote_1 .pters_login_input{
+                width: 100%;
+                max-width: 300px;
+            }
+            #idimg, #pwimg{
+                display: none;
+            }
+            #promote_1 .loginboxstyle{
+                display: inline-block;
+                width: 50%;
+            }
+            .explain_main_sublabel{
+                display: none;
             }
             nav.upperbar span{
                 display: none;
@@ -80,7 +94,10 @@
                     display: block;
                     left: 10%;
                     transform: translateY(-50%);
-                } 
+                }
+                #idimg, #pwimg{
+                    display: inline-block;
+                }
                 #promote_1 .explain_wrap{
                     top: 50%;
                     height: unset;
@@ -94,6 +111,9 @@
                 }
                 #promote_1 .loginbox{
                     top: 50%;
+                }
+                .explain_main_sublabel{
+                    display: block;
                 }
             }
             
@@ -189,8 +209,8 @@
 
                     <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
 
-                    <p>예약과 일정 관리는 쉽고 빠르게</p>
-                    <p>만족도는 업!</p>
+                    <p class="explain_main_sublabel">예약과 일정 관리는 쉽고 빠르게</p>
+                    <p class="explain_main_sublabel">만족도는 업!</p>
 
                 </div>
                 <div class="gotoSignIn_pc">
