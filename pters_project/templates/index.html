@@ -30,6 +30,8 @@
 
         <meta name="login" content="trainer_login">
         <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
+        <!-- <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %} > -->
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
@@ -38,7 +40,63 @@
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
         <style type="text/css">
-
+            .loginbox{
+                display: block;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #promote_1 .explain_wrap{
+                top: 50%;
+                height: 100%;
+            }
+            #promote_1 .explain_main{
+                height: 100%;
+                padding-top: 40px;
+            }
+            #promote_1 .gotoSignIn{
+                height: auto;
+                margin-bottom: 5px;
+            }
+            #promote_1 .gotoSignIn a{
+                display: none;
+            }
+            #promote_1 .logo_label{
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            #promote_1 .loginbox{
+                top: 41%;
+                z-index: 1500;
+            }
+            #promote_1 #login-form button{
+                width: 100%;
+                margin-top: 5px !important;
+            }
+            nav.upperbar span{
+                display: none;
+            }
+            @media(min-width:1024px){
+               .loginbox{
+                    display: block;
+                    left: 10%;
+                    transform: translateY(-50%);
+                } 
+                #promote_1 .explain_wrap{
+                    top: 50%;
+                    height: unset;
+                }
+                #promote_1 .explain_main{
+                    height: 305px;
+                }
+                #promote_1 .logo_label{
+                    margin-top: 50px;
+                    margin-bottom: 50px;
+                }
+                #promote_1 .loginbox{
+                    top: 50%;
+                }
+            }
+            
 
         </style>
 
@@ -73,6 +131,57 @@
 
     <div class="album_wrap" id="album_wrap">
         <div class="album" id="promote_1">
+            <div class="loginbox">
+                <!-- <div class="logintext">
+                    <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"  onclick="location.href='{% url 'index' %}'"><span id="logintext">로그인</span></div>
+                </div> -->
+                <div id="loginboxbg">
+                </div>
+                <div>
+                    <form action="{% url 'login:login' %}" id="login-form" method="post">
+                        {% csrf_token %}
+                        <div id="idinput" class="pters_login_input">
+                            <img id="idimg" alt="피터스 아이디" src={% static_url "user/res/login/icon-user.png" %}>
+                            <input type="text" class="loginboxstyle form-control" name="username" id="username_id" placeholder="아이디" autofocus>
+                        </div>
+                        <div id="pwinput" style="margin-top:5%;"  class="pters_login_input">
+                            <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
+                            <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
+                        </div>
+                        <div class="checkbox" style="margin-top:15px;margin-left:27px;"  class="pters_login_input">
+                            <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
+                        </div>
+                        <div  class="pters_login_input">
+                            <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
+                        </div>
+                        <!-- 네이버아이디로로그인 버튼 노출 영역 -->
+                        <div id="naverIdLogin"></div>
+                        <!-- //네이버아이디로로그인 버튼 노출 영역 -->
+
+                        <!-- 구글아이디로그인 버튼 노출 영역 -->
+                        <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div> -->
+                        <!-- //구글아이디로그인 버튼 노출 영역 -->
+
+                        <!-- 페이스북아이디로그인 버튼 노출 영역 -->
+                        <!-- <fb:login-button
+                          scope="public_profile, email" onlogin="checkLoginState();" class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="text-align: center;display: block">
+                        </fb:login-button> -->
+                        <!-- //페이스북아이디로그인 버튼 노출 영역 -->
+
+
+                        <input type="hidden" name="keyword" id="keyword">
+                        <div class="innerbox">
+                            <a href="{% url 'registration_register' %}"><div id="registerButton">회원 가입</div></a>
+                            <div class="seperate_bar"></div>
+                            <a href="{% url 'auth_password_reset' %}"><div id="findIDPW">PW 초기화</div></a>
+                        </div>
+                        <input type="hidden" name="next_page" value = '{% url 'index' %}'>
+                    </form>
+                </div>
+            </div>
+
+
+
             <div class="explain_wrap">
                 <div class="explain_main">
                     <h2>세상에서 가장 쉬운</h2>
@@ -82,6 +191,7 @@
 
                     <p>예약과 일정 관리는 쉽고 빠르게</p>
                     <p>만족도는 업!</p>
+
                 </div>
                 <div class="gotoSignIn_pc">
                     <a href="/accounts/register/"><button>가입하기</button></a>
@@ -311,6 +421,7 @@
     <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
     <script>
         var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
         if(varUA.match('android') != null){
@@ -494,6 +605,21 @@
             return cookieValue;
         }
         var csrftoken = getCookie('csrftoken');
+
+        // <!-- 네이버아디디로로그인 초기화 Script -->
+        var naverLogin = new naver.LoginWithNaverId(
+            {
+                clientId: "h5MuvYzSFLlrFTs19g0V",
+    {#          callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
+                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",
+                isPopup: false, /* 팝업을 통한 연동처리 여부 */
+                loginButton: {color: "green", type: 3, height: 39} /* 로그인 버튼의 타입을 지정 */
+            }
+        );
+
+        /* 설정정보를 초기화하고 연동을 준비 */
+        naverLogin.init();
+        // <!--  네이버아이디로로그인 초기화 Script -->
 
     </script>
 {% endblock %}
