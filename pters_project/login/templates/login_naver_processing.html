@@ -22,7 +22,9 @@
         <input type="hidden" name="username" id="id_username">
         <input type="hidden" name="social_login_check" id="id_social_login_check" value="1">
         <input type="hidden" name="social_login_type" value="NAVER">
+        <input type="hidden" name="social_login_id" id="id_social_login_id" value="">
         <input type="hidden" name="auto_login_check" value="1">
+        <input type="hidden" name="social_accessToken" id="id_accessToken" value="" >
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
 
@@ -33,6 +35,7 @@
         <input type="hidden" name="name" id="id_sns_name">
         <input type="hidden" name="sns_id" id="id_new_sns_id">
         <input type="hidden" name="sns_type" value="NAVER">
+        <input type="hidden" name="social_accessToken" id="id_accessToken1" value="" >
         <input type="hidden" name="sex" id="id_sns_sex">
     </form>
 
@@ -44,6 +47,7 @@
         <input type="hidden" name="sns_id" id="id_new_sns_id2">
         <input type="hidden" name="sns_type" value="NAVER">
         <input type="hidden" name="sex" id="id_sns_sex2">
+        <input type="hidden" name="social_accessToken" id="id_accessToken2" value="" >
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
 
@@ -56,11 +60,33 @@
 
 	<!-- (2) LoginWithNaverId Javscript 설정 정보 및 초기화 -->
 	<script>
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
 		var naverLogin = new naver.LoginWithNaverId(
 			{
-                clientId: "h5MuvYzSFLlrFTs19g0V",
-                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",
-{#                callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
+{#                clientId: "h5MuvYzSFLlrFTs19g0V",#}
+{#                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",#}
+                clientId: "VM6zl0mLyBgjf9dgw1cC",
+                callbackUrl: "http://localhost:8000/login/login_simple_naver/",
 				isPopup: false,
 				callbackHandle: true
 				/* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */
@@ -69,9 +95,9 @@
 
 		/* (3) 네아로 로그인 정보를 초기화하기 위하여 init을 호출 */
 		naverLogin.init();
-
 		/* (4) Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close) */
 		window.addEventListener('load', function () {
+
 			naverLogin.getLoginStatus(function (status) {
 				if (status) {
 					/* (5) 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크 */
@@ -79,6 +105,9 @@
 					var name = naverLogin.user.getName();
 					var sns_id = naverLogin.user.getId();
 					var sex = naverLogin.user.getGender();
+					var access_token = naverLogin.accessToken;
+
+					access_token = encodeURIComponent(access_token).split('.')[1];
                     $('#id_email').attr('value', email);
                     $('#id_username').attr('value', email);
                     $('#id_sns_id').attr('value', sns_id);
@@ -95,7 +124,12 @@
                     $('#id_new_sns_id2').attr('value', sns_id);
                     $('#id_sns_sex2').attr('value', sex);
 
+                    $('#id_social_login_id').attr('value', sns_id);
+                    $('#id_accessToken').attr('value', access_token);
+                    $('#id_accessToken1').attr('value', access_token);
+                    $('#id_accessToken2').attr('value', access_token);
                     check_sns_member_info();
+
 					if( email == undefined || email == null) {
 						alert("이메일은 필수정보입니다. 정보제공을 동의해주세요.");
 						/* (5-1) 사용자 정보 재동의를 위하여 다시 네아로 동의페이지로 이동함 */
@@ -133,25 +167,25 @@
                     var jsondata = JSON.parse(data);
                     var id_check_message = jsondata.id_check_result;
                     var id_username = jsondata.id_username;
-                    if(id_check_message == '0'){
+{#                    if(id_check_message == '0'){#}
 {#                        console.log('회원 아님');#}
-                        document.getElementById('new-member-sns-form').submit();
-                    }else if(id_check_message == '1'){
+{#                        document.getElementById('new-member-sns-form').submit();#}
+{#                    }else if(id_check_message == '1'){#}
 {#                        console.log('SNS 회원');#}
-                        $('#id_username').attr('value', id_username);
-                        $('#id_social_login_check').attr('value', '1');
-                        document.getElementById('login-form').submit();
-                    }
-                    else{
-                        $('#id_username2').attr('value', id_username);
+{#                        $('#id_username').attr('value', id_username);#}
+{#                        $('#id_social_login_check').attr('value', '1');#}
+{#                        document.getElementById('login-form').submit();#}
+{#                    }#}
+{#                    else{#}
+{#                        $('#id_username2').attr('value', id_username);#}
 {#                        $('#id_social_login_check2').attr('value', '1');#}
 {#                        console.log('기존 회원');#}
-                        if (confirm('기존 PTERS ID와 네이버 아이디와 연동하시겠습니까?')) {
-                            document.getElementById('old-member-sns-form').submit();
-                        } else {
-                            window.location.replace('/login/');
-                        }
-                    }
+{#                        if (confirm('기존 PTERS ID와 네이버 아이디와 연동하시겠습니까?')) {#}
+{#                            document.getElementById('old-member-sns-form').submit();#}
+{#                        } else {#}
+{#                            window.location.replace('/');#}
+{#                        }#}
+{#                    }#}
                 },
 
                 //보내기후 팝업창 닫기
@@ -163,7 +197,7 @@
                 error:function(){
                     alert("에러: 서버 통신 실패")
                 }
-            })
+            });
         }
 
 	</script>
