@@ -34,7 +34,7 @@ $(document).ready(function(){
     var currentHour = date.getHours();
     var currentMinute = date.getMinutes();
 
-    $("#datepicker, #datepicker_repeat_start, #datepicker_repeat_end").datepicker({
+    $("#datepicker").datepicker({
         //minDate : 0,
         onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
@@ -44,13 +44,9 @@ $(document).ready(function(){
                 $(this).parent('p').addClass("dropdown_selected");
                 var selector_timeGraph = $('#timeGraph');
                 var selector_datepicker = $("#datepicker");
-                var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
-                var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
                 if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-                    //$("#id_training_date").val($("#datepicker").val()).submit();
                     $("#id_training_date, #id_training_end_date").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
-                        //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
                     }
                     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
@@ -58,43 +54,64 @@ $(document).ready(function(){
                     $('#durations_mini, #durations_mini').html('');
                     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft');
                     ajaxTimeGraphSet(selector_datepicker.val());
-                    /*
-                     timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
-                     timeGraphSet("group","pink","AddClass", initialJSON);
-                     timeGraphSet("off","grey","AddClass", initialJSON)
-                     */
-                    //startTimeSet('class');
                 }else if(addTypeSelect =="offadd"){
-                    //$("#id_training_date_off").val($("#datepicker").val()).submit();
                     $("#id_training_date_off, #id_training_end_date_off").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
-                        //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
                     }
                     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
                     clear_start_dur_dropdown();
-                    /*ajaxTimeGraphSet($('#datepicker').val(), function(){
-                     startTimeSet('class');
-                     })*/
                     $('#durations_mini, #durations_mini').html('');
                     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft');
                     ajaxTimeGraphSet(selector_datepicker.val());
-                    /*
-                     timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
-                     timeGraphSet("group","pink","AddClass", initialJSON);
-                     timeGraphSet("off","grey","AddClass", initialJSON)
-                     */
-                    //startTimeSet('class');
-                }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-                    selector_datepicker_repeat_end.datepicker('option', 'minDate', selector_datepicker_repeat_start.val());
-                    selector_datepicker_repeat_start.datepicker('option', 'maxDate', selector_datepicker_repeat_end.val());
+                }
+                check_dropdown_selected_addplan();
+            }
+        }
+    });
+
+    $("#datepicker_repeat_start").datepicker({
+        //minDate : 0,
+        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+                $(this).css({
+                                        "-webkit-text-fill-color":'#282828'
+                            });
+                $(this).parent('p').addClass("dropdown_selected");
+                var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
+                var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
+                if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                     $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_start.val());
                 }else if(addTypeSelect == "repeatoffadd"){
-                    selector_datepicker_repeat_end.datepicker('option', 'minDate', selector_datepicker_repeat_start.val());
-                    selector_datepicker_repeat_start.datepicker('option', 'maxDate', selector_datepicker_repeat_end.val());
                     $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_start.val());
+                }
+                check_dropdown_selected_addplan();
+            }
+        }
+    });
+
+    $("#datepicker_repeat_end").datepicker({
+        //minDate : 0,
+        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+                $(this).css({
+                                        "-webkit-text-fill-color":'#282828'
+                            });
+                $(this).parent('p').addClass("dropdown_selected");
+                var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
+                var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
+                if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
+                    $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
+                    $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_end.val());
+                }else if(addTypeSelect == "repeatoffadd"){
+                    $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
+                    $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_end.val());
                 }
                 check_dropdown_selected_addplan();
             }
@@ -1918,8 +1935,9 @@ function ajaxTimeGraphSet(date, use, callback){
         data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             beforeSend();
+            pters_option_inspector(xhr, today_form);
         },
 
         success:function(data){
