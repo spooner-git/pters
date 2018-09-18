@@ -61,32 +61,13 @@
 	<!-- (2) LoginWithNaverId Javscript 설정 정보 및 초기화 -->
 	<script>
 
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        var csrftoken = getCookie('csrftoken');
+
 		var naverLogin = new naver.LoginWithNaverId(
 			{
-{#                clientId: "h5MuvYzSFLlrFTs19g0V",#}
-{#                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",#}
-                clientId: "VM6zl0mLyBgjf9dgw1cC",
-                callbackUrl: "http://localhost:8000/login/login_simple_naver/",
+                clientId: "h5MuvYzSFLlrFTs19g0V",
+                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",
+{#                clientId: "VM6zl0mLyBgjf9dgw1cC",#}
+{#                callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
 				isPopup: false,
 				callbackHandle: true
 				/* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */
@@ -167,25 +148,25 @@
                     var jsondata = JSON.parse(data);
                     var id_check_message = jsondata.id_check_result;
                     var id_username = jsondata.id_username;
-{#                    if(id_check_message == '0'){#}
-{#                        console.log('회원 아님');#}
-{#                        document.getElementById('new-member-sns-form').submit();#}
-{#                    }else if(id_check_message == '1'){#}
-{#                        console.log('SNS 회원');#}
-{#                        $('#id_username').attr('value', id_username);#}
-{#                        $('#id_social_login_check').attr('value', '1');#}
-{#                        document.getElementById('login-form').submit();#}
-{#                    }#}
-{#                    else{#}
-{#                        $('#id_username2').attr('value', id_username);#}
-{#                        $('#id_social_login_check2').attr('value', '1');#}
-{#                        console.log('기존 회원');#}
-{#                        if (confirm('기존 PTERS ID와 네이버 아이디와 연동하시겠습니까?')) {#}
-{#                            document.getElementById('old-member-sns-form').submit();#}
-{#                        } else {#}
-{#                            window.location.replace('/');#}
-{#                        }#}
-{#                    }#}
+                    if(id_check_message == '0'){
+                        console.log('회원 아님');
+                        document.getElementById('new-member-sns-form').submit();
+                    }else if(id_check_message == '1'){
+                        console.log('SNS 회원');
+                        $('#id_username').attr('value', id_username);
+                        $('#id_social_login_check').attr('value', '1');
+                        document.getElementById('login-form').submit();
+                    }
+                    else{
+                        $('#id_username2').attr('value', id_username);
+                        $('#id_social_login_check2').attr('value', '1');
+                        console.log('기존 회원');
+                        if (confirm('기존 PTERS ID와 네이버 아이디와 연동하시겠습니까?')) {
+                            document.getElementById('old-member-sns-form').submit();
+                        } else {
+                            window.location.replace('/');
+                        }
+                    }
                 },
 
                 //보내기후 팝업창 닫기
