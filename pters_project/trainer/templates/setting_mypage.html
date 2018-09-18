@@ -264,6 +264,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
+{#        var social_login_type = '{{ social_login_type }}';#}
 
         if($('body').width()<600){
             $('#page-base').css('display', 'none');
@@ -272,7 +273,6 @@
             $('#uptext').text("마이페이지");
             $('#upbutton-modify').hide();
         }
-
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
             location.href="/trainer/trainer_setting/";
@@ -296,6 +296,8 @@
 
             $('body').css('overflow-y', 'hidden');
             $('#shade_caution').show();
+            naverLogout();
+
         });
 
         $('#btn_close_how_to_disconnect_sns_login').click(function(){
@@ -646,6 +648,63 @@
             }else if(option == "payment_history"){
                 location.href = "/payment/payment_history/";
             }
+        }
+
+        function naverLogout(){
+
+            $.ajax({
+
+                url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=VM6zl0mLyBgjf9dgw1cC&client_secret=gGI681B6TR&access_token='+social_accessToken+'&service_provider=NAVER',
+                type:'GET',
+                dataType:'json',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                },
+
+                //통신 실패시 처리
+                error:function(){
+
+                }
+            });
+
+            $.ajax({
+                url:'/login/delete_sns_info/',
+                type:'POST',
+                data : {"sns_id":social_login_id, "sns_type":social_login_type},
+                dataType : 'html',
+
+                beforeSend:function(xhr, settings){
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                    beforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata);
+{#                    window.location.reload();#}
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                },
+
+                //통신 실패시 처리
+                error:function(){
+
+                }
+            });
         }
 
     </script>

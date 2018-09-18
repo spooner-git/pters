@@ -1,6 +1,7 @@
 import logging
 import random
 
+import httplib2
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, Group
@@ -58,21 +59,30 @@ def login_trainer(request):
     social_login_check = request.POST.get('social_login_check', '0')
     social_login_type = request.POST.get('social_login_type', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
+    social_login_id = request.POST.get('social_login_id', '')
+    social_accessToken = request.POST.get('social_accessToken', '')
+
     next_page = request.POST.get('next_page')
     error = None
     if next_page == '':
         next_page = '/trainer/'
     if next_page is None:
         next_page = '/trainer/'
+
     request.session['push_token'] = ''
     request.session['social_login_check'] = social_login_check
     request.session['social_login_type'] = social_login_type
+    request.session['social_login_id'] = social_login_id
+    request.session['social_accessToken'] = social_accessToken
+
     if not error:
         # if password == 'kakao_login':
         #     user = authenticate(username=username)
         # else:
         if social_login_check == '0':
             request.session['social_login_type'] = ''
+            request.session['social_login_id'] = ''
+            request.session['social_accessToken'] = ''
             user = authenticate(username=username, password=password)
         else:
             try:
@@ -116,7 +126,7 @@ def login_trainer(request):
         return redirect(next_page)
 
 
-class LoginSimpleNaverView(TemplateView):
+class LoginSimpleNaverView(View):
     template_name = 'login_naver_processing.html'
 
     def get_context_data(self, **kwargs):
@@ -217,6 +227,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
         sns_type = request.POST.get('sns_type', 'naver')
         auto_login_check = request.POST.get('auto_login_check', '1')
         group_type = request.POST.get('group_type', 'trainer')
+        social_accessToken = request.POST.get('social_accessToken', '')
 
         error = None
         user = None
@@ -253,6 +264,9 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                     login(request, user)
                     request.session['social_login_check'] = '1'
                     request.session['social_login_type'] = sns_type
+                    request.session['social_login_id'] = sns_id
+                    request.session['social_accessToken'] = social_accessToken
+
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
                     return redirect('/trainer/')
@@ -284,8 +298,9 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
         email = request.POST.get('email', '')
         name = request.POST.get('name', '')
         sns_id = request.POST.get('sns_id', '')
-        sns_type = request.POST.get('sns_type', 'naver')
+        sns_type = request.POST.get('sns_type', 'NAVER')
         auto_login_check = request.POST.get('auto_login_check', '1')
+        social_accessToken = request.POST.get('social_accessToken', '')
 
         error = None
         user = None
@@ -304,10 +319,15 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
                     sns_info = SnsInfoTb(member_id=user.id, sns_id=sns_id, sns_type=sns_type,
                                          sns_name=name, sns_connect_date=timezone.now(), use=USE)
                     sns_info.save()
+                    user.is_active = 1
+                    user.save()
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
                     login(request, user)
                     request.session['social_login_check'] = '1'
                     request.session['social_login_type'] = sns_type
+                    request.session['social_login_id'] = sns_id
+                    request.session['social_accessToken'] = social_accessToken
+
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
                     return redirect('/trainer/')
@@ -325,6 +345,45 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
 
         if error is not None:
             logger.error(name+'['+email+']'+error)
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
+class DeleteSnsInfoView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+
+        sns_id = request.POST.get('sns_id')
+        sns_type = request.POST.get('sns_type')
+        error = None
+        sns_info = None
+        try:
+            sns_info = SnsInfoTb.objects.get(sns_id=sns_id, sns_type=sns_type, use=USE)
+        except ObjectDoesNotExist:
+            error = '이미 연동해제가 완료됐습니다.'
+
+        if error is None:
+            try:
+                with transaction.atomic():
+                    sns_info.use = UN_USE
+                    sns_info.save()
+                    request.session['social_login_check'] = '0'
+                    request.session['social_login_type'] = ''
+                    request.session['social_login_id'] = ''
+                    request.session['social_accessToken'] = ''
+
+            except ValueError:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError:
+                error = '등록 값에 문제가 있습니다.'
+            except ValidationError:
+                error = '등록 값에 문제가 있습니다.'
+
+        if error is not None:
             messages.error(request, error)
 
         return render(request, self.template_name)
@@ -1213,4 +1272,5 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     context['error'] = error
 
     return context
+
 

@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'^add_new_member_sns_info/$', views.AddNewMemberSnsInfoView.as_view(), name='add_new_member_sns_info'),
     # sns 회원가입 처리
     url(r'^add_old_member_sns_info/$', views.AddOldMemberSnsInfoView.as_view(), name='add_old_member_sns_info'),
+    # sns 연결 해제 처리
+    url(r'^delete_sns_info/$', views.DeleteSnsInfoView.as_view(), name='delete_sns_info'),
 
     # sns 회원가입 체크
     url(r'^check_sns_member_info/$', views.CheckSnsMemberInfoView.as_view(), name='check_sns_member_info'),
