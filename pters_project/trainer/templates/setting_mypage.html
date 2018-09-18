@@ -692,11 +692,12 @@
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-{#                    window.location.reload();#}
+                    window.location.reload();
                 },
 
                 //보내기후 팝업창 닫기
                 complete:function(){
+
                 },
 
                 //통신 실패시 처리
