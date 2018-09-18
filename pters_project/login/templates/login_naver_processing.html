@@ -148,7 +148,6 @@
                     var jsondata = JSON.parse(data);
                     var id_check_message = jsondata.id_check_result;
                     var id_username = jsondata.id_username;
-                    alert(id_check_message)
                     if(id_check_message == '0'){
                         console.log('회원 아님');
                         document.getElementById('new-member-sns-form').submit();
