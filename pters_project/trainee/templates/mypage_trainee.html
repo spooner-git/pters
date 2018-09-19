@@ -4,9 +4,21 @@
 {% block local_css %}
 
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.mypage.css" %}>
-
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
-{% endblock %}
+    <style type="text/css">
+        .NAVER{
+            font-weight: 500 !important;
+            color: #2DB400; 
+        }
+        .Facebook{
+            font-weight: 500 !important;
+            color: #3b5998;
+        }
+        .Google{
+            font-weight: 500 !important;
+            color: #4285f4;
+        }
+    </style>
 
 {% block content %}
     <div id="popup_how_to_disconnect_sns_login" class="popups">
