@@ -158,34 +158,11 @@
 
 {% block footer %}
     <footer class="fixfooter bottomzero">
-        <!--
-            <div class="bottomfooter1">
-                <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
-                    <input type="hidden" name = "next_page" value="/trainer/trainer_main">
-                </form>
-                <span class="language_set" onclick="languageSet('ENG')">English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('KOR')">한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('JPN')">日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            </div>
-            -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
             <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
             <a class="JPtext _company">会社紹介</a>
             <a class="ENtext _company">About us</a>
-            <!--
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext" href="">이용문의</a>
-            <a class="JPtext">利用案内</a>
-            <a class="ENtext">Help</a>
-
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext ">제휴제안</a>
-            <a class="JPtext ">提携</a>
-            <a class="ENtext ">Partnership</a>
-            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -194,21 +171,10 @@
             <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
             <a class="JPtext">個人情報処理方針</a>
             <a class="ENtext">Privacy Policy</a>
-            <!--
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext ">고객센터</a>
-            <a class="JPtext ">ヘルプ</a>
-            <a class="ENtext ">Customer Service</a>
-            -->
         </div>
 
         <div class="bottomfooter3">
             <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <!--
-            <a class="KRtext" href="">이용문의</a>
-            <a class="JPtext">利用案内</a>
-            <a class="ENtext">Help</a>
-            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -224,11 +190,10 @@
 
 
 {% endblock %}
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src={% static_url "common/js/bootstrap.min.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
