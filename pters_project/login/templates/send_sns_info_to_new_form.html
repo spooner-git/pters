@@ -136,7 +136,7 @@
 
 
             #errorMessageBar{
-                display: none;
+{#                display: none;#}
                 width: 100%;
                 position: sticky;
                 top: 0;
@@ -273,10 +273,11 @@
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 {% block content %}
-
-    <div id="errorMessageBar">
-        <span id="errorMessageText"></span><span>닫기</span>
-    </div>
+    {% if messages %}
+        <div id="errorMessageBar">
+            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
+        </div>
+    {% endif %}
 
     <div id="legal_popup">
         <label><img src="/static/user/res/PTERS_logo_pure.png" style="height:17px;margin-top:11px;margin-left:  7px;"> <span style="font-size: 20px;">피터스 가입</span></label>
