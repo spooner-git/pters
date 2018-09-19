@@ -1,4 +1,4 @@
-{% extends "trainee_base_blank.html" %}
+{% extends "trainee_base.html" %}
 {% load static_url %}
 
 {% block local_css %}
@@ -19,11 +19,9 @@
             color: #4285f4;
         }
     </style>
-{% endblock %}
 
 {% block content %}
-
-    <div id="blank_member_popup">
+    <div id="blank_member_popup" style="display: none;">
         <label>PTERS에 오신걸 환영합니다!</label>
         <p><br>담당 강사와 연결된 후부터 사용이 가능합니다.</p>
         <p>담당 강사에게 회원님의 아이디를 알려 드리고 등록을 요청해주세요.</p>
@@ -64,11 +62,11 @@
   -->
         <div id="ymdTextWrap">
             <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
-                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">0 </span>회</span>
+                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;">{{lecture_avail_count}} </span>회</span>
             </div>
             <div id="yearText">마이 페이지</div>
             <div id="monthText"></div>
-            <div id="menuName">마이 페이지
+            <div id="menuName">
             </div>
             <div id="menuDescription">나의 정보를 확인할 수 있습니다.
             </div>
@@ -90,24 +88,24 @@
         </div>
 
         <div id="regCountBoardWrap" class="boardWrap">
-            <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">등록 횟수</p>
+            <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">총 등록 횟수</p>
                 <p class="countBoard_explain">현재까지 총 등록 횟수</p>
-                <p><span>0</span>회</p>
+                <p><span>{{lecture_reg_count}} </span>회</p>
             </div>
-            <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">남은 횟수</p>
+            <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">현재 남은 횟수</p>
                 <p class="countBoard_explain">아직 진행하지 않은 횟수</p>
-                <p><span>0</span>회</p>
+                <p><span><script type="text/javascript">document.write({{ lecture_rem_count }})</script></span>회</p>
             </div>
         </div>
 
         <div id="countBoardWrap" class="boardWrap">
             <div class="countBoard"><p><img src="/static/user/res/member/icon-able.png" alt="">예약 가능</p>
                 <p class="countBoard_explain">아직 일정을 예약하지 않은 횟수</p>
-                <p><span>0</span>회</p>
+                <p><span>{{lecture_avail_count}} </span>회</p>
             </div>
             <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">진행 완료</p>
                 <p class="countBoard_explain">담당 강사와 진행완료한 횟수</p>
-                <p><span>0 </span>회</p>
+                <p><span>{{lecture_finish_count}} </span>회</p>
             </div>
         </div>
 
@@ -117,9 +115,12 @@
         </div>
 
         <div id="dateBoardWrap" class="boardWrap">
-            <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 시작일</p><p style="margin:0;"></p></div></div>
-            <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 종료일</p><p style="margin:0;"></p></div></div>
+            <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 시작일</p><p style="margin:0;">{{ pt_start_date }}</p></div></div>
+            <div class="dateBoard"><div><p><img src="/static/user/res/member/icon-cal.png" alt="">레슨 종료일</p><p style="margin:0;">{{ pt_end_date }}</p></div></div>
         </div>
+
+
+
 
 
         <div class="mypage_label">
@@ -196,12 +197,15 @@
 
 
 
+
+
+
         <div class="mypage_label">
             <img src="/static/user/res/member/icon-user.png" alt=""><span>담당 강사 정보</span>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
-                <span> - </span>
+                <span>{{ class_info.mem_info.name }}님</span>
                 <a href='tel:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-call.png"></a>
                 <a href='sms:{{ class_info.mem_info.phone }}'><img src="/static/user/res/member/icon-message.png" alt=""></a>
             </div>
@@ -220,7 +224,7 @@
         </div>
 
         <div id="myRegHistory" class="boardWrap">
-            <p>등록 후 사용 가능합니다.</p>
+
         </div>
 
         <div class="mypage_label">
@@ -229,13 +233,58 @@
         </div>
 
         <div id="myActiveHistory" class="boardWrap">
-            <p>등록 후 사용 가능합니다.</p>
+
         </div>
 
 
 
     </div>
 
+    <!--
+<div class="mypage_label _GRAPH_OPEN">
+    <img src="/static/user/res/member/icon-user.png" alt=""><span>월별 활동 그래프</span>
+</div>
+
+<div id="mygraph" data-open="0">
+    <div id="yyyyText">
+        <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
+        <span id="yy"></span>
+        <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
+    </div>
+
+    <div id="graph" class="pters_graph">
+      <div class="graph_main">
+        <div class="graph_vertical">
+          <div class="verti">30</div>
+          <div class="verti">25</div>
+          <div class="verti">20</div>
+          <div class="verti">15</div>
+          <div class="verti">10</div>
+          <div class="verti">5</div>
+          <div class="verti"></div>
+        </div>
+      </div>  
+      <div class="graph_horizontal">
+        <table>
+          <tr>
+            <td>1월</td>
+            <td>2월</td>
+            <td>3월</td>
+            <td>4월</td>
+            <td>5월</td>
+            <td>6월</td>
+            <td>7월</td>
+            <td>8월</td>
+            <td>9월</td>
+            <td>10월</td>
+            <td>11월</td>
+            <td>12월</td>
+          </tr>
+        </table>
+      </div>
+    </div> 
+</div>
+-->
 
     <div class="mypage_label button_trainee_logout">
         <span onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
@@ -264,42 +313,61 @@
         var krHolidayList =  [{% for holiday_day in holiday %}'{{ holiday_day.holiday_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];//대한민국 공휴일 (구정, 추석 제외)
 
         //여기를 가져다 써야함 - hkkim 171021;
-        var classTimeArray_start_date = [{% for pt_schedule_start_datetime_info in pt_schedule_start_datetime %}'{{ pt_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var classTimeArray_end_date = [{% for pt_schedule_end_datetime_info in pt_schedule_end_datetime %}'{{ pt_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var scheduleIdArray = [{% for pt_schedule_id_info in pt_schedule_id %}'{{ pt_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var scheduleFinishArray =  [{% for pt_schedule_finish_check_info in pt_schedule_finish_check %}'{{ pt_schedule_finish_check_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var classTimeArray_member_name = [{% for pt_schedule_member_name_info in pt_schedule_member_name %}'{{ pt_schedule_member_name_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_start_date = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.start_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_end_date = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.end_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleIdArray = [{% for pt_schedule_info in pt_schedule_id %}'{{ pt_schedule_info.schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleFinishArray =  [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.finish_check }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var classTimeArray_member_name = [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.member_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleNoteArray =  [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.note }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var scheduleIdxArray =  [{% for pt_schedule_info in pt_schedule_data %}'{{ pt_schedule_info.idx }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
-        var offTimeArray_start_date = [{% for off_schedule_start_datetime_info in off_schedule_start_datetime %}'{{ off_schedule_start_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var offTimeArray_end_date = [{% for off_schedule_end_datetime_info in off_schedule_end_datetime %}'{{ off_schedule_end_datetime_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offTimeArray_start_date = [{% for off_schedule_info in off_schedule_data %}'{{ off_schedule_info.start_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var offTimeArray_end_date = [{% for off_schedule_info in off_schedule_data %}'{{ off_schedule_info.end_dt }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
 
 
         var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
         var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
-        var ptRepeatScheduleIdArray =  [{% for pt_repeat_schedule_id_info in pt_repeat_schedule_id_data %}'{{ pt_repeat_schedule_id_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleTypeArray =  [{% for pt_repeat_schedule_type_info in pt_repeat_schedule_type_data %}'{{ pt_repeat_schedule_type_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleWeekInfoArray =  [{% for pt_repeat_schedule_week_info_info in pt_repeat_schedule_week_info_data %}'{{ pt_repeat_schedule_week_info_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleStartDateArray =  [{% for pt_repeat_schedule_start_date_info in pt_repeat_schedule_start_date_data %}'{{ pt_repeat_schedule_start_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleEndDateArray =  [{% for pt_repeat_schedule_end_date_info in pt_repeat_schedule_end_date_data %}'{{ pt_repeat_schedule_end_date_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleStartTimeArray =  [{% for pt_repeat_schedule_start_time_info in pt_repeat_schedule_start_time_data %}'{{ pt_repeat_schedule_start_time_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
-        var ptRepeatScheduleTimeDurationArray =  [{% for pt_repeat_schedule_time_duration_info in pt_repeat_schedule_time_duration_data %}'{{ pt_repeat_schedule_time_duration_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleIdArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.repeat_schedule_id }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleTypeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.repeat_type_cd }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleWeekInfoArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.week_info }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleStartDateArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.start_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleEndDateArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.end_date }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleStartTimeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.start_time }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleEndTimeArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.end_time }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleTimeDurationArray =  [{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.time_duration }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleGroupTypeNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_type_cd_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
+        var ptRepeatScheduleGroupNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
-
-        var next_schedule = ['{{ next_schedule }}'];
+        var next_schedule = '{{ next_schedule }}';
         var lt_res_01 =  ['{{ lt_res_01 }}'];
         var lt_res_02 =  ['{{ lt_res_02 }}'];
         var lt_res_03 =  ['{{ lt_res_03 }}'];
         var lt_res_04 =  ['{{ lt_res_04 }}'];
+        var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
+        var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
+        var lt_res_enable = ['{{ lt_res_enable }}'];
         var class_id = ['{{ request.session.class_id }}'];
+        var trainee_next_schedule = "일정이 없습니다."
+        $('#uptext').text("마이페이지")
+        $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month'%}'")
+        $('#upbutton img').attr('src','/static/user/res/icon-setting-arrow.png').css({'transform':'rotate(180deg)','height':'20px','width':'unset'})
+        if(next_schedule.length>0){
+            trainee_next_schedule = date_format_to_user_hangul(next_schedule)
+        }
     </script>
 
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.mypage.js" %}></script> <!--달력에 대한 JS-->
     <script>
+        $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시')
+
+        birthChangeEventGroup();
+
+
         if(Number(social_login_check) == 0){
 
         }else if(Number(social_login_check) == 1){
@@ -323,34 +391,6 @@
             $('#shade_caution').hide();
         });
 
-
-        $('#uptext').text("마이페이지")
-        $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month_blank'%}'")
-        $('#upbutton img').attr('src','/static/user/res/icon-setting-arrow.png').css({'transform':'rotate(180deg)','height':'20px','width':'unset'})
-        if('{{next_schedule_start_dt }}'.length>0){
-            var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}')
-        }else{
-            var trainee_next_schedule = "일정이 없습니다."
-        }
-        $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시');
-
-        /*
-         $('._GRAPH_OPEN').click(function(){
-         if($('#mygraph').attr('data-open') == '0'){
-         $('#mygraph').css('transform','translateY(0%)').attr('data-open','1')
-         //$('#summary_wrap').css('transform','translateY(0%)')
-
-         }else if($('#mygraph').attr('data-open') == "1"){
-         $('#mygraph').css('transform','translateX(-200%)').attr('data-open','0')
-         //$('#summary_wrap').css('transform','translateY(-48%)')
-
-         }
-         })
-         */
-
-        $('#blank_member_popup span').click(function(){
-            $('#blank_member_popup').fadeOut()
-        })
 
         $('button.changeMemberInfo').click(function(){
             if($(this).attr('data-type') == "modify"){
@@ -545,7 +585,6 @@
                 }
             });
         }
-
     </script>
 
 {% endblock %}
