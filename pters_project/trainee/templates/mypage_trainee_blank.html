@@ -241,6 +241,21 @@
         <span onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
     </div>
 
+    <form id="modify-member-id-form" method="post">
+        {% csrf_token %}
+        <div style="display: none">
+            {{ form.as_p }}
+        </div>
+        <input type="hidden" name="id" id="userid" value="" >
+        <input type="hidden" name="first_name" id="first_name" value="" >
+        <input type="hidden" name="last_name" id="last_name" value="" >
+        <input type="hidden" name="sex" id="newsex" value="" >
+        <input type="hidden" name="birthday" id="newbirth" value="" >
+        <input type="hidden" name="phone" id="newphone" value="" >
+        <input type="hidden" name="contents" id="contents" value="" >
+        <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainee:get_trainee_info' %}">
+    </form>
+
 {% endblock %}
 
 {% block local_js_footer %}
