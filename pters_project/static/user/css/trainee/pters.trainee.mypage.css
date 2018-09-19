@@ -7,6 +7,38 @@ body{
 	height: 300px;
 }
 
+#popup_how_to_disconnect_sns_login{
+	position: absolute;
+	display: none;
+	width: 95%;
+	max-width: 500px;
+	height: auto;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	z-index: 450;
+	max-height: 700px;
+}
+	#how_to_disconnect_naver_explain{
+
+	}
+	#how_to_disconnect_facebook_explain{
+		display: none;
+	}
+	.explain_page{
+		overflow-y: auto;
+		border-top: 1px solid #cccccc;
+		padding: 15px;
+		width: 100%;
+		background-color: #f4f4f4;
+		height: 100%;
+	}
+	.explain_page p{
+		margin-top: 20px;
+	}
+	.explain_page img{
+		width: 100%;
+	}
+
 @media(max-width:599px){
 	.bottomfooter2{
 		display:none;
