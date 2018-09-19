@@ -227,7 +227,8 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
         sns_type = request.POST.get('sns_type', 'naver')
         auto_login_check = request.POST.get('auto_login_check', '1')
         group_type = request.POST.get('group_type', 'trainer')
-        social_accessToken = request.POST.get('social_accessToken', '')
+        social_access_token = request.POST.get('social_accessToken', '')
+        next_page = request.POST.get('next_page', '/login/new_member_sns_info/')
 
         error = None
         user = None
@@ -265,7 +266,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                     request.session['social_login_check'] = '1'
                     request.session['social_login_type'] = sns_type
                     request.session['social_login_id'] = sns_id
-                    request.session['social_accessToken'] = social_accessToken
+                    request.session['social_accessToken'] = social_access_token
 
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
@@ -286,7 +287,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
             logger.error(name+'['+email+']'+error)
             messages.error(request, error)
 
-        return render(request, self.template_name)
+        return redirect(next_page)
 
 
 class AddOldMemberSnsInfoView(RegistrationView, View):
@@ -300,7 +301,7 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
         sns_id = request.POST.get('sns_id', '')
         sns_type = request.POST.get('sns_type', 'NAVER')
         auto_login_check = request.POST.get('auto_login_check', '1')
-        social_accessToken = request.POST.get('social_accessToken', '')
+        social_access_token = request.POST.get('social_accessToken', '')
 
         error = None
         user = None
@@ -326,7 +327,7 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
                     request.session['social_login_check'] = '1'
                     request.session['social_login_type'] = sns_type
                     request.session['social_login_id'] = sns_id
-                    request.session['social_accessToken'] = social_accessToken
+                    request.session['social_accessToken'] = social_access_token
 
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
@@ -353,7 +354,7 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
 class DeleteSnsInfoView(View):
     template_name = 'ajax/registration_error_ajax.html'
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
 
         sns_id = request.POST.get('sns_id')
         sns_type = request.POST.get('sns_type')

@@ -684,7 +684,7 @@
         <input type="hidden" name="sns_type" value="{{ sns_type }}">
         <input type="hidden" name="sex" id="id_sns_sex" value="{{ sex }}">
         <input type="hidden" name="group_type" id="id_group_type" value="trainer">
-        <input type="hidden" name="next_page" value="{% url 'login:login' %}">
+        <input type="hidden" name="next_page" value="{% url 'login:new_member_sns_info' %}">
     </form>
 
 {% endblock %}
