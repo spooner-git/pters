@@ -315,6 +315,7 @@ class HelpPtersView(AccessTestMixin, TemplateView):
         context = super(HelpPtersView, self).get_context_data(**kwargs)
         qa_type_list = CommonCdTb.objects.filter(upper_common_cd='16', use=1).order_by('order')
         context['qa_type_data'] = qa_type_list
+        print('jaiosfjio'+str(len(qa_type_list)))
         return context
 
 
