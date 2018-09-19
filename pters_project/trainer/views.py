@@ -47,7 +47,7 @@ from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
-    func_get_class_member_ing_list
+    func_get_class_member_ing_list, func_get_class_member_end_list
 
 logger = logging.getLogger(__name__)
 
@@ -447,7 +447,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_id_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id)
+            end_member = func_get_class_member_end_list(class_id)
 
             for member_info in all_member:
                 # member_data = member_info
@@ -460,20 +461,14 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                                                                                           lecture_tb__use=USE,
                                                                                           auth_cd='VIEW',
                                                                                           use=USE).order_by('-lecture_tb__start_date')
-                # class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                #                                                    lecture_tb__member_id=member_info,
-                #                                                    lecture_tb__state_cd='IP',
-                #                                                    lecture_tb__use=USE,
-                #                                                    auth_cd='VIEW',
-                #                                                    use=USE).order_by('-lecture_tb__start_date')
 
                 if len(total_class_lecture_list) > 0:
-                    total_member_num += 1
+                    # total_member_num += 1
                     start_date = ''
                     for class_lecture_info in total_class_lecture_list:
                         lecture_info = class_lecture_info.lecture_tb
                         if lecture_info.state_cd == 'IP':
-                            current_total_member_num += 1
+                            # current_total_member_num += 1
                             # for lecture_info_data in class_lecture_list:
                             if start_date == '':
                                 start_date = lecture_info.start_date
@@ -502,9 +497,10 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                                                           use=USE).count()
         if error is None:
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
-            context['total_member_num'] = total_member_num
+            context['total_member_num'] = len(all_member) + len(end_member)
             # 남은 횟수 1개 이상 3개 미만인 경우 - 180314 hk.kim
-            context['current_total_member_num'] = current_total_member_num
+            # context['current_total_member_num'] = current_total_member_num
+            context['current_total_member_num'] = len(all_member)
             context['new_member_num'] = new_member_num
 
         pt_schedule_data = ScheduleTb.objects.filter(class_tb=class_id,

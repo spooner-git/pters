@@ -20,7 +20,8 @@ def func_get_class_member_id_list(class_id):
 
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                           lecture_tb__use=USE, use=USE
+                                           lecture_tb__use=USE,
+                                           use=USE
                                            ).order_by('lecture_tb__member__name')
     member_id = None
     for class_lecture_info in class_lecture_data:
