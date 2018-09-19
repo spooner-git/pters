@@ -8,15 +8,17 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
+
     <!--Google Adsense-->
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-4554121851965192",
-            enable_page_level_ads: true
-        });
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-4554121851965192",
+        enable_page_level_ads: true
+      });
     </script>
     <!--Google Adsense-->
+
     {% load static_url %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -213,6 +215,7 @@
 {% endblock %}
 
 <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src={% static_url "common/js/bootstrap.min.js" %}></script>
@@ -357,11 +360,17 @@
     }
     var varUA = navigator.userAgent.toLowerCase()
     if(varUA.match('android') != null){
-        $('._company').css('display','none')
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        platform_check = 'mobile'
     }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('._company').css('display','none')
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        platform_check = 'mobile'
     }else{
-
+        platform_check = 'pc'
     }
 
 
