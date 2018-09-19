@@ -275,7 +275,9 @@
 {% block content %}
     {% if messages %}
         <div id="errorMessageBar">
-            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
+            {% for message in messages %}
+                <span id="errorMessageText">{{ message }}</span><span>닫기</span>
+            {% endfor %}
         </div>
     {% endif %}
 
