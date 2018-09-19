@@ -1,5 +1,7 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
-
+html, body{
+	background: #f7f7f7;
+}
 body{
 	padding-top: 50px;
 	height: 300px;
