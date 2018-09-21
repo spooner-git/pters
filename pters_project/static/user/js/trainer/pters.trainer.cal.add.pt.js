@@ -910,6 +910,7 @@ $(document).ready(function(){
                         //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200);
                         $('#page-addplan').animate({'top':($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()},250);
                     }
+                    check_dropdown_selected_addplan();
                 });
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide();
@@ -3230,7 +3231,6 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
     var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
 
     if(addTypeSelect == "ptadd"){
-
         if($('#page-addplan-pc').css('display')!='block' && (memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');
