@@ -89,7 +89,7 @@
         $('select').change(function(){
             $('#id_inquire_type').val($(this).val())
             $('#id_inquire_type').attr('value',$(this).val())
-        })
+        });
 
         function characterCheck() {
             var RegExp = /[\{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
