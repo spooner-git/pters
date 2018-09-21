@@ -474,7 +474,7 @@
             }
         });
 
-        $(document).on('click','#subject_type_1 li a, #subject_type_2 li a',function(){
+        $(document).on('click','.sub_subjectlist li a',function(){
             var classcode = $(this).attr('data-time');
             $('#subject_cd').val(classcode);
             subject_selected = classcode;
