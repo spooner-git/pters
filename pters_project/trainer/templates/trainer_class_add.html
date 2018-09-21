@@ -113,7 +113,14 @@
         .dropdown li{
             cursor: pointer;
         }
+
         #dropdown_subject_1, #dropdown_subject_2{
+            /*display: none;*/
+        }
+        .sub_subjectlist{
+            display: none;
+        }
+        #id_input_subject_detail_nm_wrap{
             display: none;
         }
 
@@ -204,14 +211,14 @@
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
             <ul id="class_type" class="dropdown-menu">
                 {% for class_type_cd_info in class_type_cd_data %}
-                    <li><a data-time="{{ class_type_cd_info.common_cd }}">{{ class_type_cd_info.common_cd_nm }}</a></li>
+                    <li><a data-time="{{ class_type_cd_info.common_cd }}" data-count="{{ forloop.counter }}">{{ class_type_cd_info.common_cd_nm }}</a></li>
                 {% endfor %}
             </ul>
         </div>
 
         {% for class_type_cd_info in class_type_cd_data %}
             {% if class_type_cd_info.common_cd != 'ETC' %}
-                <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
+                <div class="dropdown sub_subjectlist" id="dropdown_subject_{{ forloop.counter }}">
                     <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
                     <ul id="subject_type_{{ forloop.counter }}" class="dropdown-menu" display="none">
                         {% for subject_type in class_type_cd_info.subject_type_cd %}
@@ -220,7 +227,7 @@
                     </ul>
                 </div>
             {% else %}
-                <div class="dropdown" id="dropdown_subject_{{ forloop.counter }}">
+                <div class="dropdown" id="id_input_subject_detail_nm_wrap">
                     <input type="text" name="input_subject_detail_nm" id="id_input_subject_detail_nm" maxlength="12" placeholder="상세 프로그램명">
                 </div>
             {% endif %}
@@ -452,30 +459,17 @@
         })
         /*드랍다운 설정*/
 
-        /*과목 선택*/
-        // $(document).on('click','a[data-time=TR]',function(){
-        //     $('#dropdown_subject_1').css('display','inline-block');
-        //     $('#dropdown_subject_2').css('display','none');
-        //     $('#subject_cd').val(subject_selected);
-        // });
-        // $(document).on('click','a[data-time=PL]',function(){
-        //     $('#dropdown_subject_1').css('display','none');
-        //     $('#dropdown_subject_2').css('display','inline-block');
-        // });
-        // $(document).on('click','a[data-time=ETC]',function(){
-        //     $('#dropdown_subject_1').css('display','none');
-        //     $('#dropdown_subject_2').css('display','inline-block');
-        //     $('#subject_cd').val('ETC')
-        // });
-
         $(document).on('click','#class_type a',function(){
             if($(this).attr('data-time') != "ETC" ){
-                $('#dropdown_subject_1').css('display','inline-block');
-                $('#dropdown_subject_2').css('display','none');
-                $('#subject_cd').val(subject_selected);
+                var count = $(this).attr('data-count');
+                $('.sub_subjectlist').hide();
+                $('#id_input_subject_detail_nm_wrap').hide();
+                $(`#dropdown_subject_${count}`).css('display','inline-block');
+                var sub_subjectlist_selected_val = $(`#dropdown_subject_${count}`).find('button').val();
+                $('#subject_cd').val(sub_subjectlist_selected_val);
             }else{
-                $('#dropdown_subject_1').css('display','none');
-                $('#dropdown_subject_2').css('display','inline-block');
+                $('.sub_subjectlist').hide();
+                $('#id_input_subject_detail_nm_wrap').css('display','inline-block');
                 $('#subject_cd').val('ETC');
             }
         });
