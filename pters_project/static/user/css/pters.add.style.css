@@ -1190,6 +1190,7 @@ option{
 	margin:0 auto;
 	margin-top: 0px !important;
 	border: 0 !important;
+	background-color: unset;
 }
 
 
