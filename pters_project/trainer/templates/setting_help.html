@@ -92,7 +92,7 @@
         })
 
         function characterCheck() {
-            var RegExp = /[ \{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
+            var RegExp = /[\{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
             var obj = document.getElementsByName("textarea_body")[0]
             if (RegExp.test(obj.value)) {
                 obj.value = obj.value.substring(0, obj.value.length - 1);//특수문자를 지우는 구문
