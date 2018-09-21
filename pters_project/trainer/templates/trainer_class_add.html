@@ -446,26 +446,38 @@
 
         /*드랍다운 설정*/
         $(document).on('click','.dropdown li a',function(){
-            var selectedValue = $(this).attr('data-time')
-            var selectedName  = $(this).text()
+            var selectedValue = $(this).attr('data-time');
+            var selectedName  = $(this).text();
             $(this).parents('ul').siblings('button').val(selectedValue).text(selectedName)
         })
         /*드랍다운 설정*/
 
         /*과목 선택*/
-        $(document).on('click','a[data-time=TR]',function(){
-            $('#dropdown_subject_1').css('display','inline-block');
-            $('#dropdown_subject_2').css('display','none');
-            $('#subject_cd').val(subject_selected);
-        });
-        $(document).on('click','a[data-time=PL]',function(){
-            $('#dropdown_subject_1').css('display','none');
-            $('#dropdown_subject_2').css('display','inline-block');
-        });
-        $(document).on('click','a[data-time=ETC]',function(){
-            $('#dropdown_subject_1').css('display','none');
-            $('#dropdown_subject_2').css('display','inline-block');
-            $('#subject_cd').val('ETC')
+        // $(document).on('click','a[data-time=TR]',function(){
+        //     $('#dropdown_subject_1').css('display','inline-block');
+        //     $('#dropdown_subject_2').css('display','none');
+        //     $('#subject_cd').val(subject_selected);
+        // });
+        // $(document).on('click','a[data-time=PL]',function(){
+        //     $('#dropdown_subject_1').css('display','none');
+        //     $('#dropdown_subject_2').css('display','inline-block');
+        // });
+        // $(document).on('click','a[data-time=ETC]',function(){
+        //     $('#dropdown_subject_1').css('display','none');
+        //     $('#dropdown_subject_2').css('display','inline-block');
+        //     $('#subject_cd').val('ETC')
+        // });
+
+        $(document).on('click','#class_type a',function(){
+            if($(this).attr('data-time') != "ETC" ){
+                $('#dropdown_subject_1').css('display','inline-block');
+                $('#dropdown_subject_2').css('display','none');
+                $('#subject_cd').val(subject_selected);
+            }else{
+                $('#dropdown_subject_1').css('display','none');
+                $('#dropdown_subject_2').css('display','inline-block');
+                $('#subject_cd').val('ETC');
+            }
         });
 
         $(document).on('click','#subject_type_1 li a, #subject_type_2 li a',function(){
