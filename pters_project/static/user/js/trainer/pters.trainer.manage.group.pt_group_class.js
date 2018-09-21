@@ -487,11 +487,11 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).addClass('groupWrap_selected');
             memberlist.addClass('groupMembersWrap_selected').show();
             if( $('#btnCallCurrent').hasClass('pters_selectbox_btn_selected') ){
-                get_member_ing_list("callback", function(jsondata){
+                get_member_one_to_one_ing_list("callback", function(jsondata){
                     memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</div>');
                 });
             }else if( $('#btnCallFinished').hasClass('pters_selectbox_btn_selected') ){
-                get_member_end_list("callback", function(jsondata){
+                get_member_one_to_one_end_list("callback", function(jsondata){
                     memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('finished', 'name', 'no', jsondata).html+'</div>');
                 });
             }

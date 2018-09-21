@@ -53,6 +53,10 @@ urlpatterns = [
     url(r'^get_member_ing_list/$', views.GetMemberIngListViewAjax.as_view(), name='get_member_ing_list'),
     # 진행 완료 회원 목록 조회
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
+    # 진행중 회원 목록 조회 1:1만
+    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(), name='get_member_one_to_one_ing_list'),
+    # 진행 완료 회원 목록 조회 1:1만
+    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(), name='get_member_one_to_one_end_list'),
     # 회원 정보 수정
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     # 회원 정보 삭제

@@ -47,7 +47,7 @@ from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
-    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list
+    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list
 
 logger = logging.getLogger(__name__)
 
@@ -1059,6 +1059,32 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         context['member_data'] = func_get_member_end_list(class_id, self.request.user.id)
+        # end_dt = timezone.now()
+        # print(str(end_dt-start_dt))
+        return context
+
+
+class GetMemberOneToOneIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/member_list_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # start_dt = timezone.now()
+        context = super(GetMemberOneToOneIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        context['member_data'] = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
+        # end_dt = timezone.now()
+        # print(str(end_dt-start_dt))
+        return context
+
+
+class GetMemberOneToOneEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/member_list_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # start_dt = timezone.now()
+        context = super(GetMemberOneToOneEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        context['member_data'] = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
         # end_dt = timezone.now()
         # print(str(end_dt-start_dt))
         return context
@@ -3090,7 +3116,7 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd')
-        member_data = func_get_member_end_list(class_id, self.request.user.id)
+        member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
         context['member_data'] = member_data
 
         if error is not None:
