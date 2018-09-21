@@ -1027,9 +1027,9 @@ a:focus, a:hover{
 
 
 /*스크롤바 스타일*/
-::-webkit-scrollbar{width: 10px;}
+::-webkit-scrollbar{width: 6px;}
 ::-webkit-scrollbar-track {background-color:#f1f1f1;}
-::-webkit-scrollbar-thumb {background-color:#fe4e65;border-radius: 10px;}
+::-webkit-scrollbar-thumb {background-color:#fe4e65;border-radius: 6px;}
 ::-webkit-scrollbar-thumb:hover {background: #555;}
 /*::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
                                                     width:10px;height:16px;background:#f1f1f1;border-radius: 10px} */
