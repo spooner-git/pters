@@ -115,12 +115,12 @@ function close_planadd_popup(){
     $('.add_time_unit').removeClass('checked');
     shade_index(-100);
     enable_window_scroll();
-    // if(bodywidth<=600){
-    //     $('#float_btn_wrap').show();
-    //     $('#float_btn').removeClass('rotate_btn');
-    //     $('#page-base').show();
-    //     $('#page-base-addstyle').hide();
-    // }
+    if(bodywidth<=600){
+        $('#float_btn_wrap').show();
+        $('#float_btn').removeClass('rotate_btn');
+        $('#page-base').show();
+        $('#page-base-addstyle').hide();
+    }
 }
 //일정추가 팝업 닫기 (pc)
 
