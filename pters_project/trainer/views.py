@@ -47,7 +47,7 @@ from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
-    func_get_class_member_ing_list, func_get_class_member_end_list
+    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list
 
 logger = logging.getLogger(__name__)
 
@@ -3057,7 +3057,40 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd')
-        member_data = func_get_member_ing_list(class_id, self.request.user.id)
+        member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
+        context['member_data'] = member_data
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+        # end_time = timezone.now()
+        # print(str(end_time-start_time))
+        return context
+
+
+class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/member_group_class_list_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetMemberGroupClassEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+        # start_time = timezone.now()
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, []),
+                                                       group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd')
+        member_data = func_get_member_end_list(class_id, self.request.user.id)
         context['member_data'] = member_data
 
         if error is not None:

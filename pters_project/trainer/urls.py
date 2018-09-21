@@ -104,8 +104,9 @@ urlpatterns = [
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
 
     # 수업 관리 기능
-    # 진행중 그룹 list 조회
+    # 진행중 회원/그룹/클래스 list 조회
     url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(), name='get_member_group_class_ing_list'),
+    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(), name='get_member_group_class_end_list'),
 
 
     # 강좌 기능 ##########################################################################################################
