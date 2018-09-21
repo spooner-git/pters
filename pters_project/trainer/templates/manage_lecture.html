@@ -274,12 +274,12 @@
     </div>
     <!--플로팅 버튼-->
 
-    <div id="please_add_member">
+    <!-- <div id="please_add_member">
         <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;margin-top:5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
-        <p>먼저 여기를 눌러서</p>
-        <p>새로운 회원을 등록하고</p>
+        <p>여기를 눌러서</p>
+        <p>새로운 그룹 혹은 클래스를 등록하고</p>
         <p>피터스의 기능들을 사용해보세요.</p>
-    </div>
+    </div> -->
 
 
     <div id="page_managemember">
@@ -312,12 +312,12 @@
             </div>
            -->
             <div class="ymdText-pc-add-member-wrap">
-                <div id="please_add_member_pc">
+                <!-- <div id="please_add_member_pc">
                     <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
-                    <p>먼저 여기를 눌러서</p>
-                    <p>새로운 회원을 등록하고</p>
+                    <p>여기를 눌러서</p>
+                    <p>새로운 그룹 혹은 클래스를 등록하고</p>
                     <p>피터스의 기능들을 사용해보세요.</p>
-                </div>
+                </div> -->
                 <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
                     <span class="KRtext">그룹 추가</span>
                     <span class="JPtext"></span>
@@ -1184,33 +1184,30 @@
             var member_Html = memberlist.html;
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
-
         });
-{#        get_member_ing_list("callback", function(jsondata){#}
-{#            var start_time = new Date().getTime();#}
-{#            console.log(start_time);#}
-{#            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);#}
-{#            var member_Html = memberlist.html;#}
-{#            var group_class_Html;#}
-{##}
-{#            get_group_ing_list("callback", function(jsondata){#}
-{#                group_class_Html = group_class_ListHtml('current', jsondata);#}
-{#                $('#currentGroupList').html(group_class_Html);#}
-{#                var end_time = new Date().getTime();#}
-{#                console.log(end_time);#}
-{#                console.log(end_time-start_time);#}
-{#            }); //그룹 + 클래스#}
-{#        });#}
+
+        // get_member_ing_list("callback", function(jsondata){
+        //     var start_time = new Date().getTime();
+        //     var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+        //     var member_Html = memberlist.html;
+        //     var group_class_Html;
+
+        //     get_group_ing_list("callback", function(jsondata){
+        //         group_class_Html = group_class_ListHtml('current', jsondata);
+        //         $('#currentGroupList').html(group_class_Html);
+        //         var end_time = new Date().getTime();
+        //     }); //그룹 + 클래스#}
+        // });
 
         
 
-        $('html,body').click(function(){
-            $('#please_add_member_pc').fadeOut('fast')
-        })
+        // $('html,body').click(function(){
+        //     $('#please_add_member_pc').fadeOut('fast')
+        // })
 
-        $('#float_btn, .navbar').click(function(){
-            $('#please_add_member').fadeOut('fast')
-        })
+        // $('#float_btn, .navbar').click(function(){
+        //     $('#please_add_member').fadeOut('fast')
+        // })
 
         $('#_close_how_to_add_member, #page_addmember').click(function(){
             $('#how_to_add_member').fadeOut()

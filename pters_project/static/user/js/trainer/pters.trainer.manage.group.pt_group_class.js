@@ -816,9 +816,19 @@ function delete_group_from_list(group_id){
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 if($('#currentGroupList').css('display') == "block"){
-                    group_class_ListHtml('current', jsondata);
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('current', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
+                    });
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    group_class_ListHtml('finished', jsondata);
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('finished', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
+                    });
                 }
 
                 console.log('success');
@@ -925,9 +935,19 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 if($('#currentGroupList').css('display') == "block"){
-                    group_class_ListHtml('current', jsondata);
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('current', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
+                    });
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    group_class_ListHtml('finished', jsondata);
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('finished', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
+                    });
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true);
                 $('img._info_cancel').hide();
@@ -995,16 +1015,31 @@ function modify_group_status(group_id, option){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
+                // if($('#currentGroupList').css('display') == "block"){
+                //     get_group_ing_list("callback", function(json){
+                //         group_class_ListHtml('current', json);
+                //     });
+                //     //group_class_ListHtml('current',jsondata)
+                // }else if($('#finishedGroupList').css('display') == "block"){
+                //     get_group_end_list("callback", function(json){
+                //         group_class_ListHtml('finished', json);
+                //     });
+                //     //group_class_ListHtml('finished',jsondata)
+                // }
                 if($('#currentGroupList').css('display') == "block"){
-                    get_group_ing_list("callback", function(json){
-                        group_class_ListHtml('current', json);
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('current', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
                     });
-                    //group_class_ListHtml('current',jsondata)
                 }else if($('#finishedGroupList').css('display') == "block"){
-                    get_group_end_list("callback", function(json){
-                        group_class_ListHtml('finished', json);
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('finished', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
                     });
-                    //group_class_ListHtml('finished',jsondata)
                 }
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
 

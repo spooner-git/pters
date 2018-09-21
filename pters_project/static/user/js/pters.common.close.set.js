@@ -274,7 +274,7 @@ function close_manage_popup(option){
         var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){
             //$('#page_managemember').show();
-            $('#page-base').css('display','block');
+            $('#page-base').css('display', 'block');
                 $('#page-base-addstyle').css('display','none');
             $('#page_managemember').css({'height':'100%'});
             $('#float_btn_wrap').show();
