@@ -872,11 +872,12 @@ function get_groupmember_list(group_id, use, callback){
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend();
+            
         },
 
         //통신성공시 처리
         success:function(data){
+            completeSend();
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto");
@@ -898,10 +899,7 @@ function get_groupmember_list(group_id, use, callback){
                     groupMemberListSet(group_id, jsondata);
                     $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1);
                 }
-
                 console.log('success');
-
-
             }
         },
 
