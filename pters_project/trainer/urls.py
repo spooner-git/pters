@@ -53,10 +53,6 @@ urlpatterns = [
     url(r'^get_member_ing_list/$', views.GetMemberIngListViewAjax.as_view(), name='get_member_ing_list'),
     # 진행 완료 회원 목록 조회
     url(r'^get_member_end_list/$', views.GetMemberEndListViewAjax.as_view(), name='get_member_end_list'),
-    # 진행중 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(), name='get_member_one_to_one_ing_list'),
-    # 진행 완료 회원 목록 조회 1:1만
-    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(), name='get_member_one_to_one_end_list'),
     # 회원 정보 수정
     url(r'^update_member_info/$', views.update_member_info_logic, name='update_member_info'),
     # 회원 정보 삭제
@@ -107,10 +103,18 @@ urlpatterns = [
     # 그룹 재개 상태 변경
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
 
-    # 수업 관리 기능
+    # 수업 관리 기능 ######################################################################################################
     # 진행중 회원/그룹/클래스 list 조회
-    url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(), name='get_member_group_class_ing_list'),
-    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(), name='get_member_group_class_end_list'),
+    url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(),
+        name='get_member_group_class_ing_list'),
+    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(),
+        name='get_member_group_class_end_list'),
+    # 진행중 회원 목록 조회 1:1만
+    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(),
+        name='get_member_one_to_one_ing_list'),
+    # 진행 완료 회원 목록 조회 1:1만
+    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(),
+        name='get_member_one_to_one_end_list'),
 
 
     # 강좌 기능 ##########################################################################################################
