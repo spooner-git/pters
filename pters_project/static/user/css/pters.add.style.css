@@ -986,6 +986,9 @@ button._info_baseedit_img{
 .dur_wrap{
 	height: 110px;
 }
+.dur_wrap .dropdown{
+	background-color: transparent;
+}
 
 .ptersCheckbox_wrapper{
 	display: block;
@@ -1081,6 +1084,9 @@ button._info_baseedit_img{
 	border:1px solid #8d8d8d;
 	border-radius: 0;
 }
+#memberSearch{
+	background-color: transparent;
+}
 
 #memberSearchButton{
 	display: table-cell;
@@ -1101,6 +1107,7 @@ button._info_baseedit_img{
 	display: table-cell;
 	width: 90%;
 	vertical-align: middle;
+	background-color: transparent;
 }
 
 #memberSex{
@@ -1180,7 +1187,7 @@ option{
 }
 
 .regCountSelect{
-
+	background-color: transparent;
 }
 
 .pricebutton{

@@ -1726,7 +1726,7 @@ function pc_add_member(option){
         });
 
         $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#memberDue_add_2_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#memberDue_add_2_fast').datepicker('setDate', null).removeClass("dropdown_selected");
         $('#datepicker_add').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker2_add').datepicker('option', 'minDate', find_max_date(regEnddate));
 
@@ -1736,7 +1736,7 @@ function pc_add_member(option){
         selector_memberSearchButton.trigger('click');
 
         $('body').css('overflow-y','hidden');
-        selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
+        selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
@@ -3073,6 +3073,76 @@ function check_dropdown_selected(){
 }
 
 //빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택
+// function autoDateInput(){
+//     var text = '소진시까지';
+//     var text2 = '선택';
+//     if(Options.language == "JPN"){
+//         text = '残余回数終わるまで';
+//         text2 = '進行期間を選んでください。';
+//     }else if(Options.language == "ENG"){
+//         text = 'No cutoff';
+//         text2 = 'Please enter contract period';
+//     }
+
+//     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택///// 
+//     var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];
+//     var selected = $('#datepicker_fast').val();
+//     var selectedDate = Number(selected.replace(/-/g, ""));
+//     var selectedD = $('._due div.checked').parent('td').attr('data-check'); // 1,2,3,6,12,99
+//     var selectedDue = Number(selectedD + '00');
+//     var finishDate =  selectedDate+selectedDue;
+//     var yy = String(finishDate).substr(0,4);
+//     var mm = String(finishDate).substr(4,2);
+//     var dd = String(finishDate).substr(6,2);
+
+
+//     if(mm>12){ //해 넘어갈때 날짜처리
+//         //var finishDate = finishDate + 10000 - 1200
+//         yy = Number(yy)+1;
+//         mm = Number(mm)-12;
+//     }
+//     if(String(mm).length<2){
+//         mm = "0"+mm;
+//     }
+//     finishDate = yy +"-"+ mm +"-"+ dd;
+//     if(dd>lastDay[Number(mm)-1]){
+//         dd = Number(dd)-lastDay[Number(mm)-1];
+//         mm = Number(mm)+1;
+//         if(String(dd).length<2){
+//             dd = "0"+dd;
+//         }
+//         if(String(mm).length<2){
+//             mm = "0"+mm;
+//         }
+//         finishDate = yy +"-"+ mm +"-"+ dd;
+//     }
+//     var selector_memberDue_add_2 = $('#memberDue_add_2');
+//     var selector_memberDue_add_2_fast = $('#memberDue_add_2_fast');
+//     //selector_memberDue_add_2.val(finishDate);
+//     selector_memberDue_add_2_fast.val(finishDate);
+//     if(selectedD==99){
+//         selector_memberDue_add_2_fast.text(text);
+//         selector_memberDue_add_2_fast.val("9999-12-31");
+//     }
+
+//     if(selectedD==undefined){
+//         selector_memberDue_add_2_fast.val(text2);
+//     }
+
+//     if(selectedD == 0){
+
+//     }
+
+//     if(selector_memberDue_add_2_fast.val()!=text2 && selector_memberDue_add_2_fast.val()!="" ){
+//         selector_memberDue_add_2_fast.addClass("dropdown_selected");
+//     }
+//     selector_memberDue_add_2_fast.css({
+//                                      "-webkit-text-fill-color":'#282828'
+//                                 });
+//     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
+// }
+
+//빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택
 function autoDateInput(){
     var text = '소진시까지';
     var text2 = '선택';
@@ -3084,16 +3154,16 @@ function autoDateInput(){
         text2 = 'Please enter contract period';
     }
 
-    /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택///// 
-    var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];
+    /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
+    var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     var selected = $('#datepicker_fast').val();
     var selectedDate = Number(selected.replace(/-/g, ""));
     var selectedD = $('._due div.checked').parent('td').attr('data-check'); // 1,2,3,6,12,99
     var selectedDue = Number(selectedD + '00');
     var finishDate =  selectedDate+selectedDue;
-    var yy = String(finishDate).substr(0,4);
-    var mm = String(finishDate).substr(4,2);
-    var dd = String(finishDate).substr(6,2);
+    var yy = String(finishDate).substr(0, 4);
+    var mm = String(finishDate).substr(4, 2);
+    var dd = String(finishDate).substr(6, 2);
 
 
     if(mm>12){ //해 넘어갈때 날짜처리
@@ -3106,14 +3176,7 @@ function autoDateInput(){
     }
     finishDate = yy +"-"+ mm +"-"+ dd;
     if(dd>lastDay[Number(mm)-1]){
-        dd = Number(dd)-lastDay[Number(mm)-1];
-        mm = Number(mm)+1;
-        if(String(dd).length<2){
-            dd = "0"+dd;
-        }
-        if(String(mm).length<2){
-            mm = "0"+mm;
-        }
+        dd = lastDay[Number(mm)-1];
         finishDate = yy +"-"+ mm +"-"+ dd;
     }
     var selector_memberDue_add_2 = $('#memberDue_add_2');
