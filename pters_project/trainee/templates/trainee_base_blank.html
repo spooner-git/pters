@@ -58,7 +58,7 @@
     <nav class="navbar navbar-fixed-top navbar-default wrap" id="mobilever">
         <div class="">
             <div class="navbar-header">
-                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainee:mypage_trainee_blank' %}'">
+                <button id="upbutton" class="navbar-toggle" aria-controls="navbar" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
                     <a><img src={% static_url "user/res/icon-user-setting.png" %} style="width:25px;"></a>
                 </button>
                 {% block nav_center_img %}
@@ -81,7 +81,7 @@
             <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'trainee:cal_month_blank'%}'" style="cursor: pointer;">
             <div class="centermenu_box" style="margin-left: 97px;text-align: left;">
                 <div class="centermenu_div">
-                    <a href="{% url 'trainee:mypage_trainee_blank' %}" class="centermenu_text"></a>
+                    <a href="{% url 'trainee:mypage_trainee' %}" class="centermenu_text"></a>
                 </div>
                 <div class="centermenu_div">
                     <a class="centermenu_text"   onclick="location.href='{% url 'trainee:cal_month_blank'%}'">달력</a>
@@ -91,7 +91,7 @@
                     <!--<a class="centermenu_text" style="color: #cccccc">클래스 선택</a>-->
                 </div>
                 <div class="centermenu_div">
-                    <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee_blank' %}'">마이페이지</a>
+                    <a class="centermenu_text" onclick="location.href='{% url 'trainee:mypage_trainee' %}'">마이페이지</a>
                 </div>
                 <div class="centermenu_div">
                     <a href="#" class="centermenu_text"></a>
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div id="loginInfo" class="centermenu_div" style="float:right;cursor:pointer;"　
-                 onclick="location.href='{% url 'trainee:mypage_trainee_blank' %}'">
+                 onclick="location.href='{% url 'trainee:mypage_trainee' %}'">
                 <span class="pcwhere"></span>
                 <span class="pcwho">{{ user.last_name }} {{user.first_name}} 님<span></span></span>
             </div>
