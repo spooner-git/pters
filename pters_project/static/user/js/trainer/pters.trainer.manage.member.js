@@ -14,6 +14,16 @@ $(document).ready(function(){
     });
     //ESC키를 눌러서 팝업 닫기
 
+    $('.hastooltips').click(function(e){
+        e.stopPropagation();
+        var $title = $(this).find(".mobile_title_popup");
+        if( !$title.length ){
+            $(this).append('<span class="mobile_title_popup" style="position:absolute;top:20px;background:white;border:1px solid #cccccc;padding:4px;left:0;max-width:100%;">'+$(this).find(".mobile_title").val()+'</span>');
+        }else{
+            $title.remove();
+        }
+    });
+
     $(document).on('click', '.phonesms', function(e){
         e.stopPropagation();
     });

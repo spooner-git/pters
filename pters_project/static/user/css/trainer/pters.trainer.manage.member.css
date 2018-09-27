@@ -634,6 +634,9 @@ select:focus > option:checked {
 }
 	#memberInfoPopup_PC input{
 		-webkit-text-fill-color:#282828;
+		overflow:hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 .infopopup_pc > label{

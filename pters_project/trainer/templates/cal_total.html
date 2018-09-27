@@ -761,11 +761,11 @@
             -->
             <div class="mobileinfo_wrap form-group">
                 <label for="memberName_info" class="ptaddboxtext">
-                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원/그룹/클래스명
+                    <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
                     <span id="npSituationPresent"></span>
                 </label>
-                <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberName_info" name="name" title="name" disabled>
+                <div class="mobileinfo hastooltips">
+                    <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" title="name" disabled>
                     <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" title="lastName" disabled>
                     <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" title="firstName" disabled>
                     <div id="memberSex_info">
@@ -779,8 +779,8 @@
                 <label for="memberId" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
                 </label>
-                <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberId" name="id" title="id" disabled>
+                <div class="mobileinfo hastooltips">
+                    <input type="text" class="mobileinfo_input mobile_title" id="memberId" name="id" title="id" disabled>
                 </div>
             </div>
 
@@ -920,10 +920,10 @@
                     <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
                 </button>
             </div>
-            <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
+            <div id="memberId_info_PC_wrap" class="member_info_PC_wrap hastooltips">
                 <label><img src="/static/user/res/member/icon-user.png">아이디</label>
                 <!--<span id="memberId_info_PC"></span>-->
-                <input id="memberId_info_PC" title="id">
+                <input id="memberId_info_PC" title="id" class="mobile_title">
             </div>
             <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
                 <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
