@@ -431,6 +431,7 @@ div.groupmemberline_thead div{
 }
 div.memberline{
 	display: table;
+	table-layout: fixed;
 	width: 100%;
 	border-bottom: 1px solid #f7f7f7;
 	background:white;
@@ -438,6 +439,10 @@ div.memberline{
 div.memberline div{
 	display: table-cell;
 	padding:8px 0 8px 0;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
 }
 img.substract_groupMember{
 	width: 22px;

@@ -1255,12 +1255,12 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
             var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
             */
-            var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';          
+            var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
             var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="1:1">';
             var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="1:1">';
             var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="1:1" data-edit="view">';
             var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="1:1">';
-            var manageimgs = '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+name+'" data-id="'+id+'" data-dbid="'+dbId+'" data-groupid="1:1"></div>';
+            var manageimgs = '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+name+'" data-id="'+id+'" data-dbid="'+dbId+'" data-groupid="1:1" hidden></div>';
 
             var grouptypetd = '<div class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</div>';
             var nametd = '<div class="_tdname" data-name="'+name+'">'+/*newReg+*/name+'</div>';
