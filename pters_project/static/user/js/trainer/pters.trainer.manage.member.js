@@ -601,31 +601,35 @@ $(document).ready(function(){
 
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
-        var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
-        var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
-        var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
-        complete_member_reg_data_pc(lectureID, dbID);
-        selectore_lectureStateChangeSelectPopup.css('display','none');
-        $('#shade_caution').hide();
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group"){
+            var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+            var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+            var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
+            complete_member_reg_data_pc(lectureID, dbID);
+            selectore_lectureStateChangeSelectPopup.css('display', 'none');
+            $('#shade_caution').hide();
+        }
     });
 
     //재개 처리 버튼
     $('.lectureStateChangeSelectPopup ._resume').click(function(){
-        if(!$(this).hasClass('disabled_button')){
-            var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
-            var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
-            var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
-            resume_member_reg_data_pc(lectureID, dbID);
-            selectore_lectureStateChangeSelectPopup.css('display','none');
-            $('#shade_caution').hide();
-        }else{
-            show_caution_popup(
-                                '<p style="color:#fe4e65;">수강 자동 완료 기능이 활성화 상태입니다.</p>'+
-                                    '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
-                                        '<p>- 옵션에서 수강 자동완료 해제 혹은<br>- 종료일자를 오늘 이후 날짜로 설정해주세요.</p>'+
-                                    '</div>'+
-                                '<p>확인 후 다시 시도해주세요.</p>'
-                                );
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group"){
+            if(!$(this).hasClass('disabled_button')){
+                var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
+                var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
+                var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
+                resume_member_reg_data_pc(lectureID, dbID);
+                selectore_lectureStateChangeSelectPopup.css('display','none');
+                $('#shade_caution').hide();
+            }else{
+                show_caution_popup(
+                                    '<p style="color:#fe4e65;">수강 자동 완료 기능이 활성화 상태입니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>- 옵션에서 수강 자동완료 해제 혹은<br>- 종료일자를 오늘 이후 날짜로 설정해주세요.</p>'+
+                                        '</div>'+
+                                    '<p>확인 후 다시 시도해주세요.</p>'
+                                    );
+            }
         }
     });
 
