@@ -1726,7 +1726,7 @@ function pc_add_member(option){
         });
 
         $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#memberDue_add_2_fast').datepicker('setDate', null).removeClass("dropdown_selected");
+        $('#memberDue_add_2_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker_add').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
         $('#datepicker2_add').datepicker('option', 'minDate', find_max_date(regEnddate));
 
@@ -4488,6 +4488,15 @@ function add_member_form_func(){
                         memberListSet('finished','date','yes',jsondata);
                     })
                 }
+                if($('#currentGroupList').length || $('#finishedGroupList').length ){
+                    get_member_group_class_ing_list("callback", function(jsondata){
+                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        var member_Html = memberlist.html;
+                        var group_class_Html = group_class_ListHtml('current', jsondata);
+                        $('#currentGroupList').html(group_class_Html);
+                    });
+                }
+                
 
                 close_manage_popup('member_add');
                 if($('#memberInfoPopup_PC').css('display') == "block"){
