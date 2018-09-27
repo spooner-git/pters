@@ -213,11 +213,12 @@ ul a{
 	position: relative;
 	width: 160px;
 	border: 1px solid #cccccc;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 #classDuration_mini button{
 	border: 1px solid #cccccc;
+	overflow: hidden;
 }
 
 .pters_dropdown_custom_mini{
