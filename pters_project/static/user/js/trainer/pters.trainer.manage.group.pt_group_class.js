@@ -1263,8 +1263,8 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             var manageimgs = '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+name+'" data-id="'+id+'" data-dbid="'+dbId+'" data-groupid="1:1" hidden></div>';
 
             var grouptypetd = '<div class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</div>';
-            var nametd = '<div class="_tdname" data-name="'+name+'">'+/*newReg+*/name+'</div>';
-            var idtd = '<div class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</div>';
+            var nametd = '<div class="_tdname" data-name="'+name+'" title="'+name+'">'+/*newReg+*/name+'</div>';
+            var idtd = '<div class="_id" data-name="'+id+'" data-dbid="'+dbId+'" title="'+id+'">'+id+'</div>';
             var emailtd = '<div class="_email">'+email+'</div>';
             var phone = '<div class="_contact" data-phone="'+phone+'">'+phone+'</div>';
             var regcounttd = '<div class="_regcount">'+regcount+'</div>';
@@ -1550,8 +1550,8 @@ function groupMemberListSet(group_id, jsondata){
             htmlEnd;
         }else if(bodywidth >= 600){
             memberRow = htmlStart +
-            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
-            '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'" title="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
+            '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'" title="'+groupmember_id+'">'+groupmember_id+'</div>' +
             '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
             '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
             '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
