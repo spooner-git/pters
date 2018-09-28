@@ -36,7 +36,7 @@ from login.views import add_member_no_email_func
 from board.models import BoardTb
 from center.models import CenterTrainerTb
 from login.models import MemberTb, LogTb, CommonCdTb
-from payment.models import PaymentInfoTb, ProductTb
+# from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
@@ -511,21 +511,21 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             next_schedule_start_dt = pt_schedule_data[0].start_dt
             next_schedule_end_dt = pt_schedule_data[0].end_dt
 
-        product_list = ProductTb.objects.filter(use=USE)
-        current_payment_data = []
-        for product_info in product_list:
-            try:
-                payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                            merchandise_type_cd=product_info.merchandise_type_cd,
-                                                            start_date__lte=today, end_date__gte=today,
-                                                            status='paid',
-                                                            use=USE).latest('end_date')
-            except ObjectDoesNotExist:
-                payment_info = None
-            if payment_info is not None:
-                current_payment_data.append(payment_info)
-
-        context['current_payment_data'] = current_payment_data
+        # product_list = ProductTb.objects.filter(use=USE)
+        # current_payment_data = []
+        # for product_info in product_list:
+        #     try:
+        #         payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+        #                                                     merchandise_type_cd=product_info.merchandise_type_cd,
+        #                                                     start_date__lte=today, end_date__gte=today,
+        #                                                     status='paid',
+        #                                                     use=USE).latest('end_date')
+        #     except ObjectDoesNotExist:
+        #         payment_info = None
+        #     if payment_info is not None:
+        #         current_payment_data.append(payment_info)
+        #
+        # context['current_payment_data'] = current_payment_data
         context['next_schedule_start_dt'] = str(next_schedule_start_dt)
         context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['end_schedule_num'] = end_schedule_num
