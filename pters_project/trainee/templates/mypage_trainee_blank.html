@@ -530,60 +530,120 @@
         }
 
 
+//         function naverLogout(){
+//             $.ajax({
+
+//                 url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
+//                 type:'GET',
+//                 dataType:'json',
+
+//                 beforeSend:function(){
+//                 },
+
+//                 //통신성공시 처리
+//                 success:function(data){
+
+//                 },
+
+//                 //보내기후 팝업창 닫기
+//                 complete:function(){
+//                 },
+
+//                 //통신 실패시 처리
+//                 error:function(){
+
+//                 }
+//             });
+
+//             $.ajax({
+//                 url:'/login/delete_sns_info/',
+//                 type:'POST',
+//                 data : {"sns_id":social_login_id, "sns_type":social_login_type},
+//                 dataType : 'html',
+
+//                 beforeSend:function(xhr, settings){
+//                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//                     }
+//                     beforeSend();
+//                 },
+
+//                 //통신성공시 처리
+//                 success:function(data){
+//                     var jsondata = JSON.parse(data);
+//                     console.log(jsondata);
+// {#                    window.location.reload();#}
+//                 },
+
+//                 //보내기후 팝업창 닫기
+//                 complete:function(){
+//                 },
+
+//                 //통신 실패시 처리
+//                 error:function(){
+
+//                 }
+//             });
+//         }
         function naverLogout(){
-            $.ajax({
+            if(confirm("네이버 연동해제시 비밀번호를 초기화(변경)하셔야\n 정상적으로 재로그인이 가능합니다.")){
+                $.ajax({
 
-                url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
-                type:'GET',
-                dataType:'json',
+                    url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
+                    type:'GET',
+                    dataType:'json',
 
-                beforeSend:function(){
-                },
+                    beforeSend:function(){
+                    },
 
-                //통신성공시 처리
-                success:function(data){
+                    //통신성공시 처리
+                    success:function(data){
 
-                },
+                    },
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-                },
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    },
 
-                //통신 실패시 처리
-                error:function(){
+                    //통신 실패시 처리
+                    error:function(){
 
-                }
-            });
-
-            $.ajax({
-                url:'/login/delete_sns_info/',
-                type:'POST',
-                data : {"sns_id":social_login_id, "sns_type":social_login_type},
-                dataType : 'html',
-
-                beforeSend:function(xhr, settings){
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
-                    beforeSend();
-                },
+                });
 
-                //통신성공시 처리
-                success:function(data){
-                    var jsondata = JSON.parse(data);
-                    console.log(jsondata);
-{#                    window.location.reload();#}
-                },
+                $.ajax({
+                    url:'/login/delete_sns_info/',
+                    type:'POST',
+                    data : {"sns_id":social_login_id, "sns_type":social_login_type},
+                    dataType : 'html',
 
-                //보내기후 팝업창 닫기
-                complete:function(){
-                },
+                    beforeSend:function(xhr, settings){
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
 
-                //통신 실패시 처리
-                error:function(){
+                    //통신성공시 처리
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        window.location.reload();
+                    },
 
-                }
-            });
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+            }else{
+                
+            }
+            
         }
         
         $('#blank_member_popup span').click(function(){
