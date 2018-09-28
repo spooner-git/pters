@@ -71,7 +71,7 @@ class BillingCancelInfoTb(TimeStampedModel):
 
 class ProductTb(TimeStampedModel):
     product_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-    merchandise_type_cd = models.CharField(db_column='MERCHANDISE_TYPE_CD', max_length=45, blank=True, default='')
+    upper_product_id = models.CharField(db_column='UPPER_PRODUCT_ID', max_length=45, blank=True, default='')
     name = models.CharField(db_column='NAME', max_length=100, blank=True, default='')
     contents = models.CharField(db_column='CONTENTS', max_length=200,  blank=True, default='')
     order = models.IntegerField(db_column='ORDER', default=1)
@@ -82,6 +82,19 @@ class ProductTb(TimeStampedModel):
         db_table = 'PRODUCT_TB'
 
 
+class FunctionAuthTb(TimeStampedModel):
+    function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    function_auth_type_cd = models.CharField(db_column='FUNCTION_AUTH_TYPE_CD', max_length=45, blank=True, null=True)
+    function_auth_type_name = models.CharField(db_column='FUNCTION_AUTH_TYPE_NAME', max_length=255,
+                                               blank=True, null=True)
+    order = models.IntegerField(db_column='ORDER', default=1)
+    use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'FUNCTION_AUTH_TB'
+
+
 class ProductPriceTb(TimeStampedModel):
     product_price_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     product_tb = models.ForeignKey(ProductTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
@@ -89,6 +102,7 @@ class ProductPriceTb(TimeStampedModel):
     price = models.IntegerField(db_column='PRICE', default=0)
     sale_price = models.IntegerField(db_column='SALE_PRICE', default=0)
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45,  blank=True, default='')
+    period_month = models.IntegerField(db_column='PERIOD_MONTH', default=1)
     order = models.IntegerField(db_column='ORDER', default=1)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
@@ -97,16 +111,14 @@ class ProductPriceTb(TimeStampedModel):
         db_table = 'PRODUCT_PRICE_TB'
 
 
-# class FunctionAuthTb(models.Model):
-#     function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
-#     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
-#     function_auth_type_cd = models.CharField(db_column='FUNCTION_AUTH_TYPE_CD', max_length=45, blank=True, null=True)
-#     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, null=True)
-#     expired_date = models.DateField(db_column='EXPIRED_DATE', blank=True, null=True)  # Field name made lowercase.
-#     reg_dt = models.DateTimeField(db_column='REG_DT', blank=True, null=True)  # Field name made lowercase.
-#     mod_dt = models.DateTimeField(db_column='MOD_DT', blank=True, null=True)  # Field name made lowercase.
-#     use = models.IntegerField(db_column='USE', blank=True, null=True)  # Field name made lowercase.
-#
-#     class Meta:
-#         managed = False
-#         db_table = 'FUNCTION_AUTH_TB'
+class ProductFunctionAuthTb(TimeStampedModel):
+    product_function_auth_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    product_tb = models.ForeignKey(ProductTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    function_auth_tb = models.ForeignKey(FunctionAuthTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    auth_type_cd = models.CharField(db_column='AUTH_TYPE_CD', max_length=255, blank=True, null=True)
+    order = models.IntegerField(db_column='ORDER', default=1)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PRODUCT_FUNCTION_AUTH_TB'

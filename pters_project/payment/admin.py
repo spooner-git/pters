@@ -21,7 +21,7 @@ class BillingInfoTbAdmin(admin.ModelAdmin):
 
 @admin.register(ProductTb)
 class ProductTbAdmin(admin.ModelAdmin):
-    list_display = ('product_id', 'merchandise_type_cd', 'name', 'contents', 'order',
+    list_display = ('product_id', 'upper_product_id', 'name', 'contents', 'order',
                     'reg_dt', 'mod_dt', 'use')
 
 
