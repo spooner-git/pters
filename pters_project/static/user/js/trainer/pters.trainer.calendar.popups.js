@@ -992,7 +992,7 @@
                 close_info_popup('cal_popup_plandelete');
                 close_info_popup('cal_popup_planinfo');
                 close_info_popup('cal_popup_plancheck');
-                close_planadd_popup()
+                close_planadd_popup();
                 close_manage_popup('member_info_PC');
             }
         }
