@@ -514,7 +514,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
         group_delete_JSON.group_id = group_id
         shade_index(150);
     }else{
-        alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.')
+        alert('리스트를 펼쳐 확인 후 삭제 해주세요.')
     }
 
 })
