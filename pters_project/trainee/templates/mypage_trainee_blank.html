@@ -433,8 +433,8 @@
 
                 //통신성공시 처리
                 success:function(data){
+                    window.location.reload();
                     var jsondata = JSON.parse(data)
-                    console.log('data',jsondata)
                     fill_recieved_member_info(jsondata)
                 },
 
