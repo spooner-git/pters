@@ -607,7 +607,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     if($(this).attr('data-groupstatus') == "IP"){
         $('._complete').css('display', 'block');
         $('._resume, ._refund, ._delete').css('display', 'none');
-        $(document).on('click', '._complete', function(){
+        $(document).on('click', 'div.lectureStateChangeSelectPopup ._complete', function(){
             if($('.lectureStateChangeSelectPopup').attr('data-grouptype')=='group'){
                 modify_group_status($(this).attr('data-groupid'), 'complete');
             }else{
@@ -621,7 +621,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     }else if($(this).attr('data-groupstatus') == "PE"){
         $('._resume').css('display', 'block');
         $('._complete, ._refund, ._delete').css('display', 'none');
-        $(document).on('click', '._resume', function(){
+        $(document).on('click', 'div.lectureStateChangeSelectPopup ._resume', function(){
             if($('.lectureStateChangeSelectPopup').attr('data-grouptype')=='group'){
                 modify_group_status($(this).attr('data-groupid'), 'resume');
             }else{
@@ -1026,6 +1026,8 @@ function modify_group_status(group_id, option){
                 //     });
                 //     //group_class_ListHtml('finished',jsondata)
                 // }
+
+
                 if($('#currentGroupList').css('display') == "block"){
                     get_member_group_class_ing_list("callback", function(jsondata){
                         var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
