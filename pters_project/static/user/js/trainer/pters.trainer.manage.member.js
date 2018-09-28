@@ -3,12 +3,12 @@ $(document).ready(function(){
     //ESC키를 눌러서 팝업 닫기
     $(document).keyup(function(e){
         if(e.keyCode == 27){
-            if($('#page_addmember').css('display') == 'block'){
+            if($('#cal_popup_plandelete').css('display') == 'block'){
+                close_info_popup('cal_popup_plandelete');
+            }else if($('#page_addmember').css('display') == 'block'){
                 close_manage_popup('member_add');
             }else if($('#memberInfoPopup_PC').css('display') == 'block'){
                 close_manage_popup('member_info_PC');
-            }else{
-                close_info_popup('cal_popup_plandelete');
             }
         }
     });
