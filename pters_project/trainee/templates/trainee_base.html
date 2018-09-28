@@ -239,7 +239,7 @@
         $('.ajaxloadingPC').hide();
     });
 
-
+console.log("classid",class_id[0],class_id )
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///
     var class_name = '{{ request.session.class_type_name }}';
@@ -284,7 +284,7 @@
         "location" : "Japan"           //Korea, Japan, English
     };
 
-    console.log("classid",class_id[0],class_id )
+    
         if(class_id[0] == ""){
             var Options = { "hourunit" : 30,                       // 30 or 60
                             "classDur" : '{{ request.session.class_hour }}',      // 30 or 60
