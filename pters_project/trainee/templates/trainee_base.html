@@ -251,8 +251,8 @@
     var class_id = ['{{ request.session.class_id }}'];
 
     var class_background_img_url = [];
-
-    if(class_id[0] != ""){
+    console.log(class_id[0])
+    if(class_id[0] != ''){
         var Options = {  "hourunit" : 30,                       // 30 or 60
             "classDur" : '{{ request.session.class_hour }}',      // 30 or 60
             "timeDur" : '{{ lt_res_member_time_duration }}',
