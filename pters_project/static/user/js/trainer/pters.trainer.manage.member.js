@@ -1268,7 +1268,8 @@ $(document).ready(function(){
         var selector_ADD_GROUPMEMBER_NEW = $('._ADD_GROUPMEMBER_NEW');
         if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none"){
             var id_search_confirm = $('#id_search_confirm').val();
-            if(select_all_check==true){
+            check_dropdown_selected();
+            if(select_all_check == true){
                 if(id_search_confirm==0){ //신규 회원을 직접 정보를 입력했을 때
                     add_member_form_noemail_func();
                 }else{                    //회원을 PTERS에서 검색했을 때
@@ -1283,13 +1284,15 @@ $(document).ready(function(){
 
             //그룹 추가
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "block"){
-            if(select_all_check==true){
+            check_dropdown_selected();
+            if(select_all_check == true){
                 add_group_form_func();
             }
 
             //그룹원 추가
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block"){
-            if(select_all_check==true){
+            check_dropdown_selected();
+            if(select_all_check == true){
                 add_groupmember_form_func()
             }
         }
@@ -3035,7 +3038,6 @@ function check_dropdown_selected(){
     var selector_upbutton_check = $("#upbutton-check");
     var selector_page_addmember_submitBtn_first_child = $('#page_addmember .submitBtn:first-child');
 
-    console.log((dueInput_fast).hasClass("dropdown_selected"));
     if(selector_ADD_GROUP_NEW.css('display')=="none" && $('._ADD_MEMBER_NEW').css('display')=="block"){
         if((lastnameInput).hasClass("dropdown_selected")==true && (firstnameInput).hasClass("dropdown_selected")==true && (countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true && (dueInput_fast).hasClass("dropdown_selected") == true && sexInput.length>0){
             selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
