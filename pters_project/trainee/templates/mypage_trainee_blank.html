@@ -523,9 +523,18 @@
 
         function goPage(option){
             if(option == 2){
-                location.href= "/accounts/password/change/"
-            }else if(option = "delAccount"){
-                location.href="/trainee/delete_trainee_account/";
+                if(Number(social_login_check) == 0){
+                    location.href= "/accounts/password/change/";
+                }else if(Number(social_login_check) == 1){
+                    location.href= "/accounts/password/reset/";
+                }
+                
+
+            }else if(option == "delAccount"){
+                location.href="/trainer/delete_account/";
+
+            }else if(option == "payment_history"){
+                location.href = "/payment/payment_history/";
             }
         }
 
