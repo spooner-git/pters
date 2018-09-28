@@ -19,7 +19,7 @@ from configs import settings
 from configs.const import USE, UN_USE
 
 from login.models import MemberTb
-from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb, ProductPriceTb
 
 from .functions import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
@@ -33,7 +33,10 @@ class PaymentView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
-        product_list = ProductTb.objects.filter(use=USE)
+        product_list = ProductTb.objects.filter(upper_product_id='1', use=USE).order_by('order')
+        for product_info in product_list:
+            product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id, use=USE).order_by('order')
+            product_info.price_list = product_price_list
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')

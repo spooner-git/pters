@@ -25,25 +25,39 @@
 
 
     <div id="payment_contents_wrap">
-        <div class="payment_function_wrap">
-            <label class="function_label">베이직</label>
-            <p>- 일정 조회 및 등록 시 기간 자유 선택 (2주 제한 해제) <br>- 강사 및 소속 회원의 화면에서 광고 제거</p>
-            <div class="payment_monthly">
-                <label class="inner_label">정기 결제</label>
-                <p class="inner_explain"><span class="price_before">6,000원</span>
-                                        <span class="price_after"> → 매월 5,000원</span>
-                </p>
-                <button id="pay_basic_function_monthly">정기 결제 구매</button>
-            </div>
-            <div class="seperator"></div>
-            <div class="payment_instant">
-                <label class="inner_label">1개월 이용권</label>
-                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  6,000원</span></p>
-                <button id="pay_basic_function_instant">구매</button>
-            </div>
-        </div>
+    {% autoescape off %}
+        {% for product_info in product_data %}
+            <div class="payment_function_wrap">
+                <label class="function_label"> {{ product_info.name }} </label>
+                <p> {{ product_info.contents|linebreaks }} </p>
+                {% for price_info in product_info.price_list %}
+                    <div class="payment_monthly">
+                        <label class="inner_label">{{ price_info.name }}</label>
+                        {% if price_info.price != price_info.sale_price %}
+                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.price }}원</span>
+                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.sale_price }}원</span>
+                            </p>
+                        {% else %}
+                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.sale_price }}원</span>
+                            </p>
+                        {% endif %}
 
-
+                        {% if price_info.price != 0 %}
+                            {% if price_info.payment_type_cd == 'PERIOD' %}
+                                <button id="pay_basic_function_monthly">정기 결제 구매</button>
+                            {% else %}
+                                <button id="pay_basic_function_instant">구매</button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    {%if forloop.last == False%}
+                        <div class="seperator"></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endautoescape %}
+<!--
         <div class="payment_function_wrap">
             <label class="function_label">엘리트</label>
             <p>- 베이직 기능 <br>- <span style="color:#fe4e65;text-decoration: underline;">지점 1개</span> 관리자 기능 (지점 관리 및 통계, 직원 관리, 직원 수업 배정)</p>
@@ -98,7 +112,7 @@
             </div>
         </div>
     </div>
-
+-->
 
     <div id="purchase_popup">
         <label style="font-size: 18px;" id="purchase_popup_product">피터스 이용권 구매하기</label>
