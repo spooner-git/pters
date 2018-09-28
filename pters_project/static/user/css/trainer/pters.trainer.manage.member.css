@@ -420,12 +420,16 @@ select:focus > option:checked {
 	background:transparent;
 	text-align: left;
 	padding-left: 20px;
-	width: 100%;
+	width: 80%;
 	-webkit-appearance:none;
 	border-radius: 0;
 	color: #282828 !important;
 	-webkit-text-fill-color:#282828 !important;
 	-webkit-opacity:1;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .mobileinfo_birth{
 	border: 0;
