@@ -187,18 +187,13 @@ $(document).ready(function(){
             },
 
             success:function(data){
-                if(Options.worktime !=""){
-                    var jsondata = JSON.parse(data);
-                    if(jsondata.messageArray.length>0){
-                        $('#errorMessageBar').show();
-                        $('#errorMessageText').text(jsondata.messageArray);
-                    }else{
-                        draw_trainee_lecture_history(jsondata, $('#myActiveHistory'));
-                    }
+                var jsondata = JSON.parse(data);
+                if(jsondata.messageArray.length>0){
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
                 }else{
-                    
+                    draw_trainee_lecture_history(jsondata, $('#myActiveHistory'));
                 }
-
             },
 
             complete:function(){
