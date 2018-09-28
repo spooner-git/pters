@@ -116,7 +116,7 @@ def login_trainer(request):
                     error = '이미 탈퇴한 회원입니다.'
         else:
             error = 'ID/비밀번호를 확인해주세요.'
-            next_page = '/login/'
+            next_page = '/'
             # logger.error(error)
 
     if error is None:
