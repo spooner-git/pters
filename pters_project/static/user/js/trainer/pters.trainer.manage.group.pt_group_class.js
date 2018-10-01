@@ -1622,12 +1622,33 @@ $('#popup_delete_btn_yes').click(function(){
         //ajax_block_during_delete_weekcal = false;
         if(deleteTypeSelect == "groupMember_Substract_From_Group"){
             disable_delete_btns_during_ajax();
-            delete_groupmember_from_grouplist('callback',function(){
+            delete_groupmember_from_grouplist('callback', function(){
                 close_info_popup('cal_popup_plandelete');
+                refresh_all_member_group_class_list();
             });
         }
     }
 });
+
+function refresh_all_member_group_class_list(){
+    if($('#currentGroupList').css('display') == "block"){
+        get_member_group_class_ing_list("callback", function(jsondata){
+            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+            var member_Html = memberlist.html;
+            var group_class_Html = group_class_ListHtml('current', jsondata);
+            $('#currentGroupList').html(group_class_Html);
+        });
+    }else if($('#finishedGroupList').css('display') == "block"){
+        get_member_group_class_end_list("callback", function(jsondata){
+            var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+            var member_Html = memberlist.html;
+            var group_class_Html = group_class_ListHtml('finished', jsondata);
+            $('#finishedGroupList').html(group_class_Html);
+        });
+    }
+}
+
+
 function disable_delete_btns_during_ajax(){
     $('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button');
     //ajax_block_during_delete_weekcal = false;
