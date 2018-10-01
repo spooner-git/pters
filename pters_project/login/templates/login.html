@@ -333,7 +333,7 @@
 
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script>
-{#        delete_token('pc');#}
+{#      delete_token('pc');#}
         var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
             $('._company').css('display','none');
@@ -358,7 +358,7 @@
 
 
         $('#errorMessageBar span:nth-child(2)').click(function(){
-            $('#errorMessageBar').fadeOut('fast')
+            $('#errorMessageBar').fadeOut('fast');
         });
 
         function getCookie(name) {
