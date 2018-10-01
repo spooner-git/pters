@@ -897,7 +897,7 @@ $(document).ready(function(){
             get_repeat_info(groupid);
             $('#id_repeat_group_id').val(groupid);
 
-            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':groupid});
+            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'), 'data-groupid':groupid});
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-groupid', groupid);
             $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
             $("#id_group_id").val(groupid);
@@ -914,6 +914,14 @@ $(document).ready(function(){
                 });
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide();
+                get_groupmember_list(groupid, 'callback', function(jsondata){
+                    draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'));
+                    if(bodywidth > 600){
+                        //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200);
+                        $('#page-addplan').animate({'top':($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()},250);
+                    }
+                    check_dropdown_selected_addplan();
+                });
             }
         }
 
@@ -3010,6 +3018,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 function draw_groupMemberList_to_view(jsondata, targetHTML){
+    console.log(jsondata)
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">'+'회원명'+'</div>'+'<div>'+'예약 가능'+'</div>'+'<div>남은 횟수</div>'+'</div>'];
     var addedCount = 0;
@@ -3245,6 +3254,12 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "groupptadd"){
+        console.log(
+                (memberSelect).hasClass("dropdown_selected"),
+                (dateSelect).hasClass("dropdown_selected"),
+                (durSelect).hasClass("dropdown_selected"),
+                (startSelect).hasClass("dropdown_selected")
+            );
         if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');
