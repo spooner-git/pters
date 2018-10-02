@@ -688,7 +688,7 @@ $(document).ready(function(){
     $("#datepicker_refund").datepicker({
         onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
-               
+
             }
         }
     });
@@ -715,7 +715,6 @@ $(document).ready(function(){
         $('#shade_caution').hide();
         hide_shadow_responsively();
     });
-
 
 
 
@@ -1326,16 +1325,16 @@ $(document).ready(function(){
     });
 
     //PC 회원기본 정보 수정 버튼 (회원정보창에서)
-    $(document).on('click','button._info_baseedit',function(){
+    $(document).on('click', 'button._info_baseedit', function(){
         var selector_memberSex_info_PC_selectboxopt = $('#memberSex_info_PC .selectboxopt');
         if($(this).attr('data-view') == 'view'){
-            $(this).attr('data-view','edit');
-            $(this).find('img').attr('src','/static/user/res/btn-pt-complete.png');
+            $(this).attr('data-view', 'edit');
+            $(this).find('img').attr('src', '/static/user/res/btn-pt-complete.png');
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC, #memberName_info_lastName_PC, #memberName_info_firstName_PC').addClass('input_available').attr('disabled',false);
             selector_memberSex_info_PC_selectboxopt.show();
             $('#memberSex_info_PC .selectboxopt[value="'+$('#form_sex_modify').val()+'"]').addClass('selectbox_checked');
 
-            $('#memberPhone_info_PC').attr('placeholder','숫자만 입력해주세요.');
+            $('#memberPhone_info_PC').attr('placeholder', '숫자만 입력해주세요.');
 
 
             $('#memberName_info_PC').hide();
@@ -1343,18 +1342,18 @@ $(document).ready(function(){
 
 
         }else if($(this).attr('data-view') == 'edit'){
-            $(this).attr('data-view','view');
-            $(this).find('img').attr('src','/static/user/res/icon-pencil.png');
+            $(this).attr('data-view', 'view');
+            $(this).find('img').attr('src', '/static/user/res/icon-pencil.png');
             $('#memberPhone_info_PC, #memberBirth_select_wrap select, #memberName_info_PC, #memberName_info_lastName_PC, #memberName_info_firstName_PC').removeClass('input_available').attr('disabled',true);
             selector_memberSex_info_PC_selectboxopt.hide();
             $('#memberSex_info_PC .selectbox_checked').show().removeClass('selectbox_checked');
 
-            $('#memberPhone_info_PC').attr('placeholder','');
+            $('#memberPhone_info_PC').attr('placeholder', '');
 
             $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val());
             $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide();
-
-            send_modified_member_base_data();
+            var dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+            send_modified_member_base_data(dbID);
         }
     });
 
@@ -1389,7 +1388,8 @@ $(document).ready(function(){
 
         }else if($(this).attr('data-type') == "modify" ){
             // if(select_all_check==false){
-            send_modified_member_base_data();
+            var dbID = $('#memberInfoPopup #memberId').attr('data-dbid');
+            send_modified_member_base_data(dbID);
             $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val());
             $('#memberName_info_lastName, #memberName_info_firstName').hide();
             /*
@@ -1421,7 +1421,7 @@ $(document).ready(function(){
     });
 });
 
-function send_modified_member_base_data(){
+function send_modified_member_base_data(dbID){
     var bodywidth = window.innerWidth;
     var $form = $('#member-add-form-modify');
     $.ajax({
@@ -1443,7 +1443,7 @@ function send_modified_member_base_data(){
         success:function(data){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
-                $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
+                $('#upbutton-modify img').attr('src', '/static/user/res/icon-pencil.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -1455,18 +1455,21 @@ function send_modified_member_base_data(){
                     close_manage_popup('member_info');
                     //$('#page_managemember').show();
                     $('#page_managemember').css({'height':'100%'});
+                }else{
+                    get_indiv_member_info(dbID);
                 }
                 // $('html').css("cursor","auto");
-                $('#upbutton-modify img').attr('src','/static/user/res/ptadd/icon-pencil.png');
+                $('#upbutton-modify img').attr('src', '/static/user/res/ptadd/icon-pencil.png');
                 if($('#currentMemberList').css('display') == "block"){
-                    get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
-                    })
+                    get_member_ing_list("callback", function(jsondata){
+                        memberListSet('current', 'date', 'yes', jsondata);
+                    });
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
-                    })
+                        memberListSet('finished', 'date', 'yes', jsondata);
+                    });
                 }
+                
                 $('#startR').attr('selected', 'selected');
                 console.log('success');
 
