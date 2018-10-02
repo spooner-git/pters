@@ -3158,6 +3158,11 @@ $(document).on('click', '.group_member_cancel', function(){
         }
         get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
             draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+            $('#groupplan_participants_status').text(
+                                                        ' ('+$('div.groupParticipantsRow').length +
+                                                        '/'+
+                                                        max+')'
+                                                    );
         });
     });
 });

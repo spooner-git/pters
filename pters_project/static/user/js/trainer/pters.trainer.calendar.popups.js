@@ -440,7 +440,7 @@
             var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
             var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
             var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
-            var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_class_type_name+'">['+group_class_type_name+'] '+info[6]+' ('+group_current_member_num+'/'+group_max_member_num+')</span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+            var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_class_type_name+'">['+group_class_type_name+'] '+info[6]+'<span id="groupplan_participants_status"> ('+group_current_member_num+'/'+group_max_member_num+')</span> </span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
             var infoText3 = $(this).attr('data-memo');
             if($(this).attr('data-memo') == undefined){
                 infoText3 = "";
