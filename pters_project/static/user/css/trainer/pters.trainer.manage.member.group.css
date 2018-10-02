@@ -160,6 +160,8 @@ img.substract_addedMember{
 
 .list_addByList > div:nth-child(1){
 	width: 50%;
+	text-align: left;
+	padding-left: 25px;
 }
 .list_addByList > div:nth-child(2){
 	width: 27%;

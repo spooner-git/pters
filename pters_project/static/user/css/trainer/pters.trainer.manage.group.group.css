@@ -411,6 +411,11 @@ div._groupmanage img._info_delete{
 		font-weight: 500;
 		font-size: 12px;
 	}
+	#subpopup_addByList{
+		overflow-y: auto;
+		max-height: 70%;
+		top: 92px;
+	}
 }
 
 /*그룹 탭에서 그룹들 나열*/

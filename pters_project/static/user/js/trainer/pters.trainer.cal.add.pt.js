@@ -3115,7 +3115,7 @@ function send_add_groupmember_plan(use, callback){
 
 //그룹/클래스 일정내에서 그룹원을 일정에 추가할때
 function set_pters_scrolling_to_groupmember_add($selector){ //subpopup_addByList_thisgroup or subpopup_addByList_whole
-    append_dropdown_scroll_arrow('#subpopup_addByList_plan #subpopup_addByList_thisgroup', '#subpopup_addByList_plan .mode_switch_button_wrap_cal', 25, -395, 'left:0;', 'left:0;');
+    append_dropdown_scroll_arrow('#subpopup_addByList_plan #subpopup_addByList_thisgroup', '#subpopup_addByList_plan .mode_switch_button_wrap_cal', 25, -420, 'left:0;', 'left:0;');
     set_list_overflow_scrolling('#subpopup_addByList_plan #subpopup_addByList_thisgroup', '#subpopup_addByList_plan .mode_switch_button_wrap_cal');
 }
 
