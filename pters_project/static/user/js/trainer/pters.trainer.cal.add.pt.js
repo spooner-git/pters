@@ -2,16 +2,17 @@
 $(document).ready(function(){
 
     //바로 실행
-    get_current_member_list("callback", function(jsondata){
-        set_member_dropdown_list(jsondata);
-    });
-    get_current_group_list("callback", function(jsondata){
-        set_group_dropdown_list(jsondata);
-        //append_dropdown_scroll_arrow("#members_pc", "#members_pc", 0, 0, "", "");
-        set_list_overflow_scrolling("#members_pc", "#members_pc");
-        set_list_overflow_scrolling('#durations_mini', '#durations_mini');
-    });
+    // get_current_member_list("callback", function(jsondata){
+    //     set_member_dropdown_list(jsondata);
+    // });
+    // get_current_group_list("callback", function(jsondata){
+    //     set_group_dropdown_list(jsondata);
+    //     //append_dropdown_scroll_arrow("#members_pc", "#members_pc", 0, 0, "", "");
+    //     set_list_overflow_scrolling("#members_pc", "#members_pc");
+    //     set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+    // });
     //
+    
 
     //유저가 터치인지 마우스 사용인지 알아낸다
     var touch_or_mouse = "";
@@ -121,6 +122,8 @@ $(document).ready(function(){
     //긁어서 일정 추가
     if(bodywidth > 600 && (varUA.match('iphone') ==null && varUA.match('ipad')==null && varUA.match('ipod')==null && varUA.match('android') == null) ){
         $(document).on('mousedown', '.td00, .td30', function(e){
+            set_member_group_dropdown_list();
+
             e.stopPropagation();
             close_planadd_popup_mini();
             $(document).off('mouseup');
@@ -269,7 +272,9 @@ $(document).ready(function(){
         timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
     }
 
-    $(document).on('click','.td00',function(e){
+    $(document).on('click', '.td00', function(e){
+        set_member_group_dropdown_list();
+
         var thisIDDate = $(this).attr('id').replace(/_/gi, "-");
         if( (compare_date2(thisIDDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIDDate)) && Options.auth_limit == 0 ){
                 show_caution_popup(`<div style="margin-bottom:10px;">
@@ -1266,9 +1271,7 @@ $(document).ready(function(){
                                 }
 
                                 super_ajaxClassTime();
-                                $('#members_mobile, #members_pc').html('');
-                                get_current_member_list();
-                                get_current_group_list();
+                                set_member_group_dropdown_list();
 
                                 close_planadd_popup();
                                 close_planadd_popup_mini();
@@ -1554,6 +1557,24 @@ $(document).ready(function(){
     }
 });
 
+function set_member_group_dropdown_list(init){
+    $('#members_mobile, #members_pc').html('');
+    if(init == "init"){
+        get_current_member_list("callback", function(jsondata){
+            set_member_dropdown_list(jsondata);
+        });
+        get_current_group_list("callback", function(jsondata){
+            set_group_dropdown_list(jsondata);
+            //append_dropdown_scroll_arrow("#members_pc", "#members_pc", 0, 0, "", "");
+            set_list_overflow_scrolling("#members_pc", "#members_pc");
+            set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+        });
+    }else{
+        get_current_member_list();
+        get_current_group_list();
+    }
+}
+
 
 function float_btn_addplan(option){
     if(option == 0){
@@ -1573,6 +1594,7 @@ function float_btn_addplan(option){
         open_pt_off_add_popup('ptadd');
         ajaxTimeGraphSet(today_YY_MM_DD);
         shade_index(100);
+        set_member_group_dropdown_list();
         //scrollToDom($('#calendar'))
 
     }else if(option == 2){
