@@ -3889,7 +3889,7 @@ function smart_refresh_member_group_class_list(){
         $('#finishedGroupList div.groupWrap_selected').each(function(){
             opened_group.push($(this).attr('data-groupid'));
         });
-        get_member_group_class_ing_list("callback", function(jsondata){
+        get_member_group_class_end_list("callback", function(jsondata){
             var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('finished', jsondata);
             $('#finishedGroupList').html(group_class_Html);
