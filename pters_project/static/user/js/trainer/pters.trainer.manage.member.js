@@ -291,7 +291,7 @@ $(document).ready(function(){
 
 
     //PC 회원삭제버튼 (회원목록에서)
-    $(document).on('click','._manage img._info_delete',function(e){
+    $(document).on('click', '._manage img._info_delete', function(e){
         e.stopPropagation();
         deleteTypeSelect = "memberinfodelete";
         var selectedUserId = $(this).parent('td').siblings('._id').text();
@@ -329,7 +329,7 @@ $(document).ready(function(){
 
 
     //회원 등록이력 수정 버튼
-    $(document).on('click','#memberRegHistory_info_PC img, #memberRegHistory_info img',function(){
+    $(document).on('click', '#memberRegHistory_info_PC img, #memberRegHistory_info img', function(){
         var bodywidth = window.innerWidth;
         var text = "완료";
         if(Options.language == "JPN"){
@@ -358,9 +358,9 @@ $(document).ready(function(){
                 myNoteRow = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').siblings('div[data-leid='+$(this).attr('data-leid')+']').find('input');
                 myRowParent = $(this).parent('div').siblings('div')
             }
-            myRow.addClass('input_available').attr('disabled',false);
-            myRowSelect.addClass('input_available').attr('disabled',false);
-            myNoteRow.addClass('input_available').attr('disabled',false);
+            myRow.addClass('input_available').attr('disabled', false);
+            myRowSelect.addClass('input_available').attr('disabled', false);
+            myNoteRow.addClass('input_available').attr('disabled', false);
             var myStartDate = myRowParent.find('.lec_start_date').val();
             var myEndDate = myRowParent.find('.lec_end_date').val();
             var myPrice = myRowParent.find('#regPrice').val();
@@ -372,8 +372,8 @@ $(document).ready(function(){
             $(this).attr('src','/static/user/res/btn-pt-complete.png');
             $('#form_member_dbid').val(dbID);
             $('#form_lecture_id').val(lectureID);
-            $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myStartDate,'-'));
-            $('#form_end_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myEndDate,'-'));
+            $('#form_start_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myStartDate, '-'));
+            $('#form_end_date').val(date_format_yyyymmdd_to_yyyymmdd_split(myEndDate, '-'));
             $('#form_price').val(myPrice);
             $('#form_lecture_reg_count').val(myRegCount);
             $('#form_note').val(myNoteRow.val());
@@ -1053,12 +1053,30 @@ $(document).ready(function(){
     });
 
 
-    $(document).on("focus","input.lec_start_date, input.lec_end_date",function(){
+    $(document).on("focus", "input.lec_start_date, input.lec_end_date", function(){
+        var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date');
+        var endDateOriDate = endDatepicker.val().replace(/\./gi, '-');
         $(this).datepicker({
             onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
-                $('#'+$(this).attr('data-type').replace(/lec_/gi,'form_')).val($(this).val());
+                $('#'+$(this).attr('data-type').replace(/lec_/gi, 'form_')).val($(this).val());
                 var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date');
-                var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date');
+                var selectedStartDate = startDatepicker.val().replace(/\./gi, '-');
+                // var endDateOriDate = endDatepicker.val().replace(/\./gi, '-');
+                if( selectedStartDate == undefined || selectedStartDate.length == 0 ){
+                    endDatepicker.datepicker('setDate', null);
+                    show_caution_popup('<p style="color:#fe4e65;">날짜 선택</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>시작 일자를 먼저 선택해주세요</p>'+
+                                        '</div>');
+                }else if(compare_date2( dateText, selectedStartDate ) == false){
+                    endDatepicker.datepicker('setDate', endDateOriDate);
+                    $('#'+$(this).attr('data-type').replace(/lec_/gi, 'form_')).val(endDateOriDate);
+                    show_caution_popup('<p style="color:#fe4e65;">종료일자가 시작일자보다 앞섭니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>종료일자는 시작날짜 이후로 선택해주세요.</p>'+
+                                        '</div>');
+                }
+
                 //$("input.lec_end_date").datepicker('option','minDate',startDatepicker.val());
                 //$("input.lec_start_date").datepicker('option','maxDate',endDatepicker.val());
             }
