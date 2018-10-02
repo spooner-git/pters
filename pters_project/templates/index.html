@@ -31,7 +31,6 @@
         <meta name="login" content="trainer_login">
         <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}>
         <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
-        <!-- <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %} > -->
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
@@ -89,6 +88,29 @@
             nav.upperbar span{
                 display: none;
             }
+            #errorMessageBar{
+                display: block;
+                width: 100%;
+                position: sticky;
+                top: 0;
+                left: 0;
+                height: 35px;
+                text-align: center;
+                background: red;
+                color: #ffffff;
+                font-size: 15px;
+                font-weight: bold;
+                z-index: 1500;
+            }
+            #errorMessageBar span{
+                line-height: 35px;
+            }
+            #errorMessageBar span:nth-child(2){
+                position: absolute;
+                right: 0;
+                margin-right: 10px;
+                cursor: pointer;
+            }
             @media(min-width:1024px){
                .loginbox{
                     display: block;
@@ -116,8 +138,6 @@
                     display: block;
                 }
             }
-            
-
         </style>
 
     {% endblock %}
@@ -152,6 +172,15 @@
     <div class="album_wrap" id="album_wrap">
         <div class="album" id="promote_1">
             <div class="loginbox">
+                {% for message in messages %}
+                    {% if message.tags == "error" %}
+
+                        <div id="errorMessageBar">
+                            <span id="errorMessageText">{{ message }}</span><span>닫기</span>
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
                 <!-- <div class="logintext">
                     <div><img src="/static/user/res/PTERS_logo_pure.png" id="pterstext" alt="피터스 로고"  onclick="location.href='{% url 'index' %}'"><span id="logintext">로그인</span></div>
                 </div> -->
@@ -443,6 +472,7 @@
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
     <script>
+
         var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
         if(varUA.match('android') != null){
             var devicetext = '브라우저, Android 앱으로'
@@ -457,7 +487,6 @@
         $('#connectedMethod').html(methodtext);
         $('#connectedDevice').html(devicetext);
 
-        console.log(varUA)
         if(varUA.match('MSIE') != null || varUA.match('rv:11.0')){
             $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none')
             $('#IE_block_explain').css('display','block')
@@ -495,7 +524,7 @@
                 scroll = false
                 setTimeout(function(){scroll = true}, 500)
             }
-        })
+        });
 
 
         var initX;
@@ -504,7 +533,7 @@
         $(document).on('touchstart','.album_wrap',function(e){
             initX = e.originalEvent.touches[0].clientX;
 
-        })
+        });
 
         if($('body').width()<1025){
             $(document).on('touchend','.album_wrap',function(e){

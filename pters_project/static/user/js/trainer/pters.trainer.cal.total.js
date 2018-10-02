@@ -788,7 +788,7 @@ function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한
 
         if(Options.classDur == 30){
         }else if(Options.classDur == 60){
-            $('.time-row').css('border-bottom','0');
+            $('.time-row').css('border-bottom', '0');
         }
 
         var sum = textToAppend+toAppend1+textToAppend_+toAppend2;

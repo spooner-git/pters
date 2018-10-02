@@ -166,7 +166,6 @@ $(document).on('click','img.add_listedMember',function(){
             var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum')
 
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-                console.log('여기',jsondata)
                 if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
                     for(var i=0; i<jsondata.scheduleIdArray.length; i++){
                         if(jsondata.scheduleFinishArray[i] == 0){
@@ -179,76 +178,76 @@ $(document).on('click','img.add_listedMember',function(){
                                 signImageSend(senddata);
                                 completeSend();
                                 set_schedule_time(json);
-                                get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max)})
-                                alert('지난 일정 참석자 정상 등록되었습니다.')
+                                get_group_plan_participants(group_schedule_id, 'callback', function(d){
+                                                                                                        draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id, max)
+                                                                                                        $('#groupplan_participants_status').text(
+                                                                                                                                                    ' ('+$('div.groupParticipantsRow').length +
+                                                                                                                                                    '/'+
+                                                                                                                                                    max+'-)'
+                                                                                                                                                );
+                                                                                                    });
+                                alert('지난 일정 참석자 정상 등록되었습니다.');
                                 if(bodywidth<600){
-                                    $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                                    $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2});
                                 }
-                                /*
-                                 if(z==len){
-                                 completeSend();
-                                 set_schedule_time(json);
-                                 close_info_popup('cal_popup_planinfo')
-                                 ajax_block_during_complete_weekcal = true
-                                 }
-                                 */
-                            })
+                            });
                         }else{
 
                         }
                     }
                 }else{
-                    scheduleTime('class', data)
-                    scheduleTime('off', data)
-                    scheduleTime('group', data)
-                    draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max)
-                    alert('일정 참석자 정상 등록되었습니다.')
+                    scheduleTime('class', data);
+                    scheduleTime('off', data);
+                    scheduleTime('group', data);
+                    draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+                    $('#groupplan_participants_status').text(
+                                                                ' ('+$('div.groupParticipantsRow').length +
+                                                                '/'+
+                                                                max+'-)'
+                                                            );
+                    alert('일정 참석자 정상 등록되었습니다.');
                     if(bodywidth<600){
                         $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
                     }
                 }
-            })
+            });
         });
 
         //회원관리 : 리스트로 그룹회원 추가
     }else{
 
-        var group_id = $('#form_member_groupid').val()
-        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype')
-        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity')
-        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length
-        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length
+        var group_id = $('#form_member_groupid').val();
+        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
+        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
+        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
 
-        console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type)
+        console.log(alreadyParticipateNumber, addedParticipateNumber, group_capacity, group_type);
         if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-            alert('고정 그룹 : 이미 정원이 가득 찼습니다.')
+            alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
         }else{
             if(selected_sex=="M"){
-                var sexInfo = "남"
+                var sexInfo = "남";
             }else if(selected_sex=="W"){
-                var sexInfo = "여"
+                var sexInfo = "여";
             }else{
-                var sexInfo = "-"
+                var sexInfo = "-";
             }
-            var selected_phone = $(this).parents('div.list_addByList').attr('data-phone')
+            var selected_phone = $(this).parents('div.list_addByList').attr('data-phone');
             if(selected_phone.length == 0){
-                var selected_phone = "-"
+                var selected_phone = "-";
             }
 
             var html = '<div class="addByNewRaw" data-lastname="'+selected_lastname+'" data-firstname="'+selected_firstname+'" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>'
 
-            $('#addedMemberListBox').prepend(html)
+            $('#addedMemberListBox').prepend(html);
 
-            added_New_Member_Num++
-            $('#addedMemberListBox span').text(added_New_Member_Num+' 명')
-            $(this).parents('div.list_addByList').remove()
+            added_New_Member_Num++;
+            $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
+            $(this).parents('div.list_addByList').remove();
         }
-
-
-
     }
-
-})
+});
 
 function draw_memberlist_for_addByList(targetHTML){
     var bodywidth = window.innerWidth;
@@ -258,12 +257,12 @@ function draw_memberlist_for_addByList(targetHTML){
         dataType : 'html',
 
         beforeSend:function(){
-            beforeSend()
+            beforeSend();
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
