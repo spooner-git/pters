@@ -1,4 +1,4 @@
-PTERS 계정 재인증 메일입니다. (https://{{ site.domain }})
+PTERS 계정 재인증 메일입니다. ( https://{{ site.domain }} )
 
 아래 링크를 클릭해주세요!
 
