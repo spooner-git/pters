@@ -1558,20 +1558,40 @@ $(document).ready(function(){
 });
 
 function set_member_group_dropdown_list(init){
-    $('#members_mobile, #members_pc').html('');
+    var $member_list_dropdown = $('#members_mobile, #members_pc');
+    $member_list_dropdown.html('').attr({"data-member":"unload", "data-group":"unload"});
     if(init == "init"){
         get_current_member_list("callback", function(jsondata){
             set_member_dropdown_list(jsondata);
+            $member_list_dropdown.attr({"data-member":"loaded"});
         });
         get_current_group_list("callback", function(jsondata){
+            $member_list_dropdown.attr({"data-group":"loaded"});
             set_group_dropdown_list(jsondata);
-            //append_dropdown_scroll_arrow("#members_pc", "#members_pc", 0, 0, "", "");
             set_list_overflow_scrolling("#members_pc", "#members_pc");
             set_list_overflow_scrolling('#durations_mini', '#durations_mini');
         });
     }else{
-        get_current_member_list();
-        get_current_group_list();
+        get_current_member_list("callback", function(jsondata){
+            if($member_list_dropdown.attr('data-member') == "unload"){
+                $member_list_dropdown.attr('data-member', "loaded");
+                set_member_dropdown_list(jsondata);
+            }else if($member_list_dropdown.attr('data-member') == "loaded"){
+                member_list_dropdown.html().attr('data-member', "loaded");
+                set_member_dropdown_list(jsondata);
+            }
+        });
+        get_current_group_list("callback", function(jsondata){
+            if($member_list_dropdown.attr('data-group') == "unload"){
+                $member_list_dropdown.attr('data-group', "loaded");
+                set_group_dropdown_list(jsondata);
+                set_list_overflow_scrolling("#members_pc", "#members_pc");
+                set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+            }else if($member_list_dropdown.attr('data-group') == "loaded"){
+                $member_list_dropdown.html().attr('data-group', "loaded");
+                set_group_dropdown_list(jsondata);
+            }
+        });
     }
 }
 
@@ -1866,6 +1886,7 @@ function set_member_dropdown_list(jsondata){
         member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
     }
     member_array_mobile.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
+    member_array_pc.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
     var member_arraySum_mobile = member_array_mobile.join('');
     var member_arraySum_pc = member_array_pc.join('');
     memberMobileList.append(member_arraySum_mobile);
