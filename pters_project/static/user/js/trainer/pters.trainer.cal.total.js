@@ -1718,9 +1718,13 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         //24:00일경우 다음날 00:00 으로 들어오기 때문에
 
         //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
+        var check_plan = 0;
+        var temp_planHour = planHour;
+        var temp_planMinute = planMinute;
         if(compare_time(planHour+':'+planMinute, Options.workStartTime+':00') == false && compare_time(planEndHour+':'+planEndMin, Options.workStartTime+':00') ){
             planHour = Options.workStartTime;
             planMinute = '00';
+            check_plan = 1;
         }
         //일정시작시간이 업무시작시간보다 작고, 종료시간은 업무 시작시간보다 큰 경우//
 
@@ -1824,6 +1828,11 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
                 }else{
+                    if(check_plan==1){
+                        planHour = temp_planHour;
+                        planMinute = temp_planMinute;
+
+                    }
                     planStartDiv.append('<div class-time="'+planArrayForTag.join('_')+
                                            '" class-schedule-id="'+planScheduleIdArray[i]+
                                            '" data-starttime="'+planStartDate[i]+
@@ -1856,6 +1865,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             if(planStartDiv.find('div['+'group-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
                 }else{
+                    if(check_plan==1){
+                        planHour = temp_planHour;
+                        planMinute = temp_planMinute;
+                    }
                     planStartDiv.append('<div group-time="'+planArrayForTag.join('_')+
                                            '" group-schedule-id="'+planScheduleIdArray[i]+
                                            '" data-starttime="'+planStartDate[i]+
@@ -1891,6 +1904,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             if(planStartDiv.find('div['+'off-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
                 }else{
+                    if(check_plan==1){
+                        planHour = temp_planHour;
+                        planMinute = temp_planMinute;
+                    }
                     planStartDiv.append('<div off-time="'+planArrayForTag.join('_')+
                                            '" off-schedule-id="'+planScheduleIdArray[i]+
                                            '" data-starttime="'+planStartDate[i]+
