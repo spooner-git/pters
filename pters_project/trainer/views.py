@@ -108,10 +108,37 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
 
         class_id = self.request.session.get('class_id', '')
         error = None
-
         today = datetime.date.today()
         one_day_after = today + datetime.timedelta(days=1)
         month_first_day = today.replace(day=1)
+
+        # 업무 시간 고려
+        context = func_get_trainer_setting_list(context, self.request.user.id, class_id)
+
+        setting_trainer_work_time_avail = [context['lt_work_sun_time_avail'],
+                                           context['lt_work_mon_time_avail'],
+                                           context['lt_work_tue_time_avail'],
+                                           context['lt_work_wed_time_avail'],
+                                           context['lt_work_ths_time_avail'],
+                                           context['lt_work_fri_time_avail'],
+                                           context['lt_work_sat_time_avail']]
+        work_avail_start_time = '24:00'
+        work_avail_end_time = '00:00'
+        for i in range(0, 7):
+            work_avail_time = setting_trainer_work_time_avail[i]
+            if work_avail_time != '0:00-0:00' and work_avail_time != '00:00-00:00':
+                if work_avail_start_time > work_avail_time.split('-')[0]:
+                    work_avail_start_time = work_avail_time.split('-')[0]
+                if work_avail_end_time < work_avail_time.split('-')[1]:
+                    work_avail_end_time = work_avail_time.split('-')[1]
+
+        if work_avail_start_time == '24:00':
+            work_avail_start_time = '23:59'
+        today_start_time = datetime.datetime.strptime(str(today) + ' ' + work_avail_start_time, '%Y-%m-%d %H:%M')
+        if work_avail_end_time != '24:00':
+            one_day_after = datetime.datetime.strptime(str(today) + ' ' + work_avail_end_time, '%Y-%m-%d %H:%M')
+        today = today_start_time
+
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = (int(month_first_day.strftime('%m')) + 1) % 13
         if next_month == 0:
