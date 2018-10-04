@@ -426,27 +426,28 @@
 {% block local_js_footer %}
     <!-- for db by hk.kim 170805-->
     <script>
-        $('#uptext').text('프로그램 추가')
+        $('#alarm_button, #classselect_button, #loginInfo span.pcwho').css({'opacity':0.5}).attr('onclick',"");
+        $('#uptext').text('프로그램 추가');
         /*
          $('#popup_lecture_select').show().css('top','40%')
          ajax_read_lecture_info_from_db()
          */
         var subject_selected = '';
-        $('#pcver').css('background','#e2e2e2')
-        $('.centermenu_text').css('color','#b1b1b1').attr('onclick','')
-        $('#loginInfo').attr('onclick','')
-        $('.button_close_popup').hide()
+        $('#pcver').css('background','#e2e2e2');
+        $('.centermenu_text').css('color','#b1b1b1').attr('onclick','');
+        $('#loginInfo').attr('onclick','');
+        $('.button_close_popup').hide();
 
-        $('#upbutton').attr('onclick','')
-        $('#upbutton img').css('opacity','0.2')
+        $('#upbutton').attr('onclick','');
+        $('#upbutton img').css('opacity','0.2');
 
         $('.reserveOnOffToggle[data-onoff=0]').click(function(){
-            $('.memberConnectSettingBox').show()
-        })
+            $('.memberConnectSettingBox').show();
+        });
 
         $('.reserveOnOffToggle[data-onoff=1]').click(function(){
-            $('.memberConnectSettingBox').hide()
-        })
+            $('.memberConnectSettingBox').hide();
+        });
 
 
         //시간 설정 관련 드랍다운 채우기
