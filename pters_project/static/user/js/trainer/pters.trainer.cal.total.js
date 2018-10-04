@@ -2087,7 +2087,9 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
         var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
         var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+        var planOriHour = planHour;
         var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+        var planOriMinute = planMinute;
         var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
@@ -2132,6 +2134,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         }
 
         var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
+        var planArrayForTag = [planYear, planMonth, planDate, planOriHour, planOriMinute, planDura, memberName, planEndHour, planEndMin];
         var planStartArr = [planYear, planMonth, planDate];
         var planStart = planStartArr.join("_");
         //var tdPlanStart = $("#"+planStart+" div"); //2018_7_8
@@ -2187,7 +2190,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
-                planhtml = '<div class-time="'+planArray.join('_')+
+                planhtml = '<div class-time="'+planArrayForTag.join('_')+
                             '" class-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
                             '" data-groupid="'+planGroupid[i]+
@@ -2208,7 +2211,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
-                planhtml = '<div group-time="'+planArray.join('_')+
+                planhtml = '<div group-time="'+planArrayForTag.join('_')+
                             '" group-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
                             '" data-groupid="'+planGroupid[i]+
@@ -2231,7 +2234,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
-                planhtml = '<div off-time="'+planArray.join('_')+
+                planhtml = '<div off-time="'+planArrayForTag.join('_')+
                             '" off-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
                             '" data-groupid="'+planGroupid[i]+
