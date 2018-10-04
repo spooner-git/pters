@@ -386,6 +386,7 @@
         }
 
         function fill_recieved_member_info(jsondata){
+            $('.pcwho').html(jsondata.name + '<span class="text-nameAttach">님</span>');
             $('._nameInfo').text(jsondata.name).attr('data-dbid', jsondata.db_id);
             $('._phoneInfo').text(jsondata.phone);
             $('._birthInfo').text(jsondata.birthday_dt);
