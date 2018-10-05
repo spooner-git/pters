@@ -188,7 +188,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 class_lecture_list = ClassLectureTb.objects.select_related(
                     'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_info,
                                          lecture_tb__state_cd='IP', lecture_tb__use=USE,
-                                         auth_cd='VIEW', use=USE ).order_by('-lecture_tb__start_date')
+                                         auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
                 start_date = ''
                 if len(class_lecture_list) > 0:
                     for lecture_info_data in class_lecture_list:
@@ -503,11 +503,12 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                             else:
                                 if start_date > lecture_info.start_date:
                                     start_date = lecture_info.start_date
-                            if start_date != '':
-                                if month_first_day <= start_date < next_month_first_day:
-                                    new_member_num += 1
+                            # break
 
-                            break
+                    if start_date != '':
+                        if month_first_day <= start_date < next_month_first_day:
+                            new_member_num += 1
+
             query_class_auth_cd \
                 = "select `AUTH_CD` from CLASS_LECTURE_TB as D" \
                   " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.CLASS_TB_ID = " + str(class_id)
