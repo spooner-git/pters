@@ -97,25 +97,25 @@
 {% block local_js_footer %}
     <script type="text/javascript" src={% static_url "user/js/main/main_trainer.js" %}></script>
     <script type="text/javascript">
-        $('.bottomfooter3').css('display','none')
+        $('.bottomfooter3').css('display', 'none');
 
         $('#notice_popup_main').click(function(){
-            $(this).css('display','none')
+            $(this).css('display', 'none');
         })
 
         $('#notice_popup_close_temp').click(function(e){
-            e.stopPropagation()
-            $('#notice_popup_main').css('display','none')
+            e.stopPropagation();
+            $('#notice_popup_main').css('display', 'none');
         })
 
         $('#notice_popup_close_main').click(function(e){
-            e.stopPropagation()
+            e.stopPropagation();
             $.cookie('notice_popup_main', 'hidden', {expires : 1});
-            $('#notice_popup_main').css('display','none')
+            $('#notice_popup_main').css('display', 'none');
         });
 
         if($.cookie('notice_popup_main') == 'hidden'){
-            $('#notice_popup_main').css('display','none')
+            $('#notice_popup_main').css('display', 'none');
             //테스트$('#notice_popup').css('display','block')
         }else{
             //$('#notice_popup_main').css('display','block') 공지 팝업 안보이게 잠시 주석처리

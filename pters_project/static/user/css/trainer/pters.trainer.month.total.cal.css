@@ -740,7 +740,7 @@ img,a,div,span,p{
 	}
 }
 
-@media(min-width: 730px){
+@media(min-width: 820px){
 
 
 	.ymdText-pc-add{
@@ -780,9 +780,9 @@ img,a,div,span,p{
 		color: #ffffff;
 	}
 
-	#float_btn_wrap{
+	/*#float_btn_wrap{
 		display: none !important;
-	}
+	}*/
 }
 
 

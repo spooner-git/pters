@@ -67,7 +67,7 @@
 
     <!--플로팅 버튼-->
     <div id="float_btn_wrap">
-        <div id="float_btn" onclick="float_btn_addplan(0)">
+        <div id="float_btn" onclick="float_btn_addplan(0)" data-open="closed">
             
         </div>
         <div id="float_inner1" class="float_inner"  onclick="float_btn_addplan(1)">
@@ -78,6 +78,10 @@
         </div>
     </div>
     <!--플로팅 버튼-->
+
+    <div id="calendar_change_explain">
+        <p>여기를 누르면 <span style="color:#fe4e65;font-weight:500;">주간/월간 달력으로 전환</span>할 수 있습니다.</p>
+    </div>
 
     <!--<div id="ymdText" class="" style="background-image:url(/static/user/res/bg.png);background-size: 100%;">-->
     <div id="ymdText" class="">
@@ -1204,6 +1208,28 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.calendar.popups.js" %}></script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.total.js" %}></script>
     <script>
+
+        
+        $('#calendar_change_explain, #ymdText, #calendar, #week').click(function(){
+            $('#calendar_change_explain').fadeOut('fast');
+        });
+        $('#calendar_change_explain').click(function(e){
+            e.stopPropagation();
+            $.cookie('calendar_change_explain', 'hidden', {expires : 30});
+        });
+
+        if($.cookie('calendar_change_explain') == 'hidden'){
+            $('#calendar_change_explain').css('display', 'none');
+        }else{
+            if($('#ymdText-pc').css('display') == "none"){
+                $('#calendar_change_explain').css({"top":$('#ymdText').offset().top+$('#ymdText').height()+10, "left":"50%", "transform":"translateX(-50%)" })
+                                             .show(function(){setTimeout(function(){$('#calendar_change_explain').fadeOut('fast')}, 2500);
+                });
+            }
+        }
+
+
+
         var calendarSize = 1;
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){

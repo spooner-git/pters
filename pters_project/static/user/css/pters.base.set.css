@@ -810,13 +810,17 @@ a:focus, a:hover{
     background-position-x:center;
 }
 
-
-
-/*미디어 쿼리*/
-@media(min-width:600px){
+@media(min-width:820px){
     #float_btn, #float_inner1, #float_inner2{
         display: none !important;
     }
+}
+
+/*미디어 쿼리*/
+@media(min-width:600px){
+    /*#float_btn, #float_inner1, #float_inner2{
+        display: none !important;
+    }*/
     #ymdText{
         height: 100px;
     }
