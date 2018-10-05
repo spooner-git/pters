@@ -246,7 +246,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                 'lecture_tb').filter(Q(lecture_tb__start_date__gte=month_first_day)
                                      & Q(lecture_tb__start_date__lte=month_last_day),
                                      class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
-                                     use=USE).order_by('lecture_tb__start_date', 'reg_dt')
+                                     use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
             for price_info in price_data:
                 try:
@@ -272,7 +272,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                 'lecture_tb').filter(Q(lecture_tb__refund_date__gte=month_first_day)
                                      & Q(lecture_tb__refund_date__lte=month_last_day),
                                      class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
-                                     use=USE).order_by('lecture_tb__refund_date', 'reg_dt')
+                                     use=USE).order_by('lecture_tb__refund_date', 'lecture_tb__reg_dt')
 
             for refund_price_info in refund_price_data:
                 if refund_price_info.lecture_tb.price != refund_price_info.lecture_tb.refund_price:
