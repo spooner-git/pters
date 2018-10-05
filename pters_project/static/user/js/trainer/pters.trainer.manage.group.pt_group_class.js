@@ -159,56 +159,43 @@ $(document).on('click', 'img.add_listedMember', function(){
 
     //주간, 월간달력 : 그룹레슨에 회원 추가할때.
     if($('#calendar').length != 0 ){
-        $('#form_add_member_group_plan_memberid').val(selected_dbid);
-        send_add_groupmember_plan('callback', function(data){
+        if(!$(this).hasClass('disabled_button')){
+            disable_group_member_add_during_ajax();
+            $('#form_add_member_group_plan_memberid').val(selected_dbid);
+            send_add_groupmember_plan('callback', function(data){
+                var selector_popup_btn_viewGroupParticipants = $('#popup_btn_viewGroupParticipants');
+                var group_schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
+                var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
+                var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
 
-            var group_schedule_id = $('#cal_popup_planinfo').attr('schedule_id');
-            var group_id = $('#popup_btn_viewGroupParticipants').attr('data-groupid');
-            var max = $('#popup_btn_viewGroupParticipants').attr('data-membernum');
-
-            get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
-                if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
-                    for(var i = 0; i < jsondata.scheduleIdArray.length; i++){
-                        if(jsondata.scheduleFinishArray[i] == 0){
-                            $('#id_schedule_id_finish').val(jsondata.scheduleIdArray[i]);
-                            $('#id_lecture_id_finish').val(jsondata.classArray_lecture_id[i]);
-
-                            send_plan_complete('callback', function(json, senddata){
-                                z++;
-                                send_memo();
-                                signImageSend(senddata);
-                                completeSend();
-                                set_schedule_time(json);
-                                get_group_plan_participants(group_schedule_id, 'callback', function(d){draw_groupParticipantsList_to_popup(d, group_id, group_schedule_id ,max);});
-                                alert('지난 일정 참석자 정상 등록되었습니다.');
-                                if(bodywidth < 600){
-                                    $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2});
-                                }
-                                /*
-                                 if(z==len){
-                                 completeSend();
-                                 set_schedule_time(json);
-                                 close_info_popup('cal_popup_planinfo')
-                                 ajax_block_during_complete_weekcal = true
-                                 }
-                                 */
-                            });
-                        }else{
-
+                get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
+                    ajaxClassTime();
+                    draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+                    get_groupmember_list(group_id, 'callback', function(jsondata){
+                                                                                    draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));
+                                                                                    $('#groupplan_participants_status').text(
+                                                                                                                                ' ('+$('div.groupParticipantsRow').length +
+                                                                                                                                '/'+
+                                                                                                                                max+')'
+                                                                                                                            );
+                                                                                 });//특정그룹 회원목록 업데이트
+                    enable_group_member_add_after_ajax();
+                    
+                    if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
+                        alert('지난 일정 참석자 정상 등록되었습니다.');
+                        if(bodywidth<600){
+                            $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                        }
+                    }else{
+                        alert('일정 참석자 정상 등록되었습니다.');
+                        if(bodywidth<600){
+                            $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
                         }
                     }
-                }else{
-                    scheduleTime('class', data);
-                    scheduleTime('off', data);
-                    scheduleTime('group', data);
-                    draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id ,max);
-                    alert('일정 참석자 정상 등록되었습니다.');
-                    if(bodywidth < 600){
-                        $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height() - $('#subpopup_addByList_plan').height())/2});
-                    }
-                }
+
+                });
             });
-        });
+        }
 
         //회원관리 : 리스트로 그룹회원 추가
     }else{
@@ -245,6 +232,13 @@ $(document).on('click', 'img.add_listedMember', function(){
         }
     }
 });
+
+function disable_group_member_add_during_ajax(){
+    $('.add_listedMember').addClass('disabled_button');
+}
+function enable_group_member_add_after_ajax(){
+    $('.add_listedMember').removeClass('disabled_button');
+}
 
 function draw_memberlist_for_addByList(targetHTML){
     var bodywidth = window.innerWidth;

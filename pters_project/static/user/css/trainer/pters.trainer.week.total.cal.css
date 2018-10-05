@@ -29,6 +29,38 @@ body{
 		height: 30px;
 		line-height: 30px !important;
 	}
+#calendar_change_explain{
+	display:none;
+	position:fixed;
+	width: 200px;
+	height: auto;
+	font-size:12.5px;
+	background-color:#ffffff;
+	border: 1px solid #fe4e65;
+	padding: 10px;
+	z-index: 15;
+}
+#calendar_change_explain > p{
+	margin: 0;
+}
+#calendar_change_explain:after{
+		content: '';
+	    position: absolute;
+	    border-bottom: 12px solid #ffffff;
+	    border-right: 10px solid transparent;
+	    border-left: 10px solid transparent;
+	    top: -12px;
+	    left: 83px;
+	}
+	#calendar_change_explain:before{
+		content: '';
+	    position: absolute;
+	    border-bottom: 13px solid #fe4e65;
+	    border-right: 11px solid transparent;
+	    border-left: 11px solid transparent;
+	    top: -13px;
+	    left: 82px;
+	}
 
 .time-row30{
 	border-bottom: 1px solid #cccccc !important;
@@ -160,7 +192,7 @@ body{
 	/*height: 100%;*/
 	padding-bottom:0px;
 	height: auto;
-	background:#f7f7f7;
+	background:#ffffff;
 }
 
 
@@ -560,6 +592,12 @@ img,a,div,span,p{
 #float_btn_wrap{
 	display: block;
 }
+.ymdText-pc-refresh{
+	display: none;
+}
+.ymdText-pc-add-refresh{
+	display: none;
+}
 
 @media(min-width: 400px){
 	.timeindex_time{
@@ -616,7 +654,7 @@ img,a,div,span,p{
 		text-align: center;
 		z-index: 5;
 		vertical-align: middle;
-		background:#f7f7f7;
+		background:#ffffff;
 	}
 
 	#ymdText-pc div{
@@ -654,7 +692,10 @@ img,a,div,span,p{
 	}
 
 	.ymdText-pc-refresh{
-		display: none;
+		display: inline;
+		line-height: 50px;
+		position: absolute;
+		left: 0;
 	}
 
 	.time-row{
@@ -886,11 +927,24 @@ img,a,div,span,p{
 		margin-bottom: -3px;
 	}
 
-	.ymdText-pc-refresh{
+	
+}
+
+@media(min-width: 800px){
+	._morningday{
+		display:inline;
+	}
+}
+
+@media(min-width: 820px){
+	/*.ymdText-pc-refresh{
 		display: inline;
 		line-height: 50px;
 		position: absolute;
 		left: 0;
+	}*/
+	.ymdText-pc-add-refresh{
+		display: inline-block;
 	}
 
 	.ymdText-pc-left-btn{
@@ -940,16 +994,6 @@ img,a,div,span,p{
 	.ymdText-pc-add-pt:hover{
 		background-color: #fe4e65;
 		color: #ffffff;
-	}
-
-	#float_btn_wrap{
-		display: none !important;
-	}
-}
-
-@media(min-width: 800px){
-	._morningday{
-		display:inline;
 	}
 }
 
