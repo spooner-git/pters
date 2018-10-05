@@ -17,7 +17,7 @@ img,a,div,span,p{
 	padding-bottom: 5px;
 	padding-right: 15px;
 	padding-left: 15px;
-	height: auto;
+	height: 60px;
 	z-index: 5;
 	background-color: #ffffff;
 	max-width: 1200px;
@@ -27,7 +27,7 @@ img,a,div,span,p{
 	top: 100px;
 }
 	#date .calendar-style{
-		background-color: #f7f7f7;
+		background-color: #ffffff;
 	}
 
 .arrowButton{

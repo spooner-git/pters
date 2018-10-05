@@ -192,7 +192,7 @@ body{
 	/*height: 100%;*/
 	padding-bottom:0px;
 	height: auto;
-	background:#f7f7f7;
+	background:#ffffff;
 }
 
 
@@ -654,7 +654,7 @@ img,a,div,span,p{
 		text-align: center;
 		z-index: 5;
 		vertical-align: middle;
-		background:#f7f7f7;
+		background:#ffffff;
 	}
 
 	#ymdText-pc div{
