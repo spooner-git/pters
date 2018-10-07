@@ -73,7 +73,7 @@ class ProductTb(TimeStampedModel):
     product_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     upper_product_id = models.CharField(db_column='UPPER_PRODUCT_ID', max_length=45, blank=True, default='')
     name = models.CharField(db_column='NAME', max_length=100, blank=True, default='')
-    contents = models.CharField(db_column='CONTENTS', max_length=200,  blank=True, default='')
+    contents = models.CharField(db_column='CONTENTS', max_length=1000,  blank=True, default='')
     order = models.IntegerField(db_column='ORDER', default=1)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 from login.models import MemberTb
@@ -32,3 +32,4 @@ class MyPasswordResetForm(PasswordResetForm):
         active_users = get_user_model()._default_manager.filter(
             email__iexact=email)
         return (u for u in active_users if u.has_usable_password())
+

@@ -25,6 +25,7 @@
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
     <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.select.teacher.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.base.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
     {% block local_css %}
     {% endblock %}
@@ -46,10 +47,9 @@
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 {% block navbar %}
-    <div id="shade">
-    </div>
-    <div id="shade2">
-    </div>
+    <div id="pshade" class="pshade _shade"></div>
+    <div id="mshade" class="mshade _shade"></div>
+    <div id="shade_caution"></div>
 
     <div id="errorMessageBar">
         <span id="errorMessageText"></span><span>닫기</span>
@@ -137,34 +137,11 @@
 {% endblock %}
 
     <footer class="fixfooter bottomzero">
-        <!--
-            <div class="bottomfooter1">
-                <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
-                    <input type="hidden" name = "next_page" value="/trainer/trainer_main">
-                </form>
-                <span class="language_set" onclick="languageSet('ENG')">English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('KOR')">한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('JPN')">日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            </div>
-            -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
             <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
             <a class="JPtext _company">会社紹介</a>
             <a class="ENtext _company">About us</a>
-            <!--
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext" href="">이용문의</a>
-            <a class="JPtext">利用案内</a>
-            <a class="ENtext">Help</a>
-
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext ">제휴제안</a>
-            <a class="JPtext ">提携</a>
-            <a class="ENtext ">Partnership</a>
-            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -173,21 +150,9 @@
             <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
             <a class="JPtext">個人情報処理方針</a>
             <a class="ENtext">Privacy Policy</a>
-            <!--
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext ">고객센터</a>
-            <a class="JPtext ">ヘルプ</a>
-            <a class="ENtext ">Customer Service</a>
-            -->
         </div>
 
         <div class="bottomfooter3">
-            <!--
-            <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <a class="KRtext" href="">이용문의</a>
-            <a class="JPtext">利用案内</a>
-            <a class="ENtext">Help</a>
-            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -207,43 +172,17 @@
 {% endblock %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
 <script src={% static_url "common/js/bootstrap.min.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
+
 {#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
 {#<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
 {#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
 {#<link rel="manifest" href={% static_url "manifest.json" %}>#}
-{#<!--<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
-{#<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>#}
-{#    <script>#}
-{#    function playSound() {#}
-{#          var sound = document.getElementById("audio");#}
-{#          sound.loop = false;#}
-{#          sound.play();#}
-{#      }#}
-{#    </script>#}
-{#    <script type="text/javascript">#}
-{#// var requestButton = document.querySelector(".request-btn");#}
-{##}
-{#    //});#}
-{#    //const messageChannel = new MessageChannel();#}
-{#    //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }#}
-{#    //navigator.serviceWorker.controller.postMessage({'hello':'test'});#}
-{#        function messageCommunicationWithWorker(){#}
-{#            navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
-{#                registrations.forEach(function (v) {#}
-{#                    send_message_to_sw(v.active, "data").then(function (m) {#}
-{#                        playSound();#}
-{#                        ajaxClassTime();#}
-{#                        messageCommunicationWithWorker();#}
-{#                    });#}
-{#                });#}
-{#            });#}
-{#        }#}
-{#        messageCommunicationWithWorker();#}
-{#    </script>-->#}
 <script>
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
@@ -252,6 +191,13 @@
 
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///
+    var class_name = '{{ request.session.class_type_name }}';
+    var class_code = '{{ request.session.class_type_code }}';
+    var social_login_check = '{{ request.session.social_login_check }}';
+    var social_login_type = '{{ request.session.social_login_type }}';
+    var social_login_id = '{{ request.session.social_login_id }}';
+    var social_accessToken = '{{ request.session.social_accessToken }}';
+
     var class_background_img_url = []
 
 

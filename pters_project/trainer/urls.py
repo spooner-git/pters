@@ -103,6 +103,19 @@ urlpatterns = [
     # 그룹 재개 상태 변경
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
 
+    # 수업 관리 기능 ######################################################################################################
+    # 진행중 회원/그룹/클래스 list 조회
+    url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(),
+        name='get_member_group_class_ing_list'),
+    url(r'^get_member_group_class_end_list/$', views.GetMemberGroupClassEndListViewAjax.as_view(),
+        name='get_member_group_class_end_list'),
+    # 진행중 회원 목록 조회 1:1만
+    url(r'^get_member_one_to_one_ing_list/$', views.GetMemberOneToOneIngListViewAjax.as_view(),
+        name='get_member_one_to_one_ing_list'),
+    # 진행 완료 회원 목록 조회 1:1만
+    url(r'^get_member_one_to_one_end_list/$', views.GetMemberOneToOneEndListViewAjax.as_view(),
+        name='get_member_one_to_one_end_list'),
+
 
     # 강좌 기능 ##########################################################################################################
     # 강좌 정보 조회
@@ -171,6 +184,8 @@ urlpatterns = [
     url(r'^cal_week/$', views.CalWeekView.as_view(), name='cal_week'),
     # 월간 일정 페이지
     url(r'^cal_month/$', views.CalMonthView.as_view(), name='cal_month'),
+    # 일정 페이지
+    url(r'^cal_total/$', views.CalTotalView.as_view(), name='cal_total'),
     # 회원/그룹/클래스 통합 뷰 페이지
     url(r'^lecture_manage/$', views.ManageLectureView.as_view(), name='lecture_manage'),
     # 회원 관리 페이지

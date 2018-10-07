@@ -9,7 +9,7 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
-    <!--Google Adsense-
+    <!--Google Adsense-->
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
       (adsbygoogle = window.adsbygoogle || []).push({
@@ -17,7 +17,7 @@
         enable_page_level_ads: true
       });
     </script>
-    <Google Adsense-->
+    <!--Google Adsense-->
 
     {% load static_url %}
     <meta charset="utf-8">
@@ -217,7 +217,7 @@
     </div>
     [월간전용] 알림 팝업 -->
 
-    <div id="base_popup_check_finished_member_notice" class="popups">
+    <div id="caution_popup" class="popups">
         <div class="caution_img"><img src="/static/user/res/stopmark.png"></div>
         <div class="caution_message">
 
@@ -232,6 +232,21 @@
             <span class="ENtext">No</span>
         </div>
         -->
+    </div>
+
+    <div id="caution_popup_yes_or_no" class="popups">
+        <div class="caution_img"><img src="/static/user/res/stopmark.png"></div>
+        <div class="caution_message">
+
+        </div>
+        <div id="caution_popup_yes" class="popup_inner popup_inner_delete">
+            <span style="color:#fe4e65;" class="text-yes"></span>
+        </div>
+
+        <div id="caution_popup_no" class="popup_inner" onclick="close_caution_popup()">
+            <span style="color:#282828;" class="text-no"></span>
+        </div>
+        
     </div>
 
 
@@ -276,24 +291,29 @@
                             <a class="sidebar_text text-todayplan">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('cal_total')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text text-plan">
+                            </a>
+                        </div>
+                        <!-- <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-weekplan">
                             </a>
                         </div>
                         <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-monthplan">
                             </a>
-                        </div>
+                        </div> -->
                         <div class="sidebar_div" onclick="sideGoPage('member_manage')"><img src="{% static_url "user/res/icon-user-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-membermanage">
                             </a>
                         </div>
                         
-                        <!-- <div class="sidebar_div" onclick="sideGoPage('lecture_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('lecture_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-lecturemanage">
                             </a>
-                        </div> -->
+                        </div>
                         
+                        <!-- 
                         <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-groupmanage">
                             </a>
@@ -301,14 +321,13 @@
                         <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-classmanage">
                             </a>
-                        </div>
+                        </div> -->
                         
-                        <!--
-                        <div class="sidebar_div" onclick="sideGoPage('center_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        
+                        <!-- <div class="sidebar_div" onclick="sideGoPage('center_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-centermanage">
                             </a>
-                        </div>
-                        -->
+                        </div> -->
                         
                             <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
                                 <a href="{% url 'trainer:work_manage' %}" class="sidebar_text text-workmanage">
@@ -352,7 +371,7 @@
     <nav class="navbar navbar-fixed-top navbar-default" id="page-base-addstyle">
         <div class="container">
             <div class="navbar-header">
-                <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar">
+                <button id="upbutton-x" class="navbar-toggle" aria-controls="navbar" onclick="closePopup_mobile('upbutton-x')">
                     <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
                 </button>
                 {% block nav_center_img1 %}
@@ -368,7 +387,7 @@
     <nav class="navbar navbar-fixed-top navbar-default" id="page-base-modifystyle">
         <div class="container">
             <div class="navbar-header">
-                <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar">
+                <button id="upbutton-x-modify" class="navbar-toggle" aria-controls="navbar" onclick="closePopup_mobile('upbutton-x-modify')">
                     <img src="{% static_url "user/res/ptadd/btn-x.png" %}" style="width:90%;">
                 </button>
                 {% block nav_center_img2 %}
@@ -389,32 +408,37 @@
                     <a href="{% url 'trainer:cal_day' %}" class="centermenu_text text-todayplan"></a>
                 </div>
                 <div class="centermenu_div">
+                    <a href="{% url 'trainer:cal_total' %}" class="centermenu_text text-plan"></a>
+                </div>
+                
+                <!-- <div class="centermenu_div">
                     <a href="{% url 'trainer:cal_week' %}" class="centermenu_text text-weekplan"></a>
                 </div>
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:cal_month' %}" class="centermenu_text text-monthplan"></a>
-                </div>
+                </div> -->
+
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:member_manage' %}" class="centermenu_text text-membermanage"></a>
                 </div>
                 
-                <div class="centermenu_div">
+                <!-- <div class="centermenu_div">
                     <a href="{% url 'trainer:group_manage' %}" class="centermenu_text text-groupmanage"></a>
                 </div>
 
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:class_manage' %}" class="centermenu_text text-classmanage"></a>
-                </div>
-                
-                <!--<div class="centermenu_div">
-                    <a href="{% url 'trainer:lecture_manage' %}" class="centermenu_text text-lecturemanage">수업 관리</a>
                 </div> -->
-
-                <!--
+                
                 <div class="centermenu_div">
+                    <a href="{% url 'trainer:lecture_manage' %}" class="centermenu_text text-lecturemanage"></a>
+                </div> 
+
+                
+                <!-- <div class="centermenu_div">
                     <a href="{% url 'trainer:center_manage' %}" class="centermenu_text text-centermanage"></a>
-                </div>
-                -->
+                </div> -->
+                
 
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:work_manage' %}" class="centermenu_text text-workmanage"></a>
@@ -443,7 +467,7 @@
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
                 <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="text-nameAttach"></span></span>
             </div>
-            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'"></span>
+            <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
             
             <div class="pcver-slide-menu_class">
@@ -757,11 +781,11 @@ function playSound() {
         }
     }
     
-    
-
-
     var class_hour = '{{ request.session.class_hour }}';
-
+    var social_login_check = '{{ request.session.social_login_check }}';
+    var social_login_type = '{{ request.session.social_login_type }}';
+    var social_login_id = '{{ request.session.social_login_id }}';
+    var social_accessToken = '{{ request.session.social_accessToken }}';
 
     var worktime = '{{ request.session.setting_trainer_work_time_available }}';
     var stoptime = '{{ request.session.setting_member_reserve_time_available }}';
@@ -835,11 +859,12 @@ function playSound() {
         "workEndTime":worktimeEnd,
 
         "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
-        "location" : "Japan",         //Korea, Japan, English, Chinese
+        "location" : "Korea",         //Korea, Japan, English, Chinese
 
         "auth_group":1,
         "auth_class":1,
         "auth_limit":1,
+        "auth_option_limit":0, //1: 제한  0: 제한 없음
         "auth_ads":0,
     };
 
@@ -1142,9 +1167,10 @@ function playSound() {
 </script>
 <script type="text/javascript" src={% static_url "common/js/jquery.cookie.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.base.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.multi.language.set.js" %}></script>
-
+<script type="text/javascript" src={% static_url "user/js/pters.common.option.inspector.js" %}></script>
 
 {% block local_js_footer %}
 {% endblock %}

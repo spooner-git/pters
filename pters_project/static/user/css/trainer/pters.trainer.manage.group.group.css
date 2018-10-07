@@ -254,6 +254,11 @@ img.substract_addedMember{
 ._grouppartystatus{
 	width: 14%;
 }
+.group_member_current_num{
+	width: 40%;
+	display: inline-block;
+	text-align: right;
+}
 ._groupstatus span{
 	font-size: 12px;
 }
@@ -369,7 +374,14 @@ div._groupmanage img._info_delete{
 	margin-top: 10px;
 	cursor: pointer;
 }
-
+@media(max-width:350px){
+	._groupstatus{
+		display: none !important;
+	}
+	._groupmanage img{
+		margin-left: 0 !important;
+	}
+}
 
 @media(max-width: 600px){
 	._groupnum, ._groupmemo, ._groupcreatedate{
@@ -396,8 +408,13 @@ div._groupmanage img._info_delete{
 
 
 	.groupWrap{
-		font-weight: bold;
-		font-size: 13px;
+		font-weight: 500;
+		font-size: 12px;
+	}
+	#subpopup_addByList{
+		overflow-y: auto;
+		max-height: 70%;
+		top: 92px;
 	}
 }
 
@@ -419,6 +436,7 @@ div.groupmemberline_thead div{
 }
 div.memberline{
 	display: table;
+	table-layout: fixed;
 	width: 100%;
 	border-bottom: 1px solid #f7f7f7;
 	background:white;
@@ -426,6 +444,10 @@ div.memberline{
 div.memberline div{
 	display: table-cell;
 	padding:8px 0 8px 0;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
 }
 img.substract_groupMember{
 	width: 22px;

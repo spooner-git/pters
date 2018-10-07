@@ -130,12 +130,11 @@ body{
 	width: 100%;
 	top: 110px;
 	background-color: transparent;
-	padding-right: 0;
-	padding-left: 0;
 	height: 90%;
 	z-index: 3;
 	max-width: 1080px;
 	height: 100%;
+	table-layout: fixed;
 	overflow-y: hidden;
 	overflow-x: hidden;
 }

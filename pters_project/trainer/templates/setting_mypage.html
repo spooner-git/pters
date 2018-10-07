@@ -8,6 +8,18 @@
         .fixfooter{
             position: relative;
         }
+        .NAVER{
+            font-weight: 500 !important;
+            color: #2DB400; 
+        }
+        .Facebook{
+            font-weight: 500 !important;
+            color: #3b5998;
+        }
+        .Google{
+            font-weight: 500 !important;
+            color: #4285f4;
+        }
         @media(min-width:600px){
             .fixfooter{
                 position: relative;
@@ -15,12 +27,43 @@
             .bottomfooter3 span{
                 color: #282828;
             }
+            .pters_selectbox_wrapper{
+                height: 30px;
+            }
+            .pters_selectbox_btn{
+                line-height: 30px;
+            }
         }
         
     </style>
 {% endblock %}
 
 {% block content %}
+
+    <div id="popup_how_to_disconnect_sns_login" class="popups">
+        <label style="text-align: center;font-size: 18px;margin-left: 15px;margin-top:10px;font-weight: 500;">SNS계정 연동 해제 방법</label><img src="/static/user/res/ptadd/btn-x.png" style="width:32px;padding:10px;float:right;margin:5px;cursor: pointer;" id="btn_close_how_to_disconnect_sns_login">
+        <!-- <div id="" class="pters_selectbox_wrapper" style="margin-top: 15px;">
+            <div id="how_to_disconnect_naver" onclick="" class="pters_selectbox_btn pters_selectbox_btn_selected">
+                <span class="KRtext">네이버</span>
+            </div>
+            <div id="how_to_disconnect_facebook" onclick="" class="pters_selectbox_btn">
+                <span class="KRtext">페이스북</span>
+            </div>
+        </div> -->
+        <div id="how_to_disconnect_naver_explain" class="explain_page">
+            <label>네이버 연동 해제 방법</label>
+            <p style="color:#fe4e65;font-weight: bold;"><img src="/static/user/res/stopmark.png" style="width: 15px;">주의사항!<br>연동 해제 전 비밀번호를 초기화후 재설정하셔야, <br>연동 해제 후 피터스에 정상적으로 로그인이 가능합니다.</p>
+            <p>1. 네이버 사이트에서 로그인 후, 내정보로 이동합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/1.png">
+            <p>2. 보안 설정 탭으로 이동합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/2.png">
+            <p>3. 외부 사이트 연결을 확인합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/3.png">
+            <p>4. 목록에서 PTERS의 연결 여부를 설정합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/4.png">
+        </div>
+        <div id="how_to_disconnect_facebook_explain" class="explain_page">페이스북 연동 해제 방법</div>
+    </div>
 
     <div id="ymdText">
         <div id="ymdTextWrap">
@@ -55,7 +98,7 @@
             </div>
             <div class="countBoard"><p><img src="/static/user/res/member/icon-check.png" alt="">신규 회원</p>
                 <p class="countBoard_explain">이번달 등록한 신규회원 수</p>
-                <p><span>{{new_member_num}} </span>회</p>
+                <p><span>{{new_member_num}} </span>명</p>
             </div>
         </div>
 
@@ -67,17 +110,17 @@
             </div>
         </div>
 
-{#        <div id="planBoardWrap" class="boardWrap">#}
-{#            <div class="planBoard _My_Purchse">#}
-{#                <div style="margin-bottom: 10px;">#}
-{#                    <img src="/static/user/res/icon-card@3x.png" alt="" style="width:19px;">내 이용권#}
-{#                    <div class="menuButton" style="line-height: 18px;"><button onclick="goPage('payment_history')">내역</button></div>#}
-{#                </div>#}
-{#                {% for current_payment_info in current_payment_data %}#}
-{#                    <p> <span style="color:#fe4e65;font-size: 19px;">{{ current_payment_info.name }} - 사용중</span> </p>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
+        <div id="planBoardWrap" class="boardWrap" style="display: none;">
+            <div class="planBoard _My_Purchse">
+                <div style="margin-bottom: 10px;">
+                    <img src="/static/user/res/icon-card@3x.png" alt="" style="width:19px;">내 이용권
+                    <div class="menuButton" style="line-height: 18px;"><button onclick="goPage('payment_history')">내역</button></div>
+                </div>
+                {% for current_payment_info in current_payment_data %}
+                    <p> <span style="color:#fe4e65;font-size: 19px;">{{ current_payment_info.name }} - 사용중</span> </p>
+                {% endfor %}
+            </div>
+        </div>
 
         <!--
         <div id="dateBoardWrap" class="boardWrap">
@@ -90,12 +133,17 @@
             <img src="/static/user/res/member/icon-user.png" alt=""><span>가입 정보</span>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
-            <div class="trainerInfo">
+            <div class="trainerInfo" style="height: auto;">
                 <div>
                     <span class="menuName">ID</span>
                     <div class="menuButton"><button onclick="goPage('delAccount')">탈퇴</button></div>
                 </div>
                 <span>{{ request.user.username }}</span>
+                <div id="is_this_sns_login" style="display: none;padding-bottom: 7px;">
+                    <div id="sns_type" style="display: inline-block;"></div>
+                    <div class="menuButton" style="position: relative;margin-right: 10px;"><button onclick="naverLogout()" style="width: 40px;">연동해제</button></div>
+                    <img src="/static/user/res/icon-info.png" style="width:15px;margin:0;opacity: 0.5;cursor: pointer;" id="btn_how_to_disconnect_sns_login">
+                </div>
             </div>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
@@ -121,6 +169,20 @@
         <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
                 <div>
+                    <span class="menuName">E-mail</span>
+                    <div class="menuButton">
+                        <button class="changeEmail changeMemberInfo" data-type="modify">변경</button>
+                        <button class="cancelEmail cancelMemberInfo">취소</button>
+                    </div>
+                </div>
+                <input type="text" name="newemail" class="modifyInfoTool" placeholder="새로운 E-mail 입력">
+                <span class="email_confirm" style="position: absolute;"></span>
+                <span class="_emailInfo _originalInfo">{{ request.user.email }}</span>
+            </div>
+        </div>
+        <div id="trainerInfoWrap" class="boardWrap">
+            <div class="trainerInfo">
+                <div>
                     <span class="menuName">연락처</span>
                     <div class="menuButton">
                         <button class="changePhone changeMemberInfo" data-type="modify">변경</button>
@@ -131,7 +193,8 @@
                 <span class="_phoneInfo _originalInfo">{{ member_info.phone }}</span>
             </div>
         </div>
-        <div id="trainerInfoWrap" class="boardWrap">
+
+        <div id="trainerInfoWrap" class="boardWrap" style="display: none;">
             <div class="trainerInfo">
                 <div>
                     <span class="menuName">생일</span>
@@ -152,297 +215,7 @@
                 <span class="_birthInfo _originalInfo">{{ member_info.birthday_dt }}</span>
             </div>
         </div>
-        <div id="trainerInfoWrap" class="boardWrap">
-            <div class="trainerInfo">
-                <div>
-                    <span class="menuName">지역</span>
-                    <div class="menuButton">
-                        <button class="changeRegion changeMemberInfo" data-type="modify">변경</button>
-                        <button class="cancelRegion cancelMemberInfo">취소</button>
-                    </div>
-                </div>
-                <span class="_regionInfo _originalInfo"></span>
-                <div class="modifyInfoTool">
-                    <div class="outerbox" id="country">
-                        <select class="login_dropdown"  id="country_input">
-                            <option selected disabled>선택</option>
-                            <option value="USA">United States</option>
-                            <option value="KOR">대한민국</option>
-                            <option value="JPN">日本</option>
-                            <option value="CHN">China</option>
-                            <option value="AFG">Afghanistan</option>
-                            <option value="ALA">Åland Islands</option>
-                            <option value="ALB">Albania</option>
-                            <option value="DZA">Algeria</option>
-                            <option value="ASM">American Samoa</option>
-                            <option value="AND">Andorra</option>
-                            <option value="AGO">Angola</option>
-                            <option value="AIA">Anguilla</option>
-                            <option value="ATA">Antarctica</option>
-                            <option value="ATG">Antigua and Barbuda</option>
-                            <option value="ARG">Argentina</option>
-                            <option value="ARM">Armenia</option>
-                            <option value="ABW">Aruba</option>
-                            <option value="AUS">Australia</option>
-                            <option value="AUT">Austria</option>
-                            <option value="AZE">Azerbaijan</option>
-                            <option value="BHS">Bahamas</option>
-                            <option value="BHR">Bahrain</option>
-                            <option value="BGD">Bangladesh</option>
-                            <option value="BRB">Barbados</option>
-                            <option value="BLR">Belarus</option>
-                            <option value="BEL">Belgium</option>
-                            <option value="BLZ">Belize</option>
-                            <option value="BEN">Benin</option>
-                            <option value="BMU">Bermuda</option>
-                            <option value="BTN">Bhutan</option>
-                            <option value="BOL">Bolivia, Plurinational State of</option>
-                            <option value="BES">Bonaire, Sint Eustatius and Saba</option>
-                            <option value="BIH">Bosnia and Herzegovina</option>
-                            <option value="BWA">Botswana</option>
-                            <option value="BVT">Bouvet Island</option>
-                            <option value="BRA">Brazil</option>
-                            <option value="IOT">British Indian Ocean Territory</option>
-                            <option value="BRN">Brunei Darussalam</option>
-                            <option value="BGR">Bulgaria</option>
-                            <option value="BFA">Burkina Faso</option>
-                            <option value="BDI">Burundi</option>
-                            <option value="KHM">Cambodia</option>
-                            <option value="CMR">Cameroon</option>
-                            <option value="CAN">Canada</option>
-                            <option value="CPV">Cape Verde</option>
-                            <option value="CYM">Cayman Islands</option>
-                            <option value="CAF">Central African Republic</option>
-                            <option value="TCD">Chad</option>
-                            <option value="CHL">Chile</option>
-                            <option value="CXR">Christmas Island</option>
-                            <option value="CCK">Cocos (Keeling) Islands</option>
-                            <option value="COL">Colombia</option>
-                            <option value="COM">Comoros</option>
-                            <option value="COG">Congo</option>
-                            <option value="COD">Congo, the Democratic Republic of the</option>
-                            <option value="COK">Cook Islands</option>
-                            <option value="CRI">Costa Rica</option>
-                            <option value="CIV">Côte d'Ivoire</option>
-                            <option value="HRV">Croatia</option>
-                            <option value="CUB">Cuba</option>
-                            <option value="CUW">Curaçao</option>
-                            <option value="CYP">Cyprus</option>
-                            <option value="CZE">Czech Republic</option>
-                            <option value="DNK">Denmark</option>
-                            <option value="DJI">Djibouti</option>
-                            <option value="DMA">Dominica</option>
-                            <option value="DOM">Dominican Republic</option>
-                            <option value="ECU">Ecuador</option>
-                            <option value="EGY">Egypt</option>
-                            <option value="SLV">El Salvador</option>
-                            <option value="GNQ">Equatorial Guinea</option>
-                            <option value="ERI">Eritrea</option>
-                            <option value="EST">Estonia</option>
-                            <option value="ETH">Ethiopia</option>
-                            <option value="FLK">Falkland Islands (Malvinas)</option>
-                            <option value="FRO">Faroe Islands</option>
-                            <option value="FJI">Fiji</option>
-                            <option value="FIN">Finland</option>
-                            <option value="FRA">France</option>
-                            <option value="GUF">French Guiana</option>
-                            <option value="PYF">French Polynesia</option>
-                            <option value="ATF">French Southern Territories</option>
-                            <option value="GAB">Gabon</option>
-                            <option value="GMB">Gambia</option>
-                            <option value="GEO">Georgia</option>
-                            <option value="DEU">Germany</option>
-                            <option value="GHA">Ghana</option>
-                            <option value="GIB">Gibraltar</option>
-                            <option value="GRC">Greece</option>
-                            <option value="GRL">Greenland</option>
-                            <option value="GRD">Grenada</option>
-                            <option value="GLP">Guadeloupe</option>
-                            <option value="GUM">Guam</option>
-                            <option value="GTM">Guatemala</option>
-                            <option value="GGY">Guernsey</option>
-                            <option value="GIN">Guinea</option>
-                            <option value="GNB">Guinea-Bissau</option>
-                            <option value="GUY">Guyana</option>
-                            <option value="HTI">Haiti</option>
-                            <option value="HMD">Heard Island and McDonald Islands</option>
-                            <option value="VAT">Holy See (Vatican City State)</option>
-                            <option value="HND">Honduras</option>
-                            <option value="HKG">Hong Kong</option>
-                            <option value="HUN">Hungary</option>
-                            <option value="ISL">Iceland</option>
-                            <option value="IND">India</option>
-                            <option value="IDN">Indonesia</option>
-                            <option value="IRN">Iran, Islamic Republic of</option>
-                            <option value="IRQ">Iraq</option>
-                            <option value="IRL">Ireland</option>
-                            <option value="IMN">Isle of Man</option>
-                            <option value="ISR">Israel</option>
-                            <option value="ITA">Italy</option>
-                            <option value="JAM">Jamaica</option>
-                            <option value="JEY">Jersey</option>
-                            <option value="JOR">Jordan</option>
-                            <option value="KAZ">Kazakhstan</option>
-                            <option value="KEN">Kenya</option>
-                            <option value="KIR">Kiribati</option>
-                            <option value="PRK">Korea, Democratic People's Republic of</option>
-                            <option value="KWT">Kuwait</option>
-                            <option value="KGZ">Kyrgyzstan</option>
-                            <option value="LAO">Lao People's Democratic Republic</option>
-                            <option value="LVA">Latvia</option>
-                            <option value="LBN">Lebanon</option>
-                            <option value="LSO">Lesotho</option>
-                            <option value="LBR">Liberia</option>
-                            <option value="LBY">Libya</option>
-                            <option value="LIE">Liechtenstein</option>
-                            <option value="LTU">Lithuania</option>
-                            <option value="LUX">Luxembourg</option>
-                            <option value="MAC">Macao</option>
-                            <option value="MKD">Macedonia, the former Yugoslav Republic of</option>
-                            <option value="MDG">Madagascar</option>
-                            <option value="MWI">Malawi</option>
-                            <option value="MYS">Malaysia</option>
-                            <option value="MDV">Maldives</option>
-                            <option value="MLI">Mali</option>
-                            <option value="MLT">Malta</option>
-                            <option value="MHL">Marshall Islands</option>
-                            <option value="MTQ">Martinique</option>
-                            <option value="MRT">Mauritania</option>
-                            <option value="MUS">Mauritius</option>
-                            <option value="MYT">Mayotte</option>
-                            <option value="MEX">Mexico</option>
-                            <option value="FSM">Micronesia, Federated States of</option>
-                            <option value="MDA">Moldova, Republic of</option>
-                            <option value="MCO">Monaco</option>
-                            <option value="MNG">Mongolia</option>
-                            <option value="MNE">Montenegro</option>
-                            <option value="MSR">Montserrat</option>
-                            <option value="MAR">Morocco</option>
-                            <option value="MOZ">Mozambique</option>
-                            <option value="MMR">Myanmar</option>
-                            <option value="NAM">Namibia</option>
-                            <option value="NRU">Nauru</option>
-                            <option value="NPL">Nepal</option>
-                            <option value="NLD">Netherlands</option>
-                            <option value="NCL">New Caledonia</option>
-                            <option value="NZL">New Zealand</option>
-                            <option value="NIC">Nicaragua</option>
-                            <option value="NER">Niger</option>
-                            <option value="NGA">Nigeria</option>
-                            <option value="NIU">Niue</option>
-                            <option value="NFK">Norfolk Island</option>
-                            <option value="MNP">Northern Mariana Islands</option>
-                            <option value="NOR">Norway</option>
-                            <option value="OMN">Oman</option>
-                            <option value="PAK">Pakistan</option>
-                            <option value="PLW">Palau</option>
-                            <option value="PSE">Palestinian Territory, Occupied</option>
-                            <option value="PAN">Panama</option>
-                            <option value="PNG">Papua New Guinea</option>
-                            <option value="PRY">Paraguay</option>
-                            <option value="PER">Peru</option>
-                            <option value="PHL">Philippines</option>
-                            <option value="PCN">Pitcairn</option>
-                            <option value="POL">Poland</option>
-                            <option value="PRT">Portugal</option>
-                            <option value="PRI">Puerto Rico</option>
-                            <option value="QAT">Qatar</option>
-                            <option value="REU">Réunion</option>
-                            <option value="ROU">Romania</option>
-                            <option value="RUS">Russian Federation</option>
-                            <option value="RWA">Rwanda</option>
-                            <option value="BLM">Saint Barthélemy</option>
-                            <option value="SHN">Saint Helena, Ascension and Tristan da Cunha</option>
-                            <option value="KNA">Saint Kitts and Nevis</option>
-                            <option value="LCA">Saint Lucia</option>
-                            <option value="MAF">Saint Martin (French part)</option>
-                            <option value="SPM">Saint Pierre and Miquelon</option>
-                            <option value="VCT">Saint Vincent and the Grenadines</option>
-                            <option value="WSM">Samoa</option>
-                            <option value="SMR">San Marino</option>
-                            <option value="STP">Sao Tome and Principe</option>
-                            <option value="SAU">Saudi Arabia</option>
-                            <option value="SEN">Senegal</option>
-                            <option value="SRB">Serbia</option>
-                            <option value="SYC">Seychelles</option>
-                            <option value="SLE">Sierra Leone</option>
-                            <option value="SGP">Singapore</option>
-                            <option value="SXM">Sint Maarten (Dutch part)</option>
-                            <option value="SVK">Slovakia</option>
-                            <option value="SVN">Slovenia</option>
-                            <option value="SLB">Solomon Islands</option>
-                            <option value="SOM">Somalia</option>
-                            <option value="ZAF">South Africa</option>
-                            <option value="SGS">South Georgia and the South Sandwich Islands</option>
-                            <option value="SSD">South Sudan</option>
-                            <option value="ESP">Spain</option>
-                            <option value="LKA">Sri Lanka</option>
-                            <option value="SDN">Sudan</option>
-                            <option value="SUR">Suriname</option>
-                            <option value="SJM">Svalbard and Jan Mayen</option>
-                            <option value="SWZ">Swaziland</option>
-                            <option value="SWE">Sweden</option>
-                            <option value="CHE">Switzerland</option>
-                            <option value="SYR">Syrian Arab Republic</option>
-                            <option value="TWN">Taiwan, Province of China</option>
-                            <option value="TJK">Tajikistan</option>
-                            <option value="TZA">Tanzania, United Republic of</option>
-                            <option value="THA">Thailand</option>
-                            <option value="TLS">Timor-Leste</option>
-                            <option value="TGO">Togo</option>
-                            <option value="TKL">Tokelau</option>
-                            <option value="TON">Tonga</option>
-                            <option value="TTO">Trinidad and Tobago</option>
-                            <option value="TUN">Tunisia</option>
-                            <option value="TUR">Turkey</option>
-                            <option value="TKM">Turkmenistan</option>
-                            <option value="TCA">Turks and Caicos Islands</option>
-                            <option value="TUV">Tuvalu</option>
-                            <option value="UGA">Uganda</option>
-                            <option value="UKR">Ukraine</option>
-                            <option value="ARE">United Arab Emirates</option>
-                            <option value="GBR">United Kingdom</option>
-                            <option value="UMI">United States Minor Outlying Islands</option>
-                            <option value="URY">Uruguay</option>
-                            <option value="UZB">Uzbekistan</option>
-                            <option value="VUT">Vanuatu</option>
-                            <option value="VEN">Venezuela, Bolivarian Republic of</option>
-                            <option value="VNM">Viet Nam</option>
-                            <option value="VGB">Virgin Islands, British</option>
-                            <option value="VIR">Virgin Islands, U.S.</option>
-                            <option value="WLF">Wallis and Futuna</option>
-                            <option value="ESH">Western Sahara</option>
-                            <option value="YEM">Yemen</option>
-                            <option value="ZMB">Zambia</option>
-                            <option value="ZWE">Zimbabwe</option>
-                        </select>
-                    </div>
-                    <div class="outerbox" id="city-KOR">
-                        <select class="login_dropdown"  id="region_input">
-                            <option disabled selected>선택</option>
-                            <option>서울특별시</option>
-                            <option>부산광역시</option>
-                            <option>인천광역시</option>
-                            <option>대구광역시</option>
-                            <option>대전광역시</option>
-                            <option>광주광역시</option>
-                            <option>울산광역시</option>
-                            <option>세종특별자치시</option>
-                            <option>제주특별자치도</option>
-                            <option>강원도</option>
-                            <option>경기도</option>
-                            <option>충청남도</option>
-                            <option>충청북도</option>
-                            <option>전라남도</option>
-                            <option>전라북도</option>
-                            <option>경상남도</option>
-                            <option>경상북도</option>
-                        </select>
-                    </div>
-                </div>
 
-            </div>
-        </div>
         <div id="trainerInfoWrap" class="boardWrap">
             <div class="trainerInfo">
                 <span class="menuName" style="line-height: 60px;">가입일</span><span>{{ request.user.date_joined }}</span>
@@ -463,52 +236,6 @@
 
 
 
-    <!--
-<div class="mypage_label _GRAPH_OPEN">
-    <img src="/static/user/res/member/icon-user.png" alt=""><span>월별 강의 완료 그래프</span>
-</div>
-
-<div id="mygraph" data-open="0">
-    <div id="yyyyText">
-        <a id="leftArrow" style="left: 6%;cursor: pointer;"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="-webkit-transform:rotate(180deg);width: 6px;"></a>
-        <span id="yy"></span>
-        <a id="rightArrow" style="right: 6%;cursor: pointer;"><img src={% static_url "user/res/icon-setting-arrow.png" %} alt="" style="width: 6px;"></a>
-    </div>
-
-    <div id="graph" class="pters_graph">
-      <div class="graph_main">
-        <div class="graph_vertical">
-          <div class="verti">30</div>
-          <div class="verti">25</div>
-          <div class="verti">20</div>
-          <div class="verti">15</div>
-          <div class="verti">10</div>
-          <div class="verti">5</div>
-          <div class="verti"></div>
-        </div>
-      </div>  
-      <div class="graph_horizontal">
-        <table>
-          <tr>
-            <td>1월</td>
-            <td>2월</td>
-            <td>3월</td>
-            <td>4월</td>
-            <td>5월</td>
-            <td>6월</td>
-            <td>7월</td>
-            <td>8월</td>
-            <td>9월</td>
-            <td>10월</td>
-            <td>11월</td>
-            <td>12월</td>
-          </tr>
-        </table>
-      </div>
-    </div> 
-</div>
--->
-
     <div class="popupBtn_mini">
         <button class="submitBtn _button_Prev">이전</button>
         <button class="submitBtn _button_Next" style="display: none;">등록</button>
@@ -527,6 +254,7 @@
         <input type="hidden" name="country" id="newcountry" value="" >
         <input type="hidden" name="address" id="newcity" value="" >
         <input type="hidden" name="phone" id="newphone" value="" >
+        <input type="hidden" name="email" id="newemail" value="" >
         <input type="hidden" name="contents" id="contents" value="" >
         <input type="hidden" name="next_page" id="id_next_page" value="{% url 'trainer:get_trainer_info' %}">
     </form>
@@ -537,60 +265,96 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
+{#        var social_login_type = '{{ social_login_type }}';#}
 
         if($('body').width()<600){
-            $('#page-base').css('display','none')
-            $('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('마이페이지')
-            $('#uptext').text("마이페이지")
-            $('#upbutton-modify').hide()
+            $('#page-base').css('display', 'none');
+            $('#page-base-modifystyle').css('display', 'block');
+            $('#uptext3').text('마이페이지');
+            $('#uptext').text("마이페이지");
+            $('#upbutton-modify').hide();
         }
-
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
-        })
+            location.href="/trainer/trainer_setting/";
+        });
 
-        regionChangeEventGroup()
-        birthChangeEventGroup()
+        regionChangeEventGroup();
+        birthChangeEventGroup();
+
+        if(Number(social_login_check) == 0){
+
+        }else if(Number(social_login_check) == 1){
+            $('.changeEmail').parent('.menuButton').hide();
+            $('#is_this_sns_login').show();
+            $('#sns_type').html(`<span class="${social_login_type}" style="margin:0">${social_login_type}</span> 계정으로 로그인 중`);
+        }
+        
+
+        $('#btn_how_to_disconnect_sns_login').click(function(){
+            height_this_fit_to_display('#popup_how_to_disconnect_sns_login', 60);
+            locate_this_to_center('#popup_how_to_disconnect_sns_login');
+
+            $('body').css('overflow-y', 'hidden');
+            $('#shade_caution').show();
+        });
+
+        $('#btn_close_how_to_disconnect_sns_login').click(function(){
+            $('#popup_how_to_disconnect_sns_login').hide();
+            $('body').css('overflow-y', 'unset');
+            $('#shade_caution').hide();
+        });
+
+        $('.pters_selectbox_btn').click(function(){
+            var thisID = $(this).attr("id");
+            $(`#${thisID}_explain`).show();
+            $(`#${thisID}_explain`).siblings('.explain_page').hide();
+        });
+
 
         if('{{next_schedule_start_dt }}'.length>0){
-            var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}')
+            var trainee_next_schedule = date_format_to_user_hangul('{{next_schedule_start_dt }}');
 
         }else{
-            var trainee_next_schedule = "일정이 없습니다."
+            var trainee_next_schedule = "일정이 없습니다.";
         }
-        $('._Next_Info p:nth-child(2)').text(trainee_next_schedule)
+        $('._Next_Info p:nth-child(2)').text(trainee_next_schedule);
 
 
         $('button.changeMemberInfo').click(function(){
             if($(this).attr('data-type') == "modify"){
-                $(this).attr('data-type','complete')
-                $(this).siblings('button.cancelMemberInfo').show()
-                $(this).parents('.trainerInfo').find('._originalInfo').hide()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').show()
+                $(this).attr('data-type', 'complete');
+                $(this).siblings('button.cancelMemberInfo').show();
+                $(this).parents('.trainerInfo').find('._originalInfo').hide();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').show();
             }else if($(this).attr('data-type') == "complete"){
-                $(this).attr('data-type','modify')
-                $(this).siblings('button.cancelMemberInfo').hide()
-                $(this).parents('.trainerInfo').find('._originalInfo').show()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-                send_modified_member_info()
+                $(this).attr('data-type', 'modify');
+                $(this).siblings('button.cancelMemberInfo').hide();
+                $(this).parents('.trainerInfo').find('._originalInfo').show();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+                if(!$(this).hasClass('changeEmail')){
+                    send_modified_member_info();
+                }
             }
-        })
+        });
 
         $('button.cancelMemberInfo').click(function(){
-            $(this).hide()
-            $(this).siblings('button.changeMemberInfo').attr('data-type','modify')
-            $(this).parents('.trainerInfo').find('._originalInfo').show()
-            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-        })
+            $(this).hide();
+            $(this).siblings('button.changeMemberInfo').attr('data-type', 'modify');
+            $(this).parents('.trainerInfo').find('._originalInfo').show();
+            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+            $('.email_confirm').hide();
+        });
 
         $('input').keyup(function(){
-            var targetID = $('#'+$(this).attr('name'))
-            targetID.val($(this).val())
-        })
+            var targetID = $('#'+$(this).attr('name'));
+            targetID.val($(this).val());
+            if($(this).attr('name') == "newemail"){
+                check_email($(this).val());
+            }
+        });
 
-        send_modified_member_info()
+        send_modified_member_info();
         function send_modified_member_info(){
             $.ajax({
                 url:'/trainer/update_trainer_info/',
@@ -599,13 +363,15 @@
                 dataType : 'html',
 
                 beforeSend:function(){
+                    beforeSend();
                 },
 
                 //통신성공시 처리
                 success:function(data){
-                    var jsondata = JSON.parse(data)
-                    console.log(jsondata)
-                    fill_recieved_member_info(jsondata)
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata);
+                    fill_recieved_member_info(jsondata);
+                    completeSend();
                 },
 
                 //보내기후 팝업창 닫기
@@ -615,18 +381,18 @@
                 //통신 실패시 처리
                 error:function(){
 
-                },
-            })
+                }
+            });
         }
 
         function fill_recieved_member_info(jsondata){
-            $('._nameInfo').text(jsondata.name)
-            $('._phoneInfo').text(jsondata.phone)
-            $('._birthInfo').text(jsondata.birthday_dt)
-            console.log(jsondata.country)
+            $('.pcwho').html(jsondata.name + '<span class="text-nameAttach">님</span>');
+            $('._nameInfo').text(jsondata.name).attr('data-dbid', jsondata.db_id);
+            $('._phoneInfo').text(jsondata.phone);
+            $('._birthInfo').text(jsondata.birthday_dt);
             if(jsondata.country != ""){
-                var countryname = $('option[value='+jsondata.country+']').text()
-                $('._regionInfo').text(countryname+' '+jsondata.address)
+                var countryname = $('option[value='+jsondata.country+']').text();
+                $('._regionInfo').text(countryname+' '+jsondata.address);
             }
 
             var repeat_info_dict= { 'KOR':
@@ -638,59 +404,59 @@
                 'JAP':
                     {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                         'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
-            }
-            var repeatList = []
+            };
+            var repeatList = [];
 
             if(jsondata.off_repeat_schedule_type_data.length>0){
                 for(var i=0; i<jsondata.off_repeat_schedule_type_data.length; i++){
-                    var off_type = repeat_info_dict[Options.language][jsondata.off_repeat_schedule_type_data[0]]
+                    var off_type = repeat_info_dict[Options.language][jsondata.off_repeat_schedule_type_data[0]];
                     var off_day = function(){
-                        var repeat_day_info_raw = jsondata.off_repeat_schedule_week_info_data[i].split('/')
-                        var repeat_day_info = ""
+                        var repeat_day_info_raw = jsondata.off_repeat_schedule_week_info_data[i].split('/');
+                        var repeat_day_info = "";
                         if(repeat_day_info_raw.length>1){
                             for(var j=0; j<repeat_day_info_raw.length; j++){
-                                var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1)
+                                var repeat_day_info = repeat_day_info + '/' + repeat_info_dict['KOR'][repeat_day_info_raw[j]].substr(0,1);
                             }
                         }else if(repeat_day_info_raw.length == 1){
-                            var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]]
+                            var repeat_day_info = repeat_info_dict['KOR'][repeat_day_info_raw[0]];
                         }
                         if(repeat_day_info.substr(0,1) == '/'){
-                            var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length)
+                            var repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
                         }
-                        return repeat_day_info
+                        return repeat_day_info;
                     };
-                    var off_startdate = jsondata.off_repeat_schedule_start_date_data[i]
-                    var off_enddate = jsondata.off_repeat_schedule_end_date_data[i]
-                    var off_starttime = jsondata.off_repeat_schedule_start_time_data[i]
-                    var off_starttimehour = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
-                    var off_starttimemin = jsondata.off_repeat_schedule_start_time_data[i].split(':')[1]
-                    var off_endtime = jsondata.off_repeat_schedule_end_time_data[i]
-                    var off_endtimehour = jsondata.off_repeat_schedule_end_time_data[i].split(':')[0]
-                    var off_endtimemin = jsondata.off_repeat_schedule_end_time_data[i].split(':')[1]
-                    var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0]
+                    var off_startdate = jsondata.off_repeat_schedule_start_date_data[i];
+                    var off_enddate = jsondata.off_repeat_schedule_end_date_data[i];
+                    var off_starttime = jsondata.off_repeat_schedule_start_time_data[i];
+                    var off_starttimehour = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0];
+                    var off_starttimemin = jsondata.off_repeat_schedule_start_time_data[i].split(':')[1];
+                    var off_endtime = jsondata.off_repeat_schedule_end_time_data[i];
+                    var off_endtimehour = jsondata.off_repeat_schedule_end_time_data[i].split(':')[0];
+                    var off_endtimemin = jsondata.off_repeat_schedule_end_time_data[i].split(':')[1];
+                    var off_time = jsondata.off_repeat_schedule_start_time_data[i].split(':')[0];
                     //var off_dur = jsondata.off_repeat_schedule_time_duration_data[i]
-                    var off_dur = calc_duration_by_start_end(off_startdate, off_starttime, off_enddate, off_endtime)
+                    var off_dur = calc_duration_by_start_end(off_startdate, off_starttime, off_enddate, off_endtime);
 
                     if(off_dur - parseInt(off_dur) == 0.5){
                         if(parseInt(off_dur) != 0){
-                            var off_dur = parseInt(off_dur)+'시간' + ' 30분'
+                            var off_dur = parseInt(off_dur)+'시간' + ' 30분';
                         }else if(parseInt(off_dur) == 0){
-                            var off_dur = '30분'
+                            var off_dur = '30분';
                         }
                     }else{
-                        var off_dur = off_dur + '시간'
+                        var off_dur = off_dur + '시간';
                     }
 
-                    var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_starttimehour+':'+off_starttimemin+' ~ '+off_endtimehour+':'+off_endtimemin+'</p>'
-                    var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>'
-                    repeatList.push(offText+offText2)
+                    var offText = '<p style="margin:0px;margin-top:7px;">'+off_type+' '+off_day()+' '+off_starttimehour+':'+off_starttimemin+' ~ '+off_endtimehour+':'+off_endtimemin+'</p>';
+                    var offText2 = '<span>'+off_startdate+'부터 ~ '+off_enddate+"까지"+'</span>';
+                    repeatList.push(offText+offText2);
                     //$('._Repeat_Info p:nth-child(2)').text(offText)
                     //$('._Repeat_Info span').text(offText2)
-                }$('._Repeat_Info div').html(repeatList.join(''))
+                }$('._Repeat_Info div').html(repeatList.join(''));
 
             }else{
-                var offText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>'
-                $('._Repeat_Info div').html(offText)
+                var offText = '<span style="margin:0px;margin-top:7px;">'+'설정된 반복 일정이 없습니다.'+'</span>';
+                $('._Repeat_Info div').html(offText);
             }
         }
 
@@ -767,18 +533,114 @@
         }
 
         function input_birth_to_form(){
-            var year = $('#birth_year').val().replace(/년/gi,"")
-            var month = $('#birth_month').val().replace(/월/gi,"")
-            var date = $('#birth_date').val().replace(/일/gi,"")
-            var birthdata = year+'-'+month+'-'+date
-            $('#newbirth').attr('value',birthdata)
+            var year = $('#birth_year').val().replace(/년/gi, "");
+            var month = $('#birth_month').val().replace(/월/gi, "");
+            var date = $('#birth_date').val().replace(/일/gi, "");
+            var birthdata = year+'-'+month+'-'+date;
+            $('#newbirth').attr('value', birthdata);
         }
 
+        $('.changeEmail').click(function(){
+            $('.email_confirm').hide();
+            if($(this).attr('data-type') == "modify" && email_change_varification == true){
+                //이메일 변경을 계속 할건지 예/아니오 팝업 출력
+                $('.email_confirm').hide();
+                show_caution_popup_yes_or_no(
+                                            `<p>이메일 주소를 변경합니다.</p>
+                                             <p>${$('._emailInfo').text()} <img src="/static/user/res/btn-today-right.png" style="width:10px;margin-left:6px;margin-right:6px;">
+                                                ${$('._emailInfo').siblings('input').val()}</p>
+                                             <p>변경후에는 자동으로 <span style="color:#fe4e65;font-weight:500">로그아웃</span>되며,<br> <span style="color:#fe4e65;font-weight:500">이메일 인증</span> 후 계속 사용이 가능합니다.</p>
+                                                <p>계속 하시겠습니까?</p>
+                                            `
+                                            );
+                $(document).on('click', '#caution_popup_yes', function(e){
+                    e.stopPropagation();
+                    send_modified_email_info($('._emailInfo').siblings('input').val());
+                    $('#caution_popup_yes').off();
+                });
+            }
+        });
 
+        function send_modified_email_info(newemail){
+            var userid = "{{ request.user.username }}";
+            var db_id = $('._nameInfo').attr('data-dbid');
+            $.ajax({
+                    url:'/login/change_resend_email_authentication/',
+                    type:'POST',
+                    data : {"username":userid, "email":newemail, "member_id":db_id},
+                    dataType : 'html',
+
+                    beforeSend:function(xhr, settings){
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        alert('로그아웃 합니다.\n 이메일 인증 후 재로그인 해주세요.');
+                        location.href = '/login/logout/';
+                        completeSend();
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+        }
+
+        var email_change_varification = false;
+        function check_email(newemail){
+            $.ajax({
+                url:'/login/check_member_email/',
+                type:'GET',
+                data:{"email" : newemail },
+                dataType : 'html',
+
+                beforeSend:function(){
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    var id_check_message = jsondata.id_check_result;
+                    if(id_check_message[0].length>0){
+                        var error_msg = id_check_message[0];
+                        $('.email_confirm').text(error_msg).css({'display':'inline-block', 'color':'#fe4e65'});
+                        email_change_varification = false;
+                    }else{
+                        $('.email_confirm').text('사용 가능').css({'display':'inline-block', 'color':'green'});
+                        email_change_varification = true;
+                    }
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+
+                },
+
+                //통신 실패시 처리
+                error:function(){
+                    alert("에러: 서버 통신 실패");
+                }
+            });
+        }
 
         function goPage(option){
             if(option == 2){
-                location.href= "/accounts/password/change/"
+                if(Number(social_login_check) == 0){
+                    location.href= "/accounts/password/change/";
+                }else if(Number(social_login_check) == 1){
+                    location.href= "/accounts/password/reset/";
+                }
+                
 
             }else if(option == "delAccount"){
                 location.href="/trainer/delete_account/";
@@ -786,6 +648,67 @@
             }else if(option == "payment_history"){
                 location.href = "/payment/payment_history/";
             }
+        }
+
+        function naverLogout(){
+            if(confirm("네이버 연동해제시 비밀번호를 초기화(변경)하셔야\n 정상적으로 재로그인이 가능합니다.")){
+                $.ajax({
+
+                    url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
+                    type:'GET',
+                    dataType:'json',
+
+                    beforeSend:function(){
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+
+                $.ajax({
+                    url:'/login/delete_sns_info/',
+                    type:'POST',
+                    data : {"sns_id":social_login_id, "sns_type":social_login_type},
+                    dataType : 'html',
+
+                    beforeSend:function(xhr, settings){
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        window.location.reload();
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+            }else{
+                
+            }
+            
         }
 
     </script>

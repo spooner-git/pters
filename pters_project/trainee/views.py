@@ -190,22 +190,24 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         class_id = request.session.get('class_id', '')
         class_info = None
 
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '수강 정보를 불러오지 못했습니다.'
+        if class_id != '':
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            context = func_get_holiday_schedule(context)
+        if class_id != '' and error is None:
             context = func_get_class_lecture_count(context, class_id, request.user.id)
-            # 회원 setting 값 로드
-            context = get_trainee_setting_data(context, request.user.id)
-            request.session['setting_language'] = context['lt_lan_01']
+            context = get_trainer_setting_data(context, class_info.member_id, class_id)
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
+            # 회원 setting 값 로드
+
+        context = func_get_holiday_schedule(context)
+        context = get_trainee_setting_data(context, request.user.id)
+        request.session['setting_language'] = context['lt_lan_01']
             # 강사 setting 값 로드
-            context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return render(request, self.template_name, context)
 
@@ -221,11 +223,11 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         member_info = None
         class_info = None
         # today = datetime.date.today()
-
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '수강 정보를 불러오지 못했습니다.'
+        if class_id != '' and class_id is not None:
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+            except ObjectDoesNotExist:
+                error = '수강 정보를 불러오지 못했습니다.'
 
         if error is None:
             try:
@@ -233,12 +235,13 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
 
-        if error is None:
-            try:
-                class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
-        context['class_info'] = class_info
+        if class_id != '' and class_id is not None:
+            if error is None:
+                try:
+                    class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
+            context['class_info'] = class_info
 
         if error is None:
             if member_info.phone is None:
@@ -248,15 +251,17 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             context['member_info'] = member_info
 
         if error is None:
-            context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
-            context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
-            context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
-                                                                 class_id)
+            if class_id != '' and class_id is not None:
+                context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
+                context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
+                context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
+                                                                     class_id)
+                # 강사 setting 값 로드
+                context = get_trainer_setting_data(context, class_info.member_id, class_id)
+
             # 회원 setting 값 로드
             context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
-            # 강사 setting 값 로드
-            context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         return render(request, self.template_name, context)
 
@@ -781,37 +786,39 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
         # start_date = today - datetime.timedelta(days=46)
         # end_date = today + datetime.timedelta(days=47)
         class_info = None
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '수강정보를 불러오지 못했습니다.'
-
-        if error is None:
+        if class_id != '' and class_id is not None:
             try:
-                member_info = MemberTb.objects.get(member_id=request.user.id)
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
-
-        if error is None:
-            try:
-                class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+                class_info = ClassTb.objects.get(class_id=class_id)
             except ObjectDoesNotExist:
                 error = '수강정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if class_id != '' and class_id is not None:
+                try:
+                    member_info = MemberTb.objects.get(member_id=request.user.id)
+                except ObjectDoesNotExist:
+                    error = '회원 정보를 불러오지 못했습니다.'
+
+        if error is None:
+            if class_id != '' and class_id is not None:
+                try:
+                    class_info.mem_info = MemberTb.objects.get(member_id=class_info.member_id)
+                except ObjectDoesNotExist:
+                    error = '수강정보를 불러오지 못했습니다.'
         context['class_info'] = class_info
 
         if error is None:
-            context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
-            context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
-            context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
-                                                                 class_id)
+            if class_id != '' and class_id is not None:
+                context = func_get_trainee_on_schedule(context, class_id, request.user.id, None, None)
+                context = func_get_trainee_on_repeat_schedule(context, request.user.id, class_id)
+                context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
+                                                                     class_id)
+                # 강사 setting 값 로드
+                context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
-            # 강사 setting 값 로드
+            # 회원 setting 값 로드
             context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
-
-        # 강사 setting 값 로드
-        if error is None:
-            context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
         if error is None:
             if member_info.phone is None:

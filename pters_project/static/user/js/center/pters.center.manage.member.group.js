@@ -447,7 +447,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
     if($(this).css('opacity') == 1){
         deleteTypeSelect = 'groupdelete';
         $('#cal_popup_plandelete').fadeIn('fast');
-        $('#popup_delete_question').text('정말 이 그룹을 삭제하시겠습니까?');
+        $('#popup_delete_question').text('정말 삭제하시겠습니까?');
         //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
         var group_id = $(this).attr('data-groupid');
         var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
@@ -460,7 +460,7 @@ $(document).on('click','._groupmanage img._info_delete',function(e){
         group_delete_JSON.group_id = group_id;
         console.log(group_delete_JSON);
     }else{
-        alert('그룹원 리스트를 펼쳐 확인 후 삭제 해주세요.');
+        alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
     }
 
 });
@@ -806,11 +806,11 @@ function groupListSet(option, jsondata){ //option : current, finished
     var htmlToJoin = [];
     var groupNum = jsondata.group_id.length;
     for(var i=0; i<groupNum; i++){
-        var group_name = jsondata.name[i];
+        var group_name = jsondata.group_name[i];
         var group_id = jsondata.group_id[i];
         var group_type = jsondata.group_type_cd[i];
-        var group_createdate = date_format_to_yyyymmdd(jsondata.reg_dt[i].split(' ')[0]+' '+jsondata.reg_dt[i].split(' ')[1]+' '+jsondata.reg_dt[i].split(' ')[2], '-');
-        var group_memo = jsondata.note[i];
+        var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
+        var group_memo = jsondata.group_note[i];
         var group_memberlist = [];
         var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];

@@ -287,24 +287,15 @@
             <select class="alignSelect _ALIGN_DROPDOWN">
 
                 <option id="name" class="KRtext">회원명 가나다 순</option>
-                <option id="name" class="JPtext">名前順</option>
-                <option id="name" class="ENtext">Name</option>
 
                 <option id="countH" class="KRtext">남은 횟수 많은 순</option>
-                <option id="countH" class="JPtext">残り回数が多い</option>
-                <option id="countH" class="ENtext">Remain Count(H)</option>
 
                 <option id="countL" class="KRtext">남은 횟수 적은 순</option>
-                <option id="countL" class="JPtext">残り回数が少ない</option>
-                <option id="countL" class="ENtext">Remain Count(L)</option>
 
                 <option id="startP" class="KRtext">시작 일자 과거 순</option>
-                <option id="startP" class="JPtext">開始が過去</option>
-                <option id="startP" class="ENtext">Start Date(P)</option>
 
                 <option id="startR" class="KRtext">시작 일자 최근 순</option>
-                <option id="startR" class="JPtext">開始が最近</option>
-                <option id="startR" class="ENtext">Start Date(R)</option>
+
             </select>
             <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
 
@@ -458,8 +449,8 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
                     <span id="npSituationPresent"></span>
                 </label>
-                <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberName_info" name="name" disabled>
+                <div class="mobileinfo hastooltips">
+                    <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
                     <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled>
                     <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" disabled>
                     <div id="memberSex_info">
@@ -473,8 +464,8 @@
                 <label for="memberId" class="ptaddboxtext">
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원 ID
                 </label>
-                <div class="mobileinfo">
-                    <input type="text" class="mobileinfo_input" id="memberId" name="id" disabled>
+                <div class="mobileinfo hastooltips">
+                    <input type="text" class="mobileinfo_input mobile_title" id="memberId" name="id" disabled>
                 </div>
             </div>
 
@@ -600,7 +591,7 @@
             <input type="" name="" id="memberName_info_PC">
             <input type="" name="" id="memberName_info_lastName_PC" maxlength="4">
             <input type="" name="" id="memberName_info_firstName_PC" maxlength="4">
-            <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="closePopup('member_info_PC')">
+            <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="close_manage_popup('member_info_PC')">
         </label>
 
         <div id="info_shift_base" class="info_shift_wrap">
@@ -615,10 +606,10 @@
                     <img src="/static/user/res/member/icon-delete.png" style="margin-bottom: 4px;height:17px;">
                 </button>
             </div>
-            <div id="memberId_info_PC_wrap" class="member_info_PC_wrap">
+            <div id="memberId_info_PC_wrap" class="member_info_PC_wrap hastooltips">
                 <label><img src="/static/user/res/member/icon-user.png">아이디</label>
                 <!--<span id="memberId_info_PC"></span>-->
-                <input id="memberId_info_PC">
+                <input id="memberId_info_PC" class="mobile_title">
             </div>
             <div id="memberBirth_info_PC_wrap" class="member_info_PC_wrap">
                 <label><img src="/static/user/res/member/icon-birth-grey.png">생년월일</label>
@@ -718,7 +709,7 @@
         <div class="member_info_PC_buttons_wrap popupBtn_mini">
             <button class="submitBtn _info_delete" style="display: none;">삭제</button>
             <button class="submitBtn _info_modify" data-type="view" style="display: none;">수정</button>
-            <button class="submitBtn _btn_close_info_PC" onclick="closePopup('member_info_PC')">닫기</button>
+            <button class="submitBtn _btn_close_info_PC" onclick="close_manage_popup('member_info_PC')">닫기</button>
         </div>
     </div>
 
@@ -757,7 +748,7 @@
 
         <div class="ptaddbox" id="addpopup_pc_label_new">
             <span id="uptext2_PC"></span>
-            <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="closePopup('member_add')" style="display: none;">
+            <img src="/static/user/res/ptadd/btn-x.png" alt="닫기"  class="icons" onclick="close_manage_popup('member_add')" style="display: none;">
         </div>
 
         <form class="member-form" id="member-add-form-new">
@@ -1151,7 +1142,7 @@
             <div class="member_info_PC_buttons_wrap popupBtn_mini" style="margin-bottom: 6px;">
                 <button id="pcBtn" class="submitBtn text-register"></button>
                 <button class="submitBtn" style="display: none;">수정</button>
-                <button class="submitBtn text-close" onclick="closePopup('member_add')"></button>
+                <button class="submitBtn text-close" onclick="close_manage_popup('member_add')"></button>
             </div>
         </form>
     </div>
@@ -1165,7 +1156,8 @@
 
 {% block local_js_footer %}
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
-    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script>
+    <!-- <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script> -->
+    <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
     <script>
         $('a.text-membermanage').css('color','#fe4e65;')
         $('#uptext').text("회원 관리")

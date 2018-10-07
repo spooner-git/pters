@@ -45,11 +45,11 @@
                 <div class='center_box_monthyear'><p href="#"></p></div>
                 <div class='center_box_day'><p href="#"></p></div>
             </div>
-            <div class='center_box_text' onclick="location.href='{% url 'trainer:cal_week' %}'" >
+            <div class='center_box_text' onclick="location.href='{% url 'trainer:cal_total' %}'" >
                 <div class='center_box_plan'>
                     <p></p>
                 </div>
-                <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_week' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
+                <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_total' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
             </div>
         </div>
         <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
@@ -87,7 +87,7 @@
         <br>
         <p>-피터스팀 드림</p>
         <p style="text-align: right;margin-bottom: 0;font-size: 11px;">
-            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;margin-right"> 닫기</span>
+            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 닫기</span>
             <span id="notice_popup_close_main"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 오늘 더 보지 않기</span>
         </p>
     </div>
@@ -97,25 +97,25 @@
 {% block local_js_footer %}
     <script type="text/javascript" src={% static_url "user/js/main/main_trainer.js" %}></script>
     <script type="text/javascript">
-        $('.bottomfooter3').css('display','none')
+        $('.bottomfooter3').css('display', 'none');
 
         $('#notice_popup_main').click(function(){
-            $(this).css('display','none')
+            $(this).css('display', 'none');
         })
 
         $('#notice_popup_close_temp').click(function(e){
-            e.stopPropagation()
-            $('#notice_popup_main').css('display','none')
+            e.stopPropagation();
+            $('#notice_popup_main').css('display', 'none');
         })
 
         $('#notice_popup_close_main').click(function(e){
-            e.stopPropagation()
+            e.stopPropagation();
             $.cookie('notice_popup_main', 'hidden', {expires : 1});
-            $('#notice_popup_main').css('display','none')
+            $('#notice_popup_main').css('display', 'none');
         });
 
         if($.cookie('notice_popup_main') == 'hidden'){
-            $('#notice_popup_main').css('display','none')
+            $('#notice_popup_main').css('display', 'none');
             //테스트$('#notice_popup').css('display','block')
         }else{
             //$('#notice_popup_main').css('display','block') 공지 팝업 안보이게 잠시 주석처리

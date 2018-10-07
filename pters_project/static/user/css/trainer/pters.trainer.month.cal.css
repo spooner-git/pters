@@ -21,8 +21,8 @@ img,a,div,span,p{
 #date{
 	padding-top: 5px;
 	padding-bottom: 5px;
-	padding-right: 35px;
-	padding-left: 35px;
+	padding-right: 15px;
+	padding-left: 15px;
 	height: auto;
 	z-index: 3;
 	background-color: #ffffff;
@@ -204,8 +204,6 @@ img,a,div,span,p{
 	width: 100%;
 	height: 72.5%;
 	background-color: #ffffff;
-	padding-left: 20px;
-	padding-right:20px;
 	z-index: 2;
 	top: 93px;
 	table-layout: fixed;

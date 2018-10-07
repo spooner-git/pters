@@ -194,7 +194,6 @@ $(document).ready(function(){
                 }else{
                     draw_trainee_lecture_history(jsondata, $('#myActiveHistory'));
                 }
-
             },
 
             complete:function(){

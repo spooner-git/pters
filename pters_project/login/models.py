@@ -88,3 +88,21 @@ class PushInfoTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'PUSH_INFO_TB'
+
+
+class SnsInfoTb(TimeStampedModel):
+    sns_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    sns_id = models.CharField(db_column='SNS_ID', max_length=255, blank=True, default='')  # Field name made lowercase.
+    sns_type = models.CharField(db_column='SNS_TYPE', max_length=10, blank=True, default='')  # Field name made lowercase.
+    sns_name = models.CharField(db_column='SNS_NAME', max_length=255, blank=True, default='')  # Field name made lowercase.
+    sns_profile = models.CharField(db_column='SNS_PROFILE', max_length=255, blank=True, default='')  # Field name made lowercase.
+    sns_connect_date = models.DateField(db_column='SNS_CONNECT_DATE', blank=True, null=True)  # Field name made lowercase.
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'SNS_INFO_TB'
+
+    def __str__(self):
+        return self.name

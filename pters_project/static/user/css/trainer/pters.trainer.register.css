@@ -37,6 +37,30 @@ body{
 	-webkit-overflow-scrolling:touch;
 	user-select: none;
 }
+.registration_select_button{
+	width: 300px;
+	height: 40px;
+	line-height: 40px;
+	margin: 0 auto;
+	margin-top: 15px;
+	border: 1px solid #ffffff;
+	color: #ffffff;
+	font-size: 17px;
+	font-weight: 500;
+	text-align: center;
+	cursor: pointer;
+}
+	.registration_select_button:hover{
+		background-color: #282828;
+		color: #fe4e65;
+	}
+
+#page1_label{
+
+}
+#page1_content{
+	display: none;
+}
 
 #global_error_msg{
 	position: absolute;
@@ -61,7 +85,7 @@ body{
 	left: 50%;
 	color: #ffffff;
 	transform: translateX(250%);
-	background: rgba(40, 40, 40, 0.5803921568627451);
+	background: rgba(40, 40, 40, 0.87);
 
 	-webkit-transform: translateX(250%);
 	margin-top: 160px;
@@ -117,6 +141,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	top: 50px;
 }
 
+
 .promise_wrap{
 	position: absolute;
 	max-width: 600px;
@@ -130,6 +155,7 @@ div._step1_label, div._step2_label, div._step3_label{
 	transition: 1s;
 	-webkit-transition: 1s;
 	color: #ffffff;
+	background-color: rgba(40, 40, 40, 0.87);
 }
 
 
@@ -260,7 +286,7 @@ div._step1_label, div._step2_label, div._step3_label{
 .pw_notice{
 	margin-top: 3px;
 	font-size: 11px;
-	color:#fe4e65;
+	color:#ffffff;
 }
 
 .register_button{
@@ -476,7 +502,8 @@ div._step1_label, div._step2_label, div._step3_label{
 	}
 
 	.promise_wrap{
-		margin-top: 170px;
+		margin-top: 230px;
+		margin-bottom: 200px;
 	}
 
 	.contractread{

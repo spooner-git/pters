@@ -1,3 +1,38 @@
+var date = new Date();
+var currentYear = date.getFullYear(); //현재 년도
+var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
+var currentDate = date.getDate();
+var currentDay = date.getDay(); // 0,1,2,3,4,5,6,7
+var currentHour = date.getHours();
+var currentMinute = date.getMinutes();
+var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
+var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate, '-');
+var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate;
+var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
+if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
+    lastDay[1] = 29;
+}else{
+    lastDay[1] = 28;
+}
+
+var multiLanguage = { 'KOR':
+    {'DD':'매일', 'WW':'매주', '2W':'격주',
+        'SUN':'일요일', 'MON':'월요일', 'TUE':'화요일', 'WED':'수요일', 'THS':'목요일', 'FRI':'금요일', 'SAT':'토요일',
+        "WeekSmpl":['일', '월', '화', '수', '목', '금', '토']
+    },
+    'JPN':
+        {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+            'SUN':'日曜日', 'MON':'月曜日', 'TUE':'火曜日', 'WED':'水曜日', 'THS':'木曜日', 'FRI':'金曜日', 'SAT':'土曜日',
+            "WeekSmpl":['日', '月', '火', '水', '木', '金', '土']
+        },
+    'ENG':
+        {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+            'SUN':'Sun', 'MON':'Mon', 'TUE':'Tue', 'WED':'Wed', 'THS':'Thr', 'FRI':'Fri', 'SAT':'Sat',
+            "WeekSmpl":['Sun', 'Mon', 'Tue', 'Wed', 'Ths', 'Fri', 'Sat']
+        }
+};
+
+
 //플로팅 버튼 스크롤시 숨기기 Start
 var ts;
 var selector_body = $("body");
@@ -114,72 +149,25 @@ function shade_index(option){
 }
 
 function show_caution_popup(messageHtml){
-    $('#base_popup_check_finished_member_notice .caution_message').html(messageHtml);
-    $('#base_popup_check_finished_member_notice').show();
+    $('#caution_popup .caution_message').html(messageHtml);
+    $('#caution_popup').show();
+    $('#shade_caution').show();
+}
+
+function show_caution_popup_yes_or_no(messageHtml){
+    $('#caution_popup_yes_or_no .caution_message').html(messageHtml);
+    $('#caution_popup_yes_or_no').show();
     $('#shade_caution').show();
 }
 
 function close_caution_popup(){
-    $('#base_popup_check_finished_member_notice').hide();
+    $('#caution_popup').hide();
+    $('#caution_popup_yes_or_no').hide();
     $('#shade_caution').hide();
     //$('#page-base-addstyle').css('z-index',150);
     //enable_window_scroll();
 }
 
-function close_info_popup(option){
-    var bodywidth = window.innerWidth;
-    body_position_fixed_unset();
-    if(option=="cal_popup_planinfo"){
-        $("#"+option).css({'display':'none'});
-        $('#groupParticipants').html("");
-        toggleGroupParticipantsList('off');
-        if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
-            shade_index(100);
-        }else{
-            shade_index(-100);
-        }
-        if($('._calweek').length != 0){
-            enable_window_scroll();
-        }
-        //$('body').css('overflow-y','overlay');
-    }else if(option =="cal_popup_plandelete"){
-        $("#"+option).css({'display':'none'});
-        if($('#pshade').css('z-index')== 200 || $('#mshade').css('z-index') == 200){
-            shade_index(100);
-        }else if($('#pshade').css('z-index')== 300 || $('#mshade').css('z-index') == 300){
-            shade_index(100);
-        }else{
-            shade_index(-100);
-        }
-        enable_window_scroll();
-        //$('body').css('overflow-y','overlay');
-    }else if(option =="page-addplan"){
-        $('#'+option).css('display', 'none');
-        $('#calendar').css('position', 'relative');
-        $('.add_time_unit').removeClass('checked');
-        shade_index(-100);
-        enable_window_scroll();
-    }else if(option =="cal_popup_repeatconfirm"){
-        $('#'+option).css('display', 'none');
-        //$('#calendar').css('position','relative')
-        if($('#pshade').css('z-index') == 200 || $('#mshade').css('z-index') == 200){
-            shade_index(100);
-        }else{
-            shade_index(-100);
-        }
-        if(bodywidth>=600){
-            $('#calendar').css('position', 'relative');
-        }else{
-            //$('._calmonth').css({'height':'90%','position':'fixed'})
-            //$('body').css('overflow-y','overlay');
-        }
-        //enable_window_scroll();
-    }else if(option == "cal_popup_plancheck"){
-        $('#'+option).css('display', 'none');
-        shade_index(-100);
-        enable_window_scroll();
-    }
-}
 
 var toggleGroupParticipants = 'off';
 function toggleGroupParticipantsList(onoff){
@@ -211,32 +199,6 @@ function toggleGroupParticipantsList(onoff){
     }
 }
 
-/*
- function shade1(option){
- if($('body').width()>600){
- $('#pshade').css({'display':option});
- }else{
- $('#mshade').css({'display':option});
- }
- }
-
- function shade2(option){
- if($('body').width()>600){
- $('#pshade2').css({'display':option});
- }else{
- $('#mshade2').css({'display':option});
- }
- }
-
- function shade3(option){
- if($('body').width()>600){
- $('#pshade3').css({'display':option});
- }else{
- $('#mshade3').css({'display':option});
- }
- }
- */
-
 $(document).ready(function(){
 
     var upText = "PTERS";
@@ -256,26 +218,6 @@ $(document).ready(function(){
         //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
     }
 
-
-    /*
-     $('.__alarm, #upbutton-alarm').click(function(){
-     if($('#alarm-iframe').contents().find(".log_id_array").length == 0){
-     $('#alarm_delete').hide()
-     }else{
-     $('#alarm_delete').show()
-     }
-
-
-     if($('body').width()>600){
-     shade_index(100)
-     $('#alarm').css('height','370px');
-     }else{
-     shade_index(100)
-     $('#alarm').css('height','70%');
-     }
-     $('#alarm-iframe-div').html('<iframe id="alarm-iframe" src="/trainer/alarm/" width="540" height="305" frameborder="0"></iframe>');
-     });
-     */
     $('#alarm button').click(function(){
         var bodywidth = window.innerWidth;
         /*$('#alarm').css('transform','translate(-50%,-200%)');*/
@@ -288,41 +230,6 @@ $(document).ready(function(){
     });
 });
 
-
-var date = new Date();
-var currentYear = date.getFullYear(); //현재 년도
-var currentMonth = date.getMonth(); //달은 0부터 출력해줌 0~11
-var currentDate = date.getDate();
-var currentHour = date.getHours();
-var currentMinute = date.getMinutes();
-
-
-var todayYYYYMMDD = Number(date_format_yyyy_m_d_to_yyyymmdd(currentYear+'_'+(currentMonth+1)+'_'+currentDate));
-var today_YY_MM_DD = date_format_yyyy_m_d_to_yyyy_mm_dd(currentYear+'_'+(currentMonth+1)+'_'+currentDate, '-');
-var today_Y_M_D = currentYear+'-'+(currentMonth+1)+'-'+currentDate;
-var lastDay = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];      //각 달의 일수
-if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 ){  //윤년
-    lastDay[1] = 29;
-}else{
-    lastDay[1] = 28;
-}
-
-var multiLanguage = { 'KOR':
-    {'DD':'매일', 'WW':'매주', '2W':'격주',
-        'SUN':'일요일', 'MON':'월요일', 'TUE':'화요일', 'WED':'수요일', 'THS':'목요일', 'FRI':'금요일', 'SAT':'토요일',
-        "WeekSmpl":['일', '월', '화', '수', '목', '금', '토']
-    },
-    'JPN':
-        {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
-            'SUN':'日曜日', 'MON':'月曜日', 'TUE':'火曜日', 'WED':'水曜日', 'THS':'木曜日', 'FRI':'金曜日', 'SAT':'土曜日',
-            "WeekSmpl":['日', '月', '火', '水', '木', '金', '土']
-        },
-    'ENG':
-        {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
-            'SUN':'Sun', 'MON':'Mon', 'TUE':'Tue', 'WED':'Wed', 'THS':'Thr', 'FRI':'Fri', 'SAT':'Sat',
-            "WeekSmpl":['Sun', 'Mon', 'Tue', 'Wed', 'Ths', 'Fri', 'Sat']
-        }
-};
 
 //Array에서 중복요소 제거
 function remove_duplicate_in_list(arraylist){
@@ -788,154 +695,6 @@ Array.prototype.insert = function(index, item){
 /*/////////////////////일정 관련 공통 함수////////////////////////////////*/
 
 
-/*
- function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
- //DB데이터 가공
- var classTimeLength = startarray.length
- var startlength = startarray.length;
- var endlength = endarray.length;
- var resultarray = []
-
- for(i=0;i<classTimeLength; i++){
- var start = startarray[i].replace(/년 |월 |일 |:| /gi,"_");
- var end = endarray[i].replace(/년 |월 |일 |:| /gi,"_");
- var startSplitArray= start.split("_");
- var endSplitArray = end.split("_");
- //["2017", "10", "7", "6", "00", "오전"]
-
- if(startSplitArray[5]=="오후" && startSplitArray[3]!=12){
- startSplitArray[3] = String(Number(startSplitArray[3])+12);
- }
-
- if(endSplitArray[5]=="오후" && endSplitArray[3]!=12){
- endSplitArray[3] = String(Number(endSplitArray[3])+12);
- }
-
- if(startSplitArray[5]=="오전" && startSplitArray[3]==12){
- startSplitArray[3] = String(Number(startSplitArray[3])+12);
- }
-
- if(endSplitArray[5]=="오전" && endSplitArray[3]==12){
- endSplitArray[3] = String(Number(endSplitArray[3])+12);
- }
-
- var dura = endSplitArray[3] - startSplitArray[3];  //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
- if(dura>0){
- startSplitArray[5] = String(dura)
- }else{
- startSplitArray[5] = String(dura+24)
- }
-
- if(option=="class"){
- startSplitArray.push(classTimeArray_member_name[i])
- result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+startSplitArray[6]+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
- }else if(option=="off"){
- startSplitArray.push(classTimeArray_member_name[i])
- result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]+"_"+startSplitArray[3]+"_"+startSplitArray[4]+"_"+startSplitArray[5]+"_"+"OFF"+"_"+endSplitArray[3]+"_"+endSplitArray[4]);
- }else if(option=="member"){
- result.push(startSplitArray[0]+"_"+startSplitArray[1]+"_"+startSplitArray[2]);
- result2.push(startSplitArray[3]+":"+startSplitArray[4]);
- }else if(option=="graph"){
- var mm = startSplitArray[1]
- var dd = startSplitArray[2]
- if(mm.length<2){
- var mm = '0'+startSplitArray[1]
- }
- if(dd.length<2){
- var dd = '0'+startSplitArray[2]
- }
- result.push(startSplitArray[0]+"-"+mm+"-"+dd); //2017_10_7
- result2.push(startSplitArray[3]+"_"+startSplitArray[4] +"_"+ startSplitArray[5]); //6_00_2
- }
- }
- }
- */
-
-/*
- function DBdataProcess(startarray,endarray,result,option,result2){ //result2는 option이 member일때만 사용
- //DB데이터 가공
- var classTimeLength = startarray.length
- var startlength = startarray.length;
- var endlength = endarray.length;
- var resultarray = []
-
- //2018-08-15 09:00:00
- for(i=0;i<classTimeLength; i++){
- if(startarray[i].split(' ').length>1){
- var sdate = startarray[i].split(' ')[0].split('-')
- var stime = startarray[i].split(' ')[1].split(':')
- }else{
- var sdate = startarray[i].split(' ')[0].split('-')
- var stime = ''
- }
-
- if(endarray[i].split(' ').length>1){
- var edate = endarray[i].split(' ')[0].split('-')
- var etime = endarray[i].split(' ')[1].split(':')
- }else{
- var edate = endarray[i].split(' ')[0].split('-')
- var etime = ''
- }
-
- var sYear = Number(sdate[0])
- var sMonth = Number(sdate[1])
- var sDate = Number(sdate[2])
- var sHour = Number(stime[0])
- var sMinute = stime[1]
-
- var eYeat = Number(edate[0])
- var eMonth = Number(edate[1])
- var eDate = Number(edate[2])
- var eHour = Number(etime[0])
- var eMinute = etime[1]
-
-
- //["2017", "10", "7", "6", "00", "오전"]
-
- if(Math.abs(etime[1] - stime[1]) == 30){  //  01:30 ~ 02:00  01:00 ~ 01:30,,,, 01:00 ~ 05:30, 01:30 ~ 05:00
- if(etime[0]-stime[0] == 0){
- var dura = "0.5"
- }else if(etime[0] > stime[0] && etime[1]-stime[1] == -30 ){
- var dura = String((etime[0]-stime[0]-1))+'.5'
- }else if(etime[0] > stime[0] && etime[1]-stime[1] == 30){
- var dura = String((etime[0]-stime[0]))+'.5'
- }
- }else{
- var dura = etime[0] - stime[0];
- }
-
- //오전 12시 표시 일정 표시 안되는 버그 픽스 17.10.30
- if(eDate == sDate+1 && eHour==sHour){
- var dura = 24
- }else if(eDate == sDate+1 && eHour == 0){
- var dura = 24-sHour
- }else if(sDate == lastDay[sMonth-1] && eDate == 1 && eHour == 0){ //달넘어갈때 -23시 표기되던 문제
- var dura = 24-sHour
- }
-
- if(option=="class"){
- result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+classTimeArray_member_name[i]+"_"+eHour+"_"+eMinute);
- }else if(option=="off"){
- result.push(sYear+"_"+sMonth+"_"+sDate+"_"+sHour+"_"+sMinute+"_"+dura+"_"+"OFF"+"_"+eHour+"_"+eMinute);
- }else if(option=="member"){
- result.push(sYear+'_'+sMonth+'_'+sDate);
- result2.push(sHour+":"+sMinute);
- }else if(option=="graph"){
- result.push(sYear+"-"+sMonth+"-"+sDate); //2017_10_7
- result2.push(sHour+"_"+sMinute +"_"+ dura); //6_00_2
- }
- }
- }
- */
-
-function show_ajax_error_message(){
-
-}
-
-function hide_ajax_error_message(){
-
-}
-
 function scrollToDom(dom){
     if(dom != undefined){
         var offset = dom.offset();
@@ -1120,83 +879,12 @@ function numberWithCommas(x) { //천단위 콤마 찍기
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
 set_drag_drop_action_to_DOM('#page-addplan');
 set_drag_drop_action_to_DOM('#cal_popup_planinfo');
 set_drag_drop_action_to_DOM('#cal_popup_plancheck');
 set_drag_drop_action_to_DOM('#page_addmember');
 set_drag_drop_action_to_DOM('#memberInfoPopup_PC');
 ///////////////skkim test//////////////////드래그앤 드랍 함수
-/*
-function set_drag_drop_action_to_DOM(targetSelector){
-    //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
-    if(bodywidth > 600 ){
-        $(targetSelector).mousedown(function(event){
-            //event.stopPropagation();
-                var $this = $(this);
-
-                    $this.mouseup(function(event){
-                        $this.css({'box-shadow':'unset'});
-                    });
-
-                    $this.mouseleave(function(){
-                        $this.css({'box-shadow':'unset'});
-                    });
-
-                    var thisOriX = $this.offset().left;
-                    var thisOriY = $this.offset().top;
-
-                    var oriX = event.pageX;
-                    var oriY = event.pageY;
-
-                    $(document).on('mousemove', 'body', function(e){
-                        e.stopPropagation();
-                        var moveX = e.pageX;
-                        var moveY = e.pageY;
-
-                        var diffX = oriX - moveX;
-                        var diffY = oriY - moveY;
-
-                        var resultX;
-                        var resultY;
-
-                        var resultX = thisOriX - diffX;
-                        var resultY = thisOriY - diffY;
-
-                        if(Math.abs(diffX) > 10 || Math.abs(diffY) > 10){
-                            $this.css({'box-shadow':'1px 1px 20px 3px #fe4e65'});
-                        }
-
-                        $(targetSelector).css({'top':resultY+'px', 'left':resultX+'px'});
-                        $(document).on('mouseup click', 'body', function(){
-                            $(document).off('mousemove');
-                        });
-                    });
-
-
-                     $(document).on('click mouseup',
-                                    targetSelector+ ' textarea,'+
-                                    targetSelector+ ' button,'+
-                                    targetSelector+ ' input,'+
-                                    targetSelector+ ' table,'+
-                                    targetSelector+ ' span,'+
-                                    targetSelector+ ' div,'+
-                                    targetSelector+ ' img,'+
-                                    targetSelector+ ' td,'+
-                                    targetSelector+ ' tr,'+
-                                    targetSelector+ ' p'
-                                    , function(){
-                        $(document).off('mousemove');
-                    });
-                     $(document).on('mousedown mousemove',
-                                    targetSelector+ ' canvas'
-                                    , function(){
-                        $(document).off('mousemove');
-                    });
-        });
-    }
-}
-*/
 
 function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
@@ -1282,7 +970,6 @@ function set_drag_drop_action_to_DOM(targetSelector){
         });
     }
 }
-
 
 //set_drag_drop_action_to_DOM_partial('#page-addplan',{grabHeight:'40px', grabWidth:'40px'});
 //set_drag_drop_action_to_DOM_partial('#cal_popup_planinfo',{grabHeight:'40px', grabWidth:'40px'});

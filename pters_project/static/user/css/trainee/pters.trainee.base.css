@@ -1,0 +1,35 @@
+#blank_member_popup{
+	position: fixed;
+	width: 90%;
+	max-width: 500px;
+	height: 50%;
+	max-height: 400px;
+	background: #f4f4f4;
+	border:1px solid #cccccc;
+	text-align: center;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	z-index: 100;
+}
+#blank_member_popup label{
+	margin-top: 20px;
+	width: 100%;
+	font-size: 19px;
+	color: #fe4e65;
+}
+#blank_member_popup p{
+	margin-top: 30px;
+	width: 100%;
+	font-size: 15px;
+	color: #282828;
+}
+#blank_member_popup span{
+	position:absolute;
+	bottom: 0;
+	right: 0;
+	margin:10px;
+	font-size: 14px;
+	color: #282828;
+	cursor: pointer;
+}

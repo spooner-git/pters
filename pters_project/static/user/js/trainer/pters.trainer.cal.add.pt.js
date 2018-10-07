@@ -2,9 +2,17 @@
 $(document).ready(function(){
 
     //바로 실행
-    get_current_member_list();
-    get_current_group_list();
+    // get_current_member_list("callback", function(jsondata){
+    //     set_member_dropdown_list(jsondata);
+    // });
+    // get_current_group_list("callback", function(jsondata){
+    //     set_group_dropdown_list(jsondata);
+    //     //append_dropdown_scroll_arrow("#members_pc", "#members_pc", 0, 0, "", "");
+    //     set_list_overflow_scrolling("#members_pc", "#members_pc");
+    //     set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+    // });
     //
+    
 
     //유저가 터치인지 마우스 사용인지 알아낸다
     var touch_or_mouse = "";
@@ -18,7 +26,6 @@ $(document).ready(function(){
     //DBdataProcess(offTimeArray_start_date,offTimeArray_end_date,offDateData,"graph",offTimeData)
     //초기에 미니 timegraph를 채워주기 위한 DBdataprocess
 
-
     //var select_all_check = false;
     var date = new Date();
     var currentYear = date.getFullYear(); //현재 년도
@@ -28,7 +35,7 @@ $(document).ready(function(){
     var currentHour = date.getHours();
     var currentMinute = date.getMinutes();
 
-    $("#datepicker, #datepicker_repeat_start, #datepicker_repeat_end").datepicker({
+    $("#datepicker").datepicker({
         //minDate : 0,
         onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
             if( curDate != instance.lastVal ){
@@ -38,13 +45,9 @@ $(document).ready(function(){
                 $(this).parent('p').addClass("dropdown_selected");
                 var selector_timeGraph = $('#timeGraph');
                 var selector_datepicker = $("#datepicker");
-                var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
-                var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
                 if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-                    //$("#id_training_date").val($("#datepicker").val()).submit();
                     $("#id_training_date, #id_training_end_date").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
-                        //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
                     }
                     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
@@ -52,43 +55,64 @@ $(document).ready(function(){
                     $('#durations_mini, #durations_mini').html('');
                     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft');
                     ajaxTimeGraphSet(selector_datepicker.val());
-                    /*
-                     timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
-                     timeGraphSet("group","pink","AddClass", initialJSON);
-                     timeGraphSet("off","grey","AddClass", initialJSON)
-                     */
-                    //startTimeSet('class');
                 }else if(addTypeSelect =="offadd"){
-                    //$("#id_training_date_off").val($("#datepicker").val()).submit();
                     $("#id_training_date_off, #id_training_end_date_off").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
-                        //$('#timeGraph').show(110,"swing");
                         selector_timeGraph.css('display','block');
                     }
                     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
                     clear_start_dur_dropdown();
-                    /*ajaxTimeGraphSet($('#datepicker').val(), function(){
-                     startTimeSet('class');
-                     })*/
                     $('#durations_mini, #durations_mini').html('');
                     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft');
                     ajaxTimeGraphSet(selector_datepicker.val());
-                    /*
-                     timeGraphSet("class","pink","AddClass", initialJSON);  //시간 테이블 채우기
-                     timeGraphSet("group","pink","AddClass", initialJSON);
-                     timeGraphSet("off","grey","AddClass", initialJSON)
-                     */
-                    //startTimeSet('class');
-                }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-                    selector_datepicker_repeat_end.datepicker('option', 'minDate', selector_datepicker_repeat_start.val());
-                    selector_datepicker_repeat_start.datepicker('option', 'maxDate', selector_datepicker_repeat_end.val());
+                }
+                check_dropdown_selected_addplan();
+            }
+        }
+    });
+
+    $("#datepicker_repeat_start").datepicker({
+        //minDate : 0,
+        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+                $(this).css({
+                                        "-webkit-text-fill-color":'#282828'
+                            });
+                $(this).parent('p').addClass("dropdown_selected");
+                var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
+                var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
+                if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                     $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_start.val());
                 }else if(addTypeSelect == "repeatoffadd"){
-                    selector_datepicker_repeat_end.datepicker('option', 'minDate', selector_datepicker_repeat_start.val());
-                    selector_datepicker_repeat_start.datepicker('option', 'maxDate', selector_datepicker_repeat_end.val());
                     $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_start.val());
+                }
+                check_dropdown_selected_addplan();
+            }
+        }
+    });
+
+    $("#datepicker_repeat_end").datepicker({
+        //minDate : 0,
+        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( curDate != instance.lastVal ){
+                $(this).css({
+                                        "-webkit-text-fill-color":'#282828'
+                            });
+                $(this).parent('p').addClass("dropdown_selected");
+                var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
+                var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
+                if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
+                    $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
+                    $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_end.val());
+                }else if(addTypeSelect == "repeatoffadd"){
+                    $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
+                    $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
+                    pters_option_inspector("", selector_datepicker_repeat_end.val());
                 }
                 check_dropdown_selected_addplan();
             }
@@ -98,8 +122,10 @@ $(document).ready(function(){
     //긁어서 일정 추가
     if(bodywidth > 600 && (varUA.match('iphone') ==null && varUA.match('ipad')==null && varUA.match('ipod')==null && varUA.match('android') == null) ){
         $(document).on('mousedown', '.td00, .td30', function(e){
+            set_member_group_dropdown_list();
+
             e.stopPropagation();
-            closeAddPopup_mini();
+            close_planadd_popup_mini();
             $(document).off('mouseup');
             var thisID     = $(this).attr('id');
             var thisIDDate = $(this).attr('id').split('_')[0]+'_'+$(this).attr('id').split('_')[1]+'_'+$(this).attr('id').split('_')[2];
@@ -153,7 +179,7 @@ $(document).ready(function(){
                         });
 
                         $(document).on('mouseup', '#gap', function(){
-                            closeAddPopup_mini();
+                            close_planadd_popup_mini();
                             $('.blankSelected30').removeClass('blankSelected30');
                         });
                     }
@@ -214,7 +240,7 @@ $(document).ready(function(){
 
 
                         $(document).on('mouseup', '#gap', function(){
-                            closeAddPopup_mini();
+                            close_planadd_popup_mini();
                             $('.blankSelected').removeClass('blankSelected');
                         });
 
@@ -246,7 +272,9 @@ $(document).ready(function(){
         timePlanY.push($('#hour'+(Options.workEndTime-1) ).offset().top+$('#hour'+(Options.workEndTime-1) ).height()+0.5);
     }
 
-    $(document).on('click','.td00',function(e){
+    $(document).on('click', '.td00', function(e){
+        set_member_group_dropdown_list();
+
         var thisIDDate = $(this).attr('id').replace(/_/gi, "-");
         if( (compare_date2(thisIDDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIDDate)) && Options.auth_limit == 0 ){
                 show_caution_popup(`<div style="margin-bottom:10px;">
@@ -261,7 +289,7 @@ $(document).ready(function(){
             var thisOffsetTop = $(this).offset().top;
             //if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) && bodywidth > 600 ){
             if( (varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null) ){
-                closeAddPopup_mini();
+                close_planadd_popup_mini();
                 var blankmark;
                 if(Options.classDur == 30){blankmark = 'blankSelected30';}else if(Options.classDur == 60){blankmark = 'blankSelected';}
 
@@ -770,22 +798,19 @@ $(document).ready(function(){
 
         var message = exist_past_reg.join('');
         if(exist_past_reg.length > 0){
-            $('#base_popup_check_finished_member_notice .caution_message').html(                                                                            
-                                                                                   '<p style="color:#fe4e65;">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
-                                                                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
-                                                                                            message+
-                                                                                        '</div>'+
-                                                                                    '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
-                                                                            );
-            $('#base_popup_check_finished_member_notice').show();
-            $('#shade_caution').show();
-            //$('#page-base-addstyle').css('z-index',151);
-            disable_window_scroll();
+            show_caution_popup(                                                                            
+                                   '<p style="color:#fe4e65;">종료일자가 지난 수강정보가 있는 회원입니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            message+
+                                        '</div>'+
+                                    '<p>정확한 데이터 관리를 위해<br>종료일자 변경 및 확인을 해주세요.</p>'
+                            );
+            //disable_window_scroll();
         }
     }
 
 
-    $(document).on('click',"#members_pc li a", function(){
+    $(document).on('click', "#members_pc li a", function(){
         //$('.tdgraph').removeClass('graphindicator')
         if($(this).attr('data-grouptype') == "personal"){
             addTypeSelect = "ptadd";
@@ -877,7 +902,7 @@ $(document).ready(function(){
             get_repeat_info(groupid);
             $('#id_repeat_group_id').val(groupid);
 
-            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'),'data-groupid':groupid});
+            $('#cal_popup_repeatconfirm').attr({'data-lectureid':$(this).attr('data-lectureid'), 'data-groupid':groupid});
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-groupid', groupid);
             $('#grouptypenumInfo').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
             $("#id_group_id").val(groupid);
@@ -890,9 +915,18 @@ $(document).ready(function(){
                         //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200);
                         $('#page-addplan').animate({'top':($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()},250);
                     }
+                    check_dropdown_selected_addplan();
                 });
             }else if(grouptypecd == "EMPTY"){
                 $('#groupmembersInfo').hide();
+                get_groupmember_list(groupid, 'callback', function(jsondata){
+                    draw_groupMemberList_to_view(jsondata, $('#groupmemberInfo'));
+                    if(bodywidth > 600){
+                        //$('#page-addplan').animate({'top': $('#page-addplan').offset().top-$('#groupmemberInfo').height()},200);
+                        $('#page-addplan').animate({'top':($(window).height()-$('#page-addplan').outerHeight())/2+$(window).scrollTop()},250);
+                    }
+                    check_dropdown_selected_addplan();
+                });
             }
         }
 
@@ -1165,6 +1199,7 @@ $(document).ready(function(){
                     dataType : 'html',
 
                     beforeSend:function(){
+
                         beforeSend(); //ajax 로딩 이미지 출력
                     },
 
@@ -1236,12 +1271,10 @@ $(document).ready(function(){
                                 }
 
                                 super_ajaxClassTime();
-                                $('#members_mobile, #members_pc').html('');
-                                get_current_member_list();
-                                get_current_group_list();
+                                set_member_group_dropdown_list();
 
-                                closeAddPopup();
-                                closeAddPopup_mini();
+                                close_planadd_popup();
+                                close_planadd_popup_mini();
                                 enable_window_scroll();
                                 completeSend();
                                 shade_index(-100);
@@ -1524,25 +1557,74 @@ $(document).ready(function(){
     }
 });
 
+function set_member_group_dropdown_list(init){
+    var $member_list_dropdown = $('#members_mobile, #members_pc');
+    $member_list_dropdown.html('').attr({"data-member":"unload", "data-group":"unload"});
+    if(init == "init"){
+        get_current_member_list("callback", function(jsondata){
+            set_member_dropdown_list(jsondata);
+            $member_list_dropdown.attr({"data-member":"loaded"});
+        });
+        get_current_group_list("callback", function(jsondata){
+            $member_list_dropdown.attr({"data-group":"loaded"});
+            set_group_dropdown_list(jsondata);
+            set_list_overflow_scrolling("#members_pc", "#members_pc");
+            set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+        });
+    }else{
+        get_current_member_list("callback", function(jsondata){
+            if($member_list_dropdown.attr('data-member') == "unload"){
+                $member_list_dropdown.attr('data-member', "loaded");
+                set_member_dropdown_list(jsondata);
+            }else if($member_list_dropdown.attr('data-member') == "loaded"){
+                $member_list_dropdown.find("a[data-grouptype='personal']").parent("li").remove();
+                $member_list_dropdown.find("img").parent("div").remove();
+                $member_list_dropdown.attr('data-member', "loaded");
+                set_member_dropdown_list(jsondata);
+            }
+        });
+        get_current_group_list("callback", function(jsondata){
+            if($member_list_dropdown.attr('data-group') == "unload"){
+                $member_list_dropdown.attr('data-group', "loaded");
+                set_group_dropdown_list(jsondata);
+                set_list_overflow_scrolling("#members_pc", "#members_pc");
+                set_list_overflow_scrolling('#durations_mini', '#durations_mini');
+            }else if($member_list_dropdown.attr('data-group') == "loaded"){
+                $member_list_dropdown.find("a[data-grouptype='group']").parent("li").remove();
+                $member_list_dropdown.attr('data-group', "loaded");
+                set_group_dropdown_list(jsondata);
+            }
+        });
+    }
+}
+
 
 function float_btn_addplan(option){
     if(option == 0){
-        if($('#mshade').css('display')=='none'){
+        if($('#float_btn').attr('data-open') == "closed"){
+            $('#float_btn').attr('data-open', 'opened');
             $('#float_inner1').animate({'opacity':'1', 'bottom':'85px'}, 120);
             $('#float_inner2').animate({'opacity':'1', 'bottom':'145px'}, 120);
             $('#float_btn').addClass('rotate_btn');
             shade_index(100);
-        }else{
+        }else if($('#float_btn').attr('data-open') == "opened"){
+            $('#float_btn').attr('data-open', 'closed');
             $('#float_inner1,#float_inner2').animate({'opacity':'0', 'bottom':'25px'}, 10);
             $('#float_btn').removeClass('rotate_btn');
             shade_index(-100);
         }
+        // if($('#pshade').css('display')=="block"){
+        //     $('#float_inner1,#float_inner2').animate({'opacity':'0', 'bottom':'25px'}, 10);
+        //     $('#float_btn').removeClass('rotate_btn');
+        //     shade_index(-100);
+        // }
 
     }else if(option == 1){
         clear_pt_off_add_popup();
         open_pt_off_add_popup('ptadd');
         ajaxTimeGraphSet(today_YY_MM_DD);
         shade_index(100);
+        set_member_group_dropdown_list();
         //scrollToDom($('#calendar'))
 
     }else if(option == 2){
@@ -1609,12 +1691,18 @@ function open_pt_off_add_popup(option, date){ //option 'ptadd', 'offadd'
     $('#page-addplan-pc').css('display','none');
     $('.blankSelected').removeClass('blankSelected');
 
+    if(bodywidth <= 820){
+        $('#float_btn_wrap').hide();
+        $('#float_btn').attr('data-open', 'closed');
+        $('#float_btn').removeClass('rotate_btn');
+        $('#float_inner1, #float_inner2').animate({'opacity':'0', 'bottom':'25px'}, 10);
+    }
     if(bodywidth <= 600){
         $('#page-base, #float_btn_wrap, #addpopup_pc_label_pt, #addpopup_pc_label_off').hide();
         $('#page-base-addstyle, #page-addplan').show();
         selector_page_addplan.css('top', 50);
-        $('#float_btn').removeClass('rotate_btn');
-        $('#float_inner1, #float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        // $('#float_btn').removeClass('rotate_btn');
+        // $('#float_inner1, #float_inner2').animate({'opacity':'0', 'bottom':'25px'}, 10);
         $('#calendar').css('height', '0');
         $('#upbutton-x').attr('data-page', 'addplan');
         scrollToDom(selector_page_addplan);
@@ -1814,6 +1902,7 @@ function set_member_dropdown_list(jsondata){
         member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
     }
     member_array_mobile.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
+    member_array_pc.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
     var member_arraySum_mobile = member_array_mobile.join('');
     var member_arraySum_pc = member_array_pc.join('');
     memberMobileList.append(member_arraySum_mobile);
@@ -1829,8 +1918,8 @@ function set_group_dropdown_list(jsondata){
 
     if(memberSize>0){
         for(var i=0; i<memberSize; i++){
-            member_array_mobile.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+ '" data-grouptypecd="'+jsondata.group_type_cd[i] +'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">['+jsondata.group_type_cd_nm[i]+'] '+jsondata.name[i]+'</a></li>');
-            member_array_pc.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">['+jsondata.group_type_cd_nm[i]+'] '+jsondata.name[i]+'</a></li>');
+            member_array_mobile.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+ '" data-grouptypecd="'+jsondata.group_type_cd[i] +'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">['+jsondata.group_type_cd_nm[i]+'] '+jsondata.group_name[i]+'</a></li>');
+            member_array_pc.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">['+jsondata.group_type_cd_nm[i]+'] '+jsondata.group_name[i]+'</a></li>');
         }
     }else if(memberSize == 0){
         //member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 그룹이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
@@ -1914,8 +2003,9 @@ function ajaxTimeGraphSet(date, use, callback){
         data : {"date":today_form, "day":1}, //월간 46 , 주간 18, 하루 1
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             beforeSend();
+            pters_option_inspector(xhr, today_form);
         },
 
         success:function(data){
@@ -2254,46 +2344,6 @@ function popup_repeat_confirm(){ //반복일정을 서버로 보내기 전 확�
         // dur_info : repeat_input_dur_info
     };
     locate_this_to_center('#cal_popup_repeatconfirm');
-}
-
-
-function closeAddPopup(){
-    //$('body').css('overflow-y','overlay');
-    $('#page-addplan').hide('fast', 'swing');
-    $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
-    if(bodywidth<=600){
-        $('#float_btn_wrap').show();
-        $('#float_btn').removeClass('rotate_btn');
-        $('#page-base').show();
-        $('#page-base-addstyle').hide();
-    }
-}
-
-function closeAddPopup_mini(){
-    $('#page-addplan-pc').hide();
-    clear_pt_off_add_popup_mini();
-}
-
-function clear_pt_off_add_popup_mini(){
-    //핑크 버튼 활성화 초기화
-    $('#submitBtn_mini').css('background', '#282828');
-
-    //진행시간 선택 핑크 하단선 초기화
-    $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected').html("<span style='color:#cccccc;'>선택</span>").val("");
-
-    //회원 선택 핑크 하단선 초기화
-    $("#membersSelected button, #membersSelected_mini button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹/클래스 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
-
-    //예약가능 횟수 내용 초기화
-    $("#countsSelected,.countsSelected").text("");
-    $('#remainCount_mini, #groupInfo_mini').hide();
-
-    //메모 초기화
-    $('#addmemo_mini input').val('').text('');
-
-    $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
-    select_all_check=false;
 }
 
 
@@ -3027,6 +3077,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 function draw_groupMemberList_to_view(jsondata, targetHTML){
+    console.log(jsondata)
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">'+'회원명'+'</div>'+'<div>'+'예약 가능'+'</div>'+'<div>남은 횟수</div>'+'</div>'];
     var addedCount = 0;
@@ -3123,7 +3174,7 @@ function send_add_groupmember_plan(use, callback){
 
 //그룹/클래스 일정내에서 그룹원을 일정에 추가할때
 function set_pters_scrolling_to_groupmember_add($selector){ //subpopup_addByList_thisgroup or subpopup_addByList_whole
-    append_dropdown_scroll_arrow('#subpopup_addByList_plan #subpopup_addByList_thisgroup', '#subpopup_addByList_plan .mode_switch_button_wrap_cal', 25, -395, 'left:0;', 'left:0;');
+    append_dropdown_scroll_arrow('#subpopup_addByList_plan #subpopup_addByList_thisgroup', '#subpopup_addByList_plan .mode_switch_button_wrap_cal', 25, -420, 'left:0;', 'left:0;');
     set_list_overflow_scrolling('#subpopup_addByList_plan #subpopup_addByList_thisgroup', '#subpopup_addByList_plan .mode_switch_button_wrap_cal');
 }
 
@@ -3144,6 +3195,11 @@ $(document).on('click', '.group_member_cancel', function(){
         }
         get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
             draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+            $('#groupplan_participants_status').text(
+                                                        ' ('+$('div.groupParticipantsRow').length +
+                                                        '/'+
+                                                        max+')'
+                                                    );
         });
     });
 });
@@ -3248,7 +3304,6 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
     var dateSelect_repeat_end = $("#datepicker_repeat_end").parent('p');
 
     if(addTypeSelect == "ptadd"){
-
         if($('#page-addplan-pc').css('display')!='block' && (memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');
@@ -3263,6 +3318,12 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "groupptadd"){
+        console.log(
+                (memberSelect).hasClass("dropdown_selected"),
+                (dateSelect).hasClass("dropdown_selected"),
+                (durSelect).hasClass("dropdown_selected"),
+                (startSelect).hasClass("dropdown_selected")
+            );
         if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');

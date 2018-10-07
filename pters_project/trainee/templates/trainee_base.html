@@ -8,15 +8,17 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
     <!-- End Google Tag Manager -->
+
     <!--Google Adsense-->
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-4554121851965192",
-            enable_page_level_ads: true
-        });
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-4554121851965192",
+        enable_page_level_ads: true
+      });
     </script>
     <!--Google Adsense-->
+
     {% load static_url %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,6 +36,7 @@
     <link rel="shortcut icon" href="/static/common/favicon-152.png">
     <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.select.teacher.css" %}>
+    <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.base.css" %}>
     <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
     {% block local_css %}
     {% endblock %}
@@ -43,6 +46,16 @@
         }
         .bottomfooter3 a{
             color:  #7d7d7d;
+        }
+        #shade_caution{
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            z-index: 400;
+            background: black;
+            opacity: 0.5;
+            top: 0;
         }
 
     </style>
@@ -58,6 +71,7 @@
 
     <div id="pshade" class="pshade _shade"></div>
     <div id="mshade" class="mshade _shade"></div>
+    <div id="shade_caution"></div>
 
     <div id="errorMessageBar">
         <span id="errorMessageText"></span><span>닫기</span>
@@ -145,34 +159,11 @@
 
 {% block footer %}
     <footer class="fixfooter bottomzero">
-        <!--
-            <div class="bottomfooter1">
-                <form action="/trainer/update_setting_language/" id="update-setting-language-form" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="setting_member_language" id="id_setting_language" value="">
-                    <input type="hidden" name = "next_page" value="/trainer/trainer_main">
-                </form>
-                <span class="language_set" onclick="languageSet('ENG')">English</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('KOR')">한국어</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-                <span class="language_set" onclick="languageSet('JPN')">日本語</span><span style="margin-left:10px;margin-right: 10px;">|</span>
-            </div>
-            -->
         <div class="bottomfooter2">
             <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
             <a href="http://www.spooner.co.kr" class="_company">회사소개</a>
             <a class="JPtext _company">会社紹介</a>
             <a class="ENtext _company">About us</a>
-            <!--
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext" href="">이용문의</a>
-            <a class="JPtext">利用案内</a>
-            <a class="ENtext">Help</a>
-
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext ">제휴제안</a>
-            <a class="JPtext ">提携</a>
-            <a class="ENtext ">Partnership</a>
-            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -181,21 +172,10 @@
             <a class="KRtext" href="{% url 'privacy' %}">개인정보처리방침</a>
             <a class="JPtext">個人情報処理方針</a>
             <a class="ENtext">Privacy Policy</a>
-            <!--
-            <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
-            <a class="KRtext ">고객센터</a>
-            <a class="JPtext ">ヘルプ</a>
-            <a class="ENtext ">Customer Service</a>
-            -->
         </div>
 
         <div class="bottomfooter3">
             <span><img src="/static/user/res/spooner_b.png" style="width: 60px;margin-right: 20px;vertical-align: middle;"></span>
-            <!--
-            <a class="KRtext" href="">이용문의</a>
-            <a class="JPtext">利用案内</a>
-            <a class="ENtext">Help</a>
-            -->
             <span style="margin-left:5px;margin-right: 5px; color:#7d7d7d;">|</span>
             <a class="KRtext" href="{% url 'policy' %}">이용약관</a>
             <a class="JPtext">利用案内</a>
@@ -211,10 +191,10 @@
 
 
 {% endblock %}
-
-<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
-<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.common.close.set.js" %}></script>
+<script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 <script src={% static_url "common/js/bootstrap.min.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.swipe.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
@@ -255,21 +235,23 @@
 <script>
 
     $('#errorMessageBar span:nth-child(2)').click(function(){
-        $('#errorMessageBar').fadeOut()
+        $('#errorMessageBar').fadeOut();
         $('.ajaxloadingPC').hide();
-    })
-
+    });
 
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
+    var social_login_check = '{{ request.session.social_login_check }}';
+    var social_login_type = '{{ request.session.social_login_type }}';
+    var social_login_id = '{{ request.session.social_login_id }}';
+    var social_accessToken = '{{ request.session.social_accessToken }}';
 
     var class_background_img_url = [];
-
     var Options = {  "hourunit" : 30,                       // 30 or 60
-        "classDur" : {{ request.session.class_hour }},      // 30 or 60
-        "timeDur" : {{ lt_res_member_time_duration }},
+        "classDur" : '{{ request.session.class_hour }}',      // 30 or 60
+        "timeDur" : '{{ lt_res_member_time_duration }}',
         "startTime": '{{ lt_res_member_start_time }}',
         "stoptimeStart": worktime_extract_hour('{{ lt_res_01 }}')['start'],                    //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": worktime_extract_hour('{{ lt_res_01 }}')['end'] ,                        //강사가 설정한 예약불가 시간 (종료)
@@ -298,7 +280,9 @@
 
         "language" : "KOR",             //Korea, Japan, English
         "location" : "Japan"           //Korea, Japan, English
-    }
+    };
+
+
 
 
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
@@ -307,9 +291,9 @@
         if(Options.worktimeWeekly[i] == Options.worktimeWeekly[0]){
             //
         }else{
-            week_worktime_selected = true
-        };
-    };
+            week_worktime_selected = true;
+        }
+    }
     if(week_worktime_selected == false){
         Options.worktimeWeeklyOn = 0;
         Options.worktime = Options.worktimeWeekly[0];
@@ -320,17 +304,17 @@
         Options.workStartTime =  worktime_extract_maxmin(Options.worktimeWeekly)["min"];
         Options.workEndTime = worktime_extract_maxmin(Options.worktimeWeekly)["max"];
     }
-    Options.worktime = `${Options.workStartTime}:00-${Options.workEndTime}:00`
+    Options.worktime = `${Options.workStartTime}:00-${Options.workEndTime}:00`;
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
 
     //요일별 업무시간을 보고 휴일날짜를 구한다.
     for(var i=0; i<Options.worktimeWeekly.length; i++){
         if(Options.worktimeWeekly[i].split('-')[0] == Options.worktimeWeekly[i].split('-')[1]){
-            Options.worktimeOffDay[i] = 1
+            Options.worktimeOffDay[i] = 1;
         }else{
-            Options.worktimeOffDay[i] = 0
-        };
-    };
+            Options.worktimeOffDay[i] = 0;
+        }
+    }
     //요일별 업무시간을 보고 휴일날짜를 구한다.
 
 
@@ -338,8 +322,8 @@
 
 
 
-    {#            var lt_res_enable_time = ['{{ lt_res_enable_time }}'];#}
-    {#            var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];#}
+    var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
+    var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
 
     if(Options.language=="JPN"){
         $(".KRtext, .ENtext").remove();
@@ -351,13 +335,19 @@
         $(".ENtext, .JPtext").remove();
         $(".KRtext").show();
     }
-    var varUA = navigator.userAgent.toLowerCase()
+    var varUA = navigator.userAgent.toLowerCase();
     if(varUA.match('android') != null){
-        $('._company').css('display','none')
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        platform_check = 'mobile'
     }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        $('._company').css('display','none')
+        $('._company').css('display','none');
+        $('.ads_wrap').css('display','none');
+        $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
+        platform_check = 'mobile';
     }else{
-
+        platform_check = 'pc';
     }
 
 
@@ -368,14 +358,14 @@
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///
 
-    var lec_select_regCountArray = []
-    var lec_select_countArray = []
-    var lec_select_startArray = []
-    var lec_select_endArray = []
-    var lec_select_lectureIdArray = []
-    var lec_select_trainerNameArray = []
-    var lec_select_availCountArray = []
-    var lec_select_classIdArray = []
+    var lec_select_regCountArray = [];
+    var lec_select_countArray = [];
+    var lec_select_startArray = [];
+    var lec_select_endArray = [];
+    var lec_select_lectureIdArray = [];
+    var lec_select_trainerNameArray = [];
+    var lec_select_availCountArray = [];
+    var lec_select_classIdArray = [];
 
 
     function ajax_read_lecture_info_from_db(){
@@ -393,10 +383,9 @@
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log(jsondata)
                 if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text(jsondata.messageArray)
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
                 }else{
                     //lec_select_regCountArray = jsondata.regCountArray;
                     //lec_select_countArray = jsondata.countArray;
@@ -408,7 +397,7 @@
                     lec_select_npLectureCountsArray = jsondata.npLectureCountsArray;
                     lec_select_classInfoArray = jsondata.classInfoArray;
                     lec_select_classIdArray = jsondata.classIdArray;
-                    fill_lecture_select_popup()
+                    fill_lecture_select_popup();
                 }
 
             },
@@ -418,10 +407,10 @@
             },
 
             error:function(){
-                $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('통신 에러: 관리자 문의');
             }
-        })
+        });
     }
 
     function ajax_read_lecture_detail_info_from_db(classid){
@@ -436,11 +425,10 @@
             },
 
             success:function(data){
-                console.log(data)
                 var jsondata = JSON.parse(data);
                 if(jsondata.messageArray.length>0){
-                    $('#errorMessageBar').show()
-                    $('#errorMessageText').text(jsondata.messageArray)
+                    $('#errorMessageBar').show();
+                    $('#errorMessageText').text(jsondata.messageArray);
                 }else{
                     lec_select_regCountArray = jsondata.countArray;
                     lec_select_startArray = jsondata.startArray;
@@ -454,7 +442,7 @@
                     // lec_select_classInfoArray = jsondata.classInfoArray;
                     //lec_select_classIdArray = jsondata.classIdArray;
 
-                    fill_lecture_connect_select_popup(classid)
+                    fill_lecture_connect_select_popup(classid);
                 }
             },
 
@@ -463,93 +451,93 @@
             },
 
             error:function(){
-                $('#errorMessageBar').show()
-                $('#errorMessageText').text('통신 에러: 관리자 문의')
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text('통신 에러: 관리자 문의');
             }
-        })
+        });
     }
 
     function open_lecture_select_popup(){
         shade_index(100);
-        $('#popup_lecture_select').show()
-        ajax_read_lecture_info_from_db()
+        $('#popup_lecture_select').show();
+        ajax_read_lecture_info_from_db();
     }
 
     function fill_lecture_select_popup(){
         var len = lec_select_trainerNameArray.length;
-        var list_table_to_join = []
+        var list_table_to_join = [];
         for(var i=0; i<len; i++){
             if(lec_select_npLectureCountsArray[i] == '0'){
-                var table = '<div class="pters_table" style="margin-top:0;" id="classid-"'+lec_select_classIdArray[i]+'>'
-                var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
-                var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                var selection = '<div class="pters_table_cell table_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>'
-                var sum = table + lectureName + trainerName + selection + '</div>'
-                list_table_to_join.push(sum)
+                var table = '<div class="pters_table" style="margin-top:0;" id="classid-"'+lec_select_classIdArray[i]+'>';
+                var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>';
+                var selection = '<div class="pters_table_cell table_selection"  data-classid="'+lec_select_classIdArray[i]+'"><a data="" '+'onclick="lecture_check('+lec_select_lectureIdArray[i]+',2, '+lec_select_classIdArray[i]+')"'+'">선택</a></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
             }else{
-                var table = '<div class="pters_table" style="margin-top:0;" id="classid-'+lec_select_classIdArray[i]+'">'
-                var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>'
-                var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>'
-                var selection = '<div class="pters_table_cell table_selection _npOpen" data-classid="'+lec_select_classIdArray[i]+'">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>'
-                var sum = table + lectureName + trainerName + selection + '</div>'
-                list_table_to_join.push(sum)
+                var table = '<div class="pters_table" style="margin-top:0;" id="classid-'+lec_select_classIdArray[i]+'">';
+                var lectureName = '<div class="pters_table_cell table_lecture_name">'+lec_select_classInfoArray[i]+'</div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+lec_select_trainerNameArray[i]+'</div>';
+                var selection = '<div class="pters_table_cell table_selection _npOpen" data-classid="'+lec_select_classIdArray[i]+'">New<img src="/static/user/res/daycal_arrow_pink.png" style="transform:rotate(-90deg); width:5px;margin-left:7px;"></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
             }
         }
-        var list_table = list_table_to_join.join('')
-        $('.lecture_select_table_list').html(list_table)
+        var list_table = list_table_to_join.join('');
+        $('.lecture_select_table_list').html(list_table);
     }
 
 
     function fill_lecture_connect_select_popup(classid){
         var len = lec_select_trainerNameArray.length;
-        var list_table_to_join = []
+        var list_table_to_join = [];
         //for(var j=0; j<lec_select_stateArray.length; j++){
         for(var j=0; j<1; j++){
             if(lec_select_stateArray[j] == 'WAIT'){
-                console.log(lec_select_startArray[j])
-                var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
-                var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
-                var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>'
+                console.log(lec_select_startArray[j]);
+                var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">';
+                var lectureName = '<div class="pters_table_cell table_lecture_name"></div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>';
                 var selection = '<div class="pters_table_cell table_selection"><a data="" '
                     +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',0, '+classid+')">연결/</a><a data="" '
-                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+classid+')">취소</a></div>'
-                var sum = table + lectureName + trainerName + selection + '</div>'
-                list_table_to_join.push(sum)
+                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',1, '+classid+')">취소</a></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
             }else if(lec_select_stateArray[j] == 'VIEW'){
-                var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">'
-                var lectureName = '<div class="pters_table_cell table_lecture_name"></div>'
-                var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>'
+                var table = '<div class="pters_table" style="margin-top:0;" data-pter="'+lec_select_trainerNameArray[0]+'">';
+                var lectureName = '<div class="pters_table_cell table_lecture_name"></div>';
+                var trainerName = '<div class="pters_table_cell table_trainer_name">'+'수강 정보 연동'+'</div>';
                 var selection = '<div class="pters_table_cell table_selection"><a data="" '
-                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+classid+')">선택</a></div>'
-                var sum = table + lectureName + trainerName + selection + '</div>'
-                list_table_to_join.push(sum)
+                    +'onclick="lecture_check('+lec_select_lectureIdArray[j]+',2, '+classid+')">선택</a></div>';
+                var sum = table + lectureName + trainerName + selection + '</div>';
+                list_table_to_join.push(sum);
             }
         }
         if( $('#classid-'+classid).attr('data-open') != 'open'){
-            var list_table = list_table_to_join.join('')
+            var list_table = list_table_to_join.join('');
         }
-        $('#classid-'+classid).after(list_table).attr('data-open','open')
+        $('#classid-'+classid).after(list_table).attr('data-open','open');
     }
 
 
     $(document).on('click','div._npOpen',function(){
-        var classid = $(this).attr('data-classid')
-        ajax_read_lecture_detail_info_from_db(classid)
-        var trainer = $(this).siblings('.table_trainer_name').text()
-        var $hiddenElement = $('.pters_table[data-pter='+trainer+']')
+        var classid = $(this).attr('data-classid');
+        ajax_read_lecture_detail_info_from_db(classid);
+        var trainer = $(this).siblings('.table_trainer_name').text();
+        var $hiddenElement = $('.pters_table[data-pter='+trainer+']');
         if($hiddenElement.hasClass('displayNone')){
-            $hiddenElement.removeClass('displayNone')
-            $(this).find('img').css('transform','rotate(90deg)')
+            $hiddenElement.removeClass('displayNone');
+            $(this).find('img').css('transform','rotate(90deg)');
         }else{
-            $hiddenElement.addClass('displayNone')
-            $(this).find('img').css('transform','rotate(-90deg)')
+            $hiddenElement.addClass('displayNone');
+            $(this).find('img').css('transform','rotate(-90deg)');
         }
-    })
+    });
 
     $('.button_close_popup').click(function(){
-        shade_index(-100)
-        $(this).parents('div._popup').hide()
-    })
+        shade_index(-100);
+        $(this).parents('div._popup').hide();
+    });
 
     function lecture_check(lecture_id, check, class_id){
         $('#id_check_lecture_id').val(lecture_id);

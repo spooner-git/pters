@@ -1,7 +1,9 @@
 import logging
 import random
 
+import httplib2
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import password_reset_done
@@ -12,6 +14,7 @@ from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
@@ -23,10 +26,10 @@ from registration.backends.hmac.views import RegistrationView
 from registration.forms import RegistrationForm
 
 from configs import settings
-from configs.const import USE
+from configs.const import USE, UN_USE
 
 from .forms import MyPasswordResetForm
-from .models import MemberTb, PushInfoTb
+from .models import MemberTb, PushInfoTb, SnsInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -53,19 +56,40 @@ def login_trainer(request):
     # login 완료시 main page로 이동
     username = request.POST.get('username')
     password = request.POST.get('password')
+    social_login_check = request.POST.get('social_login_check', '0')
+    social_login_type = request.POST.get('social_login_type', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
+    social_login_id = request.POST.get('social_login_id', '')
+    social_accessToken = request.POST.get('social_accessToken', '')
+
     next_page = request.POST.get('next_page')
     error = None
     if next_page == '':
         next_page = '/trainer/'
     if next_page is None:
         next_page = '/trainer/'
+
     request.session['push_token'] = ''
+    request.session['social_login_check'] = social_login_check
+    request.session['social_login_type'] = social_login_type
+    request.session['social_login_id'] = social_login_id
+    request.session['social_accessToken'] = social_accessToken
+
     if not error:
         # if password == 'kakao_login':
         #     user = authenticate(username=username)
         # else:
-        user = authenticate(username=username, password=password)
+        if social_login_check == '0':
+            request.session['social_login_type'] = ''
+            request.session['social_login_id'] = ''
+            request.session['social_accessToken'] = ''
+            user = authenticate(username=username, password=password)
+        else:
+            try:
+                user = User.objects.get(username=username)
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
+            except ObjectDoesNotExist:
+                user = None
 
         if user is not None and user.is_active:
             login(request, user)
@@ -82,6 +106,7 @@ def login_trainer(request):
             if error is None:
                 if member.use == 1:
                     request.session['user_id'] = user.id
+                    request.session['username'] = user.username
                     if user.email is None or user.email == '':
                         next_page = '/login/send_email_member/'
                     else:
@@ -91,7 +116,7 @@ def login_trainer(request):
                     error = '이미 탈퇴한 회원입니다.'
         else:
             error = 'ID/비밀번호를 확인해주세요.'
-            next_page = '/login/'
+            next_page = '/'
             # logger.error(error)
 
     if error is None:
@@ -99,6 +124,40 @@ def login_trainer(request):
     else:
         messages.error(request, error)
         return redirect(next_page)
+
+
+class LoginSimpleNaverView(TemplateView):
+    template_name = 'login_naver_processing.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LoginSimpleNaverView, self).get_context_data(**kwargs)
+        return context
+
+
+class LoginSimpleSnsView(TemplateView):
+    template_name = 'login_sns_processing.html'
+
+    def post(self, request):
+        # context = super(LoginSimpleFacebookView, self).get_context_data(**kwargs)
+        context = {}
+        sns_id = request.POST.get('sns_id', '')
+        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        last_name = request.POST.get('last_name', '')
+        first_name = request.POST.get('first_name', '')
+        sns_type = request.POST.get('sns_type', 'google')
+        sex = request.POST.get('sex', '')
+
+        context['username'] = username
+        context['email'] = email
+        context['last_name'] = last_name
+        context['first_name'] = first_name
+        context['name'] = last_name + first_name
+        context['sns_id'] = sns_id
+        context['sns_type'] = sns_type
+        context['sex'] = sex
+
+        return render(request, self.template_name, context)
 
 
 class RegisterTrainerView(TemplateView):
@@ -151,7 +210,233 @@ def logout_trainer(request):
     if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name
                          + '[' + str(request.user.id) + ']' + error)
-    return redirect('/login/')
+    return redirect('/')
+
+
+class AddNewMemberSnsInfoView(RegistrationView, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+
+        email = request.POST.get('email', '')
+        last_name = request.POST.get('last_name', '')
+        first_name = request.POST.get('first_name', '')
+        name = request.POST.get('name', '')
+        sex = request.POST.get('sex', '')
+        sns_id = request.POST.get('sns_id', '')
+        sns_type = request.POST.get('sns_type', 'naver')
+        auto_login_check = request.POST.get('auto_login_check', '1')
+        group_type = request.POST.get('group_type', 'trainer')
+        social_access_token = request.POST.get('social_accessToken', '')
+        next_page = request.POST.get('next_page', '/login/new_member_sns_info/')
+
+        error = None
+        user = None
+        if first_name == '' or first_name == 'None' or first_name is None:
+            first_name = name
+
+        if last_name == '' or last_name == 'None' or last_name is None:
+            last_name = ''
+
+        try:
+            user = User.objects.get(username=email)
+        except ObjectDoesNotExist:
+            error = None
+
+        if user is not None:
+            error = '이미 가입된 회원입니다.'
+
+        if error is None:
+            try:
+                with transaction.atomic():
+
+                    user = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, email=email,
+                                                    password=sns_id, is_active=1)
+                    group = Group.objects.get(name=group_type)
+                    user.groups.add(group)
+
+                    member = MemberTb(member_id=user.id, name=name, sex=sex,
+                                      user_id=user.id, use=USE)
+                    member.save()
+                    sns_info = SnsInfoTb(member_id=user.id, sns_id=sns_id, sns_type=sns_type,
+                                         sns_name=name, sns_connect_date=timezone.now(), use=USE)
+                    sns_info.save()
+                    user.backend = 'django.contrib.auth.backends.ModelBackend'
+                    login(request, user)
+                    request.session['social_login_check'] = '1'
+                    request.session['social_login_type'] = sns_type
+                    request.session['social_login_id'] = sns_id
+                    request.session['social_accessToken'] = social_access_token
+
+                    if auto_login_check == '0':
+                        request.session.set_expiry(0)
+                    return redirect('/trainer/')
+
+            except ValueError:
+                error = '이미 가입된 회원입니다.'
+            except IntegrityError:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError:
+                error = '등록 값에 문제가 있습니다.'
+            except ValidationError:
+                error = '등록 값에 문제가 있습니다.'
+            except InternalError:
+                error = '이미 가입된 회원입니다.'
+
+        if error is not None:
+            logger.error(name+'['+email+']'+error)
+            messages.error(request, error)
+
+        return redirect(next_page)
+
+
+class AddOldMemberSnsInfoView(RegistrationView, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request, *args, **kwargs):
+
+        # first_name = request.POST.get('first_name', '')
+        email = request.POST.get('email', '')
+        name = request.POST.get('name', '')
+        sns_id = request.POST.get('sns_id', '')
+        sns_type = request.POST.get('sns_type', 'NAVER')
+        auto_login_check = request.POST.get('auto_login_check', '1')
+        social_access_token = request.POST.get('social_accessToken', '')
+
+        error = None
+        user = None
+
+        try:
+            user = User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            error = None
+
+        if user is None:
+            error = '로그인에 실패했습니다.'
+
+        if error is None:
+            try:
+                with transaction.atomic():
+                    sns_info = SnsInfoTb(member_id=user.id, sns_id=sns_id, sns_type=sns_type,
+                                         sns_name=name, sns_connect_date=timezone.now(), use=USE)
+                    sns_info.save()
+                    user.is_active = 1
+                    user.save()
+                    user.backend = 'django.contrib.auth.backends.ModelBackend'
+                    login(request, user)
+                    request.session['social_login_check'] = '1'
+                    request.session['social_login_type'] = sns_type
+                    request.session['social_login_id'] = sns_id
+                    request.session['social_accessToken'] = social_access_token
+
+                    if auto_login_check == '0':
+                        request.session.set_expiry(0)
+                    return redirect('/trainer/')
+
+            except ValueError:
+                error = '이미 가입된 회원입니다.'
+            except IntegrityError:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError:
+                error = '등록 값에 문제가 있습니다.'
+            except ValidationError:
+                error = '등록 값에 문제가 있습니다.'
+            except InternalError:
+                error = '이미 가입된 회원입니다.'
+
+        if error is not None:
+            logger.error(name+'['+email+']'+error)
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
+class DeleteSnsInfoView(View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+
+        sns_id = request.POST.get('sns_id')
+        sns_type = request.POST.get('sns_type')
+        error = None
+        sns_info = None
+        try:
+            sns_info = SnsInfoTb.objects.get(sns_id=sns_id, sns_type=sns_type, use=USE)
+        except ObjectDoesNotExist:
+            error = '이미 연동해제가 완료됐습니다.'
+
+        if error is None:
+            try:
+                with transaction.atomic():
+                    sns_info.use = UN_USE
+                    sns_info.save()
+                    request.session['social_login_check'] = '0'
+                    request.session['social_login_type'] = ''
+                    request.session['social_login_id'] = ''
+                    request.session['social_accessToken'] = ''
+
+            except ValueError:
+                error = '등록 값에 문제가 있습니다.'
+            except IntegrityError:
+                error = '등록 값에 문제가 있습니다.'
+            except TypeError:
+                error = '등록 값에 문제가 있습니다.'
+            except ValidationError:
+                error = '등록 값에 문제가 있습니다.'
+
+        if error is not None:
+            messages.error(request, error)
+
+        return render(request, self.template_name)
+
+
+class NewMemberSnsInfoView(TemplateView):
+    template_name = 'send_sns_info_to_new_form.html'
+
+    def post(self, request):
+        context = {}
+        context['username'] = self.request.POST.get('username')
+        context['email'] = self.request.POST.get('email')
+        context['first_name'] = self.request.POST.get('first_name')
+        context['last_name'] = self.request.POST.get('last_name')
+        context['name'] = self.request.POST.get('name')
+        context['sns_id'] = self.request.POST.get('sns_id')
+        context['sns_type'] = self.request.POST.get('sns_type')
+        context['sex'] = self.request.POST.get('sex')
+
+        return render(request, self.template_name, context)
+
+
+class CheckSnsMemberInfoView(TemplateView):
+    template_name = 'ajax/id_check_ajax.html'
+    error = ''
+
+    def get_context_data(self, **kwargs):
+        context = super(CheckSnsMemberInfoView, self).get_context_data(**kwargs)
+        user_email = self.request.GET.get('email', '')
+        sns_id = self.request.GET.get('sns_id', '')
+        sns_type = self.request.GET.get('sns_type', '')
+        username = ''
+
+        context['error'] = '0'
+        try:
+            sns_info = SnsInfoTb.objects.select_related('member').get(sns_id=sns_id, sns_type=sns_type, use=USE)
+            username = sns_info.member.user.username
+            context['error'] = '1'
+        except ObjectDoesNotExist:
+            sns_info = None
+
+        if sns_info is None:
+            try:
+                user_info = User.objects.get(email=user_email)
+                username = user_info.username
+                context['error'] = '2'
+            except ObjectDoesNotExist:
+                username = ''
+
+        context['username'] = username
+
+        return context
 
 
 # 회원가입 api
@@ -225,8 +510,30 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
         return render(request, self.template_name)
 
 
+class MyReRegistrationView(RegistrationView):
+    def send_activation_email(self, user):
+        """
+        Send the activation email. The activation key is the username,
+        signed using TimestampSigner.
+
+        """
+        activation_key = self.get_activation_key(user)
+        context = self.get_email_context(activation_key)
+        context.update({
+            'user': user,
+        })
+        subject = render_to_string('registration/activation_re_email_subject.txt',
+                                   context)
+        # Force subject to a single line to avoid header-injection
+        # issues.
+        subject = ''.join(subject.splitlines())
+        message = render_to_string('registration/activation_re_email.txt',
+                                   context)
+        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+
 # 회원가입 api
-class ResendEmailAuthenticationView(RegistrationView, View):
+class ResendEmailAuthenticationView(MyReRegistrationView, View):
     template_name = 'ajax/registration_error_ajax.html'
 
     def post(self, request):
@@ -235,7 +542,6 @@ class ResendEmailAuthenticationView(RegistrationView, View):
         member_id = request.POST.get('member_id', '')
         error = None
         user = None
-        username = None
         if member_id is None or member_id == '':
             error = 'ID를 입력해주세요.'
         if error is None:
@@ -255,10 +561,56 @@ class ResendEmailAuthenticationView(RegistrationView, View):
                 error = 'ID가 존재하지 않습니다.'
 
         if error is not None:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + ']' + str(error))
+            logger.error(str(user_id) + '[' + str(email) + ']' + str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username) + '->' + str(user_id) + '[' + str(email) + '] 회원가입 완료')
+            logger.error(str(user_id) + '[' + str(email) + '] 이메일 재인증 요청')
+
+        return render(request, self.template_name)
+
+
+# 회원가입 api
+class ChangeResendEmailAuthenticationView(MyReRegistrationView, View):
+    template_name = 'ajax/registration_error_ajax.html'
+
+    def post(self, request):
+        user_id = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        member_id = request.POST.get('member_id', '')
+
+        error = None
+        user = None
+        if member_id is None or member_id == '':
+            error = 'ID를 입력해주세요.'
+
+        if error is None:
+            try:
+                User.objects.get(email=email)
+                error = '이미 가입된 email입니다.'
+            except ObjectDoesNotExist:
+                error = None
+
+        if error is None:
+            try:
+                user = User.objects.get(id=member_id)
+                user.email = email
+                user.is_active = 0
+                user.save()
+            except ObjectDoesNotExist:
+                error = '가입되지 않은 회원입니다.'
+
+        if error is None:
+            # user = authenticate(username=username, password=password)
+            if user is not None:
+                self.send_activation_email(user)
+            else:
+                error = 'ID가 존재하지 않습니다.'
+
+        if error is None:
+            logger.info(str(user_id) + '[' + str(email) + '] 이메일 변경 요청')
+        else:
+            logger.error(str(user_id) + '[' + str(email) + ']' + str(error))
+            messages.error(request, error)
 
         return render(request, self.template_name)
 
@@ -562,9 +914,11 @@ class CheckMemberEmailView(TemplateView):
         if user_email is None or user_email == '':
             self.error = 'Email을 입력해주세요.'
         else:
+            user_data = User.objects.filter(email=user_email)
 
-            if User.objects.filter(email=user_email).exists():
+            if len(user_data) > 0:
                 self.error = '사용 불가'
+                context['username'] = user_data[0].username
 
             if self.error is None or self.error == '':
                 if form.is_valid():
@@ -692,6 +1046,7 @@ def out_member_logic(request):
     member_id = request.user.id
     user = None
     member = None
+    sns_data = None
     if member_id == '':
         error = 'ID를 확인해 주세요.'
 
@@ -708,6 +1063,9 @@ def out_member_logic(request):
         except ObjectDoesNotExist:
             error = 'ID를 확인해 주세요.'
 
+    if error is None:
+        sns_data = SnsInfoTb.objects.select_related('member').filter(member_id=member_id, use=USE)
+
     # if error is None:
     #    group = user.groups.get(user=request.user.id)
 
@@ -718,6 +1076,8 @@ def out_member_logic(request):
                 user.save()
                 member.use = 0
                 member.save()
+                if len(sns_data) > 0:
+                    sns_data.update(use=UN_USE)
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -913,3 +1273,5 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     context['error'] = error
 
     return context
+
+

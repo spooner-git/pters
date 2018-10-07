@@ -203,6 +203,16 @@ nav.main_nav{
 	margin-right: 2%;
 }
 
+#naverIdLogin{
+	margin-top: 10px !important;
+	margin-bottom: 8px !important;
+}
+#naverIdLogin img{
+	width: auto;
+	max-height: 45px;
+	margin-right: 0 !important;
+}
+
 #loginboxbg{
 	display: block;
 	position: absolute;
@@ -211,7 +221,7 @@ nav.main_nav{
 	top: 0;
 	left: 0;
 	background-color: #282828;
-	opacity: 0.6;
+	opacity: 0.4;
 	z-index: -1;
 	border-radius: 2px;
 }
@@ -231,15 +241,17 @@ nav.main_nav{
 	position: absolute;
 	width: 100%;
 	max-width: 390px;
-	height: 270px;
+	height: auto;
 	padding: 23px 0px 20px 0px;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%,-50%);
 }
 
-#login-form div{
+.pters_login_input{
 	width: 300px;
+}
+#login-form div{
 	margin: 0 auto;
 	padding-left: 0;
 	text-align: center;
@@ -253,7 +265,7 @@ nav.main_nav{
 .innerbox{
 	width: 100%;
 	height: 28px;
-	margin-top: 10px !important;
+	margin-top: 20px !important;
 	font-size: 15px;
 }
 #registerButton{
@@ -319,6 +331,9 @@ nav.main_nav{
 	font-size: 18px !important;
 	font-weight: bold;
 }
+.innerbox > a > div:hover{
+	color: #fe4e65 !important;
+}
 
 
 /*Bootstrap 상속 수정*/
@@ -344,6 +359,7 @@ nav.main_nav{
 }
 
 .btn-primary:hover{
+	color: #ffffff !important;
 	background-color: transparent !important;
 	border-color: #ffffff !important;
 	border-radius: 0px !important;
@@ -439,8 +455,8 @@ nav.main_nav{
 		height: 100%;
 		top: 0;
 		left: 0;
-		background-color: #ffffff;
-		opacity: 0.15;
+		/*background-color: #ffffff;
+		opacity: 0.15;*/
 		z-index: -1;
 	}
 

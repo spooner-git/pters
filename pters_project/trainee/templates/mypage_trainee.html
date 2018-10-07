@@ -4,11 +4,55 @@
 {% block local_css %}
 
     <link rel="stylesheet" href={% static_url "user/css/trainee/pters.trainee.mypage.css" %}>
-
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
-{% endblock %}
+    <style type="text/css">
+        .NAVER{
+            font-weight: 500 !important;
+            color: #2DB400; 
+        }
+        .Facebook{
+            font-weight: 500 !important;
+            color: #3b5998;
+        }
+        .Google{
+            font-weight: 500 !important;
+            color: #4285f4;
+        }
+    </style>
 
+{% endblock %}
 {% block content %}
+    <div id="blank_member_popup" style="display: none;">
+        <label>PTERS에 오신걸 환영합니다!</label>
+        <p><br>담당 강사와 연결된 후부터 사용이 가능합니다.</p>
+        <p>담당 강사에게 회원님의 아이디를 알려 드리고 등록을 요청해주세요.</p>
+        <span>닫기</span>
+    </div>
+
+    <div id="popup_how_to_disconnect_sns_login" class="popups">
+        <label style="text-align: center;font-size: 18px;margin-left: 15px;margin-top:10px;font-weight: 500;">SNS계정 연동 해제 방법</label><img src="/static/user/res/ptadd/btn-x.png" style="width:32px;padding:10px;float:right;margin:5px;cursor: pointer;" id="btn_close_how_to_disconnect_sns_login">
+        <!-- <div id="" class="pters_selectbox_wrapper" style="margin-top: 15px;">
+            <div id="how_to_disconnect_naver" onclick="" class="pters_selectbox_btn pters_selectbox_btn_selected">
+                <span class="KRtext">네이버</span>
+            </div>
+            <div id="how_to_disconnect_facebook" onclick="" class="pters_selectbox_btn">
+                <span class="KRtext">페이스북</span>
+            </div>
+        </div> -->
+        <div id="how_to_disconnect_naver_explain" class="explain_page">
+            <label>네이버 연동 해제 방법</label>
+            <p style="color:#fe4e65;font-weight: bold;"><img src="/static/user/res/stopmark.png" style="width: 15px;">주의사항!<br>연동 해제 전 비밀번호를 초기화후 재설정하셔야, <br>연동 해제 후 피터스에 정상적으로 로그인이 가능합니다.</p>
+            <p>1. 네이버 사이트에서 로그인 후, 내정보로 이동합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/1.png">
+            <p>2. 보안 설정 탭으로 이동합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/2.png">
+            <p>3. 외부 사이트 연결을 확인합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/3.png">
+            <p>4. 목록에서 PTERS의 연결 여부를 설정합니다.</p>
+            <img src="/static/user/res/how_to_disconnect_sns/naver/4.png">
+        </div>
+        <div id="how_to_disconnect_facebook_explain" class="explain_page">페이스북 연동 해제 방법</div>
+    </div>
 
     <div id="ymdText">
         <!--
@@ -84,12 +128,17 @@
             <img src="/static/user/res/member/icon-user.png" alt=""><span>가입 정보</span>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
-            <div class="trainerInfo">
+            <div class="trainerInfo" style="height: auto;">
                 <div>
                     <span class="menuName">ID</span>
                     <div class="menuButton"><button onclick="goPage('delAccount')">탈퇴</button></div>
                 </div>
                 <span>{{ request.user.username }}</span>
+                <div id="is_this_sns_login" style="display: none;padding-bottom: 7px;">
+                    <div id="sns_type" style="display: inline-block;"></div>
+                    <div class="menuButton" style="position: relative;margin-right: 10px;"><button onclick="naverLogout()" style="width: 40px;">연동해제</button></div>
+                    <img src="/static/user/res/icon-info.png" style="width:15px;margin:0;opacity: 0.5;cursor: pointer;" id="btn_how_to_disconnect_sns_login">
+                </div>
             </div>
         </div>
         <div id="trainerInfoWrap" class="boardWrap">
@@ -317,46 +366,59 @@
     <script>
         $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시')
 
-        birthChangeEventGroup()
-        /*
-         $('._GRAPH_OPEN').click(function(){
-         if($('#mygraph').attr('data-open') == '0'){
-         $('#mygraph').css('transform','translateY(0%)').attr('data-open','1')
-         //$('#summary_wrap').css('transform','translateY(0%)')
+        birthChangeEventGroup();
 
-         }else if($('#mygraph').attr('data-open') == "1"){
-         $('#mygraph').css('transform','translateX(-200%)').attr('data-open','0')
-         //$('#summary_wrap').css('transform','translateY(-48%)')
 
-         }
-         })
-         */
+        if(Number(social_login_check) == 0){
+
+        }else if(Number(social_login_check) == 1){
+            $('.changeEmail').parent('.menuButton').hide();
+            $('#is_this_sns_login').show();
+            $('#sns_type').html(`<span class="${social_login_type}" style="margin:0">${social_login_type}</span> 계정으로 로그인 중`);
+        }
+        
+
+        $('#btn_how_to_disconnect_sns_login').click(function(){
+            height_this_fit_to_display('#popup_how_to_disconnect_sns_login', 60);
+            locate_this_to_center('#popup_how_to_disconnect_sns_login');
+
+            $('body').css('overflow-y', 'hidden');
+            $('#shade_caution').show();
+        });
+
+        $('#btn_close_how_to_disconnect_sns_login').click(function(){
+            $('#popup_how_to_disconnect_sns_login').hide();
+            $('body').css('overflow-y', 'unset');
+            $('#shade_caution').hide();
+        });
+
+
         $('button.changeMemberInfo').click(function(){
             if($(this).attr('data-type') == "modify"){
-                $(this).attr('data-type','complete')
-                $(this).siblings('button.cancelMemberInfo').show()
-                $(this).parents('.trainerInfo').find('._originalInfo').hide()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').show()
+                $(this).attr('data-type','complete');
+                $(this).siblings('button.cancelMemberInfo').show();
+                $(this).parents('.trainerInfo').find('._originalInfo').hide();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').show();
             }else if($(this).attr('data-type') == "complete"){
-                $(this).attr('data-type','modify')
-                $(this).siblings('button.cancelMemberInfo').hide()
-                $(this).parents('.trainerInfo').find('._originalInfo').show()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-                send_modified_member_info()
+                $(this).attr('data-type','modify');
+                $(this).siblings('button.cancelMemberInfo').hide();
+                $(this).parents('.trainerInfo').find('._originalInfo').show();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+                send_modified_member_info();
             }
-        })
+        });
 
         $('button.cancelMemberInfo').click(function(){
-            $(this).hide()
-            $(this).siblings('button.changeMemberInfo').attr('data-type','modify')
-            $(this).parents('.trainerInfo').find('._originalInfo').show()
-            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-        })
+            $(this).hide();
+            $(this).siblings('button.changeMemberInfo').attr('data-type','modify');
+            $(this).parents('.trainerInfo').find('._originalInfo').show();
+            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+        });
 
         $('input').keyup(function(){
             var targetID = $('#'+$(this).attr('name'))
             targetID.val($(this).val())
-        })
+        });
 
 
         send_modified_member_info()
@@ -373,7 +435,6 @@
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data)
-                    console.log('data',jsondata)
                     fill_recieved_member_info(jsondata)
                 },
 
@@ -462,11 +523,135 @@
 
         function goPage(option){
             if(option == 2){
-                location.href= "/accounts/password/change/"
+                if(Number(social_login_check) == 0){
+                    location.href= "/accounts/password/change/";
+                }else if(Number(social_login_check) == 1){
+                    location.href= "/accounts/password/reset/";
+                }
             }else if(option = "delAccount"){
                 location.href="/trainee/delete_trainee_account/";
             }
         }
+
+
+//         function naverLogout(){
+//             $.ajax({
+
+//                 url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
+//                 type:'GET',
+//                 dataType:'json',
+
+//                 beforeSend:function(){
+//                 },
+
+//                 //통신성공시 처리
+//                 success:function(data){
+
+//                 },
+
+//                 //보내기후 팝업창 닫기
+//                 complete:function(){
+//                 },
+
+//                 //통신 실패시 처리
+//                 error:function(){
+
+//                 }
+//             });
+
+//             $.ajax({
+//                 url:'/login/delete_sns_info/',
+//                 type:'POST',
+//                 data : {"sns_id":social_login_id, "sns_type":social_login_type},
+//                 dataType : 'html',
+
+//                 beforeSend:function(xhr, settings){
+//                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//                     }
+//                     beforeSend();
+//                 },
+
+//                 //통신성공시 처리
+//                 success:function(data){
+//                     var jsondata = JSON.parse(data);
+//                     console.log(jsondata);
+// {#                    window.location.reload();#}
+//                 },
+
+//                 //보내기후 팝업창 닫기
+//                 complete:function(){
+//                 },
+
+//                 //통신 실패시 처리
+//                 error:function(){
+
+//                 }
+//             });
+//         }
+
+        function naverLogout(){
+            if(confirm("네이버 연동해제시 비밀번호를 초기화(변경)하셔야\n 정상적으로 재로그인이 가능합니다.")){
+                $.ajax({
+
+                    url:'https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=h5MuvYzSFLlrFTs19g0V&client_secret=fL5b0bMvHH&access_token='+social_accessToken+'&service_provider=NAVER',
+                    type:'GET',
+                    dataType:'json',
+
+                    beforeSend:function(){
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+
+                $.ajax({
+                    url:'/login/delete_sns_info/',
+                    type:'POST',
+                    data : {"sns_id":social_login_id, "sns_type":social_login_type},
+                    dataType : 'html',
+
+                    beforeSend:function(xhr, settings){
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                        beforeSend();
+                    },
+
+                    //통신성공시 처리
+                    success:function(data){
+                        var jsondata = JSON.parse(data);
+                        window.location.reload();
+                    },
+
+                    //보내기후 팝업창 닫기
+                    complete:function(){
+
+                    },
+
+                    //통신 실패시 처리
+                    error:function(){
+
+                    }
+                });
+            }else{
+                
+            }
+            
+        }
+
+
 
 
     </script>

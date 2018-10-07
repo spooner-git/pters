@@ -1,3 +1,7 @@
+html, body{
+	background-color: #f7f7f7;
+}
+
 body{
 	padding-top: 50px;
 }
@@ -59,6 +63,7 @@ body{
 	color: #282828;
 	text-align: center;
 	margin-top: 40px;
+	margin-bottom: 50px;
 }
 
 #logout span{
@@ -82,7 +87,7 @@ body{
 	#logout{
 		position: relative;
 		margin-top: 300px;
-		margin-bottom: 22px;
+		margin-bottom: 100px;
 	}
 
 	#logout:hover{
