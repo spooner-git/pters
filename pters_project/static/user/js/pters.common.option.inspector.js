@@ -6,7 +6,7 @@ function pters_option_inspector(option_type, xhr, date){
         if(option_type == "plan_add" && Options.auth.auth_plan_add[0] == 1){
             var lock_date = Options.auth.auth_plan_add[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
-                show_caution_popup(function_lock_message(lock_date));
+                show_caution_popup(function_lock_message(lock_date, "일정 등록"));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                 }
@@ -65,7 +65,7 @@ function pters_option_inspector(option_type, xhr, date){
         }else if(option_type == "plan_delete" && Options.auth.auth_plan_delete[0] == 1){
             var lock_date = Options.auth.auth_plan_delete[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
-                show_caution_popup(function_lock_message(lock_date));
+                show_caution_popup(function_lock_message(lock_date, "일정 삭제"));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                 }
@@ -106,20 +106,21 @@ function pters_option_inspector(option_type, xhr, date){
     }
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
 
-    function function_lock_message(lock_date){ //Options.auth_lock_date
+    function function_lock_message(lock_date, option_type){ //Options.auth_lock_date
+        var type_text = option_type;
         var message;
         if(lock_date > 0){
             message =  `<div style="margin-bottom:10px;">
                                 무료 이용자께서는 <br>
-                                기능 이용이 <span style="font-weight:500;">오늘 기준 ${lock_date}일로 제한</span>됩니다. <br><br>
-                                <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                <span style="font-weight:500;">${type_text}</span> 이용이 <span style="font-weight:500;">오늘 기준 ${lock_date}일로 제한</span>됩니다. <br><br>
+                                <span style="color:#fe4e65;">이용권</span> 구매로<br>
                                 <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
                             </div>`;
         }else if(lock_date == 0){
             message = `<div style="margin-bottom:10px;">
                                         무료 이용자께서는 <br>
                                         기능 이용이  <span style="font-weight:500;"> 제한</span>됩니다. <br><br>
-                                        <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+                                        <span style="color:#fe4e65;">이용권</span> 구매로<br>
                                         <span style="color:#fe4e65;">제한 없이 이용</span>해보세요!
                                     </div>`;
         }
