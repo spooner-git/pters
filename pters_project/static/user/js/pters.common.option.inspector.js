@@ -4,7 +4,7 @@ function pters_option_inspector(option_type, xhr, date){
         var selected_date = date;
         var lock_date;
         if(      option_type == "plan_create"    && Options.auth.auth_plan_create[0] == 1){
-            var lock_date = Options.auth.auth_plan_add[1];
+            var lock_date = Options.auth.auth_plan_create[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
                 show_caution_popup(function_lock_message(lock_date, "일정 등록"));
                 if(xhr != ""){
