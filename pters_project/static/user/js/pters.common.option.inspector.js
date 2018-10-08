@@ -101,7 +101,7 @@ function pters_option_inspector(option_type, xhr, option_element){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
             }
-        }else if(option_type == "member_read"    && Options.auth.auth_member_read == 0){
+        }else if(option_type == "member_read"    && Options.auth.auth_member_read == 1){
             show_caution_popup(function_lock_message("member_read", 1, "상세 정보 조회"));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
