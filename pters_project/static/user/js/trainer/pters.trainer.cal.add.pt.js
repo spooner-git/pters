@@ -2005,7 +2005,7 @@ function ajaxTimeGraphSet(date, use, callback){
 
         beforeSend:function(xhr){
             beforeSend();
-            pters_option_inspector("ptadd", xhr, today_form);
+            pters_option_inspector("plan_add", xhr, today_form);
         },
 
         success:function(data){
@@ -3210,22 +3210,23 @@ function send_plan_delete(option, callbackoption, callback){
     var serializeArray;
     var sendData;
     var url_;
+    var selected_date;
     if(option == "pt"){
         $form = $('#daily-pt-delete-form');
         serializeArray = $form.serializeArray();
-        //sendData = send_Data(serializeArray);
         url_ = '/schedule/delete_schedule/';
+        selected_date = $('#id_date_info').val();
     }else if(option == "off"){
         $form = $('#daily-off-delete-form');
         serializeArray = $form.serializeArray();
-        //sendData = send_Data(serializeArray);
         url_ = '/schedule/delete_schedule/';
+        selected_date = $('#id_date_info_off').val();
     }else if(option == "group"){
         $form = $('#daily-pt-delete-form');
         $('#id_schedule_id').val($('#cal_popup_plandelete').attr('schedule-id'));
         serializeArray = $form.serializeArray();
-        //sendData = send_Data(serializeArray);
         url_ = '/schedule/delete_group_schedule/';
+        selected_date = $('#id_date_info').val();
     }
     //var AJAXTESTTIMER =  TEST_CODE_FOR_AJAX_TIMER_starts(url_)
     $.ajax({
@@ -3233,8 +3234,9 @@ function send_plan_delete(option, callbackoption, callback){
         type:'POST',
         data: serializeArray, //sendData,
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             beforeSend();
+            pters_option_inspector("plan_delete", xhr, selected_date);
         },
 
         //통신성공시 처리
