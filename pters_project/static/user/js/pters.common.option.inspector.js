@@ -2,8 +2,9 @@ function pters_option_inspector(option_type, xhr, date){
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
     if(Options.auth.auth_option_limit == 1){
         var selected_date = date;
-        var lock_date = Options.auth.auth_lock_date;
-        if(option_type == "plan_add" && Options.auth.auth_plan_add == 1){
+        var lock_date;
+        if(option_type == "plan_add" && Options.auth.auth_plan_add[0] == 1){
+            var lock_date = Options.auth.auth_plan_add[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
                 show_caution_popup(function_lock_message(lock_date));
                 if(xhr != ""){
@@ -61,7 +62,8 @@ function pters_option_inspector(option_type, xhr, date){
                 }
                 check_dropdown_selected_addplan();
             }
-        }else if(option_type == "plan_delete" && Options.auth.auth_plan_delete == 1){
+        }else if(option_type == "plan_delete" && Options.auth.auth_plan_delete[0] == 1){
+            var lock_date = Options.auth.auth_plan_delete[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
                 show_caution_popup(function_lock_message(lock_date));
                 if(xhr != ""){

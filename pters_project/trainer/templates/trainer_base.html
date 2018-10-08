@@ -861,13 +861,13 @@ function playSound() {
         "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
         "location" : "Korea",         //Korea, Japan, English, Chinese
 
-        "auth_group":1,
-        "auth_class":1,
+        // "auth_group":1,
+        // "auth_class":1,
         "auth":{
                     "auth_option_limit":1, //1: 제한  0: 제한 없음
-                    "auth_lock_date":3,    //날짜 제한 숫자 숫자>0 : 날짜 제한, 숫자==0 : 기능 제한
-                    "auth_plan_add":1,
-                    "auth_plan_delete":1,
+                    "auth_lock_date":3,    //숫자 > 0: 날짜 제한, 0: 기능 제한
+                    "auth_plan_add":[1, 3],
+                    "auth_plan_delete":[1, 5],
                     "auth_plan_view":1,
                     "auth_member_add":1,
                     "auth_member_delete":1,
