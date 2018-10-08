@@ -867,33 +867,33 @@ function playSound() {
                     "auth_option_limit":1, //1: 제한  0: 제한 없음
                     "auth_lock_date":3,    //숫자 > 0: 날짜 제한, 0: 기능 제한
 
-                    "auth_plan_create":[1, 3],
-                    "auth_plan_delete":[1, 5],
+                    "auth_plan_create":[1, 3],   // [On/Off, 앞뒤 몇일로 제한]
+                    "auth_plan_delete":[1, 5],   // [On/Off, 앞뒤 몇일로 제한]
                     "auth_plan_read":1,
                     "auth_plan_update":1,
 
-                    "auth_member_create":1,
+                    "auth_member_create":[1, 30], // [On/Off, 최대 몇명]
                     "auth_member_delete":1,
                     "auth_member_read":1,
                     "auth_member_update":1,
 
-                    "auth_group_create":1,
+                    "auth_group_create":[1, 2],   // [On/Off, 최대 몇 그룹]
                     "auth_group_delete":1,
                     "auth_group_read":1,
                     "auth_group_update":1,
 
-                    "auth_class_create":1,
+                    "auth_class_create":[1, 3],   // [On/Off, 최대 몇 클래스]
                     "auth_class_delete":1,
                     "auth_class_read":1,
                     "auth_class_update":1,
 
-                    "auth_package_create":1,
+                    "auth_package_create":[1, 3], // [On/Off, 최대 몇 패키지]
                     "auth_package_delete":1,
                     "auth_package_read":1,
                     "auth_package_update":1,
 
-                    "auth_analytics_create":1,
-                    "auth_analytics_delete":1,
+                    //"auth_analytics_create":1,
+                    //"auth_analytics_delete":1,
                     "auth_analytics_read":1,
                     "auth_analytics_update":1,
 
