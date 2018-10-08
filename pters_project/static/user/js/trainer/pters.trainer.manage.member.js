@@ -164,7 +164,7 @@ $(document).ready(function(){
             $('#select_info_shift_lecture').addClass('button_active');
             $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
         }
-        shade_index(100);
+        // shade_index(100);
     });
 
     //PC 회원 이력 엑셀 다운로드 버튼 (회원목록에서)
@@ -1051,12 +1051,39 @@ $(document).ready(function(){
         }
     });
 
+    $(document).on("focus", "input.lec_start_date", function(){
+        var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date');
+        var startDateOriDate = startDatepicker.val().replace(/\./gi, '-');
+        $(this).datepicker({
+            onSelect:function(dateText, inst){  //달력날짜 선택시 하단에 핑크선
+                $('#'+$(this).attr('data-type').replace(/lec_/gi, 'form_')).val($(this).val());
+                var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date');
+                var selectedEndDate = endDatepicker.val().replace(/\./gi, '-');
+                // var endDateOriDate = endDatepicker.val().replace(/\./gi, '-');
+                if( selectedEndDate == undefined || selectedEndDate.length == 0 ){
+                    endDatepicker.datepicker('setDate', null);
+                    show_caution_popup('<p style="color:#fe4e65;">날짜 선택</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>시작 일자를 먼저 선택해주세요</p>'+
+                                        '</div>');
+                }else if(compare_date2( dateText, selectedEndDate )){
+                    startDatepicker.datepicker('setDate', startDateOriDate);
+                    $('#'+$(this).attr('data-type').replace(/lec_/gi, 'form_')).val(startDateOriDate);
+                    show_caution_popup('<p style="color:#fe4e65;">종료일자가 시작일자보다 앞섭니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>종료일자는 시작날짜 이후로 선택해주세요.</p>'+
+                                        '</div>');
+                }
+            }
+        });
+    });
 
-    $(document).on("focus", "input.lec_start_date, input.lec_end_date", function(){
+
+    $(document).on("focus", "input.lec_end_date", function(){
         var endDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_end_date');
         var endDateOriDate = endDatepicker.val().replace(/\./gi, '-');
         $(this).datepicker({
-            onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
+            onSelect:function(dateText, inst){  //달력날짜 선택시 하단에 핑크선
                 $('#'+$(this).attr('data-type').replace(/lec_/gi, 'form_')).val($(this).val());
                 var startDatepicker = $(this).parents('div[data-leid='+$(this).attr('data-leid')+']').find('input.lec_start_date');
                 var selectedStartDate = startDatepicker.val().replace(/\./gi, '-');
@@ -1430,8 +1457,9 @@ function send_modified_member_base_data(dbID){
         data:$form.serialize(),
         dataType : 'html',
 
-        beforeSend:function(){
-            $('#upbutton-modify img').attr('src','/static/user/res/ajax/loading.gif');
+        beforeSend:function(xhr){
+            $('#upbutton-modify img').attr('src', '/static/user/res/ajax/loading.gif');
+            pters_option_inspector("member_update", xhr, dbID);
         },
 
         //보내기후 팝업창 닫기
@@ -3259,8 +3287,9 @@ function get_indiv_member_info(dbID){
         data: {"member_id": dbID, 'id_flag':db_id_flag},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             //beforeSend(); //ajax 로딩이미지 출력
+            pters_option_inspector("member_read", xhr, "");
         },
 
         success:function(data){
@@ -3325,9 +3354,9 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     function about_member_window_show1(){
         if(userActivation == 'True'){
-            $('button._info_baseedit').css('visibility','hidden');
+            $('button._info_baseedit').css('visibility', 'hidden');
         }else{
-            $('button._info_baseedit').css('visibility','visible');
+            $('button._info_baseedit').css('visibility', 'visible');
         }
     }
 
@@ -3362,7 +3391,7 @@ function open_member_info_popup_pc(dbID, jsondata){
     }
 
 
-    $(document).on('click','#memberSex_info_PC .selectboxopt',function(){
+    $(document).on('click', '#memberSex_info_PC .selectboxopt', function(){
         if($('button._info_baseedit').attr('data-view') == "edit"){
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
@@ -3575,13 +3604,14 @@ function send_member_modified_data(dbID){
         data: $form.serialize(),
         dataType : 'html',
 
-        beforeSend:function(){
-            beforeSend()
+        beforeSend:function(xhr){
+            beforeSend();
+            pters_option_inspector("member_update", xhr, dbID)
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
@@ -4474,8 +4504,9 @@ function add_member_form_func(){
         data: $('#member-add-form-new').serialize(),
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             beforeSend()
+            pters_option_inspector("member_create", xhr, $('#currentMember tr.memberline').length);
         },
 
         //보내기후 팝업창 닫기
@@ -4766,8 +4797,9 @@ function deleteMemberAjax(){
         data: $form.serialize(),
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             beforeSend();
+            pters_option_inspector("member_delete", xhr, "");
         },
 
         success:function(data){

@@ -1,12 +1,13 @@
-function pters_option_inspector(option_type, xhr, date){
+function pters_option_inspector(option_type, xhr, option_element){
+    //option_element는 date나, 회원숫자 등
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
     if(Options.auth.auth_option_limit == 1){
-        var selected_date = date;
         var lock_date;
         if(      option_type == "plan_create"    && Options.auth.auth_plan_create[0] == 1){
+            var selected_date = option_element;
             var lock_date = Options.auth.auth_plan_create[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
-                show_caution_popup(function_lock_message(lock_date, "일정 등록"));
+                show_caution_popup(function_lock_message("plan", lock_date, "일정 등록"));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                 }
@@ -29,7 +30,7 @@ function pters_option_inspector(option_type, xhr, date){
                     //$("#id_training_date").val($("#datepicker").val()).submit();
                     $("#id_training_date, #id_training_end_date").val(selector_datepicker.val());
                     if(selector_timeGraph.css('display')=='none'){
-                        selector_timeGraph.css('display','block');
+                        selector_timeGraph.css('display', 'block');
                     }
                     $('.graphindicator_leftborder, graphindicator').removeClass('graphindicator').removeClass('graphindicator_leftborder');
                     clear_start_dur_dropdown();
@@ -63,9 +64,10 @@ function pters_option_inspector(option_type, xhr, date){
                 check_dropdown_selected_addplan();
             }
         }else if(option_type == "plan_delete"    && Options.auth.auth_plan_delete[0] == 1){
+            var selected_date = option_element;
             var lock_date = Options.auth.auth_plan_delete[1];
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
-                show_caution_popup(function_lock_message(lock_date, "일정 삭제"));
+                show_caution_popup(function_lock_message("plan", lock_date, "일정 삭제"));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                 }
@@ -84,15 +86,40 @@ function pters_option_inspector(option_type, xhr, date){
 
 
 
-        }else if(option_type == "member_create"  && Options.auth.auth_member_create == 1){
-
+        }else if(option_type == "member_create"  && Options.auth.auth_member_create[0] == 1){
+            var current_member_num = option_element;
+            if(current_member_num > Options.auth.auth_member_create[1]){
+                show_caution_popup(function_lock_message("member_add", Options.auth.auth_member_create[1], "회원 등록"));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }else if(option_type == "member_delete"  && Options.auth.auth_member_delete == 1){
-
-        }else if(option_type == "member_read"    && Options.auth.auth_member_read == 1){
-
+            show_caution_popup(function_lock_message("member_delete", 1, "회원 삭제"));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+            }
+        }else if(option_type == "member_read"    && Options.auth.auth_member_read == 0){
+            show_caution_popup(function_lock_message("member_read", 1, "상세 정보 조회"));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                close_manage_popup('member_info_PC');
+                close_manage_popup('member_info');
+            }
         }else if(option_type == "member_update"  && Options.auth.auth_member_update == 1){
-
-
+            var dbID = option_element;
+            show_caution_popup(function_lock_message("member_read", 1, "회원 정보 수정"));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                get_indiv_member_info(dbID);
+                get_indiv_repeat_info(dbID);
+                get_member_lecture_list(dbID);
+                get_member_history_list(dbID);
+            }
 
         }else if(option_type == "group_create"   && Options.auth.auth_group_create == 1){
 
@@ -145,25 +172,54 @@ function pters_option_inspector(option_type, xhr, date){
         }
     }
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
+}
 
-    function function_lock_message(lock_date, option_type){ //Options.auth_lock_date
-        var type_text = option_type;
-        var message;
-        if(lock_date > 0){
+function function_lock_message(function_type, number, option_type){ //Options.auth_lock_date
+    var type_text = option_type;
+    var message;
+
+    if(number == 0){
+        message = `<div style="margin-bottom:10px;">
+                    무료 이용자께서는 <br>
+                    기능 이용이  <span style="font-weight:500;"> 제한</span>됩니다. <br><br>
+                    <span style="color:#fe4e65;">이용권</span> 구매로<br>
+                    <span style="color:#fe4e65;">제한 없이 이용</span>해보세요!
+                </div>`;
+    }else{
+        if(function_type == "plan"){
+            var lock_date = number;
             message = `<div style="margin-bottom:10px;">
                             무료 이용자께서는 <br>
                             <span style="font-weight:500;">${type_text}</span> 이용이 <span style="font-weight:500;">오늘 기준 ${lock_date}일로 제한</span>됩니다. <br><br>
                             <span style="color:#fe4e65;">이용권</span> 구매로<br>
                             <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
                         </div>`;
-        }else if(lock_date == 0){
+
+        }else if(function_type == "member_add"){
+            var limit_member_num = number;
             message = `<div style="margin-bottom:10px;">
-                            무료 이용자께서는 <br>
-                            기능 이용이  <span style="font-weight:500;"> 제한</span>됩니다. <br><br>
-                            <span style="color:#fe4e65;">이용권</span> 구매로<br>
-                            <span style="color:#fe4e65;">제한 없이 이용</span>해보세요!
-                        </div>`;
+                        무료 이용자께서는 <br>
+                        <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;"> ${limit_member_num}건으로 제한</span>됩니다. <br><br>
+                        <span style="color:#fe4e65;">이용권</span> 구매로<br>
+                        <span style="color:#fe4e65;">제한 없이 이용</span>해보세요!
+                    </div>`;
+        }else if(function_type == "member_delete"){
+            var limit_member_num = number;
+            message = `<div style="margin-bottom:10px;">
+                        무료 이용자께서는 <br>
+                        <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;"> 제한</span>됩니다. <br><br>
+                        <span style="color:#fe4e65;">이용권</span> 구매로<br>
+                        <span style="color:#fe4e65;">제한 없이 이용</span>해보세요!
+                    </div>`;
+        }else if(function_type == "member_read"){
+            var limit_member_num = number;
+            message = `<div style="margin-bottom:10px;">
+                        무료 이용자께서는 <br>
+                        <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;"> 제한</span>됩니다. <br><br>
+                        <span style="color:#fe4e65;">이용권</span> 구매로<br>
+                        <span style="color:#fe4e65;">제한 없이 이용</span>해보세요!
+                    </div>`;
         }
-        return message;
     }
+    return message;
 }
