@@ -864,7 +864,24 @@ function playSound() {
         "auth_group":1,
         "auth_class":1,
         "auth_limit":1,
-        "auth_option_limit":0, //1: 제한  0: 제한 없음
+        "auth":{
+                    "auth_option_limit":1, //1: 제한  0: 제한 없음
+                    "auth_lock_date":3,    //날짜 제한 숫자 숫자>0 : 날짜 제한, 숫자==0 : 기능 제한
+                    "auth_plan_add":1,
+                    "auth_plan_delete":1,
+                    "auth_plan_view":1,
+                    "auth_member_add":1,
+                    "auth_member_delete":1,
+                    "auth_member_view":1,
+                    "auth_group_add":1,
+                    "auth_group_delete":1,
+                    "auth_group_view":1,
+                    "auth_class_add":1,
+                    "auth_class_delete":1,
+                    "auth_class_view":1,
+                    "auth_program_add":1,
+                    "auth_program_delete":1
+        },
         "auth_ads":0,
     };
 

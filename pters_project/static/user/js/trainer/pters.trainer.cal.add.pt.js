@@ -84,11 +84,11 @@ $(document).ready(function(){
                 if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                     $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("", selector_datepicker_repeat_start.val());
+                    pters_option_inspector("plan_add", "", selector_datepicker_repeat_start.val());
                 }else if(addTypeSelect == "repeatoffadd"){
                     $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("", selector_datepicker_repeat_start.val());
+                    pters_option_inspector("plan_add", "", selector_datepicker_repeat_start.val());
                 }
                 check_dropdown_selected_addplan();
             }
@@ -108,11 +108,11 @@ $(document).ready(function(){
                 if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                     $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("", selector_datepicker_repeat_end.val());
+                    pters_option_inspector("plan_add", "", selector_datepicker_repeat_end.val());
                 }else if(addTypeSelect == "repeatoffadd"){
                     $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
                     $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("", selector_datepicker_repeat_end.val());
+                    pters_option_inspector("plan_add", "", selector_datepicker_repeat_end.val());
                 }
                 check_dropdown_selected_addplan();
             }
@@ -2005,7 +2005,7 @@ function ajaxTimeGraphSet(date, use, callback){
 
         beforeSend:function(xhr){
             beforeSend();
-            pters_option_inspector(xhr, today_form);
+            pters_option_inspector("ptadd", xhr, today_form);
         },
 
         success:function(data){
