@@ -89,6 +89,7 @@ class ProductPriceTb(TimeStampedModel):
     price = models.IntegerField(db_column='PRICE', default=0)
     sale_price = models.IntegerField(db_column='SALE_PRICE', default=0)
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45,  blank=True, default='')
+    period_month = models.IntegerField(db_column='PERIOD_MONTH', default=1)
     order = models.IntegerField(db_column='ORDER', default=1)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 

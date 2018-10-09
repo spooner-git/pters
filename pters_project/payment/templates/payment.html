@@ -29,7 +29,7 @@
         {% for product_info in product_data %}
             <div class="payment_function_wrap">
                 <label class="function_label"> {{ product_info.name }} </label>
-                <p> {{ product_info.contents|linebreaks }} </p>
+                <p> {{ product_info.contents }} </p>
                 {% for price_info in product_info.price_list %}
                     <div class="payment_monthly">
                         <label class="inner_label">{{ price_info.name }}</label>
@@ -44,15 +44,50 @@
 
                         {% if price_info.price != 0 %}
                             {% if price_info.payment_type_cd == 'PERIOD' %}
-                                <button id="pay_basic_function_monthly">정기 결제 구매</button>
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                        data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
+                                        data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">정기 결제 구매</button>
                             {% else %}
-                                <button id="pay_basic_function_instant">구매</button>
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                        data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
+                                        data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">구매</button>
                             {% endif %}
                         {% endif %}
                     </div>
                     {%if forloop.last == False%}
                         <div class="seperator"></div>
                     {% endif %}
+                {% endfor %}
+                {% for sub_product_info in product_info.sub_product_list %}
+                    {{ sub_product_info.name }}
+                    {% for sub_price_info in sub_product_info.sub_price_list %}
+                        <div class="payment_monthly">
+                            <label class="inner_label">{{ sub_price_info.name }}</label>
+                            {% if sub_price_info.price != sub_price_info.sale_price %}
+                                <p class="inner_explain"><span class="price_before"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ sub_price_info.price }}원</span>
+                                                        <span class="price_after"> → {% if sub_price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ sub_price_info.sale_price }}원</span>
+                                </p>
+                            {% else %}
+                                <p class="inner_explain"> <span class="price_after"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ sub_price_info.sale_price }}원</span>
+                                </p>
+                            {% endif %}
+
+                            {% if sub_price_info.price != 0 %}
+                                {% if sub_price_info.payment_type_cd == 'PERIOD' %}
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                            data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
+                                            data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">정기 결제 구매</button>
+                                {% else %}
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                            data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
+                                            data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">구매</button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        {%if forloop.last == False%}
+                            <div class="seperator"></div>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             </div>
         {% endfor %}
@@ -186,7 +221,7 @@
             </div>
             <div class="popupBtn_mini">
                 <button class="submitBtn _button_Prev">결제취소</button>
-                <button class="submitBtn _button_Next"">결제하기</button>
+                <button class="submitBtn _button_Next">결제하기</button>
             </div>
         </div>
 
@@ -223,6 +258,13 @@
 
         $('#upbutton-x-modify').click(function(){
             location.href="/trainer/trainer_setting/"
+        });
+
+        $('.pay_product_function').click(function(e){
+            e.preventDefault();
+            purchase_popup_show($(this).attr('data-product-name'), $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
+                $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
+
         });
 
         $('#pay_basic_function_monthly').click(function(e){
@@ -274,15 +316,16 @@
             //광고 제거 1개월 결제 버튼
         });
 
-        function purchase_popup_show(product, type, functions, price){
+        function purchase_popup_show(product, type, functions, price, product_id, period_month){
             shade_index(100)
             $('#purchase_popup').fadeIn('fast')
                                 .css({'top':(($(window).height()-$('#purchase_popup').outerHeight())/2),
                                       'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
                                 .attr({'data-product':product,
                                         'data-type':type,
-                                        'data-function':functions,
-                                        'data-price':price});
+                                        'data-function':product_id,
+                                        'data-price':price,
+                                        'data-period-month':period_month});
             var type_name;
             var functions_name;
             if(type=='SINGLE'){
@@ -290,16 +333,17 @@
             }else{
                 type_name='정기 결제';
             }
-            if(functions=='CLA/GRO/ADV'){
-                functions_name='클래스/그룹 레슨/광고제거';
-            }else if(functions=='GRO/ADV'){
-                functions_name='그룹 레슨/광고제거';
-            }else{
-                functions_name='광고제거';
-            }
+{#            if(functions=='CLA/GRO/ADV'){#}
+{#                functions_name='클래스/그룹 레슨/광고제거';#}
+{#            }else if(functions=='GRO/ADV'){#}
+{#                functions_name='그룹 레슨/광고제거';#}
+{#            }else{#}
+{#                functions_name='광고제거';#}
+{#            }#}
+            functions_name = functions;
             $('#purchase_popup_product').text(product);
             $('#purchase_product').find('.purchase_popup_innercontent').text(product);
-            $('#purchase_functions').find('.purchase_popup_innercontent').text(functions_name);
+            $('#purchase_functions').find('.purchase_popup_innercontent').html(functions_name);
             $('#purchase_type').find('.purchase_popup_innercontent').text(type_name);
             $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(price));
             $('#price_preview').text(numberWithCommas(price)+' 원');
@@ -308,9 +352,13 @@
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
+        function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, period_month){
             var error_check = true;
-
+            console.log(name);
+            console.log(pay_method);
+            console.log(payment_type_cd);
+            console.log(merchandise_type_cd);
+            console.log(price);
             $.ajax({
                 url: "/payment/check_before_billing/", // 서비스 웹서버
                 type: "POST",
@@ -318,7 +366,8 @@
                 data: JSON.stringify({
                     payment_type_cd: payment_type_cd,
                     merchandise_type_cd: merchandise_type_cd,
-                    price : price
+                    price : price,
+                    period_month : period_month
                 }),
 
                 beforeSend:function(xhr, settings) {
@@ -339,7 +388,8 @@
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, jsondata.next_start_date[0]);
+                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price,
+                            jsondata.next_start_date[0], period_month);
                     }
 
                 },
@@ -357,7 +407,7 @@
         }
 
 
-        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, start_date){
+        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, start_date, period_month){
             var date = new Date();
             var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
             var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
@@ -393,7 +443,8 @@
                     "merchandise_type_cd":merchandise_type_cd,
                     "payment_type_cd":payment_type_cd,
                     "customer_uid":customer_uid_data,
-                    "start_date":  payment_date
+                    "start_date":  payment_date,
+                    "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
@@ -408,7 +459,8 @@
                     "user_id":{{ request.user.id }},
                     "merchandise_type_cd":merchandise_type_cd,
                     "payment_type_cd":payment_type_cd,
-                    "start_date":  payment_date
+                    "start_date":  payment_date,
+                    "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
                 buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
@@ -437,7 +489,8 @@
                                 merchandise_type_cd : merchandise_type_cd,
                                 payment_type_cd:payment_type_cd,
                                 paid_amount: rsp.paid_amount,
-                                start_date: payment_date
+                                start_date: payment_date,
+                                period_month: period_month
                             }),
 
                             beforeSend:function(xhr, settings) {
@@ -524,10 +577,10 @@
                 var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
                 var payment_type_cd = $('#purchase_popup').attr('data-type');
                 var functions = $('#purchase_popup').attr('data-function');
-                var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1); 
-                console.log(pay_method);
+                var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1);
+                var period_month = $('#purchase_popup').attr('data-period-month');
 {#                console.log(product, method, type, functions, price)#}
-                check_payment(product, pay_method, payment_type_cd, functions, price);
+                check_payment(product, pay_method, payment_type_cd, functions, price, period_month);
                 purchase_popup_close();
                 shade_index(100)
             }
@@ -551,7 +604,8 @@
             $('#purchase_popup').attr({'data-product':'',
                                         'data-type':'',
                                         'data-function':'',
-                                        'data-price':''})
+                                        'data-price':'',
+                                        'data-period-month':''})
         }
 
 

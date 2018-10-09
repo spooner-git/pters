@@ -33,10 +33,17 @@ class PaymentView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
+
         product_list = ProductTb.objects.filter(upper_product_id='1', use=USE).order_by('order')
         for product_info in product_list:
             product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id, use=USE).order_by('order')
+            sub_product_list = ProductTb.objects.filter(upper_product_id=product_info.product_id, use=USE).order_by('order')
             product_info.price_list = product_price_list
+            if len(sub_product_list) > 0:
+                product_info.sub_product_list = sub_product_list
+                for sub_product_info in sub_product_list:
+                    sub_product_price_list = ProductPriceTb.objects.filter(product_tb_id=sub_product_info.product_id, use=USE).order_by('order')
+                    sub_product_info.sub_price_list = sub_product_price_list
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
@@ -58,6 +65,15 @@ def check_before_billing_logic(request):
     today = datetime.date.today()
     next_payment_date = today
 
+    month_first_day = today.replace(day=1)
+    next_year = int(month_first_day.strftime('%Y')) + 1
+    next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+    if next_month == 0:
+        next_month = 1
+    next_month_first_day = month_first_day.replace(month=next_month)
+    if next_month == 1:
+        next_month_first_day = next_month_first_day.replace(year=next_year)
+
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -70,14 +86,15 @@ def check_before_billing_logic(request):
             payment_type_cd = json_loading_data['payment_type_cd']
             merchandise_type_cd = json_loading_data['merchandise_type_cd']
             input_price = json_loading_data['price']
+            period_month = json_loading_data['period_month']
         except KeyError:
             error = '오류가 발생했습니다.'
 
     if error is None:
-        error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
+        error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price, period_month)
 
     if error is None:
-        merchandise_type_cd_list = merchandise_type_cd.split('/')
+        # merchandise_type_cd_list = merchandise_type_cd.split('/')
 
         equal_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
                                                                     merchandise_type_cd=merchandise_type_cd,
@@ -88,20 +105,20 @@ def check_before_billing_logic(request):
             error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
 
     if error is None:
-        for merchandise_type in merchandise_type_cd_list:
-            contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                          merchandise_type_cd__contains=merchandise_type,
-                                                                          next_payment_date__gt=today,
-                                                                          use=USE).count()
-            if contain_period_payment_counter > 0:
-                billing_info = '이미 정기결제 중인 이용권에 기능이 포함되어있습니다. 그래도 결제 진행하시겠습니까? '
-                # error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
-                # break
+        # for merchandise_type in merchandise_type_cd_list:
+        contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                      merchandise_type_cd__contains=merchandise_type_cd,
+                                                                      next_payment_date__gt=today,
+                                                                      use=USE).count()
+        if contain_period_payment_counter > 0:
+            billing_info = '이미 정기결제 중인 이용권에 기능이 포함되어있습니다. 그래도 결제 진행하시겠습니까? '
+            # error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
+            # break
 
-            single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                                   payment_type_cd='SINGLE',
-                                                                   merchandise_type_cd__contains=merchandise_type,
-                                                                   end_date__gt=today, use=USE).count()
+        single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                               payment_type_cd='SINGLE',
+                                                               merchandise_type_cd__contains=merchandise_type_cd,
+                                                               end_date__gt=today, use=USE).count()
     # 정기 결제가 포함되어있지 않은 경우만 실행, 마지막 결제 정보 불러오기
     if error is None:
         try:
@@ -159,12 +176,13 @@ def check_finish_billing_logic(request):
             payment_type_cd = json_loading_data['payment_type_cd']
             paid_amount = json_loading_data['paid_amount']
             start_date = json_loading_data['start_date']
+            period_month = json_loading_data['period_month']
         except KeyError:
             error = '오류가 발생했습니다.'
 
     if error is None:
         if str(today) == start_date or payment_type_cd == 'SINGLE':
-            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, paid_amount)
+            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, paid_amount, period_month)
 
     if error is not None:
         messages.error(request, error)

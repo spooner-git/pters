@@ -157,19 +157,19 @@ def func_resend_payment_info(customer_uid, merchant_uid, price):
     return error
 
 
-def func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price):
+def func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price, period_month):
     error = None
     product_price_info = None
     if error is None:
         try:
-            product_price_info = ProductPriceTb.objects.get(product_tb__merchandise_type_cd=merchandise_type_cd,
-                                                            payment_type_cd=payment_type_cd, use=USE)
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=merchandise_type_cd,
+                                                            payment_type_cd=payment_type_cd,
+                                                            period_month=period_month, use=USE)
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
     if error is None:
         price = int(product_price_info.sale_price * 1.1)
-
         if price != input_price:
             error = '결제금액 오류가 발생했습니다.'
 
@@ -507,6 +507,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
         try:
             payment_type_cd = custom_data['payment_type_cd']
             merchandise_type_cd = custom_data['merchandise_type_cd']
+            period_month = custom_data['period_month']
             context['user_id'] = custom_data['user_id']
         except KeyError:
             error = '오류가 발생했습니다.'
@@ -542,7 +543,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
     if error is None:
         if not empty_period_billing_check:
             error = func_check_payment_price_info(custom_data['merchandise_type_cd'], custom_data['payment_type_cd'],
-                                                  payment_result['amount'])
+                                                  payment_result['amount'], custom_data['period_month'])
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
