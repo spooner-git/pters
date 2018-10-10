@@ -95,7 +95,7 @@
 
     <div class="popupBtn_mini">
         <button class="submitBtn _button_Prev">이전</button>
-        <button class="submitBtn _button_Next" onclick="location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'">추가</button>
+        <button class="submitBtn _button_Next">추가</button>
     </div>
 
 {% endblock %}
@@ -107,19 +107,25 @@
     <!-- Placed at the end of the document so the pages load faster -->
 
     <script>
-        $('a.__setting').css('color','#fe4e65;')
+        $('a.__setting').css('color','#fe4e65;');
 
         if($('body').width()<600){
-            $('#page-base').css('display','none')
-            $('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('프로그램 관리')
-            $('#uptext').text("프로그램 관리")
-            $('#upbutton-modify').hide()
+            $('#page-base').css('display','none');
+            $('#page-base-modifystyle').css('display','block');
+            $('#uptext3').text('프로그램 관리');
+            $('#uptext').text("프로그램 관리");
+            $('#upbutton-modify').hide();
         }
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
-        })
+            location.href="/trainer/trainer_setting/";
+        });
+
+        $('button._button_Next').click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            pters_option_inspector("program_create", "", $('.lecture_select_table_list').attr('data-programcount') );
+        });
 
         var lt_sal_01 =  ['{{ lt_sal_01 }}'];
         var lt_sal_02 =  ['{{ lt_sal_02 }}'];
@@ -128,7 +134,7 @@
         var lt_sal_05 =  ['{{ lt_sal_05 }}'];
         var lt_sal_00 =  ['{{ lt_sal_00 }}'];
 
-        ajax_read_lecture_info_from_db_PAGE()
+        ajax_read_lecture_info_from_db_PAGE();
 
         $(document).on('click','._icon_del',function(e){
             e.stopPropagation()
@@ -263,98 +269,10 @@
             })
         }
 
-        /*
-        function fill_lecture_select_page(jsondata){
-            var json = class_sort_by_center(jsondata)
-
-            var len = lec_select_subjectNameArray.length;
-            var list_table_to_join = [];
-            var center_counter = 0;
-            var centers = [];
-            for(var i=0; i<len; i++){
-                //if(lec_select_npLectureCountsArray[i] == '0'){
-                if(lec_select_classIdArray[i] == lec_select_currentClassId[0]){
-                    $('.pcwhere').text(lec_select_subjectNameArray[i])
-                    var table = '<div class="pters_table pters_table_at_setting_page" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-                    var currentClass = 'currentClass'
-                    var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del" style="opacity:0.5;">'
-                    var selectionText = '<a style="cursor:default;">-</a>'
-                    if(Number(lec_select_classHour[i]) == 60){
-                        var selected30 = ""
-                        var selected60 = "selected"
-                    }else if(Number(lec_select_classHour[i]) == 30){
-                        var selected30 = "selected"
-                        var selected60 = ""
-                    }
-                    var goToLecture = ""
-                    var textdeco = ""
-                    var classUnitDropdown = '<select data-classid="'+lec_select_classIdArray[i]+'" data-subjectcd="'+lec_select_subjectCodeArray[i]+'" data-subjectname="'+lec_select_subjectNameArray[i]+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
-                }else{
-                    var table = '<div class="pters_table pters_table_at_setting_page _selection" style="margin-top:0;" id="classid" data-classid="'+lec_select_classIdArray[i]+'">'
-                    var currentClass = ""
-                    var manageIcon2 = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _icon_del">'
-                    var selectionText = '<a data="" '+'onclick="lecture_check('+lec_select_classIdArray[i]+')"'+'" style="cursor:pointer;">이동</a>'
-                    if(Number(lec_select_classHour[i]) == 60){
-                        var selected30 = ""
-                        var selected60 = "selected"
-                    }else if(Number(lec_select_classHour[i]) == 30){
-                        var selected30 = "selected"
-                        var selected60 = ""
-                    }
-                    var goToLecture = '" onclick="lecture_check('+lec_select_classIdArray[i]+')"'
-                    var textdeco = ' class="subjectnamespan'
-                    var classUnitDropdown = '<select disabled style="color:#cccccc" data-classid="'+lec_select_classIdArray[i]+'" data-subjectcd="'+lec_select_subjectCodeArray[i]+'" data-subjectname="'+lec_select_subjectNameArray[i]+'" "><option '+selected30+'>30분</option><option '+selected60+'>1시간</option></select>'
-                }
-                var centerName__ = lec_select_centerNameArray[i]
-                if(lec_select_centerNameArray[i] == ""){
-                    var centerName__ = '-'
-                }else{
-                    centers.push(lec_select_centerNameArray[i])
-                }
-                var centerName = '<div class="pters_table_cell table_center_name '+currentClass+goToLecture+'">'+centerName__+'</div>'
-                var lectureName = '<div class="pters_table_cell table_lecture_name '+currentClass+'">'+'<span '+textdeco+goToLecture+'>'+lec_select_subjectNameArray[i]+'</span>'+'<input type="" name="subjectname" maxlength="12" placeholder="새로운 클래스명을 입력 해주세요.">'+'</div>'
-                var traineeNum = '<div class="pters_table_cell table_trainee_num '+currentClass+goToLecture+'">'+lec_select_classInProgressMemberNumArray[i]+'명</div>'
-                var startDate = '<div class="pters_table_cell table_start_date '+currentClass+goToLecture+'">'+date_format_to_yyyymmdd(lec_select_startDateArray[i],'.')+'</div>'
-                var status = '<div class="pters_table_cell table_lecture_status '+currentClass+goToLecture+'">'+lec_select_stateNameArray[i]+'</div>'
-                var unitSelect = '<div class="pters_table_cell table_class_unit '+currentClass+'">'+classUnitDropdown+'</div>'
-                var manageIcon = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _icon_modify" data-type="view">'
-                var manageIcon3 = '<img src="/static/user/res/btn-pt-complete-small.png" class="pcmanageicon _icon_send" data-classid="'+lec_select_classIdArray[i]+'">'
-                var manageIcon4 = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _icon_cancel" data-classid="'+lec_select_classIdArray[i]+'">'
-
-                var del = '<div class="pters_table_cell lecture_delete"  data-classid="'+lec_select_classIdArray[i]+'">'+manageIcon+manageIcon2+manageIcon3+manageIcon4+'</div>'
-                var selection = '<div class="pters_table_cell lecture_selection"  data-classid="'+lec_select_classIdArray[i]+'">'+selectionText+'</div>'
-
-
-                var additionalRow = '<div class="pters_table_row">'+
-                    '클래스 단위 ' + classUnitDropdown+
-                    '&nbsp;  | &nbsp; ' + '개강일 '+ date_format_to_yyyymmdd(lec_select_startDateArray[i],'.') +
-                    '&nbsp;  | &nbsp; ' + '수강생 '+lec_select_classInProgressMemberNumArray[i]+' 명'  + '</div>'
-
-                //센터가 같으면 같이 묶어서 표기
-                var sum = table + centerName + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
-                var index = lec_select_centerNameArray.indexOf(lec_select_centerNameArray[i])
-                if(centers.indexOf(lec_select_centerNameArray[i]) != -1 && i != index){
-                    sum = table + lectureName + traineeNum + startDate + status + unitSelect + del + '</div>' + additionalRow
-                    list_table_to_join.insert(index+1, sum)
-                }else{
-                    list_table_to_join.push(sum)
-                }
-                //센터가 같으면 같이 묶어서 표기
-                
-                if(lec_select_centerNameArray[i] != ''){
-                    center_counter += 1;
-                }
-            }
-            var list_table = list_table_to_join.join('')
-            $('.lecture_select_table_list').html(list_table)
-            if(center_counter==0){
-                $('.table_center_name').css('display', 'none')
-            }
-        }*/
-
         function fill_lecture_select_page(jsondata){
             var json = class_sort_by_center(jsondata)
             var list_table_to_join = [];
+            var program_count = 0;
             for(center in json){
                 //console.log('center---',center)
 
@@ -362,6 +280,7 @@
                 var center_counter = 0;
                 var centers = [];
                 for(subject in json[center]){
+                    program_count++
                     //console.log(subject)
                     //console.log(json[center][subject]['classId'])
                     var className = json[center][subject]['className'];
@@ -453,12 +372,10 @@
                     }
 
                 }//for2
-                console.log(subject_join)
                 list_table_to_join.push(subject_join.join(''))
                 
             }//for1
-            $('.lecture_select_table_list').html(list_table_to_join.join(''))
-            
+            $('.lecture_select_table_list').html(list_table_to_join.join('')).attr("data-programcount", program_count);
         }
 
         /*
