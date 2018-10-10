@@ -43,7 +43,9 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
     if error is None:
         try:
             product_price_info = ProductPriceTb.objects.get(product_tb_id=product_id,
-                                                            payment_type_cd=payment_type_cd, use=USE)
+                                                            payment_type_cd=payment_type_cd,
+                                                            period_month=payment_user_info.period_month,
+                                                            use=USE)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오지 못했습니다.'
 
@@ -53,11 +55,12 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
 
     if error is None:
         start_date = payment_user_info.end_date
-        end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
+        end_date = func_get_end_date(payment_type_cd, start_date, payment_user_info.period_month, date)
         payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
                                      product_tb_id=product_id,
                                      payment_type_cd=payment_type_cd, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
+                                     period_month=payment_user_info.period_month,
                                      name=name,
                                      price=price,
                                      status='reserve',
@@ -319,7 +322,7 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         if not empty_period_billing_check:
             payment_name = payment_result['name']
-            end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, 1, date)
+            end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, custom_data['period_month'], date)
             status = payment_result['status']
         else:
             payment_name = '정기결제 카드 등록'
@@ -344,6 +347,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              merchant_uid=payment_result['merchant_uid'],
                                              customer_uid=customer_uid,
                                              start_date=start_date, end_date=end_date,
+                                             period_month=custom_data['period_month'],
                                              price=int(payment_result['amount']),
                                              name=payment_name,
                                              imp_uid=payment_result['imp_uid'],
@@ -382,6 +386,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  card_name=payment_result['card_name'],
                                                  pay_method=payment_result['pay_method'],
                                                  product_tb_id=custom_data['product_id'],
+                                                 period_month=custom_data['period_month'],
                                                  payment_type_cd=custom_data['payment_type_cd'],
                                                  merchant_uid=payment_result['merchant_uid'],
                                                  customer_uid=customer_uid,
