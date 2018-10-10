@@ -88,8 +88,8 @@ function pters_option_inspector(option_type, xhr, option_element){
 
         }else if(option_type == "member_create"  && Options.auth.auth_member_create[0] == 1){
             var current_member_num = option_element;
-            if(current_member_num > Options.auth.auth_member_create[1]){
-                show_caution_popup(function_lock_message("member_add", Options.auth.auth_member_create[1], "회원 등록"));
+            if(current_member_num >= Options.auth.auth_member_create[1]){
+                show_caution_popup(function_lock_message("member_create", Options.auth.auth_member_create[1], "회원 등록"));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
@@ -121,8 +121,17 @@ function pters_option_inspector(option_type, xhr, option_element){
                 get_member_history_list(dbID);
             }
 
-        }else if(option_type == "group_create"   && Options.auth.auth_group_create == 1){
 
+
+        }else if(option_type == "group_create"   && Options.auth.auth_group_create[0] == 1){
+            var current_group_num = option_element;
+            if(current_group_num >= Options.auth.auth_group_create[1]){
+                show_caution_popup(function_lock_message("member_create", Options.auth.auth_group_create[1], "그룹 추가"));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }else if(option_type == "group_delete"   && Options.auth.auth_group_delete == 1){
 
         }else if(option_type == "group_read"     && Options.auth.auth_group_read == 1){
@@ -131,8 +140,15 @@ function pters_option_inspector(option_type, xhr, option_element){
 
 
 
-        }else if(option_type == "class_create"   && Options.auth.auth_class_create == 1){
-
+        }else if(option_type == "class_create"   && Options.auth.auth_class_create[0] == 1){
+            var current_class_num = option_element;
+            if(current_class_num >= Options.auth.auth_class_create[1]){
+                show_caution_popup(function_lock_message("member_create", Options.auth.auth_class_create[1], "클래스 추가"));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }else if(option_type == "class_delete"   && Options.auth.auth_class_delete == 1){
 
         }else if(option_type == "class_read"     && Options.auth.auth_class_read == 1){
@@ -195,7 +211,7 @@ function function_lock_message(function_type, number, option_type){ //Options.au
                             <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
                         </div>`;
 
-        }else if(function_type == "member_add"){
+        }else if(function_type == "member_create"){
             var limit_member_num = number;
             message = `<div style="margin-bottom:10px;">
                         무료 이용자께서는 <br>
