@@ -2391,11 +2391,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray ì±
     var disable_time_array_start_date = remove_duplicate_in_list(all_start_date_time);
     var disable_time_array_end_date = remove_duplicate_in_list(all_end_date_time);
     // calc_and_make_plan_time(disable_time_array_start_date, disable_time_array_end_date);
-    // for(var i=0; i<disable_time_array_end_date.length; i++){
-    console.log(disable_time_array_start_date)
-    console.log(disable_time_array_end_date)
-    console.log(disable_time_array_start_date.length);
-    console.log(disable_time_array_end_date.length);
     for(var i=0; i<disable_time_array_start_date.length; i++){
         var plan_start_date = disable_time_array_start_date[i].split(' ')[0];
         var plan_start_time = disable_time_array_start_date[i].split(' ')[1].split(':')[0]+':'+disable_time_array_start_date[i].split(' ')[1].split(':')[1];
