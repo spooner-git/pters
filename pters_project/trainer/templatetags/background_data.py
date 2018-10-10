@@ -149,7 +149,6 @@ def get_setting_info(request):
 def get_function_auth_type_cd(request):
     context = {}
     today = datetime.date.today()
-    merchandise_type_cd_list = []
     billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
                                                 next_payment_date__lt=today, use=USE)
     payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
@@ -165,32 +164,37 @@ def get_function_auth_type_cd(request):
                                                                      ).filter(product_tb_id=payment_info.product_tb_id,
                                                                               use=USE).order_by('function_auth_tb_id')
         for function_info in function_list:
+            auth_type_list = function_info.auth_type_cd.split('/')
+            for auth_type_info in auth_type_list:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+                if auth_type_info == 'C':
+                    function_auth_type_cd_name += '_create'
+                elif auth_type_info == 'R':
+                    function_auth_type_cd_name += '_read'
+                elif auth_type_info == 'U':
+                    function_auth_type_cd_name += '_update'
+                elif auth_type_info == 'D':
+                    function_auth_type_cd_name += '_delete'
+                context[function_auth_type_cd_name] = function_info.counts
+            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
-            context[function_info.function_auth_tb.function_auth_type_cd] = function_info.counts
+    if len(payment_data) == 0:
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
+                                                                     ).filter(product_tb_id=6,
+                                                                              use=USE).order_by('function_auth_tb_id')
+        for function_info in function_list:
+            auth_type_list = function_info.auth_type_cd.split('/')
+            for auth_type_info in auth_type_list:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+                if auth_type_info == 'C':
+                    function_auth_type_cd_name += '_create'
+                elif auth_type_info == 'R':
+                    function_auth_type_cd_name += '_read'
+                elif auth_type_info == 'U':
+                    function_auth_type_cd_name += '_update'
+                elif auth_type_info == 'D':
+                    function_auth_type_cd_name += '_delete'
+                context[function_auth_type_cd_name] = function_info.counts
             # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
     return context
-
-
-@register.simple_tag
-def get_function_auth(request):
-    today = datetime.date.today()
-    merchandise_type_cd_list = []
-    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                next_payment_date__lt=today, use=USE)
-    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                start_date__lte=today, end_date__gte=today, use=USE)
-
-    for billing_info in billing_data:
-        billing_info.state_cd = 'ST'
-        billing_info.use = UN_USE
-        billing_info.save()
-
-    for payment_info in payment_data:
-        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
-                                                                     ).filter(product_tb_id=payment_info.product_tb_id,
-                                                                              use=USE).order_by('function_auth_tb_id')
-        for function_info in function_list:
-            merchandise_type_cd_list.append(function_info.auth_type_cd)
-
-    return merchandise_type_cd_list

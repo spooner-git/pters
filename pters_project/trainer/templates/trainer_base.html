@@ -662,8 +662,20 @@ function playSound() {
     var class_background_img_url= {% get_background_url request %};
     var class_background_type_cd = {% get_background_type_cd request %};
     var function_auth_type_cd = {% get_function_auth_type_cd request %};
-    var function_auth = {% get_function_auth request %};
     {% endautoescape %}
+    window.addEventListener('load', function () {
+        Options.auth.auth_analytics_read.active = 1;
+        for(key in function_auth_type_cd) {
+            if(key=="auth_ads"){
+                Options.auth_ads = 0;
+                Options.auth[key] = 0;
+            }else{
+                Options.auth[key].limit_num = function_auth_type_cd[key];
+                Options.auth[key].active = 0;
+            }
+{#            console.log('key:' + key + ' / ' + 'value:' + function_auth_type_cd[key]+ '/ '+Options.auth[key].limit_num);#}
+        }
+    });
     {#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
 
     {#            open_lecture_select_popup_pc()#}
@@ -900,8 +912,8 @@ function playSound() {
                     "auth_package_read":{"active":1, "limit_num":"", "limit_type": 0},
                     "auth_package_update":{"active":1, "limit_num":"", "limit_type": 0},
 
-                    //"auth_analytics_create":1,
-                    //"auth_analytics_delete":1,
+                    "auth_analytics_create":{"active":1, "limit_num":"", "limit_type": 0},
+                    "auth_analytics_delete":{"active":1, "limit_num":"", "limit_type": 0},
                     "auth_analytics_read":{"active":1, "limit_num":"", "limit_type": 0},
                     "auth_analytics_update":{"active":1, "limit_num":"", "limit_type": 0},
 
@@ -910,9 +922,14 @@ function playSound() {
                     "auth_program_read":{"active":1, "limit_num":"", "limit_type": 0},
                     "auth_program_update":{"active":1, "limit_num":"", "limit_type": 0},
 
-                    "auth_ads":0
+                    "auth_setting_create":{"active":1, "limit_num":3, "limit_type": 0},
+                    "auth_setting_delete":{"active":1, "limit_num":"", "limit_type": 0},
+                    "auth_setting_read":{"active":1, "limit_num":"", "limit_type": 0},
+                    "auth_setting_update":{"active":1, "limit_num":"", "limit_type": 0},
+
+                    "auth_ads":1
         },
-        "auth_ads":0
+        "auth_ads":1
     };
 
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
