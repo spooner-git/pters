@@ -810,9 +810,11 @@ $(document).ready(function(){
             group_id = group_delete_JSON.group_id;
 
             //그룹을 지운다.
-            delete_group_from_list(group_delete_JSON.group_id);
-            //그룹원들에게서 그룹에 대한 수강이력을 지운다.
-            delete_groupmember_from_grouplist();
+            delete_group_from_list(group_delete_JSON.group_id, "callback", function(){
+                //그룹원들에게서 그룹에 대한 수강이력을 지운다.
+                delete_groupmember_from_grouplist();
+            });
+            
             enable_delete_btns_after_ajax();
 
             group_delete_JSON.group_id = "";
@@ -4734,6 +4736,7 @@ function add_groupmember_form_func(){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("groupmember_create", xhr, "")
         },
 
         //보내기후 팝업창 닫기

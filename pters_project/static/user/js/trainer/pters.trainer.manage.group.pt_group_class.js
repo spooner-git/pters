@@ -765,7 +765,7 @@ function get_group_end_list(use, callback){
 //서버로부터 그룹 목록 가져오기
 
 //그룹 지우기
-function delete_group_from_list(group_id){
+function delete_group_from_list(group_id, use, callback){
     var bodywidth = window.innerWidth;
     var next_page = '/trainer/get_group_ing_list';
     if($('#currentGroupList').css('display') == "block"){
@@ -826,6 +826,9 @@ function delete_group_from_list(group_id){
                 //     });
                 // }
                 smart_refresh_member_group_class_list();
+                if(use == "calback"){
+                    callback();
+                }
 
                 console.log('success');
             }
@@ -854,7 +857,7 @@ function delete_groupmember_from_grouplist(use, callback){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            pters_option_inspector("group_delete", xhr, "");
+            pters_option_inspector("groupmember_delete", xhr, "");
         },
 
         //보내기후 팝업창 닫기
