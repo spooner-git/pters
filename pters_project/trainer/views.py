@@ -660,6 +660,8 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
             next_month = (int(finish_date.strftime('%m'))+1) % 12
             if next_month == 0:
                 next_month = 12
+            elif next_month == 1:
+                this_year += 1
             finish_date = finish_date.replace(month=next_month, day=1)
             finish_date = finish_date - datetime.timedelta(days=1)
             finish_date = finish_date.replace(year=this_year)

@@ -182,9 +182,15 @@ def func_check_payment_price_info(product_id, payment_type_cd, input_price, peri
 def func_get_end_date(payment_type_cd, start_date, month, date):
     end_date = start_date
     if payment_type_cd == 'PERIOD':
-        next_month = int(end_date.strftime('%m')) % 12 + month
+        next_month_origin = int(end_date.strftime('%m')) + month
+        origin_year = int(end_date.strftime('%y'))
+        if next_month_origin > 12:
+            next_month = next_month_origin % 12
+            if next_month == 0:
+                next_month = 1
+
         # end_date = end_date + datetime.timedelta(days=1)
-        # 다음달로 이동
+        # 다음 결제 달로 이동
         for i in range(1, 32):
             try:
                 end_date = end_date.replace(month=next_month)
@@ -194,6 +200,9 @@ def func_get_end_date(payment_type_cd, start_date, month, date):
 
             if int(end_date.strftime('%d')) <= 1:
                 break
+        # 년도 변경 (2/29일 때문에 마지막에 변경)
+        if next_month_origin > 12:
+            end_date = end_date.replace(year=origin_year+1)
 
         # 다음달 날짜 확인
         end_date_day = int(end_date.strftime('%d'))
