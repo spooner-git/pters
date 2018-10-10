@@ -57,7 +57,7 @@ def check_before_billing_logic(request):
     json_loading_data = None
     context = {}
     error = None
-    merchandise_type_cd = None
+    product_id = None
     payment_type_cd = None
     input_price = 0
     single_payment_counter = 0
@@ -84,20 +84,20 @@ def check_before_billing_logic(request):
     if error is None:
         try:
             payment_type_cd = json_loading_data['payment_type_cd']
-            merchandise_type_cd = json_loading_data['merchandise_type_cd']
+            product_id = json_loading_data['product_id']
             input_price = json_loading_data['price']
             period_month = json_loading_data['period_month']
         except KeyError:
             error = '오류가 발생했습니다.'
 
     if error is None:
-        error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price, period_month)
+        error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
     if error is None:
         # merchandise_type_cd_list = merchandise_type_cd.split('/')
 
         equal_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                    merchandise_type_cd=merchandise_type_cd,
+                                                                    merchandise_type_cd=product_id,
                                                                     next_payment_date__gt=today,
                                                                     use=USE).count()
 
@@ -107,7 +107,7 @@ def check_before_billing_logic(request):
     if error is None:
         # for merchandise_type in merchandise_type_cd_list:
         contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                      merchandise_type_cd__contains=merchandise_type_cd,
+                                                                      merchandise_type_cd__contains=product_id,
                                                                       next_payment_date__gt=today,
                                                                       use=USE).count()
         if contain_period_payment_counter > 0:
@@ -117,13 +117,13 @@ def check_before_billing_logic(request):
 
         single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
                                                                payment_type_cd='SINGLE',
-                                                               merchandise_type_cd__contains=merchandise_type_cd,
+                                                               merchandise_type_cd__contains=product_id,
                                                                end_date__gt=today, use=USE).count()
     # 정기 결제가 포함되어있지 않은 경우만 실행, 마지막 결제 정보 불러오기
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd__contains=merchandise_type_cd,
+                                                        merchandise_type_cd__contains=product_id,
                                                         use=USE).latest('end_date')
             next_payment_date = payment_info.end_date
         except ObjectDoesNotExist:
@@ -156,7 +156,7 @@ def check_finish_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
 
-    merchandise_type_cd = None
+    product_id = None
     payment_type_cd = None
     paid_amount = 0
     context = {}
@@ -172,7 +172,7 @@ def check_finish_billing_logic(request):
 
     if error is None:
         try:
-            merchandise_type_cd = json_loading_data['merchandise_type_cd']
+            product_id = json_loading_data['product_id']
             payment_type_cd = json_loading_data['payment_type_cd']
             paid_amount = json_loading_data['paid_amount']
             start_date = json_loading_data['start_date']
@@ -182,7 +182,7 @@ def check_finish_billing_logic(request):
 
     if error is None:
         if str(today) == start_date or payment_type_cd == 'SINGLE':
-            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, paid_amount, period_month)
+            error = func_check_payment_price_info(product_id, payment_type_cd, paid_amount, period_month)
 
     if error is not None:
         messages.error(request, error)
@@ -726,7 +726,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             # except ObjectDoesNotExist:
             #     payment_info = None
             payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd=product_info.merchandise_type_cd,
+                                                        merchandise_type_cd=product_info.product_id,
                                                         # payment_type_cd='SINGLE',
                                                         end_date__gte=today,
                                                         status='paid',
@@ -735,7 +735,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
             period_payment_data = PaymentInfoTb.objects.filter(Q(status='reserve') | Q(status='cancelled'),
                                                                member_id=request.user.id,
-                                                               merchandise_type_cd=product_info.merchandise_type_cd,
+                                                               merchandise_type_cd=product_info.product_id,
                                                                end_date__gte=today,
                                                                # price__gt=0,
                                                                payment_type_cd='PERIOD').order_by('-end_date',
@@ -760,7 +760,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
             try:
                 billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
-                                                         merchandise_type_cd=product_info.merchandise_type_cd,
+                                                         merchandise_type_cd=product_info.product_id,
                                                          use=USE)
             except ObjectDoesNotExist:
                 billing_info = None
@@ -768,7 +768,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             if len(payment_data) > 0:
                 for payment_info in payment_data:
                     try:
-                        merchandise_type = ProductTb.objects.get(merchandise_type_cd=payment_info.merchandise_type_cd)
+                        merchandise_type = ProductTb.objects.get(merchandise_type_cd=payment_info.product_id)
                         merchandise_type_name = merchandise_type.contents
                     except ObjectDoesNotExist:
                         merchandise_type_name = ''
@@ -811,7 +811,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_no += len(payment_data)
                 period_payment_info.counter = period_payment_no
                 try:
-                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.merchandise_type_cd)
+                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.product_id)
                     merchandise_type_name = merchandise_type.contents
                 except ObjectDoesNotExist:
                     merchandise_type_name = ''

@@ -323,7 +323,7 @@
                                       'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
                                 .attr({'data-product':product,
                                         'data-type':type,
-                                        'data-function':product_id,
+                                        'data-product-id':product_id,
                                         'data-price':price,
                                         'data-period-month':period_month});
             var type_name;
@@ -352,20 +352,16 @@
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, period_month){
+        function check_payment(name, pay_method, payment_type_cd, product_id, price, period_month){
             var error_check = true;
-            console.log(name);
-            console.log(pay_method);
-            console.log(payment_type_cd);
-            console.log(merchandise_type_cd);
-            console.log(price);
+
             $.ajax({
                 url: "/payment/check_before_billing/", // 서비스 웹서버
                 type: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
                     payment_type_cd: payment_type_cd,
-                    merchandise_type_cd: merchandise_type_cd,
+                    product_id: product_id,
                     price : price,
                     period_month : period_month
                 }),
@@ -388,7 +384,7 @@
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price,
+                        payment(name, pay_method, payment_type_cd, product_id, price,
                             jsondata.next_start_date[0], period_month);
                     }
 
@@ -407,10 +403,10 @@
         }
 
 
-        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, start_date, period_month){
+        function payment(name, pay_method, payment_type_cd, product_id, price, start_date, period_month){
             var date = new Date();
-            var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var merchant_uid_data = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+            var customer_uid_data = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var billing_data;
             var month = date.getMonth()+1;
             var day = date.getDate();
@@ -440,7 +436,7 @@
                 amount : price,
                 custom_data: {
                     "user_id":{{ request.user.id }},
-                    "merchandise_type_cd":merchandise_type_cd,
+                    "product_id":product_id,
                     "payment_type_cd":payment_type_cd,
                     "customer_uid":customer_uid_data,
                     "start_date":  payment_date,
@@ -457,7 +453,7 @@
                 amount : price,
                 custom_data: {
                     "user_id":{{ request.user.id }},
-                    "merchandise_type_cd":merchandise_type_cd,
+                    "product_id":product_id,
                     "payment_type_cd":payment_type_cd,
                     "start_date":  payment_date,
                     "period_month": period_month
@@ -486,7 +482,7 @@
                             type: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
-                                merchandise_type_cd : merchandise_type_cd,
+                                product_id : product_id,
                                 payment_type_cd:payment_type_cd,
                                 paid_amount: rsp.paid_amount,
                                 start_date: payment_date,
@@ -576,11 +572,11 @@
                 var product = $('#purchase_popup').attr('data-product');
                 var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
                 var payment_type_cd = $('#purchase_popup').attr('data-type');
-                var functions = $('#purchase_popup').attr('data-function');
+                var product_id = $('#purchase_popup').attr('data-product-id');
                 var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1);
                 var period_month = $('#purchase_popup').attr('data-period-month');
 {#                console.log(product, method, type, functions, price)#}
-                check_payment(product, pay_method, payment_type_cd, functions, price, period_month);
+                check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
                 purchase_popup_close();
                 shade_index(100)
             }
@@ -603,7 +599,7 @@
             $('.appoint_checked').removeClass('appoint_checked');
             $('#purchase_popup').attr({'data-product':'',
                                         'data-type':'',
-                                        'data-function':'',
+                                        'data-product-id':'',
                                         'data-price':'',
                                         'data-period-month':''})
         }
