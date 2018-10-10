@@ -661,7 +661,7 @@ function playSound() {
     var setting_info = {% get_setting_info request %};
     var class_background_img_url= {% get_background_url request %};
     var class_background_type_cd = {% get_background_type_cd request %};
-{#    var function_auth = {% get_function_auth request %};#}
+    var function_auth = {% get_function_auth request %};
     {% endautoescape %}
     {#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
 
