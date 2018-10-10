@@ -122,21 +122,30 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                                            context['lt_work_ths_time_avail'],
                                            context['lt_work_fri_time_avail'],
                                            context['lt_work_sat_time_avail']]
-        work_avail_start_time = '24:00'
-        work_avail_end_time = '00:00'
+        work_avail_start_time = 24
+        work_avail_end_time = 0
         for i in range(0, 7):
             work_avail_time = setting_trainer_work_time_avail[i]
+            work_avail_start_time_test = work_avail_time.split('-')[0]
+            work_avail_start_time_test = int(work_avail_start_time_test.split(':')[0])
+            work_avail_end_time_test = work_avail_time.split('-')[1]
+            work_avail_end_time_test = int(work_avail_end_time_test.split(':')[0])
             if work_avail_time != '0:00-0:00' and work_avail_time != '00:00-00:00':
-                if work_avail_start_time > work_avail_time.split('-')[0]:
-                    work_avail_start_time = work_avail_time.split('-')[0]
-                if work_avail_end_time < work_avail_time.split('-')[1]:
-                    work_avail_end_time = work_avail_time.split('-')[1]
+                if work_avail_start_time > work_avail_start_time_test:
+                    work_avail_start_time = work_avail_start_time_test
+                if work_avail_end_time < work_avail_end_time_test:
+                    work_avail_end_time = work_avail_end_time_test
 
-        if work_avail_start_time == '24:00':
+        if work_avail_start_time == 24:
             work_avail_start_time = '23:59'
+        else:
+            work_avail_start_time = str(work_avail_start_time) + ':00'
         today_start_time = datetime.datetime.strptime(str(today) + ' ' + work_avail_start_time, '%Y-%m-%d %H:%M')
-        if work_avail_end_time != '24:00':
-            one_day_after = datetime.datetime.strptime(str(today) + ' ' + work_avail_end_time, '%Y-%m-%d %H:%M')
+        if work_avail_end_time == 24:
+            work_avail_end_time = '23:59'
+        else:
+            work_avail_end_time = str(work_avail_end_time) + ':00'
+        one_day_after = datetime.datetime.strptime(str(today) + ' ' + work_avail_end_time, '%Y-%m-%d %H:%M')
         today = today_start_time
 
         next_year = int(month_first_day.strftime('%Y')) + 1

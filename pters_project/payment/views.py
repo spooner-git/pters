@@ -33,10 +33,17 @@ class PaymentView(LoginRequiredMixin, View):
 
     def get(self, request):
         context = {}
+
         product_list = ProductTb.objects.filter(upper_product_id='1', use=USE).order_by('order')
         for product_info in product_list:
             product_price_list = ProductPriceTb.objects.filter(product_tb_id=product_info.product_id, use=USE).order_by('order')
+            sub_product_list = ProductTb.objects.filter(upper_product_id=product_info.product_id, use=USE).order_by('order')
             product_info.price_list = product_price_list
+            if len(sub_product_list) > 0:
+                product_info.sub_product_list = sub_product_list
+                for sub_product_info in sub_product_list:
+                    sub_product_price_list = ProductPriceTb.objects.filter(product_tb_id=sub_product_info.product_id, use=USE).order_by('order')
+                    sub_product_info.sub_price_list = sub_product_price_list
         payment_count = PaymentInfoTb.objects.filter(member_id=request.user.id).count()
         context['payment_count'] = payment_count
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
@@ -50,13 +57,22 @@ def check_before_billing_logic(request):
     json_loading_data = None
     context = {}
     error = None
-    merchandise_type_cd = None
+    product_id = None
     payment_type_cd = None
     input_price = 0
     single_payment_counter = 0
     billing_info = ''
     today = datetime.date.today()
     next_payment_date = today
+
+    month_first_day = today.replace(day=1)
+    next_year = int(month_first_day.strftime('%Y')) + 1
+    next_month = (int(month_first_day.strftime('%m')) + 1) % 13
+    if next_month == 0:
+        next_month = 1
+    next_month_first_day = month_first_day.replace(month=next_month)
+    if next_month == 1:
+        next_month_first_day = next_month_first_day.replace(year=next_year)
 
     try:
         json_loading_data = json.loads(json_data)
@@ -68,19 +84,20 @@ def check_before_billing_logic(request):
     if error is None:
         try:
             payment_type_cd = json_loading_data['payment_type_cd']
-            merchandise_type_cd = json_loading_data['merchandise_type_cd']
+            product_id = json_loading_data['product_id']
             input_price = json_loading_data['price']
+            period_month = json_loading_data['period_month']
         except KeyError:
             error = '오류가 발생했습니다.'
 
     if error is None:
-        error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, input_price)
+        error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
     if error is None:
-        merchandise_type_cd_list = merchandise_type_cd.split('/')
+        # merchandise_type_cd_list = merchandise_type_cd.split('/')
 
         equal_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                    merchandise_type_cd=merchandise_type_cd,
+                                                                    merchandise_type_cd=product_id,
                                                                     next_payment_date__gt=today,
                                                                     use=USE).count()
 
@@ -88,25 +105,25 @@ def check_before_billing_logic(request):
             error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
 
     if error is None:
-        for merchandise_type in merchandise_type_cd_list:
-            contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                          merchandise_type_cd__contains=merchandise_type,
-                                                                          next_payment_date__gt=today,
-                                                                          use=USE).count()
-            if contain_period_payment_counter > 0:
-                billing_info = '이미 정기결제 중인 이용권에 기능이 포함되어있습니다. 그래도 결제 진행하시겠습니까? '
-                # error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
-                # break
+        # for merchandise_type in merchandise_type_cd_list:
+        contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                      merchandise_type_cd__contains=product_id,
+                                                                      next_payment_date__gt=today,
+                                                                      use=USE).count()
+        if contain_period_payment_counter > 0:
+            billing_info = '이미 정기결제 중인 이용권에 기능이 포함되어있습니다. 그래도 결제 진행하시겠습니까? '
+            # error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
+            # break
 
-            single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                                   payment_type_cd='SINGLE',
-                                                                   merchandise_type_cd__contains=merchandise_type,
-                                                                   end_date__gt=today, use=USE).count()
+        single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                               payment_type_cd='SINGLE',
+                                                               merchandise_type_cd__contains=product_id,
+                                                               end_date__gt=today, use=USE).count()
     # 정기 결제가 포함되어있지 않은 경우만 실행, 마지막 결제 정보 불러오기
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd__contains=merchandise_type_cd,
+                                                        merchandise_type_cd__contains=product_id,
                                                         use=USE).latest('end_date')
             next_payment_date = payment_info.end_date
         except ObjectDoesNotExist:
@@ -139,7 +156,7 @@ def check_finish_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
 
-    merchandise_type_cd = None
+    product_id = None
     payment_type_cd = None
     paid_amount = 0
     context = {}
@@ -155,16 +172,17 @@ def check_finish_billing_logic(request):
 
     if error is None:
         try:
-            merchandise_type_cd = json_loading_data['merchandise_type_cd']
+            product_id = json_loading_data['product_id']
             payment_type_cd = json_loading_data['payment_type_cd']
             paid_amount = json_loading_data['paid_amount']
             start_date = json_loading_data['start_date']
+            period_month = json_loading_data['period_month']
         except KeyError:
             error = '오류가 발생했습니다.'
 
     if error is None:
         if str(today) == start_date or payment_type_cd == 'SINGLE':
-            error = func_check_payment_price_info(merchandise_type_cd, payment_type_cd, paid_amount)
+            error = func_check_payment_price_info(product_id, payment_type_cd, paid_amount, period_month)
 
     if error is not None:
         messages.error(request, error)
@@ -708,7 +726,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             # except ObjectDoesNotExist:
             #     payment_info = None
             payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd=product_info.merchandise_type_cd,
+                                                        merchandise_type_cd=product_info.product_id,
                                                         # payment_type_cd='SINGLE',
                                                         end_date__gte=today,
                                                         status='paid',
@@ -717,7 +735,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
             period_payment_data = PaymentInfoTb.objects.filter(Q(status='reserve') | Q(status='cancelled'),
                                                                member_id=request.user.id,
-                                                               merchandise_type_cd=product_info.merchandise_type_cd,
+                                                               merchandise_type_cd=product_info.product_id,
                                                                end_date__gte=today,
                                                                # price__gt=0,
                                                                payment_type_cd='PERIOD').order_by('-end_date',
@@ -742,7 +760,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
             try:
                 billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
-                                                         merchandise_type_cd=product_info.merchandise_type_cd,
+                                                         merchandise_type_cd=product_info.product_id,
                                                          use=USE)
             except ObjectDoesNotExist:
                 billing_info = None
@@ -750,7 +768,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             if len(payment_data) > 0:
                 for payment_info in payment_data:
                     try:
-                        merchandise_type = ProductTb.objects.get(merchandise_type_cd=payment_info.merchandise_type_cd)
+                        merchandise_type = ProductTb.objects.get(merchandise_type_cd=payment_info.product_id)
                         merchandise_type_name = merchandise_type.contents
                     except ObjectDoesNotExist:
                         merchandise_type_name = ''
@@ -793,7 +811,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_no += len(payment_data)
                 period_payment_info.counter = period_payment_no
                 try:
-                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.merchandise_type_cd)
+                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.product_id)
                     merchandise_type_name = merchandise_type.contents
                 except ObjectDoesNotExist:
                     merchandise_type_name = ''
