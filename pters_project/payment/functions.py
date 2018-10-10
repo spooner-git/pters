@@ -322,7 +322,8 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         if not empty_period_billing_check:
             payment_name = payment_result['name']
-            end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, custom_data['period_month'], date)
+            end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, int(custom_data['period_month']),
+                                         date)
             status = payment_result['status']
         else:
             payment_name = '정기결제 카드 등록'
