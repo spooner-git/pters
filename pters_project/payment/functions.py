@@ -183,6 +183,7 @@ def func_get_end_date(payment_type_cd, start_date, month, date):
     end_date = start_date
     if payment_type_cd == 'PERIOD':
         next_month_origin = int(end_date.strftime('%m')) + month
+        next_month = next_month_origin
         origin_year = int(end_date.strftime('%Y'))
         if next_month_origin > 12:
             next_month = next_month_origin % 12
@@ -555,10 +556,10 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
         if today != start_date and custom_data['payment_type_cd'] == 'PERIOD':
             empty_period_billing_check = True
 
-    if error is None:
-        if not empty_period_billing_check:
-            error = func_check_payment_price_info(custom_data['product_id'], custom_data['payment_type_cd'],
-                                                  payment_result['amount'], custom_data['period_month'])
+    # if error is None:
+    #     if not empty_period_billing_check:
+    #         error = func_check_payment_price_info(custom_data['product_id'], custom_data['payment_type_cd'],
+    #                                               payment_result['amount'], custom_data['period_month'])
 
     if error is None:
         if payment_result['status'] == 'paid':  # 결제 완료
