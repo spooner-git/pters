@@ -812,7 +812,7 @@ $(document).ready(function(){
             //그룹을 지운다.
             delete_group_from_list(group_delete_JSON.group_id);
             //그룹원들에게서 그룹에 대한 수강이력을 지운다.
-            delete_groupmember_from_grouplist();
+            //delete_groupmember_from_grouplist();
             enable_delete_btns_after_ajax();
 
             group_delete_JSON.group_id = "";
