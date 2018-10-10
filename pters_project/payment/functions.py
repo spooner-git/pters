@@ -55,7 +55,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
 
     if error is None:
         start_date = payment_user_info.end_date
-        end_date = func_get_end_date(payment_type_cd, start_date, payment_user_info.period_month, date)
+        end_date = func_get_end_date(payment_type_cd, start_date, int(payment_user_info.period_month), date)
         payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
                                      product_tb_id=product_id,
                                      payment_type_cd=payment_type_cd, customer_uid=customer_uid,
