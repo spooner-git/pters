@@ -812,7 +812,7 @@ $(document).ready(function(){
             //그룹을 지운다.
             delete_group_from_list(group_delete_JSON.group_id);
             //그룹원들에게서 그룹에 대한 수강이력을 지운다.
-            //delete_groupmember_from_grouplist();
+            delete_groupmember_from_grouplist();
             enable_delete_btns_after_ajax();
 
             group_delete_JSON.group_id = "";
@@ -827,7 +827,7 @@ $(document).ready(function(){
                 close_info_popup('cal_popup_plandelete');
                 get_group_repeat_info(group_id);
                 if(bodywidth >= 600){
-                    $('#calendar').css('position','relative');
+                    $('#calendar').css('position', 'relative');
                 }else{
                     get_current_member_list();
                     get_current_group_list();

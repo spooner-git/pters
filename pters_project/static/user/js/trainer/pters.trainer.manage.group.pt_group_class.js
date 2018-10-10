@@ -784,6 +784,7 @@ function delete_group_from_list(group_id){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("group_delete", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -853,6 +854,7 @@ function delete_groupmember_from_grouplist(use, callback){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("group_delete", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -1583,7 +1585,7 @@ function groupMemberListSet(group_id, jsondata){
 //그룹원 목록을 그룹에 그리기
 
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
-$(document).on('click','img.substract_groupMember',function(e){
+$(document).on('click', 'img.substract_groupMember', function(e){
     e.stopPropagation();
 
     var groupmember_name = $(this).attr('data-fullname');

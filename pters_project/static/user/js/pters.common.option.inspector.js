@@ -133,7 +133,12 @@ function pters_option_inspector(option_type, xhr, option_element){
                 }
             }
         }else if(option_type == "group_delete"   && Options.auth.auth_group_delete == 1){
-
+            show_caution_popup(function_lock_message("member_delete", Options.auth.auth_group_create[1], "삭제"));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                enable_delete_btns_after_ajax();
+            }
         }else if(option_type == "group_read"     && Options.auth.auth_group_read == 1){
 
         }else if(option_type == "group_update"   && Options.auth.auth_group_update == 1){
@@ -150,7 +155,12 @@ function pters_option_inspector(option_type, xhr, option_element){
                 }
             }
         }else if(option_type == "class_delete"   && Options.auth.auth_class_delete == 1){
-
+            show_caution_popup(function_lock_message("member_delete", Options.auth.auth_group_create[1], "삭제"));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                enable_delete_btns_after_ajax();
+            }
         }else if(option_type == "class_read"     && Options.auth.auth_class_read == 1){
 
         }else if(option_type == "class_update"   && Options.auth.auth_class_update == 1){
