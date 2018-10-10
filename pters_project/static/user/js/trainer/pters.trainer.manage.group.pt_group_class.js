@@ -1437,13 +1437,14 @@ function get_groupmember_list(group_id, use, callback){
         type:'GET',
         dataType : 'html',
 
-        beforeSend:function(){
-            beforeSend()
+        beforeSend:function(xhr){
+            beforeSend();
+            pters_option_inspector("group_read", xhr, "");
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
@@ -1662,8 +1663,9 @@ function get_group_repeat_info(group_id){
         data: {"group_id": group_id},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             //beforeSend(); //ajax 로딩이미지 출력
+            pters_option_inspector("group_read", xhr, "");
         },
 
         success:function(data){

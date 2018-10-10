@@ -141,6 +141,14 @@ function pters_option_inspector(option_type, xhr, option_element){
                 enable_delete_btns_after_ajax();
             }
         }else if(option_type == "group_read"     && Options.auth.auth_group_read.active == 1){
+            show_caution_popup(function_lock_message("member_delete", "", "조회", Options.auth.auth_group_read.limit_type));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                $("div.groupWrap").removeClass('groupWrap_selected');
+                $('.groupMembersWrap_selected').removeClass('groupMembersWrap_selected').hide();
+                smart_refresh_member_group_class_list();
+            }
         }else if(option_type == "group_update"   && Options.auth.auth_group_update.active == 1){
             show_caution_popup(function_lock_message("member_delete", "", "수정", Options.auth.auth_group_update.limit_type));
             if(xhr != ""){
