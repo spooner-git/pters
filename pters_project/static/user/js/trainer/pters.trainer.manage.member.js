@@ -3927,7 +3927,7 @@ function smart_refresh_member_group_class_list(){
     }else if($('#currentGroupList').css('display') == "block"){
         var opened_group = [];
         $('#currentGroupList div.groupWrap_selected').each(function(){
-            opened_group.push($(this).attr('data-groupid'))
+            opened_group.push($(this).attr('data-groupid'));
         });
         get_member_group_class_ing_list("callback", function(jsondata){
             var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
