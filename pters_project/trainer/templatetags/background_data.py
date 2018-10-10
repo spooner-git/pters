@@ -146,6 +146,33 @@ def get_setting_info(request):
 
 
 @register.simple_tag
+def get_function_auth_type_cd(request):
+    context = {}
+    today = datetime.date.today()
+    merchandise_type_cd_list = []
+    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                next_payment_date__lt=today, use=USE)
+    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                start_date__lte=today, end_date__gte=today, use=USE)
+
+    for billing_info in billing_data:
+        billing_info.state_cd = 'ST'
+        billing_info.use = UN_USE
+        billing_info.save()
+
+    for payment_info in payment_data:
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
+                                                                     ).filter(product_tb_id=payment_info.product_tb_id,
+                                                                              use=USE).order_by('function_auth_tb_id')
+        for function_info in function_list:
+
+            context[function_info.function_auth_tb.function_auth_type_cd] = function_info.counts
+            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
+
+    return context
+
+
+@register.simple_tag
 def get_function_auth(request):
     today = datetime.date.today()
     merchandise_type_cd_list = []
@@ -160,8 +187,9 @@ def get_function_auth(request):
         billing_info.save()
 
     for payment_info in payment_data:
-        function_list = ProductFunctionAuthTb.objects.filter(product_tb_id=payment_info.product_tb_id,
-                                                             use=USE).order_by('function_auth_tb_id')
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
+                                                                     ).filter(product_tb_id=payment_info.product_tb_id,
+                                                                              use=USE).order_by('function_auth_tb_id')
         for function_info in function_list:
             merchandise_type_cd_list.append(function_info.auth_type_cd)
 
