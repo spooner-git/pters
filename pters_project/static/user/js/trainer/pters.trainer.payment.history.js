@@ -23,7 +23,8 @@ $(document).ready(function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
         var product_id = $(this).attr('data-product-id');
-        check_payment(payment_name, customer_uid, product_id);
+        var period_month = $(this).attr('data-period-month');
+        check_payment(payment_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
     })
