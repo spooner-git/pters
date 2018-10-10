@@ -770,7 +770,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             if len(payment_data) > 0:
                 for payment_info in payment_data:
                     try:
-                        merchandise_type = ProductTb.objects.get(product_tb_id=payment_info.product_id)
+                        merchandise_type = ProductTb.objects.get(product_tb_id=payment_info.product_tb_id)
                         merchandise_type_name = merchandise_type.contents
                     except ObjectDoesNotExist:
                         merchandise_type_name = ''
@@ -813,7 +813,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_no += len(payment_data)
                 period_payment_info.counter = period_payment_no
                 try:
-                    merchandise_type = ProductTb.objects.get(product_tb_id=period_payment_info.product_id)
+                    merchandise_type = ProductTb.objects.get(product_tb_id=period_payment_info.product_tb_id)
                     merchandise_type_name = merchandise_type.contents
                 except ObjectDoesNotExist:
                     merchandise_type_name = ''

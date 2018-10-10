@@ -27,6 +27,7 @@ class PaymentInfoTb(TimeStampedModel):
     customer_uid = models.CharField(db_column='CUSTOMER_UID', max_length=100, blank=True, default='')
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    period_month = models.IntegerField(db_column='PERIOD_MONTH', default=1)
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, default='')
     price = models.IntegerField(db_column='PRICE', default=0)
     imp_uid = models.CharField(db_column='IMP_UID', max_length=45, blank=True, default='')
@@ -54,6 +55,7 @@ class BillingInfoTb(TimeStampedModel):
     pay_method = models.CharField(db_column='PAY_METHOD', max_length=45, blank=True, default='')
     product_tb = models.ForeignKey(ProductTb, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, default='')
+    period_month = models.IntegerField(db_column='PERIOD_MONTH', default=1)
     merchant_uid = models.CharField(db_column='MERCHANT_UID', max_length=100,  blank=True, default='')
     customer_uid = models.CharField(db_column='CUSTOMER_UID', max_length=100, blank=True, default='')
     price = models.IntegerField(db_column='PRICE', default=0)
