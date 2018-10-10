@@ -61,9 +61,12 @@
                             <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
                         </div>
                         <div>
-                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                                <p>{{ payment_merchandise_info }}</p>
-                            {% endfor %}
+                            {% autoescape off %}
+                            <p>{{ current_payment_info.merchandise_type_name }}</p>
+                            {% endautoescape %}
+{#                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}#}
+{#                                <p>{{ payment_merchandise_info }}</p>#}
+{#                            {% endfor %}#}
                             {#                        <p>그룹 관리 메뉴 사용</p>#}
                             {#                        <p>그룹 일정 관리</p>#}
                             {#                        <p>광고 제거</p>#}
@@ -205,7 +208,7 @@
             <div class="pay_method_change_table_label">
                 <div>NO</div>
                 <div>PTERS 이용권</div>
-                <div>결제예정일</div>
+                <div>결제 예정일</div>
                 <div>총 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 별도)</span></div>
                 <div>결제방법</div>
                 <div>결제방법 변경</div>
@@ -255,13 +258,16 @@
 {#                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>#}
                     </div>
                     <div>
-                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                            <p>{{ payment_merchandise_info }}</p>
-                        {% endfor %}
+                        {% autoescape off %}
+                        <p>{{ current_payment_info.merchandise_type_name }}</p>
+                        {% endautoescape %}
+{#                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}#}
+{#                            <p>{{ payment_merchandise_info }}</p>#}
+{#                        {% endfor %}#}
                     </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.billing_info.next_payment_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제 예정일: <span>{{ current_payment_info.billing_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
                         <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.billing_info.customer_uid }}"><span>이용권해지</span></div>
@@ -332,13 +338,17 @@
 {#                        <p>{{ cancel_period_payment_info.start_date }} ~ {{ cancel_period_payment_info.end_date }}</p>#}
                     </div>
                     <div>
-                        {% for payment_merchandise_info in cancel_period_payment_info.merchandise_type_name %}
-                            <p>{{ payment_merchandise_info }}</p>
-                        {% endfor %}
+
+                        {% autoescape off %}
+                        <p>{{ cancel_period_payment_info.merchandise_type_name }}</p>
+                        {% endautoescape %}
+{#                        {% for payment_merchandise_info in cancel_period_payment_info.merchandise_type_name %}#}
+{#                            <p>{{ payment_merchandise_info }}</p>#}
+{#                        {% endfor %}#}
                     </div>
                     <div>
                         <p>{{ cancel_period_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제 예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
                         <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"><span>해지 취소</span></div>
