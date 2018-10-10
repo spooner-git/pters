@@ -236,6 +236,15 @@ function pters_option_inspector(option_type, xhr, option_element){
                 location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'
             }
         }else if(option_type == "program_delete" && Options.auth.auth_program_delete.active == 1){
+            show_caution_popup(function_lock_message("delete", "", "프로그램 삭제", Options.auth.auth_program_delete.limit_type));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                $('#popup_delete_btn_no, .popup_close_x_button').parents('.popups').hide();
+                shade_index(-100);
+                $("#popup_delete_btn_yes").off();
+                $('#popup_delete_btn_no, .popup_close_x_button').off();
+            }
         }else if(option_type == "program_read"   && Options.auth.auth_program_read.active == 1){
         }else if(option_type == "program_update" && Options.auth.auth_program_update.active == 1){
         }

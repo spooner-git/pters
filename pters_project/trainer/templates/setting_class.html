@@ -137,35 +137,33 @@
         ajax_read_lecture_info_from_db_PAGE();
 
         $(document).on('click','._icon_del',function(e){
-            e.stopPropagation()
+            e.stopPropagation();
             if(!$(this).hasClass('disabled_button')){
                 var class_id = $(this).parent('div').attr('data-classid');
-{#                if(class_id != lec_select_currentClassId[0]){#}
-                    $('#cal_popup_plandelete').fadeIn('fast')
-                    $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
-{#                    $('#shade').show()#}
-                    shade_index(100);
-{#                }#}
-{#                else{#}
-{#                    alert('현재 활성화 되어있는 프로그램은 삭제 불가능합니다.\n 다른 프로그램으로 이동후 현재 프로그램이 삭제 가능합니다.')#}
-{#                }#}
+// {#                if(class_id != lec_select_currentClassId[0]){#}
+                $('#cal_popup_plandelete').show();
+                $('#popup_delete_question').html("<p>정말 삭제하시겠습니까?<br>현재까지의 데이터가 모두 삭제됩니다.</p>")
+// {#                    $('#shade').show()#}
+                shade_index(100);
+// {#                }#}
+// {#                else{#}
+// {#                    alert('현재 활성화 되어있는 프로그램은 삭제 불가능합니다.\n 다른 프로그램으로 이동후 현재 프로그램이 삭제 가능합니다.')#}
+// {#                }#}
 
                 $('#popup_delete_btn_yes').click(function(){
-
-                    console.log("btn_yes")
                     ajax_del_lecture_info(class_id);
                     $(this).parents('.popups').hide();
                     shade_index(-100);
-                    $("#popup_delete_btn_yes").off()
-                    $('#popup_delete_btn_no, .popup_close_x_button').off()
-                })
+                    $("#popup_delete_btn_yes").off();
+                    $('#popup_delete_btn_no, .popup_close_x_button').off();
+                });
 
                 $('#popup_delete_btn_no, .popup_close_x_button').click(function(){
-                    $(this).parents('.popups').hide()
+                    $(this).parents('.popups').hide();
                     shade_index(-100);
-                    $("#popup_delete_btn_yes").off()
-                    $('#popup_delete_btn_no, .popup_close_x_button').off()
-                })
+                    $("#popup_delete_btn_yes").off();
+                    $('#popup_delete_btn_no, .popup_close_x_button').off();
+                });
             }
             
         })
@@ -239,7 +237,8 @@
                     if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
-                    beforeSend()
+                    beforeSend();
+                    pters_option_inspector("program_delete", xhr, "");
                 },
 
                 success:function(data){
