@@ -142,6 +142,12 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
         }else if(option_type == "group_read"     && Options.auth.auth_group_read.active == 1){
         }else if(option_type == "group_update"   && Options.auth.auth_group_update.active == 1){
+            show_caution_popup(function_lock_message("member_delete", "", "수정", Options.auth.auth_group_update.limit_type));
+            if(xhr != ""){
+                xhr.abort(); // ajax중지
+                completeSend(); // ajax 로딩 이미지 숨기기
+                smart_refresh_member_group_class_list();
+            }
         }
 
         //그룹/클래스원 추가 뺴기

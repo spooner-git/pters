@@ -909,6 +909,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("group_update", xhr, "");
         },
 
         //보내기후 팝업창 닫기
