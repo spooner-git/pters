@@ -992,7 +992,7 @@ $(document).ready(function(){
         onSelect:function(dateText,inst){  //달력날짜 선택시 하단에 핑크선
             $(this).css({
                              "-webkit-text-fill-color":'#282828'
-                        })
+                        });
 
             var selector_datepicker_add = $("#datepicker_add");
             var selector_datepicker2_add = $("#datepicker2_add");
@@ -4623,6 +4623,16 @@ function add_member_form_noemail_func(){
 //새로운 그룹 정보 서버로 보내 등록하기
 function add_group_form_func(){
     var bodywidth = window.innerWidth;
+    var grouptype = $('#form_grouptype').val();
+    var option_limit_type;
+    var number_has;
+    if(grouptype == "NORMAL" ){
+        option_limit_type = "group_create";
+        number_has = $(`div._grouptypecd[data-group-type="${grouptype}"]`).length;
+    }else if(grouptype == "EMPTY"){
+        option_limit_type = "class_create";
+        number_has = $(`div._grouptypecd[data-group-type="${grouptype}"]`).length;
+    }
     $.ajax({
         url:'/trainer/add_group_info/',
         type:'POST',
@@ -4638,12 +4648,14 @@ function add_group_form_func(){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
-            beforeSend()
+            beforeSend();
+            console.log(option_limit_type, number_has)
+            pters_option_inspector(option_limit_type, xhr, number_has);
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
