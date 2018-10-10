@@ -42,7 +42,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
 
     if error is None:
         try:
-            product_price_info = ProductPriceTb.objects.get(product_tb__merchandise_type_cd=product_id,
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=product_id,
                                                             payment_type_cd=payment_type_cd, use=USE)
         except ObjectDoesNotExist:
             error = '결제 정보를 불러오지 못했습니다.'
@@ -55,7 +55,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
         start_date = payment_user_info.end_date
         end_date = func_get_end_date(payment_type_cd, start_date, 1, date)
         payment_info = PaymentInfoTb(member_id=payment_user_info.member.member_id,
-                                     merchandise_type_cd=product_id,
+                                     product_tb_id=product_id,
                                      payment_type_cd=payment_type_cd, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
                                      name=name,
@@ -295,7 +295,7 @@ def func_add_billing_logic(custom_data, payment_result):
     if error is None:
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                        merchandise_type_cd=custom_data['product_id'],
+                                                        product_tb_id=custom_data['product_id'],
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
@@ -339,7 +339,7 @@ def func_add_billing_logic(custom_data, payment_result):
         try:
             with transaction.atomic():
                 payment_info = PaymentInfoTb(member_id=custom_data['user_id'],
-                                             merchandise_type_cd=custom_data['product_id'],
+                                             product_tb_id=custom_data['product_id'],
                                              payment_type_cd=custom_data['payment_type_cd'],
                                              merchant_uid=payment_result['merchant_uid'],
                                              customer_uid=customer_uid,
@@ -381,7 +381,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                                  name=payment_name,
                                                  card_name=payment_result['card_name'],
                                                  pay_method=payment_result['pay_method'],
-                                                 merchandise_type_cd=custom_data['product_id'],
+                                                 product_tb_id=custom_data['product_id'],
                                                  payment_type_cd=custom_data['payment_type_cd'],
                                                  merchant_uid=payment_result['merchant_uid'],
                                                  customer_uid=customer_uid,
@@ -527,7 +527,7 @@ def func_iamport_webhook_customer_billing_logic(custom_data, payment_result, mer
 
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
-                                                        merchandise_type_cd=product_id,
+                                                        product_tb_id=product_id,
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None

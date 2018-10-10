@@ -6,7 +6,7 @@ from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb
 
 @admin.register(PaymentInfoTb)
 class PaymentInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('payment_info_id', 'name', 'member', 'merchandise_type_cd', 'merchant_uid', 'customer_uid',
+    list_display = ('payment_info_id', 'name', 'member', 'product_tb', 'merchant_uid', 'customer_uid',
                     'start_date', 'end_date', 'payment_type_cd', 'price', 'imp_uid', 'channel', 'card_name',
                     'buyer_email', 'status', 'fail_reason', 'currency', 'pay_method', 'pg_provider', 'receipt_url',
                     'buyer_name', 'reg_dt', 'mod_dt', 'use')
@@ -14,7 +14,7 @@ class PaymentInfoTbAdmin(admin.ModelAdmin):
 
 @admin.register(BillingInfoTb)
 class BillingInfoTbAdmin(admin.ModelAdmin):
-    list_display = ('billing_info_id', 'member', 'pay_method', 'merchandise_type_cd',
+    list_display = ('billing_info_id', 'member', 'pay_method', 'product_tb',
                     'payment_type_cd', 'merchant_uid', 'customer_uid', 'payment_reg_date',
                     'next_payment_date', 'payed_date', 'reg_dt', 'mod_dt', 'use')
 

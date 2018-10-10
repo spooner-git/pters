@@ -345,7 +345,7 @@
             $('#purchase_product').find('.purchase_popup_innercontent').text(product);
             $('#purchase_functions').find('.purchase_popup_innercontent').html(functions_name);
             $('#purchase_type').find('.purchase_popup_innercontent').text(type_name);
-            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(price));
+            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(parseInt(price*1.1))+'원 (부가세 포함)');
             $('#price_preview').text(numberWithCommas(price)+' 원');
         }
         function numberWithCommas(x) { //천단위 콤마 찍기

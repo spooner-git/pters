@@ -61,6 +61,7 @@ def check_before_billing_logic(request):
     payment_type_cd = None
     input_price = 0
     single_payment_counter = 0
+    period_month = 1
     billing_info = ''
     today = datetime.date.today()
     next_payment_date = today
@@ -86,53 +87,54 @@ def check_before_billing_logic(request):
             payment_type_cd = json_loading_data['payment_type_cd']
             product_id = json_loading_data['product_id']
             input_price = json_loading_data['price']
-            period_month = json_loading_data['period_month']
+            period_month = int(json_loading_data['period_month'])
         except KeyError:
             error = '오류가 발생했습니다.'
 
     if error is None:
+        # 사전 가격 검사 작업
         error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
-    if error is None:
+    # if error is None:
         # merchandise_type_cd_list = merchandise_type_cd.split('/')
+        #
+        # equal_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+        #                                                             product_tb_id=product_id,
+        #                                                             next_payment_date__gt=today,
+        #                                                             use=USE).count()
+        #
+        # if equal_period_payment_counter > 0:
+        #     error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
 
-        equal_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                    merchandise_type_cd=product_id,
-                                                                    next_payment_date__gt=today,
-                                                                    use=USE).count()
-
-        if equal_period_payment_counter > 0:
-            error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
-
-    if error is None:
-        # for merchandise_type in merchandise_type_cd_list:
-        contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                      merchandise_type_cd__contains=product_id,
-                                                                      next_payment_date__gt=today,
-                                                                      use=USE).count()
-        if contain_period_payment_counter > 0:
-            billing_info = '이미 정기결제 중인 이용권에 기능이 포함되어있습니다. 그래도 결제 진행하시겠습니까? '
-            # error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
-            # break
-
-        single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                               payment_type_cd='SINGLE',
-                                                               merchandise_type_cd__contains=product_id,
-                                                               end_date__gt=today, use=USE).count()
-    # 정기 결제가 포함되어있지 않은 경우만 실행, 마지막 결제 정보 불러오기
-    if error is None:
-        try:
-            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd__contains=product_id,
-                                                        use=USE).latest('end_date')
-            next_payment_date = payment_info.end_date
-        except ObjectDoesNotExist:
-            next_payment_date = today
+    # if error is None:
+    #     # for merchandise_type in merchandise_type_cd_list:
+    #     contain_period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+    #                                                                   product_tb_id__contains=product_id,
+    #                                                                   next_payment_date__gt=today,
+    #                                                                   use=USE).count()
+    #     if contain_period_payment_counter > 0:
+    #         billing_info = '이미 정기결제 중인 이용권에 기능이 포함되어있습니다. 그래도 결제 진행하시겠습니까? '
+    #         # error = '이미 정기결제 중인 기능이 포함되어있어 결제할수 없습니다.'
+    #         # break
+    #
+    #     single_payment_counter += PaymentInfoTb.objects.filter(member_id=request.user.id,
+    #                                                            payment_type_cd='SINGLE',
+    #                                                            product_tb_id__contains=product_id,
+    #                                                            end_date__gt=today, use=USE).count()
+    # # 정기 결제가 포함되어있지 않은 경우만 실행, 마지막 결제 정보 불러오기
+    # if error is None:
+    #     try:
+    #         payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id,
+    #                                                     product_tb_id__contains=product_id,
+    #                                                     use=USE).latest('end_date')
+    #         next_payment_date = payment_info.end_date
+    #     except ObjectDoesNotExist:
+    #         next_payment_date = today
 
     if error is None:
         date = int(next_payment_date.strftime('%d'))
         context['next_start_date'] = str(next_payment_date)
-        context['next_end_date'] = str(func_get_end_date(payment_type_cd, next_payment_date, 1, date))
+        context['next_end_date'] = str(func_get_end_date(payment_type_cd, next_payment_date, period_month, date))
 
         if single_payment_counter > 0:
             if payment_type_cd == 'PERIOD':
@@ -726,7 +728,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             # except ObjectDoesNotExist:
             #     payment_info = None
             payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        merchandise_type_cd=product_info.product_id,
+                                                        product_tb_id=product_info.product_id,
                                                         # payment_type_cd='SINGLE',
                                                         end_date__gte=today,
                                                         status='paid',
@@ -735,7 +737,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
             period_payment_data = PaymentInfoTb.objects.filter(Q(status='reserve') | Q(status='cancelled'),
                                                                member_id=request.user.id,
-                                                               merchandise_type_cd=product_info.product_id,
+                                                               product_tb_id=product_info.product_id,
                                                                end_date__gte=today,
                                                                # price__gt=0,
                                                                payment_type_cd='PERIOD').order_by('-end_date',
@@ -760,7 +762,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
 
             try:
                 billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
-                                                         merchandise_type_cd=product_info.product_id,
+                                                         product_tb_id=product_info.product_id,
                                                          use=USE)
             except ObjectDoesNotExist:
                 billing_info = None
@@ -768,7 +770,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             if len(payment_data) > 0:
                 for payment_info in payment_data:
                     try:
-                        merchandise_type = ProductTb.objects.get(merchandise_type_cd=payment_info.product_id)
+                        merchandise_type = ProductTb.objects.get(product_tb_id=payment_info.product_id)
                         merchandise_type_name = merchandise_type.contents
                     except ObjectDoesNotExist:
                         merchandise_type_name = ''
@@ -811,7 +813,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_no += len(payment_data)
                 period_payment_info.counter = period_payment_no
                 try:
-                    merchandise_type = ProductTb.objects.get(merchandise_type_cd=period_payment_info.product_id)
+                    merchandise_type = ProductTb.objects.get(product_tb_id=period_payment_info.product_id)
                     merchandise_type_name = merchandise_type.contents
                 except ObjectDoesNotExist:
                     merchandise_type_name = ''
