@@ -145,23 +145,23 @@ def get_setting_info(request):
     return context
 
 
-@register.simple_tag
-def get_function_auth(request):
-    today = datetime.date.today()
-    merchandise_type_cd_list = []
-    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                next_payment_date__lt=today, use=USE)
-    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                start_date__lte=today, end_date__gte=today, use=USE)
-
-    for billing_info in billing_data:
-        billing_info.state_cd = 'ST'
-        billing_info.use = UN_USE
-        billing_info.save()
-
-    for payment_info in payment_data:
-        merchandise_type_cd_data = payment_info.merchandise_type_cd.split('/')
-        for merchandise_type_cd_info in merchandise_type_cd_data:
-            merchandise_type_cd_list.append(merchandise_type_cd_info)
-
-    return merchandise_type_cd_list
+# @register.simple_tag
+# def get_function_auth(request):
+#     today = datetime.date.today()
+#     merchandise_type_cd_list = []
+#     billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
+#                                                 next_payment_date__lt=today, use=USE)
+#     payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+#                                                 start_date__lte=today, end_date__gte=today, use=USE)
+#
+#     for billing_info in billing_data:
+#         billing_info.state_cd = 'ST'
+#         billing_info.use = UN_USE
+#         billing_info.save()
+#
+#     for payment_info in payment_data:
+#         merchandise_type_cd_data = payment_info.merchandise_type_cd.split('/')
+#         for merchandise_type_cd_info in merchandise_type_cd_data:
+#             merchandise_type_cd_list.append(merchandise_type_cd_info)
+#
+#     return merchandise_type_cd_list

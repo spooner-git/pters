@@ -630,7 +630,7 @@
     var setting_info = {% get_setting_info_center request %};
     var class_background_img_url= {% get_background_url_center request %};
     var class_background_type_cd = {% get_background_type_cd_center request %};
-    var function_auth = {% get_function_auth_center request %}
+{#    var function_auth = {% get_function_auth_center request %};#}
     {% endautoescape %}
 {#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
 
