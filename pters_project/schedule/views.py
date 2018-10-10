@@ -82,12 +82,18 @@ def add_schedule_logic(request):
 
     if schedule_date == '':
         error = '날짜를 선택해 주세요.'
+    elif schedule_end_date == '':
+        error = '날짜를 선택해 주세요.'
     elif schedule_time == '':
         error = '시작 시각을 선택해 주세요.'
     elif schedule_end_time == '':
         error = '종료 시각을 선택해 주세요.'
     # elif schedule_time_duration == '':
     #     error = '진행 시간을 선택해 주세요.'
+    if error is None:
+        if schedule_date == schedule_end_date:
+            if schedule_time == schedule_end_time:
+                error = '일정을 다시 선택해주세요.'
 
     if note is None:
         note = ''
@@ -590,6 +596,11 @@ def add_repeat_schedule_logic(request):
             error = '시작 날짜를 선택해 주세요.'
         if repeat_schedule_end_date == '':
             error = '종료 날짜를 선택해 주세요.'
+
+    if error is None:
+        if repeat_schedule_start_date == repeat_schedule_end_date:
+            if repeat_start_time == repeat_end_time:
+                error = '일정을 다시 선택해주세요.'
 
     if error is None:
         try:
@@ -1126,12 +1137,18 @@ def add_group_schedule_logic(request):
         error = '오류가 발생했습니다.'
     elif schedule_date == '':
         error = '날짜를 선택해 주세요.'
+    elif schedule_end_date == '':
+        error = '날짜를 선택해 주세요.'
     elif schedule_time == '':
         error = '시작 시각을 선택해 주세요.'
     elif schedule_end_time == '':
         error = '종료 시각을 선택해 주세요.'
     # elif schedule_time_duration == '':
     #     error = '진행 시간을 선택해 주세요.'
+    if error is None:
+        if schedule_date == schedule_end_date:
+            if schedule_time == schedule_end_time:
+                error = '일정을 다시 선택해주세요.'
 
     if note is None:
         note = ''
@@ -1966,6 +1983,11 @@ def add_group_repeat_schedule_logic(request):
             error = '시작 날짜를 선택해 주세요.'
         if repeat_schedule_end_date == '':
             error = '종료 날짜를 선택해 주세요.'
+
+    if error is None:
+        if repeat_schedule_start_date == repeat_schedule_end_date:
+            if repeat_start_time == repeat_end_time:
+                error = '일정을 다시 선택해주세요.'
 
     if error is None:
         try:
