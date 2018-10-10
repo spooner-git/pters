@@ -455,19 +455,20 @@
 
         $(document).on('click','img._icon_modify',function(e){
             e.stopPropagation();
-            if(!$(this).hasClass('disabled_button')){
-                var $this = $(this);
-                var $thiscancel = $this.siblings('._icon_cancel');
-                var $thisdel =  $this.siblings('._icon_del');
-                var $thissend = $this.siblings('._icon_send');
-                $('img._icon_modify, img._icon_del').addClass('disabled_button')
-                $this.css('display','none');
-                $thisdel.css('display','none');
-                $thissend.css('display','inline-block');
-                $thiscancel.css('display','inline-block');
+            pters_option_inspector("program_update", "", $(this));
+            // if(!$(this).hasClass('disabled_button')){
+            //     var $this = $(this);
+            //     var $thiscancel = $this.siblings('._icon_cancel');
+            //     var $thisdel =  $this.siblings('._icon_del');
+            //     var $thissend = $this.siblings('._icon_send');
+            //     $('img._icon_modify, img._icon_del').addClass('disabled_button')
+            //     $this.css('display','none');
+            //     $thisdel.css('display','none');
+            //     $thissend.css('display','inline-block');
+            //     $thiscancel.css('display','inline-block');
 
-                $this.parent('div').siblings('.table_lecture_name').find('input').css('display','block')
-            }
+            //     $this.parent('div').siblings('.table_lecture_name').find('input').css('display','block')
+            // }
         })
 
         $(document).on('click', '._icon_cancel', function(e){

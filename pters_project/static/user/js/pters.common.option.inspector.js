@@ -236,7 +236,7 @@ function pters_option_inspector(option_type, xhr, option_element){
                 location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'
             }
         }else if(option_type == "program_delete" && Options.auth.auth_program_delete.active == 1){
-            show_caution_popup(function_lock_message("delete", "", "프로그램 삭제", Options.auth.auth_program_delete.limit_type));
+            show_caution_popup(function_lock_message("delete", 1, "프로그램 삭제", Options.auth.auth_program_delete.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -246,7 +246,23 @@ function pters_option_inspector(option_type, xhr, option_element){
                 $('#popup_delete_btn_no, .popup_close_x_button').off();
             }
         }else if(option_type == "program_read"   && Options.auth.auth_program_read.active == 1){
-        }else if(option_type == "program_update" && Options.auth.auth_program_update.active == 1){
+        }else if(option_type == "program_update"){
+            var $this = option_element;
+            if(Options.auth.auth_program_update.active == 1){
+                show_caution_popup(function_lock_message("delete", 1, "프로그램명 수정", Options.auth.auth_program_update.limit_type));
+            }else if(Options.auth.auth_program_update.active == 0){
+                if(!$this.hasClass('disabled_button')){
+                    var $thiscancel = $this.siblings('._icon_cancel');
+                    var $thisdel =  $this.siblings('._icon_del');
+                    var $thissend = $this.siblings('._icon_send');
+                    $('img._icon_modify, img._icon_del').addClass('disabled_button');
+                    $this.css('display', 'none');
+                    $thisdel.css('display', 'none');
+                    $thissend.css('display', 'inline-block');
+                    $thiscancel.css('display', 'inline-block');
+                    $this.parent('div').siblings('.table_lecture_name').find('input').css('display', 'block');
+                }
+            }
         }
     }
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
