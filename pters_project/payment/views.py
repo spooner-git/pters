@@ -312,8 +312,9 @@ def restart_period_billing_logic(request):
 
     if error is None:
         try:
-            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, customer_uid=customer_uid,
-                                                        payment_type_cd='PERIOD', status='paid').latest('end_date')
+            payment_info = PaymentInfoTb.objects.filter(Q(status='paid') | Q(status='pre_paid'),
+                                                        member_id=request.user.id, customer_uid=customer_uid,
+                                                        payment_type_cd='PERIOD').latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
         # payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
