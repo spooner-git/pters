@@ -183,7 +183,7 @@ def func_get_end_date(payment_type_cd, start_date, month, date):
     end_date = start_date
     if payment_type_cd == 'PERIOD':
         next_month_origin = int(end_date.strftime('%m')) + month
-        origin_year = int(end_date.strftime('%y'))
+        origin_year = int(end_date.strftime('%Y'))
         if next_month_origin > 12:
             next_month = next_month_origin % 12
             if next_month == 0:
