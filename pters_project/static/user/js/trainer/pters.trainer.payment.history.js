@@ -22,8 +22,8 @@ $(document).ready(function(){
     $(document).on('click','.pay_method_changeButton',function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
-        var merchandise_type_cd = $(this).attr('data-merchandise_type_cd');
-        check_payment(payment_name, customer_uid, merchandise_type_cd);
+        var product_id = $(this).attr('data-product-id');
+        check_payment(payment_name, customer_uid, product_id);
         // alert(payid);
         //To- Do
     })

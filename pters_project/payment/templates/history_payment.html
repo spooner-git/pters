@@ -231,7 +231,7 @@
                     <div>
                         <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
-                             data-merchandise_type_cd="{{ current_payment_info.merchandise_type_cd }}"><span>변경</span></div>
+                             data-product-id="{{ current_payment_info.product_tb_id }}"><span>변경</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -404,9 +404,10 @@
             document.getElementById('clear-pause-period-payment-form').submit();
         }
 
-        function check_payment(name, customer_uid, merchandise_type_cd){
+        function check_payment(name, customer_uid, product_id){
             var error_check = true;
             console.log('check_payment::'+name);
+            console.log('product_id::'+product_id);
             $.ajax({
                 url: "/payment/check_update_period_billing/", // 서비스 웹서버
                 type: "POST",
@@ -435,7 +436,7 @@
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        payment(name, 'card',  merchandise_type_cd, jsondata.next_start_date[0], customer_uid);
+                        payment(name, 'card',  product_id, jsondata.next_start_date[0], customer_uid);
                     }
 
                 },
@@ -455,10 +456,10 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(name, pay_method, merchandise_type_cd, start_date, before_customer_uid){
+        function payment(name, pay_method, product_id, start_date, before_customer_uid){
             var date = new Date();
-            var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var merchant_uid_data = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+            var customer_uid_data = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var month = date.getMonth()+1;
             var day = date.getDate();
             var price = 0;
@@ -483,7 +484,7 @@
                 amount : price,
                 custom_data: {
                     "user_id":{{ request.user.id }},
-                    "merchandise_type_cd":merchandise_type_cd,
+                    "product_id":product_id,
                     "payment_type_cd":payment_type_cd,
                     "customer_uid":customer_uid_data,
                     "start_date":  today
@@ -502,7 +503,7 @@
                         type: "POST",
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({
-                            merchandise_type_cd : merchandise_type_cd,
+                            product_id : product_id,
                             payment_type_cd:payment_type_cd,
                             paid_amount: rsp.paid_amount,
                             start_date: today
