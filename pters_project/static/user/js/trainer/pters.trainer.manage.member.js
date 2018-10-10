@@ -827,7 +827,7 @@ $(document).ready(function(){
                 close_info_popup('cal_popup_plandelete');
                 get_group_repeat_info(group_id);
                 if(bodywidth >= 600){
-                    $('#calendar').css('position','relative');
+                    $('#calendar').css('position', 'relative');
                 }else{
                     get_current_member_list();
                     get_current_group_list();
