@@ -90,6 +90,7 @@ def check_before_billing_logic(request):
             period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
                                                                   product_tb_id='8',
                                                                   next_payment_date__gt=today,
+                                                                  state_cd='IP',
                                                                   use=USE).count()
             if period_payment_counter == 0:
                 error = '프리미엄 고객 전용 상품입니다. 먼저 프리미엄 기능을 구매해 주세요.'
@@ -97,6 +98,7 @@ def check_before_billing_logic(request):
         else:
             period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
                                                                   next_payment_date__gt=today,
+                                                                  state_cd='IP',
                                                                   use=USE).count()
             if period_payment_counter > 0:
                 error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
@@ -465,7 +467,7 @@ def check_update_period_billing_logic(request):
 
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(member_id=request.user.id, customer_uid=customer_uid, use=USE)
+            billing_info = BillingInfoTb.objects.get(member_id=request.user.id, state_cd='IP', customer_uid=customer_uid, use=USE)
         except ObjectDoesNotExist:
             billing_info = None
 
