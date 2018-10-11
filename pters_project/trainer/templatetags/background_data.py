@@ -171,8 +171,12 @@ def get_function_auth_type_cd(request):
 
         for function_info in function_list:
             auth_info = {}
-            function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
-                                         + function_info.auth_type_cd
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+            else:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                             + str(function_info.auth_type_cd)
+
             auth_info['active'] = 1
             auth_info['limit_num'] = function_info.counts
             auth_info['limit_type'] = function_info.product_tb.name
@@ -190,8 +194,11 @@ def get_function_auth_type_cd(request):
 
         for function_info in function_list:
             auth_info = {}
-            function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd\
-                                         + function_info.auth_type_cd
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+            else:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                             + str(function_info.auth_type_cd)
             auth_info['active'] = 1
             auth_info['limit_num'] = function_info.counts
             auth_info['limit_type'] = function_info.product_tb.name
