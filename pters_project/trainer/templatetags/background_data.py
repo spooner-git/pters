@@ -162,39 +162,33 @@ def get_function_auth_type_cd(request):
     for payment_info in payment_data:
         function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
                                                                      ).filter(product_tb_id=payment_info.product_tb_id,
-                                                                              use=USE).order_by('function_auth_tb_id')
+                                                                              use=USE).order_by('product_tb_id',
+                                                                                                'function_auth_tb_id',
+                                                                                                'auth_type_cd')
         for function_info in function_list:
-            auth_type_list = function_info.auth_type_cd.split('/')
-            for auth_type_info in auth_type_list:
-                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
-                if auth_type_info == 'C':
-                    function_auth_type_cd_name += '_create'
-                elif auth_type_info == 'R':
-                    function_auth_type_cd_name += '_read'
-                elif auth_type_info == 'U':
-                    function_auth_type_cd_name += '_update'
-                elif auth_type_info == 'D':
-                    function_auth_type_cd_name += '_delete'
-                context[function_auth_type_cd_name] = function_info.counts
+            auth_info = {}
+            function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                         + function_info.auth_type_cd
+            auth_info['active'] = 1
+            auth_info['limit_num'] = function_info.counts
+            if function_info.auth_type_cd == '':
+                auth_info['active'] = 1
+            context[function_auth_type_cd_name] = auth_info
             # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
     if len(payment_data) == 0:
         function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
                                                                      ).filter(product_tb_id=6,
-                                                                              use=USE).order_by('function_auth_tb_id')
+                                                                              use=USE).order_by('product_tb_id',
+                                                                                                'function_auth_tb_id',
+                                                                                                'auth_type_cd')
         for function_info in function_list:
-            auth_type_list = function_info.auth_type_cd.split('/')
-            for auth_type_info in auth_type_list:
-                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
-                if auth_type_info == 'C':
-                    function_auth_type_cd_name += '_create'
-                elif auth_type_info == 'R':
-                    function_auth_type_cd_name += '_read'
-                elif auth_type_info == 'U':
-                    function_auth_type_cd_name += '_update'
-                elif auth_type_info == 'D':
-                    function_auth_type_cd_name += '_delete'
-                context[function_auth_type_cd_name] = function_info.counts
+            auth_info = {}
+            function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd\
+                                         + function_info.auth_type_cd
+            auth_info['active'] = 1
+            auth_info['limit_num'] = function_info.counts
+            context[function_auth_type_cd_name] = auth_info
             # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
     return context
