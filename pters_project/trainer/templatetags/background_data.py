@@ -160,7 +160,7 @@ def get_function_auth_type_cd(request):
         billing_info.save()
 
     for payment_info in payment_data:
-        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
                                                                      ).filter(product_tb_id=payment_info.product_tb_id,
                                                                               use=USE).order_by('product_tb_id',
                                                                                                 'function_auth_tb_id',
@@ -171,13 +171,12 @@ def get_function_auth_type_cd(request):
                                          + function_info.auth_type_cd
             auth_info['active'] = 1
             auth_info['limit_num'] = function_info.counts
-            if function_info.auth_type_cd == '':
-                auth_info['active'] = 1
+            auth_info['limit_type'] = function_info.product_tb.name
             context[function_auth_type_cd_name] = auth_info
             # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
     if len(payment_data) == 0:
-        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb'
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
                                                                      ).filter(product_tb_id=6,
                                                                               use=USE).order_by('product_tb_id',
                                                                                                 'function_auth_tb_id',
@@ -188,6 +187,7 @@ def get_function_auth_type_cd(request):
                                          + function_info.auth_type_cd
             auth_info['active'] = 1
             auth_info['limit_num'] = function_info.counts
+            auth_info['limit_type'] = function_info.product_tb.name
             context[function_auth_type_cd_name] = auth_info
             # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
