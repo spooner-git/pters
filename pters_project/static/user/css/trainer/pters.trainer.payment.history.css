@@ -174,7 +174,7 @@ body{
 }
 .current_use_table_label div{
 	display: table-cell;
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: 500;
 	background: #fbfbfb;
 }
@@ -248,7 +248,7 @@ body{
 }
 .mypay_history_table_label div{
 	display: table-cell;
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: 500;
 	background: #fbfbfb;
 	vertical-align: middle;
@@ -350,7 +350,7 @@ body{
 }
 .monthly_pay_stop_table_label div{
 	display: table-cell;
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: 500;
 	background: #fbfbfb;
 	vertical-align:middle;
@@ -512,20 +512,29 @@ body{
 }
 .pay_method_change_table_content div:nth-child(2){
 	color: #fe4e65;
-	font-size: 20px;
-	width: 16%;
+	font-size: 16px;
+	display: block;
+	width: 100%;
 }
 .pay_method_change_table_content div:nth-child(3){
 	width: 10%;
+	width: 32%;
+	display: inline-block;
 }
 .pay_method_change_table_content div:nth-child(4){
 	width: 15%;
+	width: 32%;
+	display: inline-block;
 }
 .pay_method_change_table_content div:nth-child(5){
 	width: 100%;
 	text-align: left;
 	display: block;
 	padding-left: 10px;
+
+	width: 32%;
+	text-align: center;
+	display: inline-block;
 }
 .pay_method_change_table_content div:nth-child(6){
 	width: 100%;
@@ -743,13 +752,18 @@ body{
 	.current_use_table_label{
 		display: table;
 	}
+	.current_use_table_label div{
+		font-size: 13px;
+	}
 	.current_use_table_label div:nth-child(1){
 		display: table-cell;
 	}
 	.current_use_table_content div:nth-child(1){
 		display: table-cell;
 	}
-
+	.mypay_history_table_label div{
+		font-size: 13px;
+	}
 	.mypay_history_table_label div:nth-child(1){
 		display: table-cell;
 	}
@@ -763,6 +777,9 @@ body{
 		display: inline;
 	}
 
+	.monthly_pay_stop_table_label div{
+		font-size: 13px;
+	}
 	.monthly_pay_stop_table_label div:nth-child(1){
 		display: table-cell;
 	}
@@ -791,12 +808,27 @@ body{
 		display: table-cell;
 	}
 	.pay_method_change_table_content div:nth-child(2){
+		width: 16%;
 		font-size: 13px;
 		color: unset;
+		display: table-cell;
+	}
+
+	.pay_method_change_table_content div:nth-child(3){
+		width: 10%;
+		display: table-cell;
+	}
+	.pay_method_change_table_content div:nth-child(4){
+		width: 15%;
+		display: table-cell;
+	}
+
+	.pay_method_change_table_label div:nth-child(5){
+		width: 15%;
 	}
 	.pay_method_change_table_content div:nth-child(5){
 		display: table-cell;
-		width:35%;
+		width:15%;
 		text-align:center;
 		padding-left: unset;
 	}
