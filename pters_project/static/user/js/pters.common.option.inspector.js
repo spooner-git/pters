@@ -1,15 +1,17 @@
+console.log(auth_type_cd)
 function pters_option_inspector(option_type, xhr, option_element){
     //option_element는 date나, 회원숫자 등
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
-    if(Options.auth.auth_option_limit == 1){
+    //if(auth_type_cd.auth_option_limit == 1){
         var lock_date;
 
         //일정
-        if(      option_type == "plan_create"    && Options.auth.auth_plan_create.active == 1){
+        if(      option_type == "plan_create"){
             var selected_date = option_element;
-            var lock_date = Options.auth.auth_plan_create.limit_num;
+            var lock_date = auth_type_cd.auth_plan_create.limit_num;
+
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
-                show_caution_popup(function_lock_message("plan", lock_date, "일정 등록", Options.auth.auth_plan_create.limit_type));
+                show_caution_popup(function_lock_message("plan", lock_date, "일정 등록", auth_type_cd.auth_plan_create.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                 }
@@ -65,11 +67,11 @@ function pters_option_inspector(option_type, xhr, option_element){
                 }
                 check_dropdown_selected_addplan();
             }
-        }else if(option_type == "plan_delete"    && Options.auth.auth_plan_delete.active == 1){
+        }else if(option_type == "plan_delete"){
             var selected_date = option_element;
-            var lock_date = Options.auth.auth_plan_delete.limit_num;
+            var lock_date = auth_type_cd.auth_plan_delete.limit_num;
             if((compare_date2(add_date(today_YY_MM_DD, lock_date), selected_date) == false  ||  compare_date2(selected_date, substract_date(today_YY_MM_DD, -lock_date)) == false)){
-                show_caution_popup(function_lock_message("plan", lock_date, "일정 삭제", Options.auth.auth_plan_delete.limit_type));
+                show_caution_popup(function_lock_message("plan", lock_date, "일정 삭제", auth_type_cd.auth_plan_delete.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                 }
@@ -82,37 +84,37 @@ function pters_option_inspector(option_type, xhr, option_element){
                 enable_delete_btns_after_ajax();
                 close_info_popup('cal_popup_plandelete');
             }
-        }else if(option_type == "plan_read"      && Options.auth.auth_plan_read.active == 1){
-        }else if(option_type == "plan_update"    && Options.auth.auth_plan_update.active == 1){
+        }else if(option_type == "plan_read"){
+        }else if(option_type == "plan_update"){
         }
 
         //회원관리
-        else if(option_type == "member_create"   && Options.auth.auth_member_create.active == 1){
+        else if(option_type == "member_create"){
             var current_member_num = option_element;
-            if(current_member_num >= Options.auth.auth_member_create.limit_num){
-                show_caution_popup(function_lock_message("create", Options.auth.auth_member_create.limit_num, "회원 등록", Options.auth.auth_member_create.limit_type));
+            if(current_member_num >= auth_type_cd.auth_member_create.limit_num){
+                show_caution_popup(function_lock_message("create", auth_type_cd.auth_member_create.limit_num, "회원 등록", auth_type_cd.auth_member_create.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
                 }
             }
-        }else if(option_type == "member_delete"  && Options.auth.auth_member_delete.active == 1){
-            show_caution_popup(function_lock_message("delete", 1, "회원 삭제", Options.auth.auth_member_delete.limit_type));
+        }else if(option_type == "member_delete" ){
+            show_caution_popup(function_lock_message("delete", 1, "회원 삭제", auth_type_cd.auth_member_delete.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
             }
-        }else if(option_type == "member_read"    && Options.auth.auth_member_read.active == 1){
-            show_caution_popup(function_lock_message("read", 1, "상세 정보 조회", Options.auth.auth_member_read.limit_type));
+        }else if(option_type == "member_read"){
+            show_caution_popup(function_lock_message("read", 1, "상세 정보 조회", auth_type_cd.auth_member_read.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
                 close_manage_popup('member_info_PC');
                 close_manage_popup('member_info');
             }
-        }else if(option_type == "member_update"  && Options.auth.auth_member_update.active == 1){
+        }else if(option_type == "member_update"){
             var dbID = option_element;
-            show_caution_popup(function_lock_message("read", 1, "회원 정보 수정", Options.auth.auth_member_update.limit_type));
+            show_caution_popup(function_lock_message("read", 1, "회원 정보 수정", auth_type_cd.auth_member_update.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -124,24 +126,24 @@ function pters_option_inspector(option_type, xhr, option_element){
         }
 
         //그룹관리
-        else if(option_type == "group_create"    && Options.auth.auth_group_create.active == 1){
+        else if(option_type == "group_create"){
             var current_group_num = option_element;
-            if(current_group_num >= Options.auth.auth_group_create.limit_num){
-                show_caution_popup(function_lock_message("create", Options.auth.auth_group_create.limit_num, "그룹 추가", Options.auth.auth_group_create.limit_type));
+            if(current_group_num >= auth_type_cd.auth_group_create.limit_num){
+                show_caution_popup(function_lock_message("create", auth_type_cd.auth_group_create.limit_num, "그룹 추가", auth_type_cd.auth_group_create.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
                 }
             }
-        }else if(option_type == "group_delete"   && Options.auth.auth_group_delete.active == 1){
-            show_caution_popup(function_lock_message("delete", "", "삭제", Options.auth.auth_group_delete.limit_type));
+        }else if(option_type == "group_delete"){
+            show_caution_popup(function_lock_message("delete", "", "삭제", auth_type_cd.auth_group_delete.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
                 enable_delete_btns_after_ajax();
             }
-        }else if(option_type == "group_read"     && Options.auth.auth_group_read.active == 1){
-            show_caution_popup(function_lock_message("delete", "", "조회", Options.auth.auth_group_read.limit_type));
+        }else if(option_type == "group_read"){
+            show_caution_popup(function_lock_message("delete", "", "조회", auth_type_cd.auth_group_read.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -149,8 +151,8 @@ function pters_option_inspector(option_type, xhr, option_element){
                 $('.groupMembersWrap_selected').removeClass('groupMembersWrap_selected').hide();
                 smart_refresh_member_group_class_list();
             }
-        }else if(option_type == "group_update"   && Options.auth.auth_group_update.active == 1){
-            show_caution_popup(function_lock_message("delete", "", "수정", Options.auth.auth_group_update.limit_type));
+        }else if(option_type == "group_update"){
+            show_caution_popup(function_lock_message("delete", "", "수정", auth_type_cd.auth_group_update.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -159,15 +161,15 @@ function pters_option_inspector(option_type, xhr, option_element){
         }
 
         //그룹/클래스원 추가 뺴기
-        else if(option_type == "groupmember_create"  && Options.auth.auth_groupmember_create.active == 1){
-            show_caution_popup(function_lock_message("delete", 1, "그룹원 추가", Options.auth.auth_groupmember_create.limit_type));
+        else if(option_type == "groupmember_create"){
+            show_caution_popup(function_lock_message("delete", 1, "그룹원 추가", auth_type_cd.auth_groupmember_create.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
                 enable_delete_btns_after_ajax();
             }
-        }else if(option_type == "groupmember_delete" && Options.auth.auth_groupmember_delete.active == 1){
-            show_caution_popup(function_lock_message("delete", 1, "인원 수정", Options.auth.auth_groupmember_delete.limit_type));
+        }else if(option_type == "groupmember_delete"){
+            show_caution_popup(function_lock_message("delete", 1, "인원 수정", auth_type_cd.auth_groupmember_delete.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -175,24 +177,24 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
 
         //클래스 관리
-        }else if(option_type == "class_create"   && Options.auth.auth_class_create.active == 1){
+        }else if(option_type == "class_create"){
             var current_class_num = option_element;
-            if(current_class_num >= Options.auth.auth_class_create.limit_num){
-                show_caution_popup(function_lock_message("create", Options.auth.auth_class_create.limit_num, "클래스 추가", Options.auth.auth_class_create.limit_type));
+            if(current_class_num >= auth_type_cd.auth_class_create.limit_num){
+                show_caution_popup(function_lock_message("create", auth_type_cd.auth_class_create.limit_num, "클래스 추가", auth_type_cd.auth_class_create.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
                 }
             }
-        }else if(option_type == "class_delete"   && Options.auth.auth_class_delete.active == 1){
-            show_caution_popup(function_lock_message("delete", 1, "인원 수정", Options.auth.auth_class_delete.limit_type));
+        }else if(option_type == "class_delete"){
+            show_caution_popup(function_lock_message("delete", 1, "인원 수정", auth_type_cd.auth_class_delete.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
                 enable_delete_btns_after_ajax();
             }
-        }else if(option_type == "class_read"     && Options.auth.auth_class_read.active == 1){
-            show_caution_popup(function_lock_message("delete", "", "조회", Options.auth.auth_class_read.limit_type));
+        }else if(option_type == "class_read"){
+            show_caution_popup(function_lock_message("delete", "", "조회", auth_type_cd.auth_class_read.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -200,8 +202,8 @@ function pters_option_inspector(option_type, xhr, option_element){
                 $('.groupMembersWrap_selected').removeClass('groupMembersWrap_selected').hide();
                 smart_refresh_member_group_class_list();
             }
-        }else if(option_type == "class_update"   && Options.auth.auth_class_update.active == 1){
-            show_caution_popup(function_lock_message("plan", 1, "수정", Options.auth.auth_class_update.limit_type));
+        }else if(option_type == "class_update"){
+            show_caution_popup(function_lock_message("plan", 1, "수정", auth_type_cd.auth_class_update.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -210,41 +212,41 @@ function pters_option_inspector(option_type, xhr, option_element){
         }
         
         //패키지 관리
-        else if(option_type == "package_create"    && Options.auth.auth_package_create.active == 1){
-        }else if(option_type == "package_delete"   && Options.auth.auth_package_delete.active == 1){
-        }else if(option_type == "package_read"     && Options.auth.auth_package_read.active == 1){
-        }else if(option_type == "package_update"   && Options.auth.auth_package_update.active == 1){
+        else if(option_type == "package_create"){
+        }else if(option_type == "package_delete"){
+        }else if(option_type == "package_read"){
+        }else if(option_type == "package_update"){
         }
         
         //통계
-        else if(option_type == "analytics_create"    && Options.auth.auth_analytics_create.active == 1){
-        }else if(option_type == "analytics_delete"   && Options.auth.auth_analytics_delete.active == 1){
-        }else if(option_type == "analytics_read"     && Options.auth.auth_analytics_read.active == 1){
+        else if(option_type == "analytics_create"){
+        }else if(option_type == "analytics_delete"){
+        }else if(option_type == "analytics_read"){
             var diffmonth = option_element;
-            if(diffmonth >= Options.auth.auth_analytics_read.limit_num){
-                show_caution_popup(function_lock_message("analytics_read", Options.auth.auth_analytics_read.limit_num, "통계 조회", Options.auth.auth_class_update.limit_type));
+            if(diffmonth >= auth_type_cd.auth_analytics_read.limit_num){
+                show_caution_popup(function_lock_message("analytics_read", auth_type_cd.auth_analytics_read.limit_num, "통계 조회", auth_type_cd.auth_class_update.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
                 }
             }
-        }else if(option_type == "analytics_update"   && Options.auth.auth_analytics_update.active == 1){
+        }else if(option_type == "analytics_update"){
         }
 
         //프로그램
         else if(option_type == "program_create"){
-            if(Options.auth.auth_program_create.active == 1){
+            // if(auth_type_cd.auth_program_create.limit_num > 0){
                 var current_program_num = option_element;
-                if(current_program_num >= Options.auth.auth_program_create.limit_num){
-                    show_caution_popup(function_lock_message("create", Options.auth.auth_program_create.limit_num, "프로그램 생성", Options.auth.auth_program_create.limit_type));
+                if(current_program_num >= auth_type_cd.auth_program_create.limit_num){
+                    show_caution_popup(function_lock_message("create", auth_type_cd.auth_program_create.limit_num, "프로그램 생성", auth_type_cd.auth_program_create.limit_type));
                 }else{
-                    location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'
+                    location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/';
                 }
-            }else if(Options.auth.auth_program_create.active == 0){
-                location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'
-            }
-        }else if(option_type == "program_delete" && Options.auth.auth_program_delete.active == 1){
-            show_caution_popup(function_lock_message("delete", 1, "프로그램 삭제", Options.auth.auth_program_delete.limit_type));
+            // }else if(auth_type_cd.auth_program_create.active == 0){
+            //     location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'
+            // }
+        }else if(option_type == "program_delete"){
+            show_caution_popup(function_lock_message("delete", 1, "프로그램 삭제", auth_type_cd.auth_program_delete.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -253,12 +255,12 @@ function pters_option_inspector(option_type, xhr, option_element){
                 $("#popup_delete_btn_yes").off();
                 $('#popup_delete_btn_no, .popup_close_x_button').off();
             }
-        }else if(option_type == "program_read"   && Options.auth.auth_program_read.active == 1){
+        }else if(option_type == "program_read"){
         }else if(option_type == "program_update"){
             var $this = option_element;
-            if(Options.auth.auth_program_update.active == 1){
-                show_caution_popup(function_lock_message("delete", 1, "프로그램명 수정", Options.auth.auth_program_update.limit_type));
-            }else if(Options.auth.auth_program_update.active == 0){
+            if(auth_type_cd.auth_program_update.limit_num > 0){
+                show_caution_popup(function_lock_message("delete", 1, "프로그램명 수정", auth_type_cd.auth_program_update.limit_type));
+            }else if(auth_type_cd.auth_program_update.limit_num == 0){
                 if(!$this.hasClass('disabled_button')){
                     var $thiscancel = $this.siblings('._icon_cancel');
                     var $thisdel =  $this.siblings('._icon_del');
@@ -272,11 +274,11 @@ function pters_option_inspector(option_type, xhr, option_element){
                 }
             }
         }
-    }
+    //}
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
 }
 
-function function_lock_message(function_type, number, option_type, free_comment_on_off){ //Options.auth_lock_date
+function function_lock_message(function_type, number, option_type, free_comment_on_off){ //auth_type_cd_lock_date
     var type_text = option_type;
     var message;
     var free_message = "<p>[권한 없음]</p>";
