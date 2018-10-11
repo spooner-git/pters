@@ -750,7 +750,7 @@ function playSound() {
         window.location.reload();
     });
 
-    
+
     function adjust_sidenav_wrapper_height(){
         //var sideupper_BottomLoc = $('.sidebar_upper').offset().top + $('.sidebar_upper').height();
         var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top - $(window).scrollTop();
@@ -762,7 +762,7 @@ function playSound() {
 
 
     function openNav(){
-        
+
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
         $('#float_btn').hide('fast');
@@ -782,7 +782,7 @@ function playSound() {
     }
 
     //var selector_alarm_iframe = $('#alarm-delete-form');
-    
+
     function open_slide_menu_pc(option){ // pc or mobile
         var bodywidth = window.innerWidth;
         var selector_alarm_iframe = $('#alarm-iframe')
@@ -797,8 +797,8 @@ function playSound() {
             }else{
                 $('#popup_triangle').css({'display':'block', 'top':$('#classselect_button').position().top+53, 'left':$('#classselect_button').position().left+7})
             }
-            
-            
+
+
         }
         else if(option == 'alarm'){
             $('.pcver-slide-menu_class').css('display','none')
@@ -810,8 +810,8 @@ function playSound() {
             }else{
                 $('#popup_triangle').css({'display':'block', 'top':$('#alarm_button').position().top+53, 'left':$('#alarm_button').position().left-3})
             }
-            
-            
+
+
         }
     }
 
@@ -831,7 +831,7 @@ function playSound() {
 
         }
     }
-    
+
     var class_hour = '{{ request.session.class_hour }}';
     var social_login_check = '{{ request.session.social_login_check }}';
     var social_login_type = '{{ request.session.social_login_type }}';
@@ -848,7 +848,7 @@ function playSound() {
     if(stoptime.length>0){ //0:00-23:59
         stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0]);
         stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0]);
-        
+
         if('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_member_reserve_time_available }}'.split('-')[0].split(':')[1] == '59'){
             stoptimeStart = 24;
         }
@@ -874,7 +874,7 @@ function playSound() {
         worktimeEnd = '';
     }
 
-    var Options = {   
+    var Options = {
         "hourunit" : 30, // 30 or 60 달력을 30분단위로 선택이 가능하다.
         "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60  수업시간을 classDur 시간만큼 선택 가능
         "timeDur" : Number('{{ request.session.setting_member_time_duration }}'),               //예약 기본 시간 단위
@@ -914,7 +914,7 @@ function playSound() {
 
         // "auth_group":1,
         // "auth_class":1,
-        
+
         // "auth":{
         //             "auth_option_limit":1, //1: 제한  0: 제한 없음
         //             "auth_lock_date":3,    //숫자 > 0: 날짜 제한, 0: 기능 제한
