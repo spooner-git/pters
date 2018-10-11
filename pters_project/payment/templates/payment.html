@@ -92,6 +92,7 @@
             </div>
         {% endfor %}
     {% endautoescape %}
+    </div>
 <!--
         <div class="payment_function_wrap">
             <label class="function_label">엘리트</label>
@@ -224,7 +225,6 @@
                 <button class="submitBtn _button_Next">결제하기</button>
             </div>
         </div>
-
     </div>
 
 
@@ -317,7 +317,11 @@
         });
 
         function purchase_popup_show(product, type, functions, price, product_id, period_month){
-            shade_index(100)
+            shade_index(100);
+            // $('#payment_contents_wrap').css({"height":"100%", "overflow":"hidden"});
+            if(bodywidth < 600){
+                $('#payment_contents_wrap').hide();
+            }
             $('#purchase_popup').fadeIn('fast')
                                 .css({'top':(($(window).height()-$('#purchase_popup').outerHeight())/2),
                                       'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
@@ -566,6 +570,7 @@
             }
         });
 
+        set_list_overflow_scrolling('#purchase_popup_page1', '#purchase_popup_page1');
         $('#purchase_popup_page2 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page2').css('display')=='block' ){
 
@@ -575,9 +580,8 @@
                 var product_id = $('#purchase_popup').attr('data-product-id');
                 var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1);
                 var period_month = $('#purchase_popup').attr('data-period-month');
-{#                console.log(product, method, type, functions, price)#}
                 check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
-                purchase_popup_close();
+                purchase_popup_close("do_not_show_background");
                 shade_index(100)
             }
         });
@@ -590,7 +594,11 @@
             purchase_popup_close();
         });
 
-        function purchase_popup_close(){
+        function purchase_popup_close(option){
+            if(option == "do_not_show_background"){
+            }else{
+                $('#payment_contents_wrap').show();
+            }
             shade_index(-100);
             $('#purchase_popup, #purchase_popup_page2').hide();
             $('#purchase_popup_page1').show();
