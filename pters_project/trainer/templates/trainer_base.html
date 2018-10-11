@@ -662,6 +662,7 @@ function playSound() {
     var class_background_img_url= {% get_background_url request %};
     var class_background_type_cd = {% get_background_type_cd request %};
     var auth_type_cd = {% get_function_auth_type_cd request %};
+    var auth_product_type_name = '{{ request.session.product_type_name }}';
     {% endautoescape %}
 
     // auth_type_cd = {

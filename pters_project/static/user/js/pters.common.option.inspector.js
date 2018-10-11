@@ -5,6 +5,18 @@ function pters_option_inspector(option_type, xhr, option_element){
     //if(auth_type_cd.auth_option_limit == 1){
         var lock_date;
 
+        var limit_num = 0;
+        var limit_type = '';
+        var auth_type_name = 'auth_'+option_type;
+
+        if(auth_type_cd[auth_type_name] != undefined){
+            limit_num = auth_type_cd[auth_type_name].limit_num;
+            limit_type = auth_type_cd[auth_type_name].limit_type;
+        }
+        else{
+            limit_num = 0;
+            limit_type = auth_product_type_name;
+        }
         //일정
         if(option_type == "plan_create"){
             var selected_date = option_element;

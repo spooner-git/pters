@@ -159,12 +159,16 @@ def get_function_auth_type_cd(request):
         billing_info.use = UN_USE
         billing_info.save()
 
+    request.session['product_type_name'] = ''
     for payment_info in payment_data:
         function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
                                                                      ).filter(product_tb_id=payment_info.product_tb_id,
                                                                               use=USE).order_by('product_tb_id',
                                                                                                 'function_auth_tb_id',
                                                                                                 'auth_type_cd')
+        if len(function_list) > 0:
+            request.session['product_type_name'] += function_list[0].product_tb.name
+
         for function_info in function_list:
             auth_info = {}
             function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
@@ -181,6 +185,9 @@ def get_function_auth_type_cd(request):
                                                                               use=USE).order_by('product_tb_id',
                                                                                                 'function_auth_tb_id',
                                                                                                 'auth_type_cd')
+        if len(function_list) > 0:
+            request.session['product_type_name'] += function_list[0].product_tb.name
+
         for function_info in function_list:
             auth_info = {}
             function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd\
