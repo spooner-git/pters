@@ -151,7 +151,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
         }else if(option_type == "group_read"){
             if(auth_type_cd.auth_group_read.limit_num == 0){
-                show_caution_popup(function_lock_message("delete", 1, "조회", auth_type_cd.auth_group_read.limit_type));
+                show_caution_popup(function_lock_message("delete", 1, "그룹/클래스 인원 조회", auth_type_cd.auth_group_read.limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
