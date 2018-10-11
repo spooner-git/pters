@@ -327,7 +327,7 @@ function function_lock_message(function_type, number, option_type, free_comment_
             var limit_member_num = number;
             message = `<div style="margin-bottom:10px;">
                         ${free_message}
-                        <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;">오늘 기준 ${limit_member_num}개월로 제한</span>됩니다. <br><br>
+                        <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;">${limit_member_num}개월 단위로 제한</span>됩니다. <br><br>
                         ${free_message1}
                     </div>`;
         }
