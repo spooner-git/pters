@@ -314,15 +314,17 @@ function pters_option_inspector(option_type, xhr, option_element){
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
 }
 
-function function_lock_message(function_type, number, option_type, free_comment_on_off){ //auth_type_cd_lock_date
+function function_lock_message(function_type, number, option_type, user_type){ //auth_type_cd_lock_date
     var type_text = option_type;
     var message;
-    var free_message = "<p>[권한 없음]</p>";
-    var free_message1 = "";
-    if(free_comment_on_off == 1){
-        free_message = "무료 이용자께서는 <br>";
-        free_message1 = `<span style="color:#fe4e65;">이용권</span> 구매로<br><span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!`;
-    }
+    // var free_message = "<p>[권한 없음]</p>";
+    // var free_message1 = "";
+    // if(user_type == 1){
+    //     free_message = "무료 이용자께서는 <br>";
+    //     free_message1 = `<span style="color:#fe4e65;">이용권</span> 구매로<br><span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!`;
+    // }
+    var free_message = `${user_type}께서는 <br>`;
+    var free_message1 = `<span style="color:#fe4e65;">추가 이용권</span>으로<br><span style="color:#fe4e65;">제한 없이 </span>이용 해보세요!`;
 
 
     if(number == 0){
