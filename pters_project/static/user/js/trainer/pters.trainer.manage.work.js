@@ -40,7 +40,7 @@ $('#call_sales_data_btn').click(function(){
                                     통계조회를 <span style="font-weight:500;">이번달만 가능</span>합니다. <br><br>
                                     <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">조회기간 제한 없이 이용</span>해보세요!
-                                </div>`)
+                                </div>`);
     }else{
         if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
             if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined){

@@ -223,8 +223,8 @@
 <script type="text/javascript" src={% static_url "common/js/google.chart.js" %}></script>
 <script type="text/javascript">
     
-    $('a.text-workmanage').css('color','#fe4e65;')
-    $('#uptext').text("통계")
+    $('a.text-workmanage').css('color','#fe4e65;');
+    $('#uptext').text("통계");
 
 
     var graph_Width_To_Be = $('.chart_wrapper').width();
@@ -322,8 +322,10 @@
             dataType : 'html',
             type: 'GET',
 
-            beforeSend:function(){
+            beforeSend:function(xhr){
                 beforeSend();
+                console.log(start_date, end_date);
+                pters_option_inspector("analytics_read", xhr, diff_month(start_date, end_date))
             },
 
             success:function(data){
@@ -333,7 +335,6 @@
                     $('#errorMessageText').text(jsondata.messageArray);
                 }else{
                     var addRows_data = datas_convert_to_addRows(jsondata.month_date, jsondata.price, jsondata.refund_price)
-                    console.log('sales',addRows_data)
                     drawChart(
                                 graph_Width_To_Be, 
                                 graph_Height_To_Be,
