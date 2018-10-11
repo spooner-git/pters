@@ -324,7 +324,6 @@
 
             beforeSend:function(xhr){
                 beforeSend();
-                console.log(start_date, end_date);
                 pters_option_inspector("analytics_read", xhr, diff_month(start_date, end_date))
             },
 
@@ -478,13 +477,13 @@
                 dataType : 'html',
                 type: 'GET',
 
-                beforeSend:function(){
+                beforeSend:function(xhr){
                     beforeSend();
+                    pters_option_inspector("analytics_read", xhr, diff_month(start_date, end_date));
                 },
 
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    console.log('members',jsondata)
                     if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
@@ -543,13 +542,13 @@
             dataType : 'html',
             type: 'GET',
 
-            beforeSend:function(){
+            beforeSend:function(xhr){
                 beforeSend();
+                pters_option_inspector("analytics_read", xhr, diff_month(start_date, end_date));
             },
 
             success:function(data){
                 var jsondata = JSON.parse(data);
-                console.log('회원 월별',jsondata)
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
@@ -587,8 +586,9 @@
             dataType : 'html',
             type: 'GET',
 
-            beforeSend:function(){
+            beforeSend:function(xhr){
                 beforeSend();
+                pters_option_inspector("analytics_read", xhr, diff_month(start_date, end_date));
             },
 
             success:function(data){
