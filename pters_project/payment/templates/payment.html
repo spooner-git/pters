@@ -384,6 +384,7 @@
                         error_check = false;
                         alert(jsondata.messageArray);
                         shade_index(-100)
+                        purchase_popup_close();
                     }else {
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
@@ -534,6 +535,7 @@
                         msg += '에러내용 : ' + rsp.error_msg;
                         shade_index(-100)
                         alert(msg);
+                        location.href="/payment/";
                     }
                 });
 
