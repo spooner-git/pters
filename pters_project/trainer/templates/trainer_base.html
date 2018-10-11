@@ -914,7 +914,7 @@ function playSound() {
 
                     "auth_analytics_create":{"active":1, "limit_num":"", "limit_type": 0},
                     "auth_analytics_delete":{"active":1, "limit_num":"", "limit_type": 0},
-                    "auth_analytics_read":{"active":1, "limit_num":"", "limit_type": 0},
+                    "auth_analytics_read":{"active":1, "limit_num":3, "limit_type": 0},
                     "auth_analytics_update":{"active":1, "limit_num":"", "limit_type": 0},
 
                     "auth_program_create":{"active":1, "limit_num":3, "limit_type": 0},
@@ -931,7 +931,7 @@ function playSound() {
         },
         "auth_ads":0
     };
-
+    
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
     var week_worktime_selected = false;
     for(var i=0; i<Options.worktimeWeekly.length; i++){

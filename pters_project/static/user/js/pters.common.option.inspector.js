@@ -201,7 +201,7 @@ function pters_option_inspector(option_type, xhr, option_element){
                 smart_refresh_member_group_class_list();
             }
         }else if(option_type == "class_update"   && Options.auth.auth_class_update.active == 1){
-            show_caution_popup(function_lock_message("delete", "", "수정", Options.auth.auth_class_update.limit_type));
+            show_caution_popup(function_lock_message("plan", 1, "수정", Options.auth.auth_class_update.limit_type));
             if(xhr != ""){
                 xhr.abort(); // ajax중지
                 completeSend(); // ajax 로딩 이미지 숨기기
@@ -220,6 +220,14 @@ function pters_option_inspector(option_type, xhr, option_element){
         else if(option_type == "analytics_create"    && Options.auth.auth_analytics_create.active == 1){
         }else if(option_type == "analytics_delete"   && Options.auth.auth_analytics_delete.active == 1){
         }else if(option_type == "analytics_read"     && Options.auth.auth_analytics_read.active == 1){
+            var diffmonth = option_element;
+            if(diffmonth >= Options.auth.auth_analytics_read.limit_num){
+                show_caution_popup(function_lock_message("analytics_read", Options.auth.auth_analytics_read.limit_num, "통계 조회", Options.auth.auth_class_update.limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }else if(option_type == "analytics_update"   && Options.auth.auth_analytics_update.active == 1){
         }
 
@@ -313,6 +321,13 @@ function function_lock_message(function_type, number, option_type, free_comment_
             message = `<div style="margin-bottom:10px;">
                         ${free_message}
                         <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;"> 제한</span>됩니다. <br><br>
+                        ${free_message1}
+                    </div>`;
+        }else if(function_type == "analytics_read"){
+            var limit_member_num = number;
+            message = `<div style="margin-bottom:10px;">
+                        ${free_message}
+                        <span style="font-weight:500;">${type_text}</span> 이용이  <span style="font-weight:500;">${limit_member_num}개월 단위로 제한</span>됩니다. <br><br>
                         ${free_message1}
                     </div>`;
         }

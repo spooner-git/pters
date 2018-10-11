@@ -495,6 +495,7 @@
         closeAlarm('pc');
         var thisDate = $(this).attr('data-date');
         var planDate_ = thisDate.replace(/_/gi, "-");
+        $('#id_date_info').val(planDate_);
         var info = thisDate.split('_');
         if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             show_caution_popup(`<div style="margin-bottom:10px;">
