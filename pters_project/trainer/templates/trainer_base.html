@@ -663,22 +663,60 @@ function playSound() {
     var class_background_type_cd = {% get_background_type_cd request %};
     var auth_type_cd = {% get_function_auth_type_cd request %};
     {% endautoescape %}
-{#    window.addEventListener('load', function () {#}
-{#        Options.auth.auth_analytics_read.active = 1;#}
-{#        for(key in function_auth_type_cd) {#}
-{#            if(key=="auth_ads"){#}
-{#                Options.auth_ads = 1;#}
-{#                Options.auth[key] = 1;#}
-{#            }else{#}
-{#                Options.auth[key].limit_num = function_auth_type_cd[key];#}
-{#                Options.auth[key].active = 1;#}
-{#            }#}
-{#            console.log('key:' + key + ' / ' + 'value:' + function_auth_type_cd[key]+ '/ '+Options.auth[key].limit_num);#}
-{#        }#}
-{#    });#}
-    {#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
 
-    {#            open_lecture_select_popup_pc()#}
+    auth_type_cd = {
+                    "auth_option_limit":1, //1: 제한  0: 제한 없음
+                    "auth_lock_date":3,    //숫자 > 0: 날짜 제한, 0: 기능 제한
+
+                    // {"active":On/off여부, "limit_num":제한 숫자, "limit_type":무료사용자(1)인지 권한제한(0)인지}
+                    "auth_plan_create":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 앞뒤 몇일로 제한]
+                    "auth_plan_delete":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 앞뒤 몇일로 제한]
+                    "auth_plan_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_plan_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_member_create":{"active":1, "limit_num":0, "limit_type": 0}, // [On/Off, 최대 몇명]
+                    "auth_member_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_member_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_member_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_group_create":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 최대 몇 그룹]
+                    "auth_group_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_group_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_group_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_groupmember_create":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_groupmember_delete":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_class_create":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 최대 몇 클래스]
+                    "auth_class_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_class_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_class_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_classmember_add":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_classmember_delete":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_package_create":{"active":1, "limit_num":0, "limit_type": 0}, // [On/Off, 최대 몇 패키지]
+                    "auth_package_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_package_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_package_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_analytics_create":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_analytics_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_analytics_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_analytics_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_program_create":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_program_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_program_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_program_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_setting_create":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_setting_delete":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_setting_read":{"active":1, "limit_num":0, "limit_type": 0},
+                    "auth_setting_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+                    "auth_ads":0
+        }
 
     /* Shade 클릭해서 팝업 닫기
      $('.pshade').click(function(){
@@ -930,7 +968,7 @@ function playSound() {
 
         //             "auth_ads":0
         // },
-        
+
         "auth_ads":0
     };
     
