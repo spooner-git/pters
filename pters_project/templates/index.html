@@ -66,8 +66,8 @@
                 margin-bottom: 0px;
             }
             #promote_1 .loginbox{
-                margin-top: 70px;
-                top: 30%;
+                margin-top: 40px;
+                /*top: 30%;*/
                 z-index: 1500;
             }
             
@@ -168,6 +168,20 @@
 
     <div class="album_wrap" id="album_wrap">
         <div class="album" id="promote_1">
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h1 style="margin:0">누구나</h1>
+                    <h3 style="margin:0;font-weight: 300;">쉽고 빠르게</h3>
+                    <h1 style="margin:0">레슨<span style="font-size:17px;font-weight: 300;">을</span> 관리<span style="font-size:17px;font-weight: 300;">하는 방법</span></h1>
+
+                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><!-- <span class="pters_logo_text"> 피터스</span> --></div>
+
+                    <p class="explain_main_sublabel">1:1, 그룹, GX등 레슨 관리</p>
+                    <p class="explain_main_sublabel">더 알고 싶다면?</p>
+                    <img src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;">
+                </div>
+            </div>
+
             <div class="loginbox">
                 {% for message in messages %}
                     {% if message.tags == "error" %}
@@ -234,23 +248,6 @@
                             </div>
                         <!-- //네이버아이디로로그인 버튼 노출 영역 -->
                     </form>
-
-                </div>
-            </div>
-
-
-
-            <div class="explain_wrap">
-                <div class="explain_main">
-                    <h1 style="margin:0">누구나</h1>
-                    <h3 style="margin:0;font-weight: 300;">쉽고 빠르게</h3>
-                    <h1 style="margin:0">레슨<span style="font-size:17px;font-weight: 300;">을</span> 관리<span style="font-size:17px;font-weight: 300;">하는 방법</span></h1>
-
-                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><!-- <span class="pters_logo_text"> 피터스</span> --></div>
-
-                    <p class="explain_main_sublabel">1:1, 그룹, GX등 레슨 관리</p>
-                    <p class="explain_main_sublabel">더 알고 싶다면?</p>
-                    <img src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;">
                 </div>
             </div>
             <img src="/static/user/res/btn_next.png" class="next_page" style="display: none;">
@@ -322,35 +319,35 @@
         var page = 0
         var scroll = true
         var explain_mode;
-        $('html,body').on('mousewheel',function(e){
-            var loc_1 = $('#promote_1').height()
-            e.preventDefault()
-            var direction = e.originalEvent.wheelDelta
-            if(direction<0 && scroll == true){
-                page++
-                /*if(page > 5){
-                    page = 5
-                }*/
-                if(page > explain_mode){
-                    page = explain_mode
-                }
-                $('body, html').animate({scrollTop : loc_1*page},400)
-                $('.pagination_active').removeClass('pagination_active')
-                $('#page'+(page+1)).addClass('pagination_active')
-                scroll = false
-                setTimeout(function(){scroll = true}, 500)
-            }else if(direction>0 && scroll == true){
-                page--
-                if(page < 0){
-                    page = 0
-                }
-                $('body, html').animate({scrollTop : loc_1*page},400)
-                $('.pagination_active').removeClass('pagination_active')
-                $('#page'+(page+1)).addClass('pagination_active')
-                scroll = false
-                setTimeout(function(){scroll = true}, 500)
-            }
-        });
+        // $('html,body').on('mousewheel',function(e){
+        //     var loc_1 = $('#promote_1').height()
+        //     e.preventDefault()
+        //     var direction = e.originalEvent.wheelDelta
+        //     if(direction<0 && scroll == true){
+        //         page++
+        //         /*if(page > 5){
+        //             page = 5
+        //         }*/
+        //         if(page > explain_mode){
+        //             page = explain_mode
+        //         }
+        //         $('body, html').animate({scrollTop : loc_1*page},400)
+        //         $('.pagination_active').removeClass('pagination_active')
+        //         $('#page'+(page+1)).addClass('pagination_active')
+        //         scroll = false
+        //         setTimeout(function(){scroll = true}, 500)
+        //     }else if(direction>0 && scroll == true){
+        //         page--
+        //         if(page < 0){
+        //             page = 0
+        //         }
+        //         $('body, html').animate({scrollTop : loc_1*page},400)
+        //         $('.pagination_active').removeClass('pagination_active')
+        //         $('#page'+(page+1)).addClass('pagination_active')
+        //         scroll = false
+        //         setTimeout(function(){scroll = true}, 500)
+        //     }
+        // });
 
 
         var initX;

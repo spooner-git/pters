@@ -238,12 +238,12 @@ nav.main_nav{
 
 .loginbox{
 	display: block;
-	position: absolute;
+	position: relative;
 	width: 100%;
 	max-width: 340px;
 	height: auto;
 	padding: 23px 0px 20px 0px;
-	top: 50%;
+	/*top: 50%;*/
 	left: 50%;
 	transform: translate(-50%,-50%);
 }
