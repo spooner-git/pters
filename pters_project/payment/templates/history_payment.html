@@ -417,9 +417,6 @@
 
         function check_payment(name, customer_uid, product_id, period_month){
             var error_check = true;
-            console.log('check_payment::'+name);
-            console.log('product_id::'+product_id);
-            console.log('period_month::'+period_month);
             $.ajax({
                 url: "/payment/check_update_period_billing/", // 서비스 웹서버
                 type: "POST",
@@ -605,6 +602,7 @@
         }
 
     </script>
+
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.history.js" %}></script>
 
 {% endblock %}

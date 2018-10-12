@@ -24,6 +24,10 @@ $(document).ready(function(){
         var payment_name = $(this).attr('data-payment_name');
         var product_id = $(this).attr('data-product-id');
         var period_month = $(this).attr('data-period-month');
+        console.log(payment_name);
+        console.log(customer_uid);
+        console.log(product_id);
+        console.log(period_month);
         check_payment(payment_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
