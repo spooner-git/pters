@@ -510,7 +510,10 @@ def check_update_period_billing_logic(request):
 
     if error is None:
         if billing_info is not None:
-            context['next_start_date'] = str(billing_info.next_payment_date)
+            if today > billing_info.next_payment_date:
+                context['next_start_date'] = str(today)
+            else:
+                context['next_start_date'] = str(billing_info.next_payment_date)
         else:
             context['next_start_date'] = str(today)
 

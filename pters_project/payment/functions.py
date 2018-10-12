@@ -442,7 +442,7 @@ def func_add_billing_logic(custom_data, payment_result):
             payment_name = payment_result['name'] + ' - ' + product_price_info.name
             end_date = start_date
             status = 'pre_paid'
-            usage = UNUSE
+            usage = UN_USE
 
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
@@ -584,7 +584,25 @@ def func_update_billing_logic(payment_result):
             if error is None:
                 if len(payment_data) > 0:
                     payment_data.update(status='cancelled', use=UN_USE)
-            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+
+            if error is None:
+                billing_list = BillingInfoTb.objects.filter(member_id=payment_info.member_id, state_cd='IP', use=USE)
+                if len(billing_list) > 0:
+                    for billing_list_info in billing_list:
+                        billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_list_info.billing_info_id,
+                                                                  member_id=payment_info.member_id,
+                                                                  cancel_type='관리자',
+                                                                  cancel_reason='관리자 임의 취소',
+                                                                  use=USE)
+                        billing_cancel_info.save()
+                        billing_info.state_cd = 'CANCEL'
+                        billing_info.save()
+                        payment_data = PaymentInfoTb.objects.filter(customer_uid=billing_info.customer_uid,
+                                                                    status='reserve',
+                                                                    payment_type_cd='PERIOD')
+                        if len(payment_data) > 0:
+                            payment_data.update(status='cancelled', use=UN_USE)
+                        error = func_cancel_period_billing_schedule(billing_info.customer_uid)
 
         elif payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
             try:
