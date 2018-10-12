@@ -506,27 +506,27 @@ body{
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
-.pay_method_change_table_content div:nth-child(1){
+.pay_method_change_table_content > div:nth-child(1){
 	display: none;
 	width: 4%;
 }
-.pay_method_change_table_content div:nth-child(2){
+.pay_method_change_table_content > div:nth-child(2){
 	color: #fe4e65;
 	font-size: 16px;
 	display: block;
 	width: 100%;
 }
-.pay_method_change_table_content div:nth-child(3){
+.pay_method_change_table_content > div:nth-child(3){
 	width: 10%;
 	width: 32%;
 	display: inline-block;
 }
-.pay_method_change_table_content div:nth-child(4){
+.pay_method_change_table_content > div:nth-child(4){
 	width: 15%;
 	width: 32%;
 	display: inline-block;
 }
-.pay_method_change_table_content div:nth-child(5){
+.pay_method_change_table_content > div:nth-child(5){
 	width: 100%;
 	text-align: left;
 	display: block;
@@ -536,7 +536,7 @@ body{
 	text-align: center;
 	display: inline-block;
 }
-.pay_method_change_table_content div:nth-child(6){
+.pay_method_change_table_content > div:nth-child(6){
 	width: 100%;
 	display: block;
 	margin-top: 15px;
@@ -546,14 +546,13 @@ body{
 	font-size: 12px !important;
 	width: 50px !important;
 	height: 28px;
-	background: #282828 !important;
-	color: #ffffff;
+	border: 1px solid #cccccc;
 	margin: 0 auto;
-	display: block !important;
+	display: inline-block !important;
 	cursor: pointer;
 }
 .pay_method_changeButton span{
-	line-height: 28px;
+	line-height: 26px;
 }
 .pay_method_changeButton:hover{
 	opacity:0.8;
@@ -804,35 +803,35 @@ body{
 	.pay_method_change_table_content{
 		display: table;
 	}
-	.pay_method_change_table_content div:nth-child(1){
+	.pay_method_change_table_content > div:nth-child(1){
 		display: table-cell;
 	}
-	.pay_method_change_table_content div:nth-child(2){
+	.pay_method_change_table_content > div:nth-child(2){
 		width: 16%;
 		font-size: 13px;
 		color: unset;
 		display: table-cell;
 	}
 
-	.pay_method_change_table_content div:nth-child(3){
+	.pay_method_change_table_content > div:nth-child(3){
 		width: 10%;
 		display: table-cell;
 	}
-	.pay_method_change_table_content div:nth-child(4){
+	.pay_method_change_table_content > div:nth-child(4){
 		width: 15%;
 		display: table-cell;
 	}
 
-	.pay_method_change_table_label div:nth-child(5){
+	.pay_method_change_table_label > div:nth-child(5){
 		width: 15%;
 	}
-	.pay_method_change_table_content div:nth-child(5){
+	.pay_method_change_table_content > div:nth-child(5){
 		display: table-cell;
 		width:15%;
 		text-align:center;
 		padding-left: unset;
 	}
-	.pay_method_change_table_content div:nth-child(6){
+	.pay_method_change_table_content > div:nth-child(6){
 		display: table-cell;
 		width: 15%;
 		margin-top: unset;

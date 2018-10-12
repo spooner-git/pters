@@ -18,8 +18,8 @@ $(document).ready(function(){
     //////////////////////////////메뉴들 탭 이동//////////////////////////////////////////////
 
 
-    ////////결제방법 변경 버튼
-    $(document).on('click','.pay_method_changeButton',function(){
+    ////////결제카드 변경 버튼
+    $(document).on('click', '.pay_method_changeButton', function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
         var product_id = $(this).attr('data-product-id');
@@ -27,9 +27,19 @@ $(document).ready(function(){
         check_payment(payment_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
-    })
+    });
+    ////////결제카드 삭제 버튼
+    $(document).on('click', '.pay_method_deleteButton', function(){
+        var customer_uid = $(this).attr('data-customer_uid');
+        var payment_name = $(this).attr('data-payment_name');
+        var product_id = $(this).attr('data-product-id');
+        var period_month = $(this).attr('data-period-month');
+        //check_payment(payment_name, customer_uid, product_id, period_month);
+        alert("결제카드 삭제 관련 동작");
+        //To- Do
+    });
     // 해지신청
-    $(document).on('click','.pay_cancel_Button',function(){
+    $(document).on('click', '.pay_cancel_Button', function(){
         var customer_uid = $(this).attr('data-customer_uid');
         // alert(payid);
         $('#submit_pay_cancel').attr('data-customer_uid', customer_uid);
