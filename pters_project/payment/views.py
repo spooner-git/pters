@@ -753,7 +753,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                                                                                 end_date__gte=today,
                                                                                 # price__gt=0,
                                                                                 payment_type_cd='PERIOD',
-                                                                                use=USE
+                                                                                # use=USE
                                                                                 ).order_by('-end_date',
                                                                                            '-mod_dt',
                                                                                            '-payment_info_id')
