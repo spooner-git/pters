@@ -45,14 +45,12 @@
                 transform: translateX(-50%);
             }
             #promote_1 .explain_wrap{
-                top: 0;
-                height: auto;
-                max-width: 340px;
+                top: 50%;
+                height: 100%;
             }
             #promote_1 .explain_main{
-                text-align: left;
-                padding: 40px 20px 0 20px;
                 height: 100%;
+                padding-top: 40px;
             }
             #promote_1 .gotoSignIn{
                 height: auto;
@@ -62,21 +60,30 @@
                 display: none;
             }
             #promote_1 .logo_label{
-                margin-top: 10px;
-                margin-bottom: 0px;
+                margin-top: 20px;
+                margin-bottom: 20px;
             }
             #promote_1 .loginbox{
-                margin-top: 70px;
                 top: 30%;
                 z-index: 1500;
             }
-            
+            #promote_1 #login-form button{
+                width: 100%;
+                margin-top: 5px !important;
+            }
+            #promote_1 .pters_login_input{
+                width: 100%;
+                max-width: 300px;
+            }
             #idimg, #pwimg{
                 display: none;
             }
             #promote_1 .loginboxstyle{
                 display: inline-block;
                 width: 50%;
+            }
+            .explain_main_sublabel{
+                display: none;
             }
             nav.upperbar span{
                 display: none;
@@ -107,7 +114,7 @@
             @media(min-width:1024px){
                .loginbox{
                     display: block;
-                    left: 50%;
+                    left: 10%;
                     transform: translateY(-50%);
                 }
                 #idimg, #pwimg{
@@ -119,20 +126,16 @@
                 }
                 #promote_1 .explain_main{
                     height: 305px;
-                    padding-top: 0;
                 }
                 #promote_1 .logo_label{
-                    margin-top: 25px;
-                    margin-bottom: 5px;
+                    margin-top: 50px;
+                    margin-bottom: 50px;
                 }
                 #promote_1 .loginbox{
                     top: 50%;
-                    margin-top: unset;
                 }
                 .explain_main_sublabel{
                     display: block;
-                    font-size: 16px !important;
-                    font-weight: 300 !important;
                 }
             }
         </style>
@@ -194,12 +197,17 @@
                             <img id="pwimg" alt="피터스 비밀번호" src={% static_url "user/res/login/icon-lock.png" %}>
                             <input type="password" class="loginboxstyle form-control" name="password" id="password_id" placeholder="비밀번호">
                         </div>
-                        <div class="checkbox" style="margin-top:15px;margin-left:27px;text-align: left;"  class="pters_login_input">
+                        <div class="checkbox" style="margin-top:15px;margin-left:27px;"  class="pters_login_input">
                             <label><input type="checkbox" name="auto_login_check" value="1" checked>다음부터 자동 로그인</label>
                         </div>
-                        
+                        <div  class="pters_login_input">
+                            <button type="submit" class="form-control btn btn-primary" id="loginButton">로그인</button>
+                        </div>
 
-                        
+                        <!--간편화 업로드시 숨김-->
+                        <!-- 네이버아이디로로그인 버튼 노출 영역 -->
+                            <div id="naverIdLogin"></div>
+                        <!-- //네이버아이디로로그인 버튼 노출 영역 -->
 
                         <!-- 구글아이디로그인 버튼 노출 영역 -->
                         <!-- <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="width:179px;margin-bottom:8px;"></div> -->
@@ -213,28 +221,13 @@
 
 
                         <input type="hidden" name="keyword" id="keyword">
-                        <div class="innerbox" style="display: inline-block;width: 70%;">
+                        <div class="innerbox">
                             <a href="{% url 'registration_register' %}"><div id="registerButton">회원 가입</div></a>
                             <div class="seperate_bar"></div>
                             <a href="{% url 'auth_password_reset' %}"><div id="findIDPW">PW 초기화</div></a>
                         </div>
-                        <div  class="pters_login_input" style="display: inline-block;width: auto;">
-                                <button type="submit" class="" id="loginButton">로그인</button>
-                            </div>
                         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
-
-                        <div style="width:95%;height: 1px;background:#ffffff;margin-top:30px;margin-bottom: 15px;">
-                            
-                        </div>
-                        <!-- 네이버아이디로로그인 버튼 노출 영역 -->
-                            <div id="naverIdLogin" style="display:none"></div>
-                            <div id="naverLogin_img" onclick="location.href = naverLogin.generateAuthorizeUrl();" style="cursor: pointer;">
-                                <img src="/static/user/res/login/naver.svg" style="width:18px;">
-                                <span style="color:#ffffff;font-size: 16px;font-weight: 300;">네이버 아이디로 로그인</span>
-                            </div>
-                        <!-- //네이버아이디로로그인 버튼 노출 영역 -->
                     </form>
-
                 </div>
             </div>
 
@@ -242,20 +235,203 @@
 
             <div class="explain_wrap">
                 <div class="explain_main">
-                    <h1 style="margin:0">누구나</h1>
-                    <h3 style="margin:0;font-weight: 300;">쉽고 빠르게</h3>
-                    <h1 style="margin:0">레슨<span style="font-size:17px;font-weight: 300;">을</span> 관리<span style="font-size:17px;font-weight: 300;">하는 방법</span></h1>
+                    <h2>세상에서 가장 쉬운</h2>
+                    <h1> 1:1, 그룹, GX 레슨 관리 시스템</h1>
 
-                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><!-- <span class="pters_logo_text"> 피터스</span> --></div>
+                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
 
-                    <p class="explain_main_sublabel">1:1, 그룹, GX등 레슨 관리</p>
-                    <p class="explain_main_sublabel">더 알고 싶다면?</p>
-                    <img src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;">
+                    <p class="explain_main_sublabel">예약과 일정 관리는 쉽고 빠르게</p>
+                    <p class="explain_main_sublabel">만족도는 업!</p>
+
                 </div>
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                    <button class="mode_explain_button" onclick="show_explain_page_to_target('__teacher','pc')">강사 모드 소개</button>
+                    <button class="mode_explain_button" onclick="show_explain_page_to_target('__student','pc')">회원 모드 소개</button>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                 <button class="mode_explain_button" onclick="show_explain_page_to_target('__teacher','mobile')">강사 모드 소개</button>
+                 <button class="mode_explain_button" onclick="show_explain_page_to_target('__student','mobile')">회원 모드 소개</button>
+                <a href="/accounts/register/"><button>가입하기</button></a>
             </div>
             <img src="/static/user/res/btn_next.png" class="next_page" style="display: none;">
         </div>
 
+        <div class="album __targetall" id="promote_2">
+            <img src="/static/user/res/btn_next.png" class="prev_page">
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <br>
+                    <h1>24시간, 어디서든 편리한 일정 관리</h1>
+                    <br>
+                    <br>
+                    <p>종이와 수정펜은 넣어두세요.</p>
+                    <br>
+                    <br>
+                    <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
+                    <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">관리</span> 해보세요.</p>
+                </div>
+
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <br>
+                    <h1>24시간, 어디서든 편리한 레슨 일정 관리</h1>
+                    <br>
+                    <br>
+                    <p>번거로운 <span class="pink_strong">카톡, 문자, 전화</span> 예약은 그만!</p>
+                    <br>
+                    <br>
+                    <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
+                    <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">예약</span> 해보세요.</p>
+                </div>
+
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+            <img src="/static/user/res/btn_next.png" class="next_page">
+        </div>
+
+        <div class="album __targetall" id="promote_3">
+            <img src="/static/user/res/btn_next.png" class="prev_page">
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <h1>나의 일정과 회원 관리를 한번에!</h1>
+                    <br>
+                    <br>
+                    <p><span class="pink_strong">주간, 월간</span>으로 편리하게 일정을 확인하고</p>
+                    <p>회원 및 그룹관리도 쉽게 가능합니다.</p>
+                    <br>
+                    <br>
+                    <p><span class="pink_strong">한 번의 터치</span>로 일정을 등록하세요.</p>
+                    <p>일정 완료 사인을 하면 자동으로 횟수가 차감 됩니다.</p>
+                </div>
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <h1>레슨이 종료되도 이력을<br> 언제든 다시 확인!</h1>
+                    <br>
+                    <br>
+                    <p>다른 선생님과 하더라도 <span class="pink_strong">사용중이던 내 ID</span>를  <span class="pink_strong">새로운 선생님과 연결</span>하면 <span class="pink_strong">사용준비 완료!</span></p>
+                    <p></p>
+                    <br>
+                    <p>매번 새로운 회원번호를 부여 받지 않아서 간편!</p>
+                    <br>
+                    <p>내 ID로 연결했던 정보는 <span class="pink_strong">언제든 다시 이력확인</span>이 가능!</p>
+                </div>
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+            <img src="/static/user/res/btn_next.png" class="next_page">
+        </div>
+
+        <div class="album __targetall" id="promote_4">
+            <img src="/static/user/res/btn_next.png" class="prev_page">
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <h1>일정 예약도 회원이 직접 바로 바로!</h1>
+                    <br>
+                    <br>
+                    <p>회원이 <span class="pink_strong">1:1 예약 가능 시간 혹은 개설된 그룹 레슨</span>을 <span class="pink_strong">확인</span>한 후</p>
+                    <p><span class="pink_strong">시간을 선택</span>하기만 하면 <span class="pink_strong">예약 끝!</span></p>
+                    <br>
+                    <br>
+                    <p>강사가 업무 시간과 OFF시간을 설정하면</p>
+                    <p>그 시간 내에서만 일정 예약이 가능합니다.</p>
+                </div>
+
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <h1>그룹 레슨도 실시간 예약 가능!</h1>
+                    <br>
+                    <br>
+                    <p><span class="pink_strong">그룹레슨</span>의 참가 현황을 <span class="pink_strong">실시간 확인</span>한 후</p>
+                    <p><span class="pink_strong">시간을 선택</span>하기만 하면 <span class="pink_strong">예약 끝!</span></p>
+                    <br>
+                    <br>
+                    <p>그룹 레슨 참가를 위해 매번 컨펌 받지 마세요!</p>
+                    <p>간편하게 피터스로 예약하세요.</p>
+                </div>
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+            <img src="/static/user/res/btn_next.png" class="next_page">
+        </div>
+
+        <div class="album __targetall" id="promote_5">
+            <img src="/static/user/res/btn_next.png" class="prev_page">
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h2></h2>
+                    <h1>다양한 기기에서 한 번에 관리</h1>
+                    <br>
+                    <p><img src="/static/user/res/PTERS_logo_pure.png" style="height: 20px;">는</p>
+                    <p id="connectedMethod"></p>
+                    <p><span class="pink_strong">다양한 기기</span>에서 <span class="pink_strong">접속</span>이 <span class="pink_strong">가능</span>합니다.</p>
+                    <br>
+                    <p id="connectedDevice"></p>
+                    <p><span class="pink_strong">실시간 일정 변경</span> 푸시 알림을 받아 보세요.</p>
+                    <p>전체 일정 관리가 <span class="pink_strong">쉽게</span> 가능해 집니다.</p>
+                </div>
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+            <img src="/static/user/res/btn_next.png" class="next_page">
+        </div>
+
+        <div class="album __teacher" id="promote_6">
+            <img src="/static/user/res/btn_next.png" class="prev_page">
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h2></h2>
+                    <h1><img src="/static/user/res/PTERS_logo_pure.png" style="height: 25px;">는 지금 누구나 무료!</h1>
+                    <br>
+                    <p>누구나 1:1 레슨 관리 기능이 <span class="pink_strong">평생 무료 제공</span>됩니다.</p>
+                    <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
+                    <p>일정과 회원은 <span class="pink_strong">피터스 하나로 쉽게 관리</span> 하면서</p>
+                    <p>비즈니스의 생산성을 향상 시키세요!</p>
+                    <br>
+                    <p>파워풀한 그룹 관리 기능도 <span class="pink_strong">1개월 무료로 체험</span>해보세요!</p>
+                    <br>
+                    <!--
+                    <p style="font-size: 12px;">※지금 가입하는 ID에 한해 향후 유료컨텐츠가 추가될 시에도 <br>모든 컨텐츠를 무료로 이용할 수 있습니다. (2018년 4월 현재)</p>
+                    -->
+                    <p style="font-size: 14px;">기타 문의 : support@pters.co.kr</p>
+                </div>
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+        </div>
+        <div class="paginationMobile">
+            <div id="page1" class="paginationMobile_bar pageMobile_1 paginationMobile_active"></div>
+            <div id="page2" class="paginationMobile_bar pageMobile_2"></div>
+            <div id="page3" class="paginationMobile_bar pageMobile_3"></div>
+            <div id="page4" class="paginationMobile_bar pageMobile_4"></div>
+            <div id="page5" class="paginationMobile_bar pageMobile_5"></div>
+            <div id="page6" class="paginationMobile_bar pageMobile_6"></div>
+        </div>
     </div>
 
 
@@ -266,7 +442,7 @@
                     <h2>세상에서 가장 쉬운</h2>
                     <h1>1:1 트레이닝 일정/회원 관리 시스템</h1>
 
-                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><!-- <span class="pters_logo_text"> 피터스</span> --></div>
+                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
 
                     <p>일정 관리는 쉽고 빠르게</p>
                     <p>회원의 만족도는 업!</p>
@@ -526,7 +702,7 @@
 {#			callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
 			isPopup: false, /* 팝업을 통한 연동처리 여부 */
             callbackHandle: false,
-			loginButton: {color: "white", type: 1, height: 39} /* 로그인 버튼의 타입을 지정 */
+			loginButton: {color: "white", type: 3, height: 39} /* 로그인 버튼의 타입을 지정 */
 		}
 	);
 
