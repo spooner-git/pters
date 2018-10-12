@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 html,body{
-	height: 100%;
+	/*height: 100%;*/
 }
 
 body{
@@ -410,6 +410,9 @@ nav.main_nav{
 }
 
 @media(min-width: 600px){
+	html,body{
+		height: 100%;
+	}
 	body{
 		/*
 		background-image: url("/static/user/res/main/bg-image-pc-login.png");
