@@ -357,15 +357,6 @@ def clear_pause_period_billing_logic(request):
     payment_info = None
     today = datetime.date.today()
     date = int(today.strftime('%d'))
-    if error is None:
-        try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-            if date != billing_info.payed_date:
-                billing_info.payed_date = date
-            billing_info.state_cd = 'IP'
-            billing_info.save()
-        except ObjectDoesNotExist:
-            error = '정기 결제 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -388,13 +379,21 @@ def clear_pause_period_billing_logic(request):
                 payment_info = PaymentInfoTb.objects.filter(Q(status='cancelled') | Q(status='failed'),
                                                             member_id=request.user.id,
                                                             customer_uid=customer_uid,
-                                                            payment_type_cd='PERIOD',
-                                                            use=USE).latest('end_date')
+                                                            payment_type_cd='PERIOD').latest('end_date')
             except ObjectDoesNotExist:
                 payment_info = None
             payment_info.end_date = today
             error = func_set_billing_schedule_now(customer_uid, payment_info)
 
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+            if date != billing_info.payed_date:
+                billing_info.payed_date = date
+            billing_info.state_cd = 'IP'
+            billing_info.save()
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
     # if error is None:
     #     error = func_set_billing_schedule(customer_uid, payment_info)
 
@@ -418,13 +417,18 @@ def delete_period_billing_logic(request):
     next_page = request.POST.get('next_page', '')
     context = {'error': None}
     error = None
+    billing_info = None
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-            billing_info.use = UN_USE
-            billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
+    if error is None:
+        if billing_info.state_cd == 'IP':
+            error = '정기 결제 진행중 상태에서는 삭제할수 없습니다.'
+        else:
+            billing_info.use = UN_USE
+            billing_info.save()
 
     if error is not None:
         messages.error(request, error)
@@ -504,17 +508,21 @@ def check_update_period_billing_logic(request):
 
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(member_id=request.user.id, state_cd='IP', customer_uid=customer_uid, use=USE)
+            billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                                                     customer_uid=customer_uid, use=USE)
         except ObjectDoesNotExist:
             billing_info = None
 
     if error is None:
-        if billing_info is not None:
+        if billing_info.state_cd == 'IP':
             if today > billing_info.next_payment_date:
                 context['next_start_date'] = str(today)
+                context['price'] = billing_info.price
             else:
+                context['price'] = 0
                 context['next_start_date'] = str(billing_info.next_payment_date)
         else:
+            context['price'] = billing_info.price
             context['next_start_date'] = str(today)
 
     if error is not None:
@@ -749,7 +757,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                                                                                 end_date__gte=today,
                                                                                 # price__gt=0,
                                                                                 payment_type_cd='PERIOD',
-                                                                                use=USE
+                                                                                # use=USE
                                                                                 ).order_by('-end_date',
                                                                                            '-mod_dt',
                                                                                            '-payment_info_id')
