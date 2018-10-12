@@ -564,46 +564,43 @@ def func_update_billing_logic(payment_result):
             payment_data = PaymentInfoTb.objects.filter(customer_uid=payment_info.customer_uid,
                                                         status='reserve',
                                                         payment_type_cd='PERIOD')
-
+            check_billing_info = None
             try:
                 billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
+                billing_info.state_cd = 'CANCEL'
+                billing_info.save()
+                check_billing_info = billing_info
             except ObjectDoesNotExist:
-                error = '정기 결제 정보를 불러오지 못했습니다.'
+                check_billing_info = None
+
+            if check_billing_info is not None:
+                billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                                                          member_id=payment_info.member_id,
+                                                          cancel_type='관리자',
+                                                          cancel_reason='관리자 임의 취소',
+                                                          use=USE)
+                billing_cancel_info.save()
+            if len(payment_data) > 0:
+                payment_data.update(status='cancelled', use=UN_USE)
+            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
 
             if error is None:
-                if billing_info.state_cd == 'IP':
-                    error = func_cancel_period_billing_schedule(payment_info.customer_uid)
-
-                    if error is None:
-                        billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                billing_list = BillingInfoTb.objects.filter(member_id=payment_info.member_id, state_cd='IP', use=USE)
+                if len(billing_list) > 0:
+                    for billing_list_info in billing_list:
+                        billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_list_info.billing_info_id,
                                                                   member_id=payment_info.member_id,
                                                                   cancel_type='관리자',
                                                                   cancel_reason='관리자 임의 취소',
                                                                   use=USE)
                         billing_cancel_info.save()
-                        billing_info.state_cd = 'CANCEL'
-                        billing_info.save()
-                        if len(payment_data) > 0:
-                            payment_data.update(status='cancelled', use=UN_USE)
-
-                else:
-                    billing_list = BillingInfoTb.objects.filter(member_id=payment_info.member_id, state_cd='IP', use=USE)
-                    if len(billing_list) > 0:
-                        for billing_list_info in billing_list:
-                            billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_list_info.billing_info_id,
-                                                                      member_id=payment_info.member_id,
-                                                                      cancel_type='관리자',
-                                                                      cancel_reason='관리자 임의 취소',
-                                                                      use=USE)
-                            billing_cancel_info.save()
-                            billing_list_info.state_cd = 'CANCEL'
-                            billing_list_info.save()
-                            payment_data = PaymentInfoTb.objects.filter(customer_uid=billing_list_info.customer_uid,
-                                                                        status='reserve',
-                                                                        payment_type_cd='PERIOD')
-                            if len(payment_data) > 0:
-                                payment_data.update(status='cancelled', use=UN_USE)
-                            error = func_cancel_period_billing_schedule(billing_list_info.customer_uid)
+                        billing_list_info.state_cd = 'CANCEL'
+                        billing_list_info.save()
+                        payment_data_list = PaymentInfoTb.objects.filter(customer_uid=billing_list_info.customer_uid,
+                                                                         status='reserve', payment_type_cd='PERIOD')
+                        if len(payment_data_list) > 0:
+                            payment_data_list.update(status='cancelled', use=UN_USE)
+                        error = func_cancel_period_billing_schedule(billing_list_info.customer_uid)
 
         elif payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
             try:
