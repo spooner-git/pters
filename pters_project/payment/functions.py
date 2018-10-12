@@ -8,7 +8,7 @@ from django.db import transaction
 
 from configs.const import USE, UN_USE
 
-from .models import PaymentInfoTb, ProductPriceTb, BillingInfoTb
+from .models import PaymentInfoTb, ProductPriceTb, BillingInfoTb, BillingCancelInfoTb
 
 logger = logging.getLogger(__name__)
 
@@ -330,8 +330,17 @@ def func_add_billing_logic(custom_data, payment_result):
             empty_period_billing_check = True
 
     if error is None:
+        try:
+            product_price_info = ProductPriceTb.objects.get(product_tb_id=custom_data['product_id'],
+                                                            payment_type_cd=custom_data['payment_type_cd'],
+                                                            period_month=custom_data['period_month'],
+                                                            use=USE)
+        except ObjectDoesNotExist:
+            error = '결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
         if not empty_period_billing_check:
-            payment_name = payment_result['name']
+            payment_name = payment_result['name'] + ' - ' + product_price_info.name
             end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, int(custom_data['period_month']),
                                          date)
             status = payment_result['status']
@@ -455,7 +464,33 @@ def func_update_billing_logic(payment_result):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        if payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
+        if payment_info.status == 'cancelled' and payment_info.payment_type_cd == 'PERIOD':
+            payment_data = PaymentInfoTb.objects.filter(customer_uid=payment_info.customer_uid,
+                                                        status='reserve',
+                                                        payment_type_cd='PERIOD')
+
+            try:
+                billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
+            except ObjectDoesNotExist:
+                error = '정기 결제 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+            if error is None:
+                billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                                                          member_id=payment_info.member_id,
+                                                          cancel_type='관리자',
+                                                          cancel_reason='관리자 임의 취소',
+                                                          use=USE)
+                billing_cancel_info.save()
+                billing_info.state_cd = 'ST'
+                billing_info.save()
+
+            if error is None:
+                if len(payment_data) > 0:
+                    payment_data.update(status='cancelled', use=UN_USE)
+
+        elif payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
             try:
                 billing_info = BillingInfoTb.objects.get(member_id=payment_info.member_id,
                                                          customer_uid=payment_info.customer_uid,
@@ -465,18 +500,6 @@ def func_update_billing_logic(payment_result):
             except ObjectDoesNotExist:
                 error = '정기 결제 정보를 불러오지 못했습니다.'
 
-    # if error is None:
-    #     merchandise_type_cd_list = payment_info.merchandise_type_cd.split('/')
-    #     for merchandise_type_cd_info in merchandise_type_cd_list:
-    #         try:
-    #             function_auth_info = FunctionAuthTb.objects.get(member_id=payment_info.member_id,
-    #                                                             function_auth_type_cd=merchandise_type_cd_info,
-    #                                                             use=USE)
-    #             function_auth_info.expired_date = payment_info.end_date
-    #             function_auth_info.mod_dt = timezone.now()
-    #             function_auth_info.save()
-    #         except ObjectDoesNotExist:
-    #             error = '권한 정보를 불러오지 못했습니다.'
 
     context['error'] = error
     return context
