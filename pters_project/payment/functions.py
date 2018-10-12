@@ -582,6 +582,7 @@ def func_update_billing_logic(payment_result):
             if error is None:
                 if len(payment_data) > 0:
                     payment_data.update(status='cancelled', use=UN_USE)
+            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
 
         elif payment_info.status != 'paid' and payment_info.payment_type_cd == 'PERIOD':
             try:
@@ -596,6 +597,7 @@ def func_update_billing_logic(payment_result):
                                                         status='reserve',
                                                         payment_type_cd='PERIOD')
             payment_data.delete()
+            error = func_cancel_period_billing_schedule(payment_info.customer_uid)
 
     context['error'] = error
     return context
