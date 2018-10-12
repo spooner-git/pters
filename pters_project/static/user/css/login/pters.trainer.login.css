@@ -266,7 +266,7 @@ nav.main_nav{
 	font-weight: bold;
 	cursor: pointer;
 }
-	#loginButton:hover{
+	#loginButton:active{
 		background-color: rgba(40, 40, 40, 0.52) !important;
 		color: #fe4e65 !important;
 	}
