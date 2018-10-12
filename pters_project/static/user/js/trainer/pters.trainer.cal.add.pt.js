@@ -985,7 +985,7 @@ $(document).ready(function(){
     });
 
 
-    $('button.pters_dropdown_custom').click(function(){
+    $('button.pters_dropdown_custom').click(function(){ //#membersSelected_mini
         position_fixed_addplan_if_mobile();
         $('#page-base-addstyle').css({'z-index':150});
         if(bodywidth < 600){
@@ -994,7 +994,7 @@ $(document).ready(function(){
                                                   'left':'50%',
                                                   'transform':'translateX(-50%)'});
             //드랍다운 씹힘현상 해결
-            selector.animate({scrollTop : selector.scrollTop()+1},10);
+            selector.animate({scrollTop : selector.scrollTop()+1}, 10);
             //드랍다운 씹힘현상 해결
 
             dropdownlist_auto_scroll_to_middle($('#starttimesSelected button'));
