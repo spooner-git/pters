@@ -23,7 +23,7 @@ from .models import PaymentInfoTb, BillingInfoTb, ProductTb, BillingCancelInfoTb
 
 from .functions import func_set_billing_schedule, func_get_payment_token, func_resend_payment_info, \
     func_check_payment_price_info, func_get_end_date, func_cancel_period_billing_schedule, \
-    func_iamport_webhook_customer_billing_logic
+    func_iamport_webhook_customer_billing_logic, func_set_billing_schedule_now
 
 logger = logging.getLogger(__name__)
 
@@ -319,6 +319,7 @@ def restart_period_billing_logic(request):
                                                         payment_type_cd='PERIOD').latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
+
         # payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
         #                                             payment_type_cd='PERIOD', use=USE).order_by('end_date')
         # if len(payment_data) > 0:
@@ -356,7 +357,6 @@ def clear_pause_period_billing_logic(request):
     payment_info = None
     today = datetime.date.today()
     date = int(today.strftime('%d'))
-
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
@@ -374,6 +374,7 @@ def clear_pause_period_billing_logic(request):
                                                         use=USE).latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
+
         # payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
         #                                             payment_type_cd='PERIOD', use=USE).order_by('end_date')
         # if len(payment_data) > 0:
@@ -381,9 +382,21 @@ def clear_pause_period_billing_logic(request):
         if payment_info is not None:
             if payment_info.end_date < today:
                 payment_info.end_date = today
+                error = func_set_billing_schedule_now(customer_uid, payment_info)
+        else:
+            try:
+                payment_info = PaymentInfoTb.objects.filter(Q(status='cancelled') | Q(status='failed'),
+                                                            member_id=request.user.id,
+                                                            customer_uid=customer_uid,
+                                                            payment_type_cd='PERIOD',
+                                                            use=USE).latest('end_date')
+            except ObjectDoesNotExist:
+                payment_info = None
+            payment_info.end_date = today
+            error = func_set_billing_schedule_now(customer_uid, payment_info)
 
-    if error is None:
-        error = func_set_billing_schedule(customer_uid, payment_info)
+    # if error is None:
+    #     error = func_set_billing_schedule(customer_uid, payment_info)
 
     context['error'] = error
     if error is not None:
@@ -726,7 +739,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             #     period_payment_info = None
 
             try:
-                billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                billing_info = BillingInfoTb.objects.get(~Q(state_cd='CANCEL'), member_id=request.user.id,
                                                          product_tb_id=product_info.product_id,
                                                          use=USE)
             except ObjectDoesNotExist:
