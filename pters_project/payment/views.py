@@ -417,13 +417,18 @@ def delete_period_billing_logic(request):
     next_page = request.POST.get('next_page', '')
     context = {'error': None}
     error = None
+    billing_info = None
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-            billing_info.use = UN_USE
-            billing_info.save()
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
+    if error is None:
+        if billing_info.state_cd == 'IP':
+            error = '정기 결제 진행중 상태에서는 삭제할수 없습니다.'
+        else:
+            billing_info.use = UN_USE
+            billing_info.save()
 
     if error is not None:
         messages.error(request, error)
