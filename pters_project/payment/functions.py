@@ -387,6 +387,7 @@ def func_add_billing_logic(custom_data, payment_result):
     today = datetime.date.today()
     payment_name = ''
     status = ''
+    usage = USE
     if error is None:
         try:
             customer_uid = custom_data['customer_uid']
@@ -436,10 +437,12 @@ def func_add_billing_logic(custom_data, payment_result):
             end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, int(custom_data['period_month']),
                                          date)
             status = payment_result['status']
+            usage = USE
         else:
-            payment_name = '정기결제 카드 등록'
+            payment_name = payment_result['name'] + ' - ' + product_price_info.name
             end_date = start_date
             status = 'pre_paid'
+            usage = UNUSE
 
     if error is None:
         payment_info_check = PaymentInfoTb.objects.filter(merchant_uid=payment_result['merchant_uid']).count()
@@ -474,7 +477,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              receipt_url=payment_result['receipt_url'],
                                              buyer_name=payment_result['buyer_name'],
                                              # amount=int(payment_result['amount']),
-                                             use=USE)
+                                             use=usage)
                 # merchandise_type_cd_list = custom_data['merchandise_type_cd'].split('/')
                 # for merchandise_type_cd_info in merchandise_type_cd_list:
                 #     try:

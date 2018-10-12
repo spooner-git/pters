@@ -729,23 +729,27 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             #                                                 use=USE).latest('end_date')
             # except ObjectDoesNotExist:
             #     payment_info = None
-            payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        product_tb_id=product_info.product_id,
-                                                        # payment_type_cd='SINGLE',
-                                                        end_date__gte=today,
-                                                        status='paid',
-                                                        # price__gt=0,
-                                                        use=USE)
+            payment_data = PaymentInfoTb.objects.select_related('product_tb').filter(member_id=request.user.id,
+                                                                                     product_tb_id=product_info.product_id,
+                                                                                     # payment_type_cd='SINGLE',
+                                                                                     end_date__gte=today,
+                                                                                     status='paid',
+                                                                                     # price__gt=0,
+                                                                                     use=USE)
 
-            period_payment_data = PaymentInfoTb.objects.filter(Q(status='reserve') | Q(status='cancelled')
-                                                               | Q(status='failed'),
-                                                               member_id=request.user.id,
-                                                               product_tb_id=product_info.product_id,
-                                                               end_date__gte=today,
-                                                               # price__gt=0,
-                                                               payment_type_cd='PERIOD').order_by('-end_date',
-                                                                                                  '-mod_dt',
-                                                                                                  '-payment_info_id')
+            period_payment_data = PaymentInfoTb.objects.select_related('product_tb'
+                                                                       ).filter(Q(status='reserve')
+                                                                                | Q(status='cancelled')
+                                                                                | Q(status='failed'),
+                                                                                member_id=request.user.id,
+                                                                                product_tb_id=product_info.product_id,
+                                                                                end_date__gte=today,
+                                                                                # price__gt=0,
+                                                                                payment_type_cd='PERIOD',
+                                                                                use=USE
+                                                                                ).order_by('-end_date',
+                                                                                           '-mod_dt',
+                                                                                           '-payment_info_id')
             if len(period_payment_data) > 0:
                 # paid_period_payment_data = period_payment_data.filter(status='paid')
                 # if len(paid_period_payment_data):
