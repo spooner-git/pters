@@ -227,8 +227,7 @@ body{
 	margin-bottom: 25px;
 }
 .gotoSignIn button{
-	background:#fe4e65;
-	box-shadow: 1px 1px 1px 1px #fe4e65;
+	background: transparent;
 	border:0;
 	color: #ffffff;
 	height: 50px;
@@ -238,10 +237,10 @@ body{
 	cursor: pointer;
 }
 .brower_site{
-	background:#f4f4f4 !important;
+	background: transparent; !important;
 	box-shadow: unset !important;
-	border: 1px solid #fe4e65 !important;
-	color: #fe4e65 !important;
+	border: 0 !important;
+	color: #ffffff !important;
 	height: 50px;
 	width: 130px !important;
 	margin: 5px;
@@ -249,6 +248,10 @@ body{
 	font-size: 15px;
 	cursor: pointer;
 }
+	.brower_site > img{
+		width: 20px;
+		margin-right: 10px;
+	}
 
 .pink_strong{
 	color: #fe4e65;
@@ -393,8 +396,7 @@ body{
 	}
 	.gotoSignIn_pc button{
 		float: right;
-		background:#fe4e65;
-		box-shadow: 1px 1px 1px 1px #fe4e65;
+		background:transparent;
 		border:0;
 		color: #ffffff;
 		height: 35px;
