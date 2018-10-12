@@ -496,7 +496,7 @@ def func_add_billing_logic(custom_data, payment_result):
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
-                                                 price=int(payment_result['amount']),
+                                                 price=int(product_price_info.sale_price * 1.1),
                                                  name=payment_name,
                                                  card_name=payment_result['card_name'],
                                                  pay_method=payment_result['pay_method'],

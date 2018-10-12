@@ -504,17 +504,21 @@ def check_update_period_billing_logic(request):
 
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(member_id=request.user.id, state_cd='IP', customer_uid=customer_uid, use=USE)
+            billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
+                                                     customer_uid=customer_uid, use=USE)
         except ObjectDoesNotExist:
             billing_info = None
 
     if error is None:
-        if billing_info is not None:
+        if billing_info.state_cd == 'IP':
             if today > billing_info.next_payment_date:
                 context['next_start_date'] = str(today)
+                context['price'] = billing_info.price
             else:
+                context['price'] = 0
                 context['next_start_date'] = str(billing_info.next_payment_date)
         else:
+            context['price'] = billing_info.price
             context['next_start_date'] = str(today)
 
     if error is not None:
