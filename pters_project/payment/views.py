@@ -412,6 +412,30 @@ def clear_pause_period_billing_logic(request):
     return redirect(next_page)
 
 
+# 정기 결제 카드 제거 기능 - 확인 필요
+def delete_period_billing_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
+    next_page = request.POST.get('next_page', '')
+    context = {'error': None}
+    error = None
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+            billing_info.use = UN_USE
+            billing_info.save()
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is not None:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 오류:'
+                     + str(error))
+
+    context['error'] = error
+    return redirect(next_page)
+
+
 def update_period_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
@@ -741,7 +765,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             #     period_payment_info = None
 
             try:
-                billing_info = BillingInfoTb.objects.get(~Q(state_cd='CANCEL'), member_id=request.user.id,
+                billing_info = BillingInfoTb.objects.get(member_id=request.user.id,
                                                          product_tb_id=product_info.product_id,
                                                          use=USE)
             except ObjectDoesNotExist:
