@@ -41,6 +41,9 @@ urlpatterns = [
     # 정기 결제 일시 정지 해제 페이지
     url(r'^clear_pause_period_billing/$', views.clear_pause_period_billing_logic,
         name='clear_pause_period_billing'),
+    # 정기 결제 카드 삭제 페이지
+    url(r'^delete_period_billing/$', views.delete_period_billing_logic,
+        name='delete_period_billing'),
 
     # 정기 결제 결제 방법 변경 체크 페이지
     url(r'^check_update_period_billing/$', views.check_update_period_billing_logic, name='check_update_period_billing'),

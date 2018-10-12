@@ -576,7 +576,6 @@ def func_update_billing_logic(payment_result):
                                                           use=USE)
                 billing_cancel_info.save()
                 billing_info.state_cd = 'CANCEL'
-                billing_info.use = UN_USE
                 billing_info.save()
 
             if error is None:
