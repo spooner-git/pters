@@ -40,7 +40,7 @@
             <div class="page_menu_table">
                 <div class="page_menu_table_cell cell_active" id="current_use">보유현황</div>
                 <div class="page_menu_table_cell" id="mypay_history">결제내역</div>
-                <div class="page_menu_table_cell" id="monthly_pay_stop_history">정기결제 일시정지/해제</div>
+                <div class="page_menu_table_cell" id="monthly_pay_stop_history">결제 종료/일시정지/해제</div>
                 <div class="page_menu_table_cell_blank"></div>
             </div>
             <div id="page_current_use" class="sub_pages">
@@ -143,8 +143,10 @@
                     <div>NO</div>
                     <div>PTERS 이용권</div>
                     <div>정기결제정보</div>
-                    <div>일시정지일</div>
-                    <div>일시정지 해제/종료일</div>
+                    <!-- div>일시정지일</div>
+                    <div>일시정지 해제/종료일</div> -->
+                    <div>종료일</div>
+                    <div>재개</div>
                     <div>상태</div>
                     <div>사유</div>
                 </div>
@@ -172,23 +174,23 @@
                     </div>
                 {% endfor %}
                 <div id="monthly_pay_stop_annai1">
-                    <label>일시정지 해제하기</label>
+                    <label>일시정지?</label>
                     <p>정기결제수단의 정지/한도초과/정보변경 등의 사유로 사용중인 이용권이 일시정지가 된 상태에서 기존 정기결제수단 또는 새로운 정기결제수단으로 다시 결제를 하시면 일시정지된 정기결제를 다시 시작할 수 있습니다.</p>
                 </div>
 
                 <div id="monthly_pay_stop_annai2">
                     <label>정기결제 일시정지/해제 상태 안내</label>
                     <p class="annai_label">정기결제 일시정지란?</p>
-                    <p>고객님의 부득이한 사정으로 사용중인 이용권의 정기결제수단이 정지/한도초과/정보변경 등으로 결제상태가 변경될 경우 다음 정기결제예정일에 사용중인 이용권의 정기결제가 일시정지되는 것을 의미합니다.</p>
+                    <p>정기 결제수단이 정지/한도초과/정보변경 등으로 결제상태가 변경될 경우 다음 정기결제 예정일에 사용중인 이용권의 정기결제가 일시정지되는 것을 의미합니다.</p>
                     <p class="annai_label">정기결제 일시정지 해제란?</p>
                     <p>일시정지된 정기결제이용권의 결제수단이 다시 결제가능한 상태가 될 때 다시 결제가 처리되고 이용권이 재시작 되는 것을 의미합니다.</p>
                     <p class="annai_label">정기결제 일시정지 종료란?</p>
                     <p>일시정지된 정기결제 이용권의 결제수단이 더 이상 결제가 불가능한 상태가 되거나 다른 결제수단으로 새로 이용권을 구매하거나 또는 고객님의 종료처리요청으로 인해 정기결제가 더이상 유효하지 않고 종료되는 것을 의미합니다.</p>
                     <div style="width: 100%;height: 1px;background: #cccccc;margin:0 auto;margin-top:10px;margin-bottom: 10px;"></div>
                     <p>- 정기결제 일시정지/해제 이력은 일시정지일부터 1년간 제공됩니다.</p>
-                    <p>- 신규로 이용권 구매 시 스트리밍 서비스가 중복되는 경우 일시정지 상태인 이용권 중 스트리밍 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>
+                    <p>- 신규로 이용권 구매 시 서비스가 중복되는 경우 일시정지 상태인 이용권 중 해당 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>
                     <p>- 일시정지 날로부터 90일 이내 정기결제 일시정지 해제를 하지 않는 경우 기간 만료로 인한 자동종료 처리됩니다.</p>
-                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 이용문의 메뉴에 요청사항을 남겨주세요.</p>
+                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 결제카드가 결제 가능한 상태인지 확인 후 "일시 정지 해제"를 하면 다시 활성화 하실 수 있습니다.</p>
                     <p></p>
                 </div>
             </div>

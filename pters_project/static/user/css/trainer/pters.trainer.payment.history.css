@@ -542,7 +542,7 @@ body{
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
-.pay_method_changeButton{
+.pay_method_changeButton, .pay_method_deleteButton{
 	font-size: 12px !important;
 	width: 50px !important;
 	height: 28px;
@@ -551,10 +551,10 @@ body{
 	display: inline-block !important;
 	cursor: pointer;
 }
-.pay_method_changeButton span{
+.pay_method_changeButton span, .pay_method_deleteButton span{
 	line-height: 26px;
 }
-.pay_method_changeButton:hover{
+.pay_method_changeButton:hover, .pay_method_deleteButton:hover{
 	opacity:0.8;
 }
 
