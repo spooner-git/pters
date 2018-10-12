@@ -125,7 +125,7 @@ img.prev_page{
 	transition: 0.5s;
 }
 
-body{
+#promote_1{
 	background-image: url('/static/common/promote_mobile/1.jpg');
 	background-repeat: no-repeat;
 	background-position-x: center;
@@ -135,7 +135,7 @@ body{
 
 
 @media(min-width:1024px){
-	body{
+	#promote_1{
 		background-image: url('/static/common/promote_pc/1.jpg');
 		left: unset;
 	}
