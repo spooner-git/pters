@@ -168,8 +168,8 @@
                         <div>
                             <p>{{ stop_payment_info.status_name }}</p>
                         </div>
-                        <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">
-                            <p> {{ stop_payment_info.fail_reason }}</p>
+                        <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}">
+                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">재개</span></p>
                         </div>
                     </div>
                 {% endfor %}
@@ -401,16 +401,16 @@
     <script>
 
         if($('body').width()<600){
-            $('#page-base').css('display','block')
+            $('#page-base').css('display','block');
             //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('이용권 구매')
-            $('#uptext').text("이용권 구매")
-            $('#upbutton-modify').hide()
+            $('#uptext3').text('이용권 구매');
+            $('#uptext').text("이용권 구매");
+            $('#upbutton-modify').hide();
         }
 
         $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
-        })
+            location.href="/trainer/trainer_setting/";
+        });
 
         function test(payid){
             $('#id_customer_uid_clear_pause').val(payid);

@@ -235,6 +235,7 @@ body{
 
 #page_mypay_history{
 	display: none;
+	margin-bottom: 40px;
 }
 .mypay_history_table_label{
 	display: table;
@@ -360,7 +361,7 @@ body{
 	width: 4%;
 }
 .monthly_pay_stop_table_label div:nth-child(2){
-	width: 16%;
+	width: 20%;
 }
 .monthly_pay_stop_table_label div:nth-child(3){
 	display: none;
@@ -404,7 +405,7 @@ body{
 	width: 4%;
 }
 .monthly_pay_stop_table_content div:nth-child(2){
-	width: 16%;
+	width: 20%;
 }
 .monthly_pay_stop_table_content div:nth-child(3){
 	display: none;
@@ -782,6 +783,17 @@ body{
 	.monthly_pay_stop_table_label div:nth-child(1){
 		display: table-cell;
 	}
+	.clear_pause{
+		width:35px;
+		height: 17px;
+		border:1px solid #cccccc;
+		font-size: 9px;
+		cursor: pointer;
+	}
+		.clear_pause:active{
+			background-color:#282828;
+			color: #ffffff;
+		}
 	.monthly_pay_stop_table_content div{
 		font-size: 13px;
 	}
