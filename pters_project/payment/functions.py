@@ -118,7 +118,7 @@ def func_set_billing_schedule_now(customer_uid, payment_user_info):
         # next_billing_date_time = datetime.datetime.combine(payment_user_info.end_date, datetime.datetime.min.time())
         # next_schedule_timestamp = next_billing_date_time.replace(hour=15, minute=0, second=0, microsecond=0)
         # next_schedule_timestamp = timezone.now() + timezone.timedelta(minutes=5)
-        next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=5)
+        next_schedule_timestamp = timezone.now() + timezone.timedelta(seconds=2)
         next_schedule_timestamp = next_schedule_timestamp.timestamp()
         token_result = func_get_payment_token()
         access_token = token_result['access_token']
@@ -183,8 +183,8 @@ def func_set_billing_schedule_now(customer_uid, payment_user_info):
         if resp['status'] != '200':
             error = '오류가 발생했습니다.'
 
-    if error is None:
-        func_set_billing_schedule(customer_uid, payment_info)
+    # if error is None:
+    #     func_set_billing_schedule(customer_uid, payment_info)
 
     return error
 
