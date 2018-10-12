@@ -113,14 +113,13 @@ img.prev_page{
 .album_wrap{
 	position: relative;
 	width: 100%;
-	height: 100%;
-	overflow-x: hidden;
-	overflow-y: auto;
+	height: auto;
+	overflow: hidden;
 	margin: 0 auto;
 }
 
 .album{
-	position: absolute;
+	position: relative;
 	width: 100%;
 	height: 100%;
 	transition: 0.5s;
