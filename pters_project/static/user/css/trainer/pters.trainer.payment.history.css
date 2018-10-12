@@ -235,6 +235,7 @@ body{
 
 #page_mypay_history{
 	display: none;
+	margin-bottom: 40px;
 }
 .mypay_history_table_label{
 	display: table;
