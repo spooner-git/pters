@@ -51,6 +51,12 @@ urlpatterns = [
     url(r'^update_period_billing/$', views.update_period_billing_logic, name='update_period_billing'),
 
 
+    # 개발 중 ################################################################################
+    # 정기 결제 이용권 변경 예약
+    url(r'^update_reserve_product_info/$', views.update_reserve_product_info_logic, name='update_reserve_product_info'),
+    ########################################################################################################
+
+
     # 결제 정보 조회 ######################################################################################################
     # 결제 예정인 결제 정보 불러오기
     url(r'^get_payment_schedule_info/$', views.GetPaymentScheduleInfoView.as_view(), name='get_payment_schedule_info'),

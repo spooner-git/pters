@@ -491,6 +491,47 @@ def update_period_billing_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
+def update_reserve_product_info_logic(request):
+    customer_uid = request.POST.get('customer_uid', '')
+    product_id = request.POST.get('product_id', '')
+    change_product_id = request.POST.get('change_product_id', '')
+
+    error = None
+    context = {'error': None}
+    billing_info = None
+
+    if customer_uid == '' or customer_uid is None:
+        error = '결제 정보를 불러오지 못했습니다.'
+
+    if product_id == '' or product_id is None or change_product_id == '' or change_product_id is None:
+        error = '결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        payment_data = PaymentInfoTb.objects.filter(customer_uid=customer_uid,
+                                                    product_tb_id=product_id,
+                                                    status='reserve',
+                                                    payment_type_cd='PERIOD')
+        if len(payment_data) > 0:
+            payment_data.update(product_tb_id=change_product_id)
+
+    if error is None:
+        try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        billing_info.product_tb_id = change_product_id
+        billing_info.save()
+
+    if error is not None:
+        logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
+        messages.error(request, error)
+
+    context['error'] = error
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
 def check_update_period_billing_logic(request):
     json_data = request.body.decode('utf-8')
     json_loading_data = None
