@@ -144,9 +144,9 @@
                     <div>PTERS 이용권</div>
                     <div>정기결제정보</div>
                     <!-- div>일시정지일</div>
-                    <div>일시정지 해제/종료일</div> -->
+                    <div>일시정지 해제/종료일</div>
                     <div>종료일</div>
-                    <div>재개</div>
+                    <div>재개</div>-->
                     <div>상태</div>
                     <div>사유</div>
                 </div>
@@ -157,14 +157,14 @@
                             <p>{{ stop_payment_info.name }}</p>
                         </div>
                         <div>
-                            <p>{{ stop_payment_info.start_date }} 결제</p>
+                            <p>매월 {{ stop_payment_info.payed_date }}일 결제</p>
+                        </div>
+                        <!--<div>
+{#                            <p>{{ stop_payment_info.end_date }}</p>#}
                         </div>
                         <div>
-                            <p>{{ stop_payment_info.end_date }}</p>
-                        </div>
-                        <div>
-                            <p>{{ stop_payment_info.end_date }}</p>
-                        </div>
+{#                            <p>{{ stop_payment_info.end_date }}</p>#}
+                        </div>-->
                         <div>
                             <p>{{ stop_payment_info.status_name }}</p>
                         </div>
@@ -233,18 +233,21 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <p> ${상태값} </p>
+                        <p> {{ current_payment_info.status_name }} </p>
                     </div>
                     <div>
+                        {% if current_payment_info.billing_state_cd == 'END' %}
                         <div class="pay_method_deleteButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
                              data-period-month="{{ current_payment_info.period_month }}"><span>삭제</span></div>
-
+                        {% endif %}
+                        {% if current_payment_info.billing_state_cd == 'IP' %}
                         <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
                              data-period-month="{{ current_payment_info.period_month }}"><span>변경</span></div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -391,6 +394,11 @@
     <form action="{% url 'payment:update_period_billing' %}" id="update-period-payment-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
+        <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
+    </form>
+    <form action="{% url 'payment:delete_period_billing' %}" id="delete-period-payment-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="customer_uid" id="id_customer_uid_delete_period" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
 

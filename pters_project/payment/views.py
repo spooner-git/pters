@@ -360,6 +360,16 @@ def clear_pause_period_billing_logic(request):
 
     if error is None:
         try:
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+            if date != billing_info.payed_date:
+                billing_info.payed_date = date
+            billing_info.state_cd = 'IP'
+            billing_info.save()
+        except ObjectDoesNotExist:
+            error = '정기 결제 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, customer_uid=customer_uid,
                                                         payment_type_cd='PERIOD', status='paid',
                                                         use=USE).latest('end_date')
@@ -385,15 +395,6 @@ def clear_pause_period_billing_logic(request):
             payment_info.end_date = today
             error = func_set_billing_schedule_now(customer_uid, payment_info)
 
-    if error is None:
-        try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
-            if date != billing_info.payed_date:
-                billing_info.payed_date = date
-            billing_info.state_cd = 'IP'
-            billing_info.save()
-        except ObjectDoesNotExist:
-            error = '정기 결제 정보를 불러오지 못했습니다.'
     # if error is None:
     #     error = func_set_billing_schedule(customer_uid, payment_info)
 
@@ -418,6 +419,7 @@ def delete_period_billing_logic(request):
     context = {'error': None}
     error = None
     billing_info = None
+
     if error is None:
         try:
             billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
@@ -842,14 +844,26 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 period_payment_info.merchandise_type_name = merchandise_type_name
                 # period_payment_info.start_date = payment_info.start_date
                 # period_payment_info.end_date = payment_info.end_date
+
                 if billing_info is None:
                     period_payment_info.next_payment_date = period_payment_info.end_date
                     period_payment_info.billing_state_name = '종료 예정일'
                 else:
+                    if billing_info.state_cd == 'IP':
+                        period_payment_info.status_name = '정상 결제'
+                    elif billing_info.state_cd == 'ST':
+                        period_payment_info.status_name = '정지 예정'
+                    elif billing_info.state_cd == 'CANCEL':
+                        period_payment_info.status_name = '결제 취소'
+                    elif billing_info.state_cd == 'ERR':
+                        period_payment_info.status_name = '결제 실패'
+                    elif billing_info.state_cd == 'END':
+                        period_payment_info.status_name = '결제 종료'
 
                     period_payment_info.billing_info = billing_info
                     period_payment_info.next_payment_date = billing_info.next_payment_date
                     period_payment_info.billing_state_cd = billing_info.state_cd
+                    period_payment_info.payed_date = billing_info.payed_date
                     # period_payment_info.customer_uid = billing_info.customer_uid
                     # period_payment_info.pay_method = billing_info.pay_method
                     if billing_info.state_cd == 'IP':

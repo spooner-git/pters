@@ -155,8 +155,8 @@ def get_function_auth_type_cd(request):
                                                 start_date__lte=today, end_date__gte=today, use=USE)
 
     for billing_info in billing_data:
-        billing_info.state_cd = 'ST'
-        billing_info.use = UN_USE
+        billing_info.state_cd = 'END'
+        # billing_info.use = UN_USE
         billing_info.save()
 
     request.session['product_type_name'] = ''

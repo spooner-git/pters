@@ -39,7 +39,9 @@ $(document).ready(function(){
         var product_id = $(this).attr('data-product-id');
         var period_month = $(this).attr('data-period-month');
         //check_payment(payment_name, customer_uid, product_id, period_month);
+        $('#id_customer_uid_delete_period').val(customer_uid);
         alert("결제카드 삭제 관련 동작");
+        document.getElementById('delete-period-payment-form').submit();
         //To- Do
     });
     // 해지신청

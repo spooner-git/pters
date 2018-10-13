@@ -538,12 +538,13 @@ def func_update_billing_logic(payment_result):
             with transaction.atomic():
                 payment_info.imp_uid = payment_result['imp_uid']
                 payment_info.channel = payment_result['channel']
-                payment_info.card_name = payment_result['card_name']
                 payment_info.buyer_email = payment_result['buyer_email']
                 if int(payment_result['amount']) == 0:
                     payment_info.status = 'pre_paid'
                 else:
                     payment_info.status = payment_result['status']
+                if payment_result['status'] != 'failed':
+                    payment_info.card_name = payment_result['card_name']
                 payment_info.price = int(payment_result['amount'])
                 payment_info.fail_reason = payment_result['fail_reason']
                 payment_info.currency = payment_result['currency']
