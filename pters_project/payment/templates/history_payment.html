@@ -169,7 +169,7 @@
                             <p>{{ stop_payment_info.status_name }}</p>
                         </div>
                         <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}">
-                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">재개</span></p>
+                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="clear_pause_period_payment('{{ stop_payment_info.billing_info.customer_uid }}');">재개</span></p>
                         </div>
                     </div>
                 {% endfor %}
@@ -412,9 +412,10 @@
             location.href="/trainer/trainer_setting/";
         });
 
-        function test(payid){
+        function clear_pause_period_payment(payid){
             $('#id_customer_uid_clear_pause').val(payid);
             document.getElementById('clear-pause-period-payment-form').submit();
+            alert('최대 5분정도 소요될수 있습니다.');
         }
 
         function check_payment(name, customer_uid, product_id, period_month){
