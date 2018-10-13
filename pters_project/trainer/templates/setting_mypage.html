@@ -116,9 +116,9 @@
                     <img src="/static/user/res/icon-card@3x.png" alt="" style="width:19px;">내 이용권
                     <div class="menuButton" style="line-height: 18px;"><button onclick="goPage('payment_history')">내역</button></div>
                 </div>
-                {% for current_payment_info in current_payment_data %}
-                    <p> <span style="color:#fe4e65;font-size: 19px;">{{ current_payment_info.name }} - 사용중</span> </p>
-                {% endfor %}
+{#                {% for current_payment_info in current_payment_data %}#}
+                    <p> <span style="color:#fe4e65;font-size: 19px;">{{ request.session.product_type_name}} 이용권 - 사용중</span> </p>
+{#                {% endfor %}#}
             </div>
         </div>
 
