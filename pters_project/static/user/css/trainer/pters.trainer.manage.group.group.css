@@ -309,6 +309,24 @@ div._groupmanage img._info_delete{
 	opacity: 0.4;
 }
 
+.groupMemoWrap{
+	display: none;
+	width: 100%;
+	height: auto;
+	background: #ffffff;
+	color: #282828;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	border-bottom: 1px solid #cccccc;
+	text-align: left;
+	font-size: 12px;
+	padding: 5px 0 5px 5px;
+}
+	.groupMemoWrap input{
+		-webkit-text-fill-color:#282828 !important;
+		text-align: left;
+	}
+
 .groupRepeatWrap{
 	display: none;
 	width: 100%;
