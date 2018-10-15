@@ -433,7 +433,7 @@ def func_add_billing_logic(custom_data, payment_result):
 
     if error is None:
         if not empty_period_billing_check:
-            payment_name = payment_result['name'] + ' - ' + product_price_info.name
+            payment_name = payment_result['name']
             end_date = func_get_end_date(custom_data['payment_type_cd'], start_date, int(custom_data['period_month']),
                                          date)
             status = payment_result['status']
@@ -496,8 +496,6 @@ def func_add_billing_logic(custom_data, payment_result):
                 #     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
-                    billing_list = BillingInfoTb.objects.filter(product_tb_id=custom_data['product_id'], use=USE)
-                    billing_list.update(use=UN_USE)
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
                                                  price=int(product_price_info.sale_price * 1.1),
                                                  name=payment_name,

@@ -22,13 +22,14 @@ $(document).ready(function(){
     $(document).on('click', '.pay_method_changeButton', function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
+        var product_period_name = $(this).attr('data-product-period-name');
         var product_id = $(this).attr('data-product-id');
         var period_month = $(this).attr('data-period-month');
         console.log(payment_name);
         console.log(customer_uid);
         console.log(product_id);
         console.log(period_month);
-        check_payment(payment_name, customer_uid, product_id, period_month);
+        check_payment(payment_name+' - '+product_period_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
     });

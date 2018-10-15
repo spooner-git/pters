@@ -45,11 +45,11 @@
 
                         {% if price_info.price != 0 %}
                             {% if price_info.payment_type_cd == 'PERIOD' %}
-                                <button class="pay_product_function" data-product-name="{{ product_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }} - {{ price_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
                                         data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
                                         data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">정기 결제 구매</button>
                             {% else %}
-                                <button class="pay_product_function" data-product-name="{{ product_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }} - {{ price_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
                                         data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
                                         data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">구매</button>
                             {% endif %}
@@ -75,11 +75,11 @@
 
                             {% if sub_price_info.price != 0 %}
                                 {% if sub_price_info.payment_type_cd == 'PERIOD' %}
-                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }} - {{ sub_price_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
                                             data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
                                             data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">정기 결제 구매</button>
                                 {% else %}
-                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }} - {{ sub_price_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
                                             data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
                                             data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">구매</button>
                                 {% endif %}

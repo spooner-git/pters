@@ -467,7 +467,7 @@ def update_period_billing_logic(request):
                                                     payment_type_cd='PERIOD')
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
 
