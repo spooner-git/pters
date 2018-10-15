@@ -1,6 +1,7 @@
 {% extends "trainer_base.html" %}
 {% load static_url %}
 {% load background_data %}
+{% load humanize %}
 
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.css" %}>
@@ -35,11 +36,11 @@
                     <div class="payment_monthly">
                         <label class="inner_label">{{ price_info.name }}</label>
                         {% if price_info.price != price_info.sale_price %}
-                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.price|multiply:1.1 }}원</span>
-                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1 }}원</span>
+                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.price|multiply:1.1|intcomma }}원</span>
+                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1|intcomma }}원</span>
                             </p>
                         {% else %}
-                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1 }}원</span>
+                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1|intcomma }}원</span>
                             </p>
                         {% endif %}
 
@@ -65,11 +66,11 @@
                         <div class="payment_monthly">
                             <label class="inner_label">{{ sub_price_info.name }}</label>
                             {% if sub_price_info.price != sub_price_info.sale_price %}
-                                <p class="inner_explain"><span class="price_before"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.price|multiply:1.1 }}원</span>
-                                                        <span class="price_after"> → {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1 }}원</span>
+                                <p class="inner_explain"><span class="price_before"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.price|multiply:1.1|intcomma }}원</span>
+                                                        <span class="price_after"> → {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1|intcomma }}원</span>
                                 </p>
                             {% else %}
-                                <p class="inner_explain"> <span class="price_after"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1 }}원</span>
+                                <p class="inner_explain"> <span class="price_after"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1|intcomma }}원</span>
                                 </p>
                             {% endif %}
 

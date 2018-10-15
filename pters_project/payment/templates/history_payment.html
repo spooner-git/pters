@@ -1,6 +1,6 @@
 {% extends "trainer_base.html" %}
 {% load static_url %}
-
+{% load humanize %}
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.history.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
@@ -123,7 +123,7 @@
                             <p>{{ payment_info.start_date }}</p>
                         </div>
                         <div>
-                            <span>{{ payment_info.price }} 원</span>
+                            <span>{{ payment_info.price|intcomma }} 원</span>
                         </div>
                         <div>
                             <span>{{ payment_info.status_name }}</span>
