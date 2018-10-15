@@ -214,6 +214,7 @@
                 <div>결제 예정일</div>
                 <div>매달 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 포함가)</span></div> -->
                 <div>결제 카드 정보</div>
+                <div>결제일</div>
                 <div>상태</div>
                 <div>결제방법 변경</div>
             </div>
@@ -221,16 +222,19 @@
                 <div class="pay_method_change_table_content">
                     <div>1</div>
                     <!-- <div>
-                        <p>{{ current_payment_info.name }}</p>
+{#                        <p>{{ current_payment_info.name }}</p>#}
                     </div>
                     <div>
-                        <p>{{ current_payment_info.next_payment_date }}</p>
+{#                        <p>{{ current_payment_info.next_payment_date }}</p>#}
                     </div>
                     <div>
-                        <p>{{ current_payment_info.price }} 원</p>
+{#                        <p>{{ current_payment_info.price }} 원</p>#}
                     </div> -->
                     <div>
                         <p>{{ current_payment_info.card_name }}</p>
+                    </div>
+                    <div>
+                        <p>매월 {{ current_payment_info.payed_date }}일 결제</p>
                     </div>
                     <div>
                         <p> {{ current_payment_info.status_name }} </p>

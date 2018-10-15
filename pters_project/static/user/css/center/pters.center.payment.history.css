@@ -471,19 +471,19 @@ body{
 	width: 4%;
 }
 .pay_method_change_table_label div:nth-child(2){
-	width: 16%;
+	width: 26%;
 }
+/*.pay_method_change_table_label div:nth-child(3){*/
+	/*width: 10%;*/
+/*}*/
+/*.pay_method_change_table_label div:nth-child(4){*/
+	/*width: 15%;*/
+/*}*/
 .pay_method_change_table_label div:nth-child(3){
-	width: 10%;
+	width: 50%;
 }
 .pay_method_change_table_label div:nth-child(4){
-	width: 15%;
-}
-.pay_method_change_table_label div:nth-child(5){
-	width: 35%;
-}
-.pay_method_change_table_label div:nth-child(6){
-	width: 15%;
+	width: 20%;
 }
 
 .pay_method_change_table_content{
