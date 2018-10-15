@@ -51,12 +51,15 @@ $(document).ready(function(){
         $('#submit_pay_cancel').attr('data-customer_uid', customer_uid);
         $('#id_customer_uid_cancel').val(customer_uid);
         $('#pay_cancel_confirm_popup').show();
+        shade_index(100);
         //To- Do
     });
     // 해지신청 취소
     $(document).on('click','.pay_restart_Button',function(){
         var customer_uid = $(this).attr('data-customer_uid');
-        alert(customer_uid);
+        var next_payment_date = $(this).attr('data-next_payment_date');
+        // alert(customer_uid);
+        alert(next_payment_date+'부터 결제가 시작됩니다.');
         // $('#submit_pay_restart').attr('data-customer_uid', payid);
         $('#id_customer_uid_restart').val(customer_uid);
         document.getElementById('restart-period-payment-form').submit();
@@ -66,10 +69,12 @@ $(document).ready(function(){
             e.stopPropagation();
             $('#pay_cancel_survey').show();
             $('#pay_cancel_confirm_popup').hide();
+            shade_index(-100);
         });
         $('#popup_cancel_btn_no').click(function(e){
             e.stopPropagation();
             $('#pay_cancel_confirm_popup').hide();
+            shade_index(-100);
         });
 
     $('.ptersCheckbox').click(function(){
