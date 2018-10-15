@@ -429,7 +429,7 @@
             $('#id_customer_uid_clear_pause').val(payid);
             document.getElementById('clear-pause-period-payment-form').submit();
             var day = date.getDate();
-            var next_payment_date_info = next_payment_date.split('-')[1]+'-'+next_payment_date.split('-')[2];
+            var next_payment_date_info = next_payment_date.split('-')[1]+'월 '+next_payment_date.split('-')[2]+'일';
             if(day <10){
                 day = '0'+day;
             }
