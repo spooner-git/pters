@@ -105,7 +105,7 @@
                 <div class="mypay_history_table_label">
                     <div>NO</div>
                     <div>PTERS 이용권</div>
-                    <div>결제일</div>
+                    <div>일자</div>
                     <div>결제금액<br>(부가세 10% 포함가)</div>
                     <div>상태</div>
                     <div>결제방법</div>
@@ -123,7 +123,7 @@
                             <p>{{ payment_info.start_date }}</p>
                         </div>
                         <div>
-                            <span>결제금액</span><span>{{ payment_info.price }} 원</span>
+                            <span>{{ payment_info.price }} 원</span>
                         </div>
                         <div>
                             <span>{{ payment_info.status_name }}</span>
@@ -148,7 +148,7 @@
                     <div>종료일</div>
                     <div>재개</div>-->
                     <div>상태</div>
-                    <div>사유</div>
+                    <div> </div>
                 </div>
                 {% for stop_payment_info in stop_period_payment_data %}
                     <div class="monthly_pay_stop_table_content">
@@ -169,7 +169,7 @@
                             <p>{{ stop_payment_info.status_name }}</p>
                         </div>
                         <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}">
-                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="clear_pause_period_payment('{{ stop_payment_info.billing_info.customer_uid }}');">재개</span></p>
+                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="clear_pause_period_payment('{{ stop_payment_info.billing_info.customer_uid }}');">해제 신청</span></p>
                         </div>
                     </div>
                 {% endfor %}
@@ -188,9 +188,9 @@
                     <p>일시정지된 정기결제 이용권의 결제수단이 더 이상 결제가 불가능한 상태가 되거나 다른 결제수단으로 새로 이용권을 구매하거나 또는 고객님의 종료처리요청으로 인해 정기결제가 더이상 유효하지 않고 종료되는 것을 의미합니다.</p>
                     <div style="width: 100%;height: 1px;background: #cccccc;margin:0 auto;margin-top:10px;margin-bottom: 10px;"></div>
 {#                    <p>- 정기결제 일시정지/해제 이력은 일시정지일부터 1년간 제공됩니다.</p>#}
-{#                    <p>- 신규로 이용권 구매 시 서비스가 중복되는 경우 일시정지 상태인 이용권 중 해당 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>#}
+                    <p>- 신규로 이용권 구매 시 서비스가 중복되는 경우 일시정지 상태인 이용권 중 해당 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>
 {#                    <p>- 일시정지 날로부터 90일 이내 정기결제 일시정지 해제를 하지 않는 경우 기간 만료로 인한 자동종료 처리됩니다.</p>#}
-                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 결제카드가 결제 가능한 상태인지 확인 후 "일시 정지 해제"를 하면 다시 활성화 하실 수 있습니다.</p>
+                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 결제카드가 결제 가능한 상태인지 확인 후 "해제 신청"을 하면 다시 활성화 하실 수 있습니다.</p>
                     <p></p>
                 </div>
             </div>
