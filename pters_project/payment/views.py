@@ -467,7 +467,7 @@ def update_period_billing_logic(request):
                                                     payment_type_cd='PERIOD')
     if error is None:
         try:
-            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid, use=USE)
+            billing_info = BillingInfoTb.objects.get(customer_uid=customer_uid)
         except ObjectDoesNotExist:
             error = '정기 결제 정보를 불러오지 못했습니다.'
 
@@ -934,7 +934,6 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                 payment_info.status_name = '결제 실패'
             if payment_info.pay_method is None:
                 payment_info.pay_method = ''
-
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
         context['payment_data_history'] = payment_data_history
         context['current_payment_data'] = current_payment_data

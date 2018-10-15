@@ -211,3 +211,8 @@ def get_function_auth_type_cd(request):
             # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
 
     return context
+
+
+@register.filter
+def multiply(value, arg):
+    return int(value*arg)

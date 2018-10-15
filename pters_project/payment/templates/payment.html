@@ -1,5 +1,7 @@
 {% extends "trainer_base.html" %}
 {% load static_url %}
+{% load background_data %}
+{% load humanize %}
 
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.css" %}>
@@ -34,21 +36,21 @@
                     <div class="payment_monthly">
                         <label class="inner_label">{{ price_info.name }}</label>
                         {% if price_info.price != price_info.sale_price %}
-                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.price }}원</span>
-                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.sale_price }}원</span>
+                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.price|multiply:1.1|intcomma }}원</span>
+                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1|intcomma }}원</span>
                             </p>
                         {% else %}
-                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.sale_price }}원</span>
+                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1|intcomma }}원</span>
                             </p>
                         {% endif %}
 
                         {% if price_info.price != 0 %}
                             {% if price_info.payment_type_cd == 'PERIOD' %}
-                                <button class="pay_product_function" data-product-name="{{ product_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }} - {{ price_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
                                         data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
                                         data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">정기 결제 구매</button>
                             {% else %}
-                                <button class="pay_product_function" data-product-name="{{ product_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }} - {{ price_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
                                         data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
                                         data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">구매</button>
                             {% endif %}
@@ -64,21 +66,21 @@
                         <div class="payment_monthly">
                             <label class="inner_label">{{ sub_price_info.name }}</label>
                             {% if sub_price_info.price != sub_price_info.sale_price %}
-                                <p class="inner_explain"><span class="price_before"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ sub_price_info.price }}원</span>
-                                                        <span class="price_after"> → {% if sub_price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ sub_price_info.sale_price }}원</span>
+                                <p class="inner_explain"><span class="price_before"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.price|multiply:1.1|intcomma }}원</span>
+                                                        <span class="price_after"> → {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1|intcomma }}원</span>
                                 </p>
                             {% else %}
-                                <p class="inner_explain"> <span class="price_after"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ sub_price_info.sale_price }}원</span>
+                                <p class="inner_explain"> <span class="price_after"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1|intcomma }}원</span>
                                 </p>
                             {% endif %}
 
                             {% if sub_price_info.price != 0 %}
                                 {% if sub_price_info.payment_type_cd == 'PERIOD' %}
-                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }} - {{ sub_price_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
                                             data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
                                             data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">정기 결제 구매</button>
                                 {% else %}
-                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }} - {{ sub_price_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
                                             data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
                                             data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">구매</button>
                                 {% endif %}
@@ -158,7 +160,7 @@
                 <label>이용권 금액</label>
                 <div>
                     <div><p id="price_preview"></p></div>
-                    <p id="price_preview_vat">부가세(VAT) 10% 별도</p>
+                    <p id="price_preview_vat">부가세(VAT) 10% 포함</p>
                 </div>
             </div>
             <div id="purchase_appointment">
@@ -350,7 +352,7 @@
             $('#purchase_functions').find('.purchase_popup_innercontent').html(functions_name);
             $('#purchase_type').find('.purchase_popup_innercontent').text(type_name);
             $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(parseInt(price*1.1))+'원 (부가세 포함)');
-            $('#price_preview').text(numberWithCommas(price)+' 원');
+            $('#price_preview').text(numberWithCommas(parseInt(price*1.1))+'원 (부가세 포함)');
         }
         function numberWithCommas(x) { //천단위 콤마 찍기
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

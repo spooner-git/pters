@@ -24,10 +24,6 @@ $(document).ready(function(){
         var payment_name = $(this).attr('data-payment_name');
         var product_id = $(this).attr('data-product-id');
         var period_month = $(this).attr('data-period-month');
-        console.log(payment_name);
-        console.log(customer_uid);
-        console.log(product_id);
-        console.log(period_month);
         check_payment(payment_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
@@ -40,7 +36,7 @@ $(document).ready(function(){
         var period_month = $(this).attr('data-period-month');
         //check_payment(payment_name, customer_uid, product_id, period_month);
         $('#id_customer_uid_delete_period').val(customer_uid);
-        alert("결제카드 삭제 관련 동작");
+        alert("정기 결제 카드가 삭제됐습니다.");
         document.getElementById('delete-period-payment-form').submit();
         //To- Do
     });
