@@ -402,7 +402,7 @@ def func_add_billing_logic(custom_data, payment_result):
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
                                                         product_tb_id=custom_data['product_id'],
-                                                        use=USE).latest('end_date')
+                                                        use=USE).exclude(status='cancelled').latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None
         # payment_user_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
@@ -496,6 +496,8 @@ def func_add_billing_logic(custom_data, payment_result):
                 #     function_auth_info.save()
 
                 if custom_data['payment_type_cd'] == 'PERIOD':
+                    billing_list = BillingInfoTb.objects.filter(product_tb_id=custom_data['product_id'], use=USE)
+                    billing_list.update(use=UN_USE)
                     billing_info = BillingInfoTb(member_id=str(custom_data['user_id']),
                                                  price=int(product_price_info.sale_price * 1.1),
                                                  name=payment_name,
