@@ -472,20 +472,21 @@ body{
 	width: 4%;
 }
 .pay_method_change_table_label div:nth-child(2){
-	width: 16%;
+	width: 26%;
 }
+/*.pay_method_change_table_label div:nth-child(3){*/
+	/*width: 10%;*/
+/*}*/
+/*.pay_method_change_table_label div:nth-child(4){*/
+	/*width: 15%;*/
+/*}*/
 .pay_method_change_table_label div:nth-child(3){
-	width: 10%;
+	width: 50%;
 }
 .pay_method_change_table_label div:nth-child(4){
-	width: 15%;
+	width: 20%;
 }
-.pay_method_change_table_label div:nth-child(5){
-	width: 35%;
-}
-.pay_method_change_table_label div:nth-child(6){
-	width: 15%;
-}
+
 
 .pay_method_change_table_content{
 	display: block;
@@ -515,30 +516,30 @@ body{
 	color: #fe4e65;
 	font-size: 16px;
 	display: block;
-	width: 100%;
+	width: 26%;
 }
+/*.pay_method_change_table_content > div:nth-child(3){*/
+	/*width: 10%;*/
+	/*width: 32%;*/
+	/*display: inline-block;*/
+/*}*/
+/*.pay_method_change_table_content > div:nth-child(4){*/
+	/*width: 15%;*/
+	/*width: 32%;*/
+	/*display: inline-block;*/
+/*}*/
 .pay_method_change_table_content > div:nth-child(3){
-	width: 10%;
-	width: 32%;
-	display: inline-block;
-}
-.pay_method_change_table_content > div:nth-child(4){
-	width: 15%;
-	width: 32%;
-	display: inline-block;
-}
-.pay_method_change_table_content > div:nth-child(5){
 	width: 100%;
 	text-align: left;
 	display: block;
 	padding-left: 10px;
 
-	width: 32%;
+	width: 50%;
 	text-align: center;
 	display: inline-block;
 }
-.pay_method_change_table_content > div:nth-child(6){
-	width: 100%;
+.pay_method_change_table_content > div:nth-child(4){
+	width: 20%;
 	display: block;
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -819,33 +820,33 @@ body{
 		display: table-cell;
 	}
 	.pay_method_change_table_content > div:nth-child(2){
-		width: 16%;
+		width: 26%;
 		font-size: 13px;
 		color: unset;
 		display: table-cell;
 	}
 
-	.pay_method_change_table_content > div:nth-child(3){
-		width: 10%;
-		display: table-cell;
-	}
-	.pay_method_change_table_content > div:nth-child(4){
-		width: 15%;
-		display: table-cell;
-	}
+	/*.pay_method_change_table_content > div:nth-child(3){*/
+		/*width: 10%;*/
+		/*display: table-cell;*/
+	/*}*/
+	/*.pay_method_change_table_content > div:nth-child(4){*/
+		/*width: 15%;*/
+		/*display: table-cell;*/
+	/*}*/
 
-	.pay_method_change_table_label > div:nth-child(5){
-		width: 15%;
+	.pay_method_change_table_label > div:nth-child(3){
+		width: 50%;
 	}
-	.pay_method_change_table_content > div:nth-child(5){
+	.pay_method_change_table_content > div:nth-child(3){
 		display: table-cell;
-		width:15%;
+		width:50%;
 		text-align:center;
 		padding-left: unset;
 	}
-	.pay_method_change_table_content > div:nth-child(6){
+	.pay_method_change_table_content > div:nth-child(4){
 		display: table-cell;
-		width: 15%;
+		width: 25%;
 		margin-top: unset;
 		margin-bottom: unset;
 	}
