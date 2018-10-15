@@ -1149,43 +1149,50 @@ $(document).ready(function(){
             $form = $('#pt-add-form');
             serverURL = '/schedule/add_schedule/';
             serializeArray = $form.serializeArray();
-            //sendData = send_Data(serializeArray);
             sendData = serializeArray;
 
+            var starttime_to_send = $("#id_training_time");
+            var endtime_to_send = $("id_training_end_time");
         }else if(addTypeSelect=="groupptadd"){
             $form = $('#pt-add-form');
             serverURL = '/schedule/add_group_schedule/';
             serializeArray = $form.serializeArray();
-            //sendData = send_Data(serializeArray);
             sendData = serializeArray;
 
+            var starttime_to_send = $("#id_training_time");
+            var endtime_to_send = $("id_training_end_time");
         }else if(addTypeSelect=="offadd"){
             $form = $('#off-add-form');
             serverURL = '/schedule/add_schedule/';
             serializeArray = $form.serializeArray();
-            //sendData = send_Data(serializeArray);
             sendData = serializeArray;
 
+            var starttime_to_send = $("#id_training_time_off");
+            var endtime_to_send = $("#id_training_end_time_off");
         }else if(addTypeSelect=="repeatptadd"){
             $form = $('#add-repeat-schedule-form');
             serverURL = '/schedule/add_repeat_schedule/';
             serializeArray = $form.serializeArray();
-            //sendData = send_Data(serializeArray);
             sendData = serializeArray;
 
+            var starttime_to_send = $("#id_repeat_start_time");
+            var endtime_to_send = $("#id_repeat_end_time");
         }else if(addTypeSelect=="repeatgroupptadd"){
             $form = $('#add-repeat-schedule-form');
             serverURL = '/schedule/add_group_repeat_schedule/';
             serializeArray = $form.serializeArray();
-            //sendData = send_Data(serializeArray);
             sendData = serializeArray;
 
+            var starttime_to_send = $("#id_repeat_start_time");
+            var endtime_to_send = $("#id_repeat_end_time");
         }else if(addTypeSelect=="repeatoffadd"){
             $form = $('#add-off-repeat-schedule-form');
             serverURL = '/schedule/add_repeat_schedule/';
             serializeArray = $form.serializeArray();
-            //sendData = send_Data(serializeArray);
             sendData = serializeArray;
+
+            var starttime_to_send = $("#id_repeat_start_time_off");
+            var endtime_to_send = $("#id_repeat_end_time_off");
         }
         if(select_all_check==true){
             //ajax 회원정보 입력된 데이터 송신
@@ -1198,9 +1205,14 @@ $(document).ready(function(){
                     data:sendData,
                     dataType : 'html',
 
-                    beforeSend:function(){
-
+                    beforeSend:function(xhr){
                         beforeSend(); //ajax 로딩 이미지 출력
+                        if(starttime_to_send == endtime_to_send){
+                            if(xhr != ""){
+                                xhr.abort(); // ajax중지
+                                alert("에러: 예상치 못한 오류가 발생했습니다. Code:001\n페이지 새로고침 후 다시 이용해주세요.")
+                            }
+                        }
                     },
 
                     //통신성공시 처리
@@ -3077,7 +3089,6 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 function draw_groupMemberList_to_view(jsondata, targetHTML){
-    console.log(jsondata)
     var len = jsondata.db_id.length;
     var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">'+'회원명'+'</div>'+'<div>'+'예약 가능'+'</div>'+'<div>남은 횟수</div>'+'</div>'];
     var addedCount = 0;
@@ -3320,12 +3331,6 @@ function check_dropdown_selected_addplan(){ //회원명, 날짜, 진행시간, �
             select_all_check=false;
         }
     }else if(addTypeSelect == "groupptadd"){
-        console.log(
-                (memberSelect).hasClass("dropdown_selected"),
-                (dateSelect).hasClass("dropdown_selected"),
-                (durSelect).hasClass("dropdown_selected"),
-                (startSelect).hasClass("dropdown_selected")
-            );
         if((memberSelect).hasClass("dropdown_selected")==true && (dateSelect).hasClass("dropdown_selected")==true && (durSelect).hasClass("dropdown_selected")==true &&(startSelect).hasClass("dropdown_selected")==true){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page-addplan .submitBtn:first-child').addClass('submitBtnActivated');

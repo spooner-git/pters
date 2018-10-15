@@ -675,7 +675,7 @@ $(document).ready(function(){
         var refund_price = $('div.lectureRefundPopup input[name="refund_price"]').val().replace(/,/gi,'');
         var refund_date = $('#datepicker_refund').val();
         refund_member_lecture_data(lectureID, dbID, refund_price, refund_date);
-        selectore_lectureRefundPopup.css('display','none');
+        selectore_lectureRefundPopup.css('display', 'none');
         $('#shade_caution').hide();
     });
 
@@ -3863,7 +3863,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
         $.ajax({
             url:'/trainer/refund_lecture_info/',
             type:'POST',
-            data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price , "refund_date":refund_date, "next_page":'/trainer/get_member_list/'},
+            data:{"lecture_id":lectureID, "member_id": dbID, "refund_price": refund_price, "refund_date":refund_date, "next_page":'/trainer/get_member_list/'},
             dataType : 'html',
 
             beforeSend:function(xhr, settings) {
@@ -4062,12 +4062,12 @@ function get_member_lecture_list(dbID, use, callback){
 }
 
 function notice_lecture_status_changed_to_inprogress(lecturename, member_name){
-    console.log(member_name)
     show_caution_popup(`진행완료 되었던 ${member_name} 회원님의 <br> <span style="color:#fe4e65;font-weight:500";>수강정보 [${lecturename}]의</span> <br> 상태가 <span style="color:green">진행중</span>으로 변경됩니다.<p></p>`);
 }
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
+    console.log("jsondata",jsondata)
     var bodywidth = window.innerWidth;
     var $regHistory;
     if(PCorMobile == "pc"){
@@ -4651,7 +4651,6 @@ function add_group_form_func(){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            console.log(option_limit_type, number_has)
             pters_option_inspector(option_limit_type, xhr, number_has);
         },
 
