@@ -22,14 +22,9 @@ $(document).ready(function(){
     $(document).on('click', '.pay_method_changeButton', function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
-        var product_period_name = $(this).attr('data-product-period-name');
         var product_id = $(this).attr('data-product-id');
         var period_month = $(this).attr('data-period-month');
-        console.log(payment_name);
-        console.log(customer_uid);
-        console.log(product_id);
-        console.log(period_month);
-        check_payment(payment_name+' - '+product_period_name, customer_uid, product_id, period_month);
+        check_payment(payment_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
     });
@@ -41,7 +36,7 @@ $(document).ready(function(){
         var period_month = $(this).attr('data-period-month');
         //check_payment(payment_name, customer_uid, product_id, period_month);
         $('#id_customer_uid_delete_period').val(customer_uid);
-        alert("결제카드 삭제 관련 동작");
+        alert("정기 결제 카드가 삭제됐습니다.");
         document.getElementById('delete-period-payment-form').submit();
         //To- Do
     });
