@@ -364,7 +364,7 @@
 
     <script type="text/javascript" src={% static_url "user/js/trainee/pters.trainee.mypage.js" %}></script> <!--달력에 대한 JS-->
     <script>
-        $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시')
+        $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시');
 
         birthChangeEventGroup();
 
@@ -395,15 +395,16 @@
 
         $('button.changeMemberInfo').click(function(){
             if($(this).attr('data-type') == "modify"){
-                $(this).attr('data-type','complete');
+                $(this).attr('data-type', 'complete');
                 $(this).siblings('button.cancelMemberInfo').show();
                 $(this).parents('.trainerInfo').find('._originalInfo').hide();
                 $(this).parents('.trainerInfo').find('.modifyInfoTool').show();
             }else if($(this).attr('data-type') == "complete"){
-                $(this).attr('data-type','modify');
+                $(this).attr('data-type', 'modify');
                 $(this).siblings('button.cancelMemberInfo').hide();
                 $(this).parents('.trainerInfo').find('._originalInfo').show();
                 $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+                input_birth_to_form();
                 send_modified_member_info();
             }
         });
@@ -416,12 +417,12 @@
         });
 
         $('input').keyup(function(){
-            var targetID = $('#'+$(this).attr('name'))
-            targetID.val($(this).val())
+            var targetID = $('#'+$(this).attr('name'));
+            targetID.val($(this).val());
         });
 
 
-        send_modified_member_info()
+        send_modified_member_info();
         function send_modified_member_info(){
             $.ajax({
                 url:'/trainee/update_trainee_info/',
@@ -434,8 +435,8 @@
 
                 //통신성공시 처리
                 success:function(data){
-                    var jsondata = JSON.parse(data)
-                    fill_recieved_member_info(jsondata)
+                    var jsondata = JSON.parse(data);
+                    fill_recieved_member_info(jsondata);
                 },
 
                 //보내기후 팝업창 닫기
@@ -450,75 +451,74 @@
         }
 
         function fill_recieved_member_info(jsondata){
-            $('span._nameInfo').text(jsondata.last_name+jsondata.first_name)
-            $('span._phoneInfo').text(jsondata.phone)
-            $('span._birthInfo').text(jsondata.birthday_dt)
-            $('.pcwho').text('{{ request.session.class_type_name }}'+' - '+ jsondata.last_name+jsondata.first_name)
+            $('span._nameInfo').text(jsondata.last_name+jsondata.first_name);
+            $('span._phoneInfo').text(jsondata.phone);
+            $('span._birthInfo').text(jsondata.birthday_dt);
+            $('.pcwho').text('{{ request.session.class_type_name }}'+' - '+ jsondata.last_name+jsondata.first_name);
         }
-
 
 
         function birthChangeEventGroup(){
-            var yearoption = ['<option>연도</option>']
+            var yearoption = ['<option>연도</option>'];
             for(var i=2018; i>=1908; i--){
                 if(i == 1990){
-                    yearoption.push('<option selected>'+i+'년</option>')
+                    yearoption.push('<option selected>'+i+'년</option>');
                 }else{
-                    yearoption.push('<option>'+i+'년</option>')
+                    yearoption.push('<option>'+i+'년</option>');
                 }
             }
-            var birth_year_options = yearoption.join('')
-            $('#birth_year').html(birth_year_options)
+            var birth_year_options = yearoption.join('');
+            $('#birth_year').html(birth_year_options);
 
 
-            var monthoption = ['<option>월</option>']
+            var monthoption = ['<option>월</option>'];
             for(var i=1; i<=12; i++){
                 if(i == 10){
-                    monthoption.push('<option data-month="'+i+'" selected>'+i+'월</option>')
+                    monthoption.push('<option data-month="'+i+'" selected>'+i+'월</option>');
                 }else{
-                    monthoption.push('<option data-month="'+i+'">'+i+'월</option>')
+                    monthoption.push('<option data-month="'+i+'">'+i+'월</option>');
                 }
             }
-            var birth_month_options = monthoption.join('')
-            $('#birth_month').html(birth_month_options)
+            var birth_month_options = monthoption.join('');
+            $('#birth_month').html(birth_month_options);
 
 
-            var dateoption = ['<option>일</option>']
+            var dateoption = ['<option>일</option>'];
             for(var i=1; i<=31; i++){
                 if(i == 10){
-                    dateoption.push('<option selected>'+i+'일</option>')
+                    dateoption.push('<option selected>'+i+'일</option>');
                 }else{
-                    dateoption.push('<option>'+i+'일</option>')
+                    dateoption.push('<option>'+i+'일</option>');
                 }
 
             }
-            var birth_date_options = dateoption.join('')
-            $('#birth_date').html(birth_date_options)
+            var birth_date_options = dateoption.join('');
+            $('#birth_date').html(birth_date_options);
 
 
             $('#birth_month').change(function(){
-                var dateoption = []
-                $('#birth_date').html("")
-                var lastDay = [31,29,31,30,31,30,31,31,30,31,30,31];
-                var month = $(this).val().replace(/월/gi,"")
+                var dateoption = [];
+                $('#birth_date').html("");
+                var lastDay = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                var month = $(this).val().replace(/월/gi, "");
                 for(var i=1; i<=lastDay[month-1]; i++){
-                    dateoption.push('<option>'+i+'일</option>')
+                    dateoption.push('<option>'+i+'일</option>');
                 }
-                var birth_date_options = dateoption.join('')
-                $('#birth_date').html(birth_date_options)
-            })
+                var birth_date_options = dateoption.join('');
+                $('#birth_date').html(birth_date_options);
+            });
 
             $('#birth_year, #birth_month, #birth_date').change(function(){
-                input_birth_to_form()
-            })
+                input_birth_to_form();
+            });
         }
 
         function input_birth_to_form(){
-            var year = $('#birth_year').val().replace(/년/gi,"")
-            var month = $('#birth_month').val().replace(/월/gi,"")
-            var date = $('#birth_date').val().replace(/일/gi,"")
-            var birthdata = year+'-'+month+'-'+date
-            $('#newbirth').attr('value',birthdata)
+            var year = $('#birth_year').val().replace(/년/gi, "");
+            var month = $('#birth_month').val().replace(/월/gi, "");
+            var date = $('#birth_date').val().replace(/일/gi, "");
+            var birthdata = year+'-'+month+'-'+date;
+            $('#newbirth').attr('value', birthdata);
         }
 
         function goPage(option){
