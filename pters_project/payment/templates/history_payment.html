@@ -367,7 +367,8 @@
                         <p style="color:#fe4e65;">결제 예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"><span>해지 취소</span></div>
+                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"
+                             data-next_payment_date="{{ cancel_period_payment_info.next_payment_date }}"><span>해지 취소</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -423,7 +424,12 @@
         function clear_pause_period_payment(payid){
             $('#id_customer_uid_clear_pause').val(payid);
             document.getElementById('clear-pause-period-payment-form').submit();
-            alert('최대 5분정도 소요될수 있습니다.');
+            var day = date.getDate();
+            if(day <10){
+                day = '0'+day;
+            }
+
+            alert('매월' + day + '일 결제 됩니다.\n' + '최대 5분정도 소요될수 있습니다.');
         }
 
         function check_payment(name, customer_uid, product_id, period_month){
