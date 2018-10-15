@@ -157,7 +157,7 @@
                             <p>{{ stop_payment_info.name }}</p>
                         </div>
                         <div>
-                            <p>매월 {{ stop_payment_info.payed_date }}일 결제</p>
+                            <p>매{% if stop_payment_info.period_month == 1 %}월{% else %}년{% endif %} {{ stop_payment_info.payed_date }}일 결제</p>
                         </div>
                         <!--<div>
 {#                            <p>{{ stop_payment_info.end_date }}</p>#}
@@ -169,7 +169,8 @@
                             <p>{{ stop_payment_info.status_name }}</p>
                         </div>
                         <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}">
-                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="clear_pause_period_payment('{{ stop_payment_info.billing_info.customer_uid }}');">해제 신청</span></p>
+                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="clear_pause_period_payment('{{ stop_payment_info.billing_info.customer_uid }}',
+                                    '{{ stop_payment_info.period_month }}', '{{ stop_payment_info.next_payment_date }}');">해제 신청</span></p>
                         </div>
                     </div>
                 {% endfor %}
@@ -234,7 +235,7 @@
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
-                        <p>매월 {{ current_payment_info.payed_date }}일 결제</p>
+                        <p>매{% if current_payment_info.period_month == 1 %}월{% else %}년{% endif %} {{ current_payment_info.payed_date }}일 결제</p>
                     </div>
                     <div>
                         <p> {{ current_payment_info.status_name }} </p>
@@ -424,15 +425,19 @@
             location.href="/trainer/trainer_setting/";
         });
 
-        function clear_pause_period_payment(payid){
+        function clear_pause_period_payment(payid, period_month, next_payment_date){
             $('#id_customer_uid_clear_pause').val(payid);
             document.getElementById('clear-pause-period-payment-form').submit();
             var day = date.getDate();
+            var next_payment_date_info = next_payment_date.split('-')[1]+'-'+next_payment_date.split('-')[2];
             if(day <10){
                 day = '0'+day;
             }
-
-            alert('매월' + day + '일 결제 됩니다.\n' + '최대 5분정도 소요될수 있습니다.');
+            if(period_month==1){
+                alert('매월' + day + '일 결제 됩니다.\n' + '최대 5분정도 소요될수 있습니다.');
+            }else{
+                alert('매년' + next_payment_date_info + ' 결제 됩니다.\n' + '최대 5분정도 소요될수 있습니다.');
+            }
         }
 
         function check_payment(name, customer_uid, product_id, period_month){
