@@ -14,6 +14,10 @@
 
       "priceArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "refundPriceArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.refund_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "refundDateArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.refund_date }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "optionArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.option_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "noteArray":
