@@ -319,7 +319,7 @@ $(document).ready(function(){
     });
 
     //PC & Mobile 회원삭제버튼 (회원정보창에서)
-    $(document).on('click','button._info_delete',function(){
+    $(document).on('click', 'button._info_delete', function(){
         //$('.confirmPopup').fadeIn('fast');
         deleteTypeSelect = "memberinfodelete";
         $('#cal_popup_plandelete').show();
@@ -645,7 +645,13 @@ $(document).ready(function(){
         var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
         var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
         var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
-        delete_member_reg_data_pc(lectureID, dbID);
+
+        $('#popup_delete_question').html('정말 수강정보를 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
+        $('#cal_popup_plandelete').show().attr({'data-leid':lectureID, 'data-dbid':dbID});
+        shade_index(300);
+        deleteTypeSelect = "lecture_info";
+
+        // delete_member_reg_data_pc(lectureID, dbID);
         selectore_lectureStateChangeSelectPopup.css('display', 'none');
         $('#shade_caution').hide();
     });
@@ -847,6 +853,8 @@ $(document).ready(function(){
             //         send_repeat_delete_personal(jsondata.repeatScheduleIdArray[i])
             //     }
             // })
+        }else if(deleteTypeSelect == "lecture_info"){
+            delete_member_reg_data_pc($("#cal_popup_plandelete").attr("data-leid"), $("#cal_popup_plandelete").attr("data-dbid"));
         }
         function disable_delete_btns_during_ajax(){
             $('#popup_delete_btn_yes, #popup_delete_btn_no').addClass('disabled_button');
@@ -3734,12 +3742,14 @@ function delete_member_reg_data_pc(lectureID, dbID){
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }
+                close_info_popup("cal_popup_plandelete");
                 if($('#calendar').length > 0){
                     ajaxClassTime();
                     close_info_popup('cal_popup_planinfo');
                     close_info_popup('cal_popup_plancheck');
                     shade_index(100);
                 }
+
                 get_member_lecture_list(dbID);
                 console.log('success');
             }

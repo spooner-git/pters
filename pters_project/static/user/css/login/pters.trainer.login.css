@@ -258,6 +258,7 @@ nav.main_nav{
     border-radius: 50%;
     border: 1px solid #fe4e65;
     margin-top: 5px !important;
+    outline: none;
 }
 #loginButton{
 	color:#ffffff;
