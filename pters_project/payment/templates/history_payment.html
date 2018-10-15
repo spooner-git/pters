@@ -245,8 +245,7 @@
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
                              data-period-month="{{ current_payment_info.period_month }}"><span>삭제</span></div>
-                        {% endif %}
-                        {% if current_payment_info.billing_state_cd == 'IP' %}
+                        {% else %}
                         <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
