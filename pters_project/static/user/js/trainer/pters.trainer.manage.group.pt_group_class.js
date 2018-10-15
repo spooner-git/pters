@@ -131,7 +131,7 @@ $('button#addByList, button#addBySearch').click(function(e){
     }
 });
 
-$(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
+$(document).on('click', '#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
     if($('#subpopup_addByList').css('display') == "block"){
         $('#subpopup_addByList').hide();
         $('.groupMemberAddBox button').removeClass('disabled_button');
@@ -468,6 +468,7 @@ function added_member_info_to_jsonformat(){
 $(document).on('click', 'div.groupWrap', function(e){
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
+    var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
     if(memberlist.css('display')=='none'){
@@ -475,6 +476,9 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).addClass('groupWrap_selected');
             memberlist.addClass('groupMembersWrap_selected').show();
             repeat_list.show();
+            if(bodywidth < 600){
+               memo_list.show(); 
+            }
             get_groupmember_list(group_id);
             get_group_repeat_info(group_id);
         }else if(group_id == "1:1"){
@@ -494,6 +498,9 @@ $(document).on('click', 'div.groupWrap', function(e){
         $(this).removeClass('groupWrap_selected');
         memberlist.removeClass('groupMembersWrap_selected').hide();
         repeat_list.hide();
+        if(bodywidth < 600){
+           memo_list.hide(); 
+        }
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
     }
 });
@@ -561,9 +568,17 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
             case 'edit':
                 var group_name = $(this).parent('div').siblings('._groupname').find('input').val();
                 var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val();
-                var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
+                var group_memo;
+                if(bodywidth < 600){
+                    group_memo = $('div.groupMemoWrap[data-groupid="'+group_id+'"] input').val();
+                }else{
+                    group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
+                }
                 var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type');
 
+                if(group_memo.length == 0){
+                    group_memo = " ";
+                }
 
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
@@ -1369,16 +1384,16 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var group_type_nm = jsondata.group_type_cd_nm[i];
         var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
         var group_memo = jsondata.group_note[i];
-        var group_memberlist = []
+        var group_memberlist = [];
         var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];
         var groupstatus = jsondata.state_cd_name[i];
         var groupstatus_cd = jsondata.state_cd[i];
 
-        ordernum++
-        var full_group = ""
+        ordernum++;
+        var full_group = "";
         if(group_membernum == group_capacity && group_type == "NORMAL"){
-            var full_group = "red_color_text"
+            var full_group = "red_color_text";
         }
 
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
@@ -1387,13 +1402,14 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
         var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">'
 
-        var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
-        var htmlend = '</div>'
-        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
+        var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">';
+        var htmlend = '</div>';
+        var memolist = '<div class="groupMemoWrap" data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>';
         var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
         var manageimgs = '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>';
         if(Options.auth_class == 0){
-            manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>'
+            manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>';
         }
 
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
@@ -1405,21 +1421,21 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
             '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
             '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-            manageimgs
+            manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
         if(group_type == "EMPTY"){
-            htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
+            htmlToJoin.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }else if(group_type == "NORMAL"){
-            htmlToJoin2.push(htmlstart+main+htmlend+repeatlist+memberlist)
-        }
+            htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+        };
         
     }
 
     if(htmlToJoin.length == 0){
         if(option == "current"){
-            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>')
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>')
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
     //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
@@ -1859,7 +1875,7 @@ function send_delete_member_repeat_infos(jsondata){
 
 
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
-    $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
+    $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled', disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
     $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable));
 }
 
