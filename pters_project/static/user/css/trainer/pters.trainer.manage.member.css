@@ -805,6 +805,7 @@ select:focus > option:checked {
 	text-align: center;
 	border: 0;
 	border-right:1px solid #cccccc;
+	vertical-align: middle;
 }
 #memberRegHistory_info_PC > div > div:nth-child(1){
 	width: 12.5%;

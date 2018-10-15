@@ -4166,7 +4166,7 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
                 lectureTypeName = '<div class="lecConnectType_PE" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
                 lectureConnectTypeName = '<div data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'"> - </div>';
             }else if(jsondata.lectureStateArray[i] == "RF"){
-                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'</div>';
+                lectureTypeName = '<div class="lecConnectType_RF" data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'">'+jsondata.lectureStateNameArray[i]+'<br><span style="font-size:11px">(-'+numberWithCommas(jsondata.refundPriceArray[i])+')</span></div>';
                 lectureConnectTypeName = '<div data-dbid="'+dbID+'" data-leid ="'+jsondata.lectureIdArray[i]+'"> - </div>';
             };
 
