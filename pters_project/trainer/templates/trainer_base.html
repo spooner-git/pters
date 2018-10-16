@@ -589,13 +589,17 @@ function playSound() {
     var platform_check = 'pc';
     var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
-            $('#paymentSetting').css('display', 'none');
+            if(push_info.length == 0){
+                $('#paymentSetting').css('display', 'none');
+            }
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
             platform_check = 'mobile';
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            $('#paymentSetting').css('display', 'none');
+            if(push_info.length == 0){
+                $('#paymentSetting').css('display', 'none');
+            }
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
