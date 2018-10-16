@@ -14,6 +14,24 @@ $(document).ready(function(){
     });
     //ESC키를 눌러서 팝업 닫기
 
+    $('#search_member_input').keyup(function(e){
+        e.stopPropagation();
+        // e.preventDefault();
+        var search_value = $(this).val();
+        $('tr.memberline').hide();
+
+        $('tr.memberline').each(function(){
+            if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
+                $(this).show();
+            }
+        });
+
+        if(search_value.length == 0){
+            $('tr.memberline').show();
+        }
+    });
+
+
     $('.hastooltips').click(function(e){
         e.stopPropagation();
         var $title = $(this).find(".mobile_title_popup");

@@ -282,6 +282,7 @@
                     <span class="ENtext">Re-Contract</span>
                 </div>
                 -->
+                <input id="search_member_input" type="text" name="search_member_input" placeholder="검색">
             </div>
 
             <select class="alignSelect _ALIGN_DROPDOWN">
@@ -1159,35 +1160,35 @@
     <!-- <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script> -->
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
     <script>
-        $('a.text-membermanage').css('color','#fe4e65;')
-        $('#uptext').text("회원 관리")
-        $('footer').hide()
+        $('a.text-membermanage').css('color', '#fe4e65;');
+        $('#uptext').text("회원 관리");
+        $('footer').hide();
 
         //var DB = {};
         //var DBe = {};
         //var DB_All = {};
 
         var deleteTypeSelect;
-        var alignType = "name"
+        var alignType = "name";
         var select_all_check = false;
 
         get_member_ing_list("callback",function(jsondata){
-            memberListSet('current','name','no',jsondata);
+            memberListSet('current', 'name', 'no', jsondata);
         });
 
 
 
         $('html,body').click(function(){
-            $('#please_add_member_pc').fadeOut('fast')
-        })
+            $('#please_add_member_pc').fadeOut('fast');
+        });
 
         $('#float_btn, .navbar').click(function(){
-            $('#please_add_member').fadeOut('fast')
-        })
+            $('#please_add_member').fadeOut('fast');
+        });
 
         $('#_close_how_to_add_member, #page_addmember').click(function(){
-            $('#how_to_add_member').fadeOut()
-        })
+            $('#how_to_add_member').fadeOut();
+        });
 
     </script>
 
