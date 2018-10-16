@@ -669,7 +669,7 @@ select:focus > option:checked {
 	padding-left:10px;
 }
 #memberName_info_lastName_PC, #memberName_info_firstName_PC{
-	width: 100px;
+	width: 200px;
 	background: #ffffff;
 	display: none;
 }

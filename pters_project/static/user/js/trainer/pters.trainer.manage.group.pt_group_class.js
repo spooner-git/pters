@@ -45,7 +45,8 @@ $('button#addByNew').click(function(e){
             e.preventDefault();
             added_New_Member_Num++;
             var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">';
-            var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
+            //var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
+            var nameinput = '<input class="new_member_firstname" placeholder="이름">';
             var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
             var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
             var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';

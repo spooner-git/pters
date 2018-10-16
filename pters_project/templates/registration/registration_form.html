@@ -160,8 +160,8 @@
         <div class="registerbox_add">
             <div id="global_error_msg"></div>
             <div class="outerbox">
-                <input type="text" name="" maxlength="15" placeholder="성" id="familyname_input"  autocomplete="off">
-                <input type="text" name="" maxlength="15" placeholder="이름" id="lastname_input"  autocomplete="off">
+                <!-- <input type="text" name="" maxlength="15" placeholder="성" id="lastname_input"  autocomplete="off"> -->
+                <input type="text" name="" maxlength="15" placeholder="이름" id="familyname_input"  autocomplete="off">
                 <button class="selector_button" data-type="M">남</button>
                 <button class="selector_button" data-type="W">여</button>
             </div>
@@ -1202,8 +1202,8 @@
 
             if($('#first_name').val().length == 0 ){
                 result = '이름을 입력해주세요';
-            }else if($('#last_name').val().length == 0 ){
-                result = '성을 입력해주세요';
+            // }else if($('#last_name').val().length == 0 ){
+            //     result = '성을 입력해주세요';
             }else if($('#newsex').val().length == 0 ){
                 result = '성별을 입력해주세요';
             }
@@ -1363,18 +1363,18 @@
             $form.find('#newsex').attr('value',$(this).attr('data-type'));
         });
 
-        $('#familyname_input').keyup(function(){
+        $('#lastname_input').keyup(function(){
             if($(this).val().length>0){
-                $form.find('#newname').attr('value', $(this).val() + '' + $('#lastname_input').val());
+                $form.find('#newname').attr('value', $(this).val() + '' + $('#familyname_input').val());
                 $form.find('#last_name').attr('value', $(this).val());
             }else{
                 $form.find('#newname').attr('value',"");
             }
         });
 
-        $('#lastname_input').keyup(function(){
+        $('#familyname_input').keyup(function(){
             if($(this).val().length>0){
-                $form.find('#newname').attr('value', $('#familyname_input').val() + '' + $(this).val());
+                $form.find('#newname').attr('value', $('#lastname_input').val() + '' + $(this).val());
                 $form.find('#first_name').attr('value', $(this).val());
             }else{
                 $form.find('#newname').attr('value',"");
