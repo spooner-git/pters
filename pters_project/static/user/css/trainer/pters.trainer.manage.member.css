@@ -65,6 +65,9 @@ body{
 	right: 30px;
 	display: none;
 }
+#please_add_member_pc{
+	display: none;
+}
 #please_add_member:after{
 	content:'';
 	position: absolute;
@@ -1201,7 +1204,13 @@ span.summaryInnerBoxText_Repeatendtext{
 }
 
 .ymdText-pc-add-member-wrap{
-	display: none;
+	/*display: none;*/
+	display: inline-block;
+}
+#search_member_input, #search_lecture_input{
+	height: 33px;
+	width: 150px;
+	border: 1px solid #cccccc;
 }
 
 .input_disabled_color{
@@ -1343,7 +1352,12 @@ span.summaryInnerBoxText_Repeatendtext{
 		display: inline-block;
 		line-height: 33px;
 		position: relative;
-		width: 250px;
+		width: auto;
+	}
+	#search_member_input, #search_lecture_input{
+		height: 100%;
+		width: 130px;
+		margin-left: 10px;
 	}
 
 	#please_add_member_pc{

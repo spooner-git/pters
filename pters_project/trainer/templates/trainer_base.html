@@ -586,20 +586,27 @@ function playSound() {
     //const messageChannel = new MessageChannel();
     //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
     //navigator.serviceWorker.controller.postMessage({'hello':'test'});
-    var platform_check = 'pc'
+    var platform_check = 'pc';
+    var push_info = '{{ request.session.push_token }}';
     var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
-            $('._company').css('display','none');
-            $('.ads_wrap').css('display','none');
-            $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
-            platform_check = 'mobile'
+            if(push_info.length > 0){
+                $('#paymentSetting').css('display', 'none');
+            }
+            $('._company').css('display', 'none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+            platform_check = 'mobile';
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            $('._company').css('display','none');
-            $('.ads_wrap').css('display','none');
-            $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
-            platform_check = 'mobile'
+            if(push_info.length > 0){
+                $('#paymentSetting').css('display', 'none');
+            }
+            $('._company').css('display', 'none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+            platform_check = 'mobile';
         }else{
-            platform_check = 'pc'
+            platform_check = 'pc';
         }
     if(platform_check=='pc'){
         Push.Permission.request(onGranted, onDenied);
@@ -655,7 +662,7 @@ function playSound() {
     var class_id = '{{ request.session.class_id }}';
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
-
+    
     {% load background_data %}
     {% autoescape off %}
     var setting_info = {% get_setting_info request %};

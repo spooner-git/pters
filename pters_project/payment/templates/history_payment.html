@@ -414,15 +414,15 @@
     <script>
 
         if($('body').width()<600){
-            $('#page-base').css('display','block');
-            //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('이용권 구매');
-            $('#uptext').text("이용권 구매");
-            $('#upbutton-modify').hide();
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text('이용권 내역');
+            $('#uptext').text("이용권 내역");
+            $('#upbutton-check').hide();
         }
 
-        $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/";
+        $('#upbutton-x, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_mypage/";
         });
 
         function clear_pause_period_payment(payid, period_month, next_payment_date){
