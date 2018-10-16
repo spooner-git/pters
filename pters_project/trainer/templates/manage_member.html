@@ -452,8 +452,8 @@
                 </label>
                 <div class="mobileinfo hastooltips">
                     <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" disabled>
+                    <!-- <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled> -->
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" maxlength="11" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -801,7 +801,7 @@
                     <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
                     <div id="memberName_reg" class="dropdown pters_input_custom">
                         <!-- <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10"> -->
-                        <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="10">
+                        <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="11">
                     </div>
                     <div id="memberSex" class="pters_input_custom">
                         <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>

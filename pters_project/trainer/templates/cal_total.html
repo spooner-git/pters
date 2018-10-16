@@ -774,8 +774,8 @@
                 </label>
                 <div class="mobileinfo hastooltips">
                     <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" title="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" title="lastName" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" title="firstName" disabled>
+                   <!--  <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" title="lastName" disabled> -->
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" title="firstName" maxlength="11" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -911,8 +911,8 @@
                 <div id="memberFemale_info_PC" class="selectboxopt selectboxopt_right selectbox_disable" value="W"><img src="/static/user/res/member/icon-female-pink.png"></div>
             </div>
             <input type="text" name="" id="memberName_info_PC">
-            <input type="text" name="" id="memberName_info_lastName_PC" maxlength="4">
-            <input type="text" name="" id="memberName_info_firstName_PC" maxlength="4">
+            <!-- <input type="text" name="" id="memberName_info_lastName_PC" maxlength="4"> -->
+            <input type="text" name="" id="memberName_info_firstName_PC" maxlength="11">
             <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="close_manage_popup('member_info_PC')">
         </label>
 

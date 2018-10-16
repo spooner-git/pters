@@ -448,7 +448,7 @@ select:focus > option:checked {
 }
 #memberName_info_lastName, #memberName_info_firstName{
 	display: none;
-	width: 35%;
+	width: 80%;
 	background: #ffffff;
 }
 
