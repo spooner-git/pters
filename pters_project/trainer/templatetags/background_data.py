@@ -47,7 +47,10 @@ def get_setting_info(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     device_id = request.session.get('device_id', 'pc')
-    request.session['device_info'] = device_id
+    if device_id == 'pc':
+        request.session['device_info'] = 'web'
+    else:
+        request.session['device_info'] = 'app'
     if class_id != '':
 
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
