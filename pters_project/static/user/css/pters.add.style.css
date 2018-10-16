@@ -365,7 +365,7 @@ ul a{
 
 
 .pters_input_namefield{
-	width: 48%;
+	width: 100%;
 	display: inline-block;
 	padding: 0;
 	/*height: 40px !important;*/ /*이거 대체 왜이래?? 그룹추가할때 40 important되어있으면 칸이 너무 크다.*/
@@ -1116,8 +1116,8 @@ button._info_baseedit_img{
 
 
 #memberName_reg{
-	/*display: table-cell;
-	width: 90%;
+	display: table-cell;
+	/*width: 90%;
 	vertical-align: middle;
 	background-color: transparent;*/
 }
