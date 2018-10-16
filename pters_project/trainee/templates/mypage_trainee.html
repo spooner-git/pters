@@ -454,6 +454,16 @@
             $('span._nameInfo').text(jsondata.last_name+jsondata.first_name);
             $('span._phoneInfo').text(jsondata.phone);
             $('span._birthInfo').text(jsondata.birthday_dt);
+            var birth_year = jsondata.birthday_dt[0].split('-')[0];
+            var birth_month = jsondata.birthday_dt[0].split('-')[1];
+            var birth_date = jsondata.birthday_dt[0].split('-')[2];
+            console.log(birth_year, birth_month, birth_date)
+            $(`#birth_year option[data-year="${Number(birth_year)}"]`).prop("selected", true);
+            $(`#birth_month option[data-month="${Number(birth_month)}"]`).prop("selected", true);
+            $(`#birth_date option[data-date="${Number(birth_date)}"]`).prop("selected", true);
+
+
+
             $('.pcwho').text('{{ request.session.class_type_name }}'+' - '+ jsondata.last_name+jsondata.first_name);
         }
 
@@ -462,9 +472,9 @@
             var yearoption = ['<option>연도</option>'];
             for(var i=2018; i>=1908; i--){
                 if(i == 1990){
-                    yearoption.push('<option selected>'+i+'년</option>');
+                    yearoption.push('<option data-year="'+i+'" selected>'+i+'년</option>');
                 }else{
-                    yearoption.push('<option>'+i+'년</option>');
+                    yearoption.push('<option data-year="'+i+'">'+i+'년</option>');
                 }
             }
             var birth_year_options = yearoption.join('');
@@ -486,9 +496,9 @@
             var dateoption = ['<option>일</option>'];
             for(var i=1; i<=31; i++){
                 if(i == 10){
-                    dateoption.push('<option selected>'+i+'일</option>');
+                    dateoption.push('<option data-date="'+i+'" selected>'+i+'일</option>');
                 }else{
-                    dateoption.push('<option>'+i+'일</option>');
+                    dateoption.push('<option data-date="'+i+'">'+i+'일</option>');
                 }
 
             }
