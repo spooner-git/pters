@@ -51,30 +51,31 @@
                 </div>
                 <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_total' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
             </div>
+            <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
+                <div class="lower_box_child">
+                    <div class="lower_box_child_inner">
+                        <div class="KRtext">진행중</div><div class="JPtext">進行中</div><div class="ENtext">Ongoing Member</div>
+                        <a href="{% url 'trainer:member_manage' %}" id='total_member' class='lower_box_num'>{{total_member_num}}</a>
+                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
+                    </div>
+                </div>
+                <div class="lower_box_child">
+                    <div class="lower_box_child_inner">
+                        <div class="KRtext">이번달 신규</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
+                        <a href="{% url 'trainer:member_manage' %}" id='request_num' class='lower_box_num'>{{ new_member_num }}</a>
+                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
+                    </div>
+                </div>
+                <div class="lower_box_child">
+                    <div class="lower_box_child_inner">
+                        <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
+                        <a href="{% url 'trainer:member_manage' %}" id='finish_member' class='lower_box_num'>{{ to_be_end_member_num }}</a>
+                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
-            <div class="lower_box_child">
-                <div class="lower_box_child_inner">
-                    <div class="KRtext">진행중</div><div class="JPtext">進行中</div><div class="ENtext">Ongoing Member</div>
-                    <a href="{% url 'trainer:member_manage' %}" id='total_member' class='lower_box_num'>{{total_member_num}}</a>
-                    <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                </div>
-            </div>
-            <div class="lower_box_child">
-                <div class="lower_box_child_inner">
-                    <div class="KRtext">이번달 신규</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
-                    <a href="{% url 'trainer:member_manage' %}" id='request_num' class='lower_box_num'>{{ new_member_num }}</a>
-                    <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                </div>
-            </div>
-            <div class="lower_box_child">
-                <div class="lower_box_child_inner">
-                    <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
-                    <a href="{% url 'trainer:member_manage' %}" id='finish_member' class='lower_box_num'>{{ to_be_end_member_num }}</a>
-                    <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                </div>
-            </div>
-        </div>
+        
     <!-- </div> -->
 
     <div id="notice_popup_main">
