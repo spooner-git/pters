@@ -589,19 +589,21 @@ function playSound() {
     var platform_check = 'pc';
     var push_info = '{{ request.session.push_token }}';
     var varUA = navigator.userAgent.toLowerCase();
+    $('#about_us').text(push_info)
         if(varUA.match('android') != null){
-            if(push_info.length == 0){
-                $('#paymentSetting').css('display', 'none');
-            }
+            $('#about_us').text(push_info)
+            // if(push_info.length == 0){
+            //     $('#paymentSetting').css('display', 'none');
+            // }
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
             platform_check = 'mobile';
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            console.log(push_info.length)
-            if(push_info.length >10){
-                $('#paymentSetting').css('display', 'none');
-            }
+            $('#about_us').text(push_info)
+            // if(push_info.length >10){
+            //     $('#paymentSetting').css('display', 'none');
+            // }
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
