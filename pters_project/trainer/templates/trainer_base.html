@@ -590,7 +590,7 @@ function playSound() {
     var push_info = '{{ request.session.push_token }}';
     var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
-            if(push_info.length == 0){
+            if(push_info.length > 0){
                 $('#paymentSetting').css('display', 'none');
             }
             $('._company').css('display', 'none');
@@ -598,7 +598,7 @@ function playSound() {
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
             platform_check = 'mobile';
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            if(push_info.length == 0){
+            if(push_info.length > 0){
                 $('#paymentSetting').css('display', 'none');
             }
             $('._company').css('display', 'none');
