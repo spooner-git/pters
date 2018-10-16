@@ -31,6 +31,23 @@ $(document).ready(function(){
         }
     });
 
+    $('#search_lecture_input').keyup(function(e){
+        e.stopPropagation();
+        // e.preventDefault();
+        var search_value = $(this).val();
+        $('div.groupWrap').hide();
+
+        $('div.groupWrap').each(function(){
+            if($(this).find("._groupname input").val().match(search_value) != null || $(this).find("._groupmemo input").val().match(search_value) != null){
+                $(this).show();
+            }
+        });
+
+        if(search_value.length == 0){
+            $('div.groupWrap').show();
+        }
+    });
+
 
     $('.hastooltips').click(function(e){
         e.stopPropagation();
