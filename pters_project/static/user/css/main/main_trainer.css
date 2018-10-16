@@ -1,17 +1,20 @@
 html{
 	height: 100%;
-}
-
-body{
-	height: 100%;
-	padding-top: 0px;
-	overflow-y: hidden;
-	/*background-image: url("/static/user/res/main/bg-image.png");*/
 	background-repeat: no-repeat;
 	background-position-x:center;
 	background-size:100%;
 	background-size: cover;
-	background-color: black;
+}
+
+body{
+	padding-top: 0px;
+	overflow-y: hidden;
+	background-color: transparent;
+	
+	/*background-repeat: no-repeat;
+	background-position-x:center;
+	background-size:100%;
+	background-size: cover;*/
 }
 
 .bg_weight{
@@ -67,16 +70,19 @@ body{
 }
 
 .lower_box{
-	width: 100%;
+	width: 66.67%;
 	height: 11.3%;
 	position: absolute;
 	top: 71.04%;
 	left:0;
 	max-width: 800px !important;
+
+	display: table;
 }
 
 .lower_box_child{
-	position: absolute;
+	position: relative;
+	display: table-cell;
 	width: 30%;
 	height: 100%;
 	background-color: #ffffff;
@@ -229,9 +235,9 @@ body{
 }
 */
 @media(max-height:630px) and (min-width:600px){
-	html,body{
+	/*html,body{
 		height: auto;
-	}
+	}*/
 }
 
 @media(max-width:600px){
@@ -277,8 +283,7 @@ body{
 	}
 
 	#main_content{
-		height: 752px;
-		height: auto;
+		height: 100%;
 	}
 
 
@@ -288,18 +293,24 @@ body{
 
 	.center_box{
 		position: relative;
-		width: 460px;
+		width: 35%;
 		height: 350px;
-		margin-top: 90px;
-		top: 0;
+		max-width: 460px !important;
+		min-width: 350px;
+		/*max-height: 350px;
+		min-height: 300px;*/
+		margin-top: 7%;
 	}
 
 	.lower_box{
 		position: relative;
-		width: 500px;
+		width: 35%;
+		max-width: 460px !important;
+		min-width: 350px;
 		height: 105px;
 		margin-top: 22px;
-		top: 0;
+
+		display: table;
 	}
 
 	body{
@@ -349,6 +360,18 @@ body{
 		display: inline-block !important;
 	}
 
+}
+
+@media(max-height:750px) and (min-width: 600px){
+	html{
+		height: auto;
+	}
+	.lower_box{
+		margin-bottom: 100px;
+	}
+	.fixfooter{
+		position: relative;
+	}
 }
 
 
