@@ -1363,18 +1363,26 @@
             $form.find('#newsex').attr('value',$(this).attr('data-type'));
         });
 
-        $('#lastname_input').keyup(function(){
-            if($(this).val().length>0){
-                $form.find('#newname').attr('value', $(this).val() + '' + $('#familyname_input').val());
-                $form.find('#last_name').attr('value', $(this).val());
-            }else{
-                $form.find('#newname').attr('value',"");
-            }
-        });
+        // $('#lastname_input').keyup(function(){
+        //     if($(this).val().length>0){
+        //         $form.find('#newname').attr('value', $(this).val() + '' + $('#familyname_input').val());
+        //         $form.find('#last_name').attr('value', $(this).val());
+        //     }else{
+        //         $form.find('#newname').attr('value',"");
+        //     }
+        // });
 
+        // $('#familyname_input').keyup(function(){
+        //     if($(this).val().length>0){
+        //         $form.find('#newname').attr('value', $('#lastname_input').val() + '' + $(this).val());
+        //         $form.find('#first_name').attr('value', $(this).val());
+        //     }else{
+        //         $form.find('#newname').attr('value',"");
+        //     }
+        // });
         $('#familyname_input').keyup(function(){
             if($(this).val().length>0){
-                $form.find('#newname').attr('value', $('#lastname_input').val() + '' + $(this).val());
+                $form.find('#newname').attr('value', $(this).val());
                 $form.find('#first_name').attr('value', $(this).val());
             }else{
                 $form.find('#newname').attr('value',"");
