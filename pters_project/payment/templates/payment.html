@@ -251,15 +251,15 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
         if($('body').width()<600){
-            $('#page-base').css('display','block');
-            //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('이용권 구매');
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text('이용권 구매');
             $('#uptext').text("이용권 구매");
-            $('#upbutton-modify').hide();
+            $('#upbutton-check').hide();
         }
 
-        $('#upbutton-x-modify').click(function(){
-            location.href="/trainer/trainer_setting/"
+        $('#upbutton-x, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_setting/";
         });
 
         $('.pay_product_function').click(function(e){
