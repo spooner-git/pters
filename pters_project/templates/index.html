@@ -168,6 +168,8 @@
 
     </div>
 
+    <div id="tooltip"><span style="line-height: 30px;">서비스 안내</span></div>
+
     <div class="album_wrap" id="album_wrap">
         <div class="album" id="promote_1">
             <div class="explain_wrap">
@@ -180,7 +182,7 @@
 
                     <p class="explain_main_sublabel">1:1, 그룹, GX등 레슨 관리</p>
                     <p class="explain_main_sublabel">더 알고 싶다면?</p>
-                    <img src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;">
+                    <img id="go_to_service_explain" src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;">
                 </div>
             </div>
 
@@ -297,29 +299,55 @@
 {#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
     <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
     <script>
+        var bodywidth = window.innerWidth;
 
         var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
         if(varUA.match('android') != null){
-            var devicetext = '브라우저, Android 앱으로'
-            var methodtext = 'PC, 스마트폰, 태블릿 등'
+            var devicetext = '브라우저, Android 앱으로';
+            var methodtext = 'PC, 스마트폰, 태블릿 등';
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            var devicetext = '브라우저, iOS 앱으로'
-            var methodtext = 'PC, 스마트폰, 태블릿 등'
+            var devicetext = '브라우저, iOS 앱으로';
+            var methodtext = 'PC, 스마트폰, 태블릿 등';
         }else{
-            var devicetext = '브라우저, iOS, Android 앱으로'
-            var methodtext = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등'
+            var devicetext = '브라우저, iOS, Android 앱으로';
+            var methodtext = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등';
         }
         $('#connectedMethod').html(methodtext);
         $('#connectedDevice').html(devicetext);
 
         if(varUA.match('MSIE') != null || varUA.match('rv:11.0')){
-            $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none')
-            $('#IE_block_explain').css('display','block')
+            $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
+            $('#IE_block_explain').css('display','block');
         }
 
 
-        var page = 0
-        var scroll = true
+        function show_tooltip(bodywidth){
+            $('#tooltip').css("display","none");
+            if(bodywidth > 1024){
+                $('#go_to_service_explain').mouseover(function(){
+                    $('#tooltip').fadeIn('fast');
+                    $('#tooltip').css({"top":$(this).offset().top,"left":$(this).offset().left+$(this).width()+20});
+                    $(this).mouseleave(function(){
+                        $('#tooltip').fadeOut('fast');
+                    });
+                });
+            }else{
+                var $go_to_service_explain = $('#go_to_service_explain');
+                $('#tooltip').css({"display":"inline-block","top":$go_to_service_explain.offset().top,"left":$go_to_service_explain.offset().left+$go_to_service_explain.width()+20});
+            }
+        }
+
+        show_tooltip(bodywidth);
+        $(window).resize(function(){
+            bodywidth = window.innerWidth;
+            show_tooltip(bodywidth);
+        });
+        
+        
+
+
+        var page = 0;
+        var scroll = true;
         var explain_mode;
         // $('html,body').on('mousewheel',function(e){
         //     var loc_1 = $('#promote_1').height()
@@ -353,8 +381,8 @@
 
 
         var initX;
-        var mobile_page = 0
-        var touch = true
+        var mobile_page = 0;
+        var touch = true;
         $(document).on('touchstart','.album_wrap',function(e){
             initX = e.originalEvent.touches[0].clientX;
 
