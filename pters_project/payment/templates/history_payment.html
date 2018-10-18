@@ -132,7 +132,9 @@
                             <p>{{ payment_info.card_name }}</p>
                         </div>
                         <div>
+                            {% if payment_info.receipt_url != None %}
                             <p><a href="{{ payment_info.receipt_url }}" target="_blank">클릭</a></p>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

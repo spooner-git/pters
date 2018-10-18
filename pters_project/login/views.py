@@ -126,6 +126,30 @@ def login_trainer(request):
         return redirect(next_page)
 
 
+class ServiceInfoView(TemplateView):
+    template_name = 'service_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServiceInfoView, self).get_context_data(**kwargs)
+        return context
+
+
+class ServicePriceInfoView(TemplateView):
+    template_name = 'service_price_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServicePriceInfoView, self).get_context_data(**kwargs)
+        return context
+
+
+class ServiceTestLoginView(TemplateView):
+    template_name = 'service_test_login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
+        return context
+
+
 class LoginSimpleNaverView(TemplateView):
     template_name = 'login_naver_processing.html'
 
