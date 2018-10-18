@@ -182,8 +182,8 @@
                     <span class="icon-bar" style="width: 20px;"></span>
                 </button>
                 {% block nav_center_img %}
-                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
-                    <a id="uptext" class="uptext" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{user.first_name }}  코치님 일정</a>-->
+                    <a id="uptext" class="uptext" href="{% url 'index' %}">{{user.first_name }}  <span></span></a>
                 {% endblock %}
                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar">
                     <a href="{% url 'trainer:alarm' %}"><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -199,7 +199,7 @@
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                         <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
                         <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
-                        <div id="user_name">{{user.last_name}} {{user.first_name}}
+                        <div id="user_name">{{user.first_name}}
                             <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                         </div>
                         <div id="welcome"><span class="KRtext">안녕하세요!</span><span class="JPtext">こんにちは</span><span class="ENtext">What a nice day!</span></div>
@@ -303,7 +303,7 @@
             <div id="loginInfo" class="centermenu_div" style="float:right;">
                 <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                 <span class="pcwhere"></span>
-                <span class="pcwho">{{user.last_name}} {{user.first_name}} 님<span></span></span>
+                <span class="pcwho">{{user.first_name}} 님<span></span></span>
             </div>
             <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <!--
