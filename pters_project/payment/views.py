@@ -770,6 +770,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         product_list = ProductTb.objects.filter(use=USE)
         current_payment_data = []
         current_period_payment_data = []
+        change_period_payment_data = []
         cancel_period_payment_data = []
         stop_period_payment_data = []
         current_billing_info = []
@@ -911,12 +912,13 @@ class PaymentHistoryView(LoginRequiredMixin, View):
                     if billing_info.state_cd == 'IP':
                         period_payment_info.billing_state_name = '결제 예정일'
                         current_period_payment_data.append(period_payment_info)
+                        change_period_payment_data.append(period_payment_info)
                     elif billing_info.state_cd == 'ST':
                         period_payment_info.billing_state_name = '종료 예정일'
                         cancel_period_payment_data.append(period_payment_info)
                     else:
                         period_payment_info.billing_state_name = '종료 예정일'
-                        current_period_payment_data.append(period_payment_info)
+                        change_period_payment_data.append(period_payment_info)
                         stop_period_payment_data.append(period_payment_info)
 
                 current_billing_info.append(period_payment_info)
@@ -939,6 +941,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
         context['payment_id'] = getattr(settings, "PAYMENT_ID", '')
         context['payment_data_history'] = payment_data_history
         context['current_payment_data'] = current_payment_data
+        context['change_period_payment_data'] = change_period_payment_data
         context['current_period_payment_data'] = current_period_payment_data
         context['cancel_period_payment_data'] = cancel_period_payment_data
         context['stop_period_payment_data'] = stop_period_payment_data

@@ -223,7 +223,7 @@
                 <div>상태</div>
                 <div>결제방법 변경</div>
             </div>
-            {% for current_payment_info in current_period_payment_data %}
+            {% for current_payment_info in change_period_payment_data %}
                 <div class="pay_method_change_table_content">
                     <div>1</div>
                     <!-- <div>
@@ -245,12 +245,13 @@
                         <p> {{ current_payment_info.status_name }} </p>
                     </div>
                     <div>
-                        {% if current_payment_info.billing_state_cd == 'END' %}
+                        {% if current_payment_info.billing_state_cd != 'IP' %}
                         <div class="pay_method_deleteButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
                              data-period-month="{{ current_payment_info.period_month }}"><span>삭제</span></div>
-                        {% else %}
+                        {% endif %}
+                        {% if current_payment_info.billing_state_cd != 'END' %}
                         <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
                              data-product-id="{{ current_payment_info.product_tb_id }}"
