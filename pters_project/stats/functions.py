@@ -140,7 +140,7 @@ def get_sales_info(class_id, month_first_day):
         month_last_day = next_month_first_day - datetime.timedelta(days=1)
 
         # 결제 정보 가져오기
-        price_data = ClassLectureTb.objects.filter(
+        price_data = ClassLectureTb.objects.select_related('lecture_tb__member').filter(
                                 Q(lecture_tb__start_date__gte=month_first_day)
                                 & Q(lecture_tb__start_date__lte=month_last_day),
                                 class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -148,14 +148,11 @@ def get_sales_info(class_id, month_first_day):
 
         for price_info in price_data:
             try:
-                price_lecture_info = ClassLectureTb.objects.filter(~Q(lecture_tb_id=price_info.lecture_tb_id),
-                                                                   class_tb_id=class_id,
-                                                                   lecture_tb__member_id
-                                                                   =price_info.lecture_tb.member_id,
-                                                                   lecture_tb__start_date__lte
-                                                                   =price_info.lecture_tb.start_date,
-                                                                   lecture_tb__use=USE, auth_cd='VIEW',
-                                                                   use=USE).latest('reg_dt')
+                price_lecture_info = ClassLectureTb.objects.select_related('lecture_tb').filter(
+                    ~Q(lecture_tb_id=price_info.lecture_tb_id), class_tb_id=class_id,
+                    lecture_tb__member_id=price_info.lecture_tb.member_id,
+                    lecture_tb__start_date__lte=price_info.lecture_tb.start_date,
+                    lecture_tb__use=USE, auth_cd='VIEW', use=USE).latest('reg_dt')
                 if price_lecture_info.lecture_tb.start_date < price_info.lecture_tb.start_date:
                     trade_info = '연장 결제'
                     trade_type = STATS_RE_REG
@@ -177,7 +174,7 @@ def get_sales_info(class_id, month_first_day):
             price_list.append(price_info)
 
         # 환불 정보 가져오기
-        refund_price_data = ClassLectureTb.objects.filter(
+        refund_price_data = ClassLectureTb.objects.select_related('lecture_tb').filter(
                                 Q(lecture_tb__refund_date__gte=month_first_day)
                                 & Q(lecture_tb__refund_date__lte=month_last_day),
                                 class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,

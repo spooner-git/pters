@@ -21,6 +21,10 @@ urlpatterns = [
     url(r'^login/$', views.login_trainer, name='login'),
     url(r'^logout/$', views.logout_trainer, name='logout'),
 
+    url(r'^service_info/$', views.ServiceInfoView.as_view(), name='service_info'),
+    url(r'^service_price_info/$', views.ServicePriceInfoView.as_view(), name='service_price_info'),
+    url(r'^service_test_login/$', views.ServiceTestLoginView.as_view(), name='service_test_login'),
+
     # 네이버 간편로그인
     # 로그인 페이지
     url(r'^login_simple_naver/$', views.LoginSimpleNaverView.as_view(), name='login_simple_naver'),
