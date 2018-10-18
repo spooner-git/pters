@@ -1372,7 +1372,10 @@ $(document).ready(function(){
                     add_member_form_func();
                 }
             }else{
-                scrollToDom(selector_page_addmember);
+                if(bodywidth < 600){
+                    scrollToDom(selector_page_addmember);
+                }
+                
                 //$('#errorMessageBar').show();
                 //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
                 //입력값 확인 메시지 출력 가능
