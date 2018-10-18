@@ -422,6 +422,21 @@
 	#caution_popup .caution_message, #caution_popup_yes_or_no .caution_message{
 		font-size: 13px;
 	}
+	#go_to_purchase{
+		width:120px;
+		height:25px;
+		padding-top:3px;
+		margin:0 auto;
+		margin-top:5px;
+		border:1px solid #cccccc;
+		color:#fe4e65;
+		font-size:12px;
+		cursor: pointer;
+	}
+		#go_to_purchase:active{
+			color:#ffffff;
+			background-color: #fe4e65;
+		}
 
 
 /*월간달력 팝업*/
