@@ -235,8 +235,8 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
         if first_name == '' or first_name == 'None' or first_name is None:
             first_name = name
 
-        if last_name == '' or last_name == 'None' or last_name is None:
-            last_name = ''
+        # if last_name == '' or last_name == 'None' or last_name is None:
+        #     last_name = ''
 
         try:
             user = User.objects.get(username=email)
@@ -1202,8 +1202,8 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     username = ''
     context = {'error': None, 'user_db_id': '', 'username': ''}
 
-    if last_name is None or last_name == '':
-        error = '성을 입력해 주세요.'
+    # if last_name is None or last_name == '':
+    #     error = '성을 입력해 주세요.'
 
     if first_name is None or first_name == '':
         error = '이름을 입력해 주세요.'

@@ -451,7 +451,7 @@
         }
 
         function fill_recieved_member_info(jsondata){
-            $('span._nameInfo').text(jsondata.last_name+jsondata.first_name);
+            $('span._nameInfo').text(jsondata.first_name);
             $('span._phoneInfo').text(jsondata.phone);
             $('span._birthInfo').text(jsondata.birthday_dt);
             var birth_year = jsondata.birthday_dt[0].split('-')[0];
@@ -464,7 +464,7 @@
 
 
 
-            $('.pcwho').text('{{ request.session.class_type_name }}'+' - '+ jsondata.last_name+jsondata.first_name);
+            $('.pcwho').text('{{ request.session.class_type_name }}'+' - '+ jsondata.first_name);
         }
 
 

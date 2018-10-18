@@ -260,8 +260,8 @@
                     <span class="icon-bar" style="width: 20px;"></span>
                 </button>
                 {% block nav_center_img %}
-                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
-                    <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{user.first_name }}  코치님 일정</a>-->
+                    <a id="uptext" class="uptext">{{user.first_name }}  <span></span></a>
                 {% endblock %}
                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
                     <a><img src="{% static_url "user/res/member/icon-repeat-white.png" %}" style="width:20px;"></a>
@@ -276,7 +276,7 @@
 
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                         <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
-                        <div id="user_name">{{user.last_name}} {{user.first_name}}
+                        <div id="user_name">{{user.first_name}}
                             <span class="text-nameAttach"></span>
                         </div>
                         <div id="welcome">
@@ -465,7 +465,7 @@
                 <img src="/static/user/res/icon-name-b.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
                 <div id="popup_triangle"></div>
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
-                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="text-nameAttach"></span></span>
+                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.first_name}} <span class="text-nameAttach"></span></span>
             </div>
             <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
@@ -473,7 +473,7 @@
             <div class="pcver-slide-menu_class">
                 <div id="myInfo">
                     <span id="myInfo_center_name">{{ request.session.class_center_name }}</span>&nbsp
-                    <span id="myInfo_user_name">{{user.last_name}} {{user.first_name}}<span class="text-nameAttach"></span></span>
+                    <span id="myInfo_user_name">{{user.first_name}}<span class="text-nameAttach"></span></span>
                     
                     <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'" class="text-mypage"></span>
                     <img src="/static/user/res/ptadd/btn-x.png" onclick="" hidden>

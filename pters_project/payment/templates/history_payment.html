@@ -45,7 +45,7 @@
             </div>
             <div id="page_current_use" class="sub_pages">
                 <p style="margin-top: 20px;padding-left:5px;">
-                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+                    <span style="font-weight:bold;">{{user.first_name }}</span> 님의 이용권 보유 현황
                 </p>
                 <div class="current_use_table_label">
                     <div>NO</div>
@@ -100,7 +100,7 @@
 
             <div id="page_mypay_history" class="sub_pages">
                 <p style="margin-top: 20px;padding-left:5px;">
-                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 결제내역
+                    <span style="font-weight:bold;">{{user.first_name }}</span> 님의 이용권 결제내역
                 </p>
                 <div class="mypay_history_table_label">
                     <div>NO</div>
@@ -206,7 +206,7 @@
 
         <div id="page_pay_method_change" class="page_content_wrap">
             <p style="margin-top: 20px;margin-bottom:0;padding-left:5px;">
-                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 결제카드 등록 내역
+                <span style="font-weight:bold;">{{user.first_name }}</span> 님의 결제카드 등록 내역
             </p>
             <p style="font-size:12px;color:#676767;padding-left:5px;">자동 결제일에 아래 카드정보로 상품이 결제 됩니다.</p>
             <div class="pay_method_change_table_label">
@@ -260,7 +260,7 @@
 
         <div id="page_pay_cancel" class="page_content_wrap">
             <p style="margin-top: 20px;padding-left:5px;">
-                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+                <span style="font-weight:bold;">{{user.first_name }}</span> 님의 이용권 보유 현황
             </p>
             <div class="pay_cancel_table_label">
                 <div>NO</div>
@@ -340,7 +340,7 @@
 
         <div id="page_pay_restart" class="page_content_wrap">
             <p style="margin-top: 20px;padding-left:5px;">
-                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기결제 해지신청 현황
+                <span style="font-weight:bold;">{{user.first_name }}</span> 님의 정기결제 해지신청 현황
             </p>
             <div class="pay_cancel_table_label">
                 <div>NO</div>
@@ -526,7 +526,7 @@
                     "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                buyer_name : '{{ request.user.first_name }}',
             };
 
             IMP.request_pay(request_pay_period_data, function(rsp) {
