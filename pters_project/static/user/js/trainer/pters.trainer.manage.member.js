@@ -1422,7 +1422,8 @@ $(document).ready(function(){
 
             $('#memberPhone_info_PC').attr('placeholder', '');
 
-            $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val());
+            // $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val());
+            $('#memberName_info_PC').show().val($('#memberName_info_firstName_PC').val());
             $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide();
             var dbID = $('#memberInfoPopup_PC').attr('data-dbid');
             send_modified_member_base_data(dbID);
