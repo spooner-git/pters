@@ -324,7 +324,8 @@ function function_lock_message(function_type, number, option_type, user_type){ /
     //     free_message1 = `<span style="color:#fe4e65;">이용권</span> 구매로<br><span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!`;
     // }
     var free_message = `${user_type}이용자 께서는 <br>`;
-    var free_message1 = `<span style="color:#fe4e65;">추가 이용권</span>으로<br><span style="color:#fe4e65;">제한 없이 </span>이용 해보세요!`;
+    var free_message1 = `<span style="color:#fe4e65;">추가 이용권</span>으로<br><span style="color:#fe4e65;">제한 없이 </span>이용 해보세요!
+                        <div id="go_to_purchase" onclick="location.href=/payment/">구매 하러 가기</div>`;
 
 
     if(number == 0){
