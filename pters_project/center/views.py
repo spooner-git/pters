@@ -1082,10 +1082,10 @@ def update_member_info_logic(request):
         else:
             input_first_name = first_name
 
-        if last_name is None or last_name == '':
-            input_last_name = user.last_name
-        else:
-            input_last_name = last_name
+        # if last_name is None or last_name == '':
+        #     input_last_name = user.last_name
+        # else:
+        #     input_last_name = last_name
 
         if sex is None or sex == '':
             input_sex = member.sex
@@ -3566,10 +3566,10 @@ def update_center_info_logic(request):
     else:
         input_first_name = first_name
 
-    if last_name is None or last_name == '':
-        input_last_name = user.last_name
-    else:
-        input_last_name = last_name
+    # if last_name is None or last_name == '':
+    #     input_last_name = user.last_name
+    # else:
+    #     input_last_name = last_name
 
     if contents is None or contents == '':
         input_contents = member.contents

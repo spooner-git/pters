@@ -186,7 +186,7 @@ def add_schedule_logic(request):
         if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name+request.user.first_name+'님이 '
+            push_message.append(request.user.first_name+'님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1] +
                                 ' [1:1 레슨] 일정을 등록했습니다.')
@@ -322,12 +322,12 @@ def delete_schedule_logic(request):
             push_lecture_id.append(schedule_info.lecture_tb_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
             if group_id is not None and group_id != '':
-                push_message.append(request.user.last_name+request.user.first_name+'님이 '
+                push_message.append(request.user.first_name+'님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                     + ' ['+group_type_cd_name+'] '+group_name + ' 일정을 취소했습니다.')
             else:
-                push_message.append(request.user.last_name+request.user.first_name+'님이 '
+                push_message.append(request.user.first_name+'님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                     + ' [1:1 레슨] 일정을 취소했습니다.')
@@ -869,7 +869,7 @@ def add_repeat_schedule_confirm(request):
             if en_dis_type == ON_SCHEDULE_TYPE and setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
                 push_lecture_id.append(lecture_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
-                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date) + ' [1:1 레슨] 반복 일정을 등록했습니다')
 
                 context['push_lecture_id'] = push_lecture_id
@@ -1022,10 +1022,10 @@ def delete_repeat_schedule_logic(request):
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
             if group_id is None or group_id == '':
-                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date) + ' [1:1 레슨] 반복 일정을 취소했습니다')
             else:
-                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date)
                                     + ' ['+group_type_cd_name+']' + group_name+' 반복 일정을 취소했습니다')
 
@@ -1283,7 +1283,7 @@ def add_group_schedule_logic(request):
                                 push_info_schedule_end_date = str(schedule_end_datetime).split(' ')[1].split(':')
                                 push_lecture_id.append(lecture_id)
                                 push_title.append(class_type_name + ' 수업 - 일정 알림')
-                                push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                                push_message.append(request.user.first_name + '님이 '
                                                     + push_info_schedule_start_date[0] + ':'
                                                     + push_info_schedule_start_date[1] + '~'
                                                     + push_info_schedule_end_date[0] + ':'
@@ -1430,13 +1430,13 @@ def delete_group_schedule_logic(request):
                                               + member_group_schedule_info.get_group_name() + ' 일정', log_how='취소',
                                      log_detail=str(start_dt) + '/' + str(end_dt), use=USE)
                     log_data.save()
-                    push_message.append(request.user.last_name+request.user.first_name+'님이 '
+                    push_message.append(request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                         + ' [' + group_info.get_group_type_cd_name()+'] '+group_info.name
                                         + ' 일정을 취소했습니다.')
                 else:
-                    push_message.append(request.user.last_name+request.user.first_name+'님이 '
+                    push_message.append(request.user.first_name+'님이 '
                                         + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                         + ' [1:1 레슨] 일정을 취소했습니다.')
@@ -1773,7 +1773,7 @@ def add_member_group_schedule_logic(request):
 
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+            push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' ['+group_info.get_group_type_cd_name()+'] '+group_info.name+' 일정을 등록했습니다')
@@ -1918,7 +1918,7 @@ def add_other_member_group_schedule_logic(request):
 
             push_lecture_id.append(lecture_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+            push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' [' + group_info.get_group_type_cd_name() + '] ' + group_info.name + ' 일정을 등록했습니다')
@@ -2332,7 +2332,7 @@ def add_group_repeat_schedule_confirm(request):
                         log_data.save()
                         push_lecture_id.append(lecture_id)
                         push_title.append(class_type_name + ' 수업 - 일정 알림')
-                        push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                        push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                             + '~' + str(end_date) + ' [' + group_info.get_group_type_cd_name() + '] '
                                             + group_info.name + ' 반복 일정을 등록했습니다')
 
@@ -2507,7 +2507,7 @@ def delete_group_repeat_schedule_logic(request):
                 log_data.save()
                 push_lecture_id.append(lecture_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
-                push_message.append(request.user.last_name + request.user.first_name + '님이 ' + str(start_date)
+                push_message.append(request.user.first_name + '님이 ' + str(start_date)
                                     + '~' + str(end_date) + ' [' + repeat_schedule_info.get_group_type_cd_name() + '] '
                                     + repeat_schedule_info.get_group_name() + ' 반복 일정을 취소했습니다')
 

@@ -1171,10 +1171,10 @@ def update_member_info_logic(request):
         else:
             input_first_name = first_name
 
-        if last_name is None or last_name == '':
-            input_last_name = user.last_name
-        else:
-            input_last_name = last_name
+        # if last_name is None or last_name == '':
+        #     input_last_name = user.last_name
+        # else:
+        #     input_last_name = last_name
 
         if sex is None or sex == '':
             input_sex = member.sex
@@ -1199,17 +1199,20 @@ def update_member_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                if user.first_name != input_first_name or user.last_name != input_last_name:
+                if user.first_name != input_first_name:
                     user.first_name = input_first_name
-                    user.last_name = input_last_name
-                    member.name = input_last_name + input_first_name
-                    username = user.last_name + user.first_name
+                    # user.last_name = input_last_name
+                    # member.name = input_last_name + input_first_name
+                    member.name = input_first_name
+                    # username = user.last_name + user.first_name
+                    username = user.first_name
 
                     i = 0
                     count = MemberTb.objects.filter(name=username).count()
                     max_range = (100 * (10 ** len(str(count)))) - 1
                     for i in range(0, 100):
-                        username = user.last_name + user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        # username = user.last_name + user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                        username = user.first_name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
                         try:
                             User.objects.get(username=username)
                         except ObjectDoesNotExist:
@@ -1461,7 +1464,8 @@ def export_excel_member_list_logic(request):
     ws1.column_dimensions['F'].width = 15
     ws1.column_dimensions['G'].width = 15
     ws1.column_dimensions['H'].width = 20
-    filename_temp = request.user.last_name + request.user.first_name + '님_'
+    # filename_temp = request.user.last_name + request.user.first_name + '님_'
+    filename_temp = request.user.first_name + '님_'
     if finish_flag == '0':
         filename_temp += '진행중_회원목록'
         ws1.title = "진행중 회원"
@@ -3740,7 +3744,7 @@ def update_trainer_info_logic(request):
         except ObjectDoesNotExist:
             error = '회원 ID를 확인해 주세요.'
 
-    # input_first_name = ''
+    input_first_name = ''
     # input_last_name = ''
     input_phone = ''
     # input_contents = ''
@@ -3754,10 +3758,10 @@ def update_trainer_info_logic(request):
     else:
         input_first_name = first_name
 
-    if last_name is None or last_name == '':
-        input_last_name = user.last_name
-    else:
-        input_last_name = last_name
+    # if last_name is None or last_name == '':
+    #     input_last_name = user.last_name
+    # else:
+    #     input_last_name = last_name
 
     if contents is None or contents == '':
         input_contents = member.contents
@@ -3798,10 +3802,11 @@ def update_trainer_info_logic(request):
         try:
             with transaction.atomic():
                 user.first_name = input_first_name
-                user.last_name = input_last_name
+                # user.last_name = input_last_name
                 # user.email = email
                 user.save()
-                member.name = input_last_name + input_first_name
+                # member.name = input_last_name + input_first_name
+                member.name = input_first_name
                 member.phone = input_phone
                 member.contents = input_contents
                 member.sex = input_sex

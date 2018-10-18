@@ -450,7 +450,7 @@
                     "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                buyer_name : '{{ request.user.first_name }}',
             };
             var request_pay_single_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
@@ -466,7 +466,7 @@
                     "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                buyer_name : '{{ request.user.first_name }}',
                 {#                    buyer_tel : '',#}
                 {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
                 {#                    buyer_postcode : '123-456',#}
