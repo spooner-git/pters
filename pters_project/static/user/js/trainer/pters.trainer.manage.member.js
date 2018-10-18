@@ -1946,13 +1946,13 @@ function pc_add_member(option){
 //진행중 회원, 종료된 회원 리스트 스왑
 function shiftMemberList(type){
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
-    var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN');
+    var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
     switch(type){
         case "current":
             get_member_ing_list("callback", function(jsondata){
-                memberListSet('current','name','no',jsondata);
+                memberListSet('current', 'name', 'no', jsondata);
             });
-            $('#currentMemberList, #memberNumber_current_member').css('display','block');
+            $('#currentMemberList, #memberNumber_current_member').css('display', 'block');
             $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
             selector_MEMBER_THEAD__memberaddbutton.show();
@@ -1960,9 +1960,9 @@ function shiftMemberList(type){
         case "finished":
             //if($('#btnCallMemberList').hasClass('list_switch_selected')){
             get_member_end_list("callback", function(jsondata){
-                memberListSet('finished','name','no',jsondata);
+                memberListSet('finished', 'name', 'no', jsondata);
             });
-            $('#finishedMemberList, #memberNumber_finish_member').css('display','block');
+            $('#finishedMemberList, #memberNumber_finish_member').css('display', 'block');
             $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
             selector_MEMBER_THEAD__memberaddbutton.show();
@@ -1974,18 +1974,18 @@ function shiftMemberList(type){
 function shiftGroupClassList(type){
     switch(type){
         case "current":
-            get_group_ing_list()
-            $('#currentGroupList, #memberNumber_current_group').css('display','block');
-            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display','none')
-            $('._GROUP_THEAD, ._groupaddbutton').show()
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
+            get_group_ing_list();
+            $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
+            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
+            $('._GROUP_THEAD, ._groupaddbutton').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
             break;
         case "finished":
-            get_group_end_list()
-            $('#finishedGroupList, #memberNumber_finish_group').css('display','block');
-            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display','none')
-            $('._GROUP_THEAD, ._groupaddbutton').show()
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
+            get_group_end_list();
+            $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
+            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
+            $('._GROUP_THEAD, ._groupaddbutton').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
             break;
     }
 }
@@ -2010,10 +2010,10 @@ function shiftPtGroupClassList(type){
             //         $('#currentGroupList').html(group_class_Html);
             //     }); //그룹 + 클래스
             // });
-            $('#currentGroupList, #memberNumber_current_group').css('display','block');
-            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display','none')
-            $('._GROUP_THEAD, ._groupaddbutton').show()
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
+            $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
+            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
+            $('._GROUP_THEAD').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
             break;
         case "finished":
             get_member_group_class_end_list("callback", function(jsondata){
@@ -2032,10 +2032,10 @@ function shiftPtGroupClassList(type){
             //         $('#finishedGroupList').html(group_class_Html);
             //     }); //그룹 + 클래스
             // });
-            $('#finishedGroupList, #memberNumber_finish_group').css('display','block');
-            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display','none')
-            $('._GROUP_THEAD, ._groupaddbutton').show()
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide()
+            $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
+            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
+            $('._GROUP_THEAD').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
             break;
     }
 }
