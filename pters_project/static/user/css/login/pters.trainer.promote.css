@@ -135,7 +135,7 @@ body{
 
 
 #tooltip{
-	position:fixed;
+	position:absolute;
 	display:none;
 	width:100px;
 	height:30px;
@@ -154,7 +154,7 @@ body{
 	}
 
 	#tooltip{
-		position:fixed;
+		position:absolute;
 		display:none;
 /*		width:100px;
 		height:30px;
