@@ -274,7 +274,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
             try:
                 with transaction.atomic():
 
-                    user = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, email=email,
+                    user = User.objects.create_user(username=email, first_name=first_name, email=email,
                                                     password=sns_id, is_active=1)
                     group = Group.objects.get(name=group_type)
                     user.groups.add(group)
@@ -819,7 +819,7 @@ class AddMemberView(RegistrationView, View):
                         group = Group.objects.get(name=group_type)
                         user.groups.add(group)
                         user.first_name = first_name
-                        user.last_name = last_name
+                        # user.last_name = last_name
                         user.save()
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
@@ -1233,7 +1233,8 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
         error = '이름을 입력해 주세요.'
 
     if error is None:
-        name = last_name + first_name
+        # name = last_name + first_name
+        name = first_name
         if name == '':
             error = '이름을 입력해 주세요.'
         else:
@@ -1269,7 +1270,7 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     if error is None:
         try:
             with transaction.atomic():
-                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                user = User.objects.create_user(username=username, first_name=first_name,
                                                 password=password, is_active=0)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
