@@ -101,7 +101,8 @@ def check_before_billing_logic(request):
                                                                   state_cd='IP',
                                                                   use=USE).count()
             if period_payment_counter > 0:
-                error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
+                error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
+            # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
 
     if error is None:
         date = int(next_payment_date.strftime('%d'))

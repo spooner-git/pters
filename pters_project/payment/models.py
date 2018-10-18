@@ -17,6 +17,9 @@ class ProductTb(TimeStampedModel):
         managed = False
         db_table = 'PRODUCT_TB'
 
+    def __str__(self):
+        return self.name.__str__()
+
 
 class PaymentInfoTb(TimeStampedModel):
     payment_info_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -110,6 +113,9 @@ class FunctionAuthTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'FUNCTION_AUTH_TB'
+
+    def __str__(self):
+        return self.function_auth_type_name.__str__()
 
 
 class ProductFunctionAuthTb(TimeStampedModel):
