@@ -86,7 +86,7 @@ body{
 @media(min-width: 600px){
 	#logout{
 		position: relative;
-		margin-top: 300px;
+		margin-top: 50px;
 		margin-bottom: 100px;
 	}
 
@@ -96,7 +96,7 @@ body{
 
 	#settingMenuBox{
 		text-align: center;
-		margin-top: 150px;
+		margin-top: 50px;
 	}
 
 	.settingMenu{
