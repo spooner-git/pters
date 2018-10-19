@@ -1,9 +1,118 @@
 body{
 	padding-top: 50px;
-	height: 300px;
+	background-color: #282828;
 }
 
+/*새 디자인*/
+#page-base-addstyle{
+	background-color: #282828;
+	border-color: #282828;
+}
+	#uptext2{
+		color: #ffffff !important;
+	}
+	#upbutton-x > img{
+		filter: invert(90);
+	}
+#my_status > p{
+	font-size: 18px;
+	font-weight: 300;
+	color: #ffffff;
+	margin-bottom: 5px;
+}
+	.my_status_text{
+		font-size: 22px;
+		font-weight: 600;
+	}
+	.pters_pink_text{
+		color: #fe4e65 !important;
+	}
+#my_auth{
+	color: #ffffff;
+	border-top: 0.5px solid #ffffff;
+	border-bottom: 0.5px solid #ffffff;
+	padding: 15px 0 15px 0;
+	margin-top: 15px;
+}
+	.my_auth_tb{
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+		margin-top: 8px;
+		font-size: 14px;
+	}
+		.my_auth_tbc1{
+			display: table-cell;
+			width: 30%;
+		}
+		.my_auth_tbc2{
+			display: table-cell;
+			width: 70%;
+			font-weight: 300;
+		}
+#product_list_wrap{
+	width: 100%;
+}
+	.product{
+		display: inline-block;
+		width: 100%;
+		color: #ffffff;
+		padding: 15px 0 15px 15px;
+		border: 0.5px solid #ffffff;
+		border-radius: 10px;
+		margin-bottom: 20px;
+	}
+		.product_tb{
+			display: table;
+			width: 100%;
+		}
+			.product_tbc1{
+				display: table-cell;
+				width: 55%;
+			}
+				.product_tbc1 > p{
+					word-break: break-all;
+				}
+				.product_tbc1 > p:nth-of-type(1){
+					font-size: 22px;
+					font-weight: 500;
+				}
+				.product_tbc1 > p:nth-of-type(2){
+					font-size: 14px;
+					font-weight: 300;
+				}
+				.product_tbc1 > p:nth-of-type(3){
+					font-size: 18px;
+					font-weight: 500;
+				}
+			.product_tbc2{
+				display: table-cell;
+				width: 45%;
+				color: #ffffff;
+			}
+				.product_tbc2_tag{
+					background-color: #ffffff;
+					color: #fe4e65;
+					font-size: 18px;
+					font-weight: 500;
+					padding-left: 20px;
+					margin-bottom: 10px;
+				}
+				.original_price{
+					text-decoration: line-through;
+				}
+				.price_wrap > p{
+					padding-left: 20px;
+					margin: 0;
+					font-size: 16px;
+				}
+/*새 디자인*/
+
+
+
+
 #ymdText{
+	display: none;
 	position: fixed;
 	height: auto;
 	z-index: 4;
@@ -23,9 +132,9 @@ body{
 
 #payment_contents_wrap{
 	margin: 0 auto;
-	margin-top: 70px;
+	margin-top: 25px;
 	margin-bottom: 70px;
-	width: 95%;
+	width: 88%;
 	max-width: 900px;
 }
 .payment_function_wrap{
@@ -195,95 +304,6 @@ body{
 }
 
 
-/*그래프 ↓↓↓↓↓↓↓↓*/
-.pters_graph{
-	margin:0 auto;
-	margin-top: 10px;
-	text-align: center;
-	position: relative;
-	min-height: 230px;
-	max-width: 580px;
-}
-
-.graph_main table{
-	width: 100%;
-	height: 100%;
-}
-
-.graph_main td{
-	border-top :0.5px dotted #cccccc;
-}
-
-.graph_main{
-	position: absolute;
-	width: 92%;
-	height: 200px;
-	border: 1px solid black;
-	left: 24px;
-	background: #ffffff;
-}
-
-.graph_horizontal{
-	position: absolute;
-	width: 92.1%;
-	height: 22px;
-	top: 200px;
-	left: 22px;
-}
-
-.verti{
-	font-size: 11px;
-	text-align: right;
-}
-
-.graph_vertical div:nth-child(1){
-	height: 34px;
-}
-
-.graph_vertical div:nth-child(2){
-	height: 33px;
-}
-
-.graph_vertical div:nth-child(3){
-	height : 33px;
-}
-
-.graph_vertical div:nth-child(4),.graph_vertical div:nth-child(5){
-	height: 33px;
-}
-
-.graph_vertical{
-	position: absolute;
-	width: 8%;
-	height: 230px;
-	left: -10%;
-	top: -8.5px;
-}
-
-.graphunit{
-	border-top: 0.5px solid #ff93a1 !important;
-}
-
-
-.graph_horizontal table{
-	width: 100%;
-	height: 100%;
-}
-
-.graph_horizontal td{
-	height: 100%;
-	width: 8.33%;
-	margin:0;
-	text-align: center;
-	vertical-align: top;
-	font-size: 12px;
-}
-
-.graphcoloring{
-	background: #fe4e65;
-}
-
-/*그래프 ↑↑↑↑↑↑↑↑*/
 
 .iconimg{
 	width: 20px;
@@ -393,117 +413,6 @@ body{
 }
 
 
-
-#country{
-	display: inline-block;
-}
-#country_input{
-	width: 140px;
-}
-#country_input select{
-	width: 100%;
-}
-#city-KOR{
-	display: inline-block;
-}
-#region_input{
-	width: 120px;
-}
-#region_input select{
-	width: 100%;
-}
-
-.modifyInfoTool{
-	display: none;
-}
-.cancelMemberInfo{
-	display: none;
-}
-
-.countBoard:first-child,.dateBoard:first-child{
-	margin-right: 5px;
-}
-
-.countBoard:last-child,.dateBoard:last-child{
-	margin-left: 5px;
-}
-
-.planBoard:first-child{
-	margin-top: 10px;
-	margin-bottom:10px;
-}
-
-.planBoard:last-child{
-	margin-bottom:10px;
-}
-
-.countBoard img,.planBoard img{
-	width: 12px;
-	margin-bottom: 3px;
-	margin-right: 3px;
-}
-
-.dateBoard img{
-	width: 13px;
-	margin-bottom: 4px;
-	margin-right: 3px;
-}
-
-
-
-.countBoard p:first-child{
-	margin-top: 18px;
-	margin-bottom: 0px;
-}
-
-.dateBoard p:first-child,.planBoard p:first-child{
-	margin-bottom: 5px;
-}
-
-.countBoard span{
-	font-size: 38px;
-	font-weight: 500;
-}
-
-.countBoard_explain{
-	margin: 0;
-	font-size: 10px;
-	color: #cccccc;
-}
-
-.planBoard p:last-child{
-	font-size: 20px;
-	font-weight: 500;
-}
-
-.dateBoard p:last-child{
-	font-size: 15px;
-	font-weight: 500;
-}
-
-.planBoard span{
-	font-size:12px;
-	color: #666666;
-}
-
-.mypage_label{
-	margin:0 auto;
-	width: 100%;
-	max-width: 600px;
-	padding-left: 16px;
-	margin-bottom: 7px;
-}
-.mypage_label img{
-	width: 16px;
-	margin-bottom: 4px;
-	margin-right: 3px;
-	margin-left: 10px;
-}
-
-.mypage_label span{
-	font-size: 15px;
-	font-weight: 500;
-}
 
 #purchase_popup{
 	display: none;
@@ -657,7 +566,7 @@ body{
 	}
 
 	#payment_contents_wrap{
-		margin-top: 150px;
+		margin-top: 50px;
 	}
 
 	.function_label{
