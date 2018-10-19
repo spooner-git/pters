@@ -134,7 +134,7 @@
                         <div>
                             {% if payment_info.receipt_url != None %}
                                 {% if payment_info.receipt_url != '' %}
-                            <p><a href="{{ payment_info.receipt_url }}" target="_blank">클릭</a></p>
+                            <p class="payment_receipt_url" style="color:#3e82ff" data-url="{{ payment_info.receipt_url }}">클릭</p>
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -436,6 +436,14 @@
 
         $('#upbutton-x, ._button_Prev').click(function(){
             location.href="/trainer/trainer_mypage/";
+        });
+
+        $('.payment_receipt_url').click(function(){
+            if(device_info=='web'){
+                window.open($(this).attr('data-url'), '_blank');
+            }else{
+                alert('https://www.pters.co.kr 에서 확인 가능합니다.')
+            }
         });
 
         function clear_pause_period_payment(payid, period_month, next_payment_date){
