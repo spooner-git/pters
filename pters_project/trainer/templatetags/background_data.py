@@ -51,6 +51,7 @@ def get_setting_info(request):
         request.session['device_info'] = 'web'
     else:
         request.session['device_info'] = 'app'
+
     if class_id != '':
 
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
