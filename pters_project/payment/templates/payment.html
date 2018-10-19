@@ -331,7 +331,13 @@
             }
         });
 
+        $(document).on('click', '.product', function(e){
+            e.stopPropagation();
+            $(this).find(".pay_product_function").trigger('click');
+        });
+
         $('.pay_product_function').click(function(e){
+            e.stopPropagation();
             e.preventDefault();
             purchase_popup_show($(this).attr('data-product-name'), $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
                 $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
