@@ -582,6 +582,14 @@ function playSound() {
 <script type="text/javascript">
     // var requestButton = document.querySelector(".request-btn");
 
+    {% load background_data %}
+    {% autoescape off %}
+    var setting_info = {% get_setting_info request %};
+    var class_background_img_url= {% get_background_url request %};
+    var class_background_type_cd = {% get_background_type_cd request %};
+    var auth_type_cd = {% get_function_auth_type_cd request %};
+    var auth_product_type_name = '{{ request.session.product_type_name }}';
+    {% endautoescape %}
     //});
     //const messageChannel = new MessageChannel();
     //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
@@ -664,14 +672,6 @@ function playSound() {
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
 
-    {% load background_data %}
-    {% autoescape off %}
-    var setting_info = {% get_setting_info request %};
-    var class_background_img_url= {% get_background_url request %};
-    var class_background_type_cd = {% get_background_type_cd request %};
-    var auth_type_cd = {% get_function_auth_type_cd request %};
-    var auth_product_type_name = '{{ request.session.product_type_name }}';
-    {% endautoescape %}
 
     // auth_type_cd = {
     //                 "auth_option_limit":1, //1: 제한  0: 제한 없음
