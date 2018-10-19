@@ -118,7 +118,7 @@ var multi_language_set = {
                                     "text-business":"제휴제안",
                                     "text-policy":"이용약관",
                                     "text-privacy":"개인정보처리방침",
-                                    "text-manual":"사용법 및 FQA"
+                                    "text-manual":"사용법 및 FAQ"
                                  },
 
                             "JPN":{
