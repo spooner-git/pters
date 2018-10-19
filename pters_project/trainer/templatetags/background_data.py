@@ -164,6 +164,7 @@ def get_function_auth_type_cd(request):
         billing_info.save()
 
     request.session['product_type_name'] = ''
+    request.session['product_id'] = ''
     payment_data_counter = 0
     for payment_info in payment_data:
         function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
@@ -174,8 +175,10 @@ def get_function_auth_type_cd(request):
         if len(function_list) > 0:
             if payment_data_counter == 0:
                 request.session['product_type_name'] += function_list[0].product_tb.name
+                request.session['product_id'] = function_list[0].product_tb.product_id
             else:
-                request.session['product_type_name'] += function_list[0].product_tb.name + ','
+                request.session['product_type_name'] += ',' + function_list[0].product_tb.name
+                request.session['product_id'] += ',' + function_list[0].product_tb.product_id
 
         for function_info in function_list:
             auth_info = {}
@@ -200,6 +203,7 @@ def get_function_auth_type_cd(request):
                                                                                                 'auth_type_cd')
         if len(function_list) > 0:
             request.session['product_type_name'] += function_list[0].product_tb.name
+            request.session['product_id'] = function_list[0].product_tb.product_id
 
         for function_info in function_list:
             auth_info = {}

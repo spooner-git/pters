@@ -92,8 +92,8 @@ body{
 					font-weight: 500;
 				}
 			.product_tbc2{
-				display: table-cell;
-				width: 45%;
+				/*display: table-cell;*/
+				/*width: 45%;*/
 				color: #ffffff;
 			}
 				.product_tbc2_tag{
