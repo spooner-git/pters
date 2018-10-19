@@ -36,9 +36,9 @@ nav.upperbar img{
 	display: none;
 }
 nav.upperbar span{
-	float: right;
+	display: none;
+	/*float: right;*/
 	height: 30px;
-	margin-top: 18px;
 	color: #ffffff;
 	font-weight: 100;
 }
@@ -101,13 +101,106 @@ img.prev_page{
 
 
 .__teacher{
-	display: none;
+	
 }
 .__student{
 	display: none;
 }
 #promote_2, #promote_3, #promote_4, #promote_5, #promote_6{
-	display: none;
+	
+}
+
+#promote_1{
+	background-image: url('/static/common/promote_mobile/1.png');
+	background-repeat: no-repeat;
+	background-position-x: center;
+	background-size: cover;
+	left: 0%;
+}
+
+#promote_2{
+	background-image: url('/static/common/promote_mobile/2.png');
+	background-repeat: no-repeat;
+	background-position-x: center;
+	background-size: cover;
+	left: 100%;
+}
+
+#promote_3{
+	background-image: url('/static/common/promote_mobile/3.png');
+	background-repeat: no-repeat;
+	background-position-x: center;
+	background-size: cover;
+	left: 100%;
+}
+
+#promote_4{
+	background-image: url('/static/common/promote_mobile/4.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position-x: center;
+	left: 100%;
+}
+
+#promote_5{
+	background-image: url('/static/common/promote_mobile/5.png');
+	background-repeat: no-repeat;
+	background-position-x: center;
+	background-size: cover;
+	left: 100%;
+}
+
+#promote_6{
+	background-image: url('/static/common/promote_mobile/6.png');
+	background-repeat: no-repeat;
+	background-position-x: center;
+	background-size: cover;
+	left: 100%;
+}
+
+
+@media(min-width:1024px){
+	#promote_1{
+		background-image: url('/static/common/promote_pc/1.png');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		left: unset;
+	}
+
+	#promote_2{
+		background-image: url('/static/common/promote_pc/2.png');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		left: unset;
+	}
+
+	#promote_3{
+		background-image: url('/static/common/promote_pc/3.png');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		left: unset;
+	}
+
+	#promote_4{
+		background-image: url('/static/common/promote_pc/4.png');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		left: unset;
+	}
+
+	#promote_5{
+		background-image: url('/static/common/promote_pc/5.png');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		left: unset;
+	}
+
+	#promote_6{
+		background-image: url('/static/common/promote_pc/1.jpg');
+		background-repeat: no-repeat;
+		background-position-x: center;
+		left: unset;
+	}
 }
 
 .album_wrap{
@@ -119,9 +212,9 @@ img.prev_page{
 }
 
 .album{
-	position: relative;
+	/*position: relative;*/
 	width: 100%;
-	height: 100%;
+	height: 60%;
 	transition: 0.5s;
 }
 
@@ -312,10 +405,10 @@ body{
 	}
 
 	nav.upperbar span{
-		float: right;
+		/*float: right;*/
+		display: inline-block;
 		height: 30px;
-		margin-top: 25px;
-		margin-right: 40px;
+		margin-left: 40px;
 		color: #ffffff;
 	}
 
@@ -355,7 +448,7 @@ body{
 	.album{
 		position: relative;
 		width: 100%;
-		height: 100%;
+		height: 60%;
 	}
 
 	.logo_label img{
