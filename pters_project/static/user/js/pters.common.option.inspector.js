@@ -52,7 +52,7 @@ function pters_option_inspector(option_type, xhr, option_element){
                     clear_start_dur_dropdown();
                     $('#durations_mini, #durations_mini').html('');
                     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft');
-                    //ajaxTimeGraphSet(selector_datepicker.val());
+                    ajaxTimeGraphSet(selector_datepicker.val());
                 }else if(addTypeSelect =="offadd"){
                     selector_datepicker.datepicker("setDate", today_YY_MM_DD);
                     $("#id_training_date_off, #id_training_end_date_off").val(selector_datepicker.val());
@@ -63,7 +63,7 @@ function pters_option_inspector(option_type, xhr, option_element){
                     clear_start_dur_dropdown();
                     $('#durations_mini, #durations_mini').html('');
                     $('.tdgraph_'+Options.hourunit).removeClass('greytimegraph').removeClass('pinktimegraph').removeClass('pinktimegraph_pinkleft').removeClass('greytimegraph_greyleft');
-                    //ajaxTimeGraphSet(selector_datepicker.val());
+                    ajaxTimeGraphSet(selector_datepicker.val());
                 }else if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
                     selector_datepicker_repeat_start.datepicker("setDate", today_YY_MM_DD);
                     selector_datepicker_repeat_end.datepicker("setDate", null);
