@@ -418,6 +418,14 @@
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
     <script>
 
+
+		window.addEventListener('load', function () {
+            var error_message = "{% for message in messages %} {% if message.tags == "error" %}{{ message }}{% endif %} {%if forloop.last == False%} \n{% endif %}{% endfor %}";
+            if(error_message != ""){
+                alert(error_message);
+            }
+        });
+
         if($('body').width()<600){
             $('#page-base-addstyle').css('display','block');
             $('#page-base').css('display','none');
@@ -432,16 +440,19 @@
 
         function clear_pause_period_payment(payid, period_month, next_payment_date){
             $('#id_customer_uid_clear_pause').val(payid);
-            document.getElementById('clear-pause-period-payment-form').submit();
             var day = date.getDate();
             var next_payment_date_info = next_payment_date.split('-')[1]+'월 '+next_payment_date.split('-')[2]+'일';
             if(day <10){
                 day = '0'+day;
             }
             if(period_month==1){
-                alert('매월' + day + '일 결제 됩니다.\n' + '최대 5분정도 소요될수 있습니다.');
+                if (confirm('정말 일시정지를 해제 하시겠습니까? \n'+'매월' + day + '일 결제 됩니다. 최대 5분정도 소요될수 있습니다.')) {
+                    document.getElementById('clear-pause-period-payment-form').submit();
+                }
             }else{
-                alert('매년' + next_payment_date_info + ' 결제 됩니다.\n' + '최대 5분정도 소요될수 있습니다.');
+                if (confirm('정말 일시정지를 해제 하시겠습니까? \n'+'매년' + next_payment_date_info + ' 결제 됩니다. 최대 5분정도 소요될수 있습니다.')) {
+                    document.getElementById('clear-pause-period-payment-form').submit();
+                }
             }
         }
 

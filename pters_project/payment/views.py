@@ -417,7 +417,6 @@ def clear_pause_period_billing_logic(request):
 def delete_period_billing_logic(request):
     customer_uid = request.POST.get('customer_uid', '')
     next_page = request.POST.get('next_page', '')
-    context = {'error': None}
     error = None
     billing_info = None
 
@@ -432,6 +431,7 @@ def delete_period_billing_logic(request):
         else:
             billing_info.use = UN_USE
             billing_info.save()
+            error = '정기 결제 카드가 정상적으로 삭제됐습니다.'
 
     if error is not None:
         messages.error(request, error)
@@ -439,7 +439,6 @@ def delete_period_billing_logic(request):
                      + '(' + str(request.user.id) + ')님 정기 결제 카드 삭제 신청 오류:'
                      + str(error))
 
-    context['error'] = error
     return redirect(next_page)
 
 
