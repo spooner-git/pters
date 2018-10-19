@@ -36,8 +36,11 @@ $(document).ready(function(){
         var period_month = $(this).attr('data-period-month');
         //check_payment(payment_name, customer_uid, product_id, period_month);
         $('#id_customer_uid_delete_period').val(customer_uid);
-        alert("정기 결제 카드가 삭제됐습니다.");
-        document.getElementById('delete-period-payment-form').submit();
+        // alert("정기 결제 카드가 삭제됐습니다.");
+
+        if (confirm('카드 정보를 정말 삭제하시겠습니까?')) {
+            document.getElementById('delete-period-payment-form').submit();
+        }
         //To- Do
     });
     // 해지신청
