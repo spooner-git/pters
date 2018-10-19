@@ -1,10 +1,702 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>피터스 - 레슨 일정 및 회원 관리 서비스</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WG2KK6D');</script>
+    <!-- End Google Tag Manager -->
+    <!--Google Adsense-->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-4554121851965192",
+            enable_page_level_ads: true
+        });
+    </script>
+    <!--Google Adsense-->
+    {% load static_url %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="google-site-verification" content="EPm2stOoq7M_LaK0htEQNqbitGznovZCakPO78TPtsk" />
+    <meta name="naver-site-verification" content="919ceda7d377b0d22cf390ca79de5dc21dc3d0fa"/>
+    <meta name="description" content="PTERS 피터스 PT, 요가, 필라테스, 당구, 골프 등 레슨 회원관리와 일정을 관리하는 서비스 프로그램">
+
+    {% block local_css %}
+
+        <meta name="login" content="trainer_login">
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
+
+        <link rel="icon" href="/static/common/favicon.ico">
+        <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
+        <link rel="shortcut icon" href="/static/common/favicon-152.png">
+        <style type="text/css">
+            .loginbox{
+                display: block;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .explain_wrap{
+            	left: 50% !important;
+            }
+            #promote_1 .explain_wrap{
+                top: 50%;
+                height: 100%;
+            }
+            #promote_1 .explain_main{
+                height: 100%;
+                padding-top: 40px;
+            }
+            #promote_1 .gotoSignIn{
+                height: auto;
+                margin-bottom: 5px;
+            }
+            #promote_1 .gotoSignIn a{
+                display: none;
+            }
+            #promote_1 .logo_label{
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            #promote_1 .loginbox{
+                top: 30%;
+                z-index: 1500;
+            }
+            #promote_1 #login-form button{
+                width: 100%;
+                margin-top: 5px !important;
+            }
+            #promote_1 .pters_login_input{
+                width: 100%;
+                max-width: 300px;
+            }
+            #idimg, #pwimg{
+                display: none;
+            }
+            #promote_1 .loginboxstyle{
+                display: inline-block;
+                width: 50%;
+            }
+            .explain_main_sublabel{
+                display: none;
+            }
+            #errorMessageBar{
+                display: block;
+                width: 100%;
+                position: sticky;
+                top: 0;
+                left: 0;
+                height: 35px;
+                text-align: center;
+                background: red;
+                color: #ffffff;
+                font-size: 15px;
+                font-weight: bold;
+                z-index: 1500;
+            }
+            #errorMessageBar span{
+                line-height: 35px;
+            }
+            #errorMessageBar span:nth-child(2){
+                position: absolute;
+                right: 0;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            @media(min-width:1024px){
+               .loginbox{
+                    display: block;
+                    left: 10%;
+                    transform: translateY(-50%);
+                }
+                #idimg, #pwimg{
+                    display: inline-block;
+                }
+                #promote_1 .explain_wrap{
+                    top: 50%;
+                    height: unset;
+                }
+                #promote_1 .explain_main{
+                    height: 305px;
+                }
+                #promote_1 .logo_label{
+                    margin-top: 50px;
+                    margin-bottom: 50px;
+                }
+                #promote_1 .loginbox{
+                    top: 50%;
+                }
+                .explain_main_sublabel{
+                    display: block;
+                }
+            }
+        </style>
+
+    {% endblock %}
 </head>
-<body>
+{% block content %}
+    <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <nav class="upperbar">
+        <a href="/"><img src="/static/user/res/PTERS_logo_pure.png"></a>
+        <!-- <a href="/login"><span>LOGIN</span></a> -->
+        <a href="/login/service_info/"><span style="color:#fe4e65;font-weight: 500">서비스 소개</span></a>
+        <a href="/login/service_price_info/"><span>가격</span></a>
+        <!-- <a href="/login/service_test_login/"><span>체험하기</span></a> -->
+    </nav>
+
+    <div class="pagination">
+        <div id="page1" class="pagination_bar pagination_active"></div>
+        <div id="page2" class="pagination_bar"></div>
+        <div id="page3" class="pagination_bar"></div>
+        <div id="page4" class="pagination_bar"></div>
+        <div id="page5" class="pagination_bar"></div>
+        <div id="page6" class="pagination_bar"></div>
+    </div>
+
+    <div class="socialnetwork">
+
+    </div>
+
+    <div class="album_wrap" id="album_wrap">
+        <!-- <div class="album" id="promote_1">
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h2>세상에서 가장 쉬운</h2>
+                    <h1> 1:1, 그룹, GX 레슨 관리 시스템</h1>
+
+                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
+
+                    <p class="explain_main_sublabel">예약과 일정 관리는 쉽고 빠르게</p>
+                    <p class="explain_main_sublabel">만족도는 업!</p>
+
+                </div>
+                <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                    <button class="mode_explain_button" onclick="show_explain_page_to_target('__teacher','pc')">강사 모드 소개</button>
+                    <button class="mode_explain_button" onclick="show_explain_page_to_target('__student','pc')">회원 모드 소개</button>
+                </div>
+            </div>
+            <div class="gotoSignIn">
+                 <button class="mode_explain_button" onclick="show_explain_page_to_target('__teacher','mobile')">강사 모드 소개</button>
+                 <button class="mode_explain_button" onclick="show_explain_page_to_target('__student','mobile')">회원 모드 소개</button>
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div>
+            <img src="/static/user/res/btn_next.png" class="next_page" style="display: none;">
+        </div> -->
+
+        <div class="album __targetall" id="promote_1" style="background:#151515;">
+            <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <br>
+                    <h1>24시간, 어디서든<br> 편리한 클라우드 레슨 관리</h1>
+                    <br>
+                    <br>
+                    <p>종이와 수정펜은 넣어두세요.</p>
+                    <p>PC와 모바일에서 관리하세요!</p>
+                    <br>
+                    <br>
+                    <p>언제 어디서라도 간편하게 <span class="pink_strong">클라우드 방식</span>으로</p>
+                    <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">관리</span> 해보세요.</p>
+                </div>
+
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <br>
+                    <h1>24시간, 어디서든 편리한 레슨 일정 관리</h1>
+                    <br>
+                    <br>
+                    <p>번거로운 <span class="pink_strong">카톡, 문자, 전화</span> 예약은 그만!</p>
+                    <br>
+                    <br>
+                    <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
+                    <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">예약</span> 해보세요.</p>
+                </div>
+
+                <!-- <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div> -->
+            </div>
+            <!-- <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div> -->
+            <!-- <img src="/static/user/res/btn_next.png" class="next_page"> -->
+        </div>
+
+        <div class="album __targetall" id="promote_2" style="background:#151515;">
+            <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <br>
+                    <h1>자유로운 나만의 정책 만들기</h1>
+                    <br>
+                    <p>피터스의 다양한 설정 옵션으로</p>
+                    <p>여러분만의 정책을 만들고 관리 해보세요.</p>
+                    <br>
+                    <p>업무시간, 예약가능 기간, 근접 예약/취소 금지, 푸시등 <span class="pink_strong"></span></p>
+                    <br>
+                    <p>설정 조합으로 <span class="pink_strong">커스터마이즈</span> 된 <br><span class="pink_strong">여러분만의 정책</span>을 만들수 있습니다.</p>
+                </div>
+
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <br>
+                    <h1>24시간, 어디서든 편리한 레슨 일정 관리</h1>
+                    <br>
+                    <br>
+                    <p>번거로운 <span class="pink_strong">카톡, 문자, 전화</span> 예약은 그만!</p>
+                    <br>
+                    <br>
+                    <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
+                    <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">예약</span> 해보세요.</p>
+                </div>
+
+                <!-- <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div> -->
+            </div>
+            <!-- <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div> -->
+            <!-- <img src="/static/user/res/btn_next.png" class="next_page"> -->
+        </div>
+
+        <div class="album __targetall" id="promote_3" style="background:#151515;">
+            <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <h1>나의 일정과 회원 관리를 한번에!</h1>
+                    <br>
+                    <br>
+                    <p><span class="pink_strong">주간, 월간</span>으로 한눈에 나의 일정을 확인할 수 있습니다.</p>
+                    <br>
+                    <p>내 회원님에게는 예약이 불가한 시간으로 보이는 OFF일정을 활용해서</p>
+                    <p>레슨외 업무시간과 개인 시간도 계획적으로 관리해보세요!</p>
+                    <br>
+                    
+                    <p>일정을 완료할 때는 <span class="pink_strong">사인</span>을 입력하면 저장되어 다시 확인할 수 있습니다.</p>
+                </div>
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <h1>레슨이 종료되도 이력을<br> 언제든 다시 확인!</h1>
+                    <br>
+                    <br>
+                    <p>다른 선생님과 하더라도 <span class="pink_strong">사용중이던 내 ID</span>를  <span class="pink_strong">새로운 선생님과 연결</span>하면 <span class="pink_strong">사용준비 완료!</span></p>
+                    <p></p>
+                    <br>
+                    <p>매번 새로운 회원번호를 부여 받지 않아서 간편!</p>
+                    <br>
+                    <p>내 ID로 연결했던 정보는 <span class="pink_strong">언제든 다시 이력확인</span>이 가능!</p>
+                </div>
+                <!-- <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div> -->
+            </div>
+            <!-- <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div> -->
+            <!-- <img src="/static/user/res/btn_next.png" class="next_page"> -->
+        </div>
+
+        <div class="album __targetall" id="promote_4" style="background:#151515;">
+            <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
+            <div class="explain_wrap">
+                <div class="explain_main __teacher">
+                    <h2></h2>
+                    <h1>일정 예약도 회원이 직접 바로 바로!</h1>
+                    <br>
+                    <br>
+                    <p>회원이 <span class="pink_strong">예약 가능 시간</span> 혹은 <span class="pink_strong">개설된 그룹 레슨</span>을 <span class="pink_strong">확인</span>한 후</p>
+                    <p><span class="pink_strong">원하는 시간을 선택</span>하기만 하면 <span class="pink_strong">예약 끝!</span></p>
+					<br>
+                    <p>매번 메신저, 문자로 일정을 조율하느라 시간을 낭비하지 마세요!</p>
+                    <br>
+                    <p>강사가 OFF시간을 설정하면</p>
+                    <p>그 시간 외에서만 일정 예약이 가능합니다.</p>
+                    <p>회원 예약기능은 설정에서 활성/비활성화 할 수 있습니다.</p>
+                </div>
+
+                <div class="explain_main __student">
+                    <h2></h2>
+                    <h1>그룹 레슨도 실시간 예약 가능!</h1>
+                    <br>
+                    <br>
+                    <p><span class="pink_strong">그룹레슨</span>의 참가 현황을 <span class="pink_strong">실시간 확인</span>한 후</p>
+                    <p><span class="pink_strong">시간을 선택</span>하기만 하면 <span class="pink_strong">예약 끝!</span></p>
+                    <br>
+                    <br>
+                    <p>그룹 레슨 참가를 위해 매번 컨펌 받지 마세요!</p>
+                    <p>간편하게 피터스로 예약하세요.</p>
+                </div>
+                <!-- <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div> -->
+            </div>
+            <!-- <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div> -->
+            <!-- <img src="/static/user/res/btn_next.png" class="next_page"> -->
+        </div>
+
+        <div class="album __targetall" id="promote_5" style="background:#151515;">
+            <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h2></h2>
+                    <h1>다양한 기기에서 한 번에 관리</h1>
+                    <br>
+                    <p><img src="/static/user/res/PTERS_logo_pure.png" style="height: 20px;">는</p>
+                    <p id="connectedMethod"></p>
+                    <p><span class="pink_strong">다양한 기기</span>에서 <span class="pink_strong">접속</span>이 <span class="pink_strong">가능</span>합니다.</p>
+                    <br>
+                    <p id="connectedDevice"></p>
+                    <p><span class="pink_strong">실시간 일정 변경</span> 푸시 알림을 받아 보세요.</p>
+                    <p>전체 일정 관리가 <span class="pink_strong">쉽게</span> 가능해 집니다.</p>
+                </div>
+                <!-- <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div> -->
+            </div>
+            <!-- <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div> -->
+            <!-- <img src="/static/user/res/btn_next.png" class="next_page"> -->
+        </div>
+
+        <div class="album __teacher" id="promote_6" style="background:#151515;">
+            <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h2></h2>
+                    <h1><img src="/static/user/res/PTERS_logo_pure.png" style="height: 25px;">는 누구나 무료로 가입!</h1>
+                    <br>
+                    <p>누구나 무료로 가입해서<span class="pink_strong">사용할 수 </span>있습니다.</p>
+                    <p>여러분의 시간을 효율적으로 활용해 보세요.</p>
+                    <p>일정과 회원은 <span class="pink_strong">피터스 하나로 쉽게 관리</span> 하면서</p>
+                    <p>비즈니스의 생산성을 향상 시키세요!</p>
+                    <br>
+                    <br>
+                    <!--
+                    <p style="font-size: 12px;">※지금 가입하는 ID에 한해 향후 유료컨텐츠가 추가될 시에도 <br>모든 컨텐츠를 무료로 이용할 수 있습니다. (2018년 4월 현재)</p>
+                    -->
+                    <p style="font-size: 14px;">기타 문의 : support@pters.co.kr</p>
+                </div>
+                <!-- <div class="gotoSignIn_pc">
+                    <a href="/accounts/register/"><button>가입하기</button></a>
+                </div> -->
+            </div>
+            <!-- <div class="gotoSignIn">
+                <a href="/accounts/register/"><button>가입하기</button></a>
+            </div> -->
+        </div>
+        <div class="paginationMobile">
+            <div id="page1" class="paginationMobile_bar pageMobile_1 paginationMobile_active"></div>
+            <div id="page2" class="paginationMobile_bar pageMobile_2"></div>
+            <div id="page3" class="paginationMobile_bar pageMobile_3"></div>
+            <div id="page4" class="paginationMobile_bar pageMobile_4"></div>
+            <div id="page5" class="paginationMobile_bar pageMobile_5"></div>
+            <div id="page6" class="paginationMobile_bar pageMobile_6"></div>
+        </div>
+    </div>
+
+
+    <div class="album_wrap" id="IE_block_explain" style="display: none;">
+        <div class="album" id="promote_1">
+            <div class="explain_wrap">
+                <div class="explain_main">
+                    <h2>세상에서 가장 쉬운</h2>
+                    <h1>1:1 트레이닝 일정/회원 관리 시스템</h1>
+
+                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><span class="pters_logo_text"> 피터스</span></div>
+
+                    <p>일정 관리는 쉽고 빠르게</p>
+                    <p>회원의 만족도는 업!</p>
+                </div>
+                <div class="gotoSignIn_pc">
+                    <p><span class="pink_strong">피터스</span>는 아래의 브라우저를 지원합니다.</p>
+                    <p>MS 익스플로러로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
+                    <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site">MS Edge</button></a>
+                    <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site">Firefox</button></a>
+                    <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site">구글 Chrome</button></a>
+                </div>
+            </div>
+            <div class="gotoSignIn" style="top: 65%;color: #ffffff;">
+                <p><span class="pink_strong">피터스</span>는 아래의 브라우저를 지원합니다.</p>
+                <p>MS 익스플로러로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
+                <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site">구글 Chrome</button></a>
+                <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site">Firefox</button></a>
+                <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site">MS Edge</button></a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block local_js_footer %}
+    <script type="text/javascript" src={% static_url "common/js/jquery.1.12.4.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "common/js/jquery-ui.1.12.1.min.js" %}></script>
+    <script type="text/javascript" src={% static_url "user/js/login/pters.trainer.promote.js" %}></script>
+{#    <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+    <script>
+
+        var varUA = navigator.userAgent.toLowerCase()//useAgent값 얻기
+        if(varUA.match('android') != null){
+            var devicetext = '브라우저, Android 앱으로'
+            var methodtext = 'PC, 스마트폰, 태블릿 등'
+        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+            var devicetext = '브라우저, iOS 앱으로'
+            var methodtext = 'PC, 스마트폰, 태블릿 등'
+        }else{
+            var devicetext = '브라우저, iOS, Android 앱으로'
+            var methodtext = 'PC웹(크롬, 파이어폭스, 엣지, 사파리)과 스마트폰, 태블릿 등'
+        }
+        $('#connectedMethod').html(methodtext);
+        $('#connectedDevice').html(devicetext);
+
+        if(varUA.match('MSIE') != null || varUA.match('rv:11.0')){
+            $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none')
+            $('#IE_block_explain').css('display','block')
+        }
+
+
+        var page = 0
+        var scroll = true
+        var explain_mode;
+        // $('html,body').on('mousewheel',function(e){
+        //     var loc_1 = $('#promote_1').height()
+        //     e.preventDefault()
+        //     var direction = e.originalEvent.wheelDelta
+        //     if(direction<0 && scroll == true){
+        //         page++
+        //         /*if(page > 5){
+        //             page = 5
+        //         }*/
+        //         if(page > explain_mode){
+        //             page = explain_mode
+        //         }
+        //         $('body, html').animate({scrollTop : loc_1*page},400)
+        //         $('.pagination_active').removeClass('pagination_active')
+        //         $('#page'+(page+1)).addClass('pagination_active')
+        //         scroll = false
+        //         setTimeout(function(){scroll = true}, 500)
+        //     }else if(direction>0 && scroll == true){
+        //         page--
+        //         if(page < 0){
+        //             page = 0
+        //         }
+        //         $('body, html').animate({scrollTop : loc_1*page},400)
+        //         $('.pagination_active').removeClass('pagination_active')
+        //         $('#page'+(page+1)).addClass('pagination_active')
+        //         scroll = false
+        //         setTimeout(function(){scroll = true}, 500)
+        //     }
+        // });
+
+
+        var initX;
+        var mobile_page = 0
+        var touch = true
+        $(document).on('touchstart','.album_wrap',function(e){
+            initX = e.originalEvent.touches[0].clientX;
+
+        });
+
+        if($('body').width()<1025){
+            $(document).on('touchend','.album_wrap',function(e){
+                if($('#promote_2').css('display') == "block"){
+                    var endX = e.originalEvent.changedTouches[0].clientX;
+                    if(endX-initX > 5 && touch == true){
+                        left_page();
+                    }else if(initX-endX > 5 && touch == true){
+                        right_page();
+                    }
+                }
+               
+            })
+        }
+
+        function left_page(){
+            if(mobile_page <= 0){
+                mobile_page = 1
+            }
+            $('#promote_'+(mobile_page+1)).css('left', 100+'%')
+            $('#promote_'+(mobile_page)).css('left','0%')
+            $('.paginationMobile_active').removeClass('paginationMobile_active')
+            $('.pageMobile_'+mobile_page).addClass('paginationMobile_active')
+            mobile_page--
+            touch = false
+            setTimeout(function(){touch = true}, 50)
+
+        }
+
+        function right_page(){
+            mobile_page++
+            if(mobile_page >= explain_mode+1){
+                mobile_page = explain_mode
+            }
+            $('#promote_'+(mobile_page)).css('left', -100+'%')
+            $('#promote_'+(mobile_page+1)).css('left','0%')
+            $('.paginationMobile_active').removeClass('paginationMobile_active')
+            $('.pageMobile_'+(mobile_page+1)).addClass('paginationMobile_active')
+            touch = false
+            setTimeout(function(){touch = true}, 50)
+
+        }
+
+        function show_explain_page_to_target(target, device){
+            $('.__targetall').css('display','block')
+            
+            
+            var loc_1 = $('#promote_1').height()
+            if(device == "pc"){
+                $('.pagination').css('display','block')
+                $('body, html').animate({scrollTop : loc_1},700)
+            }else if(device ="mobile"){
+                $('.paginationMobile').css('display','table')
+                right_page()
+            }
+            if(target == "__teacher"){
+                explain_mode = 5;
+                $('.__teacher').css('display','block')
+                $('.__student').css('display','none')
+                $('.paginationMobile #page6').css('display','table-cell')
+                $('.pagination #page6').css('display','block')
+            }else if(target == "__student"){
+                explain_mode = 4;
+                $('.__teacher').css('display','none')
+                $('.__student').css('display','block')
+                $('.paginationMobile #page6, .pagination #page6').css('display','none')
+            }
+        }
+
+        function goPage(option){
+            if(option == 0){
+                location.href="/accounts/register/";
+            }else if(option == 1){
+                location.href="/accounts/password/reset/";
+            }
+        }
+
+        function goSlide(offset){
+            $('body, html').animate({scrollTop : offset},400)
+        }
+
+{#        Push.Permission.request(onGranted, onDenied);#}
+
+{#        function onDenied() {#}
+{#            console.log('알람 거절 상태')#}
+{#        }#}
+{#        function onGranted() {#}
+{#            console.log('알람 승인 상태')#}
+{#        }#}
+
+        $('#errorMessageBar span:nth-child(2)').click(function(){
+            $('#errorMessageBar').fadeOut('fast')
+        })
+
+{#        navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
+{#            registrations.forEach(function(v) {#}
+{#                if(v.active){#}
+{#                    if(v.scope=="{% url 'index' %}/static/user/js/push/" || v.scope=="{% url 'index' %}/static/user/js/push/"){#}
+{#                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t80')#}
+{#                    }#}
+{#                }#}
+{#            });#}
+{#        });#}
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+
+        window.addEventListener('load', function () {
+            var val = location.href.substr(
+                location.href.lastIndexOf('=') + 1
+            );
+
+            if(val=='naver'){
+                location.href = naverLogin.generateAuthorizeUrl();
+
+            }
+
+            $.ajax({
+                url:'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=VM6zl0mLyBgjf9dgw1cC&client_secret=gGI681B6TR',
+                type:'POST',
+                dataType : 'json',
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                //통신성공시 처리
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata);
+                },
+
+                //보내기후 팝업창 닫기
+                complete:function(){
+                },
+
+                //통신 실패시 처리
+                error:function(){
+
+                }
+            });
+        });
+// <!-- 네이버아디디로로그인 초기화 Script -->
+	var naverLogin = new naver.LoginWithNaverId(
+		{
+			clientId: "h5MuvYzSFLlrFTs19g0V",
+ 			callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",
+{#            clientId: "VM6zl0mLyBgjf9dgw1cC",#}
+{#			callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
+			isPopup: false, /* 팝업을 통한 연동처리 여부 */
+            callbackHandle: false,
+			loginButton: {color: "white", type: 3, height: 39} /* 로그인 버튼의 타입을 지정 */
+		}
+	);
+
+	/* 설정정보를 초기화하고 연동을 준비 */
+	naverLogin.init();
+    // <!--  네이버아이디로로그인 초기화 Script -->
+
+    </script>
+{% endblock %}
 
 </body>
+
+
+
 </html>

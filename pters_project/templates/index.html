@@ -79,9 +79,7 @@
                 display: inline-block;
                 width: 50%;
             }
-            nav.upperbar span{
-                display: none;
-            }
+            
             #errorMessageBar{
                 display: block;
                 width: 100%;
@@ -150,8 +148,11 @@
 
     <nav class="upperbar">
         <div>
-            <img src="/static/user/res/PTERS_logo_pure.png">
-            <a href="/login"><span>LOGIN</span></a>
+            <a href="/"><img src="/static/user/res/PTERS_logo_pure.png"></a>
+            <!-- <a href="/login"><span>LOGIN</span></a> -->
+            <a href="/login/service_info/"><span>서비스 소개</span></a>
+            <a href="/login/service_price_info/"><span>가격</span></a>
+            <!-- <a href="/login/service_test_login/"><span>체험하기</span></a> -->
         </div>
     </nav>
 
@@ -171,7 +172,7 @@
     <div id="tooltip"><span style="line-height: 30px;">서비스 안내</span></div>
 
     <div class="album_wrap" id="album_wrap">
-        <div class="album" id="promote_1">
+        <div class="album" id="promote_1" style="height: 100%;">
             <div class="explain_wrap">
                 <div class="explain_main">
                     <h1 style="margin:0">누구나</h1>
@@ -182,7 +183,7 @@
 
                     <p class="explain_main_sublabel">1:1, 그룹, GX등 레슨 관리</p>
                     <p class="explain_main_sublabel">더 알고 싶다면?</p>
-                    <img id="go_to_service_explain" src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;">
+                    <a href="/login/service_info/"><img id="go_to_service_explain" src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;"></a>
                 </div>
             </div>
 
@@ -267,7 +268,7 @@
                     <h2>세상에서 가장 쉬운</h2>
                     <h1>1:1 트레이닝 일정/회원 관리 시스템</h1>
 
-                    <div class="logo_label"><img src="/static/user/res/PTERS_logo_pure.png"><!-- <span class="pters_logo_text"> 피터스</span> --></div>
+                    <div class="logo_label"><a href="www.pters.co.kr"><img src="/static/user/res/PTERS_logo_pure.png"></a><!-- <span class="pters_logo_text"> 피터스</span> --></div>
 
                     <p>일정 관리는 쉽고 빠르게</p>
                     <p>회원의 만족도는 업!</p>
