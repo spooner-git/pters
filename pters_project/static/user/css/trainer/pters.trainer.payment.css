@@ -63,6 +63,10 @@ body{
 		border-radius: 10px;
 		margin-bottom: 20px;
 		margin-right: 20px;
+		cursor: pointer;
+	}
+	.product:hover, .product:active{
+		border-color: #fe4e65;
 	}
 		.product_tb{
 			display: table;
