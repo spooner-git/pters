@@ -294,7 +294,11 @@
         }
 
         $('#upbutton-x').click(function(){
-            location.href="/trainer/trainer_setting/";
+            if($('#purchase_popup').css('display') == "block"){
+                purchase_popup_close();
+            }else{
+                location.href="/trainer/trainer_setting/";
+            }
         });
 
         $('.pay_product_function').click(function(e){
