@@ -693,9 +693,9 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
             except ValueError:
                 error = '날짜 형식에 문제 있습니다.'
 
-        if error is None:
-            context = get_stats_member_data(class_id, month_first_day, finish_date)
-            error = context['error']
+        # if error is None:
+        #     context = get_stats_member_data(class_id, month_first_day, finish_date)
+        #     error = context['error']
 
         if error is None:
             sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
