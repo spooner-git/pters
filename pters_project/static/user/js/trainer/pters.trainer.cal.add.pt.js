@@ -1636,7 +1636,7 @@ function float_btn_addplan(option){
     }else if(option == 1){
         clear_pt_off_add_popup();
         open_pt_off_add_popup('ptadd');
-        set_member_group_dropdown_list();
+        //set_member_group_dropdown_list();
         ajaxTimeGraphSet(today_YY_MM_DD);
         shade_index(100);
         set_member_group_dropdown_list();
