@@ -22,7 +22,7 @@ body{
 }
 
 #trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
-	margin-top: 70px;
+	margin-top: 20px;
 }
 #trainerWorkTimeSetting_{
 	display: none;
@@ -268,7 +268,7 @@ li a{
 }
 
 #trainerPushSettingText{
-	margin-bottom: 40px;
+	margin-top: 70px;
 }
 
 #trainerAutoCompleteSettingText{
@@ -401,8 +401,11 @@ li a{
 	#menuDescription{
 	    line-height: unset;
 	}
-	#trainerWorkTimeSettingText ,#memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
+	#trainerPushSettingText{
 		margin-top: 120px;
+	}
+	#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
+		margin-top: 20px;
 	}
 	.settingText{
 		font-size: 20px;

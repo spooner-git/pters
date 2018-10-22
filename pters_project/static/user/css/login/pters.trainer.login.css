@@ -752,12 +752,24 @@ img.prev_page{
 	overflow: hidden;
 	margin: 0 auto;
 }
+.album_wrap_ie{
+	position: relative;
+	width: 100%;
+	height: auto;
+	overflow-y: auto;
+	margin: 0 auto;
+}
 
 .album{
 	/*position: relative;*/
 	width: 100%;
 	height: 60%;
 	transition: 0.5s;
+}
+.album_ie{
+	/*position: relative;*/
+	width: 100%;
+	height: 100%;
 }
 
 body{
@@ -1010,6 +1022,13 @@ body{
 		transform: translateY(-50%);
 		color: #ffffff;
 		width: 45%;
+	}
+	.explain_wrap_ie{
+		color: #ffffff;
+		width: 45%;
+		position:relative;
+		margin:0 auto;
+		margin-top: 50px;
 	}
 
 	.explain_main{

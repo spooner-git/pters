@@ -1765,7 +1765,7 @@ function pc_add_member(option){
         }
 
         $('body').css('overflow-y', 'hidden');
-        selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
+        selector_page_addmember_input_wrap.css('height', window_height - 100 - title_height - buttonwrap_height);
         var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
         selector_page_addmember.show().css({'top':centerLoc,
                                             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())
@@ -3411,11 +3411,13 @@ function open_member_info_popup_pc(dbID, jsondata){
 
     function about_member_window_show2(){
         var selector_memberInfoPopup_PC = $('#memberInfoPopup_PC');
-        selector_memberInfoPopup_PC.attr({'data-username':userName,'data-userid': userID,'data-dbid': dbID});
+        selector_memberInfoPopup_PC.attr({'data-username':userName, 'data-userid': userID, 'data-dbid': dbID});
         //$('#memberInfoPopup_PC').show()
+        selector_memberInfoPopup_PC.css({"height":$(window).height()-40, "max-height":540+"px"})
         selector_memberInfoPopup_PC.addClass('display_block')
                                     .css({'top':(($(window).height()-selector_memberInfoPopup_PC.outerHeight())/2+$(window).scrollTop()),
-                                          'left':(($(window).width()-selector_memberInfoPopup_PC.outerWidth())/2+$(window).scrollLeft())});
+                                          'left':(($(window).width()-selector_memberInfoPopup_PC.outerWidth())/2+$(window).scrollLeft()),
+                                      });
     }
 
     $('#memberName_info_PC').val(userName);

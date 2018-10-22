@@ -261,9 +261,9 @@
     </div>
 
 
-    <div class="album_wrap" id="IE_block_explain" style="display: none;">
-        <div class="album" id="promote_1">
-            <div class="explain_wrap">
+    <div class="album_wrap_ie" id="IE_block_explain" style="display: none;">
+        <div class="album_ie" id="promote_1">
+            <div class="explain_wrap_ie">
                 <div class="explain_main">
                     <h2>세상에서 가장 쉬운</h2>
                     <h1>1:1 레슨 일정/회원 관리 시스템</h1>
@@ -274,16 +274,14 @@
                     <p>회원의 만족도는 업!</p>
                 </div>
                 <div class="gotoSignIn_pc">
-                    <p><span class="pink_strong">피터스</span>는 아래의 브라우저를 지원합니다.</p>
-                    <p>MS 익스플로러로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
+                    <p><span class="pink_strong">MS 익스플로러</span>로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
                     <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site"><img src="/static/user/res/login/browser/edge_icon.png">MS Edge</button></a>
                     <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site"><img src="/static/user/res/login/browser/firefox_icon.png">Firefox</button></a>
                     <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site"><img src="/static/user/res/login/browser/chrome_icon.png">Chrome</button></a>
                 </div>
             </div>
             <div class="gotoSignIn" style="top: 65%;color: #ffffff;">
-                <p><span class="pink_strong">피터스</span>는 아래의 브라우저를 지원합니다.</p>
-                <p>MS 익스플로러로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
+                <p><span class="pink_strong">MS 익스플로러</span>로 접속하신 분께서는 아래 브라우저를 설치후 이용을 부탁드립니다.</p>
                 <a href="https://www.google.co.kr/chrome/index.html"><button class="brower_site"><img src="/static/user/res/login/browser/chrome_icon.png">Chrome</button></a>
                 <a href="https://www.mozilla.org/ko/firefox/"><button class="brower_site"><img src="/static/user/res/login/browser/firefox_icon.png">Firefox</button></a>
                 <a href="https://www.microsoft.com/ko-kr/windows/microsoft-edge"><button class="brower_site"><img src="/static/user/res/login/browser/edge_icon.png">MS Edge</button></a>
@@ -316,7 +314,7 @@
         $('#connectedMethod').html(methodtext);
         $('#connectedDevice').html(devicetext);
 
-        if(varUA.match('MSIE') != null || varUA.match('rv:11.0')){
+        if(varUA.match('MSIE') != null || varUA.match('msie') != null || varUA.match('rv:11.0')){
             $('#album_wrap, .upperbar a, .pagination, .paginationMobile').css('display','none');
             $('#IE_block_explain').css('display','block');
         }
@@ -404,55 +402,55 @@
         }
         function left_page(){
             if(mobile_page <= 0){
-                mobile_page = 1
+                mobile_page = 1;
             }
-            $('#promote_'+(mobile_page+1)).css('left', 100+'%')
-            $('#promote_'+(mobile_page)).css('left','0%')
-            $('.paginationMobile_active').removeClass('paginationMobile_active')
-            $('.pageMobile_'+mobile_page).addClass('paginationMobile_active')
-            mobile_page--
-            touch = false
-            setTimeout(function(){touch = true}, 50)
+            $('#promote_'+(mobile_page+1)).css('left', 100+'%');
+            $('#promote_'+(mobile_page)).css('left','0%');
+            $('.paginationMobile_active').removeClass('paginationMobile_active');
+            $('.pageMobile_'+mobile_page).addClass('paginationMobile_active');
+            mobile_page--;
+            touch = false;
+            setTimeout(function(){touch = true}, 50);
 
         }
 
         function right_page(){
             mobile_page++
             if(mobile_page >= explain_mode+1){
-                mobile_page = explain_mode
+                mobile_page = explain_mode;
             }
-            $('#promote_'+(mobile_page)).css('left', -100+'%')
-            $('#promote_'+(mobile_page+1)).css('left','0%')
-            $('.paginationMobile_active').removeClass('paginationMobile_active')
-            $('.pageMobile_'+(mobile_page+1)).addClass('paginationMobile_active')
-            touch = false
-            setTimeout(function(){touch = true}, 50)
+            $('#promote_'+(mobile_page)).css('left', -100+'%');
+            $('#promote_'+(mobile_page+1)).css('left','0%');
+            $('.paginationMobile_active').removeClass('paginationMobile_active');
+            $('.pageMobile_'+(mobile_page+1)).addClass('paginationMobile_active');
+            touch = false;
+            setTimeout(function(){touch = true}, 50);
 
         }
 
         function show_explain_page_to_target(target, device){
-            $('.__targetall').css('display','block')
+            $('.__targetall').css('display','block');
             
             
-            var loc_1 = $('#promote_1').height()
+            var loc_1 = $('#promote_1').height();
             if(device == "pc"){
-                $('.pagination').css('display','block')
-                $('body, html').animate({scrollTop : loc_1},700)
+                $('.pagination').css('display','block');
+                $('body, html').animate({scrollTop : loc_1},700);
             }else if(device ="mobile"){
-                $('.paginationMobile').css('display','table')
-                right_page()
+                $('.paginationMobile').css('display','table');
+                right_page();
             }
             if(target == "__teacher"){
                 explain_mode = 5;
-                $('.__teacher').css('display','block')
-                $('.__student').css('display','none')
-                $('.paginationMobile #page6').css('display','table-cell')
-                $('.pagination #page6').css('display','block')
+                $('.__teacher').css('display','block');
+                $('.__student').css('display','none');
+                $('.paginationMobile #page6').css('display','table-cell');
+                $('.pagination #page6').css('display','block');
             }else if(target == "__student"){
                 explain_mode = 4;
-                $('.__teacher').css('display','none')
-                $('.__student').css('display','block')
-                $('.paginationMobile #page6, .pagination #page6').css('display','none')
+                $('.__teacher').css('display','none');
+                $('.__student').css('display','block');
+                $('.paginationMobile #page6, .pagination #page6').css('display','none');
             }
         }
 
@@ -465,7 +463,7 @@
         }
 
         function goSlide(offset){
-            $('body, html').animate({scrollTop : offset},400)
+            $('body, html').animate({scrollTop : offset},400);
         }
 
 {#        Push.Permission.request(onGranted, onDenied);#}
