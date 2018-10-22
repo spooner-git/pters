@@ -34,14 +34,16 @@ nav.upperbar div{
 nav.upperbar img{
 	height: 20px;
 	margin-top:20px;
-	display: none;
+	display: inline-block;
+	margin-right: 20px;
 }
 nav.upperbar span{
-	display: none;
+	display: inline-block;
 	/*float: right;*/
 	height: 30px;
 	color: #ffffff;
 	font-weight: 100;
+	margin-right: 20px;
 }
 nav.upperbar span:hover{
 	color: #fe4e65;
