@@ -553,33 +553,37 @@ def func_get_member_end_list(class_id, user_id):
                 lecture_finish_count += lecture_info_data.lecture_count
 
                 if lecture_info.use == USE:
-                    if group_check == 0:
+                    if group_check != 0:
+                        member_data.group_reg_count += lecture_info.lecture_reg_count
+                        member_data.group_rem_count += lecture_info.lecture_rem_count
+                        member_data.group_avail_count += lecture_info.lecture_avail_count
+                    else:
                         member_data.lesson_reg_count += lecture_info.lecture_reg_count
                         member_data.lesson_rem_count += lecture_info.lecture_rem_count
                         member_data.lesson_avail_count += lecture_info.lecture_avail_count
-                    # member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                    # member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                    # member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                    member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                    member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                    member_data.lecture_avail_count += lecture_info.lecture_avail_count
 
-                        if member_data.start_date is None or member_data.start_date == '':
+                    if member_data.start_date is None or member_data.start_date == '':
+                        member_data.start_date = lecture_info.start_date
+                    else:
+                        if member_data.start_date > lecture_info.start_date:
                             member_data.start_date = lecture_info.start_date
-                        else:
-                            if member_data.start_date > lecture_info.start_date:
-                                member_data.start_date = lecture_info.start_date
-                                # if lecture_info.lecture_avail_count > 0:
-                                #     member_data.lecture_available_id = lecture_info.lecture_id
+                            # if lecture_info.lecture_avail_count > 0:
+                            #     member_data.lecture_available_id = lecture_info.lecture_id
 
-                        if member_data.end_date is None or member_data.end_date == '':
+                    if member_data.end_date is None or member_data.end_date == '':
+                        member_data.end_date = lecture_info.end_date
+                    else:
+                        if member_data.end_date < lecture_info.end_date:
                             member_data.end_date = lecture_info.end_date
-                        else:
-                            if member_data.end_date < lecture_info.end_date:
-                                member_data.end_date = lecture_info.end_date
 
-                        if member_data.mod_dt is None or member_data.mod_dt == '':
+                    if member_data.mod_dt is None or member_data.mod_dt == '':
+                        member_data.mod_dt = lecture_info.mod_dt
+                    else:
+                        if member_data.mod_dt > lecture_info.mod_dt:
                             member_data.mod_dt = lecture_info.mod_dt
-                        else:
-                            if member_data.mod_dt > lecture_info.mod_dt:
-                                member_data.mod_dt = lecture_info.mod_dt
 
                     member_data.lecture_id = lecture_info.lecture_id
 
@@ -720,23 +724,23 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
                         member_data.lesson_reg_count += lecture_info.lecture_reg_count
                         member_data.lesson_rem_count += lecture_info.lecture_rem_count
                         member_data.lesson_avail_count += lecture_info.lecture_avail_count
-                        member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                        member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                        member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                    member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                    member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                    member_data.lecture_avail_count += lecture_info.lecture_avail_count
 
-                        if member_data.start_date is None or member_data.start_date == '':
+                    if member_data.start_date is None or member_data.start_date == '':
+                        member_data.start_date = lecture_info.start_date
+                    else:
+                        if member_data.start_date > lecture_info.start_date:
                             member_data.start_date = lecture_info.start_date
-                        else:
-                            if member_data.start_date > lecture_info.start_date:
-                                member_data.start_date = lecture_info.start_date
-                                # if lecture_info.lecture_avail_count > 0:
-                                #     member_data.lecture_available_id = lecture_info.lecture_id
+                            # if lecture_info.lecture_avail_count > 0:
+                            #     member_data.lecture_available_id = lecture_info.lecture_id
 
-                        if member_data.end_date is None or member_data.end_date == '':
+                    if member_data.end_date is None or member_data.end_date == '':
+                        member_data.end_date = lecture_info.end_date
+                    else:
+                        if member_data.end_date < lecture_info.end_date:
                             member_data.end_date = lecture_info.end_date
-                        else:
-                            if member_data.end_date < lecture_info.end_date:
-                                member_data.end_date = lecture_info.end_date
 
                     if member_data.mod_dt is None or member_data.mod_dt == '':
                         member_data.mod_dt = lecture_info.mod_dt

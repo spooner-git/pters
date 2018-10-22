@@ -693,9 +693,9 @@ class ManageWorkView(LoginRequiredMixin, AccessTestMixin, View):
             except ValueError:
                 error = '날짜 형식에 문제 있습니다.'
 
-        if error is None:
-            context = get_stats_member_data(class_id, month_first_day, finish_date)
-            error = context['error']
+        # if error is None:
+        #     context = get_stats_member_data(class_id, month_first_day, finish_date)
+        #     error = context['error']
 
         if error is None:
             sales_data_result = get_sales_data(class_id, month_first_day, finish_date)
@@ -2413,15 +2413,33 @@ def delete_group_info_logic(request):
         error = '오류가 발생했습니다.'
 
     if error is None:
+        group_data = GroupLectureTb.objects.select_related('lecture_tb').filter(group_tb_id=group_id, use=USE)
+
+    if error is None:
+        if group_data is not None:
+            for group_datum in group_data:
+                lecture_info = group_datum.lecture_tb
+                lecture_info.lecture_avail_count = 0
+                lecture_info.lecture_rem_count = 0
+                lecture_info.state_cd = 'PE'
+                lecture_info.save()
+    if error is None:
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                   group_tb_id=group_id,
-                                                  # lecture_tb__isnull=True,
-                                                  start_dt__gte=timezone.now(),
+                                                  end_dt__lte=timezone.now(),
                                                   en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
+        schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
+                                                         # lecture_tb__isnull=True,
+                                                         end_dt__gt=timezone.now(),
+                                                         en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                group_tb_id=group_id)
-        schedule_data.delete()
-        repeat_schedule_data.delete()
+        if len(schedule_data) > 0:
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
+        if len(repeat_schedule_data) > 0:
+            repeat_schedule_data.delete()
     if error is None:
         group_info.state_cd = 'PE'
         group_info.use = 0
@@ -2933,25 +2951,47 @@ def finish_group_info_logic(request):
     error = None
     group_info = None
     group_data = None
+    now = timezone.now()
     if error is None:
         try:
             group_info = GroupTb.objects.get(group_id=group_id)
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
     if error is None:
-        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
+        group_data = GroupLectureTb.objects.select_related('lecture_tb').filter(group_tb_id=group_id, use=USE)
 
     if error is None:
+        schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
+                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+        schedule_data_delete = ScheduleTb.objects.filter(group_tb_id=group_id,
+                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+        repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id)
+        # group_data.update(lecture_tb__state_cd='PE',
+        #                   lecture_tb__lecture_avail_count=0, lecture_tb__lecture_rem_count=0)
+        if len(schedule_data) > 0:
+            schedule_data.update(state_cd='PE')
+        if len(schedule_data_delete) > 0:
+            schedule_data_delete.delete()
+        if len(repeat_schedule_data) > 0:
+            repeat_schedule_data.delete()
+
         if group_data is not None:
             for group_datum in group_data:
                 lecture_info = group_datum.lecture_tb
-                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
-                repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                # func_refresh_lecture_count(lecture_id)
-                if len(schedule_data) > 0:
-                    schedule_data.delete()
-                if len(repeat_schedule_data) > 0:
-                    repeat_schedule_data.delete()
+                # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                #                                           end_dt__lte=now,
+                #                                           USE=USE).exclude(state_cd='PE')
+                # schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                #                                                  end_dt__gt=now,
+                #                                                  USE=USE).exclude(state_cd='PE')
+                # repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                # # func_refresh_lecture_count(lecture_id)
+                # if len(schedule_data) > 0:
+                #     schedule_data.update(state_cd='PE')
+                # if len(schedule_data_delete) > 0:
+                #     schedule_data_delete.delete()
+                # if len(repeat_schedule_data) > 0:
+                # #     repeat_schedule_data.delete()
                 lecture_info.lecture_avail_count = 0
                 lecture_info.lecture_rem_count = 0
                 lecture_info.state_cd = 'PE'

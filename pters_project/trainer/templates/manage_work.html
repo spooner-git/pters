@@ -243,10 +243,10 @@
     var month_re_reg_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_re_reg_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
     var month_all_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_all_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
     var month_part_refund_member = [{% for member_stats_info in member_stats_data %}"{{ member_stats_info.month_part_refund_member }}"{%if forloop.last == False%},{% endif %}{% endfor %}];
-    var total_month_new_reg_member = {{ total_month_new_reg_member }};
-    var total_month_re_reg_member = {{ total_month_re_reg_member }};
-    var total_month_all_refund_member = {{ total_month_all_refund_member }};
-    var total_month_part_refund_member = {{ total_month_part_refund_member }};
+    var total_month_new_reg_member = '{{ total_month_new_reg_member }}';
+    var total_month_re_reg_member = '{{ total_month_re_reg_member }}';
+    var total_month_all_refund_member = '{{ total_month_all_refund_member }}';
+    var total_month_part_refund_member = '{{ total_month_part_refund_member }}';
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
     // Set a callback to run when the Google Visualization API is loaded.
