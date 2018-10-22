@@ -638,6 +638,7 @@ select:focus > option:checked {
 	*/
 	border-radius: 3px;
 	border: 1px solid #cccccc;
+	overflow-y: auto;
 }
 	#memberInfoPopup_PC input{
 		-webkit-text-fill-color:#282828;
