@@ -1145,54 +1145,56 @@ $(document).ready(function(){
         var serializeArray;
         var sendData;
         e.preventDefault();
+        var starttime_to_send;
+        var endtime_to_send;
         if(addTypeSelect=="ptadd"){
             $form = $('#pt-add-form');
             serverURL = '/schedule/add_schedule/';
             serializeArray = $form.serializeArray();
             sendData = serializeArray;
 
-            var starttime_to_send = $("#id_training_time");
-            var endtime_to_send = $("id_training_end_time");
+            starttime_to_send = $("#id_training_time");
+            endtime_to_send = $("id_training_end_time");
         }else if(addTypeSelect=="groupptadd"){
             $form = $('#pt-add-form');
             serverURL = '/schedule/add_group_schedule/';
             serializeArray = $form.serializeArray();
             sendData = serializeArray;
 
-            var starttime_to_send = $("#id_training_time");
-            var endtime_to_send = $("id_training_end_time");
+            starttime_to_send = $("#id_training_time");
+            endtime_to_send = $("id_training_end_time");
         }else if(addTypeSelect=="offadd"){
             $form = $('#off-add-form');
             serverURL = '/schedule/add_schedule/';
             serializeArray = $form.serializeArray();
             sendData = serializeArray;
 
-            var starttime_to_send = $("#id_training_time_off");
-            var endtime_to_send = $("#id_training_end_time_off");
+            starttime_to_send = $("#id_training_time_off");
+            endtime_to_send = $("#id_training_end_time_off");
         }else if(addTypeSelect=="repeatptadd"){
             $form = $('#add-repeat-schedule-form');
             serverURL = '/schedule/add_repeat_schedule/';
             serializeArray = $form.serializeArray();
             sendData = serializeArray;
 
-            var starttime_to_send = $("#id_repeat_start_time");
-            var endtime_to_send = $("#id_repeat_end_time");
+            starttime_to_send = $("#id_repeat_start_time");
+            endtime_to_send = $("#id_repeat_end_time");
         }else if(addTypeSelect=="repeatgroupptadd"){
             $form = $('#add-repeat-schedule-form');
             serverURL = '/schedule/add_group_repeat_schedule/';
             serializeArray = $form.serializeArray();
             sendData = serializeArray;
 
-            var starttime_to_send = $("#id_repeat_start_time");
-            var endtime_to_send = $("#id_repeat_end_time");
+            starttime_to_send = $("#id_repeat_start_time");
+            endtime_to_send = $("#id_repeat_end_time");
         }else if(addTypeSelect=="repeatoffadd"){
             $form = $('#add-off-repeat-schedule-form');
             serverURL = '/schedule/add_repeat_schedule/';
             serializeArray = $form.serializeArray();
             sendData = serializeArray;
 
-            var starttime_to_send = $("#id_repeat_start_time_off");
-            var endtime_to_send = $("#id_repeat_end_time_off");
+            starttime_to_send = $("#id_repeat_start_time_off");
+            endtime_to_send = $("#id_repeat_end_time_off");
         }
         if(select_all_check==true){
             //ajax 회원정보 입력된 데이터 송신
@@ -1210,7 +1212,7 @@ $(document).ready(function(){
                         if(starttime_to_send == endtime_to_send){
                             if(xhr != ""){
                                 xhr.abort(); // ajax중지
-                                alert("에러: 예상치 못한 오류가 발생했습니다. Code:001\n페이지 새로고침 후 다시 이용해주세요.")
+                                alert("에러: 예상치 못한 오류가 발생했습니다. Code:001(starttime==endtime)\n페이지 새로고침 후 다시 이용해주세요.")
                             }
                         }
                     },
