@@ -3,23 +3,35 @@ import random
 
 import httplib2
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import password_reset_done
+from django.contrib.auth.views import password_reset_done, deprecate_current_app
+from django.contrib.sites.shortcuts import get_current_site
+from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.template.loader import render_to_string
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic import FormView
 from django.views.generic import TemplateView
-from registration.backends.hmac.views import RegistrationView
+from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
+from registration import signals
+from django.utils.translation import ugettext as _
 
 # Create your views here.
 
@@ -677,8 +689,8 @@ class ResetPasswordView(View):
         password_reset_form = MyPasswordResetForm
         token_generator = default_token_generator
         # template_name = 'registration_error_ajax.html'
-        email_template_name = 'registration/password_reset_email.txt'
-        subject_template_name = 'registration/password_reset_subject.txt'
+        email_template_name = 'password_reset_email.txt'
+        subject_template_name = 'password_reset_subject.txt'
         # context = None
         if email is None or email == '':
             error = 'Email 정보를 입력해주세요.'
@@ -689,7 +701,7 @@ class ResetPasswordView(View):
 
         if error is None:
             if post_reset_redirect is None:
-                post_reset_redirect = reverse(password_reset_done)
+                post_reset_redirect = reverse('login:auth_password_reset_done')
             else:
                 post_reset_redirect = resolve_url(post_reset_redirect)
             if request.method == "POST":
@@ -1322,3 +1334,414 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     return context
 
 
+class BaseRegistrationView(FormView):
+    """
+    Base class for user registration views.
+
+    """
+    disallowed_url = 'registration_disallowed'
+    form_class = RegistrationForm
+    success_url = None
+    template_name = 'registration/registration_form.html'
+
+    def dispatch(self, *args, **kwargs):
+        """
+        Check that user signup is allowed before even bothering to
+        dispatch or do other processing.
+
+        """
+        if not self.registration_allowed():
+            return redirect(self.disallowed_url)
+        return super(BaseRegistrationView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        new_user = self.register(form)
+        success_url = self.get_success_url(new_user) if \
+            (hasattr(self, 'get_success_url') and
+             callable(self.get_success_url)) else \
+            self.success_url
+
+        # success_url may be a string, or a tuple providing the full
+        # argument set for redirect(). Attempting to unpack it tells
+        # us which one it is.
+        try:
+            to, args, kwargs = success_url
+            return redirect(to, *args, **kwargs)
+        except ValueError:
+            return redirect(success_url)
+
+    def registration_allowed(self):
+        """
+        Override this to enable/disable user registration, either
+        globally or on a per-request basis.
+
+        """
+        return getattr(settings, 'REGISTRATION_OPEN', True)
+
+    def register(self, form):
+        """
+        Implement user-registration logic here. Access to both the
+        request and the registration form is available here.
+
+        """
+        raise NotImplementedError
+
+
+class RegistrationView(BaseRegistrationView):
+    """
+    Register a new (inactive) user account, generate an activation key
+    and email it to the user.
+
+    This is different from the model-based activation workflow in that
+    the activation key is the username, signed using Django's
+    TimestampSigner, with HMAC verification on activation.
+
+    """
+    email_body_template = 'registration/activation_email.txt'
+    email_subject_template = 'registration/activation_email_subject.txt'
+
+    def register(self, form):
+        new_user = self.create_inactive_user(form)
+        signals.user_registered.send(sender=self.__class__,
+                                     user=new_user,
+                                     request=self.request)
+        return new_user
+
+    def get_success_url(self, user):
+        return ('registration_complete', (), {})
+
+    def create_inactive_user(self, form):
+        """
+        Create the inactive user account and send an email containing
+        activation instructions.
+
+        """
+        new_user = form.save(commit=False)
+        new_user.is_active = False
+        new_user.save()
+
+        self.send_activation_email(new_user)
+
+        return new_user
+
+    def get_activation_key(self, user):
+        """
+        Generate the activation key which will be emailed to the user.
+
+        """
+        return signing.dumps(
+            obj=getattr(user, user.USERNAME_FIELD),
+            salt=REGISTRATION_SALT
+        )
+
+    def get_email_context(self, activation_key):
+        """
+        Build the template context used for the activation email.
+
+        """
+        scheme = 'https' if self.request.is_secure else 'http'
+        return {
+            'scheme': scheme,
+            'activation_key': activation_key,
+            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+            'site': get_current_site(self.request)
+        }
+
+    def send_activation_email(self, user):
+        """
+        Send the activation email. The activation key is the username,
+        signed using TimestampSigner.
+
+        """
+        activation_key = self.get_activation_key(user)
+        context = self.get_email_context(activation_key)
+        context.update({
+            'user': user,
+        })
+        subject = render_to_string(self.email_subject_template,
+                                   context)
+        # Force subject to a single line to avoid header-injection
+        # issues.
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(self.email_body_template,
+                                   context)
+        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+
+class BaseActivationView(TemplateView):
+    """
+    Base class for user activation views.
+
+    """
+    success_url = None
+    template_name = 'registration/activate.html'
+
+    def get(self, *args, **kwargs):
+        """
+        The base activation logic; subclasses should leave this method
+        alone and implement activate(), which is called from this
+        method.
+
+        """
+        activated_user = self.activate(*args, **kwargs)
+        if activated_user:
+            signals.user_activated.send(
+                sender=self.__class__,
+                user=activated_user,
+                request=self.request
+            )
+            success_url = self.get_success_url(activated_user) if \
+                (hasattr(self, 'get_success_url') and
+                 callable(self.get_success_url)) else \
+                self.success_url
+            try:
+                to, args, kwargs = success_url
+                return redirect(to, *args, **kwargs)
+            except ValueError:
+                return redirect(success_url)
+        return super(BaseActivationView, self).get(*args, **kwargs)
+
+    def activate(self, *args, **kwargs):
+        """
+        Implement account-activation logic here.
+
+        """
+        raise NotImplementedError
+
+
+class ActivationView(BaseActivationView):
+    """
+    Given a valid activation key, activate the user's
+    account. Otherwise, show an error message stating the account
+    couldn't be activated.
+
+    """
+    # success_url = 'registration_activation_complete'
+    success_url = '/login/activate/complete/'
+
+    def activate(self, *args, **kwargs):
+        # This is safe even if, somehow, there's no activation key,
+        # because unsign() will raise BadSignature rather than
+        # TypeError on a value of None.
+        username = self.validate_key(kwargs.get('activation_key'))
+        if username is not None:
+            user = self.get_user(username)
+            if user is not None:
+                user.is_active = True
+                user.save()
+                return user
+        return False
+
+    def validate_key(self, activation_key):
+        """
+        Verify that the activation key is valid and within the
+        permitted activation time window, returning the username if
+        valid or ``None`` if not.
+
+        """
+        try:
+            username = signing.loads(
+                activation_key,
+                salt=REGISTRATION_SALT,
+                max_age=settings.ACCOUNT_ACTIVATION_DAYS * 86400
+            )
+            return username
+        # SignatureExpired is a subclass of BadSignature, so this will
+        # catch either one.
+        except signing.BadSignature:
+            return None
+
+    def get_user(self, username):
+        """
+        Given the verified username, look up and return the
+        corresponding user account if it exists, or ``None`` if it
+        doesn't.
+
+        """
+        User = get_user_model()
+        try:
+            user = User.objects.get(**{
+                User.USERNAME_FIELD: username,
+                'is_active': False
+            })
+            return user
+        except User.DoesNotExist:
+            return None
+
+
+# 4 views for password reset:
+# - password_reset sends the mail
+# - password_reset_done shows a success message for the above
+# - password_reset_confirm checks the link the user clicked and
+#   prompts for a new password
+# - password_reset_complete shows a success message for the above
+
+@deprecate_current_app
+@csrf_protect
+def password_reset(request,
+                   template_name='password_reset_form.html',
+                   email_template_name='password_reset_email.html',
+                   subject_template_name='password_reset_subject.txt',
+                   password_reset_form=PasswordResetForm,
+                   token_generator=default_token_generator,
+                   post_reset_redirect=None,
+                   from_email=None,
+                   extra_context=None,
+                   html_email_template_name=None,
+                   extra_email_context=None):
+    if post_reset_redirect is None:
+        post_reset_redirect = reverse('login:auth_password_reset')
+        # post_reset_redirect = '/login/password_reset/done/'
+    else:
+        post_reset_redirect = resolve_url(post_reset_redirect)
+    if request.method == "POST":
+        form = password_reset_form(request.POST)
+        if form.is_valid():
+            opts = {
+                'use_https': request.is_secure(),
+                'token_generator': token_generator,
+                'from_email': from_email,
+                'email_template_name': email_template_name,
+                'subject_template_name': subject_template_name,
+                'request': request,
+                'html_email_template_name': html_email_template_name,
+                'extra_email_context': extra_email_context,
+            }
+            form.save(**opts)
+            return HttpResponseRedirect(post_reset_redirect)
+    else:
+        form = password_reset_form()
+    context = {
+        'form': form,
+        'title': _('Password reset'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@deprecate_current_app
+def password_reset_done(request,
+                        template_name='password_reset_done.html',
+                        extra_context=None):
+    context = {
+        'title': _('Password reset sent'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+# Doesn't need csrf_protect since no-one can guess the URL
+@sensitive_post_parameters()
+@never_cache
+@deprecate_current_app
+def password_reset_confirm(request, uidb64=None, token=None,
+                           template_name='password_reset_confirm.html',
+                           token_generator=default_token_generator,
+                           set_password_form=SetPasswordForm,
+                           post_reset_redirect=None,
+                           extra_context=None):
+    """
+    View that checks the hash in a password reset link and presents a
+    form for entering a new password.
+    """
+    UserModel = get_user_model()
+    assert uidb64 is not None and token is not None  # checked by URLconf
+    if post_reset_redirect is None:
+        post_reset_redirect = reverse('login:auth_password_reset_complete')
+    else:
+        post_reset_redirect = resolve_url(post_reset_redirect)
+    try:
+        # urlsafe_base64_decode() decodes to bytestring on Python 3
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = UserModel._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        validlink = True
+        title = _('Enter new password')
+        if request.method == 'POST':
+            form = set_password_form(user, request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(post_reset_redirect)
+        else:
+            form = set_password_form(user)
+    else:
+        validlink = False
+        form = None
+        title = _('Password reset unsuccessful')
+    context = {
+        'form': form,
+        'title': title,
+        'validlink': validlink,
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@deprecate_current_app
+def password_reset_complete(request,
+                            template_name='password_reset_complete.html',
+                            extra_context=None):
+    context = {
+        'login_url': resolve_url(settings.LOGIN_URL),
+        'title': _('Password reset complete'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@sensitive_post_parameters()
+@csrf_protect
+@login_required
+@deprecate_current_app
+def password_change(request,
+                    template_name='password_change_form.html',
+                    post_change_redirect=None,
+                    password_change_form=PasswordChangeForm,
+                    extra_context=None):
+    if post_change_redirect is None:
+        post_change_redirect = reverse('password_change_done')
+    else:
+        post_change_redirect = resolve_url(post_change_redirect)
+    if request.method == "POST":
+        form = password_change_form(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Updating the password logs out all other sessions for the user
+            # except the current one.
+            update_session_auth_hash(request, form.user)
+            return HttpResponseRedirect(post_change_redirect)
+    else:
+        form = password_change_form(user=request.user)
+    context = {
+        'form': form,
+        'title': _('Password change'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@login_required
+@deprecate_current_app
+def password_change_done(request,
+                         template_name='password_change_done.html',
+                         extra_context=None):
+    context = {
+        'title': _('Password change successful'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)

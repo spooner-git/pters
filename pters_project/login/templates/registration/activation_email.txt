@@ -4,6 +4,6 @@ PTERS 계정 가입을 위한 인증 메일입니다. ( https://{{ site.domain }
 
 id : {{user.username}}
 
-https://{{ site.domain }}{% url 'registration_activate' activation_key %}
+https://{{ site.domain }}{% url 'login:registration_activate' activation_key %}
 
 링크는 {{ expiration_days }}일동안 유효합니다.

@@ -167,9 +167,9 @@
 
                     <input type="hidden" name="keyword" id="keyword">
                     <div class="innerbox">
-                        <a href="{% url 'registration_register' %}"><div id="registerButton">회원 가입</div></a>
+                        <a href="{% url 'login:registration_register' %}"><div id="registerButton">회원 가입</div></a>
                         <div class="seperate_bar"></div>
-                        <a href="{% url 'auth_password_reset' %}"><div id="findIDPW">PW 초기화</div></a>
+                        <a href="{% url 'login:auth_password_reset' %}"><div id="findIDPW">PW 초기화</div></a>
                     </div>
                     <input type="hidden" name="next_page" value = '{% url 'index' %}'>
                 </form>
@@ -346,9 +346,9 @@
 
         function goPage(option){
             if(option == 0){
-                location.href="/accounts/register/";
+                location.href="/login/register/";
             }else if(option == 1){
-                location.href="/accounts/password/reset/";
+                location.href="/login/password/reset/";
             }
         }
 

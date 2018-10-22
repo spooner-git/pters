@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.views.generic import TemplateView
+
 from . import views
 
 urlpatterns = [
@@ -82,4 +84,53 @@ urlpatterns = [
     url(r'^delete_push_token/$', views.DeletePushTokenView.as_view(), name='delete_push_token'),
     url(r'^clear_badge_counter/$', views.clear_badge_counter_logic, name='clear_badge_counter'),
 
+    url(r'^activate/complete/$',
+        TemplateView.as_view(
+            template_name='registration/activation_complete.html'
+        ),
+        name='registration_activation_complete'),
+    # The activation key can make use of any character from the
+    # URL-safe base64 alphabet, plus the colon as a separator.
+    url(r'^activate/(?P<activation_key>[-:\w]+)/$',
+        views.ActivationView.as_view(),
+        name='registration_activate'),
+    url(r'^register/$', views.RegistrationView.as_view(), name='registration_register'),
+    # url(r'^register/complete/$',
+    #     TemplateView.as_view(
+    #         template_name='registration/registration_complete.html'
+    #     ),
+    #     name='registration_complete'),
+    # url(r'^register/closed/$',
+    #     TemplateView.as_view(
+    #         template_name='registration/registration_closed.html'
+    #     ),
+    #     name='registration_disallowed'),
+    url(r'^password/change/$',
+        views.password_change,
+        {'post_change_redirect': 'login:auth_password_change_done'},
+        name='auth_password_change'),
+
+    url(r'^password/change/done/$',
+        views.password_change_done,
+        name='auth_password_change_done'),
+
+    url(r'^password/reset/$',
+        views.password_reset,
+        {'post_reset_redirect': 'login:auth_password_reset_done',
+         'email_template_name': 'password_reset_email.txt'},
+        name='auth_password_reset'),
+
+    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/'
+        r'(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.password_reset_confirm,
+        {'post_reset_redirect': 'login:auth_password_reset_complete'},
+        name='auth_password_reset_confirm'),
+
+    url(r'^password/reset/complete/$',
+        views.password_reset_complete,
+        name='auth_password_reset_complete'),
+
+    url(r'^password/reset/done/$',
+        views.password_reset_done,
+        name='auth_password_reset_done'),
 ]
