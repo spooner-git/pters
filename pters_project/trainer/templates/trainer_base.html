@@ -599,21 +599,26 @@ function playSound() {
     var device_info = '{{ request.session.device_info }}';
     var varUA = navigator.userAgent.toLowerCase();
         if(varUA.match('android') != null){
+            platform_check = 'mobile';
             if(device_info != "web"){
                 $('#paymentSetting').css('display', 'none');
+            }else if(device_info == "web"){
+                platform_check = "mobile_browser"
             }
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-            platform_check = 'mobile';
+            
         }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+            platform_check = 'mobile';
             if(device_info != "web"){
                 $('#paymentSetting').css('display', 'none');
+            }else if(device_info == "web"){
+                platform_check = "mobile_browser"
             }
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-            platform_check = 'mobile';
         }else{
             platform_check = 'pc';
         }
