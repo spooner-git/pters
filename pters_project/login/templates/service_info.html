@@ -29,8 +29,8 @@
     {% block local_css %}
 
         <meta name="login" content="trainer_login">
-        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}>
-        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}>
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.promote.css" %}><!-- 
+        <link rel="stylesheet" href={% static_url "user/css/login/pters.trainer.login.css" %}> -->
         <link rel="icon" href="/static/common/favicon.ico">
         <link rel="apple-touch-icon" href="/static/common/favicon-152.png">
         <link rel="shortcut icon" href="/static/common/favicon-152.png">
@@ -53,7 +53,7 @@
             }
             #promote_1 .explain_main{
                 height: 100%;
-                padding-top: 40px;
+
             }
             #promote_1 .gotoSignIn{
                 height: auto;
@@ -200,9 +200,12 @@
         <div class="album __targetall" id="promote_1" style="background:#151515;">
             <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
             <div class="explain_wrap">
+
+                <div class="promo_img_wrap">
+                    <img src="/static/user/res/promotion/1.png">
+                </div>
                 <div class="explain_main __teacher">
                     <h2></h2>
-                    <br>
                     <h1>24시간, 어디서든<br> 편리한 클라우드 레슨 관리</h1>
                     <br>
                     <br>
@@ -214,7 +217,7 @@
                     <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">관리</span> 해보세요.</p>
                 </div>
 
-                <div class="explain_main __student">
+                <!-- <div class="explain_main __student">
                     <h2></h2>
                     <br>
                     <h1>24시간, 어디서든 편리한 레슨 일정 관리</h1>
@@ -226,7 +229,7 @@
                     <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
                     <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">예약</span> 해보세요.</p>
                 </div>
-
+ -->
                 <!-- <div class="gotoSignIn_pc">
                     <a href="/accounts/register/"><button>가입하기</button></a>
                 </div> -->
@@ -240,9 +243,10 @@
         <div class="album __targetall" id="promote_2" style="background:#151515;">
             <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
             <div class="explain_wrap">
+
+                
                 <div class="explain_main __teacher">
                     <h2></h2>
-                    <br>
                     <h1>자유로운 나만의 정책 만들기</h1>
                     <br>
                     <p>피터스의 다양한 설정 옵션으로</p>
@@ -252,8 +256,10 @@
                     <br>
                     <p>설정 조합으로 <span class="pink_strong">커스터마이즈</span> 된 <br><span class="pink_strong">여러분만의 정책</span>을 만들수 있습니다.</p>
                 </div>
-
-                <div class="explain_main __student">
+                <div class="promo_img_wrap">
+                    <img src="/static/user/res/promotion/2.png">
+                </div>
+                <!-- <div class="explain_main __student">
                     <h2></h2>
                     <br>
                     <h1>24시간, 어디서든 편리한 레슨 일정 관리</h1>
@@ -265,7 +271,7 @@
                     <p>언제 어디서라도 간편하게 <span class="pink_strong">원터치 방식</span>으로</p>
                     <p>나의 <span class="pink_strong">레슨 일정을 확인</span>하고 <span class="pink_strong">예약</span> 해보세요.</p>
                 </div>
-
+ -->
                 <!-- <div class="gotoSignIn_pc">
                     <a href="/accounts/register/"><button>가입하기</button></a>
                 </div> -->
@@ -279,6 +285,9 @@
         <div class="album __targetall" id="promote_3" style="background:#151515;">
             <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
             <div class="explain_wrap">
+                <div class="promo_img_wrap">
+                    <img src="/static/user/res/promotion/3.png">
+                </div>
                 <div class="explain_main __teacher">
                     <h2></h2>
                     <h1>나의 일정과 회원 관리를 한번에!</h1>
@@ -292,7 +301,7 @@
                     
                     <p>일정을 완료할 때는 <span class="pink_strong">사인</span>을 입력하면 저장되어 다시 확인할 수 있습니다.</p>
                 </div>
-                <div class="explain_main __student">
+                <!-- <div class="explain_main __student">
                     <h2></h2>
                     <h1>레슨이 종료되도 이력을<br> 언제든 다시 확인!</h1>
                     <br>
@@ -303,7 +312,7 @@
                     <p>매번 새로운 회원번호를 부여 받지 않아서 간편!</p>
                     <br>
                     <p>내 ID로 연결했던 정보는 <span class="pink_strong">언제든 다시 이력확인</span>이 가능!</p>
-                </div>
+                </div> -->
                 <!-- <div class="gotoSignIn_pc">
                     <a href="/accounts/register/"><button>가입하기</button></a>
                 </div> -->
@@ -317,6 +326,8 @@
         <div class="album __targetall" id="promote_4" style="background:#151515;">
             <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
             <div class="explain_wrap">
+
+                
                 <div class="explain_main __teacher">
                     <h2></h2>
                     <h1>일정 예약도 회원이 직접 바로 바로!</h1>
@@ -331,8 +342,11 @@
                     <p>그 시간 외에서만 일정 예약이 가능합니다.</p>
                     <p>회원 예약기능은 설정에서 활성/비활성화 할 수 있습니다.</p>
                 </div>
-
-                <div class="explain_main __student">
+                <div class="promo_img_wrap">
+                    <img src="/static/user/res/promotion/2.png"> 
+                </div>
+                    
+                <!-- <div class="explain_main __student">
                     <h2></h2>
                     <h1>그룹 레슨도 실시간 예약 가능!</h1>
                     <br>
@@ -343,7 +357,7 @@
                     <br>
                     <p>그룹 레슨 참가를 위해 매번 컨펌 받지 마세요!</p>
                     <p>간편하게 피터스로 예약하세요.</p>
-                </div>
+                </div> -->
                 <!-- <div class="gotoSignIn_pc">
                     <a href="/accounts/register/"><button>가입하기</button></a>
                 </div> -->
@@ -357,6 +371,10 @@
         <div class="album __targetall" id="promote_5" style="background:#151515;">
             <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
             <div class="explain_wrap">
+
+                <div class="promo_img_wrap">
+                    <img src="/static/user/res/promotion/3.png">
+                </div>
                 <div class="explain_main">
                     <h2></h2>
                     <h1>다양한 기기에서 한 번에 관리</h1>
@@ -382,6 +400,9 @@
         <div class="album __teacher" id="promote_6" style="background:#151515;">
             <!-- <img src="/static/user/res/btn_next.png" class="prev_page"> -->
             <div class="explain_wrap">
+                <div class="promo_img_wrap">
+                    <img src="/static/user/res/promotion/1.png">
+                </div>
                 <div class="explain_main">
                     <h2></h2>
                     <h1><img src="/static/user/res/PTERS_logo_pure.png" style="height: 25px;">는 누구나 무료로 가입!</h1>

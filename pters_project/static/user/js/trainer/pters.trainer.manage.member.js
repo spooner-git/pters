@@ -1392,7 +1392,7 @@ $(document).ready(function(){
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block"){
             check_dropdown_selected();
             if(select_all_check == true){
-                add_groupmember_form_func()
+                add_groupmember_form_func();
             }
         }
 
@@ -4784,7 +4784,7 @@ function add_groupmember_form_func(){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            pters_option_inspector("groupmember_create", xhr, "")
+            pters_option_inspector("groupmember_create", xhr, "");
         },
 
         //보내기후 팝업창 닫기
