@@ -1271,7 +1271,8 @@ $(document).ready(function(){
         */
         $('#fast_check').val('0');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
-            $('#form_member_groupid').val($('#simpleReg select.grouptypeselect').val());
+            $('#form_member_groupid').val($('#simpleReg select.grouptypeselect').val().split('/')[0]);
+            $('#form_group_package_type').val($('#simpleReg select.grouptypeselect').val().split('/')[1]);
         }
         check_dropdown_selected();
     });
@@ -1293,7 +1294,8 @@ $(document).ready(function(){
         */
         $('#fast_check').val('1');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
-            $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val());
+            $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val().split('/')[0]);
+            $('#form_group_package_type').val($('#manualReg select.grouptypeselect').val().split('/')[1]);
         }
         check_dropdown_selected();
     });
@@ -1351,7 +1353,9 @@ $(document).ready(function(){
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
-        $('#form_member_groupid').val($(this).val());
+        $('#form_member_groupid').val($(this).val().split('/')[0]);
+        $('#form_group_package_type').val($(this).val().split('/')[1]);
+
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
@@ -1588,7 +1592,7 @@ function float_btn_managemember(option){
         }
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet();
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_page_addmember.css('display','block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
@@ -1772,8 +1776,8 @@ function pc_add_member(option){
                                             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())
                                             });
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
+
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         /*
         initialize_add_member_sheet();
@@ -1814,7 +1818,7 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
@@ -1856,7 +1860,7 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
@@ -1894,7 +1898,7 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
 
@@ -2169,12 +2173,21 @@ function grouptype_dropdown_set(grouplistJSON){
     var optionsToJoin = ['<option value="">1:1 레슨</option>'];
     // var optionsToJoin = [''];
     // $('#form_member_groupid').val(grouplistJSON.group_id[0]);
+    // $('#form_group_package_type').val('group');
     for(var i=0; i<len; i++){
-        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.group_name[i]+'</option>');
+        optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'/group">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.group_name[i]+'</option>');
     }
     $('.grouptypeselect').html(optionsToJoin.join(''));
 }
 
+function package_type_dropdown_set(packagelistJSON){
+    var len = packagelistJSON.package_id.length;
+    var optionsToJoin = [''];
+    for(var i=0; i<len; i++){
+        optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">[패키지] '+packagelistJSON.package_name[i]+'</option>');
+    }
+    $('.grouptypeselect').append(optionsToJoin.join(''));
+}
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
 function DataFormatting(jsondata){

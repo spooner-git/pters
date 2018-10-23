@@ -450,6 +450,11 @@ def func_add_billing_logic(custom_data, payment_result):
         if payment_info_check > 0:
             error = '이미 등록된 결제 정보입니다.'
         if custom_data['payment_type_cd'] == 'PERIOD':
+            billing_product_data = BillingInfoTb.objects.filter(member_id=custom_data['user_id'],
+                                                                product_tb_id=custom_data['product_id'],
+                                                                use=USE)
+            if len(billing_product_data) > 0:
+                billing_product_data.update(use=UN_USE)
             billing_info_check = BillingInfoTb.objects.filter(customer_uid=customer_uid).count()
             if billing_info_check > 0:
                 error = '이미 등록된 결제 정보입니다.'
