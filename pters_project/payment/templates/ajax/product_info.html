@@ -1,7 +1,8 @@
 {
 
+{% load background_data %}
       "product_name" :
-      ["{{ product_info.name }}",
+      ["{{ product_info.name }}"],
       "product_contents" :
       ["{{ product_info.contents }}"],
 
@@ -18,9 +19,9 @@
       "product_price_name" :
       [{% for product_price_info in product_price_data %}"{{ product_price_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "product_price_price" :
-      [{% for product_price_info in product_price_data %}"{{ product_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.price|multiply:1.1 }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "product_price_sale_price" :
-      [{% for product_price_info in product_price_data %}"{{ product_price_info.sale_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.sale_price|multiply:1.1 }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "product_price_period_month" :
       [{% for product_price_info in product_price_data %}"{{ product_price_info.period_month }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "product_price_type_cd" :

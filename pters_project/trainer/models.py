@@ -161,15 +161,41 @@ class GroupTb(TimeStampedModel):
         return state_cd_name
 
 
+class PackageTb(TimeStampedModel):
+    package_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
+    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
+    note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PACKAGE_TB'
+
+
 class GroupLectureTb(TimeStampedModel):
     group_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, blank=True, null=True)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, blank=True, null=True)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'GROUP_LECTURE_TB'
+
+
+class PackageGroupTb(TimeStampedModel):
+    package_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
+    group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PACKAGE_GROUP_TB'
 
 
 class BackgroundImgTb(TimeStampedModel):
