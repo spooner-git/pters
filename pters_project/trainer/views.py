@@ -2734,7 +2734,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).exclude(group_type_cd='ONE_TO_ONE').order_by('-group_type_cd')
+                                                       ).order_by('-group_type_cd')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE).order_by('group_type_cd')
         # for group_info in group_data:
         #     member_data = []
@@ -2793,7 +2793,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).exclude(group_type_cd='ONE_TO_ONE').order_by('-group_type_cd')
+                                                       ).order_by('-group_type_cd')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
         # for group_info in group_data:
         #     member_data = []

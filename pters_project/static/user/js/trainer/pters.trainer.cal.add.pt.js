@@ -1933,8 +1933,10 @@ function set_group_dropdown_list(jsondata){
 
     if(memberSize>0){
         for(var i=0; i<memberSize; i++){
-            member_array_mobile.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+ '" data-grouptypecd="'+jsondata.group_type_cd[i] +'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">['+jsondata.group_type_cd_nm[i]+'] '+jsondata.group_name[i]+'</a></li>');
-            member_array_pc.push('<li><a  data-grouptype="group" data-grouptypecd_nm="'+jsondata.group_type_cd_nm[i]+'" data-groupmembernum="'+jsondata.group_member_num[i]+'" data-membernum="'+jsondata.member_num[i]+'" data-groupid="'+jsondata.group_id[i]+'">['+jsondata.group_type_cd_nm[i]+'] '+jsondata.group_name[i]+'</a></li>');
+            if(jsondata.group_type_cd[i]!='ONE_TO_ONE') {
+                member_array_mobile.push('<li><a  data-grouptype="group" data-grouptypecd_nm="' + jsondata.group_type_cd_nm[i] + '" data-grouptypecd="' + jsondata.group_type_cd[i] + '" data-groupmembernum="' + jsondata.group_member_num[i] + '" data-membernum="' + jsondata.member_num[i] + '" data-groupid="' + jsondata.group_id[i] + '">[' + jsondata.group_type_cd_nm[i] + '] ' + jsondata.group_name[i] + '</a></li>');
+                member_array_pc.push('<li><a  data-grouptype="group" data-grouptypecd_nm="' + jsondata.group_type_cd_nm[i] + '" data-groupmembernum="' + jsondata.group_member_num[i] + '" data-membernum="' + jsondata.member_num[i] + '" data-groupid="' + jsondata.group_id[i] + '">[' + jsondata.group_type_cd_nm[i] + '] ' + jsondata.group_name[i] + '</a></li>');
+            }
         }
     }else if(memberSize == 0){
         //member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 그룹이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';

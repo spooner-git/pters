@@ -391,10 +391,17 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
 
                 group_info = None
                 group_check = 0
-                try:
-                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
-                except ObjectDoesNotExist:
+                # try:
+                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
+                # except ObjectDoesNotExist:
+                #     group_check = 1
+                group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_tb_id,
+                                                           package_tb__isnull=True)
+                if len(group_data) > 0:
+                    group_info = group_data[0]
+                else:
                     group_check = 1
+
                 if group_check == 0:
                     lecture_info_data.group_name = group_info.group_tb.name
                     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
