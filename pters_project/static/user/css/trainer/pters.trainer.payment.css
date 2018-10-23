@@ -75,12 +75,28 @@ body{
 		}
 	}
 	
-
+.under_construction{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	background-color: black;
+	opacity: 0.8;
+	color:#ffffff;
+}
+	.under_construction span{
+		position: absolute;
+		transform: rotate(-35deg);
+		left: 24%;
+		top: 41%;
+		font-size: 25px;
+	}
 #product_list_wrap{
 	width: 100%;
 }
 	.product_wrap{
 		margin-bottom: 25px;
+		text-align: center;
 	}
 	.product{
 		position: relative;
@@ -147,10 +163,10 @@ body{
 			background-color: #151515;
 		}
 		.textstyle_standard{
-			color: #fe4e65;
+			color: #fe4e65 !important;
 		}
 		.textstyle_premium{
-			color: #fdb056;
+			color: #fdb056 !important;
 		}
 @media(min-width:730px){
 	.product{
@@ -184,6 +200,7 @@ body{
 		position: relative;
 		display: table-cell;
 		background-color: #151515;
+		color: #ffffff;
 		height: 180px;
 		border-left: 1px solid #353535;
 		border-right: 1px solid #353535;
@@ -218,6 +235,19 @@ body{
 	    height: 20px;
 	    background-color: #353535;
 	}
+	.ticket_comment1{
+		margin: 0;
+		margin-top: 20px;
+		padding-left: 30px;
+	}
+	.ticket_original_price{
+		font-size: 12px;
+		padding-left: 30px;
+	}
+	.ticket_new_price{
+		font-size: 17px;
+		padding-left: 30px;
+	}
 	.ticket_name_background{
 		position: absolute;
 		width: 100%;
@@ -245,6 +275,7 @@ body{
 	margin-top: 40px;
 	background-color: #353535;
 	padding-bottom: 10px;
+	text-align: left;
 }
 	.product_detail_upper{
 		/*background-color: #353535;*/
@@ -704,10 +735,18 @@ body{
 .fixfooter {
 	display: block;
 	position: relative;
-	background: #ffffff;
+	background: #282828;
+	border-color: #282828;
 }
 .bottomfooter3 span{
 	display: inline-block;
+	color: #ffffff;
+}
+.bottomfooter3 span.footercontent{
+	color: #cccccc;
+}
+.bottomfooter2{
+	color: #cccccc;
 }
 
 
@@ -790,6 +829,6 @@ body{
 		margin-top: 50px;
 	}
 	.bottomfooter3 span{
-		color: #282828;
+		color: #ffffff;
 	}
 }

@@ -188,11 +188,14 @@
                 <!--상품-->
 
                  <!--상품-->
-                <div class="product productstyle_premium" data-product-id="8">
+                <div class="product productstyle_premium product_disable" data-product-id="8">
+                    <div class="under_construction">
+                        <span>서비스 준비중</span>
+                    </div>
                     <p class="product_name_tag">스탠다드+지점관리</p>
                     <p class="product_name textstyle_premium">프리미엄</p>
                     <p class="product_price_tag">정기 결제 시</p>
-                    <p class="product_price">매월 19,900원</p>
+                    <p class="product_price">준비중</p>
                     <p class="product_name_background textstyle_premium">PREMIUM</p>
                 </div>
                 <!--상품-->
@@ -208,51 +211,45 @@
 
                         <div id="my_status_auth" class="my_auth_inner_block">
                             <div class="my_auth_tb">
-                                <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">오늘 기준 전/후 1주 등록,취소</div>
+                                <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">매일 오늘기준 전/후 2년</div>
                             </div>
                             <div class="my_auth_tb">
-                                <div class="my_auth_tbc1">회원</div><div class="my_auth_tbc2">최대 20명</div>
+                                <div class="my_auth_tbc1">회원</div><div class="my_auth_tbc2">제한 없음</div>
                             </div>
                             <div class="my_auth_tb">
-                                <div class="my_auth_tbc1">그룹/클래스</div><div class="my_auth_tbc2">최대 10개씩</div>
+                                <div class="my_auth_tbc1">그룹/클래스</div><div class="my_auth_tbc2">제한 없음</div>
                             </div>
                             <div class="my_auth_tb">
-                                <div class="my_auth_tbc1">통계</div><div class="my_auth_tbc2">한달씩만 조회 가능</div>
+                                <div class="my_auth_tbc1">통계</div><div class="my_auth_tbc2">제한 없음</div>
                             </div>
                             <div class="my_auth_tb">
-                                <div class="my_auth_tbc1">프로그램</div><div class="my_auth_tbc2">최대 2개</div>
+                                <div class="my_auth_tbc1">프로그램</div><div class="my_auth_tbc2">제한 없음</div>
                             </div>
                             <div class="my_auth_tb">
                                 <div class="my_auth_tbc1">설정</div><div class="my_auth_tbc2">제한 없음</div>
                             </div>
                             <div class="my_auth_tb">
-                                <div class="my_auth_tbc1">광고</div><div class="my_auth_tbc2">서비스 내 노출</div>
+                                <div class="my_auth_tbc1">광고</div><div class="my_auth_tbc2">미노출</div>
                             </div>
                         </div>
                     </div>
                     <p style="color:#ffffff;text-align: center;margin-top:20px;margin-bottom:20px;">현재 정기결제 할인 혜택을 제공하고 있습니다.</p>
 
-                    <div class="ticket_wrap pay_product_function">
-                        <div class="ticket_left">
+                    <div class="ticket_wrap">
+                        <div class="ticket_left pay_product_function">
                             <p class="ticket_comment1"><span class="">1개월</span> 정기 결제시</p>
                             <p class="ticket_original_price">24,200원</p>
                             <p class="ticket_new_price">매월 19,900원</p>
                             <p class="ticket_name_background">MONTH<br>PREMIUM</p>
                         </div>
-                        <div class="ticket_right">
+                        <div class="ticket_right pay_product_function ticket_disable">
                             
                         </div>
                     </div>
 
                 </div>
             </div>
-
-
-
         </div>
-
-
-
     </div>
 
 
@@ -372,46 +369,48 @@
         });
 
         $(document).on('click', '.product', function(e){
-            e.stopPropagation();
-            var product_id = $(this).attr("data-product-id");
-            get_product_detail_from_server(product_id);
+            if(!$(this).hasClass("product_disable")){
+                e.stopPropagation();
+                var product_id = $(this).attr("data-product-id");
+                get_product_detail_from_server(product_id);
 
-            var this_index= $(this).index();
-            var triangle_loc;
-            if(this_index == 0 ){
-                triangle_loc = "22%";
-            }
-            else if(this_index == 1){
-                triangle_loc = "72%";
-            }
-            var product_detail_window = $(this).siblings("div.product_detail");
-            product_detail_window.css({"display":"block"}).attr("data-product-id", product_id);
-            product_detail_window.find(".product_detail_triangle").css({"left":triangle_loc});
-
-            var classlist = product_detail_window.find(".product_to_buy").attr("class").split(" ");
-            for(var i=0; i<classlist.length; i++){
-                if(classlist[i].match("textstyle_")){
-                    product_detail_window.find(".product_to_buy").removeClass(classlist[i]);
+                var this_index= $(this).index();
+                var triangle_loc;
+                if(this_index == 0 ){
+                    triangle_loc = "22%";
                 }
+                else if(this_index == 1){
+                    triangle_loc = "72%";
+                }
+                var product_detail_window = $(this).siblings("div.product_detail");
+                product_detail_window.css({"display":"block"}).attr("data-product-id", product_id);
+                product_detail_window.find(".product_detail_triangle").css({"left":triangle_loc});
+
+                var classlist = product_detail_window.find(".product_to_buy").attr("class").split(" ");
+                for(var i=0; i<classlist.length; i++){
+                    if(classlist[i].match("textstyle_")){
+                        product_detail_window.find(".product_to_buy").removeClass(classlist[i]);
+                    }
+                }
+
+                product_detail_window.find(".product_to_buy").text($(this).find(".product_name").text()).addClass("textstyle_"+$(this).find(".product_name_background").text().toLowerCase());
+                $('.product_selected').removeClass("product_selected");
+                $(this).addClass("product_selected");
             }
-
-            product_detail_window.find(".product_to_buy").text($(this).find(".product_name").text()).addClass("textstyle_"+$(this).find(".product_name_background").text().toLowerCase());
-            $('.product_selected').removeClass("product_selected");
-            $(this).addClass("product_selected");
-
         });
 
         $('.pay_product_function').click(function(e){
-            e.stopPropagation();
-            e.preventDefault();
+            if(!$(this).hasClass("ticket_disable")){
+                e.stopPropagation();
+                e.preventDefault();
 
-            if(platform_check == "mobile_browser"){
-                alert("스마트폰 브라우저로 접속하신 경우\n시크릿모드(개인정보보호 모드)로 접속시 결제가 정상적으로 진행되지 않습니다.\n결제전 다시한번 모드를 확인후 진행해주세요.");
+                if(platform_check == "mobile_browser"){
+                    alert("스마트폰 브라우저로 접속하신 경우\n시크릿모드(개인정보보호 모드)로 접속시 결제가 정상적으로 진행되지 않습니다.\n결제전 다시한번 모드를 확인후 진행해주세요.");
+                }
+
+                purchase_popup_show($(this).attr('data-product-name'), $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
+                    $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
             }
-
-            purchase_popup_show($(this).attr('data-product-name'), $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
-                $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
-
         });
 
         $('#pay_basic_function_monthly').click(function(e){
@@ -775,6 +774,7 @@
                 success:function(data){
                     var jsondata = JSON.parse(data);
                     console.log(jsondata);
+                    fill_product_detail(jsondata, product_id);
                 },
 
                 complete:function(){
@@ -788,24 +788,54 @@
         }
 
         function fill_product_detail(jsondata, product_id){
+            var product_color_class_find = $(`div.product_detail[data-product-id="${product_id}"]`).find(".product_to_buy").attr("class").split(" ");
+            var product_color;
+            for(var i=0; i<product_color_class_find.length; i++){
+                if(product_color_class_find[i].match("textstyle_")){
+                    product_color = product_color_class_find[i];
+                }
+            }
+
             var $left_ticket = $(`div.product_detail[data-product-id="${product_id}"]`).find("div.ticket_left");
             var $right_ticket = $(`div.product_detail[data-product-id="${product_id}"]`).find("div.ticket_right");
 
-            var $left_ticket_commnet = $left_ticket.find("p.ticket_comment1");
+            var $left_ticket_comment = $left_ticket.find("p.ticket_comment1");
             var $left_ticket_ori_price = $left_ticket.find("p.ticket_original_price");
             var $left_ticket_new_price = $left_ticket.find("p.ticket_new_price");
             var $left_ticket_name_bg = $left_ticket.find("p.ticket_name_background");
 
-            var $right_ticket_commnet = $right_ticket.find("p.ticket_comment1");
+            var $right_ticket_comment = $right_ticket.find("p.ticket_comment1");
             var $right_ticket_ori_price = $right_ticket.find("p.ticket_original_price");
             var $right_ticket_new_price = $right_ticket.find("p.ticket_new_price");
             var $right_ticket_name_bg = $right_ticket.find("p.ticket_name_background");
 
-            
+            find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
+
+            $left_ticket.attr({"data-product-name":jsondata.product_name,
+                               "data-payment-type":jsondata.product_price_type_cd,
+                               "data-product-price":jsondata.product_price_sale_price,
+                               "data-product-contents":jsondata.product_contents,
+                               "data-product-id":product_id,
+                               "data-period-month":jsondata.product_price_period_month,});
+            $left_ticket_comment.html(`<span class="${product_color}">${jsondata.product_price_period_month}개월</span> 정기 결제시`);
+            $left_ticket_ori_price.text(`${numberWithCommas(jsondata.product_price_price)}원`).css({"text-decoration":"line-through"});
+            $left_ticket_new_price.text(`매월 ${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
+            $left_ticket_name_bg.addClass(product_color);
 
         }
 
 
+        function find_class_and_delete_it(parent ,whose, targetClass_text){
+            var $whose = $(whose);
+            var classlist = $whose.attr("class").split(" ");
+            for(var i=0; i<classlist.length; i++){
+                if(classlist[i].match(targetClass_text)){
+                    $(parent).find('.'+classlist[i]).removeClass(classlist[i]);
+                }
+            }
+        }
+
+        $('div.bottomfooter2 > span > img').attr("src","/static/user/res/spooner.png");
 
     </script>
 
