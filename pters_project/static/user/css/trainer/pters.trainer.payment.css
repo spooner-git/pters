@@ -28,91 +28,115 @@ body{
 		color: #fe4e65 !important;
 	}
 #my_auth{
+	display: table;
 	color: #ffffff;
-	border-top: 0.5px solid #ffffff;
-	border-bottom: 0.5px solid #ffffff;
-	padding: 15px 0 15px 0;
+	background-color: #353535;
+	padding: 15px 5px 10px 20px;
+	margin: 0 auto;
 	margin-top: 15px;
+	width: 95%;
 }
 	.my_auth_tb{
 		display: table;
 		table-layout: fixed;
 		width: 100%;
-		margin-top: 8px;
+		margin-top: 5px;
 		font-size: 14px;
 	}
 		.my_auth_tbc1{
 			display: table-cell;
 			width: 30%;
+			font-weight: 500;
 		}
 		.my_auth_tbc2{
 			display: table-cell;
 			width: 70%;
 			font-weight: 300;
 		}
+	.my_auth_inner_block{
+		display: table-cell;
+		vertical-align: middle;
+	}
+	#my_status{
+		width: 40%;
+	}
+	#my_status_auth{
+		width: 60%;
+		border-top: 0.5px solid #ffffff;
+		border-bottom: 0.5px solid #ffffff;
+		padding: 10px 10px 15px 15px;
+	}
+	
+
 #product_list_wrap{
 	width: 100%;
 }
 	.product{
+		position: relative;
 		display: inline-block;
-		width: 100%;
-		max-width: 420px;
-		color: #ffffff;
-		padding: 15px 0 15px 15px;
-		border: 0.5px solid #ffffff;
-		border-radius: 10px;
-		margin-bottom: 20px;
-		margin-right: 20px;
+		text-align: center;
+		height: 220px;
+		min-width: 290px;
+		margin-left: 15px;
+		margin-right: 15px;
+		border: 1px solid transparent;
 		cursor: pointer;
 	}
-	.product:hover, .product:active{
-		border-color: #fe4e65;
-	}
-		.product_tb{
-			display: table;
-			width: 100%;
+		.product_name_tag{
+			color:#ffffff;
+			font-weight: 300;
+			font-size: 15px;
+			margin: 0;
+			margin-top: 23px;
 		}
-			.product_tbc1{
-				display: table-cell;
-				width: 55%;
+		.product_name{
+			color:#fe4e65;
+			font-weight: 700;
+			font-size: 28px;
+			margin: 0;
+		}
+		.product_price_tag{
+			color:#ffffff;
+			font-weight: 300;
+			font-size: 14px;
+			margin: 0;
+			margin-top: 20px;
+		}
+		.product_price{
+			color:#ffffff;
+			font-weight: 500;
+			font-size: 24px;
+			margin-bottom: 20px;		
+		}
+		.product_name_background{
+			position: absolute;
+			width: 100%;
+			text-align: center;
+			bottom: -14px;
+			margin:0;
+			font-size: 45px;
+			font-weight: 1000;
+			color:#282828;
+			opacity: 0.2;
+		}
+		.productstyle_standard{
+			background-color: #151515;
+		}
+			.productstyle_standard:hover{
+				border: 1px solid #fe4e65;
 			}
-				.product_tbc1 > p{
-					word-break: break-all;
-				}
-				.product_tbc1 > p:nth-of-type(1){
-					font-size: 22px;
-					font-weight: 500;
-				}
-				.product_tbc1 > p:nth-of-type(2){
-					font-size: 14px;
-					font-weight: 300;
-				}
-				.product_tbc1 > p:nth-of-type(3){
-					font-size: 18px;
-					font-weight: 500;
-				}
-			.product_tbc2{
-				/*display: table-cell;*/
-				/*width: 45%;*/
-				color: #ffffff;
+		.productstyle_premium{
+			background-color: #353535
+		}
+			.productstyle_premium:hover{
+				border: 1px solid #fdb056;
 			}
-				.product_tbc2_tag{
-					background-color: #ffffff;
-					color: #fe4e65;
-					font-size: 18px;
-					font-weight: 500;
-					padding-left: 20px;
-					margin-bottom: 10px;
-				}
-				.original_price{
-					text-decoration: line-through;
-				}
-				.price_wrap > p{
-					padding-left: 20px;
-					margin: 0;
-					font-size: 16px;
-				}
-/*새 디자인*/
+		.textstyle_standard{
+			color: #fe4e65;
+		}
+		.textstyle_premium{
+			color: #fdb056;
+		}
 
 
 
@@ -141,7 +165,7 @@ body{
 	margin-top: 25px;
 	margin-bottom: 70px;
 	width: 88%;
-	max-width: 900px;
+	max-width: 650px;
 }
 .payment_function_wrap{
 	margin-bottom: 50px;
@@ -572,7 +596,7 @@ body{
 	}
 
 	#payment_contents_wrap{
-		margin-top: 50px;
+		margin-top: 40px;
 	}
 
 	.function_label{
