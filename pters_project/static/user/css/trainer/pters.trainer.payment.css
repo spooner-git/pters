@@ -216,12 +216,82 @@ body{
 }
 	.ticket_left, .ticket_right{
 		position: relative;
+		display: block;
+		background-color: #151515;
+		color: #ffffff;
+		height: 100px;
+		border-top: 1px solid #353535;
+		border-bottom: 1px solid #353535;
+		cursor: pointer;
+		padding-left: 30px;
+	}
+	.ticket_left:hover, .ticket_right:hover{
+		background-color: #282828;
+	}
+	.ticket_left{
+		width: 100%;
+	}
+	.ticket_right{
+		width: 100%;
+	}
+	.ticket_right:after{
+		content: '';
+	    position: absolute;
+	    top: -21px;
+	    left: 0;
+	    border-radius: 0 20px 20px 0;
+	    width: 20px;
+	    height: 40px;
+	    background-color: #353535;
+	}
+	.ticket_right:before{
+		content: '';
+	    position: absolute;
+	    top: -21px;
+	    right: 0;
+	    border-radius: 20px 0px 0px 20px;
+	    width: 20px;
+	    height: 40px;
+	    background-color: #353535;
+	}
+	.ticket_comment1{
+		margin: 0;
+		margin-top: 20px;
+		padding-left: 10px;
+	}
+	.ticket_original_price{
+		display: inline-block;
+		font-size: 14px;
+		padding-left: 10px;
+	}
+	.ticket_new_price{
+		display: inline-block;
+		font-size: 19px;
+		padding-left: 10px;
+	}
+	.ticket_name_background{
+		display: none;
+		position: absolute;
+		width: 100%;
+		text-align: left;
+		bottom: 0px;
+		margin:0;
+		font-size: 27px;
+		font-weight: 1000;
+		color:#282828;
+		opacity: 0.2;
+		line-height: 21px;
+	}
+@media(min-width:730px){
+	.ticket_left, .ticket_right{
+		position: relative;
 		display: table-cell;
 		background-color: #151515;
 		color: #ffffff;
 		height: 180px;
 		border-left: 1px solid #353535;
 		border-right: 1px solid #353535;
+		padding-left: 0px;
 		cursor: pointer;
 	}
 	.ticket_left:hover, .ticket_right:hover{
@@ -253,33 +323,11 @@ body{
 	    height: 20px;
 	    background-color: #353535;
 	}
-	.ticket_comment1{
-		margin: 0;
-		margin-top: 20px;
-		padding-left: 10px;
-	}
-	.ticket_original_price{
-		font-size: 12px;
-		padding-left: 10px;
-	}
-	.ticket_new_price{
-		font-size: 17px;
-		padding-left: 10px;
-	}
+
+
+
 	.ticket_name_background{
-		position: absolute;
-		width: 100%;
-		text-align: left;
-		bottom: 0px;
-		margin:0;
-		font-size: 27px;
-		font-weight: 1000;
-		color:#282828;
-		opacity: 0.2;
-		line-height: 21px;
-	}
-@media(min-width:730px){
-	.ticket_name_background{
+		display: block;
 		font-size: 45px;
 		bottom: -0px;
 		line-height: 38px;
@@ -288,12 +336,17 @@ body{
 		padding-left: 30px;
 	}
 	.ticket_original_price{
+		display: block;
+		font-size: 12px;
 		padding-left: 30px;
 	}
 	.ticket_new_price{
+		display: block;
+		font-size: 17px;
 		padding-left: 30px;
 	}
 }
+
 
 .product_detail{
 	display: none;
