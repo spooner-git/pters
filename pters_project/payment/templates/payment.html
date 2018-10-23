@@ -496,8 +496,8 @@
             $('#purchase_product').find('.purchase_popup_innercontent').text(product);
             $('#purchase_functions').find('.purchase_popup_innercontent').html(functions_name);
             $('#purchase_type').find('.purchase_popup_innercontent').text(type_name);
-            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(parseInt(price*1.1))+'원 (부가세 포함)');
-            $('#price_preview').text(numberWithCommas(parseInt(price*1.1))+'원 (부가세 포함)');
+            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(parseInt(price))+'원 (부가세 포함)');
+            $('#price_preview').text(numberWithCommas(parseInt(price))+'원 (부가세 포함)');
         }
         function numberWithCommas(x) { //천단위 콤마 찍기
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -727,7 +727,7 @@
                 var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
                 var payment_type_cd = $('#purchase_popup').attr('data-type');
                 var product_id = $('#purchase_popup').attr('data-product-id');
-                var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1);
+                var price = parseInt(Number($('#purchase_popup').attr('data-price')));
                 var period_month = $('#purchase_popup').attr('data-period-month');
                 check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
                 purchase_popup_close("do_not_show_background");
