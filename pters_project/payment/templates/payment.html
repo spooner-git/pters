@@ -178,7 +178,7 @@
 
             <div class="product_wrap">
                 <!--상품-->
-                <div class="product productstyle_standard" gidata-product-id="7">
+                <div class="product productstyle_standard" data-product-id="7">
                     <p class="product_name_tag">무제한 이용권</p>
                     <p class="product_name textstyle_standard">스탠다드</p>
                     <p class="product_price_tag">정기 결제 시</p>
@@ -205,6 +205,7 @@
                             <p><span class="my_status_text product_to_buy">${상품명}</span>상품으로<br>업그레이드 됩니다.</p>
                             <p style="font-size: 13px;">다음 혜택을 제공해드립니다.</p>
                         </div>
+
                         <div id="my_status_auth" class="my_auth_inner_block">
                             <div class="my_auth_tb">
                                 <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">오늘 기준 전/후 1주 등록,취소</div>
@@ -229,6 +230,20 @@
                             </div>
                         </div>
                     </div>
+                    <p style="color:#ffffff;text-align: center;margin-top:20px;margin-bottom:20px;">현재 정기결제 할인 혜택을 제공하고 있습니다.</p>
+
+                    <div class="ticket_wrap pay_product_function">
+                        <div class="ticket_left">
+                            <p class="ticket_comment1"><span class="">1개월</span> 정기 결제시</p>
+                            <p class="ticket_original_price">24,200원</p>
+                            <p class="ticket_new_price">매월 19,900원</p>
+                            <p class="ticket_name_background">MONTH<br>PREMIUM</p>
+                        </div>
+                        <div class="ticket_right">
+                            
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -358,6 +373,9 @@
 
         $(document).on('click', '.product', function(e){
             e.stopPropagation();
+            var product_id = $(this).attr("data-product-id");
+            get_product_detail_from_server(product_id);
+
             var this_index= $(this).index();
             var triangle_loc;
             if(this_index == 0 ){
@@ -367,13 +385,13 @@
                 triangle_loc = "72%";
             }
             var product_detail_window = $(this).siblings("div.product_detail");
-            product_detail_window.css({"display":"block"});
+            product_detail_window.css({"display":"block"}).attr("data-product-id", product_id);
             product_detail_window.find(".product_detail_triangle").css({"left":triangle_loc});
 
             var classlist = product_detail_window.find(".product_to_buy").attr("class").split(" ");
             for(var i=0; i<classlist.length; i++){
                 if(classlist[i].match("textstyle_")){
-                    product_detail_window.find(".product_to_buy").removeClass(classlist[i])
+                    product_detail_window.find(".product_to_buy").removeClass(classlist[i]);
                 }
             }
 
@@ -741,6 +759,50 @@
                                         'data-product-id':'',
                                         'data-price':'',
                                         'data-period-month':''})
+        }
+
+        function get_product_detail_from_server(product_id){
+                $.ajax({
+                url: '/payment/get_product_info/',
+                type: 'GET',
+                dataType : 'html',
+                data:{"product_id": product_id},
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata);
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            });
+        }
+
+        function fill_product_detail(jsondata, product_id){
+            var $left_ticket = $(`div.product_detail[data-product-id="${product_id}"]`).find("div.ticket_left");
+            var $right_ticket = $(`div.product_detail[data-product-id="${product_id}"]`).find("div.ticket_right");
+
+            var $left_ticket_commnet = $left_ticket.find("p.ticket_comment1");
+            var $left_ticket_ori_price = $left_ticket.find("p.ticket_original_price");
+            var $left_ticket_new_price = $left_ticket.find("p.ticket_new_price");
+            var $left_ticket_name_bg = $left_ticket.find("p.ticket_name_background");
+
+            var $right_ticket_commnet = $right_ticket.find("p.ticket_comment1");
+            var $right_ticket_ori_price = $right_ticket.find("p.ticket_original_price");
+            var $right_ticket_new_price = $right_ticket.find("p.ticket_new_price");
+            var $right_ticket_name_bg = $right_ticket.find("p.ticket_name_background");
+
+            
+
         }
 
 
