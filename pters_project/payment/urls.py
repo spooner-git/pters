@@ -70,6 +70,9 @@ urlpatterns = [
     # 결제 정보 리스트 조회
     url(r'^get_payment_list/$', views.GetPaymentListView.as_view(), name='get_payment_list'),
 
+    # 상품 정보 가져오기
+    url(r'^get_product_info/$', views.GetProductInfoView.as_view(), name='get_product_info'),
+
 
     # 현재 미사용 ########################################################################################################
     url(r'^delete_billing_info/$', views.delete_billing_info_logic, name='delete_billing_info'),

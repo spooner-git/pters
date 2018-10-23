@@ -633,6 +633,44 @@ class GetPaymentListView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
+class GetProductInfoView(LoginRequiredMixin, View):
+    template_name = 'ajax/product_info.html'
+
+    def get(self, request):
+        context = {}
+        product_id = request.GET.get('product_id', '')
+
+        product_info = None
+        product_function_data = []
+        try:
+            product_info = ProductTb.objects.get(product_id=product_id, use=USE)
+        except ObjectDoesNotExist:
+            product_info = None
+
+        product_function_auth_data = ProductFunctionAuthTb.objects.select_related(
+            'function_auth_tb').filter(product_tb_id=product_id, use=USE).order_by('function_auth_tb_id',
+                                                                                   'auth_type_cd')
+        temp_function_auth_tb_id = ''
+
+        for product_function_auth_info in product_function_auth_data:
+            if temp_function_auth_tb_id == '':
+                temp_function_auth_tb_id = product_function_auth_info.function_auth_tb_id
+                product_function_data.append(product_function_auth_info.function_auth_tb.function_auth_type_name)
+            else:
+                if temp_function_auth_tb_id != product_function_auth_info.function_auth_tb_id:
+                    temp_function_auth_tb_id = product_function_auth_info.function_auth_tb_id
+                    product_function_data.append(product_function_auth_info.function_auth_tb.function_auth_type_name)
+
+        product_price_data = ProductPriceTb.objects.filter(product_tb_id=product_id, use=USE).order_by('order')
+
+        context['product_info'] = product_info
+        context['product_function_data'] = product_function_data
+        context['product_function_auth_data'] = product_function_auth_data
+        context['product_price_data'] = product_price_data
+
+        return render(request, self.template_name, context)
+
+
 class PaymentCompleteView(LoginRequiredMixin, TemplateView):
     template_name = 'payment_complete.html'
 

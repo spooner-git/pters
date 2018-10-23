@@ -103,6 +103,13 @@ urlpatterns = [
     # 그룹 재개 상태 변경
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
 
+    # 패키지 기능 #########################################################################################################
+    # 진행중 패키지 list 조회
+    url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
+    # 완료된 패키지 list 조회
+    url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
+
+
     # 수업 관리 기능 ######################################################################################################
     # 진행중 회원/그룹/클래스 list 조회
     url(r'^get_member_group_class_ing_list/$', views.GetMemberGroupClassIngListViewAjax.as_view(),

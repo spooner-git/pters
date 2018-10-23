@@ -1589,6 +1589,7 @@ function float_btn_managemember(option){
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet();
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_page_addmember.css('display','block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
@@ -1772,6 +1773,7 @@ function pc_add_member(option){
                                             });
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         /*
         initialize_add_member_sheet();
@@ -1813,6 +1815,7 @@ function pc_add_member(option){
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
@@ -1854,6 +1857,7 @@ function pc_add_member(option){
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
     }else if(option == 3){ //모바일 회원정보창에서 연장추가 버튼 누름
 
@@ -1891,6 +1895,7 @@ function pc_add_member(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
         get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
 
     }else if(option == 'group'){
@@ -2162,6 +2167,8 @@ function birth_dropdown_set(){
 function grouptype_dropdown_set(grouplistJSON){
     var len = grouplistJSON.group_id.length;
     var optionsToJoin = ['<option value="">1:1 레슨</option>'];
+    // var optionsToJoin = [''];
+    // $('#form_member_groupid').val(grouplistJSON.group_id[0]);
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.group_name[i]+'</option>');
     }

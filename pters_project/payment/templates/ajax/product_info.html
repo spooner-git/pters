@@ -1,0 +1,32 @@
+{
+
+      "product_name" :
+      ["{{ product_info.name }}",
+      "product_contents" :
+      ["{{ product_info.contents }}"],
+
+
+
+      "product_function_name" :
+      [{% for product_function_info in product_function_data %}"{{ product_function_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_function_type" :
+      [{% for product_function_auth_info in product_function_auth_data %}"{{ product_function_auth_info.auth_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_function_counts" :
+      [{% for product_function_auth_info in product_function_auth_data %}"{{ product_function_auth_info.counts }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+
+      "product_price_name" :
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_price_price" :
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_price_sale_price" :
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.sale_price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_price_period_month" :
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.period_month }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "product_price_type_cd" :
+      [{% for product_price_info in product_price_data %}"{{ product_price_info.payment_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+
+    "messageArray" :
+    [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
+}

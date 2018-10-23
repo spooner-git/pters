@@ -727,6 +727,61 @@ function get_group_ing_list(use, callback){
         }
     });
 }
+
+//서버로부터 패키지 목록 가져오기
+function get_package_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_package_ing_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //group_class_ListHtml('current',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
 //서버로부터 그룹 목록 가져오기
 
 //서버로부터 그룹 목록 가져오기

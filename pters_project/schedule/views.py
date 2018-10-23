@@ -71,6 +71,7 @@ def add_schedule_logic(request):
     schedule_end_datetime = None
     lecture_id = ''
     member_info = None
+    group_info = None
     member_name = ''
     push_lecture_id = []
     push_title = []
@@ -106,6 +107,11 @@ def add_schedule_logic(request):
             except ObjectDoesNotExist:
                 error = '오류가 발생했습니다.'
 
+            # try:
+            #     group_info = GroupTb.objects.get(class_tb_id=class_id, group_type_cd='ONE_TO_ONE', use=USE)
+            # except ObjectDoesNotExist:
+            #     error = '오류가 발생했습니다.'
+
     if error is None:
         # 최초 날짜 값 셋팅
         # time_duration_temp = class_info.class_hour*int(schedule_time_duration)
@@ -133,6 +139,7 @@ def add_schedule_logic(request):
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
             lecture_id = func_get_lecture_id(class_id, member_id)
+            # lecture_id = func_get_group_lecture_id(group_info.group_id, member_id)
             if lecture_id is None or lecture_id == '':
                 error = '등록할 수 있는 일정이 없습니다.'
 

@@ -409,7 +409,6 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     # except ObjectDoesNotExist:
                     #     error = '그룹 정보를 불러오지 못했습니다.'
 
-                # print('lecture_list:' + str(lecture_info_data.lecture_tb_id) + ':' + str(lecture_info_data.lecture_tb.start_date))
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list

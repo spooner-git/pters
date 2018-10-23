@@ -1818,7 +1818,7 @@ def add_lecture_info_logic(request):
     # lecture_info = None
     input_contents = ''
     # username = name
-
+    print(str(group_id))
     if user_id is None or user_id == '':
         error = '오류가 발생했습니다.'
 
@@ -2734,7 +2734,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
+                                                       ).exclude(group_type_cd='ONE_TO_ONE').order_by('-group_type_cd')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE).order_by('group_type_cd')
         # for group_info in group_data:
         #     member_data = []
@@ -2793,7 +2793,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
+                                                       ).exclude(group_type_cd='ONE_TO_ONE').order_by('-group_type_cd')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
         # for group_info in group_data:
         #     member_data = []
@@ -3059,6 +3059,65 @@ def progress_group_info_logic(request):
         messages.error(request, error)
 
         return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetPackageIngListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, []),
+                                                       group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd')
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+
+        return context
+
+
+class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetPackageEndListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+
+        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
+        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
+                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+                                                       state_cd_nm=RawSQL(query_state_cd, []),
+                                                       group_member_num=RawSQL(query_group_member_num, [])
+                                                       ).order_by('-group_type_cd')
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+
+        return context
 
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
