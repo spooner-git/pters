@@ -47,22 +47,14 @@ from .models import MemberTb, PushInfoTb, SnsInfoTb
 logger = logging.getLogger(__name__)
 
 
-class IndexView(View):
+class IndexView(TemplateView):
     template_name = 'login.html'
 
-    # def get_context_data(self, **kwargs):
-    def get(self, request):
-        context = {}
-        # print(str(request.user))
-        logout(request)
-        # context = super(IndexView, self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        logout(self.request)
 
-        # acceptLang = self.request.META['HTTP_ACCEPT_LANGUAGE']
-        # firstLang = acceptLang.split(',')[0]
-        # if 'ko' in firstLang:
-        #    print('ko')
-
-        return render(request, self.template_name, context)
+        return context
 
 
 def login_trainer(request):
@@ -73,7 +65,7 @@ def login_trainer(request):
     social_login_type = request.POST.get('social_login_type', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
     social_login_id = request.POST.get('social_login_id', '')
-    social_accessToken = request.POST.get('social_accessToken', '')
+    social_access_token = request.POST.get('social_accessToken', '')
 
     next_page = request.POST.get('next_page')
     error = None
@@ -86,7 +78,7 @@ def login_trainer(request):
     request.session['social_login_check'] = social_login_check
     request.session['social_login_type'] = social_login_type
     request.session['social_login_id'] = social_login_id
-    request.session['social_accessToken'] = social_accessToken
+    request.session['social_accessToken'] = social_access_token
 
     if not error:
         # if password == 'kakao_login':

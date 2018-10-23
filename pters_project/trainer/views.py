@@ -3294,6 +3294,9 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
                                                       auth_cd='VIEW', mod_member_id=request.user.id, use=USE)
                     member_class_info.save()
+                    # one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
+                    #                                 group_type_cd='ONE_TO_ONE', state_cd='IP', member_num=1, use=USE)
+                    # one_to_one_group_info.save()
 
             except ValueError:
                 error = '등록 값에 문제가 있습니다.'
