@@ -151,7 +151,7 @@
             <a href="/"><img src="/static/user/res/PTERS_logo_pure.png"></a>
             <!-- <a href="/login"><span>LOGIN</span></a> -->
             <a href="/login/service_info/"><span>서비스 소개</span></a>
-            <a href="/login/service_price_info/"><span>가격</span></a>
+            <!-- <a href="/login/service_price_info/"><span>가격</span></a> -->
             <!-- <a href="/login/service_test_login/"><span>체험하기</span></a> -->
         </div>
     </nav>
@@ -183,7 +183,9 @@
 
                     <p class="explain_main_sublabel">1:1, 그룹, GX등 레슨 관리</p>
                     <p class="explain_main_sublabel">더 알고 싶다면?</p>
-                    <a href="/login/service_info/"><img id="go_to_service_explain" src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;"></a>
+                    <a href="/login/service_info/">
+                        <img id="go_to_service_explain" src="/static/user/res/login/arrow.png" style="width:35px;margin-top: 15px;cursor: pointer;" title="서비스 안내">
+                    </a>
                 </div>
             </div>
 
@@ -336,11 +338,11 @@
             }
         }
 
-        show_tooltip(bodywidth);
-        $(window).resize(function(){
-            bodywidth = window.innerWidth;
-            show_tooltip(bodywidth);
-        });
+        // show_tooltip(bodywidth);
+        // $(window).resize(function(){
+        //     bodywidth = window.innerWidth;
+        //     show_tooltip(bodywidth);
+        // });
         
         
 
