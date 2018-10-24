@@ -1074,7 +1074,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_work_ths_time_avail = ''
     lt_work_fri_time_avail = ''
     lt_work_sat_time_avail = ''
-    lt_res_05 = '14'
+    lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
     lt_res_member_time_duration = 1

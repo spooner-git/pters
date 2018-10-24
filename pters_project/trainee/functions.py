@@ -578,7 +578,7 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
         lt_res_02 = 0
         lt_res_03 = '0'
         lt_res_04 = '00:00-23:59'
-        lt_res_05 = 14
+        lt_res_05 = 7
         lt_res_cancel_time = -1
         lt_res_enable_time = -1
         lt_work_time_avail = ['', '', '', '', '', '', '']

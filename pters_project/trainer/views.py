@@ -4178,7 +4178,7 @@ def update_setting_reserve_logic(request):
     setting_member_cancel_time = request.POST.get('setting_member_cancel_time_prohibition', '60')
     setting_member_reserve_prohibition = request.POST.get('setting_member_reserve_prohibition',
                                                           MEMBER_RESERVE_PROHIBITION_ON)
-    setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '14')
+    setting_member_reserve_date_available = request.POST.get('setting_member_reserve_date_available', '7')
     # setting_member_cancel_time = request.POST.get('setting_member_cancel_time', '')
     setting_member_reserve_time_duration = request.POST.get('setting_member_reserve_time_duration', '1')
     setting_member_start_time = request.POST.get('setting_member_start_time', 'A-0')
@@ -4206,7 +4206,7 @@ def update_setting_reserve_logic(request):
         if setting_member_reserve_prohibition is None or setting_member_reserve_prohibition == '':
             setting_member_reserve_prohibition = MEMBER_RESERVE_PROHIBITION_ON
         if setting_member_reserve_date_available is None or setting_member_reserve_date_available == '':
-            setting_member_reserve_date_available = '14'
+            setting_member_reserve_date_available = '7'
         if setting_member_reserve_time_duration is None or setting_member_reserve_time_duration == '':
             setting_member_reserve_time_duration = '1'
         if setting_member_start_time is None or setting_member_start_time == '':
