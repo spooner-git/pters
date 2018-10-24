@@ -58,10 +58,10 @@
         </div>
 
         <div class="button_wrap">
-            <p style="font-size:12.5px;color:#fe4e65;margin-top: 10px;">
-                <img src="/static/user/res/stopmark.png" style="width: 15px;margin-bottom: 3px;">
-                탈퇴하신 아이디와 이메일은 재가입시 사용이 불가능합니다.
-            </p>
+{#            <p style="font-size:12.5px;color:#fe4e65;margin-top: 10px;">#}
+{#                <img src="/static/user/res/stopmark.png" style="width: 15px;margin-bottom: 3px;">#}
+{#                탈퇴하신 아이디와 이메일은 재가입시 사용이 불가능합니다.#}
+{#            </p>#}
             <button class="submitBtn bgwhite" onclick="goPage('back')">돌아가기</button>
             <button class="submitBtn" onclick="goPage('deleteaccount')">탈퇴하기</button>
         </div>
@@ -72,6 +72,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
+        if($('body').width()<600){
+            $('#page-base').css('display','none');
+            $('#page-base-modifystyle').css('display','block');
+            $('#uptext3').text('회원 탈퇴');
+            $('#uptext').text("회원 탈퇴");
+            $('#upbutton-modify').hide();
+        }
 
         function beforeSend(){
 {#            $('html').css("cursor","wait");#}
