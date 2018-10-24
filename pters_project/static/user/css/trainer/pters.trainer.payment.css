@@ -16,17 +16,17 @@ body{
 	margin: 30px;
 
 	border: solid #fe4e65;
-	border-width: 0 2px 2px 0;
+	border-width: 0 1px 1px 0;
 	display: inline-block;
 	padding: 6px;
 	margin-left: 10px;
-	margin-right: 15px;
-	margin-top: 15px;
+	margin-right: 25px;
+	margin-top: 40px;
 }
 	.big_arrow:after{
 		content: "";
 		border: solid #fe4e65;
-		border-width: 25px 0 0 2px;
+		border-width: 25px 0 0 1px;
 		position: absolute;
 		top: -10.5px;
 		left: 2px;
@@ -37,18 +37,20 @@ body{
 	transform: rotate(-45deg);
 	-webkit-transform:rotate(-45deg);
 }
-@media(min-width:450px){
+
+@media(min-width:730px){
 	.big_arrow{
 		margin-right: 30px;
-		margin-top: 30px;
-		padding: 12px;
+		margin-top: 70px;
+		padding: 8px;
 	}
 		.big_arrow:after{
-			border-width: 55px 0 0 2px;
-			top: -23px;
-			left: 4px;
+			border-width: 28px 0 0 1px;
+			top: -8px;
+			left: 6px;
 		}
 }
+
 
 /*새 디자인*/
 #page-base-addstyle{
@@ -78,7 +80,7 @@ body{
 	display: table;
 	color: #ffffff;
 	background-color: #353535;
-	padding: 15px 5px 10px 20px;
+	padding: 15px 25px 10px 25px;
 	margin: 0 auto;
 	margin-top: 15px;
 	width: 95%;
@@ -92,12 +94,12 @@ body{
 	}
 		.my_auth_tbc1{
 			display: table-cell;
-			width: 30%;
+			width: 35%;
 			font-weight: 500;
 		}
 		.my_auth_tbc2{
 			display: table-cell;
-			width: 70%;
+			width: 65%;
 			font-weight: 300;
 		}
 	.my_auth_inner_block{
@@ -192,8 +194,8 @@ body{
 			margin:0;
 			font-size: 27px;
 			font-weight: 1000;
-			color:#282828;
-			opacity: 0.2;
+			color:#ffffff;
+			opacity: 0.1;
 		}
 		.productstyle_standard{
 			background-color: #353535;
@@ -266,11 +268,11 @@ body{
 		display: block;
 		background-color: #151515;
 		color: #ffffff;
-		height: 100px;
+		height: 85px;
 		border-top: 1px solid #353535;
 		border-bottom: 1px solid #353535;
 		cursor: pointer;
-		padding-left: 30px;
+		padding-left: 5%;
 	}
 	.ticket_left:hover, .ticket_right:hover{
 		background-color: #282828;
@@ -325,10 +327,22 @@ body{
 		margin:0;
 		font-size: 27px;
 		font-weight: 1000;
-		color:#282828;
-		opacity: 0.2;
+		color:#ffffff;
+		opacity: 0.1;
 		line-height: 21px;
 	}
+@media(max-width:450px){
+	.ticket_original_price{
+		display: inline-block;
+		font-size: 12px;
+		padding-left: 10px;
+	}
+	.ticket_new_price{
+		display: inline-block;
+		font-size: 15px;
+		padding-left: 10px;
+	}
+}
 @media(min-width:730px){
 	.ticket_left, .ticket_right{
 		position: relative;
@@ -363,6 +377,8 @@ body{
 	.ticket_right:before{
 		content: '';
 	    position: absolute;
+	    top: unset;
+	    right: unset;
 	    bottom: 0;
 	    left: -21px;
 	    border-radius: 40px 40px 0 0;
@@ -409,8 +425,8 @@ body{
 		/*background-color: #353535;*/
 		display: table;
 		margin: 0 auto;
-		width: 95%;
-		padding: 15px 5px 10px 20px;
+		width: 100%;
+		padding: 15px 25px 10px 25px;
 		color: #ffffff;
 		
 	}
