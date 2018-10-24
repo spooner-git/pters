@@ -1131,13 +1131,14 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
+                member.contents = user.username+'/'+user.id
+                member.use = 0
+                member.save()
                 count = User.objects.filter(id=member_id).count()
                 user.id = 'out_member_'+count
                 user.email = ''
                 user.is_active = 0
                 user.save()
-                member.use = 0
-                member.save()
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)
 
