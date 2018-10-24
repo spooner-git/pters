@@ -494,6 +494,14 @@ class CheckSnsMemberInfoView(TemplateView):
             except ObjectDoesNotExist:
                 username = ''
 
+        if username == '':
+            try:
+                user_info = User.objects.get(username=user_email)
+                username = user_info.username
+                context['error'] = '2'
+            except ObjectDoesNotExist:
+                username = ''
+
         context['username'] = username
 
         return context
