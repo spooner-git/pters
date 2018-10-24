@@ -39,7 +39,8 @@ from login.models import MemberTb, LogTb, CommonCdTb
 # from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
-from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
+from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
+    PackageTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
@@ -1807,6 +1808,7 @@ def add_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     group_id = request.POST.get('group_id', '')
     setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+    group_package_type = request.POST.get('group_package_type', 'group')
     next_page = request.POST.get('next_page')
 
     error = None
@@ -1817,8 +1819,14 @@ def add_lecture_info_logic(request):
     input_price = 0
     # lecture_info = None
     input_contents = ''
+    package_id = ''
     # username = name
-    print(str(group_id))
+
+    if group_package_type == 'package':
+        package_id = group_id
+        group_id = ''
+        error = 'package test'
+
     if user_id is None or user_id == '':
         error = '오류가 발생했습니다.'
 
@@ -1885,6 +1893,7 @@ def add_lecture_info_logic(request):
                         error = '그룹 정원을 초과했습니다.'
 
     if error is None:
+
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
                                       class_id, group_id, input_counts, input_price,
                                       input_start_date, input_end_date, input_contents,
@@ -3069,23 +3078,26 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
         error = None
 
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, []),
-                                                       group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
+        package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
+                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd,
+                                                                                     [])).order_by('-package_id')
+        # query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
+        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
+        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
+        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
+        #
+        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
+        #                                     ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
+        #                                                state_cd_nm=RawSQL(query_state_cd, []),
+        #                                                group_member_num=RawSQL(query_group_member_num, [])
+        #                                                ).order_by('-group_type_cd')
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['group_data'] = group_data
+        context['package_data'] = package_data
 
         return context
 
@@ -3097,25 +3109,17 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         context = super(GetPackageEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-
-        query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-                                 "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
-                                            ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, []),
-                                                       group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
+        package_data = PackageTb.objects.filter(
+            class_tb_id=class_id,
+            use=USE).exclude(state_cd='IP').annotate(state_cd_nm=RawSQL(query_state_cd, [])).order_by('-package_id')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['group_data'] = group_data
+        context['package_data'] = package_data
 
         return context
 

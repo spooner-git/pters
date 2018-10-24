@@ -409,7 +409,8 @@
                     alert("스마트폰 브라우저로 접속하신 경우\n시크릿모드(개인정보보호 모드)로 접속시 결제가 정상적으로 진행되지 않습니다.\n결제전 다시한번 모드를 확인후 진행해주세요.");
                 }
 
-                purchase_popup_show($(this).attr('data-product-name'), $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
+                purchase_popup_show($(this).attr('data-product-name')+' - '+$(this).attr('data-product-price-name'),
+                    $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
                     $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
             }
         });
@@ -813,6 +814,7 @@
             find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
 
             $left_ticket.attr({"data-product-name":jsondata.product_name,
+                               "data-product-price-name":jsondata.product_price_name,
                                "data-payment-type":jsondata.product_price_type_cd,
                                "data-product-price":jsondata.product_price_sale_price,
                                "data-product-contents":jsondata.product_contents,
