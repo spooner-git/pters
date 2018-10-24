@@ -654,34 +654,34 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
 
         if reserve_stop == '1':
             if add_del_type == ADD_SCHEDULE:
-                error = '예약 등록이 불가능합니다.'
+                error = '현재 예약 등록 정지 상태입니다.'
             else:
-                error = '예약 취소가 불가능합니다.'
+                error = '현재 예약 취소 정지 상태입니다.'
 
         if error is None:
             if now_time < reserve_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
+                    error = '현재 예약 등록 가능 시간이 아닙니다.'
                 else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '현재 예약 취소 가능 시간이 아닙니다.'
             if now_time > reserve_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
+                    error = '현재 예약 취소 가능 시간이 아닙니다.'
                 else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '현재 예약 취소 가능 시간이 아닙니다.'
 
         if error is None:
             if add_del_start_time < work_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
-                else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '강사 업무시간이 아닙니다.'
+                # else:
+                #     error = '예약 취소가 불가능합니다.'
 
             if add_del_end_time > work_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
-                else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '강사 업무시간이 아닙니다.'
+                # else:
+                #     error = '예약 취소가 불가능합니다.'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
 
