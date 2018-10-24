@@ -1131,11 +1131,11 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                member.contents = user.username+'/'+user.id
+                member.contents = str(user.username)+'/'+str(user.id)
                 member.use = 0
                 member.save()
-                count = User.objects.filter(id=member_id).count()
-                user.id = 'out_member_'+str(count)
+                count = MemberTb.objects.filter(use=UN_USE).count()
+                user.username = 'out_member_'+str(count)
                 user.email = ''
                 user.is_active = 0
                 user.save()
