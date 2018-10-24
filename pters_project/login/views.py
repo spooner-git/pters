@@ -39,7 +39,8 @@ from registration.forms import RegistrationForm
 
 from configs import settings
 from configs.const import USE, UN_USE
-from payment.models import PaymentInfoTb, BillingInfoTb
+from payment.functions import func_cancel_period_billing_schedule
+from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -1153,6 +1154,32 @@ def out_member_logic(request):
             error = '등록 값에 문제가 있습니다.'
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
+
+    payment_data = PaymentInfoTb.objects.filter(status='reserve',
+                                                payment_type_cd='PERIOD')
+
+    if len(payment_data) > 0:
+        for payment_info in payment_data:
+            try:
+                billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
+            except ObjectDoesNotExist:
+                error = '정기 결제 정보를 불러오지 못했습니다.'
+
+            if error is None:
+                error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+            if error is None:
+                billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                                                          member_id=request.user.id,
+                                                          cancel_type='탈퇴',
+                                                          cancel_reason='회원 탈퇴',
+                                                          use=USE)
+                billing_cancel_info.save()
+                billing_info.state_cd = 'DEL'
+                billing_info.save()
+
+        if error is None:
+            if len(payment_data) > 0:
+                payment_data.update(status='cancelled', use=UN_USE)
 
     if error is None:
         return redirect(next_page)
