@@ -160,10 +160,10 @@ function check_dropdown_date_validity(date1, date2, success_Callback){
     }
     
     if(startYear  && startMonth && endYear && endMonth){
-        if(compare_date(date2, date1) == true ){
+        if(compare_date(date1, date2) == false){
             var zz=0;
             while(date_format_yyyy_m_d_to_yyyy_mm_dd(add_month(date1, zz),'-') != date2){
-                zz++
+                zz++;
                 if(zz > 13){
                     break;
                 }
@@ -172,12 +172,12 @@ function check_dropdown_date_validity(date1, date2, success_Callback){
                 //검색
                 success_Callback();
             }else{
-                alert('최대 12개월 단위로 조회가 가능합니다.\n날짜를 다시 입력 해주세요.')
+                alert('최대 12개월 단위로 조회가 가능합니다.\n날짜를 다시 입력 해주세요.');
             }
         }else if(compare_date(endYear+'-'+endMonth, startYear+'-'+startMonth) == false){
-            alert('시작일자가 종료일보다 최근입니다.\n날짜를 다시 입력 해주세요.')
+            alert('시작일자가 종료일보다 최근입니다.\n날짜를 다시 입력 해주세요.');
         }
     }else{
-        alert('기간을 입력 해주세요.')
+        alert('기간을 입력 해주세요.');
     }
-};
+}

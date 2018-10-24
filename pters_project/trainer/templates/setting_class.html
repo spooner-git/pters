@@ -76,7 +76,7 @@
     -->
 
     <div id="defaultFeeSetting" class="settingBox wrap800">
-        <p><button class="submitBtn classAdd" onclick="location.href='/trainer/add_class/?cancel_redirect_url=/trainer/class_setting/'">추가</button></p>
+        <p><button class="submitBtn classAdd">추가</button></p>
         <div class="pters_table pters_table_at_setting_page" style="background: #f7f7f7;">
             <div class="pters_table_cell_head table_center_name">센터</div>
             <div class="pters_table_cell_head table_lecture_name">프로그램</div>
@@ -121,7 +121,7 @@
             location.href="/trainer/trainer_setting/";
         });
 
-        $('button._button_Next').click(function(e){
+        $('button._button_Next, button.classAdd').click(function(e){
             e.preventDefault();
             e.stopPropagation();
             pters_option_inspector("program_create", "", $('.lecture_select_table_list').attr('data-programcount') );
