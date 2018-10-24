@@ -173,6 +173,9 @@ class PackageTb(TimeStampedModel):
         managed = False
         db_table = 'PACKAGE_TB'
 
+    def __str__(self):
+        return self.name.__str__()+'_package'
+
 
 class GroupLectureTb(TimeStampedModel):
     group_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
@@ -184,6 +187,17 @@ class GroupLectureTb(TimeStampedModel):
     class Meta:
         managed = False
         db_table = 'GROUP_LECTURE_TB'
+
+
+class PackageLectureTb(TimeStampedModel):
+    package_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
+    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PACKAGE_LECTURE_TB'
 
 
 class PackageGroupTb(TimeStampedModel):

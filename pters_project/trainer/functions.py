@@ -215,7 +215,7 @@ def func_get_member_ing_list(class_id, user_id):
                                         member_data.group_info = '그룹/클래스'
                                 else:
                                     member_data.group_info += '/그룹'
-                        else:
+                        elif group_check == 2:
                             if member_data.group_info == '':
                                 member_data.group_info = '클래스'
                             else:
@@ -297,7 +297,9 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 AND " \
+                          "B.USE=1)"
+
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
                           "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
@@ -353,6 +355,8 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
                     group_check = 1
                 elif lecture_info_data.group_check == 'EMPTY':
                     group_check = 2
+                elif lecture_info_data.group_check == 'ONE_TO_ONE':
+                    group_check = 3
                 else:
                     group_check = 0
                     class_lecture_count += 1
@@ -378,7 +382,7 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
                                         member_data.group_info = '그룹/클래스'
                                 else:
                                     member_data.group_info += '/그룹'
-                        else:
+                        elif group_check == 2:
                             if member_data.group_info == '':
                                 member_data.group_info = '클래스'
                             else:
@@ -460,7 +464,8 @@ def func_get_member_end_list(class_id, user_id):
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 AND " \
+                          "B.PACKAGE_TB_ID is NULL and B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
                           "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
@@ -516,6 +521,8 @@ def func_get_member_end_list(class_id, user_id):
                     group_check = 1
                 elif lecture_info_data.group_check == 'EMPTY':
                     group_check = 2
+                elif lecture_info_data.group_check == 'ONE_TO_ONE':
+                    group_check = 3
                 else:
                     group_check = 0
                     class_lecture_count += 1
@@ -541,7 +548,7 @@ def func_get_member_end_list(class_id, user_id):
                                 member_data.group_info = '그룹/클래스'
                         else:
                             member_data.group_info += '/그룹'
-                else:
+                elif group_check == 2:
                     if member_data.group_info == '':
                         member_data.group_info = '클래스'
                     else:
@@ -704,7 +711,7 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
                                 member_data.group_info = '그룹/클래스'
                         else:
                             member_data.group_info += '/그룹'
-                else:
+                elif group_check == 2:
                     if member_data.group_info == '':
                         member_data.group_info = '클래스'
                     else:
