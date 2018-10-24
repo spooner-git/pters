@@ -1914,12 +1914,12 @@ function pc_add_member(option){
     }else if(option == 'group'){
         initialize_add_member_sheet();
         selector_page_addmember_input_wrap.css({'height':260+'px'});
-        $('#grouptype').hide()
-        $('#explain_group_lesson').show()
-        $('#explain_open_lesson').hide()
-        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true})
-        $('#form_grouptype').val('NORMAL')
-        $('#addgrouptypename').text('신규 그룹')
+        $('#grouptype').hide();
+        $('#explain_group_lesson').show();
+        $('#explain_open_lesson').hide();
+        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('NORMAL');
+        $('#addgrouptypename').text('신규 그룹');
 
         $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
@@ -1928,27 +1928,27 @@ function pc_add_member(option){
 
         $('body').css('overflow-y','hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
 
     }else if(option == 'openlesson'){
         initialize_add_member_sheet();
         selector_page_addmember_input_wrap.css({'height':260+'px'});
 
-        $('#grouptype').hide()
-        $('#explain_open_lesson').show()
-        $('#explain_group_lesson').hide()
-        $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true})
-        $('#form_grouptype').val('EMPTY')
-        $('#addgrouptypename').text('신규 클래스')
+        $('#grouptype').hide();
+        $('#explain_open_lesson').show();
+        $('#explain_group_lesson').hide();
+        $('#grouptype option[value="EMPTY"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('EMPTY');
+        $('#addgrouptypename').text('신규 클래스');
 
         $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
         $('._ADD_GROUP_NEW').show();
 
-        $('body').css('overflow-y','hidden');
+        $('body').css('overflow-y', 'hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
-            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())})
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
 
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
