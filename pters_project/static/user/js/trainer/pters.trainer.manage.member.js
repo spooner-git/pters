@@ -33,6 +33,15 @@ $(document).ready(function(){
 
     $('#search_lecture_input').keyup(function(e){
         e.stopPropagation();
+
+        $(".groupWrap").removeClass('groupWrap_selected');
+        $(".groupMembersWrap").removeClass('groupMembersWrap_selected').hide();
+        $(".groupRepeatWrap").hide();
+        if(bodywidth < 600){
+           $(".groupMemoWrap").hide();
+        }
+        $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
+
         // e.preventDefault();
         var search_value = $(this).val();
         $('div.groupWrap').hide();
@@ -1960,6 +1969,7 @@ function pc_add_member(option){
 function shiftMemberList(type){
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
+    $('#search_member_input').val("").css("-webkit-text-fill-color", "#cccccc");
     switch(type){
         case "current":
             get_member_ing_list("callback", function(jsondata){
@@ -1985,6 +1995,7 @@ function shiftMemberList(type){
 
 //진행중 클래스, 종료된 클래스 리스트 스왑
 function shiftGroupClassList(type){
+    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
     switch(type){
         case "current":
             get_group_ing_list();
@@ -2005,6 +2016,7 @@ function shiftGroupClassList(type){
 
 //진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
 function shiftPtGroupClassList(type){
+    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
     switch(type){
         case "current":
             get_member_group_class_ing_list("callback", function(jsondata){
