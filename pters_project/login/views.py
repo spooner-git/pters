@@ -97,10 +97,19 @@ def login_trainer(request):
                 user = None
 
         if user is not None and user.is_active:
-            login(request, user)
-            if auto_login_check == '0':
-                request.session.set_expiry(0)
-            return redirect(next_page)
+            member = None
+            try:
+                member = MemberTb.objects.get(member_id=user.id)
+            except ObjectDoesNotExist:
+                error = 'ID/비밀번호를 확인해주세요.'
+            if error is None:
+                if member.use == 1:
+                    login(request, user)
+                    if auto_login_check == '0':
+                        request.session.set_expiry(0)
+                    return redirect(next_page)
+                else:
+                    error = '이미 탈퇴된 회원입니다.'
 
         elif user is not None and user.is_active == 0:
             member = None
@@ -1090,7 +1099,7 @@ class NewMemberReSendEmailView(View):
 # 회워탈퇴 api
 def out_member_logic(request):
     # next_page = request.POST.get('next_page')
-    next_page = '/'
+    next_page = '/login/logout/'
     error = None
 
     member_id = request.user.id
@@ -1122,6 +1131,9 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
+                count = User.objects.filter(id=member_id).count()
+                user.id = 'out_member_'+count
+                user.email = ''
                 user.is_active = 0
                 user.save()
                 member.use = 0
