@@ -2538,7 +2538,7 @@ function get_member_ing_list(use, callback){
             global_json = jsondata;
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);

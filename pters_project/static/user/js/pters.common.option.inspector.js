@@ -203,6 +203,7 @@ function pters_option_inspector(option_type, xhr, option_element){
                     enable_delete_btns_after_ajax();
                 }
             }
+
         
         //클래스 관리
         }else if(option_type == "class_create"){
