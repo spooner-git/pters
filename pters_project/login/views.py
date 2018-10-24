@@ -372,6 +372,14 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
             error = None
 
         if user is None:
+            try:
+                user = User.objects.get(username=email)
+                user.email = email
+                user.save()
+            except ObjectDoesNotExist:
+                error = None
+
+        if user is None:
             error = '로그인에 실패했습니다.'
 
         if error is None:
