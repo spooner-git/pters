@@ -13,6 +13,9 @@ body{
 #ymdText{
 	z-index: 30;
 }
+#ymdText_gap{
+	height: 50px;
+}
 #menuName{
 
 }
@@ -268,7 +271,7 @@ li a{
 }
 
 #trainerPushSettingText{
-	margin-top: 70px;
+	margin-top: 20px;
 }
 
 #trainerAutoCompleteSettingText{
@@ -401,8 +404,11 @@ li a{
 	#menuDescription{
 	    line-height: unset;
 	}
+	#ymdText_gap{
+		height: 120px;
+	}
 	#trainerPushSettingText{
-		margin-top: 120px;
+		margin-top: 20px;
 	}
 	#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
 		margin-top: 20px;
