@@ -1090,7 +1090,7 @@ class NewMemberReSendEmailView(View):
 # 회워탈퇴 api
 def out_member_logic(request):
     # next_page = request.POST.get('next_page')
-    next_page = '/login/'
+    next_page = '/'
     error = None
 
     member_id = request.user.id
