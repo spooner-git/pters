@@ -1138,7 +1138,7 @@ def out_member_logic(request):
                 user.username = 'out_member_'+str(count)
                 user.email = ''
                 user.is_active = 0
-                user.set_password('bebep123')
+                user.set_password('0000')
                 user.save()
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)
