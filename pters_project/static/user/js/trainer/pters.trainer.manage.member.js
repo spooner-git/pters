@@ -2215,7 +2215,7 @@ function DataFormatting(jsondata){
 
 
 
-    for(i=0; i<len; i++){
+    for(var i=0; i<len; i++){
         var date    = date_format_to_yyyymmdd(startDateArray[i],'');
         var enddate = date_format_to_yyyymmdd(endDateArray[i],'');
         //날짜형식을 yyyymmdd 로 맞추기

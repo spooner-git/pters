@@ -2737,7 +2737,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
                                  "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.PACKAGE_TB_ID is NULL and d.USE=1) > 0 "
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
@@ -2796,7 +2796,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
                                  "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.PACKAGE_TB_ID is NULL and d.USE=1) > 0 "
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
@@ -2852,7 +2852,7 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         group_id = self.request.GET.get('group_id', '')
         error = None
         member_data = []
-        lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, package_tb__isnull=True, use=USE)
+        lecture_list = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
 
         for lecture_info in lecture_list:
             try:
@@ -3222,7 +3222,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
                                  "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.PACKAGE_TB_ID is NULL and d.USE=1) > 0 "
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
@@ -3255,7 +3255,7 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
                                  "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.PACKAGE_TB_ID is NULL and d.USE=1) > 0 "
+                                 " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
