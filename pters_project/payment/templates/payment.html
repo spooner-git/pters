@@ -237,6 +237,7 @@
 
                     <div class="ticket_wrap">
                         <div class="ticket_left pay_product_function">
+                            <i class="big_arrow right"></i>
                             <p class="ticket_comment1"><span class="">1개월</span> 정기 결제시</p>
                             <p class="ticket_original_price">24,200원</p>
                             <p class="ticket_new_price">매월 19,900원</p>
@@ -370,9 +371,9 @@
         });
 
         $(document).on('click', '.product', function(e){
-            if(!$(this).hasClass("product_disable")){
+            var product_id = $(this).attr("data-product-id");
+            if(!$(this).hasClass("product_disable") && $(".product_detail").attr('data-product-id') != product_id){
                 e.stopPropagation();
-                var product_id = $(this).attr("data-product-id");
                 get_product_detail_from_server(product_id);
 
                 var this_index= $(this).index();
@@ -821,7 +822,7 @@
                                "data-product-id":product_id,
                                "data-period-month":jsondata.product_price_period_month,});
             $left_ticket_comment.html(`<span class="${product_color}">${jsondata.product_price_period_month}개월</span> 정기 결제시`);
-            $left_ticket_ori_price.text(`${numberWithCommas(jsondata.product_price_price)}원`).css({"text-decoration":"line-through"});
+            $left_ticket_ori_price.html(`${numberWithCommas(jsondata.product_price_price)}원 <i class="small_arrow right"></i>`).css({"text-decoration":"line-through"});
             $left_ticket_new_price.text(`매월 ${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
             $left_ticket_name_bg.addClass(product_color);
 
