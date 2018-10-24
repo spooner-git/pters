@@ -1207,7 +1207,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var arrayResult = [];
     var array;
     var email;
-    var arrayforemail;
+    // var arrayforemail;
     var name;
     var id;
     var dbId;
@@ -1221,11 +1221,22 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var groupType2;
     var groupType3;
     var member_number = 0;
+    var full_data = '';
     for(var i=0; i<len; i++){
-        if(jsondata.groupInfoArray[i].split('/').indexOf('1:1') >= 0){
+        if(option == "count") {
+            full_data = countLists[i];
+            array = countLists[i].split('/');
+        }else if(option == "name"){
+            full_data = nameLists[i];
+            array = nameLists[i].split('/');
+        }else if(option == "date") {
+            full_data = dateLists[i];
+            array = dateLists[i].split('/');
+        }
+        if(full_data.split('/').indexOf('1:1') >= 0){
             member_number++;
             if(option == "count"){
-                array = countLists[i].split('/');
+                // array = countLists[i].split('/');
                 email = array[8];
                 name = array[2];
                 id = array[3];
@@ -1251,7 +1262,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
                     groupType3 = '';
                 }
             }else if(option == "name"){
-                array = nameLists[i].split('/');
+                // array = nameLists[i].split('/');
                 email = array[8];
                 name = array[0];
                 id = array[1];
@@ -1281,8 +1292,8 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
                     groupType3 = '';
                 }
             }else if(option == "date"){
-                array = dateLists[i].split('/');
-                arrayforemail = dateLists[i].split('/');
+                // array = dateLists[i].split('/');
+                // arrayforemail = dateLists[i].split('/');
                 email = array[8];
                 name = array[1];
                 id = array[2];
