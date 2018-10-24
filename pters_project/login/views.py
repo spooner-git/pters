@@ -1135,7 +1135,7 @@ def out_member_logic(request):
                 member.use = 0
                 member.save()
                 count = User.objects.filter(id=member_id).count()
-                user.id = 'out_member_'+count
+                user.id = 'out_member_'+str(count)
                 user.email = ''
                 user.is_active = 0
                 user.save()
