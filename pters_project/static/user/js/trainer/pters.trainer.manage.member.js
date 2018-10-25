@@ -4676,7 +4676,7 @@ function add_member_form_noemail_func(){
         data: $('#add-member-id-form').serialize(),
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             beforeSend();
             pters_option_inspector("member_create", xhr, $('#currentMember tr.memberline').length);
         },
