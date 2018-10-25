@@ -398,5 +398,16 @@ function show_free_member_use_guide(view_page){
         if(auth_type_cd.auth_program_create.limit_type == "무료"){
             $popup.show().text(`(${auth_type_cd.auth_program_create.limit_type}이용자) 프로그램 생성 최대 ${auth_type_cd.auth_program_create.limit_num}개 가능`);
         }
+    }else if(view_page == "setting_reserve"){
+        if(auth_type_cd.auth_setting_create.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_setting_create.limit_type}이용자) 부분 제한`).css({"z-index":"35","position":"fixed"});
+            $('#ulTimes_availDate li a').each(function(){
+                if(Number($(this).attr('data-time'))>7){
+                    $(this).parent("li").addClass("disabled").css({"background-color":"#cccccc"});
+                }
+            });
+            $('#ulTimes_availDate .disabled a').off();
+
+        }
     }
 }

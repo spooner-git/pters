@@ -621,7 +621,7 @@
 
             check_dropdown_selected();
         });
-        $(document).on('click',"#ulTimes2 li a",function(){
+        $(document).on('click', "#ulTimes2 li a", function(){
             $("#hourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
             var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
             $('#id_setting_member_reserve_available_time').val(availableTime)
@@ -663,7 +663,6 @@
             target.siblings('button').val('').text('')
             target.html(array.join(''))
         }
-
 
 
         $("#upbutton-check, ._button_Next").click(function(){
@@ -746,6 +745,7 @@
                 console.log('true')
             }
         }
+        show_free_member_use_guide("setting_reserve");
     </script>
     <script>
         var lt_res_01 =  ['{{ lt_res_01 }}'];
