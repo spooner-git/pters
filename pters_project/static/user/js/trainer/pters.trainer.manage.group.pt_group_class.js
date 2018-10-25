@@ -682,12 +682,17 @@ $(document).on('click', 'img.btn_add_member_to_group', function(){
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid');
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname');
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity');
+    var group_type = $(this).parents('.groupMembersWrap').attr('data-grouptype');
     if(bodywidth < 600){
         float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember');
     }
-    $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    if(group_type=='NORMAL'){
+        $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    }else{
+        $('#uptext2, #uptext2_PC').text('클래스원 추가'+' ('+group_name+')');
+    }
     $('#form_member_groupid').val(group_id);
 });
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
@@ -1671,7 +1676,7 @@ function groupMemberListSet(group_id, jsondata){
     var EMPTY_EXPLAIN;
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
-        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 소속인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
+        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         EMPTY_EXPLAIN = "";
@@ -1690,7 +1695,12 @@ function groupMemberListSet(group_id, jsondata){
 
     var html = htmlToJoin.join('') + addButton;
     if(jsondata.db_id.length == 0){
-        html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+        if(grouptype == 'EMPTY') {
+            html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        }
+        else if(grouptype == 'NORMAL'){
+            html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        }
     }
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
