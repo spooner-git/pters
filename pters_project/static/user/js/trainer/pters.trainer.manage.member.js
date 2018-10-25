@@ -1550,16 +1550,18 @@ function send_modified_member_base_data(dbID){
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src', '/static/user/res/ptadd/icon-pencil.png');
-                if($('#currentMemberList').css('display') == "block"){
-                    get_member_ing_list("callback", function(jsondata){
-                        memberListSet('current', 'date', 'yes', jsondata);
-                    });
-                }else if($('#finishedMemberList').css('display') == "block"){
-                    get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished', 'date', 'yes', jsondata);
-                    });
-                }
-                
+                // if($('#currentMemberList').css('display') == "block"){
+                //     get_member_ing_list("callback", function(jsondata){
+                //         memberListSet('current', 'date', 'yes', jsondata);
+                //     });
+                // }else if($('#finishedMemberList').css('display') == "block"){
+                //     get_member_end_list("callback",function(jsondata){
+                //         memberListSet('finished', 'date', 'yes', jsondata);
+                //     });
+                // }
+                smart_refresh_member_group_class_list();
+
+
                 $('#startR').attr('selected', 'selected');
                 console.log('success');
 
@@ -3707,9 +3709,10 @@ function send_member_modified_data(dbID){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 $('#startR').attr('selected','selected');
-                $('#memberRegHistory_info_PC img').attr('src','/static/user/res/icon-pencil.png').show();
+                $('#memberRegHistory_info_PC img').attr('src', '/static/user/res/icon-pencil.png').show();
                 get_member_list();
                 get_member_lecture_list(dbID);
+                smart_refresh_member_group_class_list();
                 console.log('success');
             }
         },
@@ -3815,6 +3818,8 @@ function delete_member_reg_data_pc(lectureID, dbID){
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }
+                smart_refresh_member_group_class_list();
+                
                 close_info_popup("cal_popup_plandelete");
                 if($('#calendar').length > 0){
                     ajaxClassTime();
