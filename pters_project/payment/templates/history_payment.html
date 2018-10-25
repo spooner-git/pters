@@ -373,7 +373,7 @@
                     </div>
                     <div>
                         <p>{{ cancel_period_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제 예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
+                        <p style="color:#fe4e65;">종료 예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
                         <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"
@@ -442,7 +442,7 @@
             if(device_info=='web' && (platform_check != "mobile" && platform_check !="mobile_browser") ){
                 window.open($(this).attr('data-url'), '_blank');
             }else{
-                alert('https://www.pters.co.kr 에서 확인 가능합니다.');
+                alert('PC에서 웹페이지(https://www.pters.co.kr) 에서 확인 가능합니다.');
             }
         });
 

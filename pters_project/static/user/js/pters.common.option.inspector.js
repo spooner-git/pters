@@ -404,6 +404,7 @@ function show_free_member_use_guide(view_page){
             $('#ulTimes_availDate li a').each(function(){
                 if(Number($(this).attr('data-time'))>7){
                     $(this).parent("li").addClass("disabled").css({"background-color":"#cccccc"});
+                    $(this).append("<img src='/static/user/res/login/icon-lock.png' style='position:absolute;right:10px;width:15px;'>");
                 }
             });
             $('#ulTimes_availDate .disabled a').off();
