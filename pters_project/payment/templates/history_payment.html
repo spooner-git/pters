@@ -439,10 +439,10 @@
         });
 
         $('.payment_receipt_url').click(function(){
-            if(device_info=='web'){
+            if(device_info=='web' && (platform_check != "mobile" && platform_check !="mobile_browser") ){
                 window.open($(this).attr('data-url'), '_blank');
             }else{
-                alert('https://www.pters.co.kr 에서 확인 가능합니다.')
+                alert('https://www.pters.co.kr 에서 확인 가능합니다.');
             }
         });
 
