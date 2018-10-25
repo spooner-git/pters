@@ -4595,13 +4595,13 @@ function add_member_form_func(){
         dataType : 'html',
 
         beforeSend:function(xhr){
-            beforeSend()
-            pters_option_inspector("member_create", xhr, $('#currentMember tr.memberline').length);
+            beforeSend();
+            
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
@@ -4678,6 +4678,7 @@ function add_member_form_noemail_func(){
 
         beforeSend:function(){
             beforeSend();
+            pters_option_inspector("member_create", xhr, $('#currentMember tr.memberline').length);
         },
 
         //보내기후 팝업창 닫기
