@@ -71,24 +71,54 @@ $(document).ready(function(){
         }
     });
 
+    function date_validity_check(startdate, enddate, dateText, datepicker_end){
+        if( startdate == undefined || startdate.length == 0 ){
+            datepicker_end.datepicker('setDate', null);
+            show_caution_popup('<p style="color:#fe4e65;">날짜 선택</p>'+
+                                '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                    '<p>시작 일자를 먼저 선택해주세요</p>'+
+                                '</div>');
+        }else if(compare_date2( dateText, startdate ) == false){
+            datepicker_end.datepicker('setDate', endOriDate);
+            $('#'+$(this).attr('data-type').replace(/lec_/gi, 'form_')).val(endOriDate);
+            show_caution_popup('<p style="color:#fe4e65;">종료일자가 시작일자보다 앞섭니다.</p>'+
+                                '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                    '<p>종료일자는 시작날짜 이후로 선택해주세요.</p>'+
+                                '</div>');
+        }
+    }
+
+
+
     $("#datepicker_repeat_start").datepicker({
         //minDate : 0,
-        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
-            if( curDate != instance.lastVal ){
+        onSelect : function(dateText, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( dateText != instance.lastVal ){
                 $(this).css({
                                         "-webkit-text-fill-color":'#282828'
                             });
                 $(this).parent('p').addClass("dropdown_selected");
                 var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
                 var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
+                var selectedEndDate = selector_datepicker_repeat_end.val();
                 if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-                    $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
-                    $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("plan_create", "", selector_datepicker_repeat_start.val());
+                    if(selectedEndDate == undefined || selectedEndDate.length == 0){
+                        $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
+                        $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
+                        pters_option_inspector("plan_create", "", selector_datepicker_repeat_start.val());
+                    }else if(compare_date2(dateText, selectedEndDate)){
+                        selector_datepicker_repeat_end.datepicker('setDate', null);
+                        $("#id_repeat_end_date").val("");
+                    }
                 }else if(addTypeSelect == "repeatoffadd"){
-                    $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
-                    $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("plan_create", "", selector_datepicker_repeat_start.val());
+                    if(selectedEndDate == undefined || selectedEndDate.length == 0){
+                        $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
+                        $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
+                        pters_option_inspector("plan_create", "", selector_datepicker_repeat_start.val());
+                    }else if(compare_date2(dateText, selectedEndDate)){
+                        selector_datepicker_repeat_end.datepicker('setDate', null);
+                        $("#id_repeat_end_date").val("");
+                    }
                 }
                 check_dropdown_selected_addplan();
             }
@@ -97,22 +127,41 @@ $(document).ready(function(){
 
     $("#datepicker_repeat_end").datepicker({
         //minDate : 0,
-        onSelect : function(curDate, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
-            if( curDate != instance.lastVal ){
+        onSelect : function(dateText, instance){ //미니 달력에서 날짜 선택했을때 실행되는 콜백 함수
+            if( dateText != instance.lastVal ){
                 $(this).css({
                                         "-webkit-text-fill-color":'#282828'
                             });
                 $(this).parent('p').addClass("dropdown_selected");
                 var selector_datepicker_repeat_start = $("#datepicker_repeat_start");
                 var selector_datepicker_repeat_end = $("#datepicker_repeat_end");
+                var startSelectedDate = selector_datepicker_repeat_start.val();
                 if(addTypeSelect == "repeatptadd" || addTypeSelect == "repeatgroupptadd"){
-                    $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
-                    $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("plan_create", "", selector_datepicker_repeat_end.val());
+                    if(compare_date2(startSelectedDate, dateText)){
+                        selector_datepicker_repeat_end.datepicker('setDate', null);
+                        $("#id_repeat_end_date").val("");
+                        show_caution_popup('<p style="color:#fe4e65;">종료일자가 시작일자보다 앞섭니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>종료일자는 시작날짜 이후로 선택해주세요.</p>'+
+                                        '</div>');
+                    }else{
+                        $("#id_repeat_start_date").val(selector_datepicker_repeat_start.val());
+                        $("#id_repeat_end_date").val(selector_datepicker_repeat_end.val());
+                        pters_option_inspector("plan_create", "", selector_datepicker_repeat_end.val());
+                    }
                 }else if(addTypeSelect == "repeatoffadd"){
-                    $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
-                    $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
-                    pters_option_inspector("plan_create", "", selector_datepicker_repeat_end.val());
+                    if(compare_date2(startSelectedDate, dateText)){
+                        selector_datepicker_repeat_end.datepicker('setDate', null);
+                        $("#id_repeat_end_date").val("");
+                        show_caution_popup('<p style="color:#fe4e65;">종료일자가 시작일자보다 앞섭니다.</p>'+
+                                        '<div style="width:95%;border:1px solid #cccccc;margin:0 auto;padding-top:10px;margin-bottom:10px;">'+
+                                            '<p>종료일자는 시작날짜 이후로 선택해주세요.</p>'+
+                                        '</div>');
+                    }else{
+                        $("#id_repeat_start_date_off").val(selector_datepicker_repeat_start.val());
+                        $("#id_repeat_end_date_off").val(selector_datepicker_repeat_end.val());
+                        pters_option_inspector("plan_create", "", selector_datepicker_repeat_end.val());
+                    }
                 }
                 check_dropdown_selected_addplan();
             }
