@@ -384,11 +384,11 @@ function show_free_member_use_guide(view_page){
         }
     }else if(view_page == "member_manage"){
         if(auth_type_cd.auth_member_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_member_create.limit_type}이용자) 회원등록: 최대 ${auth_type_cd.auth_member_create.limit_num}명 등록 가능(진행중`);
+            $popup.show().text(`(${auth_type_cd.auth_member_create.limit_type}이용자) 회원등록: 최대 ${auth_type_cd.auth_member_create.limit_num}명 등록 가능(진행중)`);
         }
     }else if(view_page == "lecture_manage"){
         if(auth_type_cd.auth_group_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹,클래스등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개씩 등록 가능(진행중`);
+            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹,클래스등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개씩 등록 가능(진행중)`);
         }
     }else if(view_page == "analytics"){
         if(auth_type_cd.auth_analytics_read.limit_type == "무료"){
