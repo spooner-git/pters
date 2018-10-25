@@ -436,7 +436,12 @@
                 //통신성공시 처리
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    fill_recieved_member_info(jsondata);
+                    if(jsondata.messageArray.length > 0){
+                        alert(jsondata.messageArray[0]);
+                    }else{
+                        fill_recieved_member_info(jsondata);
+                    }
+                    
                 },
 
                 //보내기후 팝업창 닫기
@@ -457,10 +462,12 @@
             var birth_year = jsondata.birthday_dt[0].split('-')[0];
             var birth_month = jsondata.birthday_dt[0].split('-')[1];
             var birth_date = jsondata.birthday_dt[0].split('-')[2];
-            console.log(birth_year, birth_month, birth_date)
             $(`#birth_year option[data-year="${Number(birth_year)}"]`).prop("selected", true);
             $(`#birth_month option[data-month="${Number(birth_month)}"]`).prop("selected", true);
             $(`#birth_date option[data-date="${Number(birth_date)}"]`).prop("selected", true);
+            if(jsondata.birthday_dt[0] == ""){
+                $("#newbirthday option").attr("selected", false)
+            }
 
 
 
@@ -524,11 +531,16 @@
         }
 
         function input_birth_to_form(){
-            var year = $('#birth_year').val().replace(/년/gi, "");
+            var year = $('#birth_year').val().replace(/연도/gi, "");
             var month = $('#birth_month').val().replace(/월/gi, "");
             var date = $('#birth_date').val().replace(/일/gi, "");
             var birthdata = year+'-'+month+'-'+date;
-            $('#newbirth').attr('value', birthdata);
+            if(birthdata == "--"){
+                $('#newbirth').attr('value', "");
+            }else{
+                $('#newbirth').attr('value', birthdata);
+            }
+            
         }
 
         function goPage(option){
