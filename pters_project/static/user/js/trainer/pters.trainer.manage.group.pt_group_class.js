@@ -681,12 +681,17 @@ $(document).on('click', 'img.btn_add_member_to_group', function(){
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid');
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname');
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity');
+    var group_type = $(this).parents('.groupMembersWrap').attr('data-grouptype');
     if(bodywidth < 600){
         float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember');
     }
-    $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    if(group_type=='NORMAL'){
+        $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    }else{
+        $('#uptext2, #uptext2_PC').text('클래스원 추가'+' ('+group_name+')');
+    }
     $('#form_member_groupid').val(group_id);
 });
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
