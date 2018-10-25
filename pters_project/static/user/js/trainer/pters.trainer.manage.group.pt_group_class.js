@@ -209,7 +209,7 @@ $(document).on('click', 'img.add_listedMember', function(){
         //회원관리 : 리스트로 그룹회원 추가
     }else{
         if(global_json.db_id.indexOf(selected_dbid) == -1){
-           pters_option_inspector("member_create", "", global_json.db_id.length); 
+           pters_option_inspector("member_create", "", global_json.db_id.length);
         }
         if($('#caution_popup').css('display') == "none"){
             var group_id = $('#form_member_groupid').val();
