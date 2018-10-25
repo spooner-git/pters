@@ -2492,6 +2492,7 @@ function get_member_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
+            console.log("get_member_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2550,6 +2551,7 @@ function get_member_ing_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
+            console.log("get_member_ing_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -2605,6 +2607,7 @@ function get_member_end_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
+            console.log("get_member_end_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2661,6 +2664,7 @@ function get_member_one_to_one_ing_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
+            console.log("get_member_one_to_one_ing_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2716,6 +2720,7 @@ function get_member_one_to_one_end_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
+            console.log("get_member_one_to_one_end_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -3710,7 +3715,7 @@ function send_member_modified_data(dbID){
                 $('#errorMessageText').text('');
                 $('#startR').attr('selected','selected');
                 $('#memberRegHistory_info_PC img').attr('src', '/static/user/res/icon-pencil.png').show();
-                get_member_list();
+                // get_member_list();
                 get_member_lecture_list(dbID);
                 smart_refresh_member_group_class_list();
                 console.log('success');
@@ -3755,7 +3760,7 @@ function resend_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
 
-                get_member_list();
+                // get_member_list();
                 get_member_lecture_list(dbID);
                 console.log('success');
             }
@@ -4084,7 +4089,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
                 $('#errorMessageText').text('');
 
                 $('#startR').attr('selected','selected');
-                get_member_list();
+                // get_member_list();
                 get_member_lecture_list(dbID);
 
                 $('#shade3').css('display','none');
@@ -4859,22 +4864,23 @@ function add_groupmember_form_func(){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
-                get_member_list()
-                if($('#currentGroupList').css('display') == "block"){
-                    get_member_group_class_ing_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
-                        var group_class_Html = group_class_ListHtml('current', jsondata);
-                        $('#currentGroupList').html(group_class_Html);
-                    });
-                }else if($('#finishedGroupList').css('display') == "block"){
-                    get_member_group_class_end_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
-                        var group_class_Html = group_class_ListHtml('finished', jsondata);
-                        $('#finishedGroupList').html(group_class_Html);
-                    });
-                }
+                // get_member_list()
+                // if($('#currentGroupList').css('display') == "block"){
+                //     get_member_group_class_ing_list("callback", function(jsondata){
+                //         var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                //         var member_Html = memberlist.html;
+                //         var group_class_Html = group_class_ListHtml('current', jsondata);
+                //         $('#currentGroupList').html(group_class_Html);
+                //     });
+                // }else if($('#finishedGroupList').css('display') == "block"){
+                //     get_member_group_class_end_list("callback", function(jsondata){
+                //         var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                //         var member_Html = memberlist.html;
+                //         var group_class_Html = group_class_ListHtml('finished', jsondata);
+                //         $('#finishedGroupList').html(group_class_Html);
+                //     });
+                // }
+                smart_refresh_member_group_class_list();
                 $('#startR').attr('selected','selected');
                 close_manage_popup('member_add');
                 console.log('success');

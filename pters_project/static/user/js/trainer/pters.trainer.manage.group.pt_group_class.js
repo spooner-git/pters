@@ -208,6 +208,7 @@ $(document).on('click', 'img.add_listedMember', function(){
 
         //회원관리 : 리스트로 그룹회원 추가
     }else{
+
         if(global_json.db_id.indexOf(selected_dbid) == -1){
             if($(this).hasClass("add_by_search")){
                 pters_option_inspector("member_create", "", global_json.db_id.length);
