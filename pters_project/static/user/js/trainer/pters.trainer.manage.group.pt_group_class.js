@@ -1675,7 +1675,7 @@ function groupMemberListSet(group_id, jsondata){
     var EMPTY_EXPLAIN;
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
-        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 소속인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
+        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         EMPTY_EXPLAIN = "";
@@ -1694,7 +1694,12 @@ function groupMemberListSet(group_id, jsondata){
 
     var html = htmlToJoin.join('') + addButton;
     if(jsondata.db_id.length == 0){
-        html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+        if(grouptype == 'EMPTY') {
+            html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        }
+        else if(grouptype == 'NORMAL'){
+            html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        }
     }
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
