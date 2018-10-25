@@ -203,8 +203,6 @@ function pters_option_inspector(option_type, xhr, option_element){
                     enable_delete_btns_after_ajax();
                 }
             }
-
-        
         //클래스 관리
         }else if(option_type == "class_create"){
             var current_class_num = option_element;
@@ -375,4 +373,30 @@ function function_lock_message(function_type, number, option_type, user_type){ /
         }
     }
     return message;
+}
+
+
+function show_free_member_use_guide(view_page){
+    var $popup = $('#free_member_use_guide');
+    if(view_page == "plan"){
+        if(auth_type_cd.auth_plan_create.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_plan_create.limit_type}이용자) 일정등록/삭제: 오늘 기준 앞뒤 ${auth_type_cd.auth_plan_create.limit_num}일로만 가능`);
+        }
+    }else if(view_page == "member_manage"){
+        if(auth_type_cd.auth_member_create.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_member_create.limit_type}이용자) 회원등록: 최대 ${auth_type_cd.auth_member_create.limit_num}명 등록 가능`);
+        }
+    }else if(view_page == "lecture_manage"){
+        if(auth_type_cd.auth_group_create.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹,클래스등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개씩 등록 가능`);
+        }
+    }else if(view_page == "analytics"){
+        if(auth_type_cd.auth_analytics_read.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_analytics_read.limit_type}이용자) ${auth_type_cd.auth_analytics_read.limit_num}달씩 조회 가능`);
+        }
+    }else if(view_page == "program"){
+        if(auth_type_cd.auth_program_create.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_program_create.limit_type}이용자) 프로그램 생성 최대 ${auth_type_cd.auth_program_create.limit_num}개 가능`);
+        }
+    }
 }
