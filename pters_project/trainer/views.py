@@ -1957,7 +1957,7 @@ def update_lecture_info_logic(request):
             try:
                 input_price = int(price)
             except ValueError:
-                error = '강의 금액은 숫자만 입력 가능합니다.'
+                error = '수강 금액은 숫자만 입력 가능합니다.'
         if refund_price is None or refund_price == '':
             input_refund_price = lecture_info.refund_price
         else:
