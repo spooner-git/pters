@@ -62,6 +62,7 @@ def func_set_billing_schedule(customer_uid, payment_user_info):
                                      product_tb_id=product_id,
                                      payment_type_cd=payment_type_cd, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
+                                     paid_date=payment_user_info.end_date,
                                      period_month=payment_user_info.period_month,
                                      name=name,
                                      price=price,
@@ -148,6 +149,7 @@ def func_set_billing_schedule_now(customer_uid, payment_user_info):
                                      product_tb_id=product_id,
                                      payment_type_cd=payment_type_cd, customer_uid=customer_uid,
                                      start_date=start_date, end_date=end_date,
+                                     paid_date=payment_user_info.end_date,
                                      period_month=payment_user_info.period_month,
                                      name=name,
                                      price=price,
@@ -470,6 +472,7 @@ def func_add_billing_logic(custom_data, payment_result):
                                              merchant_uid=payment_result['merchant_uid'],
                                              customer_uid=customer_uid,
                                              start_date=start_date, end_date=end_date,
+                                             paid_date=today,
                                              period_month=custom_data['period_month'],
                                              price=int(payment_result['amount']),
                                              name=payment_name,
@@ -540,9 +543,11 @@ def func_update_billing_logic(payment_result):
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
+    today = datetime.date.today()
     if error is None:
         try:
             with transaction.atomic():
+                payment_info.paid_date = today
                 payment_info.imp_uid = payment_result['imp_uid']
                 payment_info.channel = payment_result['channel']
                 payment_info.buyer_email = payment_result['buyer_email']
