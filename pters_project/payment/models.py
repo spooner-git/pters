@@ -30,6 +30,7 @@ class PaymentInfoTb(TimeStampedModel):
     customer_uid = models.CharField(db_column='CUSTOMER_UID', max_length=100, blank=True, default='')
     start_date = models.DateField(db_column='START_DATE', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateField(db_column='END_DATE', blank=True, null=True)  # Field name made lowercase.
+    paid_date = models.DateField(db_column='PAID_DATE', blank=True, null=True)  # Field name made lowercase.
     period_month = models.IntegerField(db_column='PERIOD_MONTH', default=1)
     payment_type_cd = models.CharField(db_column='PAYMENT_TYPE_CD', max_length=45, blank=True, default='')
     price = models.IntegerField(db_column='PRICE', default=0)

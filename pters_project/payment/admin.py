@@ -7,7 +7,7 @@ from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb, Pro
 @admin.register(PaymentInfoTb)
 class PaymentInfoTbAdmin(admin.ModelAdmin):
     list_display = ('payment_info_id', 'name', 'member', 'product_tb', 'merchant_uid', 'customer_uid',
-                    'start_date', 'end_date', 'payment_type_cd', 'price', 'imp_uid', 'channel', 'card_name',
+                    'start_date', 'end_date', 'paid_date', 'payment_type_cd', 'price', 'imp_uid', 'channel', 'card_name',
                     'buyer_email', 'status', 'fail_reason', 'currency', 'pay_method', 'pg_provider', 'receipt_url',
                     'buyer_name', 'reg_dt', 'mod_dt', 'use')
 
