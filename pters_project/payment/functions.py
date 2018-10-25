@@ -406,6 +406,7 @@ def func_add_billing_logic(custom_data, payment_result):
         try:
             payment_info = PaymentInfoTb.objects.filter(member_id=custom_data['user_id'],
                                                         product_tb_id=custom_data['product_id'],
+                                                        end_date__gte=today,
                                                         use=USE).exclude(status='cancelled').latest('end_date')
         except ObjectDoesNotExist:
             payment_info = None

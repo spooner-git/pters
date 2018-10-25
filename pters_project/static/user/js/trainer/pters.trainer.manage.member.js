@@ -4018,11 +4018,11 @@ function smart_refresh_member_group_class_list(){
             opened_group.push($(this).attr('data-groupid'));
         });
         get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+            // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
             for(var i=0; i<opened_group.length; i++){
-               $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click'); 
+               $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
             }
         });
     }else if($('#finishedGroupList').css('display') == "block"){
@@ -4031,7 +4031,7 @@ function smart_refresh_member_group_class_list(){
             opened_group.push($(this).attr('data-groupid'));
         });
         get_member_group_class_end_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+            // var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('finished', jsondata);
             $('#finishedGroupList').html(group_class_Html);
             for(var i=0; i<opened_group.length; i++){
@@ -4039,12 +4039,13 @@ function smart_refresh_member_group_class_list(){
             }
         });
     }else if($("#calendar").length > 0 ){
+    console.log('test5')
         $('#members_mobile, #members_pc').html('');
         get_current_member_list();
         get_current_group_list();
         get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            var member_Html = memberlist.html;
+            // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+            // var member_Html = memberlist.html;
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
         });

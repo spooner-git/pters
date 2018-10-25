@@ -3230,6 +3230,8 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                                        group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd')
         member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
+        # print(str(len(member_data)))
+        context['g_ptmembernum'] = len(member_data)
         context['member_data'] = member_data
 
         if error is not None:
@@ -3238,7 +3240,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
             messages.error(self.request, error)
 
         context['group_data'] = group_data
-        # end_time = timezone.now()
+        end_time = timezone.now()
         # print(str(end_time-start_time))
         return context
 
