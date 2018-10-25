@@ -209,7 +209,9 @@ $(document).on('click', 'img.add_listedMember', function(){
         //회원관리 : 리스트로 그룹회원 추가
     }else{
         if(global_json.db_id.indexOf(selected_dbid) == -1){
-           pters_option_inspector("member_create", "", global_json.db_id.length); 
+            if($(this).hasClass("add_by_search")){
+                pters_option_inspector("member_create", "", global_json.db_id.length);
+            }
         }
         if($('#caution_popup').css('display') == "none"){
             var group_id = $('#form_member_groupid').val();
@@ -221,7 +223,9 @@ $(document).on('click', 'img.add_listedMember', function(){
             if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
                 alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
             }else{
-                pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
+                if($(this).hasClass("add_by_search")){
+                    pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
+                }
                 if($('#caution_popup').css('display') == "none"){
                     var sexInfo;
                     if(selected_sex == "M"){
@@ -404,7 +408,7 @@ function draw_memberlist_for_addBySearch(jsondata){
 
     var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">';
-    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>';
+    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember add_by_search"></div>'+'</div>';
     var html = table + data;
 
     $('#searchedMemberListBox').html(html);
