@@ -156,8 +156,10 @@ def get_function_auth_type_cd(request):
     today = datetime.date.today()
     billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
                                                 next_payment_date__lt=today, use=USE)
+
     payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                start_date__lte=today, end_date__gte=today, use=USE)
+                                                start_date__lte=today, end_date__gte=today,
+                                                use=USE).order_by('product_tb_id', '-end_date')
 
     for billing_info in billing_data:
         billing_info.state_cd = 'END'

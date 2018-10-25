@@ -826,6 +826,7 @@ class PaymentHistoryView(LoginRequiredMixin, View):
             payment_data = PaymentInfoTb.objects.select_related('product_tb').filter(member_id=request.user.id,
                                                                                      product_tb_id=product_info.product_id,
                                                                                      # payment_type_cd='SINGLE',
+                                                                                     start_date__lte=today,
                                                                                      end_date__gte=today,
                                                                                      status='paid',
                                                                                      # price__gt=0,
