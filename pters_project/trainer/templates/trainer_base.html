@@ -344,12 +344,10 @@
                         </div>
                         -->
                         <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help">
-                            </a>
+                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help"></a>
                         </div>
                         <div class="sidebar_div"><img src="{% static_url "user/res/icon-card@3x.png" %}" class="sidebar_icon" alt="#">
-                            <a href="{% url 'payment:index' %}" class="sidebar_text text-payment">
-                            </a>
+                            <a href="{% url 'payment:index' %}" class="sidebar_text text-payment"></a>
                         </div>
                     </div>
                     <!--<div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>-->
@@ -612,7 +610,8 @@ function playSound() {
         platform_check = 'mobile';
         if(device_info != "web"){ //앱일떄
             $('#paymentSetting').css('display', 'none');
-            $('._company, a.text-payment').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('a.text-payment').parent('div').css('display','none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
         }else if(device_info == "web"){ //브라우저일때
@@ -622,7 +621,8 @@ function playSound() {
         platform_check = 'mobile';
         if(device_info != "web"){ //앱일때
             $('#paymentSetting').css('display', 'none');
-            $('._company,  a.text-payment').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('a.text-payment').parent('div').css('display','none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
         }else if(device_info == "web"){ //브라우저일때
