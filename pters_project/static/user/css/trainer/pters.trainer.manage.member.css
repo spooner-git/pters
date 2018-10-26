@@ -369,6 +369,7 @@ select:focus > option:checked {
 
 #currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 	width: 91.6%;
+	margin-bottom: 40px;
 }
 
 #finishedMemberList, #finishedGroupList{

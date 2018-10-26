@@ -69,12 +69,14 @@ body{
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 0 10px 30px 10px;
+	margin-bottom: 40px;
 }
 #member_analytics_page{
 	display: none;
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 0 10px 30px 10px;
+	margin-bottom: 40px;
 }
 
 #date_selector_wrapper{
