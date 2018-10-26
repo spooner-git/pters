@@ -1335,7 +1335,7 @@ $(document).ready(function(){
 
                                 super_ajaxClassTime();
                                 set_member_group_dropdown_list();
-
+                                
                                 close_planadd_popup();
                                 close_planadd_popup_mini();
                                 enable_window_scroll();
