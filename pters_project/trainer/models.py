@@ -133,7 +133,7 @@ class GroupTb(TimeStampedModel):
     group_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=45, blank=True, null=True)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
-    group_member_num = models.IntegerField(db_column='GROUP_MEMBER_NUM', default=0)  # Field name made lowercase.
+    # group_member_num = models.IntegerField(db_column='GROUP_MEMBER_NUM', default=0)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
