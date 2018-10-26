@@ -598,31 +598,33 @@ function playSound() {
     var platform_check = 'pc';
     var push_info = '{{ request.session.push_token }}';
     var device_info = '{{ request.session.device_info }}';
+
     var varUA = navigator.userAgent.toLowerCase();
-        if(varUA.match('android') != null){
-            platform_check = 'mobile';
-            if(device_info != "web"){
-                $('#paymentSetting').css('display', 'none');
-            }else if(device_info == "web"){
-                platform_check = "mobile_browser"
-            }
+    if(varUA.match('android') != null){
+        platform_check = 'mobile';
+        if(device_info != "web"){ //앱일떄
+            $('#paymentSetting').css('display', 'none');
             $('._company').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-            
-        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            platform_check = 'mobile';
-            if(device_info != "web"){
-                $('#paymentSetting').css('display', 'none');
-            }else if(device_info == "web"){
-                platform_check = "mobile_browser"
-            }
-            $('._company').css('display', 'none');
-            $('.ads_wrap').css('display', 'none');
-            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-        }else{
-            platform_check = 'pc';
+        }else if(device_info == "web"){ //브라우저일때
+            platform_check = "mobile_browser"
         }
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        platform_check = 'mobile';
+        if(device_info != "web"){ //앱일때
+            $('#paymentSetting').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        }else if(device_info == "web"){ //브라우저일때
+            platform_check = "mobile_browser"
+        }
+        
+    }else{
+        platform_check = 'pc';
+    }
+
     if(platform_check=='pc'){
         Push.Permission.request(onGranted, onDenied);
 
@@ -633,6 +635,7 @@ function playSound() {
             console.log('알람 승인 상태')
         }
     }
+
     if(platform_check=='pc'){
         registrationServiceWorker('{{ request.session.push_token }}');
     }
@@ -960,11 +963,7 @@ function playSound() {
     };
     //요일별 업무시간을 보고 휴일날짜를 구한다.
 
-    //광고 제거
-    if(auth_type_cd.auth_ads == 1){
-        $('.ads_wrap').empty()
-    };
-    //광고 제거
+    
 
     if(Options.language=="JPN"){
         $(".KRtext, .ENtext").remove();
@@ -1221,6 +1220,8 @@ function playSound() {
         $('#id_next_page').val('{% url 'trainer:index'%}');
         document.getElementById('lecture-check-form').submit();
     }
+
+    pters_option_inspector("ads","","");
 
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///

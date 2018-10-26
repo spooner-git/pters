@@ -309,6 +309,13 @@ function pters_option_inspector(option_type, xhr, option_element){
                 }
             }
         }
+
+        else if(option_type == "ads"){
+            //광고 제거
+            if(limit_num == 0){
+                $('.ads_wrap').empty();
+            }
+        }
     //}
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
 }
