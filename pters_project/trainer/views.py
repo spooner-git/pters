@@ -2829,11 +2829,11 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         lecture_list = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_id, use=USE)
 
         for lecture_info in lecture_list:
-            member_info = lecture_info.lecture_tb
-            # try:
-            #     member_info = MemberLectureTb.objects.select_related('lecture_tb', 'member').get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-            # except ObjectDoesNotExist:
-            #     error = '회원 정보를 불러오지 못했습니다.'
+            # member_info = lecture_info.lecture_tb
+            try:
+                member_info = MemberLectureTb.objects.select_related('lecture_tb', 'member').get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
+            except ObjectDoesNotExist:
+                error = '회원 정보를 불러오지 못했습니다.'
 
             if error is None:
                 member_info.member.lecture_tb = lecture_info.lecture_tb
