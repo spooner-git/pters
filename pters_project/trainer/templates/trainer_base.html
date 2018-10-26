@@ -612,7 +612,7 @@ function playSound() {
         platform_check = 'mobile';
         if(device_info != "web"){ //앱일떄
             $('#paymentSetting').css('display', 'none');
-            $('._company, ._text-payment').css('display', 'none');
+            $('._company, a.text-payment').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
         }else if(device_info == "web"){ //브라우저일때
@@ -622,7 +622,7 @@ function playSound() {
         platform_check = 'mobile';
         if(device_info != "web"){ //앱일때
             $('#paymentSetting').css('display', 'none');
-            $('._company,  ._text-payment').css('display', 'none');
+            $('._company,  a.text-payment').css('display', 'none');
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
         }else if(device_info == "web"){ //브라우저일때
