@@ -1919,6 +1919,7 @@ function get_current_group_list(use, callback){
         },
 
         success:function(data){
+
             //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){

@@ -120,7 +120,7 @@ def func_get_class_member_one_to_one_end_list(class_id):
                 if member_id != class_lecture_info.lecture_tb.member_id:
                     member_id = class_lecture_info.lecture_tb.member_id
                     all_member.append(class_lecture_info.lecture_tb.member)
-
+    # print(len(all_member))
     return all_member
 
 
@@ -837,17 +837,17 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
         if counts is None or counts == '':
             error = '등록 횟수 입력해주세요.'
 
-    if group_id != '' and group_id is not None:
-        try:
-            group_info = GroupTb.objects.get(group_id=group_id)
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
-
-        if error is None:
-            group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-            if group_info.group_type_cd == 'NORMAL':
-                if group_counter >= group_info.member_num:
-                    error = '그룹 정원을 초과했습니다.'
+    # if group_id != '' and group_id is not None:
+    #     try:
+    #         group_info = GroupTb.objects.get(group_id=group_id)
+    #     except ObjectDoesNotExist:
+    #         error = '오류가 발생했습니다.'
+    #
+    #     if error is None:
+    #         group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
+    #         if group_info.group_type_cd == 'NORMAL':
+    #             if group_counter >= group_info.member_num:
+    #                 error = '그룹 정원을 초과했습니다.'
     if error is None:
         if setting_lecture_auto_finish == AUTO_FINISH_ON:
             end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()

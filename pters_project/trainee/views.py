@@ -1455,12 +1455,10 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
                                  lecture_tb__use=USE
                                  ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
                                             ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date')
-
     if error is None:
         if len(lecture_list) > 0:
             for idx, lecture_list_info in enumerate(lecture_list):
                 lecture_info = lecture_list_info.lecture_tb
-
                 if error is None:
                     lecture_counts += 1
                     if lecture_counts == 1:

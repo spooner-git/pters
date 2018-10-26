@@ -111,7 +111,7 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
     query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     query_member_auth_cd \
-        = "select `LECTURE_TB_ID` from GROUP_LECTURE_TB as B" \
+        = "select count(`LECTURE_TB_ID`) from GROUP_LECTURE_TB as B" \
           " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
           " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)='IP'" \
           " and (select `AUTH_CD` from MEMBER_LECTURE_TB as C WHERE C.LECTURE_TB_ID = B.LECTURE_TB_ID" \
