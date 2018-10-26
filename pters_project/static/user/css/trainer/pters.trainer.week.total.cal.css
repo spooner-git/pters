@@ -186,6 +186,7 @@ body{
 	overflow-y: hidden;
 	overflow-x: hidden;
 	margin-bottom: 40px;
+	padding-bottom: 40px;
 }
 
 
@@ -614,6 +615,7 @@ img,a,div,span,p{
 		background:#ffffff;
 		padding-top: 99px;
 		margin-bottom: 60px;
+		padding-bottom: 0;
 	}
 
 	.slidegap{
