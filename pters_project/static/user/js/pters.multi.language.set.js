@@ -50,6 +50,7 @@ var multi_language_set = {
                                     "text-programselect":"프로그램 선택",
                                     "text-mypage":"마이페이지",
                                     "text-help":"이용문의",
+                                    "text-payment":"이용권",
 
                                     "text-basicsetting":"기본 설정",
                                     "text-programmanage":"프로그램 관리",
@@ -154,6 +155,7 @@ var multi_language_set = {
                                     "text-programselect":"プログラム選択",
                                     "text-mypage":"マイページ",
                                     "text-help":"ヘルプ",
+                                    "text-payment":"이용권",
 
                                     "text-basicsetting":"基本設定",
                                     "text-programmanage":"プログラム管理",
@@ -258,6 +260,7 @@ var multi_language_set = {
                                     "text-programselect":"Program Select",
                                     "text-mypage":"My page",
                                     "text-help":"Help",
+                                    "text-payment":"이용권",
 
                                     "text-basicsetting":"Basic Settings",
                                     "text-programmanage":"Program Manage.",
@@ -351,6 +354,7 @@ $('.text-alarm').text(multi_language_set[Options.language]["text-alarm"]);
 $('.text-calSelect').text(multi_language_set[Options.language]["text-programselect"]);
 $('.text-mypage').text(multi_language_set[Options.language]["text-mypage"]);
 $('.text-help').text(multi_language_set[Options.language]["text-help"]);
+$('.text-payment').text(multi_language_set[Options.language]["text-payment"]);
 $('.text-moveprogram').text(multi_language_set[Options.language]["text-moveprogram"])
 $('.text-programmanage').text(multi_language_set[Options.language]["text-programmanage"]);
 
