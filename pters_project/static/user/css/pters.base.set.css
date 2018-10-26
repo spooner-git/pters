@@ -1044,8 +1044,11 @@ a:focus, a:hover{
 .ads_cal_insideTop{
     width: 100%;
     height: auto;
-    /*background: #f7f7f7;*/
+    background: #ffffff;
+    margin:0 auto;
     margin-bottom: 40px;
+    /*border: 1px solid #cccccc;*/
+    max-width: 1080px;
 }
 
 

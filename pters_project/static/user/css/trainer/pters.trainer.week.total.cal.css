@@ -176,6 +176,7 @@ body{
 	position: relative;
 	width: 100%;
 	top: 110px;
+	margin: 0 auto;
 	background-color: transparent;
 	height: 90%;
 	z-index: 3;
@@ -184,6 +185,7 @@ body{
 	table-layout: fixed;
 	overflow-y: hidden;
 	overflow-x: hidden;
+	margin-bottom: 40px;
 }
 
 
