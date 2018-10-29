@@ -1048,7 +1048,7 @@ $(document).ready(function(){
 
             dropdownlist_auto_scroll_to_middle($('#starttimesSelected button'));
             add_scroll_arrow_to_dropdown_list($(this));
-        }        
+        }; 
     });
     $(document).on('click', '.pters_dropdown_custom_list li a', function(){
         $('#page-base-addstyle').css({'z-index':400});
@@ -3452,7 +3452,7 @@ function super_ajaxClassTime(use, callback){
 
 
 function position_fixed_addplan_if_mobile(){
-    if(bodywidth < 600){
+    if(bodywidth < 600 && $('#page-addplan-pc').css('display')== "none"){
         $('#page-addplan').css('position', 'fixed');
         $('.dropdown-backdrop').css('height', $('#mshade_popup').height()+'px');
         setTimeout(function(){$('.dropdown-backdrop').css('height', $('#mshade_popup').height()+'px');}, 1);

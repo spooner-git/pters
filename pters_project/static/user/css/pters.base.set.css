@@ -904,7 +904,7 @@ a:focus, a:hover{
 
 
     #page-base, #page-base-addstyle, #page-base-modifystyle{
-        display: none;
+        display: none !important;
     }
 
     #mobilever{
