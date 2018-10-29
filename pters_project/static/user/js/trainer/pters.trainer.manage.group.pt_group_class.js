@@ -1995,12 +1995,15 @@ function get_member_group_class_ing_list(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    // var startTime = '';
+    // var endTime = '';
     $.ajax({
         url:'/trainer/get_member_group_class_ing_list/',
 
         dataType : 'html',
 
         beforeSend:function(){
+            // startTime = performance.now();
             beforeSend();
         },
 
@@ -2012,6 +2015,9 @@ function get_member_group_class_ing_list(use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+
+            // endTime = performance.now();
+            // console.log(endTime - startTime + 'ms')
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
