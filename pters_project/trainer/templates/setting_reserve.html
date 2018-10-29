@@ -60,11 +60,14 @@
 
     <div id="ymdText">
         <div id="ymdTextWrap">
-            <div id="menuName">예약 관련 설정
+            <div id="menuName">회원 예약 설정
             </div>
             <div id="menuDescription">회원님의 예약에 관련된 설정을 합니다.
             </div>
         </div>
+    </div>
+    <div id="ymdText_gap">
+        
     </div>
 
 
@@ -128,6 +131,12 @@
     </div>
 
 -->
+
+    <div id="trainerPushSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
+        <span class="settingText">회원 예약 일시 정지</span>
+        <p class="settingText2">회원이 예약하는 기능을 일시적으로 정지합니다.</p>
+        <div id="switch2" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
+    </div>
 
     <div id="memberReserveBasicHourSettingText" class="settingMenu wrap800">
         <p class="settingText">예약 기본 시간 단위 설정</p>
@@ -305,13 +314,9 @@
         </div>
     </div>
 
-    <div id="trainerPushSettingText" class="settingMenu wrap800" style="border-bottom: 1px solid #eaeaea;">
-        <span class="settingText">회원 예약 일시 정지</span>
-        <p class="settingText2">회원이 예약하는 기능을 일시적으로 정지합니다.</p>
-        <div id="switch2" class="pters_switch"><div class="switchback"></div><div class="switchball switchoff"></div></div>
-    </div>
+    
 
-    <div class="popupBtn_mini">
+    <div class="popupBtn_mini"  style="margin-top: 40px;">
         <button class="submitBtn _button_Prev">이전</button>
         <button class="submitBtn _button_Preview" style="display: none">미리보기</button>
         <button class="submitBtn _button_Next">등록</button>
@@ -334,7 +339,7 @@
         if($('body').width()<600){
             $('#page-base-addstyle').css('display','block');
             $('#page-base').css('display','none');
-            $('#uptext2').text("예약 관련 설정");
+            $('#uptext2').text("회원 예약 설정");
         }
 
         var select_all_check = false;
@@ -616,7 +621,7 @@
 
             check_dropdown_selected();
         });
-        $(document).on('click',"#ulTimes2 li a",function(){
+        $(document).on('click', "#ulTimes2 li a", function(){
             $("#hourSelect2 button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-time'));
             var availableTime = make_available_date_format($('#hourSelect'),$('#hourSelect2'))
             $('#id_setting_member_reserve_available_time').val(availableTime)
@@ -658,7 +663,6 @@
             target.siblings('button').val('').text('')
             target.html(array.join(''))
         }
-
 
 
         $("#upbutton-check, ._button_Next").click(function(){
@@ -741,6 +745,8 @@
                 console.log('true')
             }
         }
+        $('.fixfooter').css({"z-index":0});
+        show_free_member_use_guide("setting_reserve");
     </script>
     <script>
         var lt_res_01 =  ['{{ lt_res_01 }}'];

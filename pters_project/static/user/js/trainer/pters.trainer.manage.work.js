@@ -40,7 +40,7 @@ $('#call_sales_data_btn').click(function(){
                                     통계조회를 <span style="font-weight:500;">이번달만 가능</span>합니다. <br><br>
                                     <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
                                     <span style="color:#fe4e65;">조회기간 제한 없이 이용</span>해보세요!
-                                </div>`)
+                                </div>`);
     }else{
         if($('#profit_analytics_page .duration_setter_wrapper').css('display') == 'none'){
             if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined){
@@ -64,8 +64,8 @@ $('#call_sales_data_btn').click(function(){
                     //ajax_call_sales_data_onemonth(class_id, start_date)
                 //}
             });
-        };
-    } 
+        }
+    };
 });
 
 
@@ -82,19 +82,19 @@ $('#call_member_data_btn').click(function(){
             if($(this).attr('data-startdate') != undefined && $(this).attr('data-enddate') != undefined ){
                 var start_date = $(this).attr('data-startdate');
                 var end_date = $(this).attr('data-enddate');
-                ajax_call_member_analytics_data(class_id,start_date, end_date)
-                ajax_call_member_monthly_data(class_id, start_date, end_date)
-                ajax_call_complete_monthly_data(class_id, start_date, end_date)
+                ajax_call_member_analytics_data(class_id, start_date, end_date);
+                ajax_call_member_monthly_data(class_id, start_date, end_date);
+                ajax_call_complete_monthly_data(class_id, start_date, end_date);
             }else{
-                alert('기간을 입력 해주세요.')
+                alert('기간을 입력 해주세요.');
             }
         }else if($('#member_analytics_page .duration_setter_wrapper').css('display') == 'block'){
             var start_date = $('#startYear_member').siblings('button').attr('data-value') + '-' + $('#startMonth_member').siblings('button').attr('data-value')+'-01';
             var end_date = $('#endYear_member').siblings('button').attr('data-value') + '-' + $('#endMonth_member').siblings('button').attr('data-value')+'-01';
             check_dropdown_date_validity(start_date, end_date, function(){
-                ajax_call_member_analytics_data(class_id,start_date, end_date)
-                ajax_call_member_monthly_data(class_id, start_date, end_date)
-                ajax_call_complete_monthly_data(class_id, start_date, end_date)
+                ajax_call_member_analytics_data(class_id,start_date, end_date);
+                ajax_call_member_monthly_data(class_id, start_date, end_date);
+                ajax_call_complete_monthly_data(class_id, start_date, end_date);
             });
         };
     }
@@ -160,10 +160,10 @@ function check_dropdown_date_validity(date1, date2, success_Callback){
     }
     
     if(startYear  && startMonth && endYear && endMonth){
-        if(compare_date(date2, date1) == true ){
+        if(compare_date(date1, date2) == false){
             var zz=0;
             while(date_format_yyyy_m_d_to_yyyy_mm_dd(add_month(date1, zz),'-') != date2){
-                zz++
+                zz++;
                 if(zz > 13){
                     break;
                 }
@@ -172,12 +172,12 @@ function check_dropdown_date_validity(date1, date2, success_Callback){
                 //검색
                 success_Callback();
             }else{
-                alert('최대 12개월 단위로 조회가 가능합니다.\n날짜를 다시 입력 해주세요.')
+                alert('최대 12개월 단위로 조회가 가능합니다.\n날짜를 다시 입력 해주세요.');
             }
         }else if(compare_date(endYear+'-'+endMonth, startYear+'-'+startMonth) == false){
-            alert('시작일자가 종료일보다 최근입니다.\n날짜를 다시 입력 해주세요.')
+            alert('시작일자가 종료일보다 최근입니다.\n날짜를 다시 입력 해주세요.');
         }
     }else{
-        alert('기간을 입력 해주세요.')
+        alert('기간을 입력 해주세요.');
     }
-};
+}

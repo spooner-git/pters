@@ -39,7 +39,7 @@
 
 {% block content %}
     <span class="class_lecture_info_tag" style="position: absolute;top:50px;right:10px;color:#f4f4f4;font-size:10px;"> {{ request.session.class_center_name }} {{ request.session.class_type_name }}</span>
-    <div id="main_content"  class="container" > <!--main_content-->
+    <!-- <div id="main_content"  class="container" >  -->
         <div class='center_box wrap'>
             <div class='center_box_text center_box_text_up' onclick="location.href='{% url 'trainer:cal_week' %}'">
                 <div class='center_box_monthyear'><p href="#"></p></div>
@@ -51,31 +51,32 @@
                 </div>
                 <div class="center_box_gun">&nbsp;&nbsp;&nbsp;<a href="{% url 'trainer:cal_total' %}" class="center_box_num">{{ today_schedule_num }}</a><span class="KRtext">건</span><span class="JPtext">件</span><span class="ENtext"></span></div>
             </div>
+            <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
+                <div class="lower_box_child">
+                    <div class="lower_box_child_inner">
+                        <div class="KRtext">진행중</div><div class="JPtext">進行中</div><div class="ENtext">Ongoing Member</div>
+                        <a href="{% url 'trainer:member_manage' %}" id='total_member' class='lower_box_num'>{{total_member_num}}</a>
+                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
+                    </div>
+                </div>
+                <div class="lower_box_child">
+                    <div class="lower_box_child_inner">
+                        <div class="KRtext">이번달 신규</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
+                        <a href="{% url 'trainer:member_manage' %}" id='request_num' class='lower_box_num'>{{ new_member_num }}</a>
+                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
+                    </div>
+                </div>
+                <div class="lower_box_child">
+                    <div class="lower_box_child_inner">
+                        <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
+                        <a href="{% url 'trainer:member_manage' %}" id='finish_member' class='lower_box_num'>{{ to_be_end_member_num }}</a>
+                        <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="lower_box wrap" onclick="location.href='{% url 'trainer:member_manage' %}'">
-            <div class="lower_box_child" style="left:4.17%;">
-                <div class="lower_box_child_inner">
-                    <div class="KRtext">진행중</div><div class="JPtext">進行中</div><div class="ENtext">Ongoing Member</div>
-                    <a href="{% url 'trainer:member_manage' %}" id='total_member' class='lower_box_num'>{{total_member_num}}</a>
-                    <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                </div>
-            </div>
-            <div class="lower_box_child" style="left:35%;">
-                <div class="lower_box_child_inner">
-                    <div class="KRtext">이번달 신규</div><div class="JPtext">日程変更</div><div class="ENtext">--</div>
-                    <a href="{% url 'trainer:member_manage' %}" id='request_num' class='lower_box_num'>{{ new_member_num }}</a>
-                    <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                </div>
-            </div>
-            <div class="lower_box_child" style="left:65.83%;">
-                <div class="lower_box_child_inner">
-                    <div class="KRtext">종료 임박</div><div class="JPtext">終了切迫</div><div class="ENtext">Need re-contract</div>
-                    <a href="{% url 'trainer:member_manage' %}" id='finish_member' class='lower_box_num'>{{ to_be_end_member_num }}</a>
-                    <span class="KRtext">명</span><span class="JPtext">名</span><span class="ENtext"></span>
-                </div>
-            </div>
-        </div>
-    </div> <!--main_content-->
+        
+    <!-- </div> -->
 
     <div id="notice_popup_main">
         <p style="font-size:16px;color:#fe4e65;font-weight: bold;">그룹 기능 오픈 안내</p>

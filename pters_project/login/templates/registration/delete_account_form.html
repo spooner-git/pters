@@ -36,7 +36,7 @@
 	$('button.submit_change_pw').click(function(){
 		$form = $('#submit_input form')
 		$.ajax({
-              url:'/accounts/password/change/',
+              url:'/login/password/change/',
               type:'POST',
               data:$form.serialize(),
               dataType : 'html',

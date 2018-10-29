@@ -398,7 +398,7 @@ def add_trainee_schedule_logic(request):
 
                 push_class_id.append(class_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
-                push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                     + ' [1:1 레슨] 일정을 등록했습니다')
@@ -406,7 +406,7 @@ def add_trainee_schedule_logic(request):
 
                 push_class_id.append(class_id)
                 push_title.append(class_type_name + ' 수업 - 일정 알림')
-                push_message.append(request.user.last_name + request.user.first_name + '님이 '
+                push_message.append(request.user.first_name + '님이 '
                                     + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                     + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                     + ' ['+schedule_info.get_group_type_cd_name()+']'
@@ -546,7 +546,7 @@ def delete_trainee_schedule_logic(request):
 
             push_class_id.append(class_id)
             push_title.append(class_type_name + ' 수업 - 일정 알림')
-            push_message.append(request.user.last_name + request.user.first_name + '님이 '
+            push_message.append(request.user.first_name + '님이 '
                                 + push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' ['+group_type_name+']'+group_name+' 일정을 취소했습니다.')
@@ -863,8 +863,8 @@ def update_trainee_info_logic(request):
     if first_name is None or first_name == '':
         first_name = user.first_name
 
-    if last_name is None or last_name == '':
-        last_name = user.last_name
+    # if last_name is None or last_name == '':
+    #     last_name = user.last_name
 
     if contents is None or contents == '':
         contents = member.contents
@@ -893,9 +893,10 @@ def update_trainee_info_logic(request):
         try:
             with transaction.atomic():
                 user.first_name = first_name
-                user.last_name = last_name
+                # user.last_name = last_name
                 user.save()
-                member.name = last_name + first_name
+                # member.name = last_name + first_name
+                member.name = first_name
                 member.phone = phone
                 member.contents = contents
                 member.sex = sex
@@ -918,13 +919,13 @@ def update_trainee_info_logic(request):
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
+                         from_member_name=request.user.first_name,
                          log_info='회원 정보', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
     else:
-        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        logger.error(request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
         return redirect(next_page)
@@ -1327,7 +1328,7 @@ def get_trainer_setting_data(context, user_id, class_id):
     lt_work_ths_time_avail = ''
     lt_work_fri_time_avail = ''
     lt_work_sat_time_avail = ''
-    lt_res_05 = '14'
+    lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
     lt_res_member_time_duration = 1
@@ -1454,12 +1455,10 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
                                  lecture_tb__use=USE
                                  ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
                                             ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date')
-
     if error is None:
         if len(lecture_list) > 0:
             for idx, lecture_list_info in enumerate(lecture_list):
                 lecture_info = lecture_list_info.lecture_tb
-
                 if error is None:
                     lecture_counts += 1
                     if lecture_counts == 1:

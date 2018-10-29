@@ -4,6 +4,7 @@ botocore==1.9.15
 bs4==0.0.1
 confusable-homoglyphs==3.0.0
 cycler==0.10.0
+Cython==0.28.5
 Django==1.10.5
 django-authtools==1.6.0
 django-debug-toolbar==1.9.1
@@ -12,6 +13,7 @@ django-registration==2.4.1
 django-storages==1.6.5
 docutils==0.14
 et-xmlfile==1.0.1
+HTMLParser==0.0.2
 httplib2==0.11.3
 jdcal==1.4
 jmespath==0.9.3
@@ -21,6 +23,7 @@ mysqlclient-deps==0.0.2
 numpy==1.12.1
 openpyxl==2.5.3
 pyexcel-io==0.5.7
+pymssql==2.1.4
 PyMySQL==0.7.11
 pyparsing==2.2.0
 python-dateutil==2.6.0

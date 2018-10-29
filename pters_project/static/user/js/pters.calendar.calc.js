@@ -12,8 +12,6 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
     lastDay[1] = 28;
 }
 
-
-
 //날짜 더하기 계산 : 2018-7-5에서 10일 후는 언제?
 function add_date(startdate, addvalue){
 	var year = Number(startdate.split('-')[0]);

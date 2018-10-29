@@ -30,30 +30,39 @@ $('#groupcapacity').change(function(){
 
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0;
+get_member_ing_list();
 $('button#addByNew').click(function(e){
     if(!$(this).hasClass('disabled_button')){
-        var group_id = $('#form_member_groupid').val();
-        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
-        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
-        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
-        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
 
-        if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-            alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
-        }else{
-            addByNew_input_eventGroup();
-            e.preventDefault();
-            added_New_Member_Num++;
-            var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">';
-            var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
-            var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
-            var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
-            var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';
-            var htmlend = '</div>';
+        pters_option_inspector("member_create", "", global_json.db_id.length);
+        if($('#caution_popup').css('display') == "none"){
+            var group_id = $('#form_member_groupid').val();
+            var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+            var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
+            var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
+            var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
 
-            var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend;
-            $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
-            $('#addedMemberListBox').prepend(html);
+            if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+                alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
+            }else{
+                pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
+                    if($('#caution_popup').css('display') == "none"){
+                    addByNew_input_eventGroup();
+                    e.preventDefault();
+                    added_New_Member_Num++;
+                    var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">';
+                    //var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
+                    var nameinput = '<input class="new_member_firstname" placeholder="이름">';
+                    var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
+                    var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
+                    var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';
+                    var htmlend = '</div>';
+
+                    var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend;
+                    $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
+                    $('#addedMemberListBox').prepend(html);
+                }
+            }
         }
     }
 });
@@ -131,7 +140,7 @@ $('button#addByList, button#addBySearch').click(function(e){
     }
 });
 
-$(document).on('click','#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
+$(document).on('click', '#subpopup_addByList .listTitle_addByList span, ._ADD_MEMBER_REG',function(){
     if($('#subpopup_addByList').css('display') == "block"){
         $('#subpopup_addByList').hide();
         $('.groupMemberAddBox button').removeClass('disabled_button');
@@ -200,35 +209,47 @@ $(document).on('click', 'img.add_listedMember', function(){
         //회원관리 : 리스트로 그룹회원 추가
     }else{
 
-        var group_id = $('#form_member_groupid').val();
-        var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
-        var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
-        var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
-        var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
+        if(global_json.db_id.indexOf(selected_dbid) == -1){
+            if($(this).hasClass("add_by_search")){
+                pters_option_inspector("member_create", "", global_json.db_id.length);
+            }
+        }
+        if($('#caution_popup').css('display') == "none"){
+            var group_id = $('#form_member_groupid').val();
+            var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+            var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
+            var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
+            var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
 
-        if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-            alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
-        }else{
-            var sexInfo;
-            if(selected_sex == "M"){
-                sexInfo = "남";
-            }else if(selected_sex =="W"){
-                sexInfo = "여";
+            if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+                alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
             }else{
-                sexInfo = "-";
+                if($(this).hasClass("add_by_search")){
+                    pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
+                }
+                if($('#caution_popup').css('display') == "none"){
+                    var sexInfo;
+                    if(selected_sex == "M"){
+                        sexInfo = "남";
+                    }else if(selected_sex =="W"){
+                        sexInfo = "여";
+                    }else{
+                        sexInfo = "-";
+                    }
+                    var selected_phone = $(this).parents('div.list_addByList').attr('data-phone');
+                    if(selected_phone.length == 0){
+                        selected_phone = "-";
+                    }
+
+                    var html = '<div class="addByNewRaw" data-lastname="' + selected_lastname + '" data-firstname="' + selected_firstname + '" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>';
+
+                    $('#addedMemberListBox').prepend(html);
+
+                    added_New_Member_Num++;
+                    $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
+                    $(this).parents('div.list_addByList').remove();
+                }
             }
-            var selected_phone = $(this).parents('div.list_addByList').attr('data-phone');
-            if(selected_phone.length == 0){
-                selected_phone = "-";
-            }
-
-            var html = '<div class="addByNewRaw" data-lastname="' + selected_lastname + '" data-firstname="' + selected_firstname + '" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>';
-
-            $('#addedMemberListBox').prepend(html);
-
-            added_New_Member_Num++;
-            $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
-            $(this).parents('div.list_addByList').remove();
         }
     }
 });
@@ -388,7 +409,7 @@ function draw_memberlist_for_addBySearch(jsondata){
 
     var table = ['<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var sexInfo = '<img src="/static/user/res/member/icon-sex-'+sex+'.png">';
-    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>';
+    var data = '<div class="list_addByList" data-lastname="'+lastname+'" data-firstname="'+firstname+'" data-dbid="'+dbid+'" data-id="'+id+'" data-sex="'+sex+'" data-phone="'+phone+'"><div data-dbid="'+dbid+'">'+sexInfo+lastname+firstname+' (ID: '+id+')'+'</div>'+'<div>'+phone+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember add_by_search"></div>'+'</div>';
     var html = table + data;
 
     $('#searchedMemberListBox').html(html);
@@ -468,6 +489,7 @@ function added_member_info_to_jsonformat(){
 $(document).on('click', 'div.groupWrap', function(e){
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
+    var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
     if(memberlist.css('display')=='none'){
@@ -475,6 +497,9 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).addClass('groupWrap_selected');
             memberlist.addClass('groupMembersWrap_selected').show();
             repeat_list.show();
+            if(bodywidth < 600){
+               memo_list.show(); 
+            }
             get_groupmember_list(group_id);
             get_group_repeat_info(group_id);
         }else if(group_id == "1:1"){
@@ -494,6 +519,9 @@ $(document).on('click', 'div.groupWrap', function(e){
         $(this).removeClass('groupWrap_selected');
         memberlist.removeClass('groupMembersWrap_selected').hide();
         repeat_list.hide();
+        if(bodywidth < 600){
+           memo_list.hide(); 
+        }
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
     }
 });
@@ -561,9 +589,17 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
             case 'edit':
                 var group_name = $(this).parent('div').siblings('._groupname').find('input').val();
                 var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val();
-                var group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
+                var group_memo;
+                if(bodywidth < 600){
+                    group_memo = $('div.groupMemoWrap[data-groupid="'+group_id+'"] input').val();
+                }else{
+                    group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
+                }
                 var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type');
 
+                if(group_memo.length == 0){
+                    group_memo = " ";
+                }
 
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
@@ -594,10 +630,11 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
 
 $(document).on('click', '._groupstatus_disabled_false', function(e){
     e.stopPropagation();
+    $('#shade_caution').show();
     $('.lectureStateChangeSelectPopup').css('display', 'block').attr('data-grouptype', 'group');
     $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'));
     $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-groupid'));
-
+    show_shadow_reponsively();
     if($(this).attr('data-groupstatus') == "IP"){
         $('._complete').css('display', 'block');
         $('._resume, ._refund, ._delete').css('display', 'none');
@@ -610,6 +647,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
                 complete_member_reg_data_pc(lectureID, dbID);
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
+            $('#shade_caution').hide();
+            hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-groupstatus') == "PE"){
@@ -624,6 +663,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
                 resume_member_reg_data_pc(lectureID, dbID);
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
+            $('#shade_caution').hide();
+            hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype', '');
         });
     }
@@ -641,12 +682,17 @@ $(document).on('click', 'img.btn_add_member_to_group', function(){
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid');
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname');
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity');
+    var group_type = $(this).parents('.groupMembersWrap').attr('data-grouptype');
     if(bodywidth < 600){
         float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember');
     }
-    $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    if(group_type=='NORMAL'){
+        $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
+    }else{
+        $('#uptext2, #uptext2_PC').text('클래스원 추가'+' ('+group_name+')');
+    }
     $('#form_member_groupid').val(group_id);
 });
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
@@ -659,6 +705,61 @@ function get_group_ing_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
         url:'/trainer/get_group_ing_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //group_class_ListHtml('current',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+
+//서버로부터 패키지 목록 가져오기
+function get_package_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_package_ing_list/',
 
         dataType : 'html',
 
@@ -765,7 +866,7 @@ function get_group_end_list(use, callback){
 //서버로부터 그룹 목록 가져오기
 
 //그룹 지우기
-function delete_group_from_list(group_id){
+function delete_group_from_list(group_id, use, callback){
     var bodywidth = window.innerWidth;
     var next_page = '/trainer/get_group_ing_list';
     if($('#currentGroupList').css('display') == "block"){
@@ -784,6 +885,7 @@ function delete_group_from_list(group_id){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("group_delete", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -825,6 +927,9 @@ function delete_group_from_list(group_id){
                 //     });
                 // }
                 smart_refresh_member_group_class_list();
+                if(use == "calback"){
+                    callback();
+                }
 
                 console.log('success');
             }
@@ -853,6 +958,7 @@ function delete_groupmember_from_grouplist(use, callback){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("groupmember_delete", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -904,6 +1010,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            pters_option_inspector("group_update", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -1110,7 +1217,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var arrayResult = [];
     var array;
     var email;
-    var arrayforemail;
+    // var arrayforemail;
     var name;
     var id;
     var dbId;
@@ -1124,11 +1231,22 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var groupType2;
     var groupType3;
     var member_number = 0;
+    var full_data = '';
     for(var i=0; i<len; i++){
-        if(jsondata.groupInfoArray[i].split('/').indexOf('1:1') >= 0){
+        if(option == "count") {
+            full_data = countLists[i];
+            array = countLists[i].split('/');
+        }else if(option == "name"){
+            full_data = nameLists[i];
+            array = nameLists[i].split('/');
+        }else if(option == "date") {
+            full_data = dateLists[i];
+            array = dateLists[i].split('/');
+        }
+        if(full_data.split('/').indexOf('1:1') >= 0){
             member_number++;
             if(option == "count"){
-                array = countLists[i].split('/');
+                // array = countLists[i].split('/');
                 email = array[8];
                 name = array[2];
                 id = array[3];
@@ -1154,7 +1272,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
                     groupType3 = '';
                 }
             }else if(option == "name"){
-                array = nameLists[i].split('/');
+                // array = nameLists[i].split('/');
                 email = array[8];
                 name = array[0];
                 id = array[1];
@@ -1184,8 +1302,8 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
                     groupType3 = '';
                 }
             }else if(option == "date"){
-                array = dateLists[i].split('/');
-                arrayforemail = dateLists[i].split('/');
+                // array = dateLists[i].split('/');
+                // arrayforemail = dateLists[i].split('/');
                 email = array[8];
                 name = array[1];
                 id = array[2];
@@ -1363,16 +1481,16 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var group_type_nm = jsondata.group_type_cd_nm[i];
         var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
         var group_memo = jsondata.group_note[i];
-        var group_memberlist = []
+        var group_memberlist = [];
         var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];
         var groupstatus = jsondata.state_cd_name[i];
         var groupstatus_cd = jsondata.state_cd[i];
 
-        ordernum++
-        var full_group = ""
+        ordernum++;
+        var full_group = "";
         if(group_membernum == group_capacity && group_type == "NORMAL"){
-            var full_group = "red_color_text"
+            var full_group = "red_color_text";
         }
 
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
@@ -1381,13 +1499,14 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
         var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">'
 
-        var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">'
-        var htmlend = '</div>'
-        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>'
+        var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">';
+        var htmlend = '</div>';
+        var memolist = '<div class="groupMemoWrap" data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>';
         var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
         var manageimgs = '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>';
         if(Options.auth_class == 0){
-            manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>'
+            manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>';
         }
 
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
@@ -1399,21 +1518,21 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
             '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
             '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-            manageimgs
+            manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
         if(group_type == "EMPTY"){
-            htmlToJoin.push(htmlstart+main+htmlend+repeatlist+memberlist)
+            htmlToJoin.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }else if(group_type == "NORMAL"){
-            htmlToJoin2.push(htmlstart+main+htmlend+repeatlist+memberlist)
-        }
+            htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+        };
         
     }
 
     if(htmlToJoin.length == 0){
         if(option == "current"){
-            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>')
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>')
+            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
     //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
@@ -1431,13 +1550,14 @@ function get_groupmember_list(group_id, use, callback){
         type:'GET',
         dataType : 'html',
 
-        beforeSend:function(){
-            beforeSend()
+        beforeSend:function(xhr){
+            beforeSend();
+            pters_option_inspector("group_read", xhr, "");
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
@@ -1556,7 +1676,7 @@ function groupMemberListSet(group_id, jsondata){
     var EMPTY_EXPLAIN;
     if(grouptype == 'EMPTY'){
         //var group_type = group_capacity+"인 공개"
-        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 그룹 소속인원은 이 그룹명으로 개설된 레슨에 예약 가능하며, 그룹 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
+        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         EMPTY_EXPLAIN = "";
@@ -1575,7 +1695,12 @@ function groupMemberListSet(group_id, jsondata){
 
     var html = htmlToJoin.join('') + addButton;
     if(jsondata.db_id.length == 0){
-        html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+        if(grouptype == 'EMPTY') {
+            html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        }
+        else if(grouptype == 'NORMAL'){
+            html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        }
     }
 
     $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
@@ -1583,7 +1708,7 @@ function groupMemberListSet(group_id, jsondata){
 //그룹원 목록을 그룹에 그리기
 
 //그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
-$(document).on('click','img.substract_groupMember',function(e){
+$(document).on('click', 'img.substract_groupMember', function(e){
     e.stopPropagation();
 
     var groupmember_name = $(this).attr('data-fullname');
@@ -1619,15 +1744,15 @@ $('#popup_delete_btn_yes').click(function(){
 function refresh_all_member_group_class_list(){
     if($('#currentGroupList').css('display') == "block"){
         get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            var member_Html = memberlist.html;
+            // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+            // var member_Html = memberlist.html;
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
         });
     }else if($('#finishedGroupList').css('display') == "block"){
         get_member_group_class_end_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-            var member_Html = memberlist.html;
+            // var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+            // var member_Html = memberlist.html;
             var group_class_Html = group_class_ListHtml('finished', jsondata);
             $('#finishedGroupList').html(group_class_Html);
         });
@@ -1656,8 +1781,9 @@ function get_group_repeat_info(group_id){
         data: {"group_id": group_id},
         dataType : 'html',
 
-        beforeSend:function(){
+        beforeSend:function(xhr){
             //beforeSend(); //ajax 로딩이미지 출력
+            pters_option_inspector("group_read", xhr, "");
         },
 
         success:function(data){
@@ -1851,7 +1977,7 @@ function send_delete_member_repeat_infos(jsondata){
 
 
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
-    $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled',disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
+    $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled', disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
     $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable));
 }
 
@@ -1869,12 +1995,15 @@ function get_member_group_class_ing_list(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    // var startTime = '';
+    // var endTime = '';
     $.ajax({
         url:'/trainer/get_member_group_class_ing_list/',
 
         dataType : 'html',
 
         beforeSend:function(){
+            // startTime = performance.now();
             beforeSend();
         },
 
@@ -1886,6 +2015,9 @@ function get_member_group_class_ing_list(use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+
+            // endTime = performance.now();
+            // console.log(endTime - startTime + 'ms')
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');

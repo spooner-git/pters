@@ -260,8 +260,7 @@
                     <span class="icon-bar" style="width: 20px;"></span>
                 </button>
                 {% block nav_center_img %}
-                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
-                    <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                    <a id="uptext" class="uptext">{{user.first_name }}  <span></span></a>
                 {% endblock %}
                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
                     <a><img src="{% static_url "user/res/member/icon-repeat-white.png" %}" style="width:20px;"></a>
@@ -276,7 +275,7 @@
 
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                         <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
-                        <div id="user_name">{{user.last_name}} {{user.first_name}}
+                        <div id="user_name">{{user.first_name}}
                             <span class="text-nameAttach"></span>
                         </div>
                         <div id="welcome">
@@ -345,8 +344,10 @@
                         </div>
                         -->
                         <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help">
-                            </a>
+                            <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help"></a>
+                        </div>
+                        <div class="sidebar_div"><img src="{% static_url "user/res/icon-card@3x.png" %}" class="sidebar_icon" alt="#">
+                            <a href="{% url 'payment:index' %}" class="sidebar_text text-payment"></a>
                         </div>
                     </div>
                     <!--<div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>-->
@@ -447,7 +448,11 @@
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text text-setting"></a>
                 </div>
-                
+
+                <div class="centermenu_div">
+                    <a href="{% url 'payment:index' %}" class="centermenu_text text-payment"></a>
+                </div>
+
                 <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:help_setting' %}" class="centermenu_text text-help"></a>
                 </div>
@@ -465,7 +470,7 @@
                 <img src="/static/user/res/icon-name-b.png" alt="" onclick="open_slide_menu_pc('class');" id="classselect_button">
                 <div id="popup_triangle"></div>
                 <span class="pcwhere" onclick="open_slide_menu_pc('class');">{{ request.session.class_type_name }}</span>
-                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.last_name}} {{user.first_name}} <span class="text-nameAttach"></span></span>
+                <span class="pcwho" onclick="open_slide_menu_pc('class');">{{user.first_name}} <span class="text-nameAttach"></span></span>
             </div>
             <span class="pclogout text-logout" onclick="location.href='{% url 'login:logout' %}'">로그아웃</span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
@@ -473,7 +478,7 @@
             <div class="pcver-slide-menu_class">
                 <div id="myInfo">
                     <span id="myInfo_center_name">{{ request.session.class_center_name }}</span>&nbsp
-                    <span id="myInfo_user_name">{{user.last_name}} {{user.first_name}}<span class="text-nameAttach"></span></span>
+                    <span id="myInfo_user_name">{{user.first_name}}<span class="text-nameAttach"></span></span>
                     
                     <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'" class="text-mypage"></span>
                     <img src="/static/user/res/ptadd/btn-x.png" onclick="" hidden>
@@ -509,6 +514,8 @@
             </div>
         </div>
     </nav>
+
+    <p id="free_member_use_guide">가이드</p>
 
     <div class="footergap">
 
@@ -582,25 +589,50 @@ function playSound() {
 <script type="text/javascript">
     // var requestButton = document.querySelector(".request-btn");
 
+    {% load background_data %}
+    {% autoescape off %}
+    var setting_info = {% get_setting_info request %};
+    var class_background_img_url= {% get_background_url request %};
+    var class_background_type_cd = {% get_background_type_cd request %};
+    var auth_type_cd = {% get_function_auth_type_cd request %};
+    var auth_product_type_name = '{{ request.session.product_type_name }}';
+    {% endautoescape %}
     //});
     //const messageChannel = new MessageChannel();
     //messageChannel.port1.onmessage = function(event){ console.log('msg from SW', event); }
     //navigator.serviceWorker.controller.postMessage({'hello':'test'});
-    var platform_check = 'pc'
+    var platform_check = 'pc';
+    var push_info = '{{ request.session.push_token }}';
+    var device_info = '{{ request.session.device_info }}';
+
     var varUA = navigator.userAgent.toLowerCase();
-        if(varUA.match('android') != null){
-            $('._company').css('display','none');
-            $('.ads_wrap').css('display','none');
-            $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
-            platform_check = 'mobile'
-        }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-            $('._company').css('display','none');
-            $('.ads_wrap').css('display','none');
-            $('.sidebar_div_last2 a').attr('href','/trainer/help_setting/').attr('target','');
-            platform_check = 'mobile'
-        }else{
-            platform_check = 'pc'
+    if(varUA.match('android') != null){
+        platform_check = 'mobile';
+        if(device_info != "web"){ //앱일떄
+            $('#paymentSetting').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('a.text-payment').parent('div').css('display','none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        }else if(device_info == "web"){ //브라우저일때
+            platform_check = "mobile_browser"
         }
+    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
+        platform_check = 'mobile';
+        if(device_info != "web"){ //앱일때
+            $('#paymentSetting').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('a.text-payment').parent('div').css('display','none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        }else if(device_info == "web"){ //브라우저일때
+            platform_check = "mobile_browser"
+        }
+        
+    }else{
+        platform_check = 'pc';
+    }
+
     if(platform_check=='pc'){
         Push.Permission.request(onGranted, onDenied);
 
@@ -611,6 +643,7 @@ function playSound() {
             console.log('알람 승인 상태')
         }
     }
+
     if(platform_check=='pc'){
         registrationServiceWorker('{{ request.session.push_token }}');
     }
@@ -656,16 +689,60 @@ function playSound() {
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
 
-    {% load background_data %}
-    {% autoescape off %}
-    var setting_info = {% get_setting_info request %};
-    var class_background_img_url= {% get_background_url request %};
-    var class_background_type_cd = {% get_background_type_cd request %};
-{#    var function_auth = {% get_function_auth request %};#}
-    {% endautoescape %}
-    {#    var class_background_img_url = [{% for background_img_info in request.session.background_img_data %}'{{ background_img_info.url }}'{% if forloop.last == False %},{% endif %}{% endfor %}];#}
 
-    {#            open_lecture_select_popup_pc()#}
+    // auth_type_cd = {
+    //                 "auth_option_limit":1, //1: 제한  0: 제한 없음
+    //                 "auth_lock_date":3,    //숫자 > 0: 날짜 제한, 0: 기능 제한
+
+    //                 // {"active":On/off여부, "limit_num":제한 숫자, "limit_type":무료사용자(1)인지 권한제한(0)인지}
+    //                 "auth_plan_create":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 앞뒤 몇일로 제한]
+    //                 "auth_plan_delete":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 앞뒤 몇일로 제한]
+    //                 "auth_plan_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_plan_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_member_create":{"active":1, "limit_num":0, "limit_type": 0}, // [On/Off, 최대 몇명]
+    //                 "auth_member_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_member_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_member_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_group_create":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 최대 몇 그룹]
+    //                 "auth_group_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_group_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_group_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_groupmember_create":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_groupmember_delete":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_class_create":{"active":1, "limit_num":0, "limit_type": 0},   // [On/Off, 최대 몇 클래스]
+    //                 "auth_class_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_class_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_class_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_classmember_add":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_classmember_delete":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_package_create":{"active":1, "limit_num":0, "limit_type": 0}, // [On/Off, 최대 몇 패키지]
+    //                 "auth_package_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_package_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_package_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_analytics_create":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_analytics_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_analytics_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_analytics_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_program_create":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_program_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_program_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_program_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_setting_create":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_setting_delete":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_setting_read":{"active":1, "limit_num":0, "limit_type": 0},
+    //                 "auth_setting_update":{"active":1, "limit_num":0, "limit_type": 0},
+
+    //                 "auth_ads":0
+    //     }
 
     /* Shade 클릭해서 팝업 닫기
      $('.pshade').click(function(){
@@ -699,7 +776,7 @@ function playSound() {
         window.location.reload();
     });
 
-    
+
     function adjust_sidenav_wrapper_height(){
         //var sideupper_BottomLoc = $('.sidebar_upper').offset().top + $('.sidebar_upper').height();
         var sidenav_wrapper_slide_TopLoc = $('#sidenav_wrapper_slide').offset().top - $(window).scrollTop();
@@ -711,7 +788,7 @@ function playSound() {
 
 
     function openNav(){
-        
+
         $("#outer_Sidenav").show();
         $("#inner_Sidenav").css({'width':'250px'});
         $('#float_btn').hide('fast');
@@ -731,7 +808,7 @@ function playSound() {
     }
 
     //var selector_alarm_iframe = $('#alarm-delete-form');
-    
+
     function open_slide_menu_pc(option){ // pc or mobile
         var bodywidth = window.innerWidth;
         var selector_alarm_iframe = $('#alarm-iframe')
@@ -746,8 +823,8 @@ function playSound() {
             }else{
                 $('#popup_triangle').css({'display':'block', 'top':$('#classselect_button').position().top+53, 'left':$('#classselect_button').position().left+7})
             }
-            
-            
+
+
         }
         else if(option == 'alarm'){
             $('.pcver-slide-menu_class').css('display','none')
@@ -759,8 +836,8 @@ function playSound() {
             }else{
                 $('#popup_triangle').css({'display':'block', 'top':$('#alarm_button').position().top+53, 'left':$('#alarm_button').position().left-3})
             }
-            
-            
+
+
         }
     }
 
@@ -780,7 +857,7 @@ function playSound() {
 
         }
     }
-    
+
     var class_hour = '{{ request.session.class_hour }}';
     var social_login_check = '{{ request.session.social_login_check }}';
     var social_login_type = '{{ request.session.social_login_type }}';
@@ -797,7 +874,7 @@ function playSound() {
     if(stoptime.length>0){ //0:00-23:59
         stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0]);
         stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0]);
-        
+
         if('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0] == '23' && '{{ request.session.setting_member_reserve_time_available }}'.split('-')[0].split(':')[1] == '59'){
             stoptimeStart = 24;
         }
@@ -823,7 +900,7 @@ function playSound() {
         worktimeEnd = '';
     }
 
-    var Options = {   
+    var Options = {
         "hourunit" : 30, // 30 or 60 달력을 30분단위로 선택이 가능하다.
         "classDur" : Number('{{ request.session.class_hour }}'), // 30 or 60  수업시간을 classDur 시간만큼 선택 가능
         "timeDur" : Number('{{ request.session.setting_member_time_duration }}'),               //예약 기본 시간 단위
@@ -860,14 +937,8 @@ function playSound() {
 
         "language" : "{{ request.session.setting_language }}", //Korea, Japan, English, Chinese, Spanish
         "location" : "Korea",         //Korea, Japan, English, Chinese
-
-        "auth_group":1,
-        "auth_class":1,
-        "auth_limit":1,
-        "auth_option_limit":0, //1: 제한  0: 제한 없음
-        "auth_ads":0,
     };
-
+    
     //요일별 업무시간이 모두 같으면 worktime, workStartTime, workEndTime 셋팅
     var week_worktime_selected = false;
     for(var i=0; i<Options.worktimeWeekly.length; i++){
@@ -900,11 +971,7 @@ function playSound() {
     };
     //요일별 업무시간을 보고 휴일날짜를 구한다.
 
-    //광고 제거
-    if(Options.auth_ads == 1){
-        $('.ads_wrap').empty()
-    };
-    //광고 제거
+    
 
     if(Options.language=="JPN"){
         $(".KRtext, .ENtext").remove();
@@ -1162,6 +1229,8 @@ function playSound() {
         document.getElementById('lecture-check-form').submit();
     }
 
+    
+
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///
 </script>
@@ -1171,7 +1240,7 @@ function playSound() {
 <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.multi.language.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.common.option.inspector.js" %}></script>
-
+<script type="text/javascript">pters_option_inspector("ads","","");</script>
 {% block local_js_footer %}
 {% endblock %}
 

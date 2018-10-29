@@ -365,7 +365,7 @@ ul a{
 
 
 .pters_input_namefield{
-	width: 48%;
+	width: 100%;
 	display: inline-block;
 	padding: 0;
 	/*height: 40px !important;*/ /*이거 대체 왜이래?? 그룹추가할때 40 important되어있으면 칸이 너무 크다.*/
@@ -1117,9 +1117,9 @@ button._info_baseedit_img{
 
 #memberName_reg{
 	display: table-cell;
-	width: 90%;
+	/*width: 90%;
 	vertical-align: middle;
-	background-color: transparent;
+	background-color: transparent;*/
 }
 
 #memberSex{
@@ -1382,7 +1382,7 @@ option{
 	
 
 	#memberName_reg{
-		width: 54%;
+		/*width: 54%;*/
 		border: 	0;
 	}
 
@@ -1398,12 +1398,12 @@ option{
 
 	#memberLastName_add, #memberFirstName_add{
 		display: inline-block;
-		width: 48% !important;
+		width: 100% !important;
 		border:1px solid #8d8d8d;
 		height: 26px;
 	}
 	#memberFirstName_add{
-		margin-left: 2px;
+		/*margin-left: 2px;*/
 	}
 
 	#memberSex{

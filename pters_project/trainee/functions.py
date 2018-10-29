@@ -111,7 +111,7 @@ def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_
     query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     query_member_auth_cd \
-        = "select `LECTURE_TB_ID` from GROUP_LECTURE_TB as B" \
+        = "select count(`LECTURE_TB_ID`) from GROUP_LECTURE_TB as B" \
           " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
           " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)='IP'" \
           " and (select `AUTH_CD` from MEMBER_LECTURE_TB as C WHERE C.LECTURE_TB_ID = B.LECTURE_TB_ID" \
@@ -391,10 +391,17 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
 
                 group_info = None
                 group_check = 0
-                try:
-                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
-                except ObjectDoesNotExist:
+                # try:
+                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
+                # except ObjectDoesNotExist:
+                #     group_check = 1
+                group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_tb_id,
+                                                           package_tb__isnull=True)
+                if len(group_data) > 0:
+                    group_info = group_data[0]
+                else:
                     group_check = 1
+
                 if group_check == 0:
                     lecture_info_data.group_name = group_info.group_tb.name
                     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
@@ -409,7 +416,6 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     # except ObjectDoesNotExist:
                     #     error = '그룹 정보를 불러오지 못했습니다.'
 
-                # print('lecture_list:' + str(lecture_info_data.lecture_tb_id) + ':' + str(lecture_info_data.lecture_tb.start_date))
                 output_lecture_list.append(lecture_info_data)
 
     context['lecture_data'] = output_lecture_list
@@ -572,7 +578,7 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
         lt_res_02 = 0
         lt_res_03 = '0'
         lt_res_04 = '00:00-23:59'
-        lt_res_05 = 14
+        lt_res_05 = 7
         lt_res_cancel_time = -1
         lt_res_enable_time = -1
         lt_work_time_avail = ['', '', '', '', '', '', '']
@@ -648,34 +654,34 @@ def func_check_schedule_setting(class_id, start_date, end_date, add_del_type):
 
         if reserve_stop == '1':
             if add_del_type == ADD_SCHEDULE:
-                error = '예약 등록이 불가능합니다.'
+                error = '현재 예약 등록 정지 상태입니다.'
             else:
-                error = '예약 취소가 불가능합니다.'
+                error = '현재 예약 취소 정지 상태입니다.'
 
         if error is None:
             if now_time < reserve_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
+                    error = '현재 예약 등록 가능 시간이 아닙니다.'
                 else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '현재 예약 취소 가능 시간이 아닙니다.'
             if now_time > reserve_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
+                    error = '현재 예약 취소 가능 시간이 아닙니다.'
                 else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '현재 예약 취소 가능 시간이 아닙니다.'
 
         if error is None:
             if add_del_start_time < work_avail_start_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
-                else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '강사 업무시간이 아닙니다.'
+                # else:
+                #     error = '예약 취소가 불가능합니다.'
 
             if add_del_end_time > work_avail_end_time:
                 if add_del_type == ADD_SCHEDULE:
-                    error = '예약 등록이 불가능합니다.'
-                else:
-                    error = '예약 취소가 불가능합니다.'
+                    error = '강사 업무시간이 아닙니다.'
+                # else:
+                #     error = '예약 취소가 불가능합니다.'
 
     avail_end_date = today + datetime.timedelta(days=reserve_avail_date)
 

@@ -5,6 +5,7 @@ body{
 	padding-top: 50px;
 	margin:0 auto;
 	background: #f7f7f7;
+	margin-bottom: 40px;
 }
 .wrap800{
 	width: 97%;
@@ -12,6 +13,9 @@ body{
 
 #ymdText{
 	z-index: 30;
+}
+#ymdText_gap{
+	height: 50px;
 }
 #menuName{
 
@@ -22,7 +26,7 @@ body{
 }
 
 #trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
-	margin-top: 70px;
+	margin-top: 20px;
 }
 #trainerWorkTimeSetting_{
 	display: none;
@@ -268,7 +272,7 @@ li a{
 }
 
 #trainerPushSettingText{
-	margin-bottom: 40px;
+	margin-top: 20px;
 }
 
 #trainerAutoCompleteSettingText{
@@ -401,8 +405,14 @@ li a{
 	#menuDescription{
 	    line-height: unset;
 	}
-	#trainerWorkTimeSettingText ,#memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
-		margin-top: 120px;
+	#ymdText_gap{
+		height: 120px;
+	}
+	#trainerPushSettingText{
+		margin-top: 20px;
+	}
+	#trainerWorkTimeSettingText, #memberReserveBasicHourSettingText, #memberLessonNoticeSettingText, #memberlessonChangeAlarmSettingText{
+		margin-top: 20px;
 	}
 	.settingText{
 		font-size: 20px;

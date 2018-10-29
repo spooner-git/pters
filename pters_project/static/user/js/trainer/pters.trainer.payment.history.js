@@ -18,28 +18,47 @@ $(document).ready(function(){
     //////////////////////////////메뉴들 탭 이동//////////////////////////////////////////////
 
 
-    ////////결제방법 변경 버튼
-    $(document).on('click','.pay_method_changeButton',function(){
+    ////////결제카드 변경 버튼
+    $(document).on('click', '.pay_method_changeButton', function(){
         var customer_uid = $(this).attr('data-customer_uid');
         var payment_name = $(this).attr('data-payment_name');
-        var merchandise_type_cd = $(this).attr('data-merchandise_type_cd');
-        check_payment(payment_name, customer_uid, merchandise_type_cd);
+        var product_id = $(this).attr('data-product-id');
+        var period_month = $(this).attr('data-period-month');
+        check_payment(payment_name, customer_uid, product_id, period_month);
         // alert(payid);
         //To- Do
-    })
+    });
+    ////////결제카드 삭제 버튼
+    $(document).on('click', '.pay_method_deleteButton', function(){
+        var customer_uid = $(this).attr('data-customer_uid');
+        var payment_name = $(this).attr('data-payment_name');
+        var product_id = $(this).attr('data-product-id');
+        var period_month = $(this).attr('data-period-month');
+        //check_payment(payment_name, customer_uid, product_id, period_month);
+        $('#id_customer_uid_delete_period').val(customer_uid);
+        // alert("정기 결제 카드가 삭제됐습니다.");
+
+        if (confirm('카드 정보를 정말 삭제하시겠습니까?')) {
+            document.getElementById('delete-period-payment-form').submit();
+        }
+        //To- Do
+    });
     // 해지신청
-    $(document).on('click','.pay_cancel_Button',function(){
+    $(document).on('click', '.pay_cancel_Button', function(){
         var customer_uid = $(this).attr('data-customer_uid');
         // alert(payid);
         $('#submit_pay_cancel').attr('data-customer_uid', customer_uid);
         $('#id_customer_uid_cancel').val(customer_uid);
         $('#pay_cancel_confirm_popup').show();
+        shade_index(100);
         //To- Do
     });
     // 해지신청 취소
     $(document).on('click','.pay_restart_Button',function(){
         var customer_uid = $(this).attr('data-customer_uid');
-        alert(customer_uid);
+        var next_payment_date = $(this).attr('data-next_payment_date');
+        // alert(customer_uid);
+        alert(next_payment_date+'부터 결제가 시작됩니다.');
         // $('#submit_pay_restart').attr('data-customer_uid', payid);
         $('#id_customer_uid_restart').val(customer_uid);
         document.getElementById('restart-period-payment-form').submit();
@@ -49,10 +68,12 @@ $(document).ready(function(){
             e.stopPropagation();
             $('#pay_cancel_survey').show();
             $('#pay_cancel_confirm_popup').hide();
+            shade_index(-100);
         });
         $('#popup_cancel_btn_no').click(function(e){
             e.stopPropagation();
             $('#pay_cancel_confirm_popup').hide();
+            shade_index(-100);
         });
 
     $('.ptersCheckbox').click(function(){

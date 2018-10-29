@@ -41,11 +41,20 @@ urlpatterns = [
     # 정기 결제 일시 정지 해제 페이지
     url(r'^clear_pause_period_billing/$', views.clear_pause_period_billing_logic,
         name='clear_pause_period_billing'),
+    # 정기 결제 카드 삭제 페이지
+    url(r'^delete_period_billing/$', views.delete_period_billing_logic,
+        name='delete_period_billing'),
 
     # 정기 결제 결제 방법 변경 체크 페이지
     url(r'^check_update_period_billing/$', views.check_update_period_billing_logic, name='check_update_period_billing'),
     # 정기 결제 결제 방법 변경 페이지
     url(r'^update_period_billing/$', views.update_period_billing_logic, name='update_period_billing'),
+
+
+    # 개발 중 ################################################################################
+    # 정기 결제 이용권 변경 예약
+    url(r'^update_reserve_product_info/$', views.update_reserve_product_info_logic, name='update_reserve_product_info'),
+    ########################################################################################################
 
 
     # 결제 정보 조회 ######################################################################################################
@@ -60,6 +69,9 @@ urlpatterns = [
 
     # 결제 정보 리스트 조회
     url(r'^get_payment_list/$', views.GetPaymentListView.as_view(), name='get_payment_list'),
+
+    # 상품 정보 가져오기
+    url(r'^get_product_info/$', views.GetProductInfoView.as_view(), name='get_product_info'),
 
 
     # 현재 미사용 ########################################################################################################

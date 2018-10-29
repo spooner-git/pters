@@ -174,8 +174,10 @@ $(document).ready(function(){
     });
 
     // /trainee/read_trainee_all_schedule_ajax/ PT 일정 이력
-    get_trainee_lecture_history();
-    get_trainee_reg_history();
+    if(class_id != ""){
+        get_trainee_lecture_history();
+        get_trainee_reg_history();
+    }
     function get_trainee_lecture_history(){
         $.ajax({
             url: '/trainee/get_trainee_schedule_history/',

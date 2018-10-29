@@ -223,8 +223,8 @@
                     <span class="icon-bar" style="width: 20px;"></span>
                 </button>
                 {% block nav_center_img %}
-                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{ user.last_name}} {{user.first_name }}  코치님 일정</a>-->
-                    <a id="uptext" class="uptext">{{ user.last_name}} {{user.first_name }}  <span></span></a>
+                    <!--<a id="uptext" class="uptext navbar-brand" href="{% url 'index' %}">{{user.first_name }}  코치님 일정</a>-->
+                    <a id="uptext" class="uptext">{{user.first_name }}  <span></span></a>
                 {% endblock %}
                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="openAlarm('mobile')">
                     <a><img src={% static_url "user/res/main/alarm-on.png" %} style="width:20px;"></a>
@@ -240,7 +240,7 @@
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
                         <a href="{% url 'index' %}" style="width:100%;height: 100%;z-index: 1"></a>
                         <div style="z-index: -1"><img src={% static_url "user/res/icon-pf.png" %} alt="#"></div>
-                        <div id="user_name">{{user.last_name}} {{user.first_name}}
+                        <div id="user_name">{{user.first_name}}
                             <span class="KRtext">님</span><span class="JPtext">様</span><span class="ENtext"></span>
                         </div>
                         <div id="welcome">
@@ -378,7 +378,7 @@
             <div id="loginInfo" class="centermenu_div" style="float:right;" onclick="open_lecture_select_popup_pc(); openAlarm('pc'); ">
                 <img src="/static/user/res/icon-name.png" alt="" style="margin-bottom:3px;">
                 <span class="pcwhere">{{ request.session.class_type_name }}</span>
-                <span class="pcwho">{{user.last_name}} {{user.first_name}} <span class="_nameAttach"></span></span>
+                <span class="pcwho">{{user.first_name}} <span class="_nameAttach"></span></span>
             </div>
             <span class="pclogout" onclick="location.href='{% url 'login:logout' %}'"></span>
             <span id="pters-version" style="position: absolute;top:65px;right:10px;color:#f4f4f4;font-size:12px;"></span>
@@ -386,7 +386,7 @@
                 <div id="myInfo">
                     <label><img src="/static/user/res/member/icon-user.png"><span class="KRtext">내 클래스 정보</span><span class="JPtext">My Class</span><span class="ENtext">My Classes</span></label>
                     <span>{{ request.session.class_center_name }}</span>
-                    <span>{{user.last_name}} {{user.first_name}}</span>
+                    <span>{{user.first_name}}</span>
                     <span class="_nameAttach"></span>
                     <span id="myPageMove" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">My Page</span>
                     <img src="/static/user/res/ptadd/btn-x.png" onclick="closeAlarm('pc')">

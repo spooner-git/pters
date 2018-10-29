@@ -42,6 +42,7 @@ def func_get_class_member_ing_list(class_id):
                                                                ).filter(class_tb_id=class_id, auth_cd='VIEW',
                                                                         lecture_tb__state_cd='IP',
                                                                         lecture_tb__use=USE,
+                                                                        lecture_tb__member__use=USE,
                                                                         use=USE).order_by('lecture_tb__member__name')
     member_id = None
     for class_lecture_info in class_lecture_data:
@@ -69,7 +70,7 @@ def func_get_class_member_end_list(class_id):
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                           lecture_tb__use=USE, use=USE
+                                           lecture_tb__use=USE, lecture_tb__member__use=USE, use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
                                                                 ).order_by('lecture_tb__member__name')
@@ -104,7 +105,7 @@ def func_get_class_member_one_to_one_end_list(class_id):
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                           lecture_tb__use=USE, use=USE
+                                           lecture_tb__use=USE, lecture_tb__member__use=USE, use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
                                                                 ).order_by('lecture_tb__member__name')
@@ -120,7 +121,7 @@ def func_get_class_member_one_to_one_end_list(class_id):
                 if member_id != class_lecture_info.lecture_tb.member_id:
                     member_id = class_lecture_info.lecture_tb.member_id
                     all_member.append(class_lecture_info.lecture_tb.member)
-
+    # print(len(all_member))
     return all_member
 
 
@@ -553,33 +554,37 @@ def func_get_member_end_list(class_id, user_id):
                 lecture_finish_count += lecture_info_data.lecture_count
 
                 if lecture_info.use == USE:
-                    if group_check == 0:
+                    if group_check != 0:
+                        member_data.group_reg_count += lecture_info.lecture_reg_count
+                        member_data.group_rem_count += lecture_info.lecture_rem_count
+                        member_data.group_avail_count += lecture_info.lecture_avail_count
+                    else:
                         member_data.lesson_reg_count += lecture_info.lecture_reg_count
                         member_data.lesson_rem_count += lecture_info.lecture_rem_count
                         member_data.lesson_avail_count += lecture_info.lecture_avail_count
-                    # member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                    # member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                    # member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                    member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                    member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                    member_data.lecture_avail_count += lecture_info.lecture_avail_count
 
-                        if member_data.start_date is None or member_data.start_date == '':
+                    if member_data.start_date is None or member_data.start_date == '':
+                        member_data.start_date = lecture_info.start_date
+                    else:
+                        if member_data.start_date > lecture_info.start_date:
                             member_data.start_date = lecture_info.start_date
-                        else:
-                            if member_data.start_date > lecture_info.start_date:
-                                member_data.start_date = lecture_info.start_date
-                                # if lecture_info.lecture_avail_count > 0:
-                                #     member_data.lecture_available_id = lecture_info.lecture_id
+                            # if lecture_info.lecture_avail_count > 0:
+                            #     member_data.lecture_available_id = lecture_info.lecture_id
 
-                        if member_data.end_date is None or member_data.end_date == '':
+                    if member_data.end_date is None or member_data.end_date == '':
+                        member_data.end_date = lecture_info.end_date
+                    else:
+                        if member_data.end_date < lecture_info.end_date:
                             member_data.end_date = lecture_info.end_date
-                        else:
-                            if member_data.end_date < lecture_info.end_date:
-                                member_data.end_date = lecture_info.end_date
 
-                        if member_data.mod_dt is None or member_data.mod_dt == '':
+                    if member_data.mod_dt is None or member_data.mod_dt == '':
+                        member_data.mod_dt = lecture_info.mod_dt
+                    else:
+                        if member_data.mod_dt > lecture_info.mod_dt:
                             member_data.mod_dt = lecture_info.mod_dt
-                        else:
-                            if member_data.mod_dt > lecture_info.mod_dt:
-                                member_data.mod_dt = lecture_info.mod_dt
 
                     member_data.lecture_id = lecture_info.lecture_id
 
@@ -720,23 +725,23 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
                         member_data.lesson_reg_count += lecture_info.lecture_reg_count
                         member_data.lesson_rem_count += lecture_info.lecture_rem_count
                         member_data.lesson_avail_count += lecture_info.lecture_avail_count
-                        member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                        member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                        member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                    member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                    member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                    member_data.lecture_avail_count += lecture_info.lecture_avail_count
 
-                        if member_data.start_date is None or member_data.start_date == '':
+                    if member_data.start_date is None or member_data.start_date == '':
+                        member_data.start_date = lecture_info.start_date
+                    else:
+                        if member_data.start_date > lecture_info.start_date:
                             member_data.start_date = lecture_info.start_date
-                        else:
-                            if member_data.start_date > lecture_info.start_date:
-                                member_data.start_date = lecture_info.start_date
-                                # if lecture_info.lecture_avail_count > 0:
-                                #     member_data.lecture_available_id = lecture_info.lecture_id
+                            # if lecture_info.lecture_avail_count > 0:
+                            #     member_data.lecture_available_id = lecture_info.lecture_id
 
-                        if member_data.end_date is None or member_data.end_date == '':
+                    if member_data.end_date is None or member_data.end_date == '':
+                        member_data.end_date = lecture_info.end_date
+                    else:
+                        if member_data.end_date < lecture_info.end_date:
                             member_data.end_date = lecture_info.end_date
-                        else:
-                            if member_data.end_date < lecture_info.end_date:
-                                member_data.end_date = lecture_info.end_date
 
                     if member_data.mod_dt is None or member_data.mod_dt == '':
                         member_data.mod_dt = lecture_info.mod_dt
@@ -833,17 +838,17 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
         if counts is None or counts == '':
             error = '등록 횟수 입력해주세요.'
 
-    if group_id != '' and group_id is not None:
-        try:
-            group_info = GroupTb.objects.get(group_id=group_id)
-        except ObjectDoesNotExist:
-            error = '오류가 발생했습니다.'
-
-        if error is None:
-            group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-            if group_info.group_type_cd == 'NORMAL':
-                if group_counter >= group_info.member_num:
-                    error = '그룹 정원을 초과했습니다.'
+    # if group_id != '' and group_id is not None:
+    #     try:
+    #         group_info = GroupTb.objects.get(group_id=group_id)
+    #     except ObjectDoesNotExist:
+    #         error = '오류가 발생했습니다.'
+    #
+    #     if error is None:
+    #         group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
+    #         if group_info.group_type_cd == 'NORMAL':
+    #             if group_counter >= group_info.member_num:
+    #                 error = '그룹 정원을 초과했습니다.'
     if error is None:
         if setting_lecture_auto_finish == AUTO_FINISH_ON:
             end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
@@ -936,7 +941,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        # print(member.name+'test1:'+str(lecture_id))
         # lecture_info = class_lecture_info.lecture_tb
         try:
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
@@ -1070,7 +1074,7 @@ def func_get_trainer_setting_list(context, user_id, class_id):
     lt_work_ths_time_avail = ''
     lt_work_fri_time_avail = ''
     lt_work_sat_time_avail = ''
-    lt_res_05 = '14'
+    lt_res_05 = '7'
     lt_res_cancel_time = -1
     lt_res_enable_time = -1
     lt_res_member_time_duration = 1

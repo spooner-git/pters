@@ -65,6 +65,9 @@ body{
 	right: 30px;
 	display: none;
 }
+#please_add_member_pc{
+	display: none;
+}
 #please_add_member:after{
 	content:'';
 	position: absolute;
@@ -366,6 +369,7 @@ select:focus > option:checked {
 
 #currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
 	width: 91.6%;
+	margin-bottom: 40px;
 }
 
 #finishedMemberList, #finishedGroupList{
@@ -445,7 +449,7 @@ select:focus > option:checked {
 }
 #memberName_info_lastName, #memberName_info_firstName{
 	display: none;
-	width: 35%;
+	width: 80%;
 	background: #ffffff;
 }
 
@@ -635,6 +639,7 @@ select:focus > option:checked {
 	*/
 	border-radius: 3px;
 	border: 1px solid #cccccc;
+	overflow-y: auto;
 }
 	#memberInfoPopup_PC input{
 		-webkit-text-fill-color:#282828;
@@ -666,7 +671,7 @@ select:focus > option:checked {
 	padding-left:10px;
 }
 #memberName_info_lastName_PC, #memberName_info_firstName_PC{
-	width: 100px;
+	width: 200px;
 	background: #ffffff;
 	display: none;
 }
@@ -805,6 +810,7 @@ select:focus > option:checked {
 	text-align: center;
 	border: 0;
 	border-right:1px solid #cccccc;
+	vertical-align: middle;
 }
 #memberRegHistory_info_PC > div > div:nth-child(1){
 	width: 12.5%;
@@ -1200,7 +1206,13 @@ span.summaryInnerBoxText_Repeatendtext{
 }
 
 .ymdText-pc-add-member-wrap{
-	display: none;
+	/*display: none;*/
+	display: inline-block;
+}
+#search_member_input, #search_lecture_input{
+	height: 33px;
+	width: 150px;
+	border: 1px solid #cccccc;
 }
 
 .input_disabled_color{
@@ -1342,7 +1354,12 @@ span.summaryInnerBoxText_Repeatendtext{
 		display: inline-block;
 		line-height: 33px;
 		position: relative;
-		width: 250px;
+		width: auto;
+	}
+	#search_member_input, #search_lecture_input{
+		height: 100%;
+		width: 130px;
+		margin-left: 10px;
 	}
 
 	#please_add_member_pc{

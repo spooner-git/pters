@@ -133,6 +133,7 @@ class GroupTb(TimeStampedModel):
     group_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=45, blank=True, null=True)
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
+    # group_member_num = models.IntegerField(db_column='GROUP_MEMBER_NUM', default=0)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
     note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
@@ -161,15 +162,55 @@ class GroupTb(TimeStampedModel):
         return state_cd_name
 
 
+class PackageTb(TimeStampedModel):
+    package_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
+    name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True, default='')
+    state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
+    note = models.CharField(db_column='NOTE', max_length=1000, blank=True, null=True, default='')
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PACKAGE_TB'
+
+    def __str__(self):
+        return self.name.__str__()+'_package'
+
+
 class GroupLectureTb(TimeStampedModel):
     group_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, blank=True, null=True)
     lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, blank=True, null=True)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'GROUP_LECTURE_TB'
+
+
+class PackageLectureTb(TimeStampedModel):
+    package_lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
+    lecture_tb = models.ForeignKey(LectureTb, on_delete=models.CASCADE, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PACKAGE_LECTURE_TB'
+
+
+class PackageGroupTb(TimeStampedModel):
+    package_group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
+    class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
+    package_tb = models.ForeignKey(PackageTb, on_delete=models.CASCADE, blank=True, null=True)
+    group_tb = models.ForeignKey(GroupTb, on_delete=models.CASCADE, blank=True, null=True)
+    use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'PACKAGE_GROUP_TB'
 
 
 class BackgroundImgTb(TimeStampedModel):

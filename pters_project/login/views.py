@@ -3,23 +3,35 @@ import random
 
 import httplib2
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import password_reset_done
+from django.contrib.auth.views import password_reset_done, deprecate_current_app
+from django.contrib.sites.shortcuts import get_current_site
+from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth import authenticate, logout, login, get_user_model, update_session_auth_hash
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.template.loader import render_to_string
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.generic import FormView
 from django.views.generic import TemplateView
-from registration.backends.hmac.views import RegistrationView
+from registration.backends.hmac.views import RegistrationView, REGISTRATION_SALT
+from registration import signals
+from django.utils.translation import ugettext as _
 
 # Create your views here.
 
@@ -27,6 +39,10 @@ from registration.forms import RegistrationForm
 
 from configs import settings
 from configs.const import USE, UN_USE
+from payment.functions import func_cancel_period_billing_schedule
+from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
+from trainee.models import MemberLectureTb
+from trainer.models import MemberClassTb
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -34,22 +50,14 @@ from .models import MemberTb, PushInfoTb, SnsInfoTb
 logger = logging.getLogger(__name__)
 
 
-class IndexView(View):
+class IndexView(TemplateView):
     template_name = 'login.html'
 
-    # def get_context_data(self, **kwargs):
-    def get(self, request):
-        context = {}
-        # print(str(request.user))
-        logout(request)
-        # context = super(IndexView, self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        logout(self.request)
 
-        # acceptLang = self.request.META['HTTP_ACCEPT_LANGUAGE']
-        # firstLang = acceptLang.split(',')[0]
-        # if 'ko' in firstLang:
-        #    print('ko')
-
-        return render(request, self.template_name, context)
+        return context
 
 
 def login_trainer(request):
@@ -60,7 +68,7 @@ def login_trainer(request):
     social_login_type = request.POST.get('social_login_type', '')
     auto_login_check = request.POST.get('auto_login_check', '1')
     social_login_id = request.POST.get('social_login_id', '')
-    social_accessToken = request.POST.get('social_accessToken', '')
+    social_access_token = request.POST.get('social_accessToken', '')
 
     next_page = request.POST.get('next_page')
     error = None
@@ -73,7 +81,7 @@ def login_trainer(request):
     request.session['social_login_check'] = social_login_check
     request.session['social_login_type'] = social_login_type
     request.session['social_login_id'] = social_login_id
-    request.session['social_accessToken'] = social_accessToken
+    request.session['social_accessToken'] = social_access_token
 
     if not error:
         # if password == 'kakao_login':
@@ -92,10 +100,19 @@ def login_trainer(request):
                 user = None
 
         if user is not None and user.is_active:
-            login(request, user)
-            if auto_login_check == '0':
-                request.session.set_expiry(0)
-            return redirect(next_page)
+            member = None
+            try:
+                member = MemberTb.objects.get(member_id=user.id)
+            except ObjectDoesNotExist:
+                error = 'ID/비밀번호를 확인해주세요.'
+            if error is None:
+                if member.use == 1:
+                    login(request, user)
+                    if auto_login_check == '0':
+                        request.session.set_expiry(0)
+                    return redirect(next_page)
+                else:
+                    error = '이미 탈퇴된 회원입니다.'
 
         elif user is not None and user.is_active == 0:
             member = None
@@ -124,6 +141,51 @@ def login_trainer(request):
     else:
         messages.error(request, error)
         return redirect(next_page)
+
+
+class ServiceInfoView(TemplateView):
+    template_name = 'service_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServiceInfoView, self).get_context_data(**kwargs)
+        return context
+
+
+class ServicePriceInfoView(TemplateView):
+    template_name = 'service_price_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServicePriceInfoView, self).get_context_data(**kwargs)
+        return context
+
+
+class ServiceTestLoginView(TemplateView):
+    template_name = 'service_test_login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
+        trainer_list = MemberTb.objects.filter(use=USE)
+        for trainer_info in trainer_list:
+
+            user_for_group = User.objects.get(id=trainer_info.user_id)
+            group = user_for_group.groups.get(user=trainer_info.user_id)
+            if str(group.id) == '3':
+                payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
+                                             product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
+                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
+                                             start_date='2018-10-29', end_date='2028-10-29', period_month='120',
+                                             payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
+                                             buyer_name=trainer_info.name, use=USE)
+                billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
+                                             product_tb_id='10',
+                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
+                                             payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
+                                             payment_type_cd='SINGLE', price=0, card_name='없음',
+                                             payed_date='29',
+                                             state_cd='IP', use=USE)
+                payment_info.save()
+                billing_info.save()
+        return context
 
 
 class LoginSimpleNaverView(TemplateView):
@@ -235,8 +297,8 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
         if first_name == '' or first_name == 'None' or first_name is None:
             first_name = name
 
-        if last_name == '' or last_name == 'None' or last_name is None:
-            last_name = ''
+        # if last_name == '' or last_name == 'None' or last_name is None:
+        #     last_name = ''
 
         try:
             user = User.objects.get(username=email)
@@ -250,7 +312,7 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
             try:
                 with transaction.atomic():
 
-                    user = User.objects.create_user(username=email, first_name=first_name, last_name=last_name, email=email,
+                    user = User.objects.create_user(username=email, first_name=first_name, email=email,
                                                     password=sns_id, is_active=1)
                     group = Group.objects.get(name=group_type)
                     user.groups.add(group)
@@ -262,14 +324,13 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                                          sns_name=name, sns_connect_date=timezone.now(), use=USE)
                     sns_info.save()
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
-                    login(request, user)
                     request.session['social_login_check'] = '1'
                     request.session['social_login_type'] = sns_type
                     request.session['social_login_id'] = sns_id
                     request.session['social_accessToken'] = social_access_token
-
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
+                    login(request, user)
                     return redirect('/trainer/')
 
             except ValueError:
@@ -310,6 +371,14 @@ class AddOldMemberSnsInfoView(RegistrationView, View):
             user = User.objects.get(email=email)
         except ObjectDoesNotExist:
             error = None
+
+        if user is None:
+            try:
+                user = User.objects.get(username=email)
+                user.email = email
+                user.save()
+            except ObjectDoesNotExist:
+                error = None
 
         if user is None:
             error = '로그인에 실패했습니다.'
@@ -403,6 +472,7 @@ class NewMemberSnsInfoView(TemplateView):
         context['sns_id'] = self.request.POST.get('sns_id')
         context['sns_type'] = self.request.POST.get('sns_type')
         context['sex'] = self.request.POST.get('sex')
+        context['social_accessToken'] = self.request.POST.get('social_accessToken')
 
         return render(request, self.template_name, context)
 
@@ -429,6 +499,14 @@ class CheckSnsMemberInfoView(TemplateView):
         if sns_info is None:
             try:
                 user_info = User.objects.get(email=user_email)
+                username = user_info.username
+                context['error'] = '2'
+            except ObjectDoesNotExist:
+                username = ''
+
+        if username == '':
+            try:
+                user_info = User.objects.get(username=user_email)
                 username = user_info.username
                 context['error'] = '2'
             except ObjectDoesNotExist:
@@ -505,7 +583,7 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
             logger.error(str(username)+'->'+str(user_id)+'['+str(email)+']'+str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
+            logger.info(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
 
         return render(request, self.template_name)
 
@@ -631,19 +709,19 @@ class ResetPasswordView(View):
         password_reset_form = MyPasswordResetForm
         token_generator = default_token_generator
         # template_name = 'registration_error_ajax.html'
-        email_template_name = 'registration/password_reset_email.txt'
-        subject_template_name = 'registration/password_reset_subject.txt'
+        email_template_name = 'password_reset_email.txt'
+        subject_template_name = 'password_reset_subject.txt'
         # context = None
         if email is None or email == '':
             error = 'Email 정보를 입력해주세요.'
 
         if error is None:
             if User.objects.filter(email=email).exists() is not True:
-                error = '가입되지 않은 회원입니다.'
+                error = email + '로 가입된 회원이 없습니다.'
 
         if error is None:
             if post_reset_redirect is None:
-                post_reset_redirect = reverse(password_reset_done)
+                post_reset_redirect = reverse('login:auth_password_reset_done')
             else:
                 post_reset_redirect = resolve_url(post_reset_redirect)
             if request.method == "POST":
@@ -682,8 +760,7 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
-            logger.error(request.user.last_name + ' ' + request.user.first_name
-                         + '[' + str(request.user.id) + ']' + error)
+            logger.error('email:'+email + '/' + error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -795,7 +872,7 @@ class AddMemberView(RegistrationView, View):
                         group = Group.objects.get(name=group_type)
                         user.groups.add(group)
                         user.first_name = first_name
-                        user.last_name = last_name
+                        # user.last_name = last_name
                         user.save()
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
@@ -1040,13 +1117,14 @@ class NewMemberReSendEmailView(View):
 # 회워탈퇴 api
 def out_member_logic(request):
     # next_page = request.POST.get('next_page')
-    next_page = '/login/'
+    next_page = '/login/logout/'
     error = None
 
     member_id = request.user.id
     user = None
     member = None
     sns_data = None
+    group_name = ''
     if member_id == '':
         error = 'ID를 확인해 주세요.'
 
@@ -1056,6 +1134,9 @@ def out_member_logic(request):
             user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
             error = 'ID를 확인해 주세요.'
+        if error is None:
+            group = user.groups.get(user=request.user.id)
+            group_name = group.name
 
     if error is None:
         try:
@@ -1072,13 +1153,51 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                user.is_active = 0
-                user.save()
-                member.use = 0
-                member.save()
+                # if group_name != 'trainee':
+                #     member.contents = str(user.username)+'/'+str(user.id)
+                #     member.use = 0
+                #     member.save()
+                #     count = MemberTb.objects.filter(use=UN_USE).count()
+                #     user.username = 'out_member_'+str(count)
+                #     user.email = ''
+                #     user.is_active = 0
+                #     user.set_password('0000')
+                #     user.save()
+                # else:
+                if group_name == 'trainee':
+                    member_lecture_data = MemberLectureTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                    if len(member_lecture_data) > 0:
+                        member_lecture_data.update(auth_cd='WAIT')
+                # elif group_name == 'trainer':
+                #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                #     if len(member_class_data) > 0:
+                #         member_class_data.update(auth_cd='DELETE')
+
+                name = member.name
+                i = 0
+                count = MemberTb.objects.filter(name=name).count()
+                max_range = (100 * (10 ** len(str(count)))) - 1
+
+                # while test:
+                for i in range(0, 100):
+                    username = name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                    try:
+                        User.objects.get(username=username)
+                    except ObjectDoesNotExist:
+                        break
+
+                if i == 100:
+                    raise InternalError
+                if error is None:
+                    member.contents = str(user.username)+':'+str(user.id)
+                    user.username = username
+                    user.email = ''
+                    user.is_active = 0
+                    user.set_password('0000')
+                    user.save()
+
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)
-
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -1088,7 +1207,29 @@ def out_member_logic(request):
         except ValidationError:
             error = '등록 값에 문제가 있습니다.'
         except InternalError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '다시 시도해주세요.'
+
+    if group_name != 'trainee':
+        billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, use=USE)
+
+        if len(billing_data) > 0:
+            for billing_info in billing_data:
+                error = func_cancel_period_billing_schedule(billing_info.customer_uid)
+                if error is None:
+                    billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                                                              member_id=request.user.id,
+                                                              cancel_type='탈퇴',
+                                                              cancel_reason='회원 탈퇴',
+                                                              use=USE)
+                    billing_cancel_info.save()
+                    billing_info.state_cd = 'DEL'
+                    billing_info.save()
+                payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                            customer_uid=billing_info.customer_uid)
+                if len(payment_data) >0:
+                    payment_data.update(status='cancelled', use=UN_USE)
+
+                error = None
 
     if error is None:
         return redirect(next_page)
@@ -1202,14 +1343,15 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     username = ''
     context = {'error': None, 'user_db_id': '', 'username': ''}
 
-    if last_name is None or last_name == '':
-        error = '성을 입력해 주세요.'
+    # if last_name is None or last_name == '':
+    #     error = '성을 입력해 주세요.'
 
     if first_name is None or first_name == '':
         error = '이름을 입력해 주세요.'
 
     if error is None:
-        name = last_name + first_name
+        # name = last_name + first_name
+        name = first_name
         if name == '':
             error = '이름을 입력해 주세요.'
         else:
@@ -1245,7 +1387,7 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     if error is None:
         try:
             with transaction.atomic():
-                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                user = User.objects.create_user(username=username, first_name=first_name,
                                                 password=password, is_active=0)
                 group = Group.objects.get(name='trainee')
                 user.groups.add(group)
@@ -1275,3 +1417,414 @@ def add_member_no_email_func(user_id, first_name, last_name, phone, sex, birthda
     return context
 
 
+class BaseRegistrationView(FormView):
+    """
+    Base class for user registration views.
+
+    """
+    disallowed_url = 'registration_disallowed'
+    form_class = RegistrationForm
+    success_url = None
+    template_name = 'registration/registration_form.html'
+
+    def dispatch(self, *args, **kwargs):
+        """
+        Check that user signup is allowed before even bothering to
+        dispatch or do other processing.
+
+        """
+        if not self.registration_allowed():
+            return redirect(self.disallowed_url)
+        return super(BaseRegistrationView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        new_user = self.register(form)
+        success_url = self.get_success_url(new_user) if \
+            (hasattr(self, 'get_success_url') and
+             callable(self.get_success_url)) else \
+            self.success_url
+
+        # success_url may be a string, or a tuple providing the full
+        # argument set for redirect(). Attempting to unpack it tells
+        # us which one it is.
+        try:
+            to, args, kwargs = success_url
+            return redirect(to, *args, **kwargs)
+        except ValueError:
+            return redirect(success_url)
+
+    def registration_allowed(self):
+        """
+        Override this to enable/disable user registration, either
+        globally or on a per-request basis.
+
+        """
+        return getattr(settings, 'REGISTRATION_OPEN', True)
+
+    def register(self, form):
+        """
+        Implement user-registration logic here. Access to both the
+        request and the registration form is available here.
+
+        """
+        raise NotImplementedError
+
+
+class RegistrationView(BaseRegistrationView):
+    """
+    Register a new (inactive) user account, generate an activation key
+    and email it to the user.
+
+    This is different from the model-based activation workflow in that
+    the activation key is the username, signed using Django's
+    TimestampSigner, with HMAC verification on activation.
+
+    """
+    email_body_template = 'registration/activation_email.txt'
+    email_subject_template = 'registration/activation_email_subject.txt'
+
+    def register(self, form):
+        new_user = self.create_inactive_user(form)
+        signals.user_registered.send(sender=self.__class__,
+                                     user=new_user,
+                                     request=self.request)
+        return new_user
+
+    def get_success_url(self, user):
+        return ('registration_complete', (), {})
+
+    def create_inactive_user(self, form):
+        """
+        Create the inactive user account and send an email containing
+        activation instructions.
+
+        """
+        new_user = form.save(commit=False)
+        new_user.is_active = False
+        new_user.save()
+
+        self.send_activation_email(new_user)
+
+        return new_user
+
+    def get_activation_key(self, user):
+        """
+        Generate the activation key which will be emailed to the user.
+
+        """
+        return signing.dumps(
+            obj=getattr(user, user.USERNAME_FIELD),
+            salt=REGISTRATION_SALT
+        )
+
+    def get_email_context(self, activation_key):
+        """
+        Build the template context used for the activation email.
+
+        """
+        scheme = 'https' if self.request.is_secure else 'http'
+        return {
+            'scheme': scheme,
+            'activation_key': activation_key,
+            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+            'site': get_current_site(self.request)
+        }
+
+    def send_activation_email(self, user):
+        """
+        Send the activation email. The activation key is the username,
+        signed using TimestampSigner.
+
+        """
+        activation_key = self.get_activation_key(user)
+        context = self.get_email_context(activation_key)
+        context.update({
+            'user': user,
+        })
+        subject = render_to_string(self.email_subject_template,
+                                   context)
+        # Force subject to a single line to avoid header-injection
+        # issues.
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(self.email_body_template,
+                                   context)
+        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+
+class BaseActivationView(TemplateView):
+    """
+    Base class for user activation views.
+
+    """
+    success_url = None
+    template_name = 'registration/activate.html'
+
+    def get(self, *args, **kwargs):
+        """
+        The base activation logic; subclasses should leave this method
+        alone and implement activate(), which is called from this
+        method.
+
+        """
+        activated_user = self.activate(*args, **kwargs)
+        if activated_user:
+            signals.user_activated.send(
+                sender=self.__class__,
+                user=activated_user,
+                request=self.request
+            )
+            success_url = self.get_success_url(activated_user) if \
+                (hasattr(self, 'get_success_url') and
+                 callable(self.get_success_url)) else \
+                self.success_url
+            try:
+                to, args, kwargs = success_url
+                return redirect(to, *args, **kwargs)
+            except ValueError:
+                return redirect(success_url)
+        return super(BaseActivationView, self).get(*args, **kwargs)
+
+    def activate(self, *args, **kwargs):
+        """
+        Implement account-activation logic here.
+
+        """
+        raise NotImplementedError
+
+
+class ActivationView(BaseActivationView):
+    """
+    Given a valid activation key, activate the user's
+    account. Otherwise, show an error message stating the account
+    couldn't be activated.
+
+    """
+    # success_url = 'registration_activation_complete'
+    success_url = '/login/activate/complete/'
+
+    def activate(self, *args, **kwargs):
+        # This is safe even if, somehow, there's no activation key,
+        # because unsign() will raise BadSignature rather than
+        # TypeError on a value of None.
+        username = self.validate_key(kwargs.get('activation_key'))
+        if username is not None:
+            user = self.get_user(username)
+            if user is not None:
+                user.is_active = True
+                user.save()
+                return user
+        return False
+
+    def validate_key(self, activation_key):
+        """
+        Verify that the activation key is valid and within the
+        permitted activation time window, returning the username if
+        valid or ``None`` if not.
+
+        """
+        try:
+            username = signing.loads(
+                activation_key,
+                salt=REGISTRATION_SALT,
+                max_age=settings.ACCOUNT_ACTIVATION_DAYS * 86400
+            )
+            return username
+        # SignatureExpired is a subclass of BadSignature, so this will
+        # catch either one.
+        except signing.BadSignature:
+            return None
+
+    def get_user(self, username):
+        """
+        Given the verified username, look up and return the
+        corresponding user account if it exists, or ``None`` if it
+        doesn't.
+
+        """
+        User = get_user_model()
+        try:
+            user = User.objects.get(**{
+                User.USERNAME_FIELD: username,
+                'is_active': False
+            })
+            return user
+        except User.DoesNotExist:
+            return None
+
+
+# 4 views for password reset:
+# - password_reset sends the mail
+# - password_reset_done shows a success message for the above
+# - password_reset_confirm checks the link the user clicked and
+#   prompts for a new password
+# - password_reset_complete shows a success message for the above
+
+@deprecate_current_app
+@csrf_protect
+def password_reset(request,
+                   template_name='password_reset_form.html',
+                   email_template_name='password_reset_email.html',
+                   subject_template_name='password_reset_subject.txt',
+                   password_reset_form=PasswordResetForm,
+                   token_generator=default_token_generator,
+                   post_reset_redirect=None,
+                   from_email=None,
+                   extra_context=None,
+                   html_email_template_name=None,
+                   extra_email_context=None):
+    if post_reset_redirect is None:
+        post_reset_redirect = reverse('login:auth_password_reset')
+        # post_reset_redirect = '/login/password_reset/done/'
+    else:
+        post_reset_redirect = resolve_url(post_reset_redirect)
+    if request.method == "POST":
+        form = password_reset_form(request.POST)
+        if form.is_valid():
+            opts = {
+                'use_https': request.is_secure(),
+                'token_generator': token_generator,
+                'from_email': from_email,
+                'email_template_name': email_template_name,
+                'subject_template_name': subject_template_name,
+                'request': request,
+                'html_email_template_name': html_email_template_name,
+                'extra_email_context': extra_email_context,
+            }
+            form.save(**opts)
+            return HttpResponseRedirect(post_reset_redirect)
+    else:
+        form = password_reset_form()
+    context = {
+        'form': form,
+        'title': _('Password reset'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@deprecate_current_app
+def password_reset_done(request,
+                        template_name='password_reset_done.html',
+                        extra_context=None):
+    context = {
+        'title': _('Password reset sent'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+# Doesn't need csrf_protect since no-one can guess the URL
+@sensitive_post_parameters()
+@never_cache
+@deprecate_current_app
+def password_reset_confirm(request, uidb64=None, token=None,
+                           template_name='password_reset_confirm.html',
+                           token_generator=default_token_generator,
+                           set_password_form=SetPasswordForm,
+                           post_reset_redirect=None,
+                           extra_context=None):
+    """
+    View that checks the hash in a password reset link and presents a
+    form for entering a new password.
+    """
+    UserModel = get_user_model()
+    assert uidb64 is not None and token is not None  # checked by URLconf
+    if post_reset_redirect is None:
+        post_reset_redirect = reverse('login:auth_password_reset_complete')
+    else:
+        post_reset_redirect = resolve_url(post_reset_redirect)
+    try:
+        # urlsafe_base64_decode() decodes to bytestring on Python 3
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = UserModel._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        validlink = True
+        title = _('Enter new password')
+        if request.method == 'POST':
+            form = set_password_form(user, request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(post_reset_redirect)
+        else:
+            form = set_password_form(user)
+    else:
+        validlink = False
+        form = None
+        title = _('Password reset unsuccessful')
+    context = {
+        'form': form,
+        'title': title,
+        'validlink': validlink,
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@deprecate_current_app
+def password_reset_complete(request,
+                            template_name='password_reset_complete.html',
+                            extra_context=None):
+    context = {
+        'login_url': resolve_url(settings.LOGIN_URL),
+        'title': _('Password reset complete'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@sensitive_post_parameters()
+@csrf_protect
+@login_required
+@deprecate_current_app
+def password_change(request,
+                    template_name='password_change_form.html',
+                    post_change_redirect=None,
+                    password_change_form=PasswordChangeForm,
+                    extra_context=None):
+    if post_change_redirect is None:
+        post_change_redirect = reverse('password_change_done')
+    else:
+        post_change_redirect = resolve_url(post_change_redirect)
+    if request.method == "POST":
+        form = password_change_form(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Updating the password logs out all other sessions for the user
+            # except the current one.
+            update_session_auth_hash(request, form.user)
+            return HttpResponseRedirect(post_change_redirect)
+    else:
+        form = password_change_form(user=request.user)
+    context = {
+        'form': form,
+        'title': _('Password change'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
+@login_required
+@deprecate_current_app
+def password_change_done(request,
+                         template_name='password_change_done.html',
+                         extra_context=None):
+    context = {
+        'title': _('Password change successful'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)

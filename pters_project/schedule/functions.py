@@ -3,6 +3,7 @@ import json
 import httplib2
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
@@ -30,7 +31,9 @@ def func_get_lecture_id(class_id, member_id):
 
     for lecture_info in lecture_data:
         try:
-            GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb.lecture_id, use=USE)
+            GroupLectureTb.objects.get(~Q(group_tb__group_type_cd='ONE_TO_ONE'),
+                                       lecture_tb_id=lecture_info.lecture_tb.lecture_id,
+                                       use=USE)
         except ObjectDoesNotExist:
             lecture_id = lecture_info.lecture_tb.lecture_id
             break

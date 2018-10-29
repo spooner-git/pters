@@ -176,6 +176,7 @@ body{
 	position: relative;
 	width: 100%;
 	top: 110px;
+	margin: 0 auto;
 	background-color: transparent;
 	height: 90%;
 	z-index: 3;
@@ -184,6 +185,8 @@ body{
 	table-layout: fixed;
 	overflow-y: hidden;
 	overflow-x: hidden;
+	margin-bottom: 40px;
+	padding-bottom: 40px;
 }
 
 
@@ -612,6 +615,7 @@ img,a,div,span,p{
 		background:#ffffff;
 		padding-top: 99px;
 		margin-bottom: 60px;
+		padding-bottom: 0;
 	}
 
 	.slidegap{

@@ -1,6 +1,6 @@
 {% extends "trainer_base.html" %}
 {% load static_url %}
-
+{% load humanize %}
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.history.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.add.style.css" %}>
@@ -28,8 +28,8 @@
         <label class="main_label">내 이용권/구매내역</label>
         <div class="main_menu_table">
             <div class="main_menu_table_cell main_cell_active" id="pay_history">이용권 내역</div>
-            <!--<div class="main_menu_table_cell" id="pay_change">이용권 변경</div>-->
-            <div class="main_menu_table_cell" id="pay_method_change">결제방법 변경</div>
+            <!-- <div class="main_menu_table_cell" id="pay_change">이용권 변경</div> -->
+            <div class="main_menu_table_cell" id="pay_method_change">내 결제 수단</div>
             <div class="main_menu_table_cell" id="pay_cancel">해지신청</div>
             <div class="main_menu_table_cell" id="pay_restart">해지신청 취소</div>
         </div>
@@ -40,12 +40,12 @@
             <div class="page_menu_table">
                 <div class="page_menu_table_cell cell_active" id="current_use">보유현황</div>
                 <div class="page_menu_table_cell" id="mypay_history">결제내역</div>
-                <div class="page_menu_table_cell" id="monthly_pay_stop_history">정기결제 일시정지/해제</div>
+                <div class="page_menu_table_cell" id="monthly_pay_stop_history">결제 종료/일시정지/해제</div>
                 <div class="page_menu_table_cell_blank"></div>
             </div>
             <div id="page_current_use" class="sub_pages">
                 <p style="margin-top: 20px;padding-left:5px;">
-                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+                    <span style="font-weight:bold;">{{user.first_name }}</span> 님의 이용권 보유 현황
                 </p>
                 <div class="current_use_table_label">
                     <div>NO</div>
@@ -61,9 +61,12 @@
                             <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>
                         </div>
                         <div>
-                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                                <p>{{ payment_merchandise_info }}</p>
-                            {% endfor %}
+                            {% autoescape off %}
+                            <p>{{ current_payment_info.merchandise_type_name }}</p>
+                            {% endautoescape %}
+{#                            {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}#}
+{#                                <p>{{ payment_merchandise_info }}</p>#}
+{#                            {% endfor %}#}
                             {#                        <p>그룹 관리 메뉴 사용</p>#}
                             {#                        <p>그룹 일정 관리</p>#}
                             {#                        <p>광고 제거</p>#}
@@ -97,15 +100,15 @@
 
             <div id="page_mypay_history" class="sub_pages">
                 <p style="margin-top: 20px;padding-left:5px;">
-                    <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 결제내역
+                    <span style="font-weight:bold;">{{user.first_name }}</span> 님의 이용권 결제내역
                 </p>
                 <div class="mypay_history_table_label">
                     <div>NO</div>
                     <div>PTERS 이용권</div>
-                    <div>결제일</div>
-                    <div>결제금액<br>(부가세 10%별도)</div>
+                    <div>일자</div>
+                    <div>결제 금액<br>(부가세 포함)</div>
                     <div>상태</div>
-                    <div>결제방법</div>
+                    <div>결제 방법</div>
                     <div>영수증</div>
                 </div>
 
@@ -117,10 +120,10 @@
                             <p>{{ payment_info.start_date }} ~ {{ payment_info.end_date }}</p>
                         </div>
                         <div>
-                            <p>{{ payment_info.start_date }}</p>
+                            <p>{{ payment_info.paid_date }}</p>
                         </div>
                         <div>
-                            <span>총 결제금액</span><span>{{ payment_info.price }} 원</span>
+                            <span>{{ payment_info.price|intcomma }} 원</span>
                         </div>
                         <div>
                             <span>{{ payment_info.status_name }}</span>
@@ -129,7 +132,11 @@
                             <p>{{ payment_info.card_name }}</p>
                         </div>
                         <div>
-                            <p><a href="{{ payment_info.receipt_url }}" target="_blank">클릭</a></p>
+                            {% if payment_info.receipt_url != None %}
+                                {% if payment_info.receipt_url != '' %}
+                            <p class="payment_receipt_url" style="color:#3e82ff" data-url="{{ payment_info.receipt_url }}">클릭</p>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
@@ -140,10 +147,12 @@
                     <div>NO</div>
                     <div>PTERS 이용권</div>
                     <div>정기결제정보</div>
-                    <div>일시정지일</div>
+                    <!-- div>일시정지일</div>
                     <div>일시정지 해제/종료일</div>
+                    <div>종료일</div>
+                    <div>재개</div>-->
                     <div>상태</div>
-                    <div>사유</div>
+                    <div> </div>
                 </div>
                 {% for stop_payment_info in stop_period_payment_data %}
                     <div class="monthly_pay_stop_table_content">
@@ -152,40 +161,41 @@
                             <p>{{ stop_payment_info.name }}</p>
                         </div>
                         <div>
-                            <p>{{ stop_payment_info.start_date }} 결제</p>
+                            <p>매{% if stop_payment_info.period_month == 1 %}월{% else %}년{% endif %} {{ stop_payment_info.payed_date }}일 결제</p>
+                        </div>
+                        <!--<div>
+{#                            <p>{{ stop_payment_info.end_date }}</p>#}
                         </div>
                         <div>
-                            <p>{{ stop_payment_info.end_date }}</p>
-                        </div>
-                        <div>
-                            <p>{{ stop_payment_info.end_date }}</p>
-                        </div>
+{#                            <p>{{ stop_payment_info.end_date }}</p>#}
+                        </div>-->
                         <div>
                             <p>{{ stop_payment_info.status_name }}</p>
                         </div>
-                        <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}" onclick="test('{{ stop_payment_info.billing_info.customer_uid }}');">
-                            <p> {{ stop_payment_info.fail_reason }}</p>
+                        <div data-customer_uid="{{ stop_payment_info.billing_info.customer_uid }}">
+                            <p> {{ stop_payment_info.fail_reason }} <span class="clear_pause" onclick="clear_pause_period_payment('{{ stop_payment_info.billing_info.customer_uid }}',
+                                    '{{ stop_payment_info.period_month }}', '{{ stop_payment_info.next_payment_date }}');">서비스 재개 신청</span></p>
                         </div>
                     </div>
                 {% endfor %}
                 <div id="monthly_pay_stop_annai1">
-                    <label>일시정지 해제하기</label>
+                    <label>일시정지?</label>
                     <p>정기결제수단의 정지/한도초과/정보변경 등의 사유로 사용중인 이용권이 일시정지가 된 상태에서 기존 정기결제수단 또는 새로운 정기결제수단으로 다시 결제를 하시면 일시정지된 정기결제를 다시 시작할 수 있습니다.</p>
                 </div>
 
                 <div id="monthly_pay_stop_annai2">
                     <label>정기결제 일시정지/해제 상태 안내</label>
                     <p class="annai_label">정기결제 일시정지란?</p>
-                    <p>고객님의 부득이한 사정으로 사용중인 이용권의 정기결제수단이 정지/한도초과/정보변경 등으로 결제상태가 변경될 경우 다음 정기결제예정일에 사용중인 이용권의 정기결제가 일시정지되는 것을 의미합니다.</p>
+                    <p>정기 결제수단이 정지/한도초과/정보변경 등으로 결제상태가 변경될 경우 다음 정기결제 예정일에 사용중인 이용권의 정기결제가 일시정지되는 것을 의미합니다.</p>
                     <p class="annai_label">정기결제 일시정지 해제란?</p>
                     <p>일시정지된 정기결제이용권의 결제수단이 다시 결제가능한 상태가 될 때 다시 결제가 처리되고 이용권이 재시작 되는 것을 의미합니다.</p>
                     <p class="annai_label">정기결제 일시정지 종료란?</p>
                     <p>일시정지된 정기결제 이용권의 결제수단이 더 이상 결제가 불가능한 상태가 되거나 다른 결제수단으로 새로 이용권을 구매하거나 또는 고객님의 종료처리요청으로 인해 정기결제가 더이상 유효하지 않고 종료되는 것을 의미합니다.</p>
                     <div style="width: 100%;height: 1px;background: #cccccc;margin:0 auto;margin-top:10px;margin-bottom: 10px;"></div>
-                    <p>- 정기결제 일시정지/해제 이력은 일시정지일부터 1년간 제공됩니다.</p>
-                    <p>- 신규로 이용권 구매 시 스트리밍 서비스가 중복되는 경우 일시정지 상태인 이용권 중 스트리밍 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>
-                    <p>- 일시정지 날로부터 90일 이내 정기결제 일시정지 해제를 하지 않는 경우 기간 만료로 인한 자동종료 처리됩니다.</p>
-                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 이용문의 메뉴에 요청사항을 남겨주세요.</p>
+{#                    <p>- 정기결제 일시정지/해제 이력은 일시정지일부터 1년간 제공됩니다.</p>#}
+                    <p>- 신규로 이용권 구매 시 서비스가 중복되는 경우 일시정지 상태인 이용권 중 해당 서비스를 포함하는 이용권의 정기결제는 자동으로 종료 처리 됩니다.</p>
+{#                    <p>- 일시정지 날로부터 90일 이내 정기결제 일시정지 해제를 하지 않는 경우 기간 만료로 인한 자동종료 처리됩니다.</p>#}
+                    <p>- 정기결제 일시정지 해제 또는 종료를 원하시는 고객님은 결제카드가 결제 가능한 상태인지 확인 후 "해제 신청"을 하면 다시 활성화 하실 수 있습니다.</p>
                     <p></p>
                 </div>
             </div>
@@ -194,41 +204,59 @@
 
 
         <div id="page_pay_change" class="page_content_wrap">
-
+            이용권 변경 기능 추가 예정
         </div>
 
 
         <div id="page_pay_method_change" class="page_content_wrap">
-            <p style="margin-top: 20px;padding-left:5px;">
-                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기 결제 대상 이용권
+            <p style="margin-top: 20px;margin-bottom:0;padding-left:5px;">
+                <span style="font-weight:bold;">{{user.first_name }}</span> 님의 결제카드 등록 내역
             </p>
+            <p style="font-size:12px;color:#676767;padding-left:5px;">자동 결제일에 아래 카드정보로 상품이 결제 됩니다.</p>
             <div class="pay_method_change_table_label">
                 <div>NO</div>
-                <div>PTERS 이용권</div>
-                <div>결제예정일</div>
-                <div>총 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 별도)</span></div>
-                <div>결제방법</div>
+                <!-- <div>PTERS 이용권</div>
+                <div>결제 예정일</div>
+                <div>매달 결제금액<br><span style="font-size:11.5px;font-color:#464646">(부가세 10% 포함)</span></div> -->
+                <div>결제 카드 정보</div>
+                <div>결제일</div>
+                <div>상태</div>
                 <div>결제방법 변경</div>
             </div>
-            {% for current_payment_info in current_period_payment_data %}
+            {% for current_payment_info in change_period_payment_data %}
                 <div class="pay_method_change_table_content">
                     <div>1</div>
-                    <div>
-                        <p>{{ current_payment_info.name }}</p>
+                    <!-- <div>
+{#                        <p>{{ current_payment_info.name }}</p>#}
                     </div>
                     <div>
-                        <p>{{ current_payment_info.next_payment_date }}</p>
+{#                        <p>{{ current_payment_info.next_payment_date }}</p>#}
                     </div>
                     <div>
-                        <p>{{ current_payment_info.price }} 원</p>
-                    </div>
+{#                        <p>{{ current_payment_info.price }} 원</p>#}
+                    </div> -->
                     <div>
                         <p>{{ current_payment_info.card_name }}</p>
                     </div>
                     <div>
+                        <p>매{% if current_payment_info.period_month == 1 %}월{% else %}년{% endif %} {{ current_payment_info.payed_date }}일 결제</p>
+                    </div>
+                    <div>
+                        <p> {{ current_payment_info.status_name }} </p>
+                    </div>
+                    <div>
+                        {% if current_payment_info.billing_state_cd != 'IP' %}
+                        <div class="pay_method_deleteButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
+                             data-payment_name="{{ current_payment_info.name }}"
+                             data-product-id="{{ current_payment_info.product_tb_id }}"
+                             data-period-month="{{ current_payment_info.period_month }}"><span>삭제</span></div>
+                        {% endif %}
+                        {% if current_payment_info.billing_state_cd != 'END' %}
                         <div class="pay_method_changeButton" data-customer_uid="{{ current_payment_info.customer_uid }}"
                              data-payment_name="{{ current_payment_info.name }}"
-                             data-merchandise_type_cd="{{ current_payment_info.merchandise_type_cd }}"><span>변경</span></div>
+                             data-product-id="{{ current_payment_info.product_tb_id }}"
+                             data-period-month="{{ current_payment_info.period_month }}"><span>변경</span></div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -237,7 +265,7 @@
 
         <div id="page_pay_cancel" class="page_content_wrap">
             <p style="margin-top: 20px;padding-left:5px;">
-                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 이용권 보유 현황
+                <span style="font-weight:bold;">{{user.first_name }}</span> 님의 이용권 보유 현황
             </p>
             <div class="pay_cancel_table_label">
                 <div>NO</div>
@@ -255,13 +283,16 @@
 {#                        <p>{{ current_payment_info.start_date }} ~ {{ current_payment_info.end_date }}</p>#}
                     </div>
                     <div>
-                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}
-                            <p>{{ payment_merchandise_info }}</p>
-                        {% endfor %}
+                        {% autoescape off %}
+                        <p>{{ current_payment_info.merchandise_type_name }}</p>
+                        {% endautoescape %}
+{#                        {% for payment_merchandise_info in current_payment_info.merchandise_type_name %}#}
+{#                            <p>{{ payment_merchandise_info }}</p>#}
+{#                        {% endfor %}#}
                     </div>
                     <div>
                         <p>{{ current_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ current_payment_info.billing_info.next_payment_date }}</span> </p>
+                        <p style="color:#fe4e65;">결제 예정일: <span>{{ current_payment_info.billing_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
                         <div class="pay_cancel_Button" data-customer_uid="{{ current_payment_info.billing_info.customer_uid }}"><span>이용권해지</span></div>
@@ -314,7 +345,7 @@
 
         <div id="page_pay_restart" class="page_content_wrap">
             <p style="margin-top: 20px;padding-left:5px;">
-                <span style="font-weight:bold;">{{ user.last_name}} {{user.first_name }}</span> 님의 정기결제 해지신청 현황
+                <span style="font-weight:bold;">{{user.first_name }}</span> 님의 정기결제 해지신청 현황
             </p>
             <div class="pay_cancel_table_label">
                 <div>NO</div>
@@ -332,16 +363,21 @@
 {#                        <p>{{ cancel_period_payment_info.start_date }} ~ {{ cancel_period_payment_info.end_date }}</p>#}
                     </div>
                     <div>
-                        {% for payment_merchandise_info in cancel_period_payment_info.merchandise_type_name %}
-                            <p>{{ payment_merchandise_info }}</p>
-                        {% endfor %}
+
+                        {% autoescape off %}
+                        <p>{{ cancel_period_payment_info.merchandise_type_name }}</p>
+                        {% endautoescape %}
+{#                        {% for payment_merchandise_info in cancel_period_payment_info.merchandise_type_name %}#}
+{#                            <p>{{ payment_merchandise_info }}</p>#}
+{#                        {% endfor %}#}
                     </div>
                     <div>
                         <p>{{ cancel_period_payment_info.name }}</p>
-                        <p style="color:#fe4e65;">결제예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
+                        <p style="color:#fe4e65;">종료 예정일: <span>{{ cancel_period_payment_info.next_payment_date }}</span> </p>
                     </div>
                     <div>
-                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"><span>해지 취소</span></div>
+                        <div class="pay_restart_Button" data-customer_uid="{{ cancel_period_payment_info.billing_info.customer_uid }}"
+                             data-next_payment_date="{{ cancel_period_payment_info.next_payment_date }}"><span>해지 취소</span></div>
                     </div>
                 </div>
             {% endfor %}
@@ -370,6 +406,11 @@
         <input type="hidden" name="customer_uid" id="id_customer_uid_clear_pause" value="">
         <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
     </form>
+    <form action="{% url 'payment:delete_period_billing' %}" id="delete-period-payment-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="customer_uid" id="id_customer_uid_delete_period" value="">
+        <input type="hidden" name="next_page" value="{% url 'payment:payment_history' %}">
+    </form>
 
 {% endblock %}
 
@@ -377,26 +418,54 @@
     <script type="text/javascript" src="https://service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
     <script>
 
+
+		window.addEventListener('load', function () {
+            var error_message = "{% for message in messages %} {% if message.tags == "error" %}{{ message }}{% endif %} {%if forloop.last == False%} \n{% endif %}{% endfor %}";
+            if(error_message != ""){
+                alert(error_message);
+            }
+        });
+
         if($('body').width()<600){
-            $('#page-base').css('display','block')
-            //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('이용권 구매')
-            $('#uptext').text("이용권 구매")
-            $('#upbutton-modify').hide()
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text('이용권 내역');
+            $('#uptext').text("이용권 내역");
+            $('#upbutton-check').hide();
         }
 
-        $('#upbutton-x-modify, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_setting/"
-        })
+        $('#upbutton-x, ._button_Prev').click(function(){
+            location.href="/trainer/trainer_mypage/";
+        });
 
-        function test(payid){
+        $('.payment_receipt_url').click(function(){
+            if(device_info=='web' && (platform_check != "mobile" && platform_check !="mobile_browser") ){
+                window.open($(this).attr('data-url'), '_blank');
+            }else{
+                alert('PC에서 웹페이지(https://www.pters.co.kr) 에서 확인 가능합니다.');
+            }
+        });
+
+        function clear_pause_period_payment(payid, period_month, next_payment_date){
             $('#id_customer_uid_clear_pause').val(payid);
-            document.getElementById('clear-pause-period-payment-form').submit();
+            var day = date.getDate();
+            var next_payment_date_info = next_payment_date.split('-')[1]+'월 '+next_payment_date.split('-')[2]+'일';
+            if(day <10){
+                day = '0'+day;
+            }
+            if(period_month==1){
+                if (confirm('정말 일시정지를 해제 하시겠습니까? \n'+'매월' + day + '일 결제 됩니다. 최대 5분정도 소요될수 있습니다.')) {
+                    document.getElementById('clear-pause-period-payment-form').submit();
+                }
+            }else{
+                if (confirm('정말 일시정지를 해제 하시겠습니까? \n'+'매년' + next_payment_date_info + ' 결제 됩니다. 최대 5분정도 소요될수 있습니다.')) {
+                    document.getElementById('clear-pause-period-payment-form').submit();
+                }
+            }
         }
 
-        function check_payment(name, customer_uid, merchandise_type_cd){
+        function check_payment(name, customer_uid, product_id, period_month){
             var error_check = true;
-            console.log('check_payment::'+name);
             $.ajax({
                 url: "/payment/check_update_period_billing/", // 서비스 웹서버
                 type: "POST",
@@ -425,7 +494,7 @@
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        payment(name, 'card',  merchandise_type_cd, jsondata.next_start_date[0], customer_uid);
+                        payment(name, 'card',  product_id, jsondata.next_start_date[0], customer_uid, period_month, jsondata.price[0]);
                     }
 
                 },
@@ -445,13 +514,13 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        function payment(name, pay_method, merchandise_type_cd, start_date, before_customer_uid){
+        function payment(name, pay_method, product_id, start_date, before_customer_uid, period_month, input_price){
             var date = new Date();
-            var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var merchant_uid_data = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+            var customer_uid_data = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var month = date.getMonth()+1;
             var day = date.getDate();
-            var price = 0;
+            var price = input_price;
             var payment_type_cd = 'PERIOD';
             if(month <10){
                 month = '0'+month;
@@ -464,6 +533,7 @@
             if(start_date != ''){
                 today = start_date;
             }
+
             var request_pay_period_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
                 pay_method : pay_method,
@@ -473,13 +543,14 @@
                 amount : price,
                 custom_data: {
                     "user_id":{{ request.user.id }},
-                    "merchandise_type_cd":merchandise_type_cd,
+                    "product_id":product_id,
                     "payment_type_cd":payment_type_cd,
                     "customer_uid":customer_uid_data,
-                    "start_date":  today
+                    "start_date":  today,
+                    "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                buyer_name : '{{ request.user.first_name }}',
             };
 
             IMP.request_pay(request_pay_period_data, function(rsp) {
@@ -492,10 +563,11 @@
                         type: "POST",
                         headers: { "Content-Type": "application/json" },
                         data: JSON.stringify({
-                            merchandise_type_cd : merchandise_type_cd,
+                            product_id : product_id,
                             payment_type_cd:payment_type_cd,
                             paid_amount: rsp.paid_amount,
-                            start_date: today
+                            start_date: today,
+                            period_month: period_month
                         }),
 
                         beforeSend:function(xhr, settings) {
@@ -577,6 +649,7 @@
         }
 
     </script>
+
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.payment.history.js" %}></script>
 
 {% endblock %}

@@ -284,6 +284,17 @@ img.substract_addedMember{
 div._groupmanage img._info_delete{
 	opacity: 0.4;
 }
+.groupMemoWrap{
+	display: none;
+	width: 100%;
+	height: auto;
+	background: #ffffff;
+	color: #282828;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	text-align: left;
+	font-size: 12px;
+}
 
 .groupRepeatWrap{
 	display: none;

@@ -16,6 +16,8 @@
 
     <form action="{% url 'schedule:delete_schedule' %}" id="daily-pt-delete-form" method="post">
         {% csrf_token %}
+        <input type="hidden" name="date_info" id="id_date_info">
+        
         <input type="hidden" name="schedule_id" id="id_schedule_id">
         <input type="hidden" name="member_name"   id="id_member_name_delete">
         <input type="hidden" name="member_id"   id="id_member_dbid_delete">
@@ -26,6 +28,8 @@
 
     <form action="{% url 'schedule:delete_schedule' %}" id="daily-off-delete-form" method="post">
         {% csrf_token %}
+        <input type="hidden" name="date_info_off" id="id_date_info_off">
+
         <input type="hidden" name="off_schedule_id" id="id_off_schedule_id">
         <input type="hidden" name="en_dis_type" id="en_dis_type" value ='0'>
         <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
@@ -214,7 +218,7 @@
         </table>
     </div> <!--월화수목금토일-->
 
-    <div id="calendar" class="wrap">
+    <div id="calendar" class="">
 
         <div class="swiper-container">
             <div id="timeIndicatorBar"></div>
@@ -228,10 +232,10 @@
         </div>
 
         <div id="cal_box" class="cal_box"></div>
-        <div id="gap">
-        </div>
-
-        <div class="ads_cal_insideTop ads_wrap">
+        <!-- <div id="gap">
+        </div> -->
+        
+        <div class="ads_cal_insideTop ads_wrap" style="margin-top: 30px;">
             <!--달력하단_반응형_디스플레이-->
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle"
@@ -243,7 +247,11 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
+
+        
     </div>
+
+    
 
 
     <div class="ads_cal_side ads_wrap">
@@ -770,8 +778,8 @@
                 </label>
                 <div class="mobileinfo hastooltips">
                     <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" title="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" title="lastName" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" title="firstName" disabled>
+                   <!--  <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" title="lastName" disabled> -->
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" title="firstName" maxlength="11" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -907,8 +915,8 @@
                 <div id="memberFemale_info_PC" class="selectboxopt selectboxopt_right selectbox_disable" value="W"><img src="/static/user/res/member/icon-female-pink.png"></div>
             </div>
             <input type="text" name="" id="memberName_info_PC">
-            <input type="text" name="" id="memberName_info_lastName_PC" maxlength="4">
-            <input type="text" name="" id="memberName_info_firstName_PC" maxlength="4">
+            <!-- <input type="text" name="" id="memberName_info_lastName_PC" maxlength="4"> -->
+            <input type="text" name="" id="memberName_info_firstName_PC" maxlength="11">
             <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="close_manage_popup('member_info_PC')">
         </label>
 
@@ -1385,6 +1393,9 @@
         });
 
         $('footer').css('display', 'none');
+
+        show_free_member_use_guide("plan");
+        $('#free_member_use_guide').css('position','fixed');
 
     </script>
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.cal.add.pt.js" %}></script>

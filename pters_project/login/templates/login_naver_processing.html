@@ -65,7 +65,7 @@
 		var naverLogin = new naver.LoginWithNaverId(
 			{
                 clientId: "h5MuvYzSFLlrFTs19g0V",
-                callbackUrl: "https://spooner-test.pters.co.kr/login/login_simple_naver/",
+                callbackUrl: "https://www.pters.co.kr/login/login_simple_naver/",
 {#                clientId: "VM6zl0mLyBgjf9dgw1cC",#}
 {#                callbackUrl: "http://localhost:8000/login/login_simple_naver/",#}
 				isPopup: false,
@@ -109,7 +109,6 @@
                     $('#id_accessToken').attr('value', access_token);
                     $('#id_accessToken1').attr('value', access_token);
                     $('#id_accessToken2').attr('value', access_token);
-                    check_sns_member_info();
 
 					if( email == undefined || email == null) {
 						alert("이메일은 필수정보입니다. 정보제공을 동의해주세요.");
@@ -124,9 +123,12 @@
 						return;
 					}
 
+                    check_sns_member_info();
+
 {#					window.location.replace("http://" + window.location.hostname + ( (location.port==""||location.port==undefined)?"":":" + location.port) + "/sample/main.html");#}
 				} else {
 					console.log("callback 처리에 실패하였습니다.");
+                    window.location.replace('/');
 				}
 			});
 		});

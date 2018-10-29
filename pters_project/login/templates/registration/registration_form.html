@@ -86,9 +86,9 @@
             <div id="local_registration" class="registration_select_button"><img src="/static/user/res/PTERS_logo_pure.png" style="float:left;margin-left:35px;width: 60px;margin-top:12px;margin-right:0px;"> 새로운 ID로 가입하기</div>
 
             <!--간편화 업로드시 숨김-->
-            <!-- <div id="naver_registration" class="registration_select_button">
+            <div id="naver_registration" class="registration_select_button">
               <div id="naverIdLogin" style="float: left;"><img src="/static/user/res/naver.png" style="float:left;margin-left:25px;width: 78px;margin-top:8px;margin-right:19px;">네이버 ID로 가입하기</div>
-            </div> -->
+            </div>
 
             <!-- 구글아이디로그인 버튼 노출 영역 -->
             <!-- <div id="google_registration" class="registration_select_button">
@@ -160,8 +160,8 @@
         <div class="registerbox_add">
             <div id="global_error_msg"></div>
             <div class="outerbox">
-                <input type="text" name="" maxlength="15" placeholder="성" id="familyname_input"  autocomplete="off">
-                <input type="text" name="" maxlength="15" placeholder="이름" id="lastname_input"  autocomplete="off">
+                <!-- <input type="text" name="" maxlength="15" placeholder="성" id="lastname_input"  autocomplete="off"> -->
+                <input type="text" name="" maxlength="15" placeholder="성명" id="familyname_input"  autocomplete="off">
                 <button class="selector_button" data-type="M">남</button>
                 <button class="selector_button" data-type="W">여</button>
             </div>
@@ -973,7 +973,7 @@
         </div>
     </div>
 
-    <form action="." id="add-member-id-form" method="post">
+    <form action="../" id="add-member-id-form" method="post">
         {% csrf_token %}
         <div style="display: none">
             {{ form.as_p }}
@@ -1201,9 +1201,9 @@
             var result = 1;
 
             if($('#first_name').val().length == 0 ){
-                result = '이름을 입력해주세요';
-            }else if($('#last_name').val().length == 0 ){
-                result = '성을 입력해주세요';
+                result = '성명을 입력해주세요';
+            // }else if($('#last_name').val().length == 0 ){
+            //     result = '성을 입력해주세요';
             }else if($('#newsex').val().length == 0 ){
                 result = '성별을 입력해주세요';
             }
@@ -1363,18 +1363,26 @@
             $form.find('#newsex').attr('value',$(this).attr('data-type'));
         });
 
+        // $('#lastname_input').keyup(function(){
+        //     if($(this).val().length>0){
+        //         $form.find('#newname').attr('value', $(this).val() + '' + $('#familyname_input').val());
+        //         $form.find('#last_name').attr('value', $(this).val());
+        //     }else{
+        //         $form.find('#newname').attr('value',"");
+        //     }
+        // });
+
+        // $('#familyname_input').keyup(function(){
+        //     if($(this).val().length>0){
+        //         $form.find('#newname').attr('value', $('#lastname_input').val() + '' + $(this).val());
+        //         $form.find('#first_name').attr('value', $(this).val());
+        //     }else{
+        //         $form.find('#newname').attr('value',"");
+        //     }
+        // });
         $('#familyname_input').keyup(function(){
             if($(this).val().length>0){
-                $form.find('#newname').attr('value', $(this).val() + '' + $('#lastname_input').val());
-                $form.find('#last_name').attr('value', $(this).val());
-            }else{
-                $form.find('#newname').attr('value',"");
-            }
-        });
-
-        $('#lastname_input').keyup(function(){
-            if($(this).val().length>0){
-                $form.find('#newname').attr('value', $('#familyname_input').val() + '' + $(this).val());
+                $form.find('#newname').attr('value', $(this).val());
                 $form.find('#first_name').attr('value', $(this).val());
             }else{
                 $form.find('#newname').attr('value',"");

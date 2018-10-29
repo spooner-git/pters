@@ -156,7 +156,7 @@
                     </div>
                 </div>
                 <span class="_nameInfo _originalInfo">{{ member_info.name }}</span>
-                <input type="" name="last_name" class="modifyInfoTool" placeholder="성" style="width:100px;">
+{#                <input type="" name="last_name" class="modifyInfoTool" placeholder="성" style="width:100px;">#}
                 <input type="" name="first_name" class="modifyInfoTool" placeholder="이름" style="width:100px;">
             </div>
         </div>
@@ -524,9 +524,9 @@
         function goPage(option){
             if(option == 2){
                 if(Number(social_login_check) == 0){
-                    location.href= "/accounts/password/change/";
+                    location.href= "/login/password/change/";
                 }else if(Number(social_login_check) == 1){
-                    location.href= "/accounts/password/reset/";
+                    location.href= "/login/password/reset/";
                 }
                 
 

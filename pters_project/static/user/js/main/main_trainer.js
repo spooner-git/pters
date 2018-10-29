@@ -91,36 +91,36 @@ $(document).ready(function(){
     var width_size = window.outerWidth;
     if(class_background_img_url.length == 0){
         if(width_size > 600){
-            $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-pc.jpg)")
+            $('html').css('background-image',"url(/static/user/res/main/bg-image-basic2-pc.jpg)");
         }else{
-            $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-mobile.jpg)")
+            $('html').css('background-image',"url(/static/user/res/main/bg-image-basic2-mobile.jpg)");
         }
 
         $(window).resize(function(){
             var width_size = window.outerWidth;
             if(width_size > 600){
-                $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-pc.jpg)")
+                $('html').css('background-image',"url(/static/user/res/main/bg-image-basic2-pc.jpg)");
             }else{
-                $('body').css('background-image',"url(/static/user/res/main/bg-image-basic2-mobile.jpg)")
+                $('html').css('background-image',"url(/static/user/res/main/bg-image-basic2-mobile.jpg)");
             }
         })
     }else{
         if(width_size > 600){
-            $('body').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')")
+            $('html').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')");
         }else{
-            $('body').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')")
+            $('html').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')");
         }
 
         $(window).resize(function(){
             var width_size = window.outerWidth;
             if(width_size > 600){
-                $('body').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')")
+                $('html').css('background-image',"url('"+class_background_img_url[0].replace(/\)/gi,"")+"')");
             }else{
-                $('body').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')")
+                $('html').css('background-image',"url('"+class_background_img_url[1].replace(/\)/gi,"")+"')");
             }
-        })
+        });
     }
-    
+
 
 
 });

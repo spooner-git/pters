@@ -1,5 +1,7 @@
 {% extends "trainer_base.html" %}
 {% load static_url %}
+{% load background_data %}
+{% load humanize %}
 
 {% block local_css %}
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.payment.css" %}>
@@ -24,29 +26,33 @@
     </div>
 
 
-    <div id="payment_contents_wrap">
+    <!-- <div id="payment_contents_wrap">
     {% autoescape off %}
         {% for product_info in product_data %}
             <div class="payment_function_wrap">
                 <label class="function_label"> {{ product_info.name }} </label>
-                <p> {{ product_info.contents|linebreaks }} </p>
+                <p> {{ product_info.contents }} </p>
                 {% for price_info in product_info.price_list %}
                     <div class="payment_monthly">
                         <label class="inner_label">{{ price_info.name }}</label>
                         {% if price_info.price != price_info.sale_price %}
-                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.price }}원</span>
-                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.sale_price }}원</span>
+                            <p class="inner_explain"><span class="price_before"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.price|multiply:1.1|intcomma }}원</span>
+                                                    <span class="price_after"> → {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1|intcomma }}원</span>
                             </p>
                         {% else %}
-                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매월{% endif %} {{ price_info.sale_price }}원</span>
+                            <p class="inner_explain"> <span class="price_after"> {% if price_info.payment_type_cd == 'PERIOD' %}매{% if price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ price_info.sale_price|multiply:1.1|intcomma }}원</span>
                             </p>
                         {% endif %}
 
                         {% if price_info.price != 0 %}
                             {% if price_info.payment_type_cd == 'PERIOD' %}
-                                <button id="pay_basic_function_monthly">정기 결제 구매</button>
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }} - {{ price_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                        data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
+                                        data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">정기 결제 구매</button>
                             {% else %}
-                                <button id="pay_basic_function_instant">구매</button>
+                                <button class="pay_product_function" data-product-name="{{ product_info.name }} - {{ price_info.name }}" data-payment-type="{{ price_info.payment_type_cd }}"
+                                        data-product-price="{{ price_info.sale_price }}" data-product-contents="{{ product_info.contents }}"
+                                        data-product-id="{{ product_info.product_id }}" data-period-month="{{ price_info.period_month }}">구매</button>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -54,65 +60,198 @@
                         <div class="seperator"></div>
                     {% endif %}
                 {% endfor %}
+                {% for sub_product_info in product_info.sub_product_list %}
+                    {{ sub_product_info.name }}
+                    {% for sub_price_info in sub_product_info.sub_price_list %}
+                        <div class="payment_monthly">
+                            <label class="inner_label">{{ sub_price_info.name }}</label>
+                            {% if sub_price_info.price != sub_price_info.sale_price %}
+                                <p class="inner_explain"><span class="price_before"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.price|multiply:1.1|intcomma }}원</span>
+                                                        <span class="price_after"> → {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1|intcomma }}원</span>
+                                </p>
+                            {% else %}
+                                <p class="inner_explain"> <span class="price_after"> {% if sub_price_info.payment_type_cd == 'PERIOD' %}매{% if sub_price_info.period_month == 1 %}월{% else %}년{% endif %}{% endif %} {{ sub_price_info.sale_price|multiply:1.1|intcomma }}원</span>
+                                </p>
+                            {% endif %}
+
+                            {% if sub_price_info.price != 0 %}
+                                {% if sub_price_info.payment_type_cd == 'PERIOD' %}
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }} - {{ sub_price_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                            data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
+                                            data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">정기 결제 구매</button>
+                                {% else %}
+                                    <button class="pay_product_function" data-product-name="{{ sub_product_info.name }} - {{ sub_price_info.name }}" data-payment-type="{{ sub_price_info.payment_type_cd }}"
+                                            data-product-price="{{ sub_price_info.sale_price }}" data-product-contents="{{ sub_product_info.contents }}"
+                                            data-product-id="{{ sub_product_info.product_id }}" data-period-month="{{ sub_price_info.period_month }}">구매</button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        {%if forloop.last == False%}
+                            <div class="seperator"></div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
             </div>
         {% endfor %}
     {% endautoescape %}
-<!--
-        <div class="payment_function_wrap">
-            <label class="function_label">엘리트</label>
-            <p>- 베이직 기능 <br>- <span style="color:#fe4e65;text-decoration: underline;">지점 1개</span> 관리자 기능 (지점 관리 및 통계, 직원 관리, 직원 수업 배정)</p>
-            <div class="payment_monthly">
-                <label class="inner_label">정기 결제</label>
-                <p class="inner_explain"><span class="price_before">12,000원</span>
-                                        <span class="price_after"> → 매월 9,000원</span>
-                </p>
-                <button id="pay_elite_function_monthly">정기 결제 구매</button>
+    </div> -->
+
+    <p style="font-size: 25px;font-weight: 500;text-align: center;color:#ffffff;margin-top: 40px;">이용권 안내</p>
+    <div id="payment_contents_wrap">
+        
+        <div id="my_auth">
+            <div id="my_status" class="my_auth_inner_block">
+                <p><span class="my_status_text">{{ request.user.first_name }}</span>님은 현재</p>
+                <p><span class="my_status_text pters_pink_text">{{ request.session.product_type_name }}</span><br>이용자입니다.</p>
+                <p style="font-size: 13px;">다음 혜택을 제공해드리고 있습니다.</p>
             </div>
-            <div class="seperator"></div>
-            <div class="payment_instant">
-                <label class="inner_label">1개월 이용권</label>
-                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  12,000원</span></p>
-                <button id="pay_elite_function_instant">구매</button>
+            <div id="my_status_auth" class="my_auth_inner_block">
+            {% if request.session.product_id == 6 %}
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">매일 오늘 기준 전/후 7일 등록,취소</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">회원</div><div class="my_auth_tbc2">최대 20명 (진행중)</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">그룹/클래스</div><div class="my_auth_tbc2">최대 5개씩 (진행중)</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">통계</div><div class="my_auth_tbc2">최대 1개월씩 조회</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">프로그램</div><div class="my_auth_tbc2">최대 2개</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">설정</div><div class="my_auth_tbc2">부분 제한</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">광고</div><div class="my_auth_tbc2">서비스 내 노출</div>
+                </div>
+            {% elif request.session.product_id == 7 or request.session.product_id == 10 %}
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">매일 오늘 기준 전후 1년 등록,취소</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">회원</div><div class="my_auth_tbc2">최대 500명 (진행중)</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">그룹/클래스</div><div class="my_auth_tbc2">최대 200개씩 (진행중)</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">통계</div><div class="my_auth_tbc2">최대 1년씩 조회</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">프로그램</div><div class="my_auth_tbc2">최대 10개</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">설정</div><div class="my_auth_tbc2">제한 없음</div>
+                </div>
+            {% elif request.session.product_id == 8%}
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">매일 오늘 기준 전후 1년 등록,취소</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">회원</div><div class="my_auth_tbc2">최대 500명 (진행중)</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">그룹/클래스</div><div class="my_auth_tbc2">최대 200개씩 (진행중)</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">통계</div><div class="my_auth_tbc2">최대 1년씩 조회 가능</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">프로그램</div><div class="my_auth_tbc2">최대 10개</div>
+                </div>
+                <div class="my_auth_tb">
+                    <div class="my_auth_tbc1">설정</div><div class="my_auth_tbc2">제한 없음</div>
+                </div>
+            {% endif %}
             </div>
         </div>
+        <p style="color:#ffffff;font-size:13px;font-weight:300;margin-top:40px;margin-bottom:5px;text-align: center;">
+            <span style="font-size:20px;font-weight: 500">맞춤형 이용권</span>으로  <span style="font-size: 20px;font-weight: 500;">업그레이드</span>는 어떠신가요?</p>
+        <p style="color:#ffffff;font-size:14px;font-weight:300;margin-bottom:40px;text-align: center">클릭하면 상세 안내를 확인하실 수 있습니다.</p>
 
-        <div class="payment_function_wrap">
-            <label class="function_label">프리미엄</label>
-            <p>- 베이직 기능 <br>- <span style="color:#fe4e65;text-decoration: underline;">지점 3개</span> 관리자 기능 (지점 관리 및 통계, 직원 관리, 직원 수업 배정)</p>
-            <div class="payment_monthly">
-                <label class="inner_label">정기 결제</label>
-                <p class="inner_explain"><span class="price_before">24,900원</span>
-                                        <span class="price_after"> → 매월 20,000원</span>
-                </p>
-                <button id="pay_premium_function_monthly">정기 결제 구매</button>
-            </div>
-            <div class="seperator"></div>
-            <div class="payment_instant">
-                <label class="inner_label">1개월 이용권</label>
-                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  24,900원</span></p>
-                <button id="pay_premium_function_instant">구매</button>
-            </div>
-        </div>
 
-        <div class="payment_function_wrap">
-            <label class="function_label">광고 제거</label>
-            <p>강사 및 소속 회원의 화면에서 광고 제거</p>
-            <div class="payment_monthly">
-                <label class="inner_label">정기 결제</label>
-                <p class="inner_explain"><span class="price_before">2,000원</span>
-                                        <span class="price_after"> → 매월 1,000원</span>
-                </p>
-                <button id="pay_ads_remove_monthly">정기 결제 구매</button>
-            </div>
-            <div class="seperator"></div>
-            <div class="payment_instant">
-                <label class="inner_label">1개월 이용권</label>
-                <p class="inner_explain"><span class="price_instant">1회 1개월 이용  2,000원</span></p>
-                <button id="pay_ads_remove_instant">구매</button>
+        <div id="product_list_wrap">
+
+            <div class="product_wrap">
+                <!--상품-->
+                <div class="product productstyle_standard" data-product-id="7">
+                    <p class="product_name_tag">무제한 이용권</p>
+                    <p class="product_name textstyle_standard">스탠다드</p>
+                    <p class="product_price_tag">정기 결제</p>
+                    <p class="product_price">매월 9,900원</p>
+                    <p class="product_name_background">STANDARD</p>
+                </div>
+                <!--상품-->
+
+                 <!--상품-->
+                <div class="product productstyle_premium product_disable" data-product-id="8">
+                    <div class="under_construction">
+                        <span>서비스 준비중</span>
+                    </div>
+                    <p class="product_name_tag">스탠다드+지점관리</p>
+                    <p class="product_name textstyle_premium">프리미엄</p>
+                    <p class="product_price_tag">정기 결제</p>
+                    <p class="product_price">준비중</p>
+                    <p class="product_name_background textstyle_premium">PREMIUM</p>
+                </div>
+                <!--상품-->
+
+                <div class="product_detail">
+                    <div class="product_detail_triangle"></div>
+                    <div class="product_detail_upper">
+                        <div id="my_status" class="my_auth_inner_block">
+                            <p><span class="my_status_text">{{ request.user.first_name }}</span>님,</p>
+                            <p><span class="my_status_text product_to_buy">${상품명}</span>상품으로<br>업그레이드 됩니다.</p>
+                            <p style="font-size: 13px;">다음 혜택을 제공해드립니다.</p>
+                        </div>
+
+                        <div id="my_status_auth" class="my_auth_inner_block">
+                            <div class="my_auth_tb">
+                                <div class="my_auth_tbc1">일정</div><div class="my_auth_tbc2">매일 오늘 기준 전후 1년 등록,취소</div>
+                            </div>
+                            <div class="my_auth_tb">
+                                <div class="my_auth_tbc1">회원</div><div class="my_auth_tbc2">최대 500명 (진행중)</div>
+                            </div>
+                            <div class="my_auth_tb">
+                                <div class="my_auth_tbc1">그룹/클래스</div><div class="my_auth_tbc2">최대 200개씩 (진행중)</div>
+                            </div>
+                            <div class="my_auth_tb">
+                                <div class="my_auth_tbc1">통계</div><div class="my_auth_tbc2">최대 1년씩 조회 가능</div>
+                            </div>
+                            <div class="my_auth_tb">
+                                <div class="my_auth_tbc1">프로그램</div><div class="my_auth_tbc2">최대 10개</div>
+                            </div>
+                            <div class="my_auth_tb">
+                                <div class="my_auth_tbc1">설정</div><div class="my_auth_tbc2">제한 없음</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color:#ffffff;text-align: center;margin-top:20px;margin-bottom:20px;">현재 PTERS 오픈 할인혜택을 제공하고 있습니다.</p>
+
+                    <div class="ticket_wrap">
+                        <div class="ticket_left pay_product_function">
+                            <i class="big_arrow right"></i>
+                            <p class="ticket_comment1"><span class="">1개월</span> 정기 결제</p>
+                            <p class="ticket_original_price">24,200원</p>
+                            <p class="ticket_new_price">매월 19,900원</p>
+                            <p class="ticket_name_background">MONTH<br>PREMIUM</p>
+                            <a class="icono-arrow1-left"></a>
+                        </div>
+                        <div class="ticket_right pay_product_function ticket_disable">
+                            
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
--->
+
+
 
     <div id="purchase_popup">
         <label style="font-size: 18px;" id="purchase_popup_product">피터스 이용권 구매하기</label>
@@ -122,7 +261,7 @@
                 <label>이용권 금액</label>
                 <div>
                     <div><p id="price_preview"></p></div>
-                    <p id="price_preview_vat">부가세(VAT) 10% 별도</p>
+                    <p id="price_preview_vat">부가세(VAT) 10% 포함</p>
                 </div>
             </div>
             <div id="purchase_appointment">
@@ -138,7 +277,7 @@
 
             <div id="purchase_caution">
                 <p>피터스의 모든 이용권은 국내에서만 구매 가능하며, 사용이 가능합니다.</p>
-                <p>본 이용권 구매 시 부가세 10%가 별로도 청구됩니다.</p>
+                <p>본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.</p>
                 <p>구입하신 이용권은 마이페이지의 이용권 내역에서 확인 할 수 있습니다.</p>
                 <p>본 이용권은 이용 시작일 기준 7일이내 청약철회 가능한 이용권 입니다.</p>
                 <p>단, 이용내역이 있는 경우 이용금액 공제, 이벤트등의 할인 혜택을 받으신 경우 해당금액 공제 후 환불 가능합니다.</p>
@@ -179,17 +318,16 @@
                     <div class="ptersCheckbox" data-method="card"><div></div></div>
                     <p class="purchase_method_name">신용/체크카드</p>
                 </div>
-                <div class="select_method_table_cell">
+                <!-- <div class="select_method_table_cell">
                     <div class="ptersCheckbox" data-method="trans"><div></div></div>
                     <p class="purchase_method_name">실시간 계좌이체</p>
-                </div>
+                </div> -->
             </div>
             <div class="popupBtn_mini">
                 <button class="submitBtn _button_Prev">결제취소</button>
-                <button class="submitBtn _button_Next"">결제하기</button>
+                <button class="submitBtn _button_Next">결제하기</button>
             </div>
         </div>
-
     </div>
 
 
@@ -213,16 +351,67 @@
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
+        $('a.text-payment').css('color','#fe4e65;');
         if($('body').width()<600){
-            $('#page-base').css('display','block');
-            //$('#page-base-modifystyle').css('display','block')
-            $('#uptext3').text('이용권 구매');
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text('이용권 구매');
             $('#uptext').text("이용권 구매");
-            $('#upbutton-modify').hide();
+            $('#upbutton-check').hide();
         }
 
-        $('#upbutton-x-modify').click(function(){
-            location.href="/trainer/trainer_setting/"
+        $('#upbutton-x').click(function(){
+            if($('#purchase_popup').css('display') == "block"){
+                purchase_popup_close();
+            }else{
+                location.href="/trainer/trainer_setting/";
+            }
+        });
+
+        $(document).on('click', '.product', function(e){
+            var product_id = $(this).attr("data-product-id");
+            if(!$(this).hasClass("product_disable") && $(".product_detail").attr('data-product-id') != product_id){
+                e.stopPropagation();
+                get_product_detail_from_server(product_id);
+
+                var this_index= $(this).index();
+                var triangle_loc;
+                if(this_index == 0 ){
+                    triangle_loc = "22%";
+                }
+                else if(this_index == 1){
+                    triangle_loc = "72%";
+                }
+                var product_detail_window = $(this).siblings("div.product_detail");
+                product_detail_window.css({"display":"block"}).attr("data-product-id", product_id);
+                product_detail_window.find(".product_detail_triangle").css({"left":triangle_loc});
+
+                var classlist = product_detail_window.find(".product_to_buy").attr("class").split(" ");
+                for(var i=0; i<classlist.length; i++){
+                    if(classlist[i].match("textstyle_")){
+                        product_detail_window.find(".product_to_buy").removeClass(classlist[i]);
+                    }
+                }
+
+                product_detail_window.find(".product_to_buy").text($(this).find(".product_name").text()).addClass("textstyle_"+$(this).find(".product_name_background").text().toLowerCase());
+                $('.product_selected').removeClass("product_selected");
+                $(this).addClass("product_selected");
+            }
+        });
+
+        $('.pay_product_function').click(function(e){
+            if(!$(this).hasClass("ticket_disable")){
+                e.stopPropagation();
+                e.preventDefault();
+
+                if(platform_check == "mobile_browser"){
+                    alert("스마트폰 브라우저로 접속하신 경우\n시크릿모드(개인정보보호 모드)로 접속시 결제가 정상적으로 진행되지 않습니다.\n결제전 다시한번 모드를 확인후 진행해주세요.");
+                }
+
+                purchase_popup_show($(this).attr('data-product-name')+' - '+$(this).attr('data-product-price-name'),
+                    $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
+                    $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
+            }
         });
 
         $('#pay_basic_function_monthly').click(function(e){
@@ -274,15 +463,20 @@
             //광고 제거 1개월 결제 버튼
         });
 
-        function purchase_popup_show(product, type, functions, price){
-            shade_index(100)
+        function purchase_popup_show(product, type, functions, price, product_id, period_month){
+            shade_index(100);
+            // $('#payment_contents_wrap').css({"height":"100%", "overflow":"hidden"});
+            if(bodywidth < 600){
+                $('#payment_contents_wrap').hide();
+            }
             $('#purchase_popup').fadeIn('fast')
                                 .css({'top':(($(window).height()-$('#purchase_popup').outerHeight())/2),
                                       'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
                                 .attr({'data-product':product,
                                         'data-type':type,
-                                        'data-function':functions,
-                                        'data-price':price});
+                                        'data-product-id':product_id,
+                                        'data-price':price,
+                                        'data-period-month':period_month});
             var type_name;
             var functions_name;
             if(type=='SINGLE'){
@@ -290,25 +484,26 @@
             }else{
                 type_name='정기 결제';
             }
-            if(functions=='CLA/GRO/ADV'){
-                functions_name='클래스/그룹 레슨/광고제거';
-            }else if(functions=='GRO/ADV'){
-                functions_name='그룹 레슨/광고제거';
-            }else{
-                functions_name='광고제거';
-            }
+{#            if(functions=='CLA/GRO/ADV'){#}
+{#                functions_name='클래스/그룹 레슨/광고제거';#}
+{#            }else if(functions=='GRO/ADV'){#}
+{#                functions_name='그룹 레슨/광고제거';#}
+{#            }else{#}
+{#                functions_name='광고제거';#}
+{#            }#}
+            functions_name = functions;
             $('#purchase_popup_product').text(product);
             $('#purchase_product').find('.purchase_popup_innercontent').text(product);
-            $('#purchase_functions').find('.purchase_popup_innercontent').text(functions_name);
+            $('#purchase_functions').find('.purchase_popup_innercontent').html(functions_name);
             $('#purchase_type').find('.purchase_popup_innercontent').text(type_name);
-            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(price));
-            $('#price_preview').text(numberWithCommas(price)+' 원');
+            $('#purchase_price').find('.purchase_popup_innercontent').text(numberWithCommas(parseInt(price))+'원 (부가세 포함)');
+            $('#price_preview').text(numberWithCommas(parseInt(price))+'원 (부가세 포함)');
         }
         function numberWithCommas(x) { //천단위 콤마 찍기
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-        function check_payment(name, pay_method, payment_type_cd, merchandise_type_cd, price){
+        function check_payment(name, pay_method, payment_type_cd, product_id, price, period_month){
             var error_check = true;
 
             $.ajax({
@@ -317,8 +512,9 @@
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify({
                     payment_type_cd: payment_type_cd,
-                    merchandise_type_cd: merchandise_type_cd,
-                    price : price
+                    product_id: product_id,
+                    price : price,
+                    period_month : period_month
                 }),
 
                 beforeSend:function(xhr, settings) {
@@ -335,11 +531,13 @@
                         error_check = false;
                         alert(jsondata.messageArray);
                         shade_index(-100)
+                        purchase_popup_close();
                     }else {
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, jsondata.next_start_date[0]);
+                        payment(name, pay_method, payment_type_cd, product_id, price,
+                            jsondata.next_start_date[0], period_month);
                     }
 
                 },
@@ -357,10 +555,10 @@
         }
 
 
-        function payment(name, pay_method, payment_type_cd, merchandise_type_cd, price, start_date){
+        function payment(name, pay_method, payment_type_cd, product_id, price, start_date, period_month){
             var date = new Date();
-            var merchant_uid_data = 'm_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
-            var customer_uid_data = 'c_{{request.user.id}}_'+merchandise_type_cd+'_' + date.getTime();
+            var merchant_uid_data = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
+            var customer_uid_data = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var billing_data;
             var month = date.getMonth()+1;
             var day = date.getDate();
@@ -390,13 +588,14 @@
                 amount : price,
                 custom_data: {
                     "user_id":{{ request.user.id }},
-                    "merchandise_type_cd":merchandise_type_cd,
+                    "product_id":product_id,
                     "payment_type_cd":payment_type_cd,
                     "customer_uid":customer_uid_data,
-                    "start_date":  payment_date
+                    "start_date":  payment_date,
+                    "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                buyer_name : '{{ request.user.first_name }}',
             };
             var request_pay_single_data = {
                 pg : 'danal', // version 1.1.0부터 지원.
@@ -406,12 +605,13 @@
                 amount : price,
                 custom_data: {
                     "user_id":{{ request.user.id }},
-                    "merchandise_type_cd":merchandise_type_cd,
+                    "product_id":product_id,
                     "payment_type_cd":payment_type_cd,
-                    "start_date":  payment_date
+                    "start_date":  payment_date,
+                    "period_month": period_month
                 },
                 buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.last_name }} {{ request.user.first_name }}',
+                buyer_name : '{{ request.user.first_name }}',
                 {#                    buyer_tel : '',#}
                 {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
                 {#                    buyer_postcode : '123-456',#}
@@ -434,10 +634,11 @@
                             type: "POST",
                             headers: { "Content-Type": "application/json" },
                             data: JSON.stringify({
-                                merchandise_type_cd : merchandise_type_cd,
+                                product_id : product_id,
                                 payment_type_cd:payment_type_cd,
                                 paid_amount: rsp.paid_amount,
-                                start_date: payment_date
+                                start_date: payment_date,
+                                period_month: period_month
                             }),
 
                             beforeSend:function(xhr, settings) {
@@ -481,6 +682,7 @@
                         msg += '에러내용 : ' + rsp.error_msg;
                         shade_index(-100)
                         alert(msg);
+                        location.href="/payment/";
                     }
                 });
 
@@ -517,18 +719,18 @@
             }
         });
 
+        set_list_overflow_scrolling('#purchase_popup_page1', '#purchase_popup_page1');
         $('#purchase_popup_page2 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page2').css('display')=='block' ){
 
                 var product = $('#purchase_popup').attr('data-product');
                 var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
                 var payment_type_cd = $('#purchase_popup').attr('data-type');
-                var functions = $('#purchase_popup').attr('data-function');
-                var price = parseInt(Number($('#purchase_popup').attr('data-price'))*1.1); 
-                console.log(pay_method);
-{#                console.log(product, method, type, functions, price)#}
-                check_payment(product, pay_method, payment_type_cd, functions, price);
-                purchase_popup_close();
+                var product_id = $('#purchase_popup').attr('data-product-id');
+                var price = parseInt(Number($('#purchase_popup').attr('data-price')));
+                var period_month = $('#purchase_popup').attr('data-period-month');
+                check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
+                purchase_popup_close("do_not_show_background");
                 shade_index(100)
             }
         });
@@ -541,7 +743,11 @@
             purchase_popup_close();
         });
 
-        function purchase_popup_close(){
+        function purchase_popup_close(option){
+            if(option == "do_not_show_background"){
+            }else{
+                $('#payment_contents_wrap').show();
+            }
             shade_index(-100);
             $('#purchase_popup, #purchase_popup_page2').hide();
             $('#purchase_popup_page1').show();
@@ -550,11 +756,90 @@
             $('.appoint_checked').removeClass('appoint_checked');
             $('#purchase_popup').attr({'data-product':'',
                                         'data-type':'',
-                                        'data-function':'',
-                                        'data-price':''})
+                                        'data-product-id':'',
+                                        'data-price':'',
+                                        'data-period-month':''})
+        }
+
+        function get_product_detail_from_server(product_id){
+                $.ajax({
+                url: '/payment/get_product_info/',
+                type: 'GET',
+                dataType : 'html',
+                data:{"product_id": product_id},
+
+                beforeSend:function(){
+                    beforeSend();
+                },
+
+                success:function(data){
+                    var jsondata = JSON.parse(data);
+                    console.log(jsondata);
+                    fill_product_detail(jsondata, product_id);
+                },
+
+                complete:function(){
+                    completeSend();
+                },
+
+                error:function(){
+                    console.log('server error');
+                }
+            });
+        }
+
+        function fill_product_detail(jsondata, product_id){
+            var product_color_class_find = $(`div.product_detail[data-product-id="${product_id}"]`).find(".product_to_buy").attr("class").split(" ");
+            var product_color;
+            for(var i=0; i<product_color_class_find.length; i++){
+                if(product_color_class_find[i].match("textstyle_")){
+                    product_color = product_color_class_find[i];
+                }
+            }
+
+            var $left_ticket = $(`div.product_detail[data-product-id="${product_id}"]`).find("div.ticket_left");
+            var $right_ticket = $(`div.product_detail[data-product-id="${product_id}"]`).find("div.ticket_right");
+
+            var $left_ticket_comment = $left_ticket.find("p.ticket_comment1");
+            var $left_ticket_ori_price = $left_ticket.find("p.ticket_original_price");
+            var $left_ticket_new_price = $left_ticket.find("p.ticket_new_price");
+            var $left_ticket_name_bg = $left_ticket.find("p.ticket_name_background");
+
+            var $right_ticket_comment = $right_ticket.find("p.ticket_comment1");
+            var $right_ticket_ori_price = $right_ticket.find("p.ticket_original_price");
+            var $right_ticket_new_price = $right_ticket.find("p.ticket_new_price");
+            var $right_ticket_name_bg = $right_ticket.find("p.ticket_name_background");
+
+            find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
+
+            $left_ticket.attr({"data-product-name":jsondata.product_name,
+                               "data-product-price-name":jsondata.product_price_name,
+                               "data-payment-type":jsondata.product_price_type_cd,
+                               "data-product-price":jsondata.product_price_sale_price,
+                               "data-product-contents":jsondata.product_contents,
+                               "data-product-id":product_id,
+                               "data-period-month":jsondata.product_price_period_month,});
+            $left_ticket_comment.html(`<span class="${product_color}">${jsondata.product_price_period_month}개월</span> 정기 결제`);
+            $left_ticket_ori_price.html(`${numberWithCommas(jsondata.product_price_price)}원 <i class="small_arrow right"></i>`).css({"text-decoration":"line-through"});
+            $left_ticket_new_price.text(`매월 ${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
+            if(product_color != "textstyle_standard"){
+                $left_ticket_name_bg.addClass(product_color);
+            }
+            
         }
 
 
+        function find_class_and_delete_it(parent ,whose, targetClass_text){
+            var $whose = $(whose);
+            var classlist = $whose.attr("class").split(" ");
+            for(var i=0; i<classlist.length; i++){
+                if(classlist[i].match(targetClass_text)){
+                    $(parent).find('.'+classlist[i]).removeClass(classlist[i]);
+                }
+            }
+        }
+
+        $('div.bottomfooter2 > span > img').attr("src","/static/user/res/spooner.png");
 
     </script>
 

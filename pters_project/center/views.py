@@ -1082,10 +1082,10 @@ def update_member_info_logic(request):
         else:
             input_first_name = first_name
 
-        if last_name is None or last_name == '':
-            input_last_name = user.last_name
-        else:
-            input_last_name = last_name
+        # if last_name is None or last_name == '':
+        #     input_last_name = user.last_name
+        # else:
+        #     input_last_name = last_name
 
         if sex is None or sex == '':
             input_sex = member.sex
@@ -1853,7 +1853,7 @@ def update_lecture_info_logic(request):
             try:
                 input_price = int(price)
             except ValueError:
-                error = '강의 금액은 숫자만 입력 가능합니다.'
+                error = '수강 금액은 숫자만 입력 가능합니다.'
         if refund_price is None or refund_price == '':
             input_refund_price = lecture_info.refund_price
         else:
@@ -3566,10 +3566,10 @@ def update_center_info_logic(request):
     else:
         input_first_name = first_name
 
-    if last_name is None or last_name == '':
-        input_last_name = user.last_name
-    else:
-        input_last_name = last_name
+    # if last_name is None or last_name == '':
+    #     input_last_name = user.last_name
+    # else:
+    #     input_last_name = last_name
 
     if contents is None or contents == '':
         input_contents = member.contents
@@ -4144,7 +4144,7 @@ def update_setting_sales_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='강의 금액 설정', log_how='수정', use=USE)
+                         log_info='수강 금액 설정', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)

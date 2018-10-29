@@ -57,7 +57,7 @@ function registrationServiceWorker(token_info){
                     })
                     .catch(function (error) {
                         console.log('서비스워커 등록실패 :', error)
-                        location.reload()
+                        // location.reload();
                         //registrationServiceWorker();
                     });
 

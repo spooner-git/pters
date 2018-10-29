@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
-from payment.models import BillingInfoTb, PaymentInfoTb
+from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb
@@ -47,6 +47,11 @@ def get_setting_info(request):
     now = timezone.now()
     class_id = request.session.get('class_id', '')
     device_id = request.session.get('device_id', 'pc')
+    if device_id == 'pc':
+        request.session['device_info'] = 'web'
+    else:
+        request.session['device_info'] = 'app'
+
     if class_id != '':
 
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
@@ -145,23 +150,80 @@ def get_setting_info(request):
     return context
 
 
-# @register.simple_tag
-# def get_function_auth(request):
-#     today = datetime.date.today()
-#     merchandise_type_cd_list = []
-#     billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
-#                                                 next_payment_date__lt=today, use=USE)
-#     payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-#                                                 start_date__lte=today, end_date__gte=today, use=USE)
-#
-#     for billing_info in billing_data:
-#         billing_info.state_cd = 'ST'
-#         billing_info.use = UN_USE
-#         billing_info.save()
-#
-#     for payment_info in payment_data:
-#         merchandise_type_cd_data = payment_info.merchandise_type_cd.split('/')
-#         for merchandise_type_cd_info in merchandise_type_cd_data:
-#             merchandise_type_cd_list.append(merchandise_type_cd_info)
-#
-#     return merchandise_type_cd_list
+@register.simple_tag
+def get_function_auth_type_cd(request):
+    context = {}
+    today = datetime.date.today()
+    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                next_payment_date__lt=today, use=USE)
+
+    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                start_date__lte=today, end_date__gte=today,
+                                                use=USE).order_by('product_tb_id', '-end_date')
+
+    for billing_info in billing_data:
+        billing_info.state_cd = 'END'
+        # billing_info.use = UN_USE
+        billing_info.save()
+
+    request.session['product_type_name'] = ''
+    request.session['product_id'] = ''
+    payment_data_counter = 0
+    for payment_info in payment_data:
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
+                                                                     ).filter(product_tb_id=payment_info.product_tb_id,
+                                                                              use=USE).order_by('product_tb_id',
+                                                                                                'function_auth_tb_id',
+                                                                                                'auth_type_cd')
+        if len(function_list) > 0:
+            if payment_data_counter == 0:
+                request.session['product_type_name'] += function_list[0].product_tb.name
+                request.session['product_id'] = function_list[0].product_tb.product_id
+            else:
+                request.session['product_type_name'] += ',' + function_list[0].product_tb.name
+                request.session['product_id'] += ',' + function_list[0].product_tb.product_id
+
+        for function_info in function_list:
+            auth_info = {}
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+            else:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                             + str(function_info.auth_type_cd)
+
+            auth_info['active'] = 1
+            auth_info['limit_num'] = function_info.counts
+            auth_info['limit_type'] = function_info.product_tb.name
+            context[function_auth_type_cd_name] = auth_info
+            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
+        payment_data_counter += 1
+
+    if len(payment_data) == 0:
+        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
+                                                                     ).filter(product_tb_id=6,
+                                                                              use=USE).order_by('product_tb_id',
+                                                                                                'function_auth_tb_id',
+                                                                                                'auth_type_cd')
+        if len(function_list) > 0:
+            request.session['product_type_name'] += function_list[0].product_tb.name
+            request.session['product_id'] = function_list[0].product_tb.product_id
+
+        for function_info in function_list:
+            auth_info = {}
+            if function_info.auth_type_cd is None:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+            else:
+                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                             + str(function_info.auth_type_cd)
+            auth_info['active'] = 1
+            auth_info['limit_num'] = function_info.counts
+            auth_info['limit_type'] = function_info.product_tb.name
+            context[function_auth_type_cd_name] = auth_info
+            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
+
+    return context
+
+
+@register.filter
+def multiply(value, arg):
+    return int(value*arg)

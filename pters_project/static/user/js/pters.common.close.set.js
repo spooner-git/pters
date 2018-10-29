@@ -119,6 +119,11 @@ function close_planadd_popup(){
         $('#float_btn_wrap').show();
         $('#float_btn').removeClass('rotate_btn');
     }
+    if(bodywidth<600){
+        $('#calendar').css('height', '100%');
+        $('#page-base').css('display', 'block');
+        $('#page-base-addstyle').css('display', 'none');
+    }
 }
 //일정추가 팝업 닫기 (pc)
 

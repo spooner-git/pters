@@ -35,7 +35,7 @@ def add_question_info_logic(request):
         qa_info.save()
 
     if error is None:
-        email = EmailMessage('[PTERS 질문]'+request.user.last_name+request.user.first_name+'회원-'+title,
+        email = EmailMessage('[PTERS 질문]'+request.user.first_name+'회원-'+title,
                              '질문 유형:'+qa_type_cd+'\n\n'+contents + '\n\n' + request.user.email +
                              '\n\n' + str(timezone.now()),
                              to=['support@pters.co.kr'])

@@ -4,9 +4,9 @@
     <loc>https://www.pters.co.kr/</loc> 
   </url>
   <url>
-    <loc>https://www.pters.co.kr/accounts/register/</loc> 
+    <loc>https://www.pters.co.kr/login/register/</loc>
   </url>
   <url>
-    <loc>https://www.pters.co.kr/accounts/password/reset/</loc> 
+    <loc>https://www.pters.co.kr/login/password/reset/</loc>
   </url>
 </urlset>

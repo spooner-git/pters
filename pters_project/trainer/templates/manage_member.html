@@ -282,6 +282,7 @@
                     <span class="ENtext">Re-Contract</span>
                 </div>
                 -->
+                <input id="search_member_input" type="text" name="search_member_input" placeholder="검색">
             </div>
 
             <select class="alignSelect _ALIGN_DROPDOWN">
@@ -404,7 +405,7 @@
         </div>
         -->
 
-        <div class="ads_cal_insideTop ads_wrap" style="max-width: 1080px;margin:0 auto;margin-top:80px;background:unset">
+        <div class="ads_cal_insideTop ads_wrap">
             <!-- 달력하단_반응형_디스플레이-->
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle"
@@ -451,8 +452,8 @@
                 </label>
                 <div class="mobileinfo hastooltips">
                     <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled>
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" disabled>
+                    <!-- <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled> -->
+                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" maxlength="11" disabled>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -589,8 +590,8 @@
                 <div id="memberFemale_info_PC" class="selectboxopt selectboxopt_right selectbox_disable" value="W"><img src="/static/user/res/member/icon-female-pink.png"></div>
             </div>
             <input type="" name="" id="memberName_info_PC">
-            <input type="" name="" id="memberName_info_lastName_PC" maxlength="4">
-            <input type="" name="" id="memberName_info_firstName_PC" maxlength="4">
+            <!-- <input type="" name="" id="memberName_info_lastName_PC" maxlength="4"> -->
+            <input type="" name="" id="memberName_info_firstName_PC" maxlength="11">
             <img src="/static/user/res/member/icon-x-grey.png" id="btn_close_info_PC" class="_btn_close_info_PC" title="닫기" onclick="close_manage_popup('member_info_PC')">
         </label>
 
@@ -760,6 +761,7 @@
             <input type="hidden" name="username" id="id_username_info">
             <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
+            <input type="hidden" name="group_package_type" id="form_group_package_type" value="group">
 
             <!--그룹추가 관련 Form-->
 
@@ -799,8 +801,8 @@
                     </label>
                     <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
                     <div id="memberName_reg" class="dropdown pters_input_custom">
-                        <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10">
-                        <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="이름" maxlength="10">
+                        <!-- <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10"> -->
+                        <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="11">
                     </div>
                     <div id="memberSex" class="pters_input_custom">
                         <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>
@@ -1159,36 +1161,37 @@
     <!-- <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script> -->
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
     <script>
-        $('a.text-membermanage').css('color','#fe4e65;')
-        $('#uptext').text("회원 관리")
-        $('footer').hide()
+        $('a.text-membermanage').css('color', '#fe4e65;');
+        $('#uptext').text("회원 관리");
+        $('footer').hide();
 
         //var DB = {};
         //var DBe = {};
         //var DB_All = {};
 
         var deleteTypeSelect;
-        var alignType = "name"
+        var alignType = "name";
         var select_all_check = false;
 
         get_member_ing_list("callback",function(jsondata){
-            memberListSet('current','name','no',jsondata);
+            memberListSet('current', 'name', 'no', jsondata);
         });
 
 
 
         $('html,body').click(function(){
-            $('#please_add_member_pc').fadeOut('fast')
-        })
+            $('#please_add_member_pc').fadeOut('fast');
+        });
 
         $('#float_btn, .navbar').click(function(){
-            $('#please_add_member').fadeOut('fast')
-        })
+            $('#please_add_member').fadeOut('fast');
+        });
 
         $('#_close_how_to_add_member, #page_addmember').click(function(){
-            $('#how_to_add_member').fadeOut()
-        })
+            $('#how_to_add_member').fadeOut();
+        });
 
+        show_free_member_use_guide("member_manage");
     </script>
 
 
