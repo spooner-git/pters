@@ -517,6 +517,9 @@ $(document).ready(function(){
             if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
                 if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
                     $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth});
+                    if(endTopLoc - popupheight < weekTopLoc+weekHeight){
+                        $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth});
+                    }
                 }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
                     $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth});
                 }else{ //그외
@@ -525,6 +528,9 @@ $(document).ready(function(){
             }else{
                 if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
                     $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth});
+                    if(endTopLoc - popupheight < weekTopLoc+weekHeight){
+                        $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth});
+                    }
                 }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
                     $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth});
                 }else{
@@ -625,7 +631,8 @@ $(document).ready(function(){
 
 
         //미니 팝업 위치 보정
-        var windowWidth = $(window).width();
+        // var windowWidth = $(window).width();
+        var windowWidth = $("#calendar").width()+$("#calendar").offset().left;
         var windowHeight = $(window).height();
         var popupwidth = $('#page-addplan-pc').width();
         var popupheight = $('#page-addplan-pc').height();
@@ -642,7 +649,7 @@ $(document).ready(function(){
         var endLeftLoc = $('#'+endID).offset().left;
         var endWidth = $('#'+endID).width();
         var scrollTop = $(window).scrollTop();
-        var weekTopLoc = $('#week').offset().top;
+        var weekTopLoc = $('#week').offset().top + Number($('#week').css("padding-top").replace(/px/gi,""));
         var weekHeight = $('#week').height();
 
         var popupRightLoc = endLeftLoc+endWidth+popupwidth;
@@ -650,6 +657,9 @@ $(document).ready(function(){
         if(popupRightLoc > windowWidth){ //팝업이 오른쪽으로 넘어갔을 때
             if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
                 $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc - popupwidth});
+                if(endTopLoc - popupheight < weekTopLoc+weekHeight){
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth});
+                }
             }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
                 $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc - popupwidth});
             }else{ //그외
@@ -658,6 +668,9 @@ $(document).ready(function(){
         }else{
             if(popupBottomLoc > windowHeight + scrollTop){ //팝업이 아래로 넘어가서 안보일때
                 $('#page-addplan-pc').show().css({'top':endTopLoc -  popupheight, 'left':endLeftLoc+endWidth});
+                if(endTopLoc - popupheight < weekTopLoc+weekHeight){
+                    $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth});
+                }
             }else if(popupBottomLoc + popupheight > weekTopLoc+weekHeight){ //스크롤을 내려서 팝업이 위로 넘어가서 안보일때
                 $('#page-addplan-pc').show().css({'top':endTopLoc -  startHeight, 'left':endLeftLoc+endWidth});
             }else{

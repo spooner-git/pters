@@ -1229,7 +1229,7 @@ function playSound() {
         document.getElementById('lecture-check-form').submit();
     }
 
-    pters_option_inspector("ads","","");
+    
 
     ///********************* 강의 선택*************************************///
     ///********************* 강의 선택*************************************///
@@ -1240,7 +1240,7 @@ function playSound() {
 <script type="text/javascript" src={% static_url "user/js/pters.common.module.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.multi.language.set.js" %}></script>
 <script type="text/javascript" src={% static_url "user/js/pters.common.option.inspector.js" %}></script>
-
+<script type="text/javascript">pters_option_inspector("ads","","");</script>
 {% block local_js_footer %}
 {% endblock %}
 

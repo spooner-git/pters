@@ -205,6 +205,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
         //클래스 관리
         }else if(option_type == "class_create"){
+
             var current_class_num = option_element;
             if(current_class_num >= limit_num){
                 show_caution_popup(function_lock_message("create", limit_num, "클래스 추가", limit_type));

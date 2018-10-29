@@ -714,12 +714,13 @@ a:focus, a:hover{
 }
 
 .centermenu_box{
-    position: fixed;
+    position: relative;
+    display: inline-block;
     width: 550px;
     width: auto;
     top: 3px;
     text-align: left;
-    margin-left: 100px;
+    margin-left: 60px;
 }
 
 .centermenu_div{
@@ -744,7 +745,7 @@ a:focus, a:hover{
     display: none;
     height: 12px;
     margin-left: 6px;
-    margin-top: 25px;
+    margin-top: 26px;
     position: absolute;
     z-index: 10;
 }
@@ -977,10 +978,11 @@ a:focus, a:hover{
     }
     .centermenu_logo{
         height: 24px;
-        margin-top: 18px;
+        margin-top: 20px;
     }
     .centermenu_box{
         text-align: center;
+        margin-left: 130px;
     }
     
 }
