@@ -42,6 +42,7 @@ def func_get_class_member_ing_list(class_id):
                                                                ).filter(class_tb_id=class_id, auth_cd='VIEW',
                                                                         lecture_tb__state_cd='IP',
                                                                         lecture_tb__use=USE,
+                                                                        lecture_tb__member__use=USE,
                                                                         use=USE).order_by('lecture_tb__member__name')
     member_id = None
     for class_lecture_info in class_lecture_data:
@@ -69,7 +70,7 @@ def func_get_class_member_end_list(class_id):
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                           lecture_tb__use=USE, use=USE
+                                           lecture_tb__use=USE, lecture_tb__member__use=USE, use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
                                                                 ).order_by('lecture_tb__member__name')
@@ -104,7 +105,7 @@ def func_get_class_member_one_to_one_end_list(class_id):
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                           lecture_tb__use=USE, use=USE
+                                           lecture_tb__use=USE, lecture_tb__member__use=USE, use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
                                                                 ).order_by('lecture_tb__member__name')

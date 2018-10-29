@@ -1122,6 +1122,7 @@ def out_member_logic(request):
     user = None
     member = None
     sns_data = None
+    group_name = ''
     if member_id == '':
         error = 'ID를 확인해 주세요.'
 
@@ -1131,6 +1132,9 @@ def out_member_logic(request):
             user = User.objects.get(id=member_id)
         except ObjectDoesNotExist:
             error = 'ID를 확인해 주세요.'
+        if error is None:
+            group = user.groups.get(user=request.user.id)
+            group_name = group.name
 
     if error is None:
         try:
@@ -1147,18 +1151,42 @@ def out_member_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                member.contents = str(user.username)+'/'+str(user.id)
-                member.use = 0
-                member.save()
-                count = MemberTb.objects.filter(use=UN_USE).count()
-                user.username = 'out_member_'+str(count)
-                user.email = ''
-                user.is_active = 0
-                user.set_password('0000')
-                user.save()
+                # if group_name != 'trainee':
+                #     member.contents = str(user.username)+'/'+str(user.id)
+                #     member.use = 0
+                #     member.save()
+                #     count = MemberTb.objects.filter(use=UN_USE).count()
+                #     user.username = 'out_member_'+str(count)
+                #     user.email = ''
+                #     user.is_active = 0
+                #     user.set_password('0000')
+                #     user.save()
+                # else:
+                name = member.name
+                i = 0
+                count = MemberTb.objects.filter(name=name).count()
+                max_range = (100 * (10 ** len(str(count)))) - 1
+
+                # while test:
+                for i in range(0, 100):
+                    username = name + str(random.randrange(0, max_range)).zfill(len(str(max_range)))
+                    try:
+                        User.objects.get(username=username)
+                    except ObjectDoesNotExist:
+                        break
+
+                if i == 100:
+                    raise InternalError
+                if error is None:
+                    member.contents = str(user.username)+':'+str(user.id)
+                    user.username = username
+                    user.email = ''
+                    user.is_active = 0
+                    user.set_password('0000')
+                    user.save()
+
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)
-
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
         except IntegrityError:
@@ -1168,28 +1196,29 @@ def out_member_logic(request):
         except ValidationError:
             error = '등록 값에 문제가 있습니다.'
         except InternalError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '다시 시도해주세요.'
 
-    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, use=USE)
+    if group_name != 'trainee':
+        billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, use=USE)
 
-    if len(billing_data) > 0:
-        for billing_info in billing_data:
-            error = func_cancel_period_billing_schedule(billing_info.customer_uid)
-            if error is None:
-                billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
-                                                          member_id=request.user.id,
-                                                          cancel_type='탈퇴',
-                                                          cancel_reason='회원 탈퇴',
-                                                          use=USE)
-                billing_cancel_info.save()
-                billing_info.state_cd = 'DEL'
-                billing_info.save()
-            payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
-                                                        customer_uid=billing_info.customer_uid)
-            if len(payment_data) >0:
-                payment_data.update(status='cancelled', use=UN_USE)
+        if len(billing_data) > 0:
+            for billing_info in billing_data:
+                error = func_cancel_period_billing_schedule(billing_info.customer_uid)
+                if error is None:
+                    billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
+                                                              member_id=request.user.id,
+                                                              cancel_type='탈퇴',
+                                                              cancel_reason='회원 탈퇴',
+                                                              use=USE)
+                    billing_cancel_info.save()
+                    billing_info.state_cd = 'DEL'
+                    billing_info.save()
+                payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                            customer_uid=billing_info.customer_uid)
+                if len(payment_data) >0:
+                    payment_data.update(status='cancelled', use=UN_USE)
 
-            error = None
+                error = None
 
     if error is None:
         return redirect(next_page)
