@@ -322,14 +322,13 @@ class AddNewMemberSnsInfoView(RegistrationView, View):
                                          sns_name=name, sns_connect_date=timezone.now(), use=USE)
                     sns_info.save()
                     user.backend = 'django.contrib.auth.backends.ModelBackend'
-                    login(request, user)
                     request.session['social_login_check'] = '1'
                     request.session['social_login_type'] = sns_type
                     request.session['social_login_id'] = sns_id
                     request.session['social_accessToken'] = social_access_token
-
                     if auto_login_check == '0':
                         request.session.set_expiry(0)
+                    login(request, user)
                     return redirect('/trainer/')
 
             except ValueError:
