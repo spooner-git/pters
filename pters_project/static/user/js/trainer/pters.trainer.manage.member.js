@@ -3429,7 +3429,7 @@ function open_member_info_popup_pc(dbID, jsondata){
     //     text2 = '';
     //     text3 = '';
     // }
-    var userName  = jsondata.lastnameInfo + jsondata.firstnameInfo;
+    var userName  = jsondata.firstnameInfo;
     var userID    = jsondata.idInfo;
     var userBirth = jsondata.birthdayInfo;
     var userPhone = jsondata.phoneInfo;
