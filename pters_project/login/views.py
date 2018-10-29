@@ -581,7 +581,7 @@ class NewMemberResendEmailAuthenticationView(RegistrationView, View):
             logger.error(str(username)+'->'+str(user_id)+'['+str(email)+']'+str(error))
             messages.error(request, error)
         else:
-            logger.error(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
+            logger.info(str(username)+'->'+str(user_id)+'['+str(email)+'] 회원가입 완료')
 
         return render(request, self.template_name)
 
@@ -715,7 +715,7 @@ class ResetPasswordView(View):
 
         if error is None:
             if User.objects.filter(email=email).exists() is not True:
-                error = '가입되지 않은 회원입니다.'
+                error = email + '로 가입된 회원이 없습니다.'
 
         if error is None:
             if post_reset_redirect is None:
@@ -758,8 +758,7 @@ class ResetPasswordView(View):
 
             return render(request, self.template_name, context)
         else:
-            logger.error(request.user.last_name + ' ' + request.user.first_name
-                         + '[' + str(request.user.id) + ']' + error)
+            logger.error('email:'+email + '/' + error)
             messages.error(request, error)
             return render(request, self.template_name)
 
@@ -1171,18 +1170,11 @@ def out_member_logic(request):
         except InternalError:
             error = '등록 값에 문제가 있습니다.'
 
-    payment_data = PaymentInfoTb.objects.filter(status='reserve',
-                                                payment_type_cd='PERIOD')
+    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id, use=USE)
 
-    if len(payment_data) > 0:
-        for payment_info in payment_data:
-            try:
-                billing_info = BillingInfoTb.objects.get(customer_uid=payment_info.customer_uid, use=USE)
-            except ObjectDoesNotExist:
-                error = '정기 결제 정보를 불러오지 못했습니다.'
-
-            if error is None:
-                error = func_cancel_period_billing_schedule(payment_info.customer_uid)
+    if len(billing_data) > 0:
+        for billing_info in billing_data:
+            error = func_cancel_period_billing_schedule(billing_info.customer_uid)
             if error is None:
                 billing_cancel_info = BillingCancelInfoTb(billing_info_tb_id=billing_info.billing_info_id,
                                                           member_id=request.user.id,
@@ -1192,10 +1184,12 @@ def out_member_logic(request):
                 billing_cancel_info.save()
                 billing_info.state_cd = 'DEL'
                 billing_info.save()
-
-        if error is None:
-            if len(payment_data) > 0:
+            payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id,
+                                                        customer_uid=billing_info.customer_uid)
+            if len(payment_data) >0:
                 payment_data.update(status='cancelled', use=UN_USE)
+
+            error = None
 
     if error is None:
         return redirect(next_page)
