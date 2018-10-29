@@ -470,6 +470,7 @@ class NewMemberSnsInfoView(TemplateView):
         context['sns_id'] = self.request.POST.get('sns_id')
         context['sns_type'] = self.request.POST.get('sns_type')
         context['sex'] = self.request.POST.get('sex')
+        context['social_accessToken'] = self.request.POST.get('social_accessToken')
 
         return render(request, self.template_name, context)
 
