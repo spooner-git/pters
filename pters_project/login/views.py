@@ -41,6 +41,8 @@ from configs import settings
 from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
+from trainee.models import MemberLectureTb
+from trainer.models import MemberClassTb
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -1162,6 +1164,15 @@ def out_member_logic(request):
                 #     user.set_password('0000')
                 #     user.save()
                 # else:
+                if group_name == 'trainee':
+                    member_lecture_data = MemberLectureTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                    if len(member_lecture_data) > 0:
+                        member_lecture_data.update(auth_cd='WAIT')
+                # elif group_name == 'trainer':
+                #     member_class_data = MemberClassTb.objects.filter(member_id=member_id, auth_cd='VIEW', use=USE)
+                #     if len(member_class_data) > 0:
+                #         member_class_data.update(auth_cd='DELETE')
+
                 name = member.name
                 i = 0
                 count = MemberTb.objects.filter(name=name).count()
