@@ -21,7 +21,7 @@ body{
 	position: relative;
 	height: 100%;
 	/*background-image: url("/static/user/res/main/bg-image.png");*/
-	background-image: url("/static/user/res/main/bg-image-basic2-mobile.jpg");
+	background-image: url("/static/user/res/main/bg-image-basic2-mobile.jpg?v=2018-10-30");
 	background-size:cover;
 }
 
@@ -426,7 +426,7 @@ nav.main_nav{
 	.pters_login_promote_box{
 		height: 100%;
 		/*background-image: url("/static/user/res/main/bg-image-pc-login.png");*/
-		background-image: url("/static/user/res/main/bg-image-basic2-pc.jpg");
+		background-image: url("/static/user/res/main/bg-image-basic2-pc.jpg?v=2018-10-30");
 		background-size: cover;
 	}
 	.pters_login_promote_box_sub{
@@ -653,7 +653,7 @@ img.prev_page{
 }
 
 #promote_1{
-	background-image: url('/static/common/promote_mobile/1.png');
+	background-image: url('/static/common/promote_mobile/1.jpg?v=2018-10-30');
 	background-repeat: no-repeat;
 	background-position-x: center;
 	background-size: cover;
@@ -661,7 +661,7 @@ img.prev_page{
 }
 
 #promote_2{
-	background-image: url('/static/common/promote_mobile/2.png');
+	background-image: url('/static/common/promote_mobile/2.png?v=2018-10-30');
 	background-repeat: no-repeat;
 	background-position-x: center;
 	background-size: cover;
@@ -669,7 +669,7 @@ img.prev_page{
 }
 
 #promote_3{
-	background-image: url('/static/common/promote_mobile/3.png');
+	background-image: url('/static/common/promote_mobile/3.png?v=2018-10-30');
 	background-repeat: no-repeat;
 	background-position-x: center;
 	background-size: cover;
@@ -677,7 +677,7 @@ img.prev_page{
 }
 
 #promote_4{
-	background-image: url('/static/common/promote_mobile/4.png');
+	background-image: url('/static/common/promote_mobile/4.png?v=2018-10-30');
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position-x: center;
@@ -685,7 +685,7 @@ img.prev_page{
 }
 
 #promote_5{
-	background-image: url('/static/common/promote_mobile/5.png');
+	background-image: url('/static/common/promote_mobile/5.png?v=2018-10-30');
 	background-repeat: no-repeat;
 	background-position-x: center;
 	background-size: cover;
@@ -693,7 +693,7 @@ img.prev_page{
 }
 
 #promote_6{
-	background-image: url('/static/common/promote_mobile/6.png');
+	background-image: url('/static/common/promote_mobile/6.png?v=2018-10-30');
 	background-repeat: no-repeat;
 	background-position-x: center;
 	background-size: cover;
@@ -703,42 +703,42 @@ img.prev_page{
 
 @media(min-width:1024px){
 	#promote_1{
-		background-image: url('/static/common/promote_pc/1.png');
+		background-image: url('/static/common/promote_pc/1.jpg?v=2018-10-30');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
 	}
 
 	#promote_2{
-		background-image: url('/static/common/promote_pc/2.png');
+		background-image: url('/static/common/promote_pc/2.png?v=2018-10-30');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
 	}
 
 	#promote_3{
-		background-image: url('/static/common/promote_pc/3.png');
+		background-image: url('/static/common/promote_pc/3.png?v=2018-10-30');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
 	}
 
 	#promote_4{
-		background-image: url('/static/common/promote_pc/4.png');
+		background-image: url('/static/common/promote_pc/4.png?v=2018-10-30');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
 	}
 
 	#promote_5{
-		background-image: url('/static/common/promote_pc/5.png');
+		background-image: url('/static/common/promote_pc/5.png?v=2018-10-30');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
 	}
 
 	#promote_6{
-		background-image: url('/static/common/promote_pc/1.jpg');
+		background-image: url('/static/common/promote_pc/1.jpg?v=2018-10-30');
 		background-repeat: no-repeat;
 		background-position-x: center;
 		left: unset;
@@ -773,7 +773,7 @@ img.prev_page{
 }
 
 body{
-	background-image: url('/static/common/promote_mobile/1.jpg');
+	background-image: url('/static/common/promote_mobile/1.jpg?v=2018-10-30');
 	background-repeat: repeat-y;
 	background-position-x: center;
 	background-size: cover;
@@ -795,7 +795,7 @@ body{
 
 @media(min-width:1024px){
 	body{
-		background-image: url('/static/common/promote_pc/1.jpg');
+		background-image: url('/static/common/promote_pc/1.jpg?v=2018-10-30');
 		background-repeat: no-repeat;
 		left: unset;
 	}
