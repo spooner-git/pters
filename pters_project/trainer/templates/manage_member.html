@@ -795,14 +795,14 @@
                     </div>
                 </div>
 
-                <div class="ptaddbox form-group _ADD_MEMBER_NEW">
+                <div class="ptaddbox form-group _ADD_MEMBER_NEW" style="height: 103px;">
                     <label for="memberNameSex" class="ptaddboxtext">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
                     <div id="memberName_reg" class="dropdown pters_input_custom">
                         <!-- <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10"> -->
-                        <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="11">
+                        <input type="text" class="pters_input_namefield form-control pters_field_style" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="11">
                     </div>
                     <div id="memberSex" class="pters_input_custom">
                         <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>
@@ -815,7 +815,7 @@
                         <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div class="dropdown pters_input_custom">
-                        <input type="tel" class="form-control" id="memberPhone_add" name="phone" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
+                        <input type="tel" class="form-control pters_field_style" id="memberPhone_add" name="phone" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                     </div>
                 </div>
 
@@ -1113,7 +1113,7 @@
                                 <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료 일자
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
-                            <div class="dropdown pters_input_custom">
+                            <div class="dropdown datepicktext">
                                 <!-- <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast"> -->
                                 <!-- <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly> -->
                                 <input type="tel" class="form-control" id="memberDue_add_2_fast" name="end_date_fast" placeholder="선택" maxlength="3" style="font-size:13.5px;">
