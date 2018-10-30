@@ -238,7 +238,7 @@ ul a{
 	font-family: 'Noto Sans KR';
 	top: auto;
 	width: 95px;
-	height: 23px;
+	height: 30px;
 	max-height: 200px; /*144*/
 	overflow-y: auto;
 	padding-top: 0;
@@ -444,7 +444,7 @@ ul a{
 
 #memo_mini{
 	width: 198px;
-	height: 23px;
+	height: 30px;
 	margin-left: 12px;
 }
 /*
