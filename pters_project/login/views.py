@@ -164,27 +164,27 @@ class ServiceTestLoginView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
-        # trainer_list = MemberTb.objects.filter(use=USE)
-        # for trainer_info in trainer_list:
-        #
-        #     user_for_group = User.objects.get(id=trainer_info.user_id)
-        #     group = user_for_group.groups.get(user=trainer_info.user_id)
-        #     if str(group.id) == '3':
-        #         payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
-        #                                      product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
-        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
-        #                                      start_date='2018-10-18', end_date='2028-10-18', period_month='120',
-        #                                      payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
-        #                                      buyer_name=trainer_info.name, use=USE)
-        #         billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
-        #                                      product_tb_id='10',
-        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
-        #                                      payment_reg_date='2018-10-18', next_payment_date='2028-10-18',
-        #                                      payment_type_cd='SINGLE', price=0, card_name='없음',
-        #                                      payed_date='18',
-        #                                      state_cd='IP', use=USE)
-        #         payment_info.save()
-        #         billing_info.save()
+        trainer_list = MemberTb.objects.filter(use=USE)
+        for trainer_info in trainer_list:
+
+            user_for_group = User.objects.get(id=trainer_info.user_id)
+            group = user_for_group.groups.get(user=trainer_info.user_id)
+            if str(group.id) == '3':
+                payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
+                                             product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
+                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
+                                             start_date='2018-10-29', end_date='2028-10-29', period_month='120',
+                                             payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
+                                             buyer_name=trainer_info.name, use=USE)
+                billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
+                                             product_tb_id='10',
+                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
+                                             payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
+                                             payment_type_cd='SINGLE', price=0, card_name='없음',
+                                             payed_date='29',
+                                             state_cd='IP', use=USE)
+                payment_info.save()
+                billing_info.save()
         return context
 
 

@@ -2274,4 +2274,3 @@ function know_duplicated_plans(jsondata){
 
     // };
 //중복일정 ㅇㄷ
-

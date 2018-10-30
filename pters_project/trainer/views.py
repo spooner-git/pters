@@ -562,7 +562,6 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         #         payment_info = None
         #     if payment_info is not None:
         #         current_payment_data.append(payment_info)
-        #
         # context['current_payment_data'] = current_payment_data
         context['next_schedule_start_dt'] = str(next_schedule_start_dt)
         context['next_schedule_end_dt'] = str(next_schedule_end_dt)
@@ -3975,6 +3974,7 @@ def update_setting_push_logic(request):
         except ObjectDoesNotExist:
             lt_pus_to_trainee_lesson_alarm = SettingTb(member_id=request.user.id, class_tb_id=class_id,
                                                        setting_type_cd='LT_PUS_TO_TRAINEE_LESSON_ALARM', use=USE)
+
         try:
             lt_pus_from_trainee_lesson_alarm = SettingTb.objects.get(member_id=request.user.id,
                                                                      class_tb_id=class_id,

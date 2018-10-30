@@ -606,82 +606,85 @@ function playSound() {
     var device_info = '{{ request.session.device_info }}';
 
     var varUA = navigator.userAgent.toLowerCase();
-    if(varUA.match('android') != null){
-        platform_check = 'mobile';
-        if(device_info != "web"){ //앱일떄
-            $('#paymentSetting').css('display', 'none');
-            $('._company').css('display', 'none');
-            $('a.text-payment').parent('div').css('display','none');
-            $('.ads_wrap').css('display', 'none');
-            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-        }else if(device_info == "web"){ //브라우저일때
-            platform_check = "mobile_browser"
-        }
-    }else if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
-        platform_check = 'mobile';
-        if(device_info != "web"){ //앱일때
-            $('#paymentSetting').css('display', 'none');
-            $('._company').css('display', 'none');
-            $('a.text-payment').parent('div').css('display','none');
-            $('.ads_wrap').css('display', 'none');
-            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-        }else if(device_info == "web"){ //브라우저일때
-            platform_check = "mobile_browser"
-        }
-        
-    }else{
-        platform_check = 'pc';
-    }
+    window.addEventListener('load', function () {
+        if (varUA.match('android') != null) {
+            platform_check = 'mobile';
+            if (device_info != "web") { //앱일떄
+                $('#paymentSetting').css('display', 'none');
+                $('._company').css('display', 'none');
+                $('a.text-payment').parent('div').css('display', 'none');
+                $('.ads_wrap').css('display', 'none');
+                $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+            } else if (device_info == "web") { //브라우저일때
+                platform_check = "mobile_browser"
+            }
+        } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+            platform_check = 'mobile';
+            if (device_info != "web") { //앱일때
+                $('#paymentSetting').css('display', 'none');
+                $('._company').css('display', 'none');
+                $('a.text-payment').parent('div').css('display', 'none');
+                $('.ads_wrap').css('display', 'none');
+                $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+            } else if (device_info == "web") { //브라우저일때
+                platform_check = "mobile_browser"
+            }
 
-    if(platform_check=='pc'){
-        Push.Permission.request(onGranted, onDenied);
-
-        function onDenied() {
-            console.log('알람 거절 상태')
+        } else {
+            platform_check = 'pc';
         }
-        function onGranted() {
-            console.log('알람 승인 상태')
+
+        if(platform_check=='pc'){
+            Push.Permission.request(onGranted, onDenied);
+
+            function onDenied() {
+                console.log('알람 거절 상태')
+            }
+            function onGranted() {
+                console.log('알람 승인 상태')
+            }
         }
-    }
 
-    if(platform_check=='pc'){
-        registrationServiceWorker('{{ request.session.push_token }}');
-    }
+        if(platform_check=='pc'){
+            registrationServiceWorker('{{ request.session.push_token }}');
+        }
 
-    if(platform_check=='pc') {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            registrations.forEach(function (v) {
-                if (v.active) {
-                    if (v.scope == "http://localhost:8000/user/js/push/"
-                        || v.scope == "https://www.pters.co.kr/user/js/push/"
-                        || v.scope == "https://pters.co.kr/user/js/push/"
-                        || v.scope == "https://kr.pters.co.kr/user/js/push/"
-                        || v.scope == "https://jp.pters.co.kr/user/js/push/"
-                        || v.scope == "https://us.pters.co.kr/user/js/push/"
-                        || v.scope == "https://spooner-test.pters.co.kr/user/js/push/") {
-                        v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')
+        if(platform_check=='pc') {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                registrations.forEach(function (v) {
+                    if (v.active) {
+                        if (v.scope == "http://localhost:8000/user/js/push/"
+                            || v.scope == "https://www.pters.co.kr/user/js/push/"
+                            || v.scope == "https://pters.co.kr/user/js/push/"
+                            || v.scope == "https://kr.pters.co.kr/user/js/push/"
+                            || v.scope == "https://jp.pters.co.kr/user/js/push/"
+                            || v.scope == "https://us.pters.co.kr/user/js/push/"
+                            || v.scope == "https://spooner-test.pters.co.kr/user/js/push/") {
+                            v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')
+                        }
                     }
-                }
-            });
-        });
-    }
-    function messageCommunicationWithWorker(){
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            registrations.forEach(function (v) {
-                    send_message_to_sw(v.active, "hello cal week").then(function (m) {
-                    playSound();
-                    if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')){
-                        ajaxClassTime();
-                    }
-                    messageCommunicationWithWorker();
                 });
             });
-        });
-    }
+        }
+        function messageCommunicationWithWorker(){
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                registrations.forEach(function (v) {
+                        send_message_to_sw(v.active, "hello cal week").then(function (m) {
+                        playSound();
+                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')){
+                            ajaxClassTime();
+                        }
+                        messageCommunicationWithWorker();
+                    });
+                });
+            });
+        }
 
-    if(platform_check=='pc') {
-        messageCommunicationWithWorker();
-    }
+        if(platform_check=='pc') {
+            messageCommunicationWithWorker();
+        }
+    });
+
     </script>
 <script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
 <script type="text/javascript">
