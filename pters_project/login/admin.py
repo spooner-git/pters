@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb
+from .models import CommonCdTb, PushInfoTb, LogTb, MemberTb, SnsInfoTb
+
 
 # Register your models here.
 
@@ -46,3 +47,8 @@ class PushInfoTbAdmin(admin.ModelAdmin):
     list_display = ('push_info_id', 'member', 'device_info', 'token', 'badge_counter', 'device_id',
                     'last_login', 'use')
 
+
+@admin.register(SnsInfoTb)
+class SnsInfoTbAdmin(admin.ModelAdmin):
+    list_display = ('sns_info_id', 'member', 'sns_id', 'sns_type', 'sns_name', 'sns_profile',
+                    'sns_connect_date', 'reg_dt', 'mod_dt', 'use')
