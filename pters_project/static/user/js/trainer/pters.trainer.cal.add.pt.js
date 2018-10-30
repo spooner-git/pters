@@ -1976,8 +1976,8 @@ function set_member_dropdown_list(jsondata){
             }
         }
     }else if(memberSize == 0){
-        member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
-        member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+        member_array_mobile[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;height:auto;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
+        member_array_pc[0] = '<li style="color:#fe4e65;font-weight:bold;font-size:13px;height:auto;">등록된 회원이 없습니다.<a href="/trainer/member_manage/" style="text-decoration:underline">회원 등록</a></li>';
     }
     member_array_mobile.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
     member_array_pc.push('<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>');
