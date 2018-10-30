@@ -311,6 +311,11 @@
                             <a class="sidebar_text text-lecturemanage">
                             </a>
                         </div>
+
+                        <div class="sidebar_div" onclick="sideGoPage('ticket_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text text-ticketmanage">
+                            </a>
+                        </div>
                         
                         <!-- 
                         <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
@@ -433,6 +438,10 @@
                 
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:lecture_manage' %}" class="centermenu_text text-lecturemanage"></a>
+                </div> 
+
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:ticket_manage' %}" class="centermenu_text text-ticketmanage"></a>
                 </div> 
 
                 
