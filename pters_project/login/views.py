@@ -42,7 +42,9 @@ from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from trainee.models import MemberLectureTb, LectureTb
-from trainer.models import MemberClassTb, GroupTb, PackageTb
+from trainer.functions import func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list, \
+    func_get_ing_group_member_list, func_get_end_group_member_list
+from trainer.models import MemberClassTb, GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -165,13 +167,54 @@ class ServiceTestLoginView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
 
-        group_data = GroupTb.objects.filter()
-        for group_info in group_data:
-            package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
-                                     state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
-                                     package_group_num=1, use=group_info.use)
-            package_info.save()
-        lecture_data = LectureTb.objects.filter()
+        # class_data = ClassTb.objects.filter().exlude(member_id='5')
+        # for class_info in class_data:
+        #     check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
+        #     if len(check_group) == 0:
+        #         # ing_group_member_num = len(func_get_member_one_to_one_ing_list(class_info.class_id, class_info.member_id))
+        #         # end_group_member_num = len(func_get_member_one_to_one_end_list(class_info.class_id, class_info.member_id))
+        #         group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
+        #                              name='1:1레슨',
+        #                              # ing_group_member_num=ing_group_member_num,
+        #                              # end_group_member_num=end_group_member_num,
+        #                              state_cd='IP', use=USE)
+        #         group_info.save()
+        #
+        #         class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id)
+        #         for class_lecture_info in class_lecture_data:
+        #             check_group = GroupLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
+        #             if len(check_group) == 0:
+        #                 lecture_info = GroupLectureTb(group_tb_id=group_info.group_id, lecture_tb_id=class_lecture_info.lecture_tb_id,
+        #                                               use=class_lecture_info.lecture_tb.use)
+        #                 lecture_info.save()
+
+        class_data = ClassTb.objects.filter(member_id='5')
+        for class_info in class_data:
+            group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+            if len(group_data) == 0:
+                group_data = None
+            else:
+                for group_info in group_data:
+                    group_info.ing_group_member_num = len(func_get_ing_group_member_list(group_info.group_id, class_info.member_id))
+                    group_info.end_group_member_num = len(func_get_end_group_member_list(group_info.group_id, class_info.member_id))
+                    group_info.save()
+                    # package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+                    #                          state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
+                    #                          ing_package_member_num=group_info.ing_group_member_num,
+                    #                          end_package_member_num=group_info.end_group_member_num,
+                    #                          package_group_num=1, use=group_info.use)
+                    # package_info.save()
+                    # package_group_info = PackageGroupTb(class_tb_id=group_info.class_tb_id,
+                    #                                     package_tb_id=package_info.package_id,
+                    #                                     group_tb_id=group_info.group_id, use=group_info.use)
+                    # package_group_info.save()
+
+        # group_data = GroupTb.objects.filter()
+        # for group_info in group_data:
+        #     package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+        #                              state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
+        #                              package_group_num=1, use=group_info.use)
+        #     package_info.save()
         # for lecture_info in lecture_data:
         #     package_lecture_info =
         # trainer_list = MemberTb.objects.filter(use=USE)

@@ -98,6 +98,8 @@ urlpatterns = [
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     # 그룹 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
+    # 그룹 종료 회원 조회
+    url(r'^get_end_group_member/$', views.GetEndGroupMemberViewAjax.as_view(), name='get_end_group_member'),
     # 그룹 종료 상태 변경
     url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
     # 그룹 재개 상태 변경

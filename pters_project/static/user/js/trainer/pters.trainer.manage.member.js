@@ -2221,10 +2221,10 @@ function birth_dropdown_set(){
 //등록유형 드랍다운
 function grouptype_dropdown_set(grouplistJSON){
     var len = grouplistJSON.group_id.length;
-    var optionsToJoin = ['<option value="">1:1 레슨</option>'];
-    // var optionsToJoin = [''];
-    // $('#form_member_groupid').val(grouplistJSON.group_id[0]);
-    // $('#form_group_package_type').val('group');
+    // var optionsToJoin = ['<option value="">1:1 레슨</option>'];
+    var optionsToJoin = [''];
+    $('#form_member_groupid').val(grouplistJSON.group_id[0]);
+    $('#form_group_package_type').val('group');
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'/group">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.group_name[i]+'</option>');
     }

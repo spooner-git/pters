@@ -48,7 +48,8 @@ from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
-    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list
+    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list, \
+    func_get_ing_group_member_list, func_get_end_group_member_list
 
 logger = logging.getLogger(__name__)
 
@@ -2832,98 +2833,27 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
         group_id = self.request.GET.get('group_id', '')
         error = None
-        member_data = []
-        lecture_list = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+        # member_data = []
+        member_data = func_get_ing_group_member_list(group_id, self.request.user.id)
 
-        for lecture_info in lecture_list:
-            # member_info = lecture_info.lecture_tb
-            try:
-                member_info = MemberLectureTb.objects.select_related('lecture_tb', 'member').get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
-            if error is None:
-                member_info.member.lecture_tb = lecture_info.lecture_tb
-                if member_info.member.sex is None:
-                    member_info.member.sex = ''
-                if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
-                    member_info.member.birthday_dt = ''
-                else:
-                    member_info.member.birthday_dt = str(member_info.member.birthday_dt)
+        context['member_data'] = member_data
+        return context
 
-                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(self.request.user.id):
-                    if member_info.auth_cd != 'VIEW':
-                        member_info.member.sex = ''
-                        member_info.member.birthday_dt = ''
-                        if member_info.member.phone is None:
-                            member_info.member.phone = ''
-                        else:
-                            member_info.member.phone = '***-****-' + member_info.member.phone[7:]
 
-                if member_info.member.phone is None:
-                    member_info.member.phone = ''
+class GetEndGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/group_member_ajax.html'
 
-                check_add_flag = 0
-                for member_test in member_data:
-                    if member_test.user.id == member_info.member.user.id:
-
-                        if member_test.lecture_tb.lecture_available_id == '':
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None \
-                                or member_test.lecture_tb.start_date == '':
-                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() \
-                                    > lecture_info.lecture_tb.start_date:
-                                member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                                if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                    member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None \
-                                or member_test.lecture_tb.end_date == '':
-                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
-                                    < lecture_info.lecture_tb.end_date:
-                                member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
-                                or member_test.lecture_tb.mod_dt == '':
-                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
-                                    > lecture_info.lecture_tb.mod_dt:
-                                member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                      '%Y-%m-%d %H:%M:%S') is None \
-                                or member_test.lecture_tb.reg_dt == '':
-                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                          '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
-                                member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                        member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
-                        member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
-                        member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
-                        check_add_flag = 1
-
-                if check_add_flag == 0:
-                    member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                    member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
-                    member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
-
-                    member_info.member.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
-                    member_info.member.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
-                    member_info.member.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
-                    member_info.member.lecture_tb.lecture_available_id = ''
-                    if lecture_info.lecture_tb.lecture_avail_count > 0:
-                        member_info.member.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-
-                    member_data.append(member_info.member)
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetEndGroupMemberViewAjax, self).get_context_data(**kwargs)
+        group_id = self.request.GET.get('group_id', '')
+        error = None
+        member_data = func_get_end_group_member_list(group_id, self.request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3208,25 +3138,25 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
-        for group_info in group_data:
-            member_data = []
-            lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-                                                                                              lecture_tb__use=USE, use=USE)
-            for lecture_info in lecture_data:
-                member_info = lecture_info.lecture_tb
-                if error is None:
-                    check_add_flag = 0
-                    for member_test in member_data:
-                        if member_test.user.id == member_info.member.user.id:
-                            check_add_flag = 1
+                                                       ).order_by('-group_type_cd', 'ing_group_member_num')
+        # for group_info in group_data:
+        #     member_data = []
+        #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
+        #                                                                                       lecture_tb__use=USE, use=USE)
+        #     for lecture_info in lecture_data:
+        #         member_info = lecture_info.lecture_tb
+        #         if error is None:
+        #             check_add_flag = 0
+        #             for member_test in member_data:
+        #                 if member_test.user.id == member_info.member.user.id:
+        #                     check_add_flag = 1
+        #
+        #             if check_add_flag == 0:
+        #                 member_data.append(member_info.member)
+        #     group_info.group_member_num = len(member_data)
 
-                    if check_add_flag == 0:
-                        member_data.append(member_info.member)
-            group_info.group_member_num = len(member_data)
-
-        member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
-        context['member_data'] = member_data
+        # member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
+        # context['member_data'] = member_data
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3249,32 +3179,27 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, end_group_member_num__gt=0, use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
-        for group_info in group_data:
-            member_data = []
-            lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-                                                                                              lecture_tb__use=USE, use=USE)
-            for lecture_info in lecture_data:
-                member_info = lecture_info.lecture_tb
-                if error is None:
-                    check_add_flag = 0
-                    for member_test in member_data:
-                        if member_test.user.id == member_info.member.user.id:
-                            check_add_flag = 1
-
-                    if check_add_flag == 0:
-                        member_data.append(member_info.member)
-            group_info.group_member_num = len(member_data)
-        member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
-        context['member_data'] = member_data
+                                                       ).order_by('-group_type_cd', 'end_group_member_num')
+        # for group_info in group_data:
+        #     member_data = []
+        #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
+        #                                                                                       lecture_tb__use=USE, use=USE)
+        #     for lecture_info in lecture_data:
+        #         member_info = lecture_info.lecture_tb
+        #         if error is None:
+        #             check_add_flag = 0
+        #             for member_test in member_data:
+        #                 if member_test.user.id == member_info.member.user.id:
+        #                     check_add_flag = 1
+        #
+        #             if check_add_flag == 0:
+        #                 member_data.append(member_info.member)
+        #     group_info.group_member_num = len(member_data)
+        # member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
+        # context['member_data'] = member_data
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
