@@ -359,8 +359,9 @@ $('.text-calSelect').text(multi_language_set[Options.language]["text-programsele
 $('.text-mypage').text(multi_language_set[Options.language]["text-mypage"]);
 $('.text-help').text(multi_language_set[Options.language]["text-help"]);
 $('.text-payment').text(multi_language_set[Options.language]["text-payment"]);
-$('.text-moveprogram').text(multi_language_set[Options.language]["text-moveprogram"])
+$('.text-moveprogram').text(multi_language_set[Options.language]["text-moveprogram"]);
 $('.text-programmanage').text(multi_language_set[Options.language]["text-programmanage"]);
+$('.text-memocaution').text(multi_language_set[Options.language]["text-memocaution"]);
 
 //Trainer setting menu
 $('.text-basicsetting').text(multi_language_set[Options.language]["text-basicsetting"]);
