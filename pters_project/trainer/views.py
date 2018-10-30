@@ -3060,19 +3060,14 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         error = None
 
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
-                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd,
-                                                                                     [])).order_by('-package_id')
-        # query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-        #
-        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
-        #                                     ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-        #                                                state_cd_nm=RawSQL(query_state_cd, []),
-        #                                                group_member_num=RawSQL(query_group_member_num, [])
-        #                                                ).order_by('-group_type_cd')
+        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        package_data = PackageTb.objects.filter(
+            class_tb_id=class_id, state_cd='IP',
+            package_type_cd='ONE', use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                                                     package_type_cd_nm=RawSQL(query_package_type_cd,
+                                                                               [])).order_by('-package_id')
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -3091,9 +3086,13 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
         error = None
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
+        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(
-            class_tb_id=class_id,
-            use=USE).exclude(state_cd='IP').annotate(state_cd_nm=RawSQL(query_state_cd, [])).order_by('-package_id')
+            class_tb_id=class_id, state_cd='PE',
+            package_type_cd='ONE', use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                                                     package_type_cd_nm=RawSQL(query_package_type_cd,
+                                                                               [])).order_by('-package_id')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3235,7 +3234,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
             messages.error(self.request, error)
 
         context['group_data'] = group_data
-        end_time = timezone.now()
+        # end_time = timezone.now()
         # print(str(end_time-start_time))
         return context
 
@@ -3262,7 +3261,7 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         for group_info in group_data:
             member_data = []
             lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-                                                                                      lecture_tb__use=USE, use=USE)
+                                                                                              lecture_tb__use=USE, use=USE)
             for lecture_info in lecture_data:
                 member_info = lecture_info.lecture_tb
                 if error is None:
