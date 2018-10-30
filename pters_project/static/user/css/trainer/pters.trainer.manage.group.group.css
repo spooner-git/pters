@@ -49,6 +49,7 @@
 	width: 100%;
 	text-align: center;
 }
+
 .groupMemberAddBox > .buttonGroup > button{
 	width: 31%;
 	font-size:12.5px;
@@ -56,10 +57,18 @@
 	height: 30px;
 	-webkit-appearance:none;
 	border-radius: 0;
-	border: 1px solid #cccccc;
+	border: 1px solid #eaeaea;
 	background: #f4f4f4;
-	color: #fe4e65;
+	color: #282828;
+	border-radius: 5px;
 }
+	.groupMemberAddBox > .buttonGroup > button:hover{
+		border-color: #fe4e65;
+		color: #fe4e65;
+	}
+	.groupMemberAddBox > .buttonGroup > button:active{
+		border-color: #282828;
+	}
 
 .subpopup_addGroup{
 	display: none;

@@ -12,6 +12,10 @@ input{
     -webkit-opacity:1;
 }
 
+button:focus{
+    outline: unset;
+}
+
 #free_member_use_guide{
     position: fixed;
     display: none;

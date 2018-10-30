@@ -659,9 +659,9 @@
         </div>
 
         <div id="memberName_mini" class="ptaddbox_mini _MINI_ptadd">
-            <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> <span class="KRtext"> 회원/그룹/클래스</span></div>
+            <div class="ptaddboxtext_mini"> <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %} title="회원/그룹/클래스"><!--  <span class="KRtext"> 회원/그룹/클래스</span> --></div>
             <div id="membersSelected_mini" class="dropdown_mini">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom pters_dropdown_custom_mini" type="button" data-toggle="dropdown">
+                <button class="btn btn-default dropdown-toggle pters_dropdown_custom pters_dropdown_custom_mini pters_field_style" type="button" data-toggle="dropdown">
                     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloading_dropdown">
                     <span class="KRtext" style="color:#cccccc;">회원/그룹/클래스 선택</span>
                 </button>
@@ -677,7 +677,7 @@
             <span id="remainCount_mini_text">
             <span class="KRtext">예약 가능 횟수 :</span>
       </span>
-            <div id="countsSelected_mini" class="dropdown_mini countsSelected" placeholder="ー"></div>
+            <div id="countsSelected_mini" class="countsSelected" placeholder="ー"></div>
         </div>
 
         <div id="groupInfo_mini" class="ptaddbox_mini">
@@ -686,7 +686,7 @@
             <span id="groupInfo_mini_text">
             <span class="KRtext">정원 :</span>
       </span>
-            <div id="groupInfoSelected" class="dropdown_mini groupInfoSelected" placeholder="ー"></div>
+            <div id="groupInfoSelected" class="groupInfoSelected" placeholder="ー"></div>
         </div>
 
         <div id="timeGraph" class="ptaddbox_mini" style="display: none;">
@@ -709,9 +709,9 @@
         </div>
 
         <div id="classDuration_mini" class="ptaddbox_mini">
-            <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> <span class="KRtext"> 진행 시간</span><span class="JPtext"> 進行時間</span><span class="ENtext"> Class Period</span></div>
+            <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %} title="진행시간 선택"> <!-- <span class="KRtext"> 진행 시간</span> --></div>
             <div id="durationsSelected" class="dropdown_mini">
-                <button class="btn btn-default dropdown-toggle pters_dropdown_custom pters_dropdown_custom_mini" type="button" data-toggle="dropdown" style="width: 198px;">
+                <button class="btn btn-default dropdown-toggle pters_dropdown_custom pters_dropdown_custom_mini pters_field_style" type="button" data-toggle="dropdown" style="width: 198px;">
                     <span class="KRtext" style="color:#cccccc;">선택</span>
                 </button>
                 <ul id="durations_mini" class="dropdown-menu dropdownlist_mini pters_dropdown_custom_list">
@@ -721,12 +721,13 @@
         </div>
 
         <div id="addmemo_mini" class="ptaddbox_mini">
-            <div class="ptaddboxtext_mini">
-                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %}>
-                <span class="KRtext"> 메모</span>
-                <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
-            </div>
-            <input type="text" name="memo_mini" maxlength="15" value="" placeholder="15자 이내" id="memo_mini">
+            <!-- <div class="ptaddboxtext_mini"> -->
+                <img class="icons" src={% static_url "user/res/ptadd/icon-pencil.png" %} title="메모">
+                <!-- <span class="KRtext"> 메모</span> -->
+                <!-- <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보"> -->
+            
+                <input type="text" name="memo_mini" maxlength="15" value="" placeholder="15자 이내" id="memo_mini" class="pters_field_style" style="width: 88% !important;">
+            <!-- </div> -->
             <p style="font-size:12px;color:#fe4e65;margin: 2px 0 0;text-align: right;padding-right:15px;" class="pt_memo_guide_mini">
                 <img src="/static/user/res/stopmark.png" style="height: 12px;margin-bottom: 1px;"> 이 메모는 회원님께도 공유됩니다.
             </p>

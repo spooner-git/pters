@@ -7,6 +7,17 @@ input{
 ul a{
 	cursor: pointer;
 }
+.form-control{
+	box-shadow: unset;
+}
+
+.pters_field_style{
+	border:0 !important;
+	background-color: #f4f4f4;
+	margin: 0 !important;
+	/*margin-left: 10px !important;*/
+	width: 100% !important;
+}
 
 ._on{
 	/*
@@ -208,7 +219,9 @@ ul a{
 	background: #ffffff;
 	line-height: 27px;
 }
-
+#memberName_mini{
+	margin-bottom: 0;
+}
 #memberName_mini button{
 	position: relative;
 	width: 160px;
@@ -233,9 +246,10 @@ ul a{
 }
 
 .dropdown_mini{
-	display: inline;
+	display: inline-block;
 	height: 30px;
 	margin:0px;
+	width: 88%;
 }
 
 #typeSelector{
@@ -272,14 +286,16 @@ ul a{
 }
 #classDuration_mini #durationsSelected{
 	position: relative;
-	margin-left: 7px;
+	/*margin-left: 7px;*/
+	margin-left: 0px;
 }
 #membersSelected_mini{
 	position: relative;
 	margin-left: 15px;
 }
 #memberName_mini .dropdown_mini{
-	margin-left: 6px;
+	/*margin-left: 6px;*/
+	margin-left: 0px;
 }
 
 #members_pc{
@@ -415,10 +431,11 @@ ul a{
 }
 
 .ptaddbox_mini{
-	display: inline;
+	display: block;
 	padding-left: 5%;
 	margin-top: 10px;
 	margin-bottom: 5px;
+	width: 100% !important;
 }
 
 #addmemo_mini{
@@ -466,6 +483,10 @@ ul a{
 	font-weight: bold;
 }
 
+#comment_fast{
+	resize: none;
+	background-color: #f4f4f4;
+}
 
 #remainCount{
 	position: relative;
@@ -542,7 +563,9 @@ ul a{
 	text-align: center;
 	padding-top: 10px;
 }
-
+#countsSelected_mini, #groupInfoSelected{
+	display: inline-block;
+}
 #remainCount_mini, #groupInfo_mini{
 	display: none;
 	position: relative;
@@ -990,6 +1013,11 @@ button._info_baseedit_img{
 
 	padding-bottom: 10px;
 }
+@media(min-width:600px){
+	#simpleReg{
+		background-color: #ffffff;
+	}
+}
 
 .price_wrap{
 	height: 110px;
@@ -1297,6 +1325,7 @@ option{
 
 	.ptaddboxtext{
 		display: inline;
+		line-height: 35px;
 	}
 
 	.dropdown{
@@ -1304,10 +1333,13 @@ option{
 		position: absolute;
 		left: 35%;
 		width: 53%;
-		height: 26px;
+/*		height: 26px;*/
+		height: 35px;
 		margin-left: 30px;
 		margin-top: 0;
-		border:1px solid #8d8d8d;
+		/*border:1px solid #8d8d8d;*/
+		border: 0;
+		background-color: #f4f4f4;
 		box-shadow: unset !important;
 	}
 
@@ -1356,6 +1388,8 @@ option{
 	#memberSearch_add{
 		width: 78%;
 		height: 26px;
+		background-color: #f4f4f4;
+		border: 0;
 	}
 
 	
@@ -1387,8 +1421,9 @@ option{
 	}
 
 	#memberBirth{
-		border: 	0;
-		width: 	54%;
+		border: 0;
+		width: 54%;
+		background-color: transparent;
 	}
 
 	#remainCount_mini div:nth-child(2){
@@ -1399,8 +1434,8 @@ option{
 	#memberLastName_add, #memberFirstName_add{
 		display: inline-block;
 		width: 100% !important;
-		border:1px solid #8d8d8d;
-		height: 26px;
+		border:0;
+		height: 35px;
 	}
 	#memberFirstName_add{
 		/*margin-left: 2px;*/
@@ -1414,33 +1449,38 @@ option{
 		line-height: 24px;
 	}
 
+	#memberCount_add_fast, #lecturePrice_add_2{
+		border: 1px solid #f4f4f4;
+	}
+
 	.price_wrap{
-		height: 70px;
+		height: 85px;
 	}
 
 	.dur_wrap{
-		height: 80px;
+		height: 85px;
 	}
 
 	._count{
-		height: 80px;
+		height: 85px;
 	}
 	.pricebutton{
-		margin-top: 25px !important;
+		margin-top: 35px !important;
 	}
 
 	.regCountSelect{
-		margin-top: 28px !important;
+		margin-top: 35px !important;
 	}
 
 	.dropdown_birth{
-		height: 26px;
-		border: 1px solid #8d8d8d;
+		height: 35px;
+		border: 0;
+		background-color: #f4f4f4;
 		box-shadow: unset;
 	}
 
 	.inputunit{
-		line-height: 24px;
+		line-height: 35px;
 	}
 
 	.checkboxtext{
@@ -1448,7 +1488,7 @@ option{
 	}
 
 	.ptaddbox{
-
+		padding-bottom: 0;
 	}
 
 	#page-addplan{

@@ -18,6 +18,12 @@ div.ui-widget-header{
 	cursor: pointer;
 }
 
+@media(min-width: 600px){
+	.datepicktext input{
+		background-color: #f4f4f4;
+	}
+}
+
 
 
 span.ui-datepicker-year{

@@ -470,7 +470,7 @@ $(document).ready(function(){
         $('.typeSelected').removeClass('typeSelected');
         $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-            $('._MINI_ptadd').css('display','inline');
+            $('._MINI_ptadd').css('display','block');
             //$('._MINI_offadd').hide()
         }else if(addTypeSelect == "offadd"){
             //$('._MINI_offadd').show()
@@ -622,7 +622,7 @@ $(document).ready(function(){
         $('.typeSelected').removeClass('typeSelected');
         $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){
-            $('._MINI_ptadd').css('display', 'inline');
+            $('._MINI_ptadd').css('display', 'block');
             //$('._MINI_offadd').hide()
         }else if(addTypeSelect == "offadd"){
             //$('._MINI_offadd').show()
@@ -706,7 +706,7 @@ $(document).ready(function(){
         $(this).addClass('typeSelected');
         $(this).siblings('.toggleBtnWrap').removeClass('typeSelected');
         if($(this).attr('id').split('_')[1]=="ptadd"){
-            $('#memberName_mini, #remainCount_mini').css('display', 'inline');
+            $('#memberName_mini, #remainCount_mini').css('display', 'block');
             $('.pt_memo_guide_mini').css('visibility', 'unset');
             if($('#membersSelected_mini button').attr('data-grouptype') == "group"){
                 addTypeSelect = "groupptadd";
