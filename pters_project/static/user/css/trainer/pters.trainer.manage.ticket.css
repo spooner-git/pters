@@ -1,0 +1,513 @@
+._ADD_GROUP_NEW{
+	display: none;
+}
+
+._ADD_GROUPMEMBER_NEW{
+	display: none;
+}
+
+
+#page_addgroup{
+	position: absolute;
+	width: 100%;
+	max-width: 450px !important;
+	background: #f4f4f4;
+	z-index: 350;
+	top: 75px;
+}
+
+#groupNameInput{
+	width: 100%;
+	padding-top: 3px;
+}
+#groupname, #grouptype{
+	display: inline-block;
+}
+#groupname{
+	width: 50%;
+	height: 35px;
+	border: 1px solid #cccccc;
+}
+#grouptype{
+	height: 35px;
+	width:25%;
+}
+#groupcapacity{
+	width: 20%;
+	height: 35px;
+}
+
+
+
+.groupMemberAddBox{
+	border:1px solid #cccccc;
+	padding:5px;
+	min-height: 90px;
+	background:#ffffff;
+	margin-bottom: 20px;
+}
+.groupMemberAddBox > .buttonGroup{
+	width: 100%;
+	text-align: center;
+}
+.groupMemberAddBox > .buttonGroup > button{
+	width: 31%;
+	font-size:12.5px;
+	font-weight: 500;
+	height: 30px;
+	-webkit-appearance:none;
+	border-radius: 0;
+	border: 1px solid #cccccc;
+	background: #f4f4f4;
+	color: #fe4e65;
+}
+
+.subpopup_addGroup{
+	display: none;
+	position: absolute;
+	width: 97%;
+	background: #ffffff;
+	border:2px solid #6b6b6b;
+	box-shadow: 2px 3px 4px 1px #6b6b6b;
+	z-index: 400;
+}
+#subpopup_addByList{
+	overflow-y: auto;
+	height: 350px;
+	top: 92px;
+}
+#subpopup_addBySearch{
+	height: auto;
+	min-height: 100px;
+	text-align: center;
+	top: 92px;
+}
+
+
+.addByNewRaw{
+	width: 100%;
+	margin-top:5px;
+	text-align: center;
+}
+.addByNewRaw select{
+	height: 26px;
+	width: 15%;
+	margin-left: 1px;
+	margin-right: 1px;
+	text-align-last:center;
+}
+.addByNewRaw .new_member_lastname, .addByNewRaw .new_member_firstname{
+	width: 33%;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+.addByNewRaw .new_member_phone{
+	width: 40%;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+
+img.substract_addedMember{
+	width: 10px;
+	margin-left: 7px;
+	margin-bottom: 6px;
+	cursor: pointer;
+}
+
+.addByNewRaw div{   /*리스트에서 추가했을때*/
+	display: inline-block;
+	height: 26px;
+	width: 25%;
+	margin-left: 1px;
+	margin-right: 1px;
+	background: #f4f4f4;
+	border:1px solid #cccccc;
+}
+.addByNewRaw div:nth-child(1){
+	width: 32.5%;
+}
+.addByNewRaw div:nth-child(2){
+	width: 15%;
+}
+.addByNewRaw div:nth-child(3){
+	width: 40%;
+}
+
+
+
+
+.list_addByList{
+	padding: 10px 0 7px 10px;
+	border-bottom: 1px solid #cccccc;
+}
+	.list_addByList_padding{
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+.listTitle_addByList{
+	margin-top:0;
+	background: #f4f4f4;
+	line-height: 30px;
+	font-weight: bold;
+	border-bottom: 2px solid #282828;
+}
+.listTitle_addByList span{
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	font-weight: 500;
+	font-size: 13px;
+	margin-right: 10px;
+}
+.list_addByList > div{
+	display: inline-block;
+}
+
+.list_addByList > div:nth-child(1){
+	width: 50%;
+}
+.list_addByList > div:nth-child(2){
+	width: 27%;
+}
+.list_addByList > div:nth-child(3){
+	width: 20%;
+	text-align:right;
+}
+.list_addByList > div:nth-child(4){
+	width: 20%;
+}
+
+.list_addByList div > img{
+	width: 15px;
+	margin-right: 5px;
+	margin-bottom: 6px;
+}
+
+.add_listedMember{
+	cursor: pointer;
+}
+
+
+#addBySearch_input{
+	border:2px solid #cccccc;
+}
+
+
+
+/*그룹 탭에서 그룹들 나열*/
+.groupWrap{
+	display: table;
+	width: 100%;
+	height: 40px;
+	background: #ffffff;
+	border:1px solid #ffffff;
+	border-bottom: 1px solid #cccccc;
+	text-align: center;
+	cursor: pointer !important;
+	font-size: 12px;
+}
+
+.groupWrap_selected{
+	border-top: 1px solid #fe4e65;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	background: #e8e8e8;
+	font-weight: bold;
+}
+
+.groupWrap:hover{
+	background: #e4e4e4;
+	font-weight: bold;
+
+}
+
+.red_color_text{
+	color: #fe4e65;
+	-webkit-text-fill-color: #fe4e65 !important;
+}
+
+.groupWrap:active{
+	background: #cccccc;
+}
+
+.groupWrap > div{
+	display: table-cell;
+	line-height: 36px;
+}
+._groupnum{
+	display: table-cell;
+	width: 4%;
+}
+._groupname{
+	width: 16%;
+}
+._grouptypecd{
+	width: 8%;
+}
+._groupparticipants{
+	width: 7%;
+	display: none !important;
+}
+._groupcapacity{
+	width: 7%;
+	display: none !important;
+}
+._grouppartystatus{
+	width: 14%;
+}
+.group_member_current_num{
+	width: 40%;
+	display: inline-block;
+	text-align: right;
+}
+._groupstatus span{
+	font-size: 12px;
+}
+._groupstatus_IP{
+	color: green;
+	font-weight: 400;
+}
+._groupstatus_disabled_false{
+	text-decoration: underline;
+}
+._groupstatus_disabled_true{
+	text-decoration: none;
+}
+
+._groupmemo{
+	width: 22%;
+}
+._groupcreatedate{
+	display: table-cell;
+	width: 17%;
+	font-size: 13px;
+}
+._groupstatus{
+	width:8%;
+}
+._groupmanage{
+	width: 10%;
+}
+.group_listinput{
+	width: 95%;
+	height: 26px;
+	line-height: 26px;
+	-webkit-text-fill-color:#282828;
+	-webkit-opacity:1;
+}
+.input_disabled_true{
+	border:0;
+	background: transparent;
+	cursor: pointer !important;
+}
+.input_disabled_false{
+	border:1px solid #282828;
+	background: #ffffff;
+	cursor: text;
+}
+
+div._groupmanage img._info_delete{
+	opacity: 0.4;
+}
+
+.groupMemoWrap{
+	display: none;
+	width: 100%;
+	height: auto;
+	background: #ffffff;
+	color: #282828;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	border-bottom: 1px solid #cccccc;
+	text-align: left;
+	font-size: 12px;
+	padding: 5px 0 5px 5px;
+}
+	.groupMemoWrap input{
+		-webkit-text-fill-color:#282828 !important;
+		text-align: left;
+	}
+
+.groupRepeatWrap{
+	display: none;
+	width: 100%;
+	height: auto;
+	background: #282828;
+	color: #ffffff;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	text-align: left;
+	font-size: 12px;
+}
+.groupRepeatWrap p{
+	display: inline-block;
+	line-height: 35px;
+	margin:0 10px 0 10px;
+}
+
+.groupRepeatWrap .summaryInnerBox{
+	position: relative;
+	padding-left: 45px;
+	min-height: 35px;
+	background: #f4f4f4;
+	color: #282828;
+	border-bottom: 1px solid #cccccc;
+}
+.summaryInnerBox_repeat_title{
+	height: unset;
+	padding-top: 3px;
+	border-bottom: 1px dotted #6f6f6f;
+}
+.summaryInnerBox_repeat_title .pcmanageicon{
+	height: 15px;
+	margin-bottom: 4px;
+}
+.repeat_bg{
+	padding: 0 0 6px 35px;
+}
+
+
+.groupMembersWrap{
+	display: none;
+	text-align: center;
+	min-height: 40px;
+	border-bottom:1px solid #cccccc;
+	font-size: 12.5px;
+}
+.groupMembersWrap .memberline{
+	background: #f9f9f9;
+}
+.groupMembersWrap .groupmemberline_thead{
+	background: #444444;
+	color: #ffffff;
+}
+
+.groupMembersWrap_selected{
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	border-bottom: 1px solid #fe4e65;
+}
+.btn_add_member_to_group{
+	width: 25px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	cursor: pointer;
+}
+@media(max-width:350px){
+	._groupstatus{
+		display: none !important;
+	}
+	._groupmanage img{
+		margin-left: 0 !important;
+	}
+}
+
+@media(max-width: 600px){
+	._groupnum, ._groupmemo, ._groupcreatedate{
+		display: none !important;
+	}
+
+	div._id, div._startdate, div._finday, div._contact{
+		display: none !important;
+	}
+
+	/*
+	div._groupmanage img._info_download, div._groupmanage img._info_delete{
+		display: none;
+	}
+	*/
+
+	div._groupmanage img._info_download{
+		display: none;
+	}
+
+	._grouptype{
+		display: none !important;
+	}
+
+
+	.groupWrap{
+		font-weight: 500;
+		font-size: 12px;
+	}
+	#subpopup_addByList{
+		overflow-y: auto;
+		max-height: 70%;
+		top: 92px;
+	}
+}
+
+/*그룹 탭에서 그룹들 나열*/
+
+
+/*그룹을 클릭해서 나오는 그룹멤버 리스트 테이블*/
+div.groupmemberline_thead{
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	background:#f4f4f4;
+}
+div.groupmemberline_thead div{
+	display: table-cell;
+	border: 1px solid #ffffff;
+	border-top:0;
+	padding: 1px 0 1px 0;
+}
+div.memberline{
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	border-bottom: 1px solid #f7f7f7;
+	background:white;
+}
+div.memberline div{
+	display: table-cell;
+	padding:8px 0 8px 0;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+img.substract_groupMember{
+	width: 22px;
+	padding: 5px;
+	margin-left: 7px;
+	cursor: pointer;
+}
+
+div._id, div._startdate, div._finday{
+	display: table-cell;
+}
+div._tdname{
+	width: 20%;
+}
+div._regcount{
+	width: 17%;
+}
+div._remaincount{
+	width: 17%;
+}
+div._contact{
+	width: 35%;
+}
+div._manage{
+	width: 10%;
+}
+
+@media(min-width: 600px){
+	.list_addByList_padding{
+		
+	}
+
+	div.groupmemberline_thead div{
+		width: 12.5%;
+	}
+	div.memberline div{
+		width: 12.5%;
+	}
+	tr.memberline td{
+		width: 12.5%;
+	}
+}
+
+/*그룹을 클릭해서 나오는 그룹멤버 리스트 테이블*/

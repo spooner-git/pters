@@ -195,6 +195,8 @@ urlpatterns = [
     url(r'^cal_total/$', views.CalTotalView.as_view(), name='cal_total'),
     # 회원/그룹/클래스 통합 뷰 페이지
     url(r'^lecture_manage/$', views.ManageLectureView.as_view(), name='lecture_manage'),
+    # 수강권 페이지
+    url(r'^ticket_manage/$', views.ManageTicketView.as_view(), name='ticket_manage'),
     # 회원 관리 페이지
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     # 그룹 관리 페이지

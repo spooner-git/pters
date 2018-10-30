@@ -312,6 +312,14 @@ class ManageLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageLectureView, self).get_context_data(**kwargs)
         return context
 
+# 수강권 관리 181030
+class ManageTicketView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_ticket.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageTicketView, self).get_context_data(**kwargs)
+        return context
+
 
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
