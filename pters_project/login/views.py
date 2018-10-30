@@ -41,8 +41,8 @@ from configs import settings
 from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from trainee.models import MemberLectureTb
-from trainer.models import MemberClassTb
+from trainee.models import MemberLectureTb, LectureTb
+from trainer.models import MemberClassTb, GroupTb, PackageTb
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -164,27 +164,37 @@ class ServiceTestLoginView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
-        trainer_list = MemberTb.objects.filter(use=USE)
-        for trainer_info in trainer_list:
 
-            user_for_group = User.objects.get(id=trainer_info.user_id)
-            group = user_for_group.groups.get(user=trainer_info.user_id)
-            if str(group.id) == '3':
-                payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
-                                             product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
-                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
-                                             start_date='2018-10-29', end_date='2028-10-29', period_month='120',
-                                             payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
-                                             buyer_name=trainer_info.name, use=USE)
-                billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
-                                             product_tb_id='10',
-                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
-                                             payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
-                                             payment_type_cd='SINGLE', price=0, card_name='없음',
-                                             payed_date='29',
-                                             state_cd='IP', use=USE)
-                payment_info.save()
-                billing_info.save()
+        group_data = GroupTb.objects.filter()
+        for group_info in group_data:
+            package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+                                     state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
+                                     package_group_num=1, use=group_info.use)
+            package_info.save()
+        lecture_data = LectureTb.objects.filter()
+        # for lecture_info in lecture_data:
+        #     package_lecture_info =
+        # trainer_list = MemberTb.objects.filter(use=USE)
+        # for trainer_info in trainer_list:
+        #
+        #     user_for_group = User.objects.get(id=trainer_info.user_id)
+        #     group = user_for_group.groups.get(user=trainer_info.user_id)
+        #     if str(group.id) == '3':
+        #         payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
+        #                                      product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
+        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
+        #                                      start_date='2018-10-29', end_date='2028-10-29', period_month='120',
+        #                                      payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
+        #                                      buyer_name=trainer_info.name, use=USE)
+        #         billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
+        #                                      product_tb_id='10',
+        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
+        #                                      payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
+        #                                      payment_type_cd='SINGLE', price=0, card_name='없음',
+        #                                      payed_date='29',
+        #                                      state_cd='IP', use=USE)
+        #         payment_info.save()
+        #         billing_info.save()
         return context
 
 

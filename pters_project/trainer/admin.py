@@ -51,7 +51,8 @@ class BackgroundImgTbAdmin(admin.ModelAdmin):
 
 @admin.register(PackageTb)
 class PackageTbAdmin(admin.ModelAdmin):
-    list_display = ('package_id', 'class_tb', 'name', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('package_id', 'class_tb', 'name','package_type_cd',
+                    'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(PackageLectureTb)
