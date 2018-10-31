@@ -1308,10 +1308,14 @@ def func_get_lecture_list(context, class_id, member_id):
 
 def func_get_ing_group_member_list(class_id, group_id, user_id):
     member_data = []
+    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                        "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+
     lecture_list = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_id,
                                                                                       lecture_tb__state_cd='IP',
                                                                                       lecture_tb__use=USE,
-                                                                                      use=USE)
+                                                                                      use=USE).annotate(class_count=RawSQL(query_class_count, [])).filter(class_count__gte=1)
 
     for lecture_info in lecture_list:
         # member_info = lecture_info.lecture_tb
@@ -1322,11 +1326,11 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
                 lecture_tb_id=lecture_info.lecture_tb_id, lecture_tb__use=USE, use=USE)
         except ObjectDoesNotExist:
             error = '회원 정보를 불러오지 못했습니다.'
-        class_lecture_test = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                           lecture_tb_id=lecture_info.lecture_tb_id,
-                                                           auth_cd='VIEW', use=USE).count()
-        if class_lecture_test == 0:
-            error = '내가 볼수 없는 회원'
+        # class_lecture_test = ClassLectureTb.objects.filter(class_tb_id=class_id,
+        #                                                    lecture_tb_id=lecture_info.lecture_tb_id,
+        #                                                    auth_cd='VIEW', use=USE).count()
+        # if class_lecture_test == 0:
+        #     error = '내가 볼수 없는 회원'
 
         if error is None:
             member_info.member.lecture_tb = lecture_info.lecture_tb
@@ -1415,9 +1419,12 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
 
 def func_get_end_group_member_list(class_id, group_id, user_id):
     member_data = []
+    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                        "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
     lecture_list = GroupLectureTb.objects.select_related(
         'lecture_tb__member').filter(group_tb_id=group_id, lecture_tb__use=USE,
-                                     use=USE).exclude(lecture_tb__state_cd='IP')
+                                     use=USE).exclude(lecture_tb__state_cd='IP').annotate(class_count=RawSQL(query_class_count, [])).filter(class_count__gte=1)
 
     for lecture_info in lecture_list:
         # member_info = lecture_info.lecture_tb

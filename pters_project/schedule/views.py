@@ -262,6 +262,7 @@ def delete_schedule_logic(request):
                 member_name = member_info.name
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
+            package_tb_id = schedule_info.lecture_tb.package_tb_id
 
     if error is None:
         lecture_id = schedule_info.lecture_tb_id
@@ -298,13 +299,14 @@ def delete_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
-        package_group_data = PackageGroupTb.objects.filter(package_tb_id=schedule_info.lecture_tb.package_tb_id)
+        if en_dis_type == ON_SCHEDULE_TYPE:
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb_id)
 
-        if group_id is not None and group_id != '':
-            func_refresh_group_status(group_id, None, None)
-        else:
-            for package_group_info in package_group_data:
-                func_refresh_group_status(package_group_info.group_tb_id, None, None)
+            if group_id is not None and group_id != '':
+                func_refresh_group_status(group_id, None, None)
+            else:
+                for package_group_info in package_group_data:
+                    func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
         if group_id is not None and group_id != '':
