@@ -946,7 +946,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
     user = None
     member = None
     group_id_list = []
-    package_tb = None
 
     if error is None:
         try:

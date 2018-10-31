@@ -167,12 +167,10 @@ class ServiceTestLoginView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
 
-        class_data = ClassTb.objects.filter(member_id='5')
+        class_data = ClassTb.objects.filter(member_id='2308')
         for class_info in class_data:
             check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
             if len(check_group) == 0:
-                # ing_group_member_num = len(func_get_member_one_to_one_ing_list(class_info.class_id, class_info.member_id))
-                # end_group_member_num = len(func_get_member_one_to_one_end_list(class_info.class_id, class_info.member_id))
                 group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
                                      name='1:1레슨',
                                      # ing_group_member_num=ing_group_member_num,
@@ -188,7 +186,7 @@ class ServiceTestLoginView(TemplateView):
                                                       use=class_lecture_info.lecture_tb.use)
                         lecture_info.save()
 
-        class_data = ClassTb.objects.filter(member_id='5')
+        class_data = ClassTb.objects.filter(member_id='2308')
         for class_info in class_data:
             group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
             if len(group_data) == 0:
