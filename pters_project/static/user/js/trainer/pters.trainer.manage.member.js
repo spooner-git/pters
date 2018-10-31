@@ -5089,7 +5089,7 @@ function deleteMemberAjax(){
                         }
                         break;
                 }
-                refresh_all_member_group_class_list();
+                smart_refresh_member_group_class_list();
                 console.log('success');
             }
         },
