@@ -2985,7 +2985,8 @@ def finish_group_info_logic(request):
 
         package_group_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
         for package_group_info in package_group_data:
-            package_group_info.save(use=UN_USE)
+            package_group_info.use=UN_USE
+            package_group_info.save()
 
             # package_lecture_data = ClassLectureTb.objects.select_related(
             #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
@@ -3056,7 +3057,8 @@ def progress_group_info_logic(request):
 
         package_group_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
         for package_group_info in package_group_data:
-            package_group_info.save(use=USE)
+            package_group_info.use=USE
+            package_group_info.save()
 
             # package_lecture_data = ClassLectureTb.objects.select_related(
             #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
