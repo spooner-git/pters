@@ -2126,6 +2126,11 @@ function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
                   </div>`;
     if($targetHTML.find(`div.lecture_bubble[data-groupid=${groupid}]`).length == 0 ){
         $targetHTML.append(bubble);
+        var lecture_bubbles_groupid_array = [];
+        $(`div.lecture_bubble`).each(function(){
+            lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
+        });
+        $('#form_package_groupids').val(lecture_bubbles_groupid_array);
     }
 }
 
@@ -2133,4 +2138,13 @@ $(document).on("click", "div.lecture_bubble img", function(e){
     e.stopPropagation();
     var $thisBubble = $(this).parents("div.lecture_bubble");
     $thisBubble.remove();
-})
+    var lecture_bubbles_groupid_array = [];
+    $(`div.lecture_bubble`).each(function(){
+        lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
+    });
+    $('#form_package_groupids').val(lecture_bubbles_groupid_array);
+});
+
+$('#packagename').keyup(function(){
+    check_dropdown_selected();
+});

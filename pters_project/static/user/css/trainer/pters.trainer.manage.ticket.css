@@ -20,11 +20,16 @@
 	width: 100%;
 	padding-top: 3px;
 }
-#groupname, #grouptype{
+#groupname, #grouptype, #packagename{
 	display: inline-block;
 }
 #groupname{
 	width: 50%;
+	height: 35px;
+	border: 1px solid #cccccc;
+}
+#packagename{
+	width: 60%;
 	height: 35px;
 	border: 1px solid #cccccc;
 }

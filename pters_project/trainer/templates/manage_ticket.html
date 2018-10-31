@@ -783,7 +783,6 @@
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
 
             <!--그룹추가 관련 Form-->
-
             <input type="hidden" name="grouptype" id="form_grouptype" value="">
             <input type="hidden" name="groupcapacity" id="form_groupcapacity" value="">
             <!--
@@ -795,9 +794,12 @@
             <input type="hidden" name="groupmember_dbid" id="form_groupmember_dbid">
             <input type="hidden" name="groupmember_id" id="form_groupmember_id">
             <input type="hidden" name="new_member_flag" id="form_groupmember_newornot">
-
-
             <!--그룹추가 관련 Form-->
+
+            <!--패키지추가 관련 Form-->
+            <input type="hidden" name="package_groupids" id="form_package_groupids">
+            <!--패키지추가 관련 Form-->
+
 
             <div id="page_addmember_input_wrap" style="padding-bottom: 20px;">
                 <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
@@ -966,10 +968,19 @@
                 <div class="ptaddbox _ADD_PACKAGE_NEW">
                     <label class="ptaddboxtext">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
-                        <span id="addpackagename"></span>
+                        <span>새 패키지 이름</span>
                         <span style="color: #fe4e65;">*</span>
                     </label>
                     <div id="packageNameInput">
+                        <input type="text" class="pters_input_namefield" id="packagename" name="package_name" placeholder="패키지 이름 입력" maxlength="10">
+                    </div>
+
+                    <label class="ptaddboxtext">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                        <span id="addpackagename"></span>
+                        <span style="color: #fe4e65;">*</span>
+                    </label>
+                    <div id="packaggSelector">
                         <select id="lecture_list_to_package">
                             <option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>
                             <option value="test">테스트 수강권1</option>
