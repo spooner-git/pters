@@ -1667,6 +1667,7 @@ function get_end_groupmember_list(group_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log(jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')

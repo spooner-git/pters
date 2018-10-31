@@ -1603,9 +1603,9 @@ function float_btn_managemember(option){
         }
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet();
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); });
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); });
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});
         selector_page_addmember.css('display','block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
@@ -1789,8 +1789,8 @@ function pc_add_member(option){
                                             });
 
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         /*
         initialize_add_member_sheet();
@@ -1831,7 +1831,8 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
@@ -1874,7 +1875,8 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
@@ -1913,7 +1915,8 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
@@ -2234,8 +2237,10 @@ function grouptype_dropdown_set(grouplistJSON){
 function package_type_dropdown_set(packagelistJSON){
     var len = packagelistJSON.package_id.length;
     var optionsToJoin = [''];
+    $('#form_member_groupid').val(packagelistJSON.package_id[0]);
+    $('#form_group_package_type').val('package');
     for(var i=0; i<len; i++){
-        optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">[패키지] '+packagelistJSON.package_name[i]+'</option>');
+        optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">['+packagelistJSON.package_type_cd_nm[i]+'] '+packagelistJSON.package_name[i]+'</option>');
     }
     $('.grouptypeselect').append(optionsToJoin.join(''));
 }

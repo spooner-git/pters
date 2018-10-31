@@ -25,7 +25,8 @@ from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON
     TO_TRAINEE_LESSON_ALARM_OFF
 
 from login.models import LogTb, MemberTb
-from trainer.models import GroupLectureTb, GroupTb, ClassTb
+from trainer.functions import func_get_end_package_member_list, func_get_ing_package_member_list
+from trainer.models import GroupLectureTb, GroupTb, ClassTb, ClassLectureTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ScheduleTb, RepeatScheduleTb
 
@@ -297,7 +298,13 @@ def delete_schedule_logic(request):
             error = '예약 가능한 횟수를 확인해주세요.'
 
     if error is None:
-        func_refresh_group_status(group_id, None, None)
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=schedule_info.lecture_tb.package_tb_id)
+
+        if group_id is not None and group_id != '':
+            func_refresh_group_status(group_id, None, None)
+        else:
+            for package_group_info in package_group_data:
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
         if group_id is not None and group_id != '':
@@ -440,12 +447,27 @@ def finish_schedule_logic(request):
             error = '예약 가능 횟수를 확인해주세요.'
     # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
     if error is None:
+
+        # package_lecture_data = ClassLectureTb.objects.select_related(
+        #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
+        #                                      lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
+        # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
+        # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
+        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.save()
+
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
             group_repeat_schedule_id = None
             if lecture_repeat_schedule_data is not None and lecture_repeat_schedule_data != '':
                 group_repeat_schedule_id = lecture_repeat_schedule_data.group_schedule_id
             func_refresh_group_status(schedule_info.group_tb_id, schedule_info.group_schedule_id,
                                       group_repeat_schedule_id)
+        else:
+            for package_group_info in package_group_data:
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
 
@@ -1605,6 +1627,20 @@ def finish_group_schedule_logic(request):
 
             # 그룹 스케쥴 종료 및 그룹 반복 일정 종료
             if temp_error is None:
+                # package_lecture_data = ClassLectureTb.objects.select_related(
+                #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
+                #                                      lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
+                # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
+                # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
+                # lecture_info.package_tb.ing_package_member_num = package_ing_lecture_count
+                # lecture_info.package_tb.end_package_member_num = package_end_lecture_count
+
+                lecture_info.package_tb.ing_package_member_num = len(
+                    func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                lecture_info.package_tb.end_package_member_num = len(
+                    func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                lecture_info.package_tb.save()
+
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
                     group_repeat_schedule_id = None
                     if lecture_repeat_schedule is not None and lecture_repeat_schedule != '':

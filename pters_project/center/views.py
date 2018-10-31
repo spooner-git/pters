@@ -39,7 +39,8 @@ from login.models import MemberTb, LogTb, CommonCdTb
 from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
-from trainer.models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
+from trainer.models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
+    PackageGroupTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
@@ -2495,8 +2496,15 @@ def add_group_member_logic(request):
 
                 if error is None:
                     for user_info in user_db_id_list:
+                        try:
+                            package_info = PackageGroupTb.objects.get(~Q(package_tb__package_type_cd='PACKAGE'),group_tb_id=json_loading_data['lecture_info']['group_id'])
+                            package_id = package_info.package_tb_id
+                        except ObjectDoesNotExist:
+                            package_id = ''
+                        print('group_id:'+str(json_loading_data['lecture_info']['group_id']))
+                        print('package_id:'+str(package_id))
                         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, json_loading_data['lecture_info']['group_id'],
+                                                      class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],

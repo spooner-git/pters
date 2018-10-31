@@ -8,13 +8,13 @@ from django.db import models
 from configs.const import USE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
-# from schedule.models import ClassLectureTb
 
 
 class LectureTb(TimeStampedModel):
     lecture_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     # class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE)  # Field name made lowercase.
     member = models.ForeignKey(MemberTb, on_delete=models.CASCADE)  # Field name made lowercase.
+    package_tb = models.ForeignKey("trainer.PackageTb", on_delete=models.CASCADE, null=True)
     lecture_reg_count = models.IntegerField(db_column='LECTURE_REG_COUNT', default=0)  # Field name made lowercase.
     lecture_rem_count = models.IntegerField(db_column='LECTURE_REM_COUNT', default=0)
     lecture_avail_count = models.IntegerField(db_column='LECTURE_AVAIL_COUNT', default=0)

@@ -11,7 +11,8 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
 
 from login.models import LogTb, PushInfoTb
-from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb
+from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list
+from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
@@ -96,6 +97,16 @@ def func_refresh_lecture_count(lecture_id):
         else:
             error = '오류가 발생했습니다.'
 
+    if error is None:
+        package_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb').filter(auth_cd='VIEW',
+                                             lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
+        package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
+        package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
+        lecture_info.package_tb.ing_package_member_num = package_ing_lecture_count
+        lecture_info.package_tb.end_package_member_num = package_end_lecture_count
+        lecture_info.package_tb.save()
+
     return error
 
 
@@ -141,20 +152,28 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
         except ObjectDoesNotExist:
             group_info = None
         if group_info is not None:
-            if group_info.group_type_cd == 'NORMAL':
-                group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                          lecture_tb__use=USE,
-                                                                          use=USE).count()
-                group_lecture_end_count = \
-                    GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__use=USE,
-                                                  use=USE).exclude(lecture_tb__state_cd='IP').count()
-                if group_info is not None:
-                    if group_lecture_total_count == group_lecture_end_count:
-                        group_info.state_cd = 'PE'
-                        group_info.save()
-                    else:
-                        group_info.state_cd = 'IP'
-                        group_info.save()
+            group_info.ing_group_member_num = len(func_get_ing_group_member_list(group_info.class_tb_id,
+                                                                                 group_id,
+                                                                                 group_info.class_tb.member_id))
+            group_info.end_group_member_num = len(func_get_end_group_member_list(group_info.class_tb_id,
+                                                                                 group_id,
+                                                                                 group_info.class_tb.member_id))
+            group_info.save()
+
+            # if group_info.group_type_cd == 'NORMAL':
+                # group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                #                                                           lecture_tb__use=USE,
+                #                                                           use=USE).count()
+                # group_lecture_end_count = \
+                #     GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__use=USE,
+                #                                   use=USE).exclude(lecture_tb__state_cd='IP').count()
+                # if group_info is not None:
+                #     if group_lecture_total_count == group_lecture_end_count:
+                #         group_info.state_cd = 'PE'
+                #         group_info.save()
+                #     else:
+                #         group_info.state_cd = 'IP'
+                #         group_info.save()
 
 
 # 일정 등록
