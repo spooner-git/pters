@@ -2291,6 +2291,11 @@ def progress_lecture_info_logic(request):
             group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
         except ObjectDoesNotExist:
             group_info = None
+
+    if error is None:
+        if group_info is not None:
+            if group_info.group_tb.state_cd != 'IP':
+                error = '그룹/클래스가 진행중 상태가 아닙니다.'
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
@@ -2454,7 +2459,7 @@ def delete_group_info_logic(request):
     # except ObjectDoesNotExist:
     #     error = '오류가 발생했습니다.'
 
-    package_data = PackageGroupTb.objecst.filter(group_tb_id=group_id)
+    package_data = PackageGroupTb.objects.filter(group_tb_id=group_id)
 
     if error is None:
         group_data = GroupLectureTb.objects.select_related('lecture_tb').filter(group_tb_id=group_id, use=USE)
@@ -2494,7 +2499,8 @@ def delete_group_info_logic(request):
         for package_data_info in package_data:
             package_data_info.use = 0
             package_data_info.save()
-            package_group_count = PackageGroupTb.objects.filter(package_tb_id=package_data_info.package_tb_id).count()
+            package_group_count = PackageGroupTb.objects.filter(package_tb_id=package_data_info.package_tb_id,
+                                                                use=USE).count()
             if package_group_count == 0:
                 package_data_info.package_tb.state_cd = 'PE'
                 package_data_info.package_tb.use = UN_USE
