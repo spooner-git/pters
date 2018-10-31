@@ -2018,7 +2018,7 @@ function pc_add_member(option){
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
-        selector_page_addmember_input_wrap.css({'height':260+'px'});
+        selector_page_addmember_input_wrap.css({'height':350+'px'});
 
         $('#addpackagename').text('세트로 만들고자 하는 기존 수강권을 선택 해주세요.');
 
