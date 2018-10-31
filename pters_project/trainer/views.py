@@ -1862,7 +1862,7 @@ def add_lecture_info_logic(request):
     end_date_fast = request.POST.get('end_date_fast')
     search_confirm = request.POST.get('search_confirm', '0')
     class_id = request.session.get('class_id', '')
-    group_id = request.POST.get('group_id', '')
+    package_id = request.POST.get('group_id', '')
     setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     group_package_type = request.POST.get('group_package_type', 'group')
     next_page = request.POST.get('next_page')
@@ -1875,13 +1875,7 @@ def add_lecture_info_logic(request):
     input_price = 0
     # lecture_info = None
     input_contents = ''
-    package_id = ''
     # username = name
-
-    if group_package_type == 'package':
-        package_id = group_id
-        # group_id = ''
-        # error = 'package test'
 
     if user_id is None or user_id == '':
         error = '오류가 발생했습니다.'
@@ -1951,7 +1945,7 @@ def add_lecture_info_logic(request):
     if error is None:
 
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                      class_id, group_id, input_counts, input_price,
+                                      class_id, package_id, input_counts, input_price,
                                       input_start_date, input_end_date, input_contents,
                                       user.id, setting_lecture_auto_finish)
     if error is None:

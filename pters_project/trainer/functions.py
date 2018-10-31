@@ -823,7 +823,7 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
     return context
 
 
-def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, group_id, counts, price,
+def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, package_id, counts, price,
                           start_date, end_date, contents, member_id, setting_lecture_auto_finish):
 
     error = None
@@ -861,7 +861,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
             with transaction.atomic():
 
                 lecture_info = LectureTb(member_id=member_id,
-                                         package_tb_id=group_id,
+                                         package_tb_id=package_id,
                                          lecture_reg_count=counts, lecture_rem_count=lecture_rem_count,
                                          lecture_avail_count=lecture_rem_count, price=price, option_cd='DC',
                                          state_cd=state_cd,
@@ -869,8 +869,8 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                                          note=contents, use=USE)
                 lecture_info.save()
                 auth_cd = 'DELETE'
-                if group_id != '' and group_id is not None:
-                    auth_cd = 'WAIT'
+                # if package_id != '' and package_id is not None:
+                #     auth_cd = 'WAIT'
 
                 member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
                                                                        auth_cd='VIEW', use=USE).count()
@@ -885,8 +885,8 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                                                     auth_cd='VIEW', mod_member_id=user_id, use=USE)
                 class_lecture_info.save()
 
-                if group_id != '' and group_id is not None:
-                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=group_id, use=USE)
+                if package_id != '' and package_id is not None:
+                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
                     for package_group_info in package_group_data:
                         group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
                                                             lecture_tb_id=lecture_info.lecture_id, use=USE)
@@ -909,8 +909,8 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                         # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
                         # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
                         # package_group_info.package_tb.save()
-                        package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, group_id))
-                        package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, group_id))
+                        package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+                        package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
                         package_group_info.package_tb.save()
 
         except ValueError:
