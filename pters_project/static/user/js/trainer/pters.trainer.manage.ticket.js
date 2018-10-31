@@ -2105,3 +2105,46 @@ function get_member_group_class_end_list(use, callback){
         }
     });
 }
+
+
+/*패키지 페이지 전용*/
+
+$(document).on("change", '#lecture_list_to_package', function(e){
+    e.stopPropagation();
+    var selected_groupid = $(this).val();
+    var selected_groupname = $(this).find("option[value='"+$(this).val()+"']").text()
+    add_lecture_bubble_to_make_package("#selected_lectures_to_package_wrap", selected_groupid, selected_groupname);
+    $(this).find(".disabled_option").trigger("click");
+    $('#lecture_list_to_package option:eq(0)').prop('selected', 'selected');
+});
+
+
+function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
+    var $targetHTML = $(targetSelector);
+    var bubble = `<div class="lecture_bubble" data-groupid=${groupid} data-groupname=${groupname}>
+                    <p><span>${groupname}</span><img src="/static/user/res/member/icon-x-red.png"></p>
+                  </div>`;
+    if($targetHTML.find(`div.lecture_bubble[data-groupid=${groupid}]`).length == 0 ){
+        $targetHTML.append(bubble);
+        var lecture_bubbles_groupid_array = [];
+        $(`div.lecture_bubble`).each(function(){
+            lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
+        });
+        $('#form_package_groupids').val(lecture_bubbles_groupid_array);
+    }
+}
+
+$(document).on("click", "div.lecture_bubble img", function(e){
+    e.stopPropagation();
+    var $thisBubble = $(this).parents("div.lecture_bubble");
+    $thisBubble.remove();
+    var lecture_bubbles_groupid_array = [];
+    $(`div.lecture_bubble`).each(function(){
+        lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
+    });
+    $('#form_package_groupids').val(lecture_bubbles_groupid_array);
+});
+
+$('#packagename').keyup(function(){
+    check_dropdown_selected();
+});

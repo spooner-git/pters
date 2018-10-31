@@ -248,7 +248,7 @@ function close_manage_popup(option){
             shade_index(-100);
         }
     }else if(option == 'member_add'){
-        $('body').css('overflow-y','auto');
+        $('body').css('overflow-y', 'auto');
         var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();
@@ -264,7 +264,7 @@ function close_manage_popup(option){
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         var selector_birth_year_month_date = $('#birth_year, #birth_month, #birth_date');
         selector_birth_year_month_date.find('option:first').prop('selected', true);
-        selector_birth_year_month_date.css('color','#cccccc');
+        selector_birth_year_month_date.css('color', '#cccccc');
         if($('#memberInfoPopup_PC').css('display')=="block"){
             shade_index(100);
         }else if($('#mshade').css('z-index')==150){

@@ -1659,8 +1659,7 @@ function float_btn_managemember(option){
 
         $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
-        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        //$('._ADD_GROUPMEMBER_NEW').show()
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
         shade_index(100);
 
@@ -1675,7 +1674,6 @@ function float_btn_managemember(option){
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -1691,7 +1689,7 @@ function float_btn_managemember(option){
 
         $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
-        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
         shade_index(100);
     }else if(option == "groupmember"){
@@ -1712,6 +1710,66 @@ function float_btn_managemember(option){
 
         $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
+    }else if(option == "solo_ticket"){
+        initialize_add_member_sheet();
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
+        $('#page_addmember').show();
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').hide();
+
+        scrollToDom($('#page_addmember'));
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
+        }
+
+        $('#grouptype').hide();
+        $('#explain_group_lesson, #explain_open_lesson').hide();
+        $('#explain_solo_ticket').show();
+
+        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('NORMAL');
+        $('#addgrouptypename').text('신규 단일 수강권');
+
+        $('#uptext2, #uptext2_PC').text('신규 단일 수강권');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
+        $('._ADD_GROUP_NEW').show();
+        shade_index(100);
+
+    }else if(option == "package_ticket"){
+        initialize_add_member_sheet();
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
+        $('#page_addmember').show();
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').hide();
+
+        scrollToDom($('#page_addmember'));
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
+        }
+
+        $('#grouptype').hide();
+        $('#explain_group_lesson').show();
+        $('#explain_open_lesson').hide();
+
+        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('NORMAL');
+        $('#addgrouptypename').text('신규 패키지 수강권');
+
+        $('#uptext2, #uptext2_PC').text('신규 패키지 수강권');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_PACKAGE_NEW').show();
+        shade_index(100);
+
     }
 }
 
@@ -1737,34 +1795,6 @@ function pc_add_member(option){
 
     var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
-        /*
-        initialize_add_member_sheet();
-        $('#uptext2, #uptext2_PC').text(text);
-
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
-        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('#memberBirthDate, #memberBirthDate_info').html('');
-        birth_dropdown_set();
-
-        selector_memberSearchButton.attr('data-type','');
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
-        if($('._nomember').length>0){
-            $('#how_to_add_member').show();
-        }else{
-            $('#how_to_add_member').css('display','none');
-        }
-
-        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        if( selector_page_addmember.height() > $(window).height() ){
-            centerLoc = '70px';
-        }
-
-        selector_page_addmember.show().css({'top':centerLoc,
-            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
-
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        */
-
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text);
 
@@ -1970,7 +2000,7 @@ function pc_add_member(option){
         selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
-    
+
     }else if(option == "solo_ticket"){
         initialize_add_member_sheet();
         selector_page_addmember_input_wrap.css({'height':260+'px'});
@@ -1990,14 +2020,14 @@ function pc_add_member(option){
         initialize_add_member_sheet();
         selector_page_addmember_input_wrap.css({'height':260+'px'});
 
-        $('#addgrouptypename').text('신규 패키시 수강권');
+        $('#addpackagename').text('세트로 만들고자 하는 기존 수강권을 선택 해주세요.');
 
         $('#uptext2, #uptext2_PC').text('신규 패키지 수강권 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_PACKAGE_NEW').show();
 
-        $('body').css('overflow-y','hidden');
+        $('body').css('overflow-y', 'hidden');
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
     }
@@ -5115,7 +5145,10 @@ function initialize_add_member_sheet(){
     $('#addedMemberListBox span').text('0 명');
     added_New_Member_Num = 0;
     //그룹추가관련 입력 초기화
-    $("#page_addmember input").css({"-webkit-text-fill-color":"#cccccc"})
+    $("#page_addmember input").css({"-webkit-text-fill-color":"#cccccc"});
+
+    //패키지 수강권 입력 초기화
+    $('#selected_lectures_to_package_wrap').empty();
 }
 
 

@@ -65,12 +65,12 @@
     <div id="float_btn_wrap">
         <div id="float_btn" onclick="float_btn_managemember(0)" style="background-image:url('/static/user/res/memberadd/float_plus_member.png')">
         </div>
-        <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('group')">
-            <a class="KRtext">그룹<br/>추가</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
+        <div id="float_inner1" class="float_inner" onclick="float_btn_managemember('solo_ticket')">
+            <a class="KRtext">단일<br/>추가</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
         </div>
         
-        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('openlesson')">
-            <a class="KRtext">클래스<br/>추가</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
+        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('package_ticket')">
+            <a class="KRtext">패키지<br/>추가</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
         </div>
         
     </div>
@@ -783,7 +783,6 @@
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
 
             <!--그룹추가 관련 Form-->
-
             <input type="hidden" name="grouptype" id="form_grouptype" value="">
             <input type="hidden" name="groupcapacity" id="form_groupcapacity" value="">
             <!--
@@ -795,9 +794,12 @@
             <input type="hidden" name="groupmember_dbid" id="form_groupmember_dbid">
             <input type="hidden" name="groupmember_id" id="form_groupmember_id">
             <input type="hidden" name="new_member_flag" id="form_groupmember_newornot">
-
-
             <!--그룹추가 관련 Form-->
+
+            <!--패키지추가 관련 Form-->
+            <input type="hidden" name="package_groupids" id="form_package_groupids">
+            <!--패키지추가 관련 Form-->
+
 
             <div id="page_addmember_input_wrap" style="padding-bottom: 20px;">
                 <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
@@ -902,7 +904,7 @@
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}><span id="addgrouptypename"></span><span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div id="groupNameInput">
-                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹/클래스명을 입력해주세요." maxlength="10">
+                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="수강권 이름 입력" maxlength="10">
                         <select id="grouptype">
                             <option selected disabled>그룹 타입</option>
                             <option value="NORMAL">그룹</option>
@@ -964,16 +966,52 @@
                 </div>
 
                 <div class="ptaddbox _ADD_PACKAGE_NEW">
-                    
+                    <label class="ptaddboxtext">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                        <span>새 패키지 이름</span>
+                        <span style="color: #fe4e65;">*</span>
+                    </label>
+                    <div id="packageNameInput">
+                        <input type="text" class="pters_input_namefield" id="packagename" name="package_name" placeholder="패키지 이름 입력" maxlength="10">
+                    </div>
+
+                    <label class="ptaddboxtext">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                        <span id="addpackagename"></span>
+                        <span style="color: #fe4e65;">*</span>
+                    </label>
+                    <div id="packaggSelector">
+                        <select id="lecture_list_to_package">
+                            <option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>
+                            <option value="test">테스트 수강권1</option>
+                            <option value="test2222222">테스트 수강권22222222222</option>
+                            <option value="test3">테스트 수강권3</option>
+                            <option value="test4">테스트 수강권4</option>
+                            <option value="test5">테스트 수강권5</option>
+                            <option value="test6">테스트 수강권6</option>
+                            <option value="test7">테스트 수강권7</option>
+
+                        </select>
+                    </div>
+                    <br>
+                    <label class="ptaddboxtext">
+                        <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
+                        <span >패키지에 추가될 수강권</span>
+                        <span id="selected_lectures_to_package_num" style="color: #fe4e65;">*</span>
+                    </label>
+                    <div id="selected_lectures_to_package_wrap">
+                        
+                    </div>
                 </div>
+
 
                 <div class="ptaddbox _ADD_PACKAGE_NEW">
                     <div id="explain_package_ticket">
                         <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 패키지 수강권?</p>
                         <p style="font-size: 14px;">패키지 수강권은 <span style="color:#fe4e65">기존 수강권</span> 여러개를 하나의 패키지로 묶어서 관리합니다.<br>
-                        패키지 수강권에 속한 회원의 <span style="color:#fe4e65">남은 횟수는</span> 패키지 내의 수업에서 <span style="color:#fe4e65">공통으로 차감</span>됩니다. <br>Ex: <span style="color:#fe4e65">패키지내 A, B 수강권이 있을 경우 </span>A수업이나 B수업 어떤 수업을 듣던 횟수가 차감됩니다.</p>
+                        패키지 수강권에 속한 회원의 <span style="color:#fe4e65">횟수는</span> 패키지 내의 수업에서 <span style="color:#fe4e65">공통으로 차감</span>됩니다. <br>Ex: <span style="color:#fe4e65">패키지내 A그룹, B클래스 수강권이 있을 경우 </span>A수업이나 B수업 어떤 수업이던 참여가 가능하고, 횟수가 차감됩니다.</p>
                         <p style="font-size: 13px;">
-                            <span style="color:#fe4e65;font-weight: bold;">Tip!! </span>패키지는 <span style="color:#fe4e65;font-weight: bold;">프리패스</span> 개념으로도 사용이 가능합니다. </p>
+                            <span style="color:#fe4e65;font-weight: bold;">Tip! </span>패키지는 <span style="color:#fe4e65;font-weight: bold;">프리패스</span> 개념으로도 사용이 가능합니다. </p>
                     </div>
                 </div>
 
