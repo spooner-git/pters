@@ -736,7 +736,7 @@ a:focus, a:hover{
 .centermenu_text{
     line-height: 60px;
     font-size: 13.5px;
-    font-weight: 600;
+    font-weight: 500;
     color: #282828;
     cursor: pointer;
 }
