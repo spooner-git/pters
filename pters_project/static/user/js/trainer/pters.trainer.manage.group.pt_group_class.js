@@ -1778,11 +1778,11 @@ function groupMemberListSet(group_id, jsondata){
             if(grouptype!='ONE_TO_ONE'){
                 memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>'
             }else{
-                 memberRow += '<div class="_manage"></div>'
+                 memberRow += '<div class="_manage"></div>';
             }
             memberRow += htmlEnd;
         }
-        
+
 
         htmlToJoin.push(memberRow);
     }
@@ -1799,30 +1799,25 @@ function groupMemberListSet(group_id, jsondata){
     }
 
     var addButton = '';
-    if(Options.auth_class == 0){
-        addButton = '<div><img src="/static/user/res/login/icon-lock-grey.png" style="width:20px;margin-top: 10px;margin-bottom:10px;"  title="기능 구매 후 이용가능" onclick="purchase_annai()"></div>';
+
+    if(groupcapacity <= len && grouptype =='NORMAL'){
+        addButton = '';
     }else{
-        if(groupcapacity <= len && grouptype =='NORMAL'){
-            addButton = '';
-        }else{
-            addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
-        }
+        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
     }
-    if(grouptype=='ONE_TO_ONE'){
+
+    if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
         addButton = '';
     }
 
     var html = htmlToJoin.join('') + addButton;
     if(jsondata.db_id.length == 0){
-        if(grouptype == 'EMPTY') {
-            html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' +
-                '<img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '">' +
-                '</div>';
-        }
-        else if(grouptype == 'NORMAL'){
-            html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' +
-                '<img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '">' +
-                '</div>';
+        if($('#currentGroupList').css('display') == "block"){
+            if(grouptype == 'EMPTY') {
+                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
+            }else if(grouptype == 'NORMAL'){
+                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' + addButton;
+            }
         }
     }
 
