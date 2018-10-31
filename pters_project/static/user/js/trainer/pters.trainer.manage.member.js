@@ -5014,7 +5014,7 @@ function deleteMemberAjax(){
                                 memberListSet ('current','name','no',json);
                                 $('#name').attr('selected','selected');
                             })
-                        }else if($selector_finishedMemberList.css('display') == "block"){
+                        }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','name','no',json);
                                 $('#name').attr('selected','selected');
