@@ -458,6 +458,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+        if next_month == 0:
+            next_month = 12
         next_month_first_day = month_first_day.replace(month=next_month)
 
         if next_month == 1:
