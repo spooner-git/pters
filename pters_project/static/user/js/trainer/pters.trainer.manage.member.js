@@ -1176,7 +1176,7 @@ $(document).ready(function(){
     });
 
     if(varUA.match('firefox')){
-        $("#memberLastName_add, #memberFirstName_add").bind("keydown",function(e){  //이름 입력시 하단에 핑크선
+        $("#memberLastName_add, #memberFirstName_add").bind("keydown", function(e){  //이름 입력시 하단에 핑크선
             var keyCode = e.which || e.keyCode;
             var selector_memberLastName_add = $('#memberLastName_add');
             var selector_memberFirstName_add = $('#memberFirstName_add');
@@ -1219,13 +1219,13 @@ $(document).ready(function(){
 
 
 
-    $(document).on('click','#memberSex .selectboxopt',function(){
+    $(document).on('click', '#memberSex .selectboxopt', function(){
         if($('#memberSearchButton').attr('data-type') == "searched"){
 
         }else{
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
-            $('#form_sex').attr('value',$(this).attr('value'));
+            $('#form_sex').attr('value', $(this).attr('value'));
             check_dropdown_selected();
         }
     });
@@ -1234,7 +1234,7 @@ $(document).ready(function(){
         if($('#upbutton-modify').attr('data-type') == "modify"){
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
-            $('#form_sex_modify').attr('value',$(this).attr('value'));
+            $('#form_sex_modify').attr('value', $(this).attr('value'));
         }else{
 
         }
@@ -1242,11 +1242,11 @@ $(document).ready(function(){
 
     $("#memberPhone_add").keyup(function(){  //전화번호 입력시 하단에 핑크선
         if($(this).val().length>8){
-            limit_char(this);
+            limit_char_only_number("#memberPhone_add");
             $(this).addClass("dropdown_selected");
             check_dropdown_selected();
         }else{
-            limit_char(this);
+            limit_char_only_number("#memberPhone_add");
             $(this).removeClass("dropdown_selected");
             check_dropdown_selected();
         }
@@ -1345,6 +1345,7 @@ $(document).ready(function(){
     });
 
     $('#memberCount_add_fast').keyup(function(e){
+        limit_char_only_number(this);
         if($(this).val() > 0){
             $('#memberCount_add_fast').addClass("dropdown_selected");
         }else{
@@ -2162,6 +2163,7 @@ function priceInput(price, type, selector){
 }
 //수동 가격입력
 $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
+    limit_char_only_number(this);
     var priceInputValue = $(this).val().replace(/,/g, "");
     $(this).val(numberWithCommas(priceInputValue));
     $(this).siblings('input').val(priceInputValue);
@@ -3222,6 +3224,8 @@ function show_shadow_reponsively(){
 // }
 
 function check_dropdown_selected(){
+    limit_char("#memberLastName_add");
+    limit_char("#memberFirstName_add");
     var emailInput = $("#memberEmail_add");
     var lastnameInput = $("#memberLastName_add");
     var firstnameInput = $("#memberFirstName_add");
@@ -3425,10 +3429,23 @@ function autoDateInput(){
 
 //특수문자 입력 제한
 function limit_char(e){
-    var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+    // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+    //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
+    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z\-_]/gi;
     var temp = $(e).val();
     if(limit.test(temp)){
-        $(e).val(temp.replace(limit,""));
+        $(e).val(temp.replace(limit, ""));
+        alert("이름에 특수문자는 입력하실 수 없습니다.");
+    }
+}
+
+function limit_char_only_number(e){ 
+    // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+    var limit =  /[^0-9\,]/gi;
+    var temp = $(e).val();
+    if(limit.test(temp)){
+        $(e).val(temp.replace(limit, ""));
+        alert("숫자만 입력하실 수 있습니다.");
     }
 }
 
