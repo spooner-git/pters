@@ -180,6 +180,21 @@ def add_schedule_logic(request):
             error = error
 
     if error is None:
+        if en_dis_type == ON_SCHEDULE_TYPE:
+            try:
+                lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+            except ObjectDoesNotExist:
+                lecture_info = None
+            if lecture_info is not None:
+                lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                lecture_info.package_tb.save()
+
+                package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                for package_group_info in package_group_data:
+                    func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
+    if error is None:
         # func_update_member_schedule_alarm(class_id)
 
         if en_dis_type == ON_SCHEDULE_TYPE:
@@ -239,6 +254,7 @@ def delete_schedule_logic(request):
     schedule_info = None
     group_type_cd_name = ''
     group_name = ''
+    package_tb = None
     context = {'push_lecture_id': None, 'push_title': None, 'push_message': None}
 
     if en_dis_type == ON_SCHEDULE_TYPE:
@@ -262,7 +278,7 @@ def delete_schedule_logic(request):
                 member_name = member_info.name
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
-            package_tb_id = schedule_info.lecture_tb.package_tb_id
+            package_tb = schedule_info.lecture_tb.package_tb
 
     if error is None:
         lecture_id = schedule_info.lecture_tb_id
@@ -300,13 +316,13 @@ def delete_schedule_logic(request):
 
     if error is None:
         if en_dis_type == ON_SCHEDULE_TYPE:
-            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb_id)
+            package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
+            package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
+            package_tb.save()
 
-            if group_id is not None and group_id != '':
-                func_refresh_group_status(group_id, None, None)
-            else:
-                for package_group_info in package_group_data:
-                    func_refresh_group_status(package_group_info.group_tb_id, None, None)
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id)
+            for package_group_info in package_group_data:
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
         if group_id is not None and group_id != '':
@@ -467,9 +483,8 @@ def finish_schedule_logic(request):
                 group_repeat_schedule_id = lecture_repeat_schedule_data.group_schedule_id
             func_refresh_group_status(schedule_info.group_tb_id, schedule_info.group_schedule_id,
                                       group_repeat_schedule_id)
-        else:
-            for package_group_info in package_group_data:
-                func_refresh_group_status(package_group_info.group_tb_id, None, None)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
 
@@ -1300,6 +1315,21 @@ def add_group_schedule_logic(request):
                             if error_temp is not None:
                                 raise InternalError
                             else:
+                                try:
+                                    lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+                                except ObjectDoesNotExist:
+                                    lecture_info = None
+                                if lecture_info is not None:
+                                    lecture_info.package_tb.ing_package_member_num = len(
+                                        func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                                    lecture_info.package_tb.end_package_member_num = len(
+                                        func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                                    lecture_info.package_tb.save()
+
+                                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                                    for package_group_info in package_group_data:
+                                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
                                 log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                                                  from_member_name=request.user.last_name + request.user.first_name,
                                                  to_member_name=member_info.name,
@@ -1407,6 +1437,7 @@ def delete_group_schedule_logic(request):
             member_name = None
             schedule_id = member_group_schedule_info.schedule_id
             lecture_id = member_group_schedule_info.lecture_tb_id
+            lecture_info = member_group_schedule_info.lecture_tb
             repeat_schedule_id = member_group_schedule_info.repeat_schedule_tb_id
             start_dt = member_group_schedule_info.start_dt
             end_dt = member_group_schedule_info.end_dt
@@ -1440,7 +1471,17 @@ def delete_group_schedule_logic(request):
                     temp_error = '예약 가능 횟수를 확인해주세요.'
 
             if temp_error is None:
-                func_refresh_group_status(group_id, None, None)
+                if lecture_info is not None:
+                    lecture_info.package_tb.ing_package_member_num = len(
+                        func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.end_package_member_num = len(
+                        func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.save()
+
+                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                    for package_group_info in package_group_data:
+                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
+                # func_refresh_group_status(group_id, None, None)
 
             if temp_error is None:
                 # func_save_log_data(start_dt, end_dt, class_id, lecture_id,
@@ -1802,6 +1843,20 @@ def add_member_group_schedule_logic(request):
             error = error
 
     if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            lecture_info = None
+        if lecture_info is not None:
+            lecture_info.package_tb.ing_package_member_num = len(
+                func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.end_package_member_num = len(
+                func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.save()
+
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+            for package_group_info in package_group_data:
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name+request.user.first_name,
@@ -1947,6 +2002,21 @@ def add_other_member_group_schedule_logic(request):
             error = error
 
     if error is None:
+        try:
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
+        except ObjectDoesNotExist:
+            lecture_info = None
+        if lecture_info is not None:
+            lecture_info.package_tb.ing_package_member_num = len(
+                func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.end_package_member_num = len(
+                func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.save()
+
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+            for package_group_info in package_group_data:
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name,
