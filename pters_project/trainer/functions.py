@@ -10,7 +10,6 @@ from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_F
     TO_TRAINEE_LESSON_ALARM_OFF
 
 from login.models import MemberTb, LogTb, CommonCdTb
-from schedule.functions import func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupLectureTb, GroupTb, ClassTb, SettingTb, PackageGroupTb
@@ -887,21 +886,20 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                 class_lecture_info.save()
 
                 if package_id != '' and package_id is not None:
+
+                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+                    lecture_info.package_tb.save()
                     package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
                     for package_group_info in package_group_data:
                         group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
                                                             lecture_tb_id=lecture_info.lecture_id, use=USE)
                         group_lecture_info.save()
-                        try:
-                            group_info = GroupTb.objects.get(group_id=package_group_info.group_tb_id, use=USE)
-                        except ObjectDoesNotExist:
-                            group_info = None
-                        if group_info is not None:
-                            group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
-                                                                                                 package_group_info.group_tb_id, user_id))
-                            group_info.end_group_member_num = len(func_get_end_group_member_list(class_id,
-                                                                                                 package_group_info.group_tb_id, user_id))
-                            group_info.save()
+                        package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                                             package_group_info.group_tb_id, user_id))
+                        package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                                             package_group_info.group_tb_id, user_id))
+                        package_group_info.group_tb.save()
                         # package_lecture_data = ClassLectureTb.objects.select_related(
                         #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
                         #                                      lecture_tb__package_tb_id=group_id, use=USE)
@@ -910,9 +908,9 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                         # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
                         # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
                         # package_group_info.package_tb.save()
-                        package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
-                        package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
-                        package_group_info.package_tb.save()
+                        # package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+                        # package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+                        # package_group_info.package_tb.save()
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -1076,7 +1074,11 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             package_tb.save()
             package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id)
             for package_group_info in package_group_data:
-                func_refresh_group_status(package_group_info.group_tb_id, None, None)
+                package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                                     package_group_info.group_tb_id, user_id))
+                package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                                     package_group_info.group_tb_id, user_id))
+                package_group_info.group_tb.save()
 
     return error
 
