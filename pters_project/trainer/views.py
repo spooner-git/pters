@@ -3663,7 +3663,7 @@ def progress_package_info_logic(request):
 
 
 class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
-    template_name = 'ajax/group_info_ajax.html'
+    template_name = 'ajax/package_group_info_ajax.html'
 
     def get_context_data(self, **kwargs):
         context = super(GetPackageGroupListViewAjax, self).get_context_data(**kwargs)
