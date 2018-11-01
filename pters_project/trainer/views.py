@@ -3197,8 +3197,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(
-            class_tb_id=class_id, state_cd='PE',
-            package_type_cd='ONE',
+            class_tb_id=class_id, end_package_member_num__gt=0,
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
                                                         [])).order_by('-package_type_cd', '-package_id')
