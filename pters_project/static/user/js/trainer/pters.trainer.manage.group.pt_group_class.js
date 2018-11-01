@@ -1462,7 +1462,6 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             text_membernum = "종료된 그룹 ";
             break;
     }
-    console.log(jsondata);
     var htmlToAdd = [];
     // var htmlToAdd = '<div class="groupWrap" data-groupid="'+'1:1"'+' group_id="'+'1:1"'+'">'+
     //                 '<div class="_groupnum"></div>'+

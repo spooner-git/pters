@@ -1524,7 +1524,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }else if(group_type == "NORMAL"){
             htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
-        };
+        }
         
     }
 

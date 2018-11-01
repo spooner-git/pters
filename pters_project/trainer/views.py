@@ -3201,11 +3201,12 @@ def add_package_info_logic(request):
                         if json_info['group_id'] is None or json_info['group_id'] == '':
                             error = '오류가 발생했습니다.'
                             raise InternalError
-                        package_group_info = PackageGroupTb(class_tb_id=class_id,
-                                                            package_tb_id=package_info.package_id,
-                                                            group_tb_id=json_info['group_id'],
-                                                            use=USE)
-                        package_group_info.save()
+                        else:
+                            package_group_info = PackageGroupTb(class_tb_id=class_id,
+                                                                package_tb_id=package_info.package_id,
+                                                                group_tb_id=json_info['group_id'],
+                                                                use=USE)
+                            package_group_info.save()
 
         except InternalError:
             error = error
@@ -3252,7 +3253,7 @@ def delete_package_info_logic(request):
                                               lecture_tb__package_tb_id=package_id,
                                               end_dt__lte=now, use=USE).exclude(state_cd='PE')
     schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                    lecture_tb__package_tb_id=package_id,
+                                                     lecture_tb__package_tb_id=package_id,
                                                      end_dt__gt=now, use=USE).exclude(state_cd='PE')
     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                            lecture_tb__package_tb_id=package_id)
@@ -3267,6 +3268,11 @@ def delete_package_info_logic(request):
     package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id)
     for package_group_info in package_group_data:
         func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    if len(package_group_data) == 1:
+        package_group_data[0].group_tb.state_cd = 'PE'
+        package_group_data[0].group_tb.use = UN_USE
+        pcakage_group_data[0].group_tb.save()
+
     package_group_data.update(use=UN_USE)
 
     if error is not None:
@@ -3420,9 +3426,12 @@ class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        query_package_group_id = "select GROUP_TB_ID from PACKAGE_GROUP_TB as B " \
+                                 "where B.PACKAGE_TB_ID = `PACKAGE_TB`.`ID`"
         package_data = PackageTb.objects.filter(
             ~Q(package_type_cd='PACKAGE'), class_tb_id=class_id, state_cd='IP',
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                              group_tb_id=RawSQL(query_package_group_id, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
                                                         [])).order_by('-package_type_cd', '-package_id')
 
@@ -3583,16 +3592,16 @@ def finish_package_info_logic(request):
 
 def progress_package_info_logic(request):
     group_id = request.POST.get('group_id', '')
-    # next_page = request.POST.get('next_page', '')
+    package_id = request.POST.get('package_id', '')
     class_id = request.session.get('class_id', '')
     error = None
     group_info = None
     group_data = None
     if error is None:
         try:
-            group_info = GroupTb.objects.get(group_id=group_id)
+            package_info = PackageTb.objects.get(package_id=package_id)
         except ObjectDoesNotExist:
-            error = '그룹 정보를 불러오지 못했습니다.'
+            error = '패키지 정보를 불러오지 못했습니다.'
 
     if error is None:
         group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
@@ -3651,6 +3660,29 @@ def progress_package_info_logic(request):
         messages.error(request, error)
 
         return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetPackageGroupListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        package_id = self.request.GET.get('package_id', '')
+        error = None
+
+        group_data = PackageGroupTb.objects.select_related(
+            'group_tb').filter(class_tb_id=class_id, package_tb_id=package_id, group_tb__use=USE,
+                               use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['group_data'] = group_data
+
+        return context
 
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
