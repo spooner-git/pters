@@ -3053,7 +3053,7 @@ def finish_group_info_logic(request):
 
         package_group_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
         for package_group_info in package_group_data:
-            package_group_info.use=UN_USE
+            package_group_info.use = UN_USE
             package_group_info.save()
 
             # package_lecture_data = ClassLectureTb.objects.select_related(
@@ -3064,8 +3064,10 @@ def finish_group_info_logic(request):
             # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
             # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
 
-            package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_group_info.package_tb_id))
-            package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_group_info.package_tb_id))
+            package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id,
+                                                                                                        package_group_info.package_tb_id))
+            package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id,
+                                                                                                        package_group_info.package_tb_id))
             if package_group_info.package_tb.package_type_cd != 'PACKAGE':
                 package_group_info.package_tb.state_cd = 'PE'
             package_group_info.package_tb.save()
@@ -3125,7 +3127,7 @@ def progress_group_info_logic(request):
 
         package_group_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
         for package_group_info in package_group_data:
-            package_group_info.use=USE
+            package_group_info.use = USE
             package_group_info.save()
 
             # package_lecture_data = ClassLectureTb.objects.select_related(
@@ -3157,6 +3159,49 @@ def progress_group_info_logic(request):
         messages.error(request, error)
 
         return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def add_package_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    group_type_cd = request.POST.get('package_type_cd', '')
+    member_num = request.POST.get('member_num', '')
+    name = request.POST.get('name', '')
+    note = request.POST.get('note', '')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
+    error = None
+    group_info = None
+    try:
+        with transaction.atomic():
+
+            package_info = PackageTb(class_tb_id=class_id, name=name,
+                                     package_type_cd=group_type_cd, note=note, state_cd='IP', use=USE)
+            package_info.save()
+
+            package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_info.package_id,
+                                                group_tb_id=group_info.group_id, use=USE)
+            package_group_info.save()
+    except ValueError:
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
+    except IntegrityError:
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
+    except TypeError:
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
+    except ValidationError:
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
+    except InternalError:
+        error = '오류가 발생했습니다. 다시 시도해주세요.'
+
+    if error is None:
+        log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보', log_how='등록', use=USE)
+        log_data.save()
+
+    else:
+        messages.error(request, error)
+
+    return redirect(next_page)
 
 
 class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -3246,10 +3291,10 @@ class GetPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         # context = {}
         context = super(GetPackageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        group_id = self.request.GET.get('group_id', '')
+        package_id = self.request.GET.get('package_id', '')
         error = None
         # member_data = []
-        member_data = func_get_ing_group_member_list(class_id, group_id, self.request.user.id)
+        member_data = func_get_ing_package_member_list(class_id, package_id, self.request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3267,9 +3312,9 @@ class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
         # context = {}
         context = super(GetEndPackageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        group_id = self.request.GET.get('group_id', '')
+        package_id = self.request.GET.get('group_id', '')
         error = None
-        member_data = func_get_end_group_member_list(class_id, group_id, self.request.user.id)
+        member_data = func_get_end_package_member_list(class_id, package_id, self.request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3278,6 +3323,7 @@ class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
 
         context['member_data'] = member_data
         return context
+
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'

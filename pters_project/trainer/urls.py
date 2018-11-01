@@ -106,6 +106,8 @@ urlpatterns = [
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
 
     # 패키지 기능 #########################################################################################################
+    # 패키지 추가
+    url(r'^add_package_info_logic/$', views.add_package_info_logic, name='add_package_info_logic'),
     # 진행중 패키지 list 조회
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
     # 완료된 패키지 list 조회
@@ -113,7 +115,6 @@ urlpatterns = [
     # 패키지 만들 list 조회
     url(r'^get_create_new_package_list/$', views.GetCreateNewPackageViewAjax.as_view(),
         name='get_create_new_package_list'),
-
     # 패키지 회원 조회
     url(r'^get_package_member/$', views.GetPackageMemberViewAjax.as_view(), name='get_package_member'),
     # 패키지 종료 회원 조회
