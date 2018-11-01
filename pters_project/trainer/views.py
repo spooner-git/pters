@@ -2102,13 +2102,13 @@ def delete_lecture_info_logic(request):
 
     if error is None:
         error = func_delete_lecture_info(request.user.id, class_id, lecture_id, member_id)
-    if error is None:
-        try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_id, None, None)
+    # if error is None:
+    #     try:
+    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+    #     except ObjectDoesNotExist:
+    #         group_info = None
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
@@ -2182,9 +2182,12 @@ def finish_lecture_info_logic(request):
         lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    # if error is None:
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
@@ -2281,9 +2284,12 @@ def refund_lecture_info_logic(request):
         lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    # if error is None:
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
@@ -2357,9 +2363,12 @@ def progress_lecture_info_logic(request):
         # print(str(lecture_info.package_tb.ing_package_member_num))
         # print(str(lecture_info.package_tb.end_package_member_num))
         lecture_info.package_tb.save()
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    # if error is None:
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,

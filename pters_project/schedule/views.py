@@ -1684,6 +1684,8 @@ def finish_group_schedule_logic(request):
                     func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
                 lecture_info.package_tb.save()
 
+                package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
                     group_repeat_schedule_id = None
                     if lecture_repeat_schedule is not None and lecture_repeat_schedule != '':
@@ -1691,6 +1693,9 @@ def finish_group_schedule_logic(request):
                     func_refresh_group_status(member_group_schedule_info.group_tb_id,
                                               member_group_schedule_info.group_schedule_id,
                                               group_repeat_schedule_id)
+
+                for package_group_info in package_group_data:
+                    func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
             if temp_error is None:
 

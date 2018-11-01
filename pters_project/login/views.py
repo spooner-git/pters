@@ -41,10 +41,9 @@ from configs import settings
 from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
-from trainee.models import MemberLectureTb, LectureTb
-from trainer.functions import func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list, \
-    func_get_ing_group_member_list, func_get_end_group_member_list
-from trainer.models import MemberClassTb, GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
+from trainee.models import MemberLectureTb
+from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list
+from trainer.models import GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
 
 from .forms import MyPasswordResetForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
@@ -998,14 +997,36 @@ class AddMemberNoEmailView(View):
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
         phone = request.POST.get('phone', '')
+        package_id = request.POST.get('group_id', '')
         # group_id = request.POST.get('group_id', '')
-        context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
-        if context['error'] is not None:
-            logger.error(name+'[강사 회원가입]'+context['error'])
-            messages.error(request, context['error'])
+        error = None
+        error_count = 0
+        if package_id is not None and package_id != '':
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
+            for package_group_info in package_group_data:
+                if package_group_info.group_tb.group_type_cd == 'NORMAL':
+                    if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
+                        error = package_group_info.group_tb.name
+                        error_count += 1
+            if error_count == 1:
+                error += ' 그룹의 정원을 초과했습니다.'
+            elif error_count > 1:
+                error = '해당 패키지의 '+str(error_count)+'개의 그룹 정원을 초과했습니다.'
+        if error is None:
+            context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
 
-        return render(request, self.template_name, {'username': context['username'],
-                                                    'user_db_id': context['user_db_id']})
+        if error is not None:
+            logger.error(name + '[강사 회원가입]' + error)
+            messages.error(request, error)
+            return render(request, self.template_name, {'username': '',
+                                                        'user_db_id': ''})
+        else:
+            if context['error'] is not None:
+                logger.error(name+'[강사 회원가입]'+context['error'])
+                messages.error(request, context['error'])
+
+            return render(request, self.template_name, {'username': context['username'],
+                                                        'user_db_id': context['user_db_id']})
 
 
 class CheckMemberIdView(TemplateView):
