@@ -3431,15 +3431,18 @@ function autoDateInput(){
 function limit_char(e){
     // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
     //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
-    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z\-_]/gi;
+    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z\-_ ]/gi;
     var temp = $(e).val();
-    if(limit.test(temp)){
+    if(temp.replace(/(\s*)/g, "") == ""){
+        $(e).val("");
+        alert("이름을 입력 해주세요");
+    }else if(limit.test(temp)){
         $(e).val(temp.replace(limit, ""));
         alert("이름에 특수문자는 입력하실 수 없습니다.");
     }
 }
 
-function limit_char_only_number(e){ 
+function limit_char_only_number(e){
     // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
     var limit =  /[^0-9\,]/gi;
     var temp = $(e).val();
