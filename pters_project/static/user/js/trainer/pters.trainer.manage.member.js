@@ -1362,9 +1362,9 @@ $(document).ready(function(){
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
+        get_package_ing_list();
         $('#form_member_groupid').val($(this).val().split('/')[0]);
         $('#form_group_package_type').val($(this).val().split('/')[1]);
-
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
@@ -2265,6 +2265,7 @@ function grouptype_dropdown_set(grouplistJSON){
 }
 
 function package_type_dropdown_set(packagelistJSON){
+    console.log("packagelistJSON",packagelistJSON);
     var len = packagelistJSON.package_id.length;
     var optionsToJoin = [''];
     $('#form_member_groupid').val(packagelistJSON.package_id[0]);
