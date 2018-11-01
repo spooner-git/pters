@@ -51,7 +51,7 @@ from .functions import func_get_class_member_id_list, func_get_trainee_schedule_
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
     func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list, \
     func_get_ing_group_member_list, func_get_end_group_member_list, func_get_ing_package_member_list, \
-    func_get_end_package_member_list
+    func_get_end_package_member_list, func_get_ing_package_in_member_list, func_get_end_package_in_member_list
 
 logger = logging.getLogger(__name__)
 
@@ -469,6 +469,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+        if next_month == 0:
+            next_month = 1
         next_month_first_day = month_first_day.replace(month=next_month)
 
         if next_month == 1:
@@ -2810,6 +2812,7 @@ def delete_group_member_info_logic(request):
                                                                            ).filter(group_tb_id=group_id,
                                                                                     lecture_tb__member_id=user.id,
                                                                                     use=USE)
+            print(str(member_id_info))
             if error is None:
                 try:
                     with transaction.atomic():
@@ -2833,7 +2836,7 @@ def delete_group_member_info_logic(request):
                 except ValidationError:
                     error = '오류가 발생했습니다.'
                 except InternalError:
-                    error = '오류가 발생했습니다.'
+                    error = error
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
@@ -3455,7 +3458,7 @@ class GetPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         package_id = self.request.GET.get('package_id', '')
         error = None
         # member_data = []
-        member_data = func_get_ing_package_member_list(class_id, package_id, self.request.user.id)
+        member_data = func_get_ing_package_in_member_list(class_id, package_id, self.request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3475,7 +3478,7 @@ class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
         class_id = self.request.session.get('class_id', '')
         package_id = self.request.GET.get('package_id', '')
         error = None
-        member_data = func_get_end_package_member_list(class_id, package_id, self.request.user.id)
+        member_data = func_get_end_package_in_member_list(class_id, package_id, self.request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
