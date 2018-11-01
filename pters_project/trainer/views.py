@@ -3312,7 +3312,7 @@ class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
         # context = {}
         context = super(GetEndPackageMemberViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
-        package_id = self.request.GET.get('group_id', '')
+        package_id = self.request.GET.get('package_id', '')
         error = None
         member_data = func_get_end_package_member_list(class_id, package_id, self.request.user.id)
 
