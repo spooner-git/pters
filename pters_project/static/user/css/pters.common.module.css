@@ -48,6 +48,7 @@
 			}
 			.pters_selectbox_btn_selected{
 				background: #282828 !important;
+				border-color: #282828;
 				color: #ffffff;
 				font-weight: 500;
 			}
