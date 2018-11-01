@@ -107,7 +107,13 @@ urlpatterns = [
 
     # 패키지 기능 #########################################################################################################
     # 패키지 추가
-    url(r'^add_package_info_logic/$', views.add_package_info_logic, name='add_package_info_logic'),
+    url(r'^add_package_info/$', views.add_package_info_logic, name='add_package_info'),
+    # 패키지 삭제
+    url(r'^delete_package_info/$', views.delete_package_info_logic, name='delete_package_info'),
+    # 패키지에 그룹 추가
+    url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
+    # 패키지에 그룹 삭제
+    url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
     # 진행중 패키지 list 조회
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
     # 완료된 패키지 list 조회
