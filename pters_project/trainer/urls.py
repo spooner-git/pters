@@ -119,12 +119,17 @@ urlpatterns = [
     # 완료된 패키지 list 조회
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
     # 패키지 만들 list 조회
-    url(r'^get_create_new_package_list/$', views.GetCreateNewPackageViewAjax.as_view(),
-        name='get_create_new_package_list'),
+    url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
+        name='get_single_package_list'),
     # 패키지 회원 조회
     url(r'^get_package_member/$', views.GetPackageMemberViewAjax.as_view(), name='get_package_member'),
     # 패키지 종료 회원 조회
     url(r'^get_end_package_member/$', views.GetEndPackageMemberViewAjax.as_view(), name='get_end_package_member'),
+
+    # 패키지 종료 상태 변경
+    url(r'^finish_package_info/$', views.finish_package_info_logic, name='finish_package_info'),
+    # 패키지 재개 상태 변경
+    url(r'^progress_package_info/$', views.progress_package_info_logic, name='progress_package_info'),
 
 
     # 수업 관리 기능 ######################################################################################################
