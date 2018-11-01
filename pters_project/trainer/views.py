@@ -2334,18 +2334,23 @@ def progress_lecture_info_logic(request):
 
     if error is None:
         try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+            group_info = GroupLectureTb.objects.select_related('group_tb').get(lecture_tb_id=lecture_id, use=USE)
         except ObjectDoesNotExist:
             group_info = None
 
     if error is None:
         if group_info is not None:
             if group_info.group_tb.state_cd != 'IP':
-                error = '그룹/클래스가 진행중 상태가 아닙니다.'
+                if group_info.group_tb.group_type_cd == 'NORMAL':
+                    error = '그룹이 진행중 상태가 아닙니다.'
+                elif group_info.group_tb.group_type_cd == 'EMPTY':
+                    error = '클래스가 진행중 상태가 아닙니다.'
+
     if error is None:
         if group_info is not None:
-            if group_info.group_tb.ing_group_member_num >= group_info.group_tb.member_num:
-                error = '그룹 정원을 초과했습니다.'
+            if group_info.group_tb.group_type_cd == 'NORMAL':
+                if group_info.group_tb.ing_group_member_num >= group_info.group_tb.member_num:
+                    error = '그룹 정원을 초과했습니다.'
 
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
