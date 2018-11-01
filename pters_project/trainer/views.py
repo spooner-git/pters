@@ -2038,14 +2038,14 @@ def update_lecture_info_logic(request):
             note = lecture_info.note
 
     if error is None:
-        if input_lecture_reg_count < lecture_info.lecture_reg_count - lecture_info.lecture_avail_count:
-            error = '등록 횟수가 이미 등록한 스케쥴보다 적습니다.'
-
-    if error is None:
         schedule_list = ScheduleTb.objects.filter(lecture_tb=lecture_id)
         if len(schedule_list) > 0:
             reserve_pt_count = schedule_list.count()
             finish_pt_count = schedule_list.filter(state_cd='PE').count()
+
+    if error is None:
+        if input_lecture_reg_count < reserve_pt_count:
+            error = '등록 횟수가 이미 등록한 스케쥴보다 적습니다.'
 
     if error is None:
         lecture_info.start_date = start_date
@@ -2059,12 +2059,15 @@ def update_lecture_info_logic(request):
             lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
             lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
         else:
-            if lecture_info.lecture_reg_count < input_lecture_reg_count:
-                lecture_info.lecture_reg_count = input_lecture_reg_count
-                lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
-                lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
-                lecture_info.refund_price = 0
-                lecture_info.refund_date = None
+            # if lecture_info.lecture_reg_count < input_lecture_reg_count:
+            lecture_info.lecture_reg_count = input_lecture_reg_count
+            lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
+            lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
+            # lecture_info.refund_price = 0
+            # lecture_info.refund_date = None
+            if lecture_info.state_cd == 'PE':
+                lecture_info.lecture_rem_count = 0
+                lecture_info.lecture_avail_count = 0
                 # lecture_info.state_cd = 'IP'
         lecture_info.save()
 
