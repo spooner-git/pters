@@ -1618,8 +1618,7 @@ def func_get_ing_package_member_list(class_id, package_id, user_id):
     member_data = []
 
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                        "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and " \
-                        "B.USE=1"
+                        "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.USE=1"
 
     lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
