@@ -3235,7 +3235,7 @@ def delete_package_info_logic(request):
     for package_lecture_info in package_lecture_data:
         group_lecture_info = GroupLectureTb.objects.filter(lecture_tb_id=package_lecture_info.lecture_tb_id, use=USE)
         group_lecture_info.update(use=UN_USE)
-        package_lecture_info.auth_cd='DELETE'
+        package_lecture_info.auth_cd = 'DELETE'
         package_lecture_info.save()
 
         if package_lecture_info.lecture_tb.lecture_rem_count == package_lecture_info.lecture_tb.lecture_reg_count:
@@ -3267,6 +3267,7 @@ def delete_package_info_logic(request):
     package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id)
     for package_group_info in package_group_data:
         func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    package_group_data.update(use=UN_USE)
 
     if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
