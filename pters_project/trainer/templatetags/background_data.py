@@ -10,8 +10,9 @@ from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb
-from trainer.functions import func_get_trainer_setting_list
+from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb
+from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
+    func_get_end_package_member_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -110,6 +111,15 @@ def get_setting_info(request):
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
                 func_refresh_lecture_count(not_finish_schedule_info.lecture_tb_id)
+                lecture_info = not_finish_schedule_info.lecture_tb
+                if lecture_info is not None and lecture_info != '':
+                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.save()
+
+                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                    for package_group_info in package_group_data:
+                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
@@ -144,8 +154,16 @@ def get_setting_info(request):
                 lecture_info.state_cd = 'PE'
                 lecture_info.save()
 
-                if group_info is not None:
-                    func_refresh_group_status(group_info.group_tb_id, None, None)
+                if lecture_info is not None and lecture_info != '':
+                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.save()
+
+                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                    for package_group_info in package_group_data:
+                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
+                # if group_info is not None:
+                #     func_refresh_group_status(group_info.group_tb_id, None, None)
 
     return context
 

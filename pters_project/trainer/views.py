@@ -2065,7 +2065,7 @@ def update_lecture_info_logic(request):
                 lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
                 lecture_info.refund_price = 0
                 lecture_info.refund_date = None
-                lecture_info.state_cd = 'IP'
+                # lecture_info.state_cd = 'IP'
         lecture_info.save()
 
     if error is None:
@@ -2336,6 +2336,11 @@ def progress_lecture_info_logic(request):
         if group_info is not None:
             if group_info.group_tb.state_cd != 'IP':
                 error = '그룹/클래스가 진행중 상태가 아닙니다.'
+    if error is None:
+        if group_info is not None:
+            if group_info.group_tb.ing_group_member_num >= group_info.group_tb.member_num:
+                error = '그룹 정원을 초과했습니다.'
+
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
