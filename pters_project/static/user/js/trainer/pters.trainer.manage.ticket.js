@@ -2148,3 +2148,58 @@ $(document).on("click", "div.lecture_bubble img", function(e){
 $('#packagename').keyup(function(){
     check_dropdown_selected();
 });
+
+get_single_package_list("callback", function(){
+    fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package");
+});
+
+function get_single_package_list(use, callback){
+    $.ajax({
+        url:'/trainer/get_single_package_list/',
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+               console.log("get_single_package_list", jsondata);
+               if(use == "callback"){
+                   callback(jsondata);
+               }
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+
+
+
+function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, jsondata){
+    var $targetHTML = $(targetHTML);
+    var html = ['<option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>'];
+    for(var i=0; i<jsondata.package_id.length; i++){
+        html.push(`<option value="${jsondata.package_id[i]}">${jsondata.package_name[i]}</option>`)
+    }
+
+    $targetHTML.html(html.join(""));
+}
+

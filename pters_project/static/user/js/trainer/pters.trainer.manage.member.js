@@ -1364,7 +1364,6 @@ $(document).ready(function(){
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
-        get_package_ing_list();
         $('#form_member_groupid, #form_member_groupid_no_email').val($(this).val().split('/')[0]);
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
