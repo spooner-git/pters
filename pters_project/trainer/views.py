@@ -3213,6 +3213,33 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         return context
 
 
+class GetCreateNewPackageListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetCreateNewPackageListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
+        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        package_data = PackageTb.objects.filter(
+            ~Q(package_type_cd='PACKAGE'), class_tb_id=class_id, state_cd='IP',
+            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                              package_type_cd_nm=RawSQL(query_package_type_cd,
+                                                        [])).order_by('-package_type_cd', '-package_id')
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['package_data'] = package_data
+
+        return context
+
+
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
 

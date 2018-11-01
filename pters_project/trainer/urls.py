@@ -110,7 +110,9 @@ urlpatterns = [
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
     # 완료된 패키지 list 조회
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
-
+    # 패키지 만들 list 조회
+    url(r'^get_create_new_package_list/$', views.GetCreateNewPackageListViewAjax.as_view(),
+        name='get_create_new_package_list'),
 
     # 수업 관리 기능 ######################################################################################################
     # 진행중 회원/그룹/클래스 list 조회
