@@ -741,8 +741,9 @@ a:focus, a:hover{
     cursor: pointer;
 }
 
-.centermenu_text:hover,.centermenu_text:focus{
+.centermenu_text:hover, .centermenu_text:focus{
     color:#fe4e65;
+    transition: color 0.13s cubic-bezier(0.4,0,0.2,1);
 }
 
 .centermenu_logo{

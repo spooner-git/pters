@@ -361,8 +361,8 @@ select:focus > option:checked {
 }
 
 .memberline:hover{
-	background:#fdfdfd;
-	color: #fe4e65 !important;
+	background:#f4f4f4 !important;
+	transition: background-color 0.12s cubic-bezier(0.4,0,0.2,1);
 
 }
 
@@ -1424,11 +1424,15 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 	.ymdText-pc-add-member:hover{
 		background-color: #fe4e65;
+		border-color: #fe4e65;
 		color: #ffffff;
+		transition: background-color 0.17s cubic-bezier(0.4,0,0.2,1);
 	}
 	.ymdText-pc-add-member-again:hover{
 		background: #282828;
+		border-color: #282828;
 		color: #ffffff;
+		transition: background-color 0.17s cubic-bezier(0.4,0,0.2,1);
 	}
 
 

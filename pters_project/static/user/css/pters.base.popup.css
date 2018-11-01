@@ -490,6 +490,10 @@
 .plan_raw:active{
 	background: #f4f4f4;
 }
+.plan_raw:hover{
+	background-color: #eaeaea;
+	transition: background-color 0.12s cubic-bezier(0.4,0,0.2,1);
+}
 
 .plan_raw > div{
 	position: relative;

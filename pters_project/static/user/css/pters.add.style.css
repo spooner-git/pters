@@ -1633,7 +1633,9 @@ option{
 	}
 
 	.dropdown-menu>li:hover, .dropdown-menu>li>a:focus{
-		background: #282828 !important;
-		color: #fe4e65 !important;
+		/*background: #282828 !important;
+		color: #fe4e65 !important;*/
+		background-color: #eaeaea !important;
+		transition: background-color 0.12s cubic-bezier(0.4,0,0.2,1);
 	}
 }

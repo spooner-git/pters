@@ -226,7 +226,7 @@ img.substract_addedMember{
 .groupWrap:hover{
 	background: #e4e4e4;
 	font-weight: bold;
-
+	transition: background 0.12s cubic-bezier(0.4,0,0.2,1);
 }
 
 .red_color_text{
