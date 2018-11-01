@@ -111,8 +111,14 @@ urlpatterns = [
     # 완료된 패키지 list 조회
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
     # 패키지 만들 list 조회
-    url(r'^get_create_new_package_list/$', views.GetCreateNewPackageListViewAjax.as_view(),
+    url(r'^get_create_new_package_list/$', views.GetCreateNewPackageViewAjax.as_view(),
         name='get_create_new_package_list'),
+
+    # 패키지 회원 조회
+    url(r'^get_package_member/$', views.GetPackageMemberViewAjax.as_view(), name='get_package_member'),
+    # 패키지 종료 회원 조회
+    url(r'^get_end_package_member/$', views.GetEndPackageMemberViewAjax.as_view(), name='get_end_package_member'),
+
 
     # 수업 관리 기능 ######################################################################################################
     # 진행중 회원/그룹/클래스 list 조회

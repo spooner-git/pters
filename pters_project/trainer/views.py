@@ -3213,11 +3213,11 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         return context
 
 
-class GetCreateNewPackageListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+class GetCreateNewPackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/package_info_ajax.html'
 
     def get_context_data(self, **kwargs):
-        context = super(GetCreateNewPackageListViewAjax, self).get_context_data(**kwargs)
+        context = super(GetCreateNewPackageViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
 
@@ -3239,6 +3239,46 @@ class GetCreateNewPackageListViewAjax(LoginRequiredMixin, AccessTestMixin, Templ
 
         return context
 
+
+class GetPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_member_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetPackageMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        group_id = self.request.GET.get('group_id', '')
+        error = None
+        # member_data = []
+        member_data = func_get_ing_group_member_list(class_id, group_id, self.request.user.id)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['member_data'] = member_data
+        return context
+
+
+class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_member_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetEndPackageMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        group_id = self.request.GET.get('group_id', '')
+        error = None
+        member_data = func_get_end_group_member_list(class_id, group_id, self.request.user.id)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['member_data'] = member_data
+        return context
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
