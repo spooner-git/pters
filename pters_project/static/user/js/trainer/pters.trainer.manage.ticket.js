@@ -2376,6 +2376,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
     var htmlToAdd = [];
     var htmlToJoin = [];
     var htmlToJoin2 = [];
+    var htmlToJoin3 = [];
     var groupNum = jsondata.package_id.length;
     var ordernum = 0;
     for(var i=0; i<groupNum; i++){
@@ -2456,6 +2457,8 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }else if(package_type == "ONE_TO_ONE"){
             htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+        }else{
+            htmlToJoin3.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }
     }
 
@@ -2466,7 +2469,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
-    return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
+    return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
 }
 //패키지 목록을 화면에 뿌리기
 
@@ -2716,7 +2719,7 @@ function send_new_package_info(packagedata, use, callback){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/add_package_info/',
-        data: packagedata,
+        data: JSON.stringify(packagedata),
         type:'POST',
         dataType : 'html',
 
@@ -2769,15 +2772,15 @@ function send_new_package_info(packagedata, use, callback){
 //새로운 패키지를 만든다
 function make_new_package_info_to_json_form(){
     //{ “package_info” : [  {“package_name”: xx , “package_note”:xx}], “new_package_group_data” : [{“group_id”: xx}, {“group_id”:xx}, ….]}
-    var groupids = [];
-    $('#selected_lectures_to_package_wrap .lecture_bubble').each(function(){
-        groupids.push({"group_id":$(this).attr('data-groupid')});
-    });
+    // var groupids = [];
 
     var jsondata = {
-                    "package_info":[{"package_name":$('#packagename').val(), "package_note":""}],
-                    "new_package_group_data":groupids
+                    "package_info":{"package_name":$('#packagename').val(), "package_note":""},
+                    "new_package_group_data":[]
                     };
+    $('#selected_lectures_to_package_wrap .lecture_bubble').each(function(){
+        jsondata.new_package_group_data.push({"group_id":$(this).attr('data-groupid')});
+    });
     console.log("jsondata");
     return jsondata;
 }

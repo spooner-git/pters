@@ -3171,13 +3171,12 @@ def add_package_info_logic(request):
     next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     json_loading_data = None
     error = None
-
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다. [0]'
     except TypeError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다. [1]'
 
     if error is None:
         try:
@@ -3412,6 +3411,9 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
                                                         [])).order_by('-package_type_cd', '-package_id')
+        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        order = {key: i for i, key in enumerate(order)}
+        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3438,6 +3440,9 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
                                                         [])).order_by('-package_type_cd', '-package_id')
+        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        order = {key: i for i, key in enumerate(order)}
+        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
