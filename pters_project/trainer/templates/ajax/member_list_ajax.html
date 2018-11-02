@@ -67,6 +67,9 @@
     "groupInfoArray" :
     [{% for member_info in member_data %}"{{ member_info.group_info }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "checkOneToOneArray" :
+    [{% for member_info in member_data %}"{{ member_info.check_one_to_one }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
     "lecture_id" :
     [{% for member_info in member_data %}"{{ member_info.lecture_available_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
