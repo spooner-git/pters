@@ -261,6 +261,7 @@ def func_get_class_lecture_count(context, class_id, user_id):
     group_lecture_flag = False
     class_lecture_flag = False
     lecture_list = None
+    package_data = []
 
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
@@ -275,6 +276,7 @@ def func_get_class_lecture_count(context, class_id, user_id):
 
         lecture_list = ClassLectureTb.objects.select_related(
             'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user_id,
+                                             lecture_tb__state_cd='IP',
                                              lecture_tb__use=USE).annotate(lecture_count=RawSQL(query_lecture_count, [])
                                                                            ).order_by('lecture_tb__start_date')
 
@@ -288,6 +290,27 @@ def func_get_class_lecture_count(context, class_id, user_id):
             lecture_info = lecture_list_info.lecture_tb
 
             if lecture_list_info.lecture_count > 0:
+
+                try:
+                    lecture_info.package_tb.package_type_cd_name = \
+                        CommonCdTb.objects.get(common_cd=lecture_info.package_tb.package_type_cd).common_cd_nm
+                except ObjectDoesNotExist:
+                    lecture_info.package_tb.package_type_cd_name = ''
+
+                if len(package_data) == 0:
+                    package_data.append(lecture_info)
+                else:
+                    check_flag = 0
+                    for package_info in package_data:
+                        if package_info.package_tb.package_id == lecture_info.package_tb.package_id:
+                            package_info.lecture_reg_count += lecture_info.lecture_reg_count
+                            package_info.lecture_rem_count += lecture_info.lecture_rem_count
+                            package_info.lecture_avail_count += lecture_info.lecture_avail_count
+                        else:
+                            check_flag = 1
+                    if check_flag == 1:
+                        package_data.append(lecture_info)
+
                 package_group_data = PackageGroupTb.objects.select_related(
                     'group_tb').filter(package_tb_id=lecture_info.package_tb_id)
                 # group_lecture_check = 0
@@ -322,6 +345,7 @@ def func_get_class_lecture_count(context, class_id, user_id):
     if class_lecture_reg_count_sum > 0:
         class_lecture_flag = True
 
+    context['package_data'] = package_data
     context['lecture_flag'] = lecture_flag
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_reg_count_sum - lecture_rem_count_sum
@@ -355,7 +379,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     auth_cd_list = auth_cd.split('/')
 
     if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+        lecture_list = ClassLectureTb.objects.select_related('lecture_tb__package_tb').filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_id,
                                                      lecture_tb__use=USE
                                                      ).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
@@ -379,7 +403,8 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 lecture_info_data.lecture_tb.mod_dt = str(lecture_info_data.lecture_tb.mod_dt)
                 lecture_info_data.lecture_tb.reg_dt = str(lecture_info_data.lecture_tb.reg_dt)
                 try:
-                    lecture_info_data.auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.auth_cd)
+                    lecture_info_data.auth_cd_name =\
+                        CommonCdTb.objects.get(common_cd=lecture_info_data.auth_cd)
                 except ObjectDoesNotExist:
                     lecture_info_data.auth_cd_name = ''
                 try:
@@ -396,26 +421,42 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id)
                 # except ObjectDoesNotExist:
                 #     group_check = 1
-                group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_tb_id,
-                                                           package_tb__isnull=True)
-                if len(group_data) > 0:
-                    group_info = group_data[0]
-                else:
-                    group_check = 1
-
-                if group_check == 0:
-                    lecture_info_data.group_name = group_info.group_tb.name
-                    lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
-                    lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
-                    lecture_info_data.group_member_num = group_info.group_tb.member_num
-                    lecture_info_data.group_note = group_info.group_tb.note
-                    lecture_info_data.group_state_cd = group_info.group_tb.state_cd
-                    lecture_info_data.group_state_cd_name = group_info.group_tb.get_state_cd_name()
+                # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_tb_id,
+                #                                            package_tb__isnull=True)
+                # if len(group_data) > 0:
+                #     group_info = group_data[0]
+                # else:
+                #     group_check = 1
+                #
+                # if group_check == 0:
+                #     lecture_info_data.group_name = group_info.group_tb.name
+                #     lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
+                #     lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
+                #     lecture_info_data.group_member_num = group_info.group_tb.member_num
+                #     lecture_info_data.group_note = group_info.group_tb.note
+                #     lecture_info_data.group_state_cd = group_info.group_tb.state_cd
+                #     lecture_info_data.group_state_cd_name = group_info.group_tb.get_state_cd_name()
                     # try:
                     #     state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
                     #     lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
                     # except ObjectDoesNotExist:
                     #     error = '그룹 정보를 불러오지 못했습니다.'
+                lecture_info_data.group_name = lecture_info.lecture_tb.package_tb.name
+                lecture_info_data.group_type_cd = lecture_info.lecture_tb.package_tb.package_type_cd
+                # lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
+                try:
+                    lecture_info_data.group_type_cd_name = \
+                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd).common_cd_nm
+                except ObjectDoesNotExist:
+                    lecture_info_data.group_type_cd_name = ''
+                lecture_info_data.group_member_num = 'x'
+                lecture_info_data.group_note = lecture_info.lecture_tb.package_tb.note
+                lecture_info_data.group_state_cd = lecture_info.lecture_tb.package_tb.state_cd
+                try:
+                    lecture_info_data.group_state_cd_name = \
+                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.state_cd).common_cd_nm
+                except ObjectDoesNotExist:
+                    lecture_info_data.group_state_cd_name = ''
 
                 output_lecture_list.append(lecture_info_data)
 
