@@ -293,10 +293,10 @@
         </div>
 
          <div id="" class="pters_selectbox_wrapper">
-            <div id="btnCallCurrent" onclick="shiftPtGroupClassList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
+            <div id="btnCallCurrent" onclick="shiftPackageList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
                 <span class="KRtext">진행중</span>
             </div>
-            <div id="btnCallFinished" onclick="shiftPtGroupClassList('finished')" class="pters_selectbox_btn">
+            <div id="btnCallFinished" onclick="shiftPackageList('finished')" class="pters_selectbox_btn">
                 <span class="KRtext">종료</span>
             </div>
         </div>
@@ -415,13 +415,13 @@
         </table>
 
 
-        <div id="currentGroupList" class="centeralign">
+        <div id="currentPackageList" class="centeralign">
             <table id="currentGroup" class="table table-bordered">
 
             </table>
         </div>
 
-        <div id="finishedGroupList" class="centeralign">
+        <div id="finishedPackageList" class="centeralign">
             <table id="finishedGroup" class="table table-bordered">
 
             </table>
@@ -988,7 +988,7 @@
                     <br>
                     <label class="ptaddboxtext">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}>
-                        <span >패키지에 추가될 수강권</span>
+                        <span >패키지에 추가될 수강권 (2개 이상 선택)</span>
                         <span id="selected_lectures_to_package_num" style="color: #fe4e65;">*</span>
                     </label>
                     <div id="selected_lectures_to_package_wrap">
@@ -1254,7 +1254,7 @@
 
         get_package_ing_list("callback", function(jsondata){
             var group_class_Html = package_ListHtml('current', jsondata);
-            $('#currentGroupList').html(group_class_Html);
+            $('#currentPackageList').html(group_class_Html);
             console.log('get_package_ing_list', jsondata);
         });
 
