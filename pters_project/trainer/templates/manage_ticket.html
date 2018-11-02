@@ -982,14 +982,6 @@
                     </label>
                     <div id="packaggSelector">
                         <select id="lecture_list_to_package">
-                            <option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>
-                            <option value="test">테스트 수강권1</option>
-                            <option value="test2222222">테스트 수강권22222222222</option>
-                            <option value="test3">테스트 수강권3</option>
-                            <option value="test4">테스트 수강권4</option>
-                            <option value="test5">테스트 수강권5</option>
-                            <option value="test6">테스트 수강권6</option>
-                            <option value="test7">테스트 수강권7</option>
 
                         </select>
                     </div>
@@ -1252,11 +1244,18 @@
         var deleteTypeSelect;
         var alignType = "name";
         var select_all_check = false;
-        get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            var member_Html = memberlist.html;
-            var group_class_Html = group_class_ListHtml('current', jsondata);
+        // get_member_group_class_ing_list("callback", function(jsondata){
+        //     // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+        //     // var member_Html = memberlist.html;
+        //     var group_class_Html = group_class_ListHtml('current', jsondata);
+        //     $('#currentGroupList').html(group_class_Html);
+        //     console.log("get_membeR_group_class_ing_list", jsondata)
+        // });
+
+        get_package_ing_list("callback", function(jsondata){
+            var group_class_Html = package_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
+            console.log('get_package_ing_list', jsondata);
         });
 
         // get_member_ing_list("callback", function(jsondata){
