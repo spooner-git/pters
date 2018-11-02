@@ -1548,7 +1548,9 @@ function send_modified_member_base_data(dbID){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#upbutton-modify img').attr('src', '/static/user/res/icon-pencil.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }
@@ -2616,7 +2618,9 @@ function get_member_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2675,7 +2679,9 @@ function get_member_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2731,7 +2737,9 @@ function get_member_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2788,7 +2796,9 @@ function get_member_one_to_one_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2844,7 +2854,9 @@ function get_member_one_to_one_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4778,7 +4790,9 @@ function add_member_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'))
+                if(bodywidth < 600){
+                   scrollToDom($('#page_addmember')) 
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4860,7 +4874,9 @@ function add_member_form_noemail_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4922,7 +4938,9 @@ function add_group_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -5006,7 +5024,9 @@ function add_groupmember_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -5079,7 +5099,9 @@ function deleteMemberAjax(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }
