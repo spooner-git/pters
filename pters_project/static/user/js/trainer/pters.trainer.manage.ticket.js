@@ -1549,6 +1549,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         }else if(group_type == "ONE_TO_ONE"){
             htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }
+
     }
 
     if(htmlToJoin.length == 0){

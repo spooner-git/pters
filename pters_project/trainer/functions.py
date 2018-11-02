@@ -971,6 +971,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+
     if error is None:
         package_tb = lecture_info.package_tb
         # group_data = None
@@ -1069,9 +1070,11 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
             # package_tb.ing_package_member_num = package_ing_lecture_count
             # package_tb.end_package_member_num = package_end_lecture_count
+
             package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
             package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
             package_tb.save()
+
             package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id)
             for package_group_info in package_group_data:
                 package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
@@ -1561,7 +1564,6 @@ def func_get_end_group_member_list(class_id, group_id, user_id):
 def func_get_ing_package_member_list(class_id, package_id):
     member_data = []
     lecture_list = LectureTb.objects.select_related('member').filter(package_tb_id=package_id, state_cd='IP', use=USE)
-
     for lecture_info in lecture_list:
         error = None
         class_lecture_test = ClassLectureTb.objects.filter(class_tb_id=class_id,
@@ -1578,7 +1580,6 @@ def func_get_ing_package_member_list(class_id, package_id):
 
             if check_add_flag == 0:
                 member_data.append(member_info)
-
     # for member_info in member_data:
     #     print('ing:'+str(member_info))
     return member_data
@@ -1614,7 +1615,7 @@ def func_get_end_package_member_list(class_id, package_id):
     return member_data
 
 
-def func_get_ing_package_member_list(class_id, package_id, user_id):
+def func_get_ing_package_in_member_list(class_id, package_id, user_id):
     member_data = []
 
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
@@ -1715,7 +1716,7 @@ def func_get_ing_package_member_list(class_id, package_id, user_id):
     return member_data
 
 
-def func_get_end_package_member_list(class_id, package_id, user_id):
+def func_get_end_package_in_member_list(class_id, package_id, user_id):
     member_data = []
 
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
