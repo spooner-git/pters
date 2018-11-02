@@ -1548,7 +1548,9 @@ function send_modified_member_base_data(dbID){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#upbutton-modify img').attr('src', '/static/user/res/icon-pencil.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }
@@ -1722,7 +1724,7 @@ function float_btn_managemember(option){
             shade_index(100);
         }
 
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
     }else if(option == "solo_ticket"){
         initialize_add_member_sheet();
@@ -1756,7 +1758,8 @@ function float_btn_managemember(option){
 
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
-        get_single_package_list("callback", function(jsondata){
+        get_group_ing_list('callback', function(jsondata){
+            console.log("get_group_ing_list", jsondata);
             fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
         });
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
@@ -1837,7 +1840,7 @@ function pc_add_member(option){
 
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
+        get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         /*
         initialize_add_member_sheet();
@@ -2010,7 +2013,7 @@ function pc_add_member(option){
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
 
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
         $('body').css('overflow-y','hidden');
@@ -2313,14 +2316,13 @@ function grouptype_dropdown_set(grouplistJSON){
 }
 
 function package_type_dropdown_set(packagelistJSON){
-    console.log("packagelistJSON",packagelistJSON);
     var len = packagelistJSON.package_id.length;
     var optionsToJoin = [''];
     $('#form_member_groupid, #form_member_groupid_no_email').val(packagelistJSON.package_id[0]);
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">['+packagelistJSON.package_type_cd_nm[i]+'] '+packagelistJSON.package_name[i]+'</option>');
     }
-    $('.grouptypeselect').append(optionsToJoin.join(''));
+    $('.grouptypeselect').html(optionsToJoin.join(''));
 }
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
@@ -2616,7 +2618,9 @@ function get_member_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2675,7 +2679,9 @@ function get_member_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2731,7 +2737,9 @@ function get_member_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2788,7 +2796,9 @@ function get_member_one_to_one_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2844,7 +2854,9 @@ function get_member_one_to_one_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4778,7 +4790,9 @@ function add_member_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'))
+                if(bodywidth < 600){
+                   scrollToDom($('#page_addmember')) 
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4860,7 +4874,9 @@ function add_member_form_noemail_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4922,7 +4938,9 @@ function add_group_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -5006,7 +5024,9 @@ function add_groupmember_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -5079,7 +5099,9 @@ function deleteMemberAjax(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }
