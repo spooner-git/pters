@@ -489,10 +489,10 @@ function added_member_info_to_jsonformat(){
 $(document).on('click', 'div.groupWrap', function(e){
     e.stopPropagation();
     var package_id = $(this).attr('data-packageid');
-    console.log("package_id", package_id);
     var memo_list =  $(this).siblings('div[data-packageid="'+package_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-packageid="'+package_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-packageid="'+package_id+'"].groupMembersWrap');
+    var grouplist = $(this).siblings('div[data-packageid="'+package_id+'"].groupPackageWrap');
     if(memberlist.css('display')=='none'){
         //if(package_id != "1:1"){
             $(this).addClass('groupWrap_selected');
@@ -503,9 +503,15 @@ $(document).on('click', 'div.groupWrap', function(e){
             }
             if($(this).attr('data-packagestatecd')=='current'){
                 get_package_member_list(package_id);
+                get_grouplist_in_package(package_id, "callback", function(jsondata){
+                    draw_grouplist_in_package(grouplist, jsondata);
+                });
             }
             else{
                 get_end_package_member_list(package_id);
+                get_grouplist_in_package(package_id, "callback", function(jsondata){
+                    draw_grouplist_in_package(grouplist, jsondata);
+                });
             }
             get_group_repeat_info(package_id);
         //}
@@ -527,7 +533,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         memberlist.removeClass('groupMembersWrap_selected').hide();
         repeat_list.hide();
         if(bodywidth < 600){
-           memo_list.hide(); 
+           memo_list.hide();
         }
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
     }
@@ -2418,7 +2424,8 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         var htmlend = '</div>';
         var memolist = '<div class="groupMemoWrap" data-packageid="'+package_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
         var repeatlist = '<div class="groupRepeatWrap" data-packageid="'+package_id+'"></div>';
-        var memberlist = '<div class="groupMembersWrap" data-packageid="'+package_id+'" data-packagename="'+package_name+'" data-packagecapacity="'+package_capacity+'" data-packagetype="'+package_type+'">'+package_memberlist+'</div>'
+        var packagelist = '<div class="groupPackageWrap" data-packageid="'+package_id+'"></div>';
+        var memberlist = '<div class="groupMembersWrap" data-packageid="'+package_id+'" data-packagename="'+package_name+'" data-packagecapacity="'+package_capacity+'" data-packagetype="'+package_type+'">'+package_memberlist+'</div>';
 
         if(package_type == "ONE_TO_ONE") {
             manageimgs = '<div class="_groupmanage"></div>';
@@ -2783,4 +2790,64 @@ function make_new_package_info_to_json_form(){
         jsondata.new_package_group_data.push({"group_id":$(this).attr('data-groupid')});
     });
     return jsondata;
+}
+
+function get_grouplist_in_package(package_id, use, callback){
+    $.ajax({
+        url:'/trainer/get_package_group_list/',
+        data: {"package_id": package_id},
+        type:'GET',
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings){
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            // pters_option_inspector("group_read", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log("get_grouplist_in_package",jsondata);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(use == 'callback'){
+                    callback(jsondata);
+                }
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+
+function draw_grouplist_in_package($targetHTML, jsondata){
+    var htmlToJoin = [];
+    for(var i=0; i<jsondata.group_id.length; i++){
+        htmlToJoin.push(
+                            `<div class="lecture_bubble" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name}'>
+                                <p><span>${jsondata.group_name}</span><img src="/static/user/res/member/icon-x-red.png" style="display:none;"></p>
+                              </div>`
+                        );
+    }
+
+    $targetHTML.html(htmlToJoin.join(""));
 }
