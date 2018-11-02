@@ -51,7 +51,7 @@
         <img src="/static/user/res/PTERS_logo_pure.png" id="logo">
         <div id="information_wrap">
             <img src="/static/user/res/stopmark.png">
-            <p>{% trans "CSRF 검증에 실패했습니다. 요청을 중단하였습니다.<br/> 이 메세지가 보이는 이유는 사이트가 폼을 제출할 때 CSRF 쿠키를 필요로 하기 때문입니다. 이 쿠키는 보안상의 이유로 필요하며, 제3자에 의해 당신의 브라우저가 해킹당하고 있지 않다는 것을 보장합니다.<br/>만약 브라우저 설정에서 쿠키를 비활성화 시켰을 경우, 적어도 이 사이트나 '동일-출처' 요청에 대해서는 활성화 시키십시오." %}</p>
+            <p>{% trans "오류가 발생했습니다.<br/> 이 오류는 제3자에 의해 당신의 브라우저가 해킹당하고 있지 않다는 것을 보장합니다.<br/>만약 브라우저 설정에서 쿠키를 비활성화 시켰을 경우, 적어도 이 사이트나 '동일-출처' 요청에 대해서는 활성화 시키십시오." %}</p>
             <a href="{% url 'index' %}"><button>처음으로</button></a>
             <a href="{% url 'login:logout' %}"><button>로그아웃</button></a>
         </div>

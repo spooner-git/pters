@@ -23,8 +23,8 @@
       [{% for package_info in package_data %}"{{ package_info.ing_package_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "package_end_member_num":
       [{% for package_info in package_data %}"{{ package_info.end_package_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-      "package_group_tb_id"
-      [{% for package_info in package_data %}"{{ package_info.group_tb_id }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+{#      "package_group_tb_id"#}
+{#      [{% for package_info in package_data %}"{{ package_info.group_tb_id }}"{% if forloop.last == False %},{% endif %}{% endfor %}],#}
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }
