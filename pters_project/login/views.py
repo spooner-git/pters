@@ -1012,6 +1012,7 @@ class AddMemberNoEmailView(View):
                 error += ' 그룹의 정원을 초과했습니다.'
             elif error_count > 1:
                 error = '해당 패키지의 '+str(error_count)+'개의 그룹 정원을 초과했습니다.'
+
         if error is None:
             context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
 

@@ -52,6 +52,9 @@
       "groupNoteArray":
       [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.group_note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+      "checkOneToOneArray":
+      [{% for lecture_info in lecture_data %}"{{ lecture_info.lecture_tb.check_one_to_one }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "classInfoArray":
       ["{{ class_data.get_class_type_cd_name}}"],
       "classIdArray":

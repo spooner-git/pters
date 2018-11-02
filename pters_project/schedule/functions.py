@@ -32,12 +32,13 @@ def func_get_lecture_id(class_id, member_id):
 
     for lecture_info in lecture_data:
         try:
-            GroupLectureTb.objects.get(~Q(group_tb__group_type_cd='ONE_TO_ONE'),
+            GroupLectureTb.objects.get(group_tb__group_type_cd='ONE_TO_ONE',
                                        lecture_tb_id=lecture_info.lecture_tb.lecture_id,
                                        use=USE)
-        except ObjectDoesNotExist:
             lecture_id = lecture_info.lecture_tb.lecture_id
             break
+        except ObjectDoesNotExist:
+            lecture_id = None
 
     return lecture_id
 

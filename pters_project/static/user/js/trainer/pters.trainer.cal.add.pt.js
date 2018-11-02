@@ -884,7 +884,7 @@ $(document).ready(function(){
             get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                 var availCount_personal = 0;
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
-                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
+                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.checkOneToOneArray[i] == "1"){
                         availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                     }
                 }
@@ -927,7 +927,7 @@ $(document).ready(function(){
             get_member_lecture_list($(this).attr("data-dbid"), 'callback', function(jsondata){
                 var availCount_personal = 0;
                 for(var i= 0; i<jsondata.availCountArray.length; i++){
-                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
+                    if(jsondata.lectureStateArray[i] == "IP" && jsondata.checkOneToOneArray[i] == "1"){
                         availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                     }
                 }
@@ -1492,7 +1492,7 @@ $(document).ready(function(){
                     get_member_lecture_list(id, 'callback', function(jsondata){
                         var availCount_personal = 0;
                         for(var i= 0; i<jsondata.availCountArray.length; i++){
-                            if(jsondata.lectureStateArray[i] == "IP" && jsondata.groupNameArray[i] == "1:1 레슨"){
+                            if(jsondata.lectureStateArray[i] == "IP" && jsondata.checkOneToOneArray[i] == "1"){
                                 availCount_personal = availCount_personal + Number(jsondata.availCountArray[i]);
                             }
                         }
