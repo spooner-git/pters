@@ -498,6 +498,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).addClass('groupWrap_selected');
             memberlist.addClass('groupMembersWrap_selected').show();
             repeat_list.show();
+            grouplist.show();
             if(bodywidth < 600){
                memo_list.show(); 
             }
@@ -532,6 +533,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         $(this).removeClass('groupWrap_selected');
         memberlist.removeClass('groupMembersWrap_selected').hide();
         repeat_list.hide();
+        grouplist.hide();
         if(bodywidth < 600){
            memo_list.hide();
         }
@@ -2466,7 +2468,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         }else if(package_type == "ONE_TO_ONE"){
             htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }else{
-            htmlToJoin3.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }
     }
 
@@ -2843,8 +2845,8 @@ function draw_grouplist_in_package($targetHTML, jsondata){
     var htmlToJoin = [];
     for(var i=0; i<jsondata.group_id.length; i++){
         htmlToJoin.push(
-                            `<div class="lecture_bubble" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name}'>
-                                <p><span>${jsondata.group_name}</span><img src="/static/user/res/member/icon-x-red.png" style="display:none;"></p>
+                            `<div class="lecture_bubble" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
+                                <p><span>${jsondata.group_name[i]}</span><img src="/static/user/res/member/icon-x-red.png" style="display:none;"></p>
                               </div>`
                         );
     }
