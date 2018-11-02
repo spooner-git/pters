@@ -343,6 +343,7 @@ div._groupmanage img._info_delete{
 	border-right: 1px solid #fe4e65;
 	text-align: left;
 	font-size: 12px;
+	padding: 3px 0 3px 0;
 }
 
 .groupRepeatWrap{
