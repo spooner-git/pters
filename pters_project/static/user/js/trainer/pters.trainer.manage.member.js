@@ -1415,6 +1415,7 @@ $(document).ready(function(){
                 console.log("data", data)
                 send_new_package_info(data, "callback", function(){
                     smart_refresh_member_group_class_list();
+                    close_manage_popup('member_add');
                 });
             }
             
