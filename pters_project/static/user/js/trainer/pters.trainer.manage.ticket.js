@@ -2396,7 +2396,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         var package_createdate = date_format_to_yyyymmdd(jsondata.package_reg_dt[i].split(' ')[0]+' '+jsondata.package_reg_dt[i].split(' ')[1]+' '+jsondata.package_reg_dt[i].split(' ')[2], '-');
         var package_memo = jsondata.package_note[i];
         var package_memberlist = [];
-        var package_capacity = jsondata.package_ing_member_num[i];
+        var package_capacity = jsondata.package_group_num[i];
         var packagestatus = jsondata.package_state_cd_name[i];
         var packagestatus_cd = jsondata.package_state_cd[i];
 
@@ -2412,7 +2412,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
 
         ordernum++;
         var full_package = "";
-        if(package_membernum == package_capacity && package_type == "NORMAL"){
+        if(package_membernum >= package_capacity && package_type == "NORMAL"){
             var full_package = "red_color_text";
         }
 

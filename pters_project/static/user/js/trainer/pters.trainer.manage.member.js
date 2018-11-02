@@ -1722,7 +1722,7 @@ function float_btn_managemember(option){
             shade_index(100);
         }
 
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
     }else if(option == "solo_ticket"){
         initialize_add_member_sheet();
@@ -2010,7 +2010,7 @@ function pc_add_member(option){
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
 
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
         $('body').css('overflow-y','hidden');
