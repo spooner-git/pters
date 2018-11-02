@@ -2156,6 +2156,7 @@ $(document).on("change", '#lecture_list_to_package', function(e){
     add_lecture_bubble_to_make_package("#selected_lectures_to_package_wrap", selected_groupid, selected_groupname);
     $(this).find(".disabled_option").trigger("click");
     $('#lecture_list_to_package option:eq(0)').prop('selected', 'selected');
+    $(this).find("option[value='"+selected_groupid+"']").css({"background":"#cccccc"});
     check_dropdown_selected();
 });
 
@@ -2172,7 +2173,7 @@ function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
             lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
         });
         $('#form_package_groupids').val(lecture_bubbles_groupid_array);
-        $('#selected_lectures_to_package_num').text($(`div.lecture_bubble`).length+'개 선택됨' )
+        $('#selected_lectures_to_package_num').text($(`div.lecture_bubble`).length+'개 선택됨' );
     }
 }
 
@@ -2781,6 +2782,5 @@ function make_new_package_info_to_json_form(){
     $('#selected_lectures_to_package_wrap .lecture_bubble').each(function(){
         jsondata.new_package_group_data.push({"group_id":$(this).attr('data-groupid')});
     });
-    console.log("jsondata");
     return jsondata;
 }

@@ -1376,7 +1376,7 @@ $(document).ready(function(){
         var selector_ADD_GROUP_NEW = $('._ADD_GROUP_NEW');
         var selector_ADD_GROUPMEMBER_NEW = $('._ADD_GROUPMEMBER_NEW');
         var selector_ADD_PACKAGE_NEW = $('._ADD_PACKAGE_NEW');
-        if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none" && selector_ADD_PACKAGE_NEW.css('display') == "none"){
+        if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none" && (selector_ADD_PACKAGE_NEW.css('display') == "none"||selector_ADD_PACKAGE_NEW.css('display') == undefined) ){
             var id_search_confirm = $('#id_search_confirm').val();
             check_dropdown_selected();
             if(select_all_check == true){
