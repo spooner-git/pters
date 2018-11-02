@@ -2021,7 +2021,8 @@ function pc_add_member(option){
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
-        get_single_package_list("callback", function(jsondata){
+        get_group_ing_list('callback', function(jsondata){
+            console.log("get_group_ing_list", jsondata)
             fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
         });
         selector_page_addmember_input_wrap.css({'height':350+'px'});

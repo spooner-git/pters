@@ -2207,7 +2207,8 @@ function get_member_group_class_end_list(use, callback){
 $(document).on("change", '#lecture_list_to_package', function(e){
     e.stopPropagation();
     var selected_groupid = $(this).val();
-    var selected_groupname = $(this).find("option[value='"+$(this).val()+"']").text()
+    var selected_groupname = $(this).find("option[value='"+$(this).val()+"']").text();
+    console.log("selected_groupname", selected_groupname)
     add_lecture_bubble_to_make_package("#selected_lectures_to_package_wrap", selected_groupid, selected_groupname);
     $(this).find(".disabled_option").trigger("click");
     $('#lecture_list_to_package option:eq(0)').prop('selected', 'selected');
@@ -2216,7 +2217,7 @@ $(document).on("change", '#lecture_list_to_package', function(e){
 
 function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
     var $targetHTML = $(targetSelector);
-    var bubble = `<div class="lecture_bubble" data-groupid=${groupid} data-groupname=${groupname}>
+    var bubble = `<div class="lecture_bubble" data-groupid=${groupid} data-groupname='${groupname}'>
                     <p><span>${groupname}</span><img src="/static/user/res/member/icon-x-red.png"></p>
                   </div>`;
     if($targetHTML.find(`div.lecture_bubble[data-groupid=${groupid}]`).length == 0 ){
@@ -2246,50 +2247,50 @@ $('#packagename').keyup(function(){
 
 
 
-function get_single_package_list(use, callback){
-    $.ajax({
-        url:'/trainer/get_single_package_list/',
-        dataType : 'html',
+// function get_single_package_list(use, callback){
+//     $.ajax({
+//         url:'/trainer/get_single_package_list/',
+//         dataType : 'html',
 
-        beforeSend:function(){
-            beforeSend();
-        },
+//         beforeSend:function(){
+//             beforeSend();
+//         },
 
-        //보내기후 팝업창 닫기
-        complete:function(){
-            completeSend();
-        },
+//         //보내기후 팝업창 닫기
+//         complete:function(){
+//             completeSend();
+//         },
 
-        //통신성공시 처리
-        success:function(data){
-            var jsondata = JSON.parse(data);
-            if(jsondata.messageArray.length>0){
-                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray);
-            }else{
-               console.log("get_single_package_list", jsondata);
-               if(use == "callback"){
-                   callback(jsondata);
-               }
-            }
-        },
+//         //통신성공시 처리
+//         success:function(data){
+//             var jsondata = JSON.parse(data);
+//             if(jsondata.messageArray.length>0){
+//                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+//                 scrollToDom($('#page_addmember'));
+//                 $('#errorMessageBar').show();
+//                 $('#errorMessageText').text(jsondata.messageArray);
+//             }else{
+//                console.log("get_single_package_list", jsondata);
+//                if(use == "callback"){
+//                    callback(jsondata);
+//                }
+//             }
+//         },
 
-        //통신 실패시 처리
-        error:function(){
-            $('#errorMessageBar').show();
-            $('#errorMessageText').text('통신 에러: 관리자 문의');
-        }
-    });
-}
+//         //통신 실패시 처리
+//         error:function(){
+//             $('#errorMessageBar').show();
+//             $('#errorMessageText').text('통신 에러: 관리자 문의');
+//         }
+//     });
+// }
 
 
 function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, jsondata){
     var $targetHTML = $(targetHTML);
     var html = ['<option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>'];
-    for(var i=0; i<jsondata.package_id.length; i++){
-        html.push(`<option value="${jsondata.package_id[i]}">[${jsondata.package_type_cd_nm[i]}] ${jsondata.package_name[i]}</option>`);
+    for(var i=0; i<jsondata.group_id.length; i++){
+        html.push(`<option value="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</option>`);
     }
 
     $targetHTML.html(html.join(""));
