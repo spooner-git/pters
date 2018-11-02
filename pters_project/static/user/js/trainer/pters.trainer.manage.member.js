@@ -1364,7 +1364,6 @@ $(document).ready(function(){
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
-        get_package_ing_list();
         $('#form_member_groupid, #form_member_groupid_no_email').val($(this).val().split('/')[0]);
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
@@ -1743,6 +1742,9 @@ function float_btn_managemember(option){
 
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
+        get_single_package_list("callback", function(jsondata){
+            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
+        });
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#page_addmember').show();
         $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
@@ -2019,6 +2021,9 @@ function pc_add_member(option){
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
+        get_single_package_list("callback", function(jsondata){
+            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
+        });
         selector_page_addmember_input_wrap.css({'height':350+'px'});
 
         $('#addpackagename').text('세트로 만들고자 하는 기존 수강권을 선택 해주세요.');
