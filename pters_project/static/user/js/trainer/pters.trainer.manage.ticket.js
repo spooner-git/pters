@@ -2153,10 +2153,10 @@ $(document).on("change", '#lecture_list_to_package', function(e){
     e.stopPropagation();
     var selected_groupid = $(this).val();
     var selected_groupname = $(this).find("option[value='"+$(this).val()+"']").text();
-    console.log("selected_groupname", selected_groupname)
     add_lecture_bubble_to_make_package("#selected_lectures_to_package_wrap", selected_groupid, selected_groupname);
     $(this).find(".disabled_option").trigger("click");
     $('#lecture_list_to_package option:eq(0)').prop('selected', 'selected');
+    check_dropdown_selected();
 });
 
 
@@ -2172,6 +2172,7 @@ function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
             lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
         });
         $('#form_package_groupids').val(lecture_bubbles_groupid_array);
+        $('#selected_lectures_to_package_num').text($(`div.lecture_bubble`).length+'개 선택됨' )
     }
 }
 
@@ -2184,6 +2185,7 @@ $(document).on("click", "div.lecture_bubble img", function(e){
         lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
     });
     $('#form_package_groupids').val(lecture_bubbles_groupid_array);
+    check_dropdown_selected();
 });
 
 $('#packagename').keyup(function(){
@@ -2362,12 +2364,12 @@ function package_ListHtml(option, jsondata){ //option : current, finished
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');
-            $targetHTML = $('#currentGroupList');
+            $targetHTML = $('#currentPackageList');
             text_membernum = "진행중인 그룹 ";
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
-            $targetHTML = $('#finishedGroupList');
+            $targetHTML = $('#finishedPackageList');
             text_membernum = "종료된 그룹 ";
             break;
     }
@@ -2481,7 +2483,7 @@ function get_package_member_list(package_id, use, callback){
 
         beforeSend:function(xhr){
             beforeSend();
-            pters_option_inspector("group_read", xhr, "");
+            // pters_option_inspector("group_read", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -2539,7 +2541,7 @@ function get_end_package_member_list(package_id, use, callback){
 
         beforeSend:function(xhr){
             beforeSend();
-            pters_option_inspector("group_read", xhr, "");
+            // pters_option_inspector("group_read", xhr, "");
         },
 
         //보내기후 팝업창 닫기
@@ -2695,7 +2697,7 @@ function packageMemberListSet(package_id, jsondata){
 
     var html = htmlToJoin.join('') + addButton;
     if(jsondata.db_id.length == 0){
-        if($('#currentGroupList').css('display') == "block"){
+        if($('#currentPackageList').css('display') == "block"){
             if(grouptype == 'EMPTY') {
                 html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
             }else if(grouptype == 'NORMAL'){
@@ -2708,3 +2710,71 @@ function packageMemberListSet(package_id, jsondata){
 }
 //패키지 소속 회원 목록을 그룹에 그리기
 
+
+//새로운 패키지를 만든다
+function send_new_package_info(packagedata, use, callback){
+    var bodywidth = window.innerWidth;
+    $.ajax({
+        url:'/trainer/add_package_info/',
+        data: packagedata,
+        type:'POST',
+        dataType : 'html',
+
+        beforeSend:function(xhr){
+            beforeSend();
+            // pters_option_inspector("group_read", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log("add_package_info",jsondata);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                if(use == 'callback'){
+                    callback(jsondata);
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//새로운 패키지를 만든다
+function make_new_package_info_to_json_form(){
+    //{ “package_info” : [  {“package_name”: xx , “package_note”:xx}], “new_package_group_data” : [{“group_id”: xx}, {“group_id”:xx}, ….]}
+    var groupids = [];
+    $('#selected_lectures_to_package_wrap .lecture_bubble').each(function(){
+        groupids.push({"group_id":$(this).attr('data-groupid')});
+    });
+
+    var jsondata = {
+                    "package_info":[{"package_name":$('#packagename').val(), "package_note":""}],
+                    "new_package_group_data":groupids
+                    };
+    console.log("jsondata");
+    return jsondata;
+}
