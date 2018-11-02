@@ -2144,6 +2144,33 @@ function shiftPtGroupClassList(type){
     }
 }
 
+//진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
+function shiftPackageList(type){
+    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
+    switch(type){
+        case "current":
+            get_package_ing_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml('current', jsondata);
+                $('#currentGroupList').html(group_class_Html);
+            });
+            $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
+            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
+            $('._GROUP_THEAD').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            break;
+        case "finished":
+            get_package_end_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml('finished', jsondata);
+                $('#finishedGroupList').html(group_class_Html);
+            });
+            $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
+            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
+            $('._GROUP_THEAD').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            break;
+    }
+}
+
 
 //간편 가격입력
 function priceInput(price, type, selector){

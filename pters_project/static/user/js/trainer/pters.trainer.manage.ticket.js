@@ -760,62 +760,7 @@ function get_group_ing_list(use, callback){
     });
 }
 
-//서버로부터 패키지 목록 가져오기
-function get_package_ing_list(use, callback){
-    var bodywidth = window.innerWidth;
-    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
-    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
-    $.ajax({
-        url:'/trainer/get_package_ing_list/',
 
-        dataType : 'html',
-
-        beforeSend:function(){
-            beforeSend();
-        },
-
-        //보내기후 팝업창 닫기
-        complete:function(){
-            completeSend();
-        },
-
-        //통신성공시 처리
-        success:function(data){
-            var jsondata = JSON.parse(data);
-            console.log("get_package_ing_list", jsondata)
-            if(jsondata.messageArray.length>0){
-                //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray);
-            }else{
-                $('#errorMessageBar').hide();
-                $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
-                //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-
-                if(use == "callback"){
-                    callback(jsondata);
-                }else{
-                    //group_class_ListHtml('current',jsondata)
-                }
-
-                console.log('success');
-            }
-        },
-
-        //통신 실패시 처리
-        error:function(){
-            $('#errorMessageBar').show();
-            $('#errorMessageText').text('통신 에러: 관리자 문의');
-        }
-    });
-}
-//서버로부터 그룹 목록 가져오기
 
 //서버로부터 그룹 목록 가져오기
 function get_group_end_list(use, callback){
@@ -2285,6 +2230,119 @@ $('#packagename').keyup(function(){
 //     });
 // }
 
+//서버로부터 패키지 목록 가져오기
+function get_package_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_package_ing_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log("get_package_ing_list", jsondata);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //group_class_ListHtml('current',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//서버로부터 그룹 목록 가져오기
+//서버로부터 그룹 목록 가져오기
+function get_package_end_list(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_package_end_list/',
+
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log("get_package_end_list", jsondata);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //group_class_ListHtml('finished',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//서버로부터 그룹 목록 가져오기
+
 
 function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, jsondata){
     var $targetHTML = $(targetHTML);
@@ -2397,7 +2455,6 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         }else if(package_type == "ONE_TO_ONE"){
             htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }
-        
     }
 
     if(htmlToJoin.length == 0){
@@ -2435,26 +2492,26 @@ function get_package_member_list(package_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log("get_package_member", jsondata)
+            console.log("get_package_member", jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'))
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray)
+                $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                $('#errorMessageBar').hide()
-                $('#errorMessageText').text('')
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 if(use == 'callback'){
-                    callback(jsondata)
+                    callback(jsondata);
                 }else{
-                    packageMemberListSet(package_id, jsondata)
-                    $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1)
+                    packageMemberListSet(package_id, jsondata);
+                    $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
                 }
 
                 console.log('success');
@@ -2466,7 +2523,7 @@ function get_package_member_list(package_id, use, callback){
         //통신 실패시 처리
         error:function(){
             $('#errorMessageBar').show();
-            $('#errorMessageText').text('통신 에러: 관리자 문의')
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
         },
     })
 }
@@ -2475,7 +2532,7 @@ function get_package_member_list(package_id, use, callback){
 function get_end_package_member_list(package_id, use, callback){
     var bodywidth = window.innerWidth;
     $.ajax({
-        url:'/trainer/get_end_group_member/',
+        url:'/trainer/get_end_package_member/',
         data: {"package_id":package_id},
         type:'GET',
         dataType : 'html',
@@ -2496,23 +2553,23 @@ function get_end_package_member_list(package_id, use, callback){
             console.log(jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'))
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray)
+                $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                $('#errorMessageBar').hide()
-                $('#errorMessageText').text('')
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 if(use == 'callback'){
-                    callback(jsondata)
+                    callback(jsondata);
                 }else{
-                    packageMemberListSet(package_id, jsondata)
-                    $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1)
+                    packageMemberListSet(package_id, jsondata);
+                    $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
                 }
 
                 console.log('success');
@@ -2523,14 +2580,14 @@ function get_end_package_member_list(package_id, use, callback){
 
         //통신 실패시 처리
         error:function(){
-            $('#errorMessageBar').show()
-            $('#errorMessageText').text('통신 에러: 관리자 문의')
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
         },
     })
 }
 //패키지 소속 회원 목록을 그룹에 뿌리기
 
-//패키지 소속 회원 목록을 그룹에 그리기 
+//패키지 소속 회원 목록을 그룹에 그리기
 function packageMemberListSet(package_id, jsondata){
     var htmlToJoin = [];
     if(bodywidth < 600){
@@ -2597,8 +2654,8 @@ function packageMemberListSet(package_id, jsondata){
             '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'" title="'+groupmember_id+'">'+groupmember_id+'</div>' +
             '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
             '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
-            '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
-            '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
+            '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate, '.')+'</div>' +
+            '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate, '.')+'</div>' +
             '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>';
 
             if(grouptype!='ONE_TO_ONE'){
@@ -2650,3 +2707,4 @@ function packageMemberListSet(package_id, jsondata){
     $('div.groupMembersWrap[data-packageid="'+package_id+'"]').html(EMPTY_EXPLAIN+html);
 }
 //패키지 소속 회원 목록을 그룹에 그리기
+
