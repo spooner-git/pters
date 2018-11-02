@@ -11,7 +11,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, USE, TO_TRAINEE_LESSON
 
 from login.models import CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
-from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb
+from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb, PackageGroupTb
 from .models import MemberLectureTb
 
 
@@ -265,20 +265,18 @@ def func_get_class_lecture_count(context, class_id, user_id):
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
 
-        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+        #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+        #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+        #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
         query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                               " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
                               "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
 
         lecture_list = ClassLectureTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id,
-                                 lecture_tb__member_id=user_id,
-                                 lecture_tb__use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                               lecture_count=RawSQL(query_lecture_count, [])
-                                                               ).order_by('lecture_tb__start_date')
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user_id,
+                                             lecture_tb__use=USE).annotate(lecture_count=RawSQL(query_lecture_count, [])
+                                                                           ).order_by('lecture_tb__start_date')
 
         # lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
         #                                                      ).filter(class_tb_id=class_id,
@@ -290,29 +288,32 @@ def func_get_class_lecture_count(context, class_id, user_id):
             lecture_info = lecture_list_info.lecture_tb
 
             if lecture_list_info.lecture_count > 0:
+                package_group_data = PackageGroupTb.objects.select_related(
+                    'group_tb').filter(package_tb_id=lecture_info.package_tb_id)
                 # group_lecture_check = 0
-                if lecture_list_info.group_check == 'NORMAL':
-                    group_check = 1
-                elif lecture_list_info.group_check == 'EMPTY':
-                    group_check = 2
-                else:
-                    group_check = 0
+                for package_group_info in package_group_data:
+                    if package_group_info.group_tb.group_type_cd == 'NORMAL':
+                        group_check = 1
+                    elif package_group_info.group_tb.group_type_cd == 'EMPTY':
+                        group_check = 2
+                    else:
+                        group_check = 0
 
-                if group_check == 0:
-                    if lecture_info.state_cd == 'IP':
-                        lecture_reg_count_sum += lecture_info.lecture_reg_count
-                        lecture_rem_count_sum += lecture_info.lecture_rem_count
-                        lecture_avail_count_sum += lecture_info.lecture_avail_count
-                else:
-                    if lecture_info.state_cd == 'IP':
-                        if group_check == 2:
-                            class_lecture_reg_count_sum += lecture_info.lecture_reg_count
-                            class_lecture_rem_count_sum += lecture_info.lecture_rem_count
-                            class_lecture_avail_count_sum += lecture_info.lecture_avail_count
-                        else:
-                            group_lecture_reg_count_sum += lecture_info.lecture_reg_count
-                            group_lecture_rem_count_sum += lecture_info.lecture_rem_count
-                            group_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                    if group_check == 0:
+                        if lecture_info.state_cd == 'IP':
+                            lecture_reg_count_sum += lecture_info.lecture_reg_count
+                            lecture_rem_count_sum += lecture_info.lecture_rem_count
+                            lecture_avail_count_sum += lecture_info.lecture_avail_count
+                    else:
+                        if lecture_info.state_cd == 'IP':
+                            if group_check == 2:
+                                class_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                                class_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                                class_lecture_avail_count_sum += lecture_info.lecture_avail_count
+                            else:
+                                group_lecture_reg_count_sum += lecture_info.lecture_reg_count
+                                group_lecture_rem_count_sum += lecture_info.lecture_rem_count
+                                group_lecture_avail_count_sum += lecture_info.lecture_avail_count
 
     if lecture_reg_count_sum > 0:
         lecture_flag = True

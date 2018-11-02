@@ -3691,7 +3691,7 @@ class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
         package_id = self.request.GET.get('package_id', '')
         error = None
 
-        group_data = PackageGroupTb.objects.select_related(
+        package_group_data = PackageGroupTb.objects.select_related(
             'group_tb').filter(class_tb_id=class_id, package_tb_id=package_id, group_tb__use=USE,
                                use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
 
@@ -3700,7 +3700,7 @@ class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['group_data'] = group_data
+        context['package_group_data'] = package_group_data
 
         return context
 

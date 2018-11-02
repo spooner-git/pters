@@ -247,7 +247,7 @@ def func_get_member_ing_list(class_id, user_id):
 
                 if lecture_info.use == USE:
                     if lecture_info.state_cd == 'IP':
-                        if check_one_to_one == 0:
+                        if check_one_to_one != 0:
                             member_data.group_reg_count += lecture_info.lecture_reg_count
                             member_data.group_rem_count += lecture_info.lecture_rem_count
                             member_data.group_avail_count += lecture_info.lecture_avail_count
@@ -1306,13 +1306,6 @@ def func_get_lecture_list(context, class_id, member_id):
             # lecture_info.lecture_finish_count = ScheduleTb.objects.filter(class_tb_id=class_id,
             #                                                               lecture_tb_id=lecture_info.lecture_id,
             #                                                               state_cd='PE').count()
-            check_one_to_one = PackageGroupTb.objects.select_related(
-                'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
-                                   group_tb__group_type_cd='ONE_TO_ONE').count()
-            if check_one_to_one > 0:
-                lecture_info.check_one_to_one = 1
-            else:
-                lecture_info.check_one_to_one = 0
 
             if lecture_info.package_tb.package_type_cd == 'NORMAL':
                 group_check = 1
