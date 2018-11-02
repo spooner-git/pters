@@ -2183,7 +2183,7 @@ function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
     }
 }
 
-$(document).on("click", "div.lecture_bubble img", function(e){
+$(document).on("click", "#selected_lectures_to_package_wrap div.lecture_bubble img", function(e){
     e.stopPropagation();
     var $thisBubble = $(this).parents("div.lecture_bubble");
     $thisBubble.remove();
