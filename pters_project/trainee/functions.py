@@ -449,7 +449,15 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                         CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd).common_cd_nm
                 except ObjectDoesNotExist:
                     lecture_info_data.group_type_cd_name = ''
-                lecture_info_data.group_member_num = 'x'
+                if lecture_info.lecture_tb.package_tb.package_group_num == 1:
+                    try:
+                        package_group_info = PackageGroupTb.objects.get(
+                            package_tb_id=lecture_info.lecture_tb.package_tb_id)
+                        lecture_info_data.group_member_num = package_group_info.group_tb.member_num
+                    except ObjectDoesNotExist:
+                        lecture_info_data.group_member_num = 'x'
+                else:
+                    lecture_info_data.group_member_num = 'x'
                 lecture_info_data.group_note = lecture_info.lecture_tb.package_tb.note
                 lecture_info_data.group_state_cd = lecture_info.lecture_tb.package_tb.state_cd
                 try:
@@ -485,7 +493,7 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
     auth_cd_list = auth_cd.split('/')
 
     if error is None:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
+        lecture_list = ClassLectureTb.objects.select_related('lecture_tb__package_tb').filter(class_tb_id=class_id,
                                                      lecture_tb__member_id=member_id,
                                                      use=USE).order_by('-lecture_tb__start_date')
 
@@ -519,23 +527,24 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
 
                 lecture_counts += 1
 
-                group_info = None
-                group_check = 0
+                # group_info = None
+                # group_check = 0
+                # try:
+                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
+                # except ObjectDoesNotExist:
+                #     group_check = 1
+
+                # if group_check == 0:
+                lecture_info_data.group_name = lecture_info_data.lecture_tb.package_tb.name
+                lecture_info_data.group_type_cd = lecture_info_data.lecture_tb.package_tb.group_type_cd
+                # lecture_info_data.group_member_num = lecture_info_data.lecture_tb.package_tb.member_num
+                lecture_info_data.group_note = lecture_info_data.lecture_tb.package_tb.note
+                lecture_info_data.group_state_cd = lecture_info_data.lecture_tb.package_tb.state_cd
                 try:
-                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
+                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info_data.lecture_tb.package_tb.state_cd)
+                    lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
                 except ObjectDoesNotExist:
-                    group_check = 1
-                if group_check == 0:
-                    lecture_info_data.group_name = group_info.group_tb.name
-                    lecture_info_data.group_type_cd = group_info.group_tb.group_type_cd
-                    lecture_info_data.group_member_num = group_info.group_tb.member_num
-                    lecture_info_data.group_note = group_info.group_tb.note
-                    lecture_info_data.group_state_cd = group_info.group_tb.state_cd
-                    try:
-                        state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
-                        lecture_info_data.group_state_cd_nm = state_cd_nm.common_cd_nm
-                    except ObjectDoesNotExist:
-                        error = '회원 정보를 불러오지 못했습니다.'
+                    error = '회원 정보를 불러오지 못했습니다.'
 
                 output_lecture_list.append(lecture_info_data)
 

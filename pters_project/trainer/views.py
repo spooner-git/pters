@@ -1618,26 +1618,24 @@ def export_excel_member_info_logic(request):
 
     # 수강 정보 불러 오기
     if error is None:
-        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
-        query_group_name = "select NAME from GROUP_TB WHERE ID = " \
-                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                           "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+        #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+        #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+        #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_group_name = "select NAME from GROUP_TB WHERE ID = " \
+        #                    "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+        #                    "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+        #                    "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
         query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                               "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
                               "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
 
         lecture_list = ClassLectureTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                 lecture_tb__member_id=member_id,
-                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                        group_name=RawSQL(query_group_name, []),
-                                                                        lecture_count=RawSQL(query_lecture_count, [])
-                                                                        ).order_by('-lecture_tb__start_date',
-                                                                                   'lecture_tb__reg_dt')
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
+                                             lecture_tb__use=USE,
+                                             use=USE).annotate(lecture_count=RawSQL(query_lecture_count, [])
+                                                               ).order_by('-lecture_tb__start_date',
+                                                                          'lecture_tb__reg_dt')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -1693,10 +1691,12 @@ def export_excel_member_info_logic(request):
                     np_lecture_counts += 1
                 lecture_counts += 1
 
-                if lecture_list_info.group_check == 'NORMAL':
+                if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
-                elif lecture_list_info.group_check == 'EMPTY':
+                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                     group_check = 2
+                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
 
@@ -1707,9 +1707,11 @@ def export_excel_member_info_logic(request):
                     if group_check == 0:
                         lecture_list_info.group_info = '1:1 레슨'
                     elif group_check == 1:
-                        lecture_list_info.group_info = '[그룹]'+lecture_list_info.group_name
+                        lecture_list_info.group_info = '[그룹]'+lecture_info.package_tb.name
+                    elif group_check == 2:
+                        lecture_list_info.group_info = '[클래스]'+lecture_info.package_tb.name
                     else:
-                        lecture_list_info.group_info = '[클래스]'+lecture_list_info.group_name
+                        lecture_list_info.group_info = '[패키지]'+lecture_info.package_tb.name
 
                 if '\r\n' in lecture_info.note:
                     lecture_info.note = lecture_info.note.replace('\r\n', ' ')
@@ -2250,12 +2252,12 @@ def refund_lecture_info_logic(request):
     if error is None:
         if input_refund_price > lecture_info.price:
             error = '환불 금액이 등록 금액보다 많습니다.'
-
-    if error is None:
-        try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
+    #
+    # if error is None:
+    #     try:
+    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+    #     except ObjectDoesNotExist:
+    #         group_info = None
     if error is None:
         now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
@@ -2567,12 +2569,11 @@ def delete_group_info_logic(request):
         for package_data_info in package_data:
             package_data_info.use = 0
             package_data_info.save()
-            package_group_count = PackageGroupTb.objects.filter(package_tb_id=package_data_info.package_tb_id,
-                                                                use=USE).count()
-            if package_group_count == 0:
+            package_data_info.package_tb.package_group_num -= 1
+            if package_data_info.package_tb.package_group_num == 0:
                 package_data_info.package_tb.state_cd = 'PE'
                 package_data_info.package_tb.use = UN_USE
-                package_data_info.package_tb.save()
+            package_data_info.package_tb.save()
 
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,

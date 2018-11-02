@@ -133,10 +133,10 @@ def get_setting_info(request):
             for class_lecture_info in class_lecture_data:
                 lecture_info = class_lecture_info.lecture_tb
 
-                try:
-                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                except ObjectDoesNotExist:
-                    group_info = None
+                # try:
+                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                # except ObjectDoesNotExist:
+                #     group_info = None
 
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                           end_dt__lte=now, use=USE).exclude(state_cd='PE')
