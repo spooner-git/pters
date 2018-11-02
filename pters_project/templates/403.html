@@ -1,0 +1,59 @@
+{% load i18n %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable:no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        body{
+            background-image:url('/static/user/res/main/bg-image-brick-pc-dark.jpg');
+        }
+
+        #entire_wrap{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform:translate(-50%,-50%);
+            width: 90%;
+            max-width: 400px;
+        }
+        #logo{
+            height: 20px;
+            margin-bottom: 5px;
+        }
+
+        #information_wrap{
+            background: #f4f4f4;
+            border: 1px solid #fe4e65;
+            border-radius: 5px;
+            padding: 30px 15px 30px 15px;
+            text-align: center;
+        }
+        #information_wrap>img{
+            height: 30px;
+        }
+        #information_wrap p{
+            margin-top: 30px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        #information_wrap button{
+            background: #fe4e65;
+            color: #ffffff;
+            border: 1px solid #fe4e65;
+            cursor: pointer;
+            padding:4px 2px 4px 2px;
+        }
+    </style>
+</head>
+{% block content %}
+    <div id="entire_wrap">
+        <img src="/static/user/res/PTERS_logo_pure.png" id="logo">
+        <div id="information_wrap">
+            <img src="/static/user/res/stopmark.png">
+            <p>{% trans "CSRF 검증에 실패했습니다. 요청을 중단하였습니다.<br/> 이 메세지가 보이는 이유는 사이트가 폼을 제출할 때 CSRF 쿠키를 필요로 하기 때문입니다. 이 쿠키는 보안상의 이유로 필요하며, 제3자에 의해 당신의 브라우저가 해킹당하고 있지 않다는 것을 보장합니다.<br/>만약 브라우저 설정에서 쿠키를 비활성화 시켰을 경우, 적어도 이 사이트나 '동일-출처' 요청에 대해서는 활성화 시키십시오." %}</p>
+            <a href="{% url 'index' %}"><button>처음으로</button></a>
+            <a href="{% url 'login:logout' %}"><button>로그아웃</button></a>
+        </div>
+    </div>
+{% endblock %}

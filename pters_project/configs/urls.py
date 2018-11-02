@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^stats/', include('stats.urls', namespace='stats')),
     url(r'^board/', include('board.urls', namespace='board')),
     # url(r'^404_page/$', views.Error404View.as_view(), name='404_page'),
+    url(r'^403\.html$', TemplateView.as_view(template_name='403.html', content_type='text/html')),
     url(r'^404\.html$', TemplateView.as_view(template_name='404.html', content_type='text/html')),
     # url(r'^500_page/$', views.Error500View.as_view(), name='500_page'),
     url(r'^500\.html$', TemplateView.as_view(template_name='500.html', content_type='text/html')),
