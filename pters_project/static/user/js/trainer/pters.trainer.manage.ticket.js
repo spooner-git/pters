@@ -2720,7 +2720,10 @@ function send_new_package_info(packagedata, use, callback){
         type:'POST',
         dataType : 'html',
 
-        beforeSend:function(xhr){
+        beforeSend:function(xhr, settings){
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
             beforeSend();
             // pters_option_inspector("group_read", xhr, "");
         },
