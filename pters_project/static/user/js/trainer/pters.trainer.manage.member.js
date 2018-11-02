@@ -1756,7 +1756,8 @@ function float_btn_managemember(option){
 
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
-        get_single_package_list("callback", function(jsondata){
+        get_group_ing_list('callback', function(jsondata){
+            console.log("get_group_ing_list", jsondata)
             fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
         });
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
