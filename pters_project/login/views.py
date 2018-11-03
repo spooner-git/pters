@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, logout, login, get_user_model, upd
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.template.loader import render_to_string
@@ -1005,6 +1006,7 @@ class AddMemberNoEmailView(View):
             package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
             for package_group_info in package_group_data:
                 if package_group_info.group_tb.group_type_cd == 'NORMAL':
+
                     if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
                         error = package_group_info.group_tb.name
                         error_count += 1

@@ -2689,7 +2689,7 @@ def add_group_member_logic(request):
             if error is None:
                 # group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
                 group_counter = group_info.ing_group_member_num
-                group_counter += len(json_loading_data['new_member_data']) + len(json_loading_data['old_member_data'])
+                group_counter += len(json_loading_data['new_member_data'])
                 if group_info.group_type_cd == 'NORMAL':
                     if group_counter > group_info.member_num:
                         error = '그룹 정원을 초과했습니다.'
@@ -2698,12 +2698,6 @@ def add_group_member_logic(request):
         if group_info.group_type_cd == 'NORMAL':
             if json_loading_data['old_member_data'] != '[]':
                 for json_info in json_loading_data['old_member_data']:
-                    member_info = None
-                    try:
-                        member_info = MemberTb.objects.get(member_id=json_info['db_id'])
-                    except ObjectDoesNotExist:
-                        error = '회원 정보를 불러오지 못했습니다.'
-
                     member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
 
                     for member_lecture_info in member_lecture_data:
@@ -2714,9 +2708,11 @@ def add_group_member_logic(request):
                         except ObjectDoesNotExist:
                             lecture_group_check = 1
                         if group_info.group_type_cd == 'NORMAL':
-                            if lecture_group_check == 0:
-                                error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다.'
-                                break
+                            if lecture_group_check == 1:
+                                if group_info.ing_group_member_num >= group_info.member_num:
+                                    error = '그룹 정원을 초과했습니다.'
+                                    break
+
                     if error is not None:
                         break
 
@@ -2817,7 +2813,6 @@ def delete_group_member_info_logic(request):
                                                                            ).filter(group_tb_id=group_id,
                                                                                     lecture_tb__member_id=user.id,
                                                                                     use=USE)
-            print(str(member_id_info))
             if error is None:
                 try:
                     with transaction.atomic():

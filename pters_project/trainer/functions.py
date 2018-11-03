@@ -894,7 +894,6 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
     if error is None:
         try:
             with transaction.atomic():
-
                 lecture_info = LectureTb(member_id=member_id,
                                          package_tb_id=package_id,
                                          lecture_reg_count=counts, lecture_rem_count=lecture_rem_count,
@@ -922,47 +921,63 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
 
                 if package_id != '' and package_id is not None:
 
+                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                        "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+
                     lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
                     lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
                     lecture_info.package_tb.save()
+                    error_count = 0
                     package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id, use=USE)
                     for package_group_info in package_group_data:
                         if package_group_info.group_tb.group_type_cd == 'NORMAL':
                             if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
-                                error = '그룹 정원을 초과했습니다.'
-                                raise InternalError
+
+                                group_lecture_counter = GroupLectureTb.objects.filter(
+                                    group_tb_id=package_group_info.group_tb_id, lecture_tb__state_cd='IP',
+                                    lecture_tb__member_id=member_id,
+                                    lecture_tb__use=USE,
+                                    use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                                         [])).filter(class_count__gte=1).count()
+                                print(str(group_lecture_counter))
+                                if group_lecture_counter == 0:
+                                    error = package_group_info.group_tb.name
+                                    error_count += 1
+
                         group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
                                                             lecture_tb_id=lecture_info.lecture_id, use=USE)
                         group_lecture_info.save()
-                        package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
-                                                                                             package_group_info.group_tb_id, user_id))
-                        package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
-                                                                                             package_group_info.group_tb_id, user_id))
-                        package_group_info.group_tb.save()
-                        # package_lecture_data = ClassLectureTb.objects.select_related(
-                        #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
-                        #                                      lecture_tb__package_tb_id=group_id, use=USE)
-                        # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
-                        # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
-                        # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
-                        # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
-                        # package_group_info.package_tb.save()
-                        # package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
-                        # package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
-                        # package_group_info.package_tb.save()
+
+                    if error_count == 1:
+                        error += ' 그룹의 정원을 초과했습니다.'
+                    elif error_count > 1:
+                        error = '해당 패키지의 ' + str(error_count) + '개의 그룹 정원을 초과했습니다.'
+                    if error is not None:
+                        raise InternalError
 
         except ValueError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[1]'
         except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[2]'
         except TypeError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[3]'
         except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[4]'
         except InternalError:
             error = error
 
     if error is None:
+        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id, use=USE)
+        for package_group_info in package_group_data:
+            package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                                                  package_group_info.group_tb_id,
+                                                                                                  user_id))
+            package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                                                  package_group_info.group_tb_id,
+                                                                                                  user_id))
+            package_group_info.group_tb.save()
+
         member_name = ''
         try:
             user_info = MemberTb.objects.get(member_id=member_id)
@@ -1399,8 +1414,7 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
         #                                                    lecture_tb_id=lecture_info.lecture_tb_id,
         #                                                    auth_cd='VIEW', use=USE).count()
         # if class_lecture_test == 0:
-        #     error = '내가 볼수 없는 회원'
-
+        #     error = '내가 볼수 없는 회원'group_lecture_id
         if error is None:
             member_info.lecture_tb = lecture_info.lecture_tb
             if member_info.sex is None:
@@ -1448,20 +1462,20 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
                         if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
                                 < lecture_info.lecture_tb.end_date:
                             member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') is None \
                             or member_test.lecture_tb.mod_dt == '':
                         member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') \
                                 > lecture_info.lecture_tb.mod_dt:
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
-                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
                                                   '%Y-%m-%d %H:%M:%S') is None \
                             or member_test.lecture_tb.reg_dt == '':
                         member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
                                                       '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
                             member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
@@ -1574,20 +1588,20 @@ def func_get_end_group_member_list(class_id, group_id, user_id):
                         if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
                                 < lecture_info.lecture_tb.end_date:
                             member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') is None \
                             or member_test.lecture_tb.mod_dt == '':
                         member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') \
                                 > lecture_info.lecture_tb.mod_dt:
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
-                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
                                                   '%Y-%m-%d %H:%M:%S') is None \
                             or member_test.lecture_tb.reg_dt == '':
                         member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
                                                       '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
                             member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count

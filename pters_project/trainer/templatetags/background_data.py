@@ -10,7 +10,7 @@ from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb
+from trainer.models import ClassLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb
 from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
     func_get_end_package_member_list
 
