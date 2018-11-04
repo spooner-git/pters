@@ -3187,8 +3187,8 @@ def add_package_info_logic(request):
                     error = '패키지 이름을 입력하세요.'
                     raise InternalError
 
-                if len(json_loading_data['new_package_group_data']) <= 1:
-                    error = '패키지는 2가지 이상의 수강권을 선택하셔야 합니다.'
+                if len(json_loading_data['new_package_group_data']) == 1:
+                    error = '패키지는 1가지 이상의 수강권을 선택하셔야 합니다.'
                     raise InternalError
 
                 package_info = PackageTb(class_tb_id=class_id, name=package_name,
@@ -3363,20 +3363,66 @@ def delete_package_group_info_logic(request):
     next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     error = None
 
-    package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id, use=USE)
-    if len(package_group_data) <= 2:
-        error = '패키지는 2가지 이상의 수강권이 있어야 합니다.'
     if error is None:
         try:
             with transaction.atomic():
                 package_group_info = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                    package_tb_id=package_id, group_tb_id=group_id,
                                                                    use=USE)
-                package_group_info.delete()
+                package_group_info.update(use=UN_USE)
 
                 package_group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                                            lecture_tb__package_tb_id=package_id)
-                package_group_lecture_data.delete()
+
+                package_group_lecture_data.update(use=UN_USE)
+                try:
+                    package_info = PackageTb.objects.get(package_id=package_id)
+                    package_info.package_group_num = len(PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                       package_tb_id=package_id,
+                                                                                       use=USE))
+                    package_info.save()
+                except ObjectDoesNotExist:
+                    package_info = None
+                if package_info is not None:
+                    if package_info.package_group_num == 0:
+                        class_lecture_data = ClassLectureTb.objects.select_related(
+                            'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                             lecture_tb__package_tb_id=package_id,
+                                                             auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                             lecture_tb__use=USE, use=USE)
+                        for class_lecture_info in class_lecture_data:
+                            lecture_info = class_lecture_info.lecture_tb
+
+                            if lecture_info.lecture_rem_count == lecture_info.lecture_reg_count:
+                                lecture_info.delete()
+                            else:
+                                if lecture_info.state_cd == 'IP':
+                                    lecture_info.lecture_avail_count = 0
+                                    lecture_info.lecture_rem_count = 0
+                                    lecture_info.state_cd = 'PE'
+                                    lecture_info.save()
+                        if error is None:
+                            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                      lecture_tb__package_tb_id=package_id,
+                                                                      end_dt__lte=timezone.now(),
+                                                                      en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
+                            schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                             lecture_tb__package_tb_id=package_id,
+                                                                             # lecture_tb__isnull=True,
+                                                                             end_dt__gt=timezone.now(),
+                                                                             en_dis_type=ON_SCHEDULE_TYPE).exclude(
+                                state_cd='PE')
+                            repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                                   lecture_tb__package_tb_id=package_id)
+                            if len(schedule_data) > 0:
+                                schedule_data.update(state_cd='PE')
+                            if len(schedule_data_delete) > 0:
+                                schedule_data_delete.delete()
+                            if len(repeat_schedule_data) > 0:
+                                repeat_schedule_data.delete()
+                        package_info.use = UN_USE
+                        package_info.save()
+
         except ValueError:
             error = '오류가 발생했습니다.'
         except IntegrityError:
