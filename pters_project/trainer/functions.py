@@ -940,7 +940,6 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                                     lecture_tb__use=USE,
                                     use=USE).annotate(class_count=RawSQL(query_class_count,
                                                                          [])).filter(class_count__gte=1).count()
-                                print(str(group_lecture_counter))
                                 if group_lecture_counter == 0:
                                     error = package_group_info.group_tb.name
                                     error_count += 1

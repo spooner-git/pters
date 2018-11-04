@@ -2560,6 +2560,10 @@ def delete_group_info_logic(request):
         if len(repeat_schedule_data) > 0:
             repeat_schedule_data.delete()
     if error is None:
+        group_info.ing_group_member_num = len(
+            func_get_ing_group_member_list(class_id, group_id, request.user.id))
+        group_info.end_group_member_num = len(
+            func_get_end_group_member_list(class_id, group_id, request.user.id))
         group_info.state_cd = 'PE'
         group_info.use = UN_USE
         group_info.save()
@@ -3325,9 +3329,12 @@ def add_package_group_info_logic(request):
 
     try:
         with transaction.atomic():
-            package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_id, group_tb_id=group_id, use=USE)
+            package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_id,
+                                                group_tb_id=group_id, use=USE)
             package_group_info.save()
-
+            package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                            package_tb_id=package_id,
+                                                                                            use=USE).count()
             package_group_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
                                                                        lecture_tb__package_tb_id=package_id,
                                                                        lecture_tb__use=USE, use=USE)
@@ -3377,9 +3384,9 @@ def delete_package_group_info_logic(request):
                 package_group_lecture_data.update(use=UN_USE)
                 try:
                     package_info = PackageTb.objects.get(package_id=package_id)
-                    package_info.package_group_num = len(PackageGroupTb.objects.filter(class_tb_id=class_id,
-                                                                                       package_tb_id=package_id,
-                                                                                       use=USE))
+                    package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                   package_tb_id=package_id,
+                                                                                   use=USE).count()
                     package_info.save()
                 except ObjectDoesNotExist:
                     package_info = None
@@ -3643,6 +3650,7 @@ def finish_package_info_logic(request):
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
+        package_info.package_group_num = package_group_data.filter(use=USE).count()
         package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
         package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
         package_info.state_cd = 'PE'
@@ -3706,6 +3714,7 @@ def progress_package_info_logic(request):
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
+        package_info.package_group_num = package_group_data.filter(use=USE).count()
         package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
         package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
         package_info.state_cd = 'IP'
@@ -4014,7 +4023,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                     group_type_cd='ONE_TO_ONE', state_cd='IP', member_num=1, use=USE)
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
-                                             package_type_cd='ONE_TO_ONE', state_cd='IP', use=USE)
+                                             package_type_cd='ONE_TO_ONE', package_group_num=1, state_cd='IP', use=USE)
                     package_info.save()
                     package_group_info = PackageGroupTb(class_tb_id=class_info.class_id,
                                                         package_tb_id=package_info.package_id,
