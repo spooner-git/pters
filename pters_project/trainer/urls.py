@@ -138,6 +138,8 @@ urlpatterns = [
 
     # 패키지 회원 추가
     url(r'^add_package_member/$', views.add_package_member_logic, name='add_package_member'),
+    # 패키지 회원 삭제
+    url(r'^delete_package_member_info/$', views.delete_package_member_info_logic, name='delete_package_member_info'),
 
 
 

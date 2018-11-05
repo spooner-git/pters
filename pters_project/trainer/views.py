@@ -2366,15 +2366,15 @@ def progress_lecture_info_logic(request):
         if error_count > 1:
             error = str(error_count)+'개의 그룹/클래스가 진행중 상태가 아닙니다.'
 
-    if error is None:
-        error_count = 0
-        for group_info in group_data:
-            if group_info.group_tb.group_type_cd == 'NORMAL':
-                if group_info.group_tb.ing_group_member_num >= group_info.group_tb.member_num:
-                    error = group_info.group_tb.name + ' 그룹이 정원을 초과했습니다.'
-                    error_count += 1
-        if error_count > 1:
-            error = str(error_count)+'개의 그룹이 정원을 초과했습니다.'
+    # if error is None:
+    #     error_count = 0
+    #     for group_info in group_data:
+    #         if group_info.group_tb.group_type_cd == 'NORMAL':
+    #             if group_info.group_tb.ing_group_member_num >= group_info.group_tb.member_num:
+    #                 error = group_info.group_tb.name + ' 그룹이 정원을 초과했습니다.'
+    #                 error_count += 1
+    #     if error_count > 1:
+    #         error = str(error_count)+'개의 그룹이 정원을 초과했습니다.'
 
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
@@ -2705,35 +2705,35 @@ def add_group_member_logic(request):
             except ObjectDoesNotExist:
                 error = '오류가 발생했습니다.'
 
-            if error is None:
-                # group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-                group_counter = group_info.ing_group_member_num
-                group_counter += len(json_loading_data['new_member_data'])
-                if group_info.group_type_cd == 'NORMAL':
-                    if group_counter > group_info.member_num:
-                        error = '그룹 정원을 초과했습니다.'
+            # if error is None:
+            #     # group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
+            #     group_counter = group_info.ing_group_member_num
+            #     group_counter += len(json_loading_data['new_member_data'])
+            #     if group_info.group_type_cd == 'NORMAL':
+            #         if group_counter > group_info.member_num:
+            #             error = '그룹 정원을 초과했습니다.'
 
-    if error is None:
-        if group_info.group_type_cd == 'NORMAL':
-            if json_loading_data['old_member_data'] != '[]':
-                for json_info in json_loading_data['old_member_data']:
-                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
-
-                    for member_lecture_info in member_lecture_data:
-                        lecture_group_check = 0
-                        try:
-                            GroupLectureTb.objects.get(group_tb_id=group_id,
-                                                       lecture_tb_id=member_lecture_info.lecture_tb_id, use=USE)
-                        except ObjectDoesNotExist:
-                            lecture_group_check = 1
-                        if group_info.group_type_cd == 'NORMAL':
-                            if lecture_group_check == 1:
-                                if group_info.ing_group_member_num >= group_info.member_num:
-                                    error = '그룹 정원을 초과했습니다.'
-                                    break
-
-                    if error is not None:
-                        break
+    # if error is None:
+    #     if group_info.group_type_cd == 'NORMAL':
+    #         if json_loading_data['old_member_data'] != '[]':
+    #             for json_info in json_loading_data['old_member_data']:
+    #                 member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
+    #
+    #                 for member_lecture_info in member_lecture_data:
+    #                     lecture_group_check = 0
+    #                     try:
+    #                         GroupLectureTb.objects.get(group_tb_id=group_id,
+    #                                                    lecture_tb_id=member_lecture_info.lecture_tb_id, use=USE)
+    #                     except ObjectDoesNotExist:
+    #                         lecture_group_check = 1
+    #                     if group_info.group_type_cd == 'NORMAL':
+    #                         if lecture_group_check == 1:
+    #                             if group_info.ing_group_member_num >= group_info.member_num:
+    #                                 error = '그룹 정원을 초과했습니다.'
+    #                                 break
+    #
+    #                 if error is not None:
+    #                     break
 
     if error is None:
         try:
@@ -3840,8 +3840,8 @@ def add_package_member_logic(request):
     error = None
     user_db_id_list = []
     user_name_list = []
-    group_info = None
-    group_id = None
+    package_info = None
+    package_id = None
     setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
 
     try:
@@ -3852,44 +3852,10 @@ def add_package_member_logic(request):
         error = '오류가 발생했습니다.'
 
     if error is None:
-        group_id = json_loading_data['lecture_info']['group_id']
+        package_id = json_loading_data['lecture_info']['package_id']
 
     if error is None:
-        if group_id != '' and group_id is not None:
-            try:
-                group_info = GroupTb.objects.get(group_id=group_id, use=USE)
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
-
-            if error is None:
-                # group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-                group_counter = group_info.ing_group_member_num
-                group_counter += len(json_loading_data['new_member_data'])
-                if group_info.group_type_cd == 'NORMAL':
-                    if group_counter > group_info.member_num:
-                        error = '그룹 정원을 초과했습니다.'
-
-    if error is None:
-        if group_info.group_type_cd == 'NORMAL':
-            if json_loading_data['old_member_data'] != '[]':
-                for json_info in json_loading_data['old_member_data']:
-                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
-
-                    for member_lecture_info in member_lecture_data:
-                        lecture_group_check = 0
-                        try:
-                            GroupLectureTb.objects.get(group_tb_id=group_id,
-                                                       lecture_tb_id=member_lecture_info.lecture_tb_id, use=USE)
-                        except ObjectDoesNotExist:
-                            lecture_group_check = 1
-                        if group_info.group_type_cd == 'NORMAL':
-                            if lecture_group_check == 1:
-                                if group_info.ing_group_member_num >= group_info.member_num:
-                                    error = '그룹 정원을 초과했습니다.'
-                                    break
-
-                    if error is not None:
-                        break
+        package_info = PackageTb.objects.get(package_id=package_id, use=USE)
 
     if error is None:
         try:
@@ -3916,13 +3882,6 @@ def add_package_member_logic(request):
 
                 if error is None:
                     for user_info in user_db_id_list:
-                        try:
-                            package_info = PackageGroupTb.objects.get(~Q(package_tb__package_type_cd='PACKAGE'),
-                                                                      group_tb_id=json_loading_data['lecture_info']['group_id'],
-                                                                      use=USE).lastest('mod_dt')
-                            package_id = package_info.package_tb_id
-                        except ObjectDoesNotExist:
-                            package_id = ''
                         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
                                                       class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
@@ -3937,10 +3896,10 @@ def add_package_member_logic(request):
             error = error
 
     if error is None:
-        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
+        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원 정보',
+                         log_info=package_info.name + '수강권 회원 정보',
                          log_how='등록', use=USE)
         log_data.save()
 
@@ -3950,6 +3909,99 @@ def add_package_member_logic(request):
         messages.error(request, error)
 
     return redirect(next_page)
+
+
+# 패키지 회원 삭제
+def delete_package_member_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
+    json_loading_data = None
+    error = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+
+    package_id = json_loading_data['package_id']
+
+    if error is None:
+        # idx = 0
+        for member_id_info in json_loading_data['ids']:
+            member_name = None
+            package_lecture_data = None
+            if error is None:
+                try:
+                    user = User.objects.get(id=member_id_info)
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
+                try:
+                    member = MemberTb.objects.get(user_id=user.id)
+                    member_name = member.name
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
+            if error is None:
+                package_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                     lecture_tb__package_tb_id=package_id,
+                                                     lecture_tb__member_id=user.id,
+                                                     lecture_tb__use=USE,
+                                                     use=USE)
+                # group_lecture_data = GroupLectureTb.objects.select_related('group_tb', 'lecture_tb'
+                #                                                            ).filter(group_tb_id=group_id,
+                #                                                                     lecture_tb__member_id=user.id,
+                #                                                                     use=USE)
+            if error is None:
+                try:
+                    with transaction.atomic():
+                        if package_lecture_data is not None:
+                            for package_lecture_info in package_lecture_data:
+                                error = func_delete_lecture_info(request.user.id, class_id,
+                                                                 package_lecture_info.lecture_tb.lecture_id,
+                                                                 member_id_info)
+                                if error is not None:
+                                    break
+                        # if group_lecture_data is not None:
+                        #     for group_lecture_info in group_lecture_data:
+                        #         error = func_delete_lecture_info(request.user.id, class_id,
+                        #                                          group_lecture_info.lecture_tb.lecture_id,
+                        #                                          member_id_info)
+                        #         if error is not None:
+                        #             break
+
+                        if error is not None:
+                            raise InternalError(str(error))
+
+                except ValueError:
+                    error = '오류가 발생했습니다.'
+                except IntegrityError:
+                    error = '오류가 발생했습니다.'
+                except TypeError:
+                    error = '오류가 발생했습니다.'
+                except ValidationError:
+                    error = '오류가 발생했습니다.'
+                except InternalError:
+                    error = error
+
+            log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             to_member_name=member_name, class_tb_id=class_id,
+                             log_info='수강 정보',
+                             log_how='삭제', use=USE)
+            log_data.save()
+
+    if error is None:
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return redirect(next_page)
+
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'

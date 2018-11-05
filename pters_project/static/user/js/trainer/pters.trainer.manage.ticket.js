@@ -1479,7 +1479,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
                 main += '<div class="_grouppartystatus '+"full_group"+'"><span>'+ group_membernum + ' </span> ' +'</div>';
             }
             else{
-                main += '<div class="_grouppartystatus ' + full_group + '">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>'
+                main += '<div class="_grouppartystatus ' + full_group + '">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span></div>'
             }
             main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'
 
@@ -2481,9 +2481,9 @@ function package_ListHtml(option, jsondata){ //option : current, finished
 
         ordernum++;
         var full_package = "";
-        if(package_membernum >= package_capacity && package_type == "NORMAL"){
-            var full_package = "red_color_text";
-        }
+        // if(package_membernum >= package_capacity && package_type == "NORMAL"){
+        //     var full_package = "red_color_text";
+        // }
 
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-packageid="'+package_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-packageid="'+package_id+'">';
@@ -2517,7 +2517,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
                 main += '<div class="_grouppartystatus '+full_package+'"><span>'+ package_membernum + ' </span> ' +'</div>';
             }
             else{
-                main += '<div class="_grouppartystatus ' + full_package + '">' + '<div class="group_member_current_num">' + package_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_package + '" value="' + package_capacity + '" disabled>' + '</div>';
+                main += '<div class="_grouppartystatus ' + full_package + '">' + '<div class="group_member_current_num" style="text-align:center;">' + package_membernum + '</div>' + '<span> </div>';
             }
             main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
 

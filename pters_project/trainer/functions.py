@@ -939,9 +939,9 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
 
                 if package_id != '' and package_id is not None:
 
-                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                                        "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                    # query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                    #                     "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                    #                     "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
 
                     lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
                     lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
@@ -949,27 +949,27 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                     error_count = 0
                     package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id, use=USE)
                     for package_group_info in package_group_data:
-                        if package_group_info.group_tb.group_type_cd == 'NORMAL':
-                            if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
-
-                                group_lecture_counter = GroupLectureTb.objects.filter(
-                                    group_tb_id=package_group_info.group_tb_id, lecture_tb__state_cd='IP',
-                                    lecture_tb__member_id=member_id,
-                                    lecture_tb__use=USE,
-                                    use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                                         [])).filter(class_count__gte=1).count()
-                                if group_lecture_counter == 0:
-                                    error = package_group_info.group_tb.name
-                                    error_count += 1
+                        # if package_group_info.group_tb.group_type_cd == 'NORMAL':
+                        #     if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
+                        #
+                        #         group_lecture_counter = GroupLectureTb.objects.filter(
+                        #             group_tb_id=package_group_info.group_tb_id, lecture_tb__state_cd='IP',
+                        #             lecture_tb__member_id=member_id,
+                        #             lecture_tb__use=USE,
+                        #             use=USE).annotate(class_count=RawSQL(query_class_count,
+                        #                                                  [])).filter(class_count__gte=1).count()
+                        #         if group_lecture_counter == 0:
+                        #             error = package_group_info.group_tb.name
+                        #             error_count += 1
 
                         group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
                                                             lecture_tb_id=lecture_info.lecture_id, use=USE)
                         group_lecture_info.save()
 
-                    if error_count == 1:
-                        error += ' 그룹의 정원을 초과했습니다.'
-                    elif error_count > 1:
-                        error = '해당 패키지의 ' + str(error_count) + '개의 그룹 정원을 초과했습니다.'
+                    # if error_count == 1:
+                    #     error += ' 그룹의 정원을 초과했습니다.'
+                    # elif error_count > 1:
+                    #     error = '해당 패키지의 ' + str(error_count) + '개의 그룹 정원을 초과했습니다.'
                     if error is not None:
                         raise InternalError
 

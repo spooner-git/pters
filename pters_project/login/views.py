@@ -1001,19 +1001,19 @@ class AddMemberNoEmailView(View):
         package_id = request.POST.get('group_id', '')
         # group_id = request.POST.get('group_id', '')
         error = None
-        error_count = 0
-        if package_id is not None and package_id != '':
-            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
-            for package_group_info in package_group_data:
-                if package_group_info.group_tb.group_type_cd == 'NORMAL':
-
-                    if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
-                        error = package_group_info.group_tb.name
-                        error_count += 1
-            if error_count == 1:
-                error += ' 그룹의 정원을 초과했습니다.'
-            elif error_count > 1:
-                error = '해당 패키지의 '+str(error_count)+'개의 그룹 정원을 초과했습니다.'
+        # error_count = 0
+        # if package_id is not None and package_id != '':
+        #     package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
+        #     for package_group_info in package_group_data:
+        #         if package_group_info.group_tb.group_type_cd == 'NORMAL':
+        #
+        #             if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
+        #                 error = package_group_info.group_tb.name
+        #                 error_count += 1
+        #     if error_count == 1:
+        #         error += ' 그룹의 정원을 초과했습니다.'
+        #     elif error_count > 1:
+        #         error = '해당 패키지의 '+str(error_count)+'개의 그룹 정원을 초과했습니다.'
 
         if error is None:
             context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
