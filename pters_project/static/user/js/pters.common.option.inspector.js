@@ -247,7 +247,23 @@ function pters_option_inspector(option_type, xhr, option_element){
         
         //패키지 관리
         else if(option_type == "package_create"){
+            var current_group_num = option_element;
+            if(current_group_num >= limit_num){
+                show_caution_popup(function_lock_message("create", limit_num, "패키지 추가", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }else if(option_type == "package_delete"){
+            if(limit_num == 0){
+                show_caution_popup(function_lock_message("delete", 1, "삭제", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                    enable_delete_btns_after_ajax();
+                }
+            }
         }else if(option_type == "package_read"){
         }else if(option_type == "package_update"){
         }

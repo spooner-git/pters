@@ -549,23 +549,23 @@ $(document).on('click', 'div._groupmanage', function(e){
 
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 //var group_delete_JSON = {"group_id":"", "lecture_ids":[], "fullnames":[], "ids":[]}
-var group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
+var group_delete_JSON = {"package_id":"", "fullnames":[], "ids":[]};
 $(document).on('click', '._groupmanage img._info_delete', function(e){
     e.stopPropagation();
-    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
+    group_delete_JSON = {"package_id":"", "fullnames":[], "ids":[]};
     if($(this).css('opacity') == 1){
-        deleteTypeSelect = 'groupdelete';
+        deleteTypeSelect = 'packagedelete';
         $('#cal_popup_plandelete').show();
         $('#popup_delete_question').text('정말 삭제하시겠습니까?');
         //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
-        var group_id = $(this).attr('data-groupid');
-        var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
+        var package_id = $(this).attr('data-packageid');
+        var memberLen = $('div.memberline[data-packageid="'+package_id+'"]').length;
         for(var k=2; k<=memberLen+1; k++){
             //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
-            group_delete_JSON.ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-dbid'));
-            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'));
+            group_delete_JSON.ids.push($('div.groupMembersWrap[data-packageid="'+package_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-dbid'));
+            group_delete_JSON.fullnames.push($('div.groupMembersWrap[data-packageid="'+package_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-fullname'));
         }
-        group_delete_JSON.group_id = group_id;
+        group_delete_JSON.package_id = package_id;
         shade_index(150);
     }else{
         alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
@@ -2727,6 +2727,19 @@ function packageMemberListSet(package_id, jsondata){
 //새로운 패키지를 만든다
 function send_new_package_info(packagedata, use, callback){
     var bodywidth = window.innerWidth;
+    var grouptype = $('#form_grouptype').val();
+    var option_limit_type;
+    var number_has;
+    if(grouptype == "NORMAL" ){
+        option_limit_type = "group_create";
+        number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
+    }else if(grouptype == "EMPTY"){
+        option_limit_type = "class_create";
+        number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
+    }else if(grouptype == "PACKAGE"){
+        option_limit_type = "package_create";
+        number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
+    }
     $.ajax({
         url:'/trainer/add_package_info/',
         data: JSON.stringify(packagedata),
@@ -2738,7 +2751,7 @@ function send_new_package_info(packagedata, use, callback){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
-            // pters_option_inspector("group_read", xhr, "");
+            pters_option_inspector(option_limit_type, xhr, number_has);
         },
 
         //보내기후 팝업창 닫기
@@ -2853,3 +2866,66 @@ function draw_grouplist_in_package($targetHTML, jsondata){
 
     $targetHTML.html(htmlToJoin.join(""));
 }
+
+//패키지 지우기
+function delete_package_from_list(package_id, use, callback){
+    var bodywidth = window.innerWidth;
+    var next_page = '/trainer/get_group_ing_list';
+    if($('#currentPackageList').css('display') == "block"){
+        next_page = '/trainer/get_package_ing_list';
+    }else if($('#finishedPackageList').css('display') == "block"){
+        next_page = '/trainer/get_package_end_list';
+    }
+    $.ajax({
+        url:'/trainer/delete_package_info_logic/',
+        type:'POST',
+        data: {"package_id":package_id, "next_page":next_page},
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            pters_option_inspector("package_delete", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                smart_refresh_member_group_class_list();
+                if(use == "calback"){
+                    callback();
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//패키지 지우기
