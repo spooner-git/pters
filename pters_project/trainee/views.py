@@ -30,7 +30,7 @@ from .models import LectureTb, MemberLectureTb
 
 from schedule.functions import func_get_lecture_id, func_get_group_lecture_id, \
     func_check_group_available_member_before, func_check_group_available_member_after, func_add_schedule, \
-    func_date_check, func_refresh_lecture_count, func_update_member_schedule_alarm
+    func_date_check, func_refresh_lecture_count
 from .functions import func_get_class_lecture_count, func_get_lecture_list, \
     func_get_class_list, func_get_trainee_on_schedule, func_get_trainee_off_schedule, func_get_trainee_group_schedule, \
     func_get_holiday_schedule, func_get_trainee_on_repeat_schedule, func_check_schedule_setting, \
@@ -1199,9 +1199,11 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
     if error is None:
         try:
             with transaction.atomic():
+                permission_state_cd = 'AP'
                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                     group_id, group_schedule_id,
                                                     start_date, end_date, '', ON_SCHEDULE_TYPE, request.user.id,
+                                                    permission_state_cd,
                                                     'NP')
                 error = schedule_result['error']
 

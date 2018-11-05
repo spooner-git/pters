@@ -22,6 +22,8 @@
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedulePermissionStateArray":
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleNoteArray":
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleIdxArray":

@@ -150,10 +150,12 @@ def add_schedule_logic(request):
                 schedule_result = None
                 if error is None:
                     state_cd = 'NP'
+                    permission_state_cd = 'AP'
                     if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
                         state_cd = 'PE'
                     schedule_result = func_add_schedule(class_id, lecture_id, None, None, None, schedule_start_datetime,
                                                         schedule_end_datetime, note, en_dis_type, request.user.id,
+                                                        permission_state_cd,
                                                         state_cd)
                     error = schedule_result['error']
 
@@ -753,6 +755,7 @@ def add_repeat_schedule_logic(request):
                             if schedule_check == 1:
 
                                 state_cd = 'NP'
+                                permission_state_cd = 'AP'
                                 # if setting_schedule_auto_finish == AUTO_FINISH_ON\
                                 #         and timezone.now() > schedule_end_datetime:
                                 #     state_cd = 'PE'
@@ -761,6 +764,7 @@ def add_repeat_schedule_logic(request):
                                                                     None, None,
                                                                     schedule_start_datetime, schedule_end_datetime, '',
                                                                     en_dis_type, request.user.id,
+                                                                    permission_state_cd,
                                                                     state_cd)
 
                                 if schedule_result['error'] is not None:
@@ -1238,12 +1242,14 @@ def add_group_schedule_logic(request):
             with transaction.atomic():
                 if error is None:
                     state_cd = 'NP'
+                    permission_state_cd = 'AP'
                     if setting_schedule_auto_finish == AUTO_FINISH_ON and timezone.now() > schedule_end_datetime:
                         state_cd = 'PE'
                     schedule_result = func_add_schedule(class_id, None, None,
                                                         group_id, None,
                                                         schedule_start_datetime, schedule_end_datetime,
                                                         note, ON_SCHEDULE_TYPE, request.user.id,
+                                                        permission_state_cd,
                                                         state_cd)
                     error = schedule_result['error']
 
@@ -1295,6 +1301,7 @@ def add_group_schedule_logic(request):
                             if error_temp is None:
 
                                 state_cd = 'NP'
+                                permission_state_cd = 'AP'
                                 if setting_schedule_auto_finish == AUTO_FINISH_ON\
                                         and timezone.now() > schedule_end_datetime:
                                     state_cd = 'PE'
@@ -1302,6 +1309,7 @@ def add_group_schedule_logic(request):
                                                                     group_id, group_schedule_id,
                                                                     schedule_start_datetime, schedule_end_datetime,
                                                                     note, ON_SCHEDULE_TYPE, request.user.id,
+                                                                    permission_state_cd,
                                                                     state_cd)
                                 error_temp = schedule_result['error']
 
@@ -1819,6 +1827,7 @@ def add_member_group_schedule_logic(request):
                 if error is None:
 
                     state_cd = schedule_info.state_cd
+                    permission_state_cd = 'AP'
                     if setting_schedule_auto_finish == AUTO_FINISH_ON \
                             and timezone.now() > schedule_info.end_dt:
                         state_cd = 'PE'
@@ -1826,7 +1835,7 @@ def add_member_group_schedule_logic(request):
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         note, ON_SCHEDULE_TYPE,
-                                                        request.user.id, state_cd)
+                                                        request.user.id, permission_state_cd, state_cd)
                     error = schedule_result['error']
 
                 if error is None:
@@ -1978,6 +1987,7 @@ def add_other_member_group_schedule_logic(request):
                 if error is None:
 
                     state_cd = schedule_info.state_cd
+                    permission_state_cd = 'AP'
                     if setting_schedule_auto_finish == AUTO_FINISH_ON \
                             and timezone.now() > schedule_info.end_dt:
                         state_cd = 'PE'
@@ -1985,7 +1995,7 @@ def add_other_member_group_schedule_logic(request):
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
                                                         note, ON_SCHEDULE_TYPE,
-                                                        request.user.id, state_cd)
+                                                        request.user.id, permission_state_cd, state_cd)
                     error = schedule_result['error']
 
                 if error is None:
@@ -2228,6 +2238,7 @@ def add_group_repeat_schedule_logic(request):
                         if error_date is None:
 
                             state_cd = 'NP'
+                            permission_state_cd = 'AP'
                             # if setting_schedule_auto_finish == AUTO_FINISH_ON \
                             #         and timezone.now() > schedule_end_datetime:
                             #     state_cd = 'PE'
@@ -2236,6 +2247,7 @@ def add_group_repeat_schedule_logic(request):
                                                                 group_id, None,
                                                                 schedule_start_datetime, schedule_end_datetime,
                                                                 '', ON_SCHEDULE_TYPE, request.user.id,
+                                                                permission_state_cd,
                                                                 state_cd)
                             error_date = schedule_result['error']
 
@@ -2405,6 +2417,7 @@ def add_group_repeat_schedule_confirm(request):
                                             if error_temp is None:
 
                                                 state_cd = 'NP'
+                                                permission_state_cd = 'AP'
                                                 # if setting_schedule_auto_finish == AUTO_FINISH_ON \
                                                 #         and timezone.now() > schedule_info.end_dt:
                                                 #     state_cd = 'PE'
@@ -2414,6 +2427,7 @@ def add_group_repeat_schedule_confirm(request):
                                                                       group_info.group_id, schedule_info.schedule_id,
                                                                       schedule_info.start_dt, schedule_info.end_dt,
                                                                       '', ON_SCHEDULE_TYPE, request.user.id,
+                                                                      permission_state_cd,
                                                                       state_cd)
                                                 error_temp = schedule_result['error']
 

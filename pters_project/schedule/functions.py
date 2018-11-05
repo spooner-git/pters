@@ -181,7 +181,7 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
 def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       group_id, group_schedule_id,
                       start_datetime, end_datetime,
-                      note, en_dis_type, user_id, state_cd):
+                      note, en_dis_type, user_id, permission_state_cd, state_cd):
     error = None
     context = {'error': None, 'schedule_id': ''}
 
@@ -202,7 +202,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            group_schedule_id=group_schedule_id,
                                            repeat_schedule_tb_id=repeat_schedule_id,
                                            start_dt=start_datetime, end_dt=end_datetime,
-                                           state_cd=state_cd, permission_state_cd='AP',
+                                           state_cd=state_cd, permission_state_cd=permission_state_cd,
                                            note=note, member_note='', en_dis_type=en_dis_type,
                                            reg_member_id=user_id)
             add_schedule_info.save()
@@ -383,7 +383,7 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  group_schedule_id=group_schedule_id, use=USE).count()
-    if schedule_counter == group_info.member_num:
+    if schedule_counter >= group_info.member_num:
         error = '정원을 초과했습니다.'
 
     return error
