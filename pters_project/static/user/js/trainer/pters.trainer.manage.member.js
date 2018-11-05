@@ -874,6 +874,23 @@ $(document).ready(function(){
             group_delete_JSON.fullnames = [];
             group_delete_JSON.ids = [];
             close_info_popup('cal_popup_plandelete');
+        }else if(deleteTypeSelect == "packagedelete"){
+            var groupmember_fullnames = group_delete_JSON.fullnames;
+            var groupmember_ids = group_delete_JSON.ids;
+            group_id = group_delete_JSON.package_id;
+
+            //그룹을 지운다.
+            delete_package_from_list(group_delete_JSON.package_id, "callback", function(){
+                // //그룹원들에게서 그룹에 대한 수강이력을 지운다.
+                // delete_groupmember_from_grouplist();
+            });
+            
+            enable_delete_btns_after_ajax();
+
+            group_delete_JSON.package_id = "";
+            group_delete_JSON.fullnames = [];
+            group_delete_JSON.ids = [];
+            close_info_popup('cal_popup_plandelete');
         }else if(deleteTypeSelect == "grouprepeatinfodelete"){
             group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid');
             repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
@@ -1758,6 +1775,7 @@ function float_btn_managemember(option){
 
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
+        grouptype = "PACKAGE";
         get_group_ing_list('callback', function(jsondata){
             console.log("get_group_ing_list", jsondata);
             fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
@@ -1838,32 +1856,8 @@ function pc_add_member(option){
                                             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())
                                             });
 
-        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
         get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
-        /*
-        initialize_add_member_sheet();
-        $('#uptext2, #uptext2_PC').text(text2);
-
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
-        $('#memberBirthDate, #memberBirthDate_info').html('');
-        birth_dropdown_set();
-
-        selector_memberSearchButton.attr('data-type','');
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
-
-        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        if( selector_page_addmember.height() > $(window).height() ){
-            centerLoc = '70px';
-        }
-
-        selector_page_addmember.show().css({'top':centerLoc,
-            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
-
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        */
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
 
@@ -1881,10 +1875,7 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
-        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
@@ -1906,7 +1897,7 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
         var regEnddate = [];
         $('.lec_end_date').each(function(index){
-            regEnddate.push($(this).val().replace(/\./gi,'-'));
+            regEnddate.push($(this).val().replace(/\./gi, '-'));
         });
 
         $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
@@ -1944,11 +1935,11 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
         var regEnddate = [];
         $('.wraps .lec_end_date').each(function(index){
-            regEnddate.push($(this).val().replace(/\./gi,'-'))
+            regEnddate.push($(this).val().replace(/\./gi, '-'));
         });
-        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+        $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option', 'minDate', find_max_date(regEnddate));
 
         check_dropdown_selected();
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
@@ -2038,8 +2029,9 @@ function pc_add_member(option){
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
     }else if(option == "package_ticket"){
         initialize_add_member_sheet();
+        grouptype = "PACKAGE";
         get_group_ing_list('callback', function(jsondata){
-            console.log("get_group_ing_list", jsondata)
+            console.log("get_group_ing_list", jsondata);
             fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
         });
         selector_page_addmember_input_wrap.css({'height':350+'px'});
@@ -5126,12 +5118,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet ('current','name','no',json);
                                 $('#name').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','name','no',json);
                                 $('#name').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'countH':
@@ -5139,12 +5131,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','yes',json);
                                 $('#countH').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','yes',json);
                                 $('#countH').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'countL':
@@ -5152,12 +5144,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','no',json);
                                 $('#countL').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','no',json);
                                 $('#countL').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'startP':
@@ -5169,23 +5161,23 @@ function deleteMemberAjax(){
                         get_member_ing_list('callback',function(json){
                             memberListSet('current','date','no',json);
                             $('#startP').attr('selected','selected');
-                        })
+                        });
                         get_member_end_list('callback',function(json){
                             memberListSet('finished','date','no',json);
                             $('#startP').attr('selected','selected');
-                        })
+                        });
                         break;
                     case 'startR':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#startR').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#startR').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'recent':
@@ -5193,12 +5185,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#recent').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#recent').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                 }
@@ -5223,6 +5215,10 @@ function deleteMemberAjax(){
 
 
 function initialize_add_member_sheet(){
+    $('#form_grouptype, #form_groupcapacity').val("");
+    $('#grouptype option:nth-child(1)').prop("selected", true);
+    $('#groupcapacity option:nth-child(1)').prop("selected", true);
+
     $('#id_search_confirm').val('0');
     $('#form_member_groupid, #form_member_groupid_no_email').val('');
     $('#memberLastName_add').prop('disabled', false);
