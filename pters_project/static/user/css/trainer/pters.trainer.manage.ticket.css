@@ -20,7 +20,7 @@
 	width: 100%;
 	padding-top: 3px;
 }
-#groupname, #grouptype, #packagename{
+#groupname, #grouptype, #packagename, #packagememo{
 	display: inline-block;
 }
 #groupname{
@@ -28,7 +28,7 @@
 	height: 35px;
 	border: 1px solid #cccccc;
 }
-#packagename{
+#packagename, #packagememo{
 	width: 60%;
 	height: 35px;
 	border: 1px solid #cccccc;
@@ -65,7 +65,48 @@
 		margin-left: 3px;
 		cursor: pointer;
 	}
+	.lecture_bubble_mini img{
+		width: 14px;
+		margin-bottom: 2px;
+	}
+	.btn_add_lecture_bubble_mini{
+		transform: rotate(45deg);
+		width: 10px;
+		margin-left: 15px;
+		margin-bottom: 3px;
+		cursor: pointer;
+	}
+#add_group_to_package_selector_popup{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 90%;
+	max-width: 500px;
+	height: 350px;
+	background-color: #ffffff;
+	border: 1px solid #282828;
+	z-index: 300;
+}
+	#add_group_to_package_selector{
+		position: relative;
+		display: block;
+		top: unset;
+		left: unset;
+		max-height: unset;
+		height: 100%;
+		width: 100%;
+	}
+	.add_group_to_package_dropdown_title{
 
+	}
+	.add_group_to_package_dropdown_title img{
+		position: absolute;
+		width: 12px;
+		right: 0;
+		margin: 11px;
+		cursor: pointer;
+	}
 
 
 .groupMemberAddBox{

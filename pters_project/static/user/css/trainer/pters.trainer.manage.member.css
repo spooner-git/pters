@@ -367,7 +367,7 @@ select:focus > option:checked {
 }
 
 
-#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
+#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 	width: 91.6%;
 	margin-bottom: 40px;
 }
@@ -1503,7 +1503,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 
-	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
+	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 		/*width: 1080px;*/
 		/*height: 600px;*/
 		height: auto;
