@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
@@ -388,8 +389,10 @@ def finish_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     class_type_name = request.session.get('class_type_name', '')
+    schedule_state_cd = request.POST.get('schedule_state_cd', 'PE')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
+    schedule_state_cd_name = '완료'
     error = None
     schedule_info = None
     lecture_info = None
@@ -410,6 +413,10 @@ def finish_schedule_logic(request):
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
+        if schedule_state_cd == 'PE':
+            schedule_state_cd_name = '완료'
+        elif schedule_state_cd == 'PC':
+            schedule_state_cd_name = '결석 처리'
 
     if error is None:
         try:
@@ -421,15 +428,16 @@ def finish_schedule_logic(request):
     if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
-        if schedule_info.state_cd == 'PE':
+        if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
             error = '완료된 스케쥴입니다.'
+
     if error is None:
         lecture_info = schedule_info.lecture_tb
 
     if error is None:
         try:
             with transaction.atomic():
-                schedule_info.state_cd = 'PE'
+                schedule_info.state_cd = schedule_state_cd
                 schedule_info.save()
                 # 남은 횟수 차감
                 error = func_refresh_lecture_count(lecture_info.lecture_id)
@@ -445,7 +453,7 @@ def finish_schedule_logic(request):
                         lecture_repeat_schedule_data.save()
                     lecture_repeat_schedule_counter =\
                         ScheduleTb.objects.filter(repeat_schedule_tb_id=lecture_repeat_schedule_data.repeat_schedule_id,
-                                                  use=USE).exclude(state_cd='PE').count()
+                                                  use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC')).count()
                     if lecture_repeat_schedule_counter == 0:
                         lecture_repeat_schedule_data.state_cd = 'PE'
                         lecture_repeat_schedule_data.save()
@@ -503,24 +511,24 @@ def finish_schedule_logic(request):
                              to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id='',
                              log_info='['+schedule_info.get_group_type_cd_name()+'] '
-                                      + schedule_info.get_group_name() + ' 일정', log_how='완료',
+                                      + schedule_info.get_group_name() + ' 일정', log_how=schedule_state_cd_name,
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                 + ' ['+schedule_info.get_group_type_cd_name()+'] ' + schedule_info.get_group_name()
-                                + ' 일정이 완료됐습니다.')
+                                + ' 일정이 '+schedule_state_cd_name+'됐습니다.')
         else:
             log_data = LogTb(log_type='LS03', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name+request.user.first_name,
                              to_member_name=member_name,
                              class_tb_id=class_id, lecture_tb_id='',
-                             log_info='[1:1 레슨] 일정', log_how='완료',
+                             log_info='[1:1 레슨] 일정', log_how=schedule_state_cd_name,
                              log_detail=str(start_date) + '/' + str(end_date), use=USE)
             log_data.save()
             push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                 + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
-                                + ' [1:1 레슨] 일정이 완료됐습니다.')
+                                + ' [1:1 레슨] 일정이 '+schedule_state_cd_name+'됐습니다.')
 
         if setting_to_trainee_lesson_alarm == TO_TRAINEE_LESSON_ALARM_ON:
             context['push_lecture_id'] = push_lecture_id
@@ -886,7 +894,7 @@ def add_repeat_schedule_confirm(request):
                 with transaction.atomic():
                     schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id)
                     for delete_schedule_info in schedule_data:
-                        if delete_schedule_info.state_cd != 'PE':
+                        if delete_schedule_info.state_cd != 'PE' and delete_schedule_info.state_cd != 'PC':
                             delete_lecture_id = delete_schedule_info.lecture_tb_id
                             delete_schedule_info.delete()
                             if en_dis_type == ON_SCHEDULE_TYPE:
@@ -1012,7 +1020,7 @@ def delete_repeat_schedule_logic(request):
                 delete_lecture_id_list = []
                 old_lecture_id = None
                 for delete_schedule_info in schedule_data:
-                    if delete_schedule_info.state_cd != 'PE':
+                    if delete_schedule_info.state_cd != 'PE' and delete_schedule_info.state_cd != 'PC':
                         current_lecture_id = delete_schedule_info.lecture_tb_id
                         delete_schedule_info.delete()
 
@@ -1553,7 +1561,8 @@ def finish_group_schedule_logic(request):
     schedule_id = request.POST.get('schedule_id')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
-
+    schedule_state_cd = request.POST.get('schedule_state_cd', 'PE')
+    schedule_state_cd_name = '완료'
     error = None
     schedule_info = None
     group_info = None
@@ -1577,6 +1586,10 @@ def finish_group_schedule_logic(request):
             schedule_info = ScheduleTb.objects.get(schedule_id=schedule_id)
         except ObjectDoesNotExist:
             error = '일정 정보를 불러오지 못했습니다.'
+        if schedule_state_cd == 'PE':
+            schedule_state_cd_name = '완료'
+        elif schedule_state_cd == 'PC':
+            schedule_state_cd_name = '결석 처리'
 
     if error is None:
         group_info = schedule_info.group_tb
@@ -1584,13 +1597,13 @@ def finish_group_schedule_logic(request):
     if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
-        if schedule_info.state_cd == 'PE':
+        if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
             error = '완료된 스케쥴입니다.'
 
     if error is None:
         try:
             with transaction.atomic():
-                schedule_info.state_cd = 'PE'
+                schedule_info.state_cd = schedule_state_cd
                 schedule_info.save()
 
                 repeat_schedule_data = None
@@ -1603,7 +1616,7 @@ def finish_group_schedule_logic(request):
                         repeat_schedule_data.save()
                     repeat_schedule_counter = \
                         ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_data.repeat_schedule_id,
-                                                  use=USE).exclude(state_cd='PE').count()
+                                                  use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC')).count()
                     if repeat_schedule_counter == 0:
                         repeat_schedule_data.state_cd = 'PE'
                         repeat_schedule_data.save()
@@ -1628,7 +1641,7 @@ def finish_group_schedule_logic(request):
             start_date = member_group_schedule_info.start_dt
             end_date = member_group_schedule_info.end_dt
             lecture_info = member_group_schedule_info.lecture_tb
-            if member_group_schedule_info.state_cd == 'PE':
+            if member_group_schedule_info.state_cd == 'PE' or member_group_schedule_info.state_cd == 'PC':
                 temp_error = '완료된 스케쥴입니다.'
 
             try:
@@ -1640,7 +1653,7 @@ def finish_group_schedule_logic(request):
             if temp_error is None:
                 try:
                     with transaction.atomic():
-                        member_group_schedule_info.state_cd = 'PE'
+                        member_group_schedule_info.state_cd = schedule_state_cd
                         member_group_schedule_info.save()
                         # 남은 횟수 차감
                         temp_error = func_refresh_lecture_count(lecture_info.lecture_id)
@@ -1656,7 +1669,7 @@ def finish_group_schedule_logic(request):
                             lecture_repeat_schedule_counter = \
                                 ScheduleTb.objects.filter(
                                     repeat_schedule_tb_id=lecture_repeat_schedule.repeat_schedule_id,
-                                    use=USE).exclude(state_cd='PE').count()
+                                    use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC')).count()
                             if lecture_repeat_schedule_counter == 0:
                                 lecture_repeat_schedule.state_cd = 'PE'
                                 lecture_repeat_schedule.save()
@@ -1720,20 +1733,22 @@ def finish_group_schedule_logic(request):
                                      to_member_name=member_name,
                                      class_tb_id=class_id, lecture_tb_id='',
                                      log_info='[' + member_group_schedule_info.get_group_type_cd_name() + '] '
-                                              + member_group_schedule_info.get_group_name() + ' 일정', log_how='완료',
+                                              + member_group_schedule_info.get_group_name() + ' 일정',
+                                     log_how=schedule_state_cd_name,
                                      log_detail=str(start_date) + '/' + str(end_date), use=USE)
                     log_data.save()
                     push_message.append(push_info_schedule_start_date[0] + ':' + push_info_schedule_start_date[1]
                                         + '~' + push_info_schedule_end_date[0] + ':' + push_info_schedule_end_date[1]
                                         + ' [' + schedule_info.get_group_type_cd_name() + '] '
-                                        + schedule_info.get_group_name() + ' 일정이 완료됐습니다.')
+                                        + schedule_info.get_group_name() + ' 일정이 '+schedule_state_cd_name+'됐습니다.')
 
     if error is None:
 
         log_data = LogTb(log_type='LS02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 일정', log_how='완료',
+                         log_info='['+group_info.get_group_type_cd_name()+'] '+group_info.name + ' 일정',
+                         log_how=schedule_state_cd_name,
                          log_detail=str(start_date) + '/' + str(end_date), use=USE)
         log_data.save()
     if error is None:
@@ -2545,8 +2560,9 @@ def delete_group_repeat_schedule_logic(request):
         try:
             with transaction.atomic():
                 for delete_schedule_info in schedule_data:
-                    end_schedule_counter = ScheduleTb.objects.filter(group_schedule_id=delete_schedule_info.schedule_id,
-                                                                     state_cd='PE', use=USE).count()
+                    end_schedule_counter = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                     group_schedule_id=delete_schedule_info.schedule_id,
+                                                                     use=USE).count()
                     if end_schedule_counter == 0:
                         schedule_result = func_delete_schedule(delete_schedule_info.schedule_id, request.user.id)
                         error = schedule_result['error']
@@ -2598,7 +2614,7 @@ def delete_group_repeat_schedule_logic(request):
                         delete_lecture_id_list = []
                         old_lecture_id = None
                         for delete_schedule_info in schedule_data:
-                            if delete_schedule_info.state_cd != 'PE':
+                            if delete_schedule_info.state_cd != 'PE' or delete_schedule_info.state_cd != 'PC':
                                 current_lecture_id = delete_schedule_info.lecture_tb_id
                                 delete_schedule_info.delete()
 

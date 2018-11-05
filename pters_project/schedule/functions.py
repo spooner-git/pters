@@ -85,7 +85,8 @@ def func_refresh_lecture_count(lecture_id):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
+        end_schedule_counter = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                         lecture_tb_id=lecture_id).count()
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
@@ -126,7 +127,8 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
         except ObjectDoesNotExist:
             group_schedule_info = None
         group_schedule_total_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=USE).count()
-        group_schedule_end_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, state_cd='PE',
+        group_schedule_end_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                             group_schedule_id=group_schedule_id,
                                                              use=USE).count()
 
         if group_schedule_info is not None:
@@ -358,8 +360,8 @@ def func_update_repeat_schedule(repeat_schedule_id):
 
     if error is None:
         repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id).count()
-        repeat_schedule_finish_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id,
-                                                                 state_cd='PE').count()
+        repeat_schedule_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 repeat_schedule_tb_id=repeat_schedule_id).count()
         if repeat_schedule_count == 0:
             repeat_schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
             error = repeat_schedule_result['error']

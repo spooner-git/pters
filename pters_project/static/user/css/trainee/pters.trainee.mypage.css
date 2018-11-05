@@ -195,6 +195,9 @@ body{
 .state_PE{
 	color: green;
 }
+.state_PC{
+	color: red;
+}
 .state_NP{
 	color: #fe4e65;
 }

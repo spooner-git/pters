@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import InternalError
 from django.db import transaction
 from django.db import IntegrityError
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -340,7 +341,7 @@ def add_trainee_schedule_logic(request):
             if error is None:
                 start_date = schedule_info.start_dt
                 end_date = schedule_info.end_dt
-                if schedule_info.state_cd == 'PE':
+                if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
                     error = '이미 완료된 일정입니다.'
 
     if error is None:
@@ -357,7 +358,7 @@ def add_trainee_schedule_logic(request):
                 group_schedule_info = None
 
             if group_schedule_info is not None:
-                if group_schedule_info.state_cd == 'PE':
+                if group_schedule_info.state_cd == 'PE' or group_schedule_info.state_cd == 'PC':
                     error = '이미 완료된 일정입니다.'
 
                 if error is None:
@@ -465,7 +466,7 @@ def delete_trainee_schedule_logic(request):
             error = '지난 일정입니다.'
 
     if error is None:
-        if schedule_info.state_cd == 'PE':
+        if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
             error = '종료된 일정입니다.'
 
     if error is None:
@@ -1496,7 +1497,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
 
         lecture_finish_count = ScheduleTb.objects.select_related(
             'lecture_tb__member', 'group_tb'
-        ).filter(class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE'
+        ).filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
                  ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
                             ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt').count()
 

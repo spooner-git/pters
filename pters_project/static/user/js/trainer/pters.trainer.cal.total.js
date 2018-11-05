@@ -1770,10 +1770,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
         if(option != 'off'){
-            if(planScheduleFinishArray[i] == 1){
-                planColor_ = planColor+planfinished;
-            }else{
+            if(planScheduleFinishArray[i] == 0){
                 planColor_ = planColor;
+            }else{
+                planColor_ = planColor+planfinished;
             }
         }else{
             planColor_ = planColor;
@@ -2145,10 +2145,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
         if(option != 'off'){
-            if(planScheduleFinishArray[i] == 1){
-                planColor_ = planColor+planfinished;
-            }else{
+            if(planScheduleFinishArray[i] == 0){
                 planColor_ = planColor;
+            }else{
+                planColor_ = planColor+planfinished;
             }
         }else{
             planColor_ = planColor;

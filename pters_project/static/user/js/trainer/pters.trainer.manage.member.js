@@ -4657,6 +4657,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
     var text7 = '시작전';
     var text9 = '시간';
     var text10 = '회차';
+    var text11 = '결석';
     if(Options.language == "JPN"){
         text = '授業日';
         text2 = '進行時間';
@@ -4667,6 +4668,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         text7 = '未完了';
         text9 = '時間';
         text10 = 'No.';
+        text11 = '完了'
     }else if(Options.language == "ENG"){
         text = 'Date';
         text2 = 'Period';
@@ -4677,10 +4679,11 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         text7 = 'Yet';
         text9 = 'h';
         text10 = 'No.';
+        text11 = 'Abs.';
     }
 
     var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>'];
-    var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7};
+    var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7, "PC":text11};
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay();
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2]);
