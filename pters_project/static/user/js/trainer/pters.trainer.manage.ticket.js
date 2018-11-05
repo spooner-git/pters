@@ -602,23 +602,20 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                 toggle_lock_unlock_inputfield_grouplist(package_id, false);
                 break;
             case 'edit':
-                var group_name = $(this).parent('div').siblings('._groupname').find('input').val();
-                var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val();
-                var group_memo;
+                var package_name = $(this).parent('div').siblings('._groupname').find('input').val();
+                var package_memo;
                 if(bodywidth < 600){
-                    group_memo = $('div.groupMemoWrap[data-packageid="'+package_id+'"] input').val();
+                    package_memo = $('div.groupMemoWrap[data-packageid="'+package_id+'"] input').val();
                 }else{
-                    group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
+                    package_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
                 }
-                var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-package-type');
-
-                if(group_memo.length == 0){
-                    group_memo = " ";
+                if(package_memo.length == 0){
+                    package_memo = " ";
                 }
 
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                modify_group_from_list(package_id, group_name, group_capacity, group_memo, group_type);
+                modify_package_from_list(package_id, package_name, package_memo);
                 break;
         }
 
@@ -3117,3 +3114,63 @@ function add_group_from_package(package_id, group_id, use, callback){
     });
 }
 //패키지 지우기
+
+//패키지 정보 수정
+function modify_package_from_list(package_id, package_name, package_note){
+    var bodywidth = window.innerWidth;
+    $.ajax({
+        url:'/trainer/update_package_info/',
+        type:'POST',
+        data: {"package_id":package_id, "package_name":package_name, "package_note":package_note},
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            pters_option_inspector("package_update", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                smart_refresh_member_group_class_list();
+                toggle_lock_unlock_inputfield_grouplist(package_id, true);
+                $('img._info_cancel').hide();
+                if(bodywidth > 600){
+                    $('img._info_download, img._info_delete').show();
+                }else{
+                    $('img._info_delete').show();
+                }
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//패키지 정보 수정
