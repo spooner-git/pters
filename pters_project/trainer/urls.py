@@ -136,6 +136,10 @@ urlpatterns = [
     # 패키지 소속 그룹 리스트 조회
     url(r'^get_package_group_list/$', views.GetPackageGroupListViewAjax.as_view(), name='get_package_group_list'),
 
+    # 패키지 회원 추가
+    url(r'^add_package_member/$', views.add_package_member_logic, name='add_package_member'),
+
+
 
     # 수업 관리 기능 ######################################################################################################
     # 진행중 회원/그룹/클래스 list 조회

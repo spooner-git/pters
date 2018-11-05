@@ -3576,11 +3576,12 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
-        package_data = PackageTb.objects.filter(
-            class_tb_id=class_id, end_package_member_num__gt=0,
-            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                              package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).order_by('-package_type_cd', '-package_id')
+        package_data = PackageTb.objects.filter(Q(state_cd='PE') | Q(end_package_member_num__gt=0),
+                                                class_tb_id=class_id,
+                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                                                                  package_type_cd_nm=RawSQL(
+                                                                      query_package_type_cd,
+                                                                      [])).order_by('-package_type_cd', '-package_id')
         order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
@@ -3830,6 +3831,125 @@ class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateV
 
         return context
 
+
+def add_package_member_logic(request):
+    class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_package_ing_list/')
+    json_loading_data = None
+    error = None
+    user_db_id_list = []
+    user_name_list = []
+    group_info = None
+    group_id = None
+    setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        group_id = json_loading_data['lecture_info']['group_id']
+
+    if error is None:
+        if group_id != '' and group_id is not None:
+            try:
+                group_info = GroupTb.objects.get(group_id=group_id, use=USE)
+            except ObjectDoesNotExist:
+                error = '오류가 발생했습니다.'
+
+            if error is None:
+                # group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
+                group_counter = group_info.ing_group_member_num
+                group_counter += len(json_loading_data['new_member_data'])
+                if group_info.group_type_cd == 'NORMAL':
+                    if group_counter > group_info.member_num:
+                        error = '그룹 정원을 초과했습니다.'
+
+    if error is None:
+        if group_info.group_type_cd == 'NORMAL':
+            if json_loading_data['old_member_data'] != '[]':
+                for json_info in json_loading_data['old_member_data']:
+                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
+
+                    for member_lecture_info in member_lecture_data:
+                        lecture_group_check = 0
+                        try:
+                            GroupLectureTb.objects.get(group_tb_id=group_id,
+                                                       lecture_tb_id=member_lecture_info.lecture_tb_id, use=USE)
+                        except ObjectDoesNotExist:
+                            lecture_group_check = 1
+                        if group_info.group_type_cd == 'NORMAL':
+                            if lecture_group_check == 1:
+                                if group_info.ing_group_member_num >= group_info.member_num:
+                                    error = '그룹 정원을 초과했습니다.'
+                                    break
+
+                    if error is not None:
+                        break
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                if json_loading_data['new_member_data'] != '[]':
+                    for json_info in json_loading_data['new_member_data']:
+                        context = add_member_no_email_func(request.user.id,
+                                                           json_info['first_name'], json_info['last_name'],
+                                                           json_info['phone'], json_info['sex'],
+                                                           json_info['birthday_dt'])
+
+                        if context['error'] is None:
+                            user_name_list.append(json_info['last_name'] + json_info['first_name'])
+                            user_db_id_list.append(context['user_db_id'])
+                        else:
+                            error = context['error']
+                            break
+
+                if error is None:
+                    if json_loading_data['old_member_data'] != '[]':
+                        for json_info in json_loading_data['old_member_data']:
+                            user_db_id_list.append(json_info['db_id'])
+
+                if error is None:
+                    for user_info in user_db_id_list:
+                        try:
+                            package_info = PackageGroupTb.objects.get(~Q(package_tb__package_type_cd='PACKAGE'),
+                                                                      group_tb_id=json_loading_data['lecture_info']['group_id'],
+                                                                      use=USE).lastest('mod_dt')
+                            package_id = package_info.package_tb_id
+                        except ObjectDoesNotExist:
+                            package_id = ''
+                        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
+                                                      class_id, package_id,
+                                                      json_loading_data['lecture_info']['counts'],
+                                                      json_loading_data['lecture_info']['price'],
+                                                      json_loading_data['lecture_info']['start_date'],
+                                                      json_loading_data['lecture_info']['end_date'],
+                                                      json_loading_data['lecture_info']['memo'],
+                                                      user_info, setting_lecture_auto_finish)
+                if error is not None:
+                    raise InternalError
+        except InternalError:
+            error = error
+
+    if error is None:
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원 정보',
+                         log_how='등록', use=USE)
+        log_data.save()
+
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
+            request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/schedule_lesson_data_ajax.html'
