@@ -2877,7 +2877,7 @@ function delete_package_from_list(package_id, use, callback){
         next_page = '/trainer/get_package_end_list';
     }
     $.ajax({
-        url:'/trainer/delete_package_info_logic/',
+        url:'/trainer/delete_package_info/',
         type:'POST',
         data: {"package_id":package_id, "next_page":next_page},
         dataType : 'html',
