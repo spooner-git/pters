@@ -390,7 +390,7 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  group_schedule_id=group_schedule_id, use=USE).count()
-    if schedule_counter >= group_info.member_num:
+    if schedule_counter > group_info.member_num:
         error = '정원을 초과했습니다.'
 
     return error
@@ -409,7 +409,7 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                  group_schedule_id=group_schedule_id, use=USE).count()
-    if schedule_counter >= group_info.member_num:
+    if schedule_counter > group_info.member_num:
         error = '정원을 초과했습니다.'
 
     return error
@@ -513,16 +513,16 @@ def func_check_group_schedule_enable(group_id):
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
 
-    if group_info.group_type_cd == 'NORMAL':
-        group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                 group_tb__use=USE,
-                                                                 lecture_tb__state_cd='IP',
-                                                                 lecture_tb__lecture_avail_count__gt=0,
-                                                                 lecture_tb__use=USE,
-                                                                 use=USE).count()
-
-        if group_lecture_data_count == 0:
-            error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
+    # if group_info.group_type_cd == 'NORMAL':
+    #     group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+    #                                                              group_tb__use=USE,
+    #                                                              lecture_tb__state_cd='IP',
+    #                                                              lecture_tb__lecture_avail_count__gt=0,
+    #                                                              lecture_tb__use=USE,
+    #                                                              use=USE).count()
+    #
+    #     if group_lecture_data_count == 0:
+    #         error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
 
     return error
 
@@ -530,10 +530,11 @@ def func_check_group_schedule_enable(group_id):
 def func_get_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__group_type_cd='NORMAL',
+                                                       # group_tb__group_type_cd='NORMAL',
                                                        group_tb__use=USE,
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__use=USE,
+                                                       fix_state_cd='FIX',
                                                        use=USE)
 
     for group_lecture_info in group_lecture_data:
@@ -553,11 +554,12 @@ def func_get_group_member_list(group_id):
 def func_get_available_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__group_type_cd='NORMAL',
+                                                       # group_tb__group_type_cd='NORMAL',
                                                        group_tb__use=USE,
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__use=USE,
                                                        lecture_tb__lecture_avail_count__gt=0,
+                                                       fix_state_cd='FIX',
                                                        use=USE)
 
     for group_lecture_info in group_lecture_data:
@@ -565,7 +567,7 @@ def func_get_available_group_member_list(group_id):
             member_list.append(group_lecture_info.lecture_tb.member)
         check_info = 0
         for member_info in member_list:
-            if group_lecture_info.lecture_tb.member.member_id == member_info.member_id:
+            if str(group_lecture_info.lecture_tb.member.member_id) == str(member_info.member_id):
                 check_info = 1
 
         if check_info == 0:
@@ -577,10 +579,10 @@ def func_get_available_group_member_list(group_id):
 # 그룹회원중 예약 가능하지 않은 회원들의 리스트
 def func_get_not_available_group_member_list(group_id):
     member_list = []
-    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__group_type_cd='NORMAL',
+    group_lecture_data = GroupLectureTb.objects.filter(Q(lecture_tb__lecture_avail_count=0) | ~Q(fix_state_cd='FIX'),
+                                                       group_tb_id=group_id,
+                                                       # group_tb__group_type_cd='NORMAL',
                                                        group_tb__use=USE,
-                                                       lecture_tb__lecture_avail_count=0,
                                                        lecture_tb__use=USE,
                                                        use=USE)
 

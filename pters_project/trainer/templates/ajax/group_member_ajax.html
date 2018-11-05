@@ -20,6 +20,11 @@
     "email_activation" :
     [{% for member_info in member_data %}"{{ member_info.user.is_active }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+    "fix_state_cd" :
+    [{% for member_info in member_data %}"{{ member_info.fix_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+    "fix_state_cd_nm" :
+    [{% for member_info in member_data %}"{{ member_info.fix_state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
     "price":
     [{% for member_info in member_data %}"{{ member_info.lecture_tb.price }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
     "option":

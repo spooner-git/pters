@@ -939,14 +939,14 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
 
                 if package_id != '' and package_id is not None:
 
-                    # query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                    #                     "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                    #                     "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                        " B.USE=1"
 
                     lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
                     lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
                     lecture_info.package_tb.save()
-                    error_count = 0
+                    # error_count = 0
                     package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id, use=USE)
                     for package_group_info in package_group_data:
                         # if package_group_info.group_tb.group_type_cd == 'NORMAL':
@@ -961,9 +961,18 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                         #         if group_lecture_counter == 0:
                         #             error = package_group_info.group_tb.name
                         #             error_count += 1
-
+                        group_lecture_counter = GroupLectureTb.objects.filter(
+                            group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
+                            lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
+                            use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                                 [])).filter(class_count__gte=1).count()
+                        if group_lecture_counter > 0:
+                            fix_state_cd = 'FIX'
+                        else:
+                            fix_state_cd = ''
                         group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
-                                                            lecture_tb_id=lecture_info.lecture_id, use=USE)
+                                                            lecture_tb_id=lecture_info.lecture_id,
+                                                            fix_state_cd=fix_state_cd, use=USE)
                         group_lecture_info.save()
 
                     # if error_count == 1:
@@ -1407,11 +1416,13 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                         "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and " \
                         "B.USE=1"
+    # query_fix_state_cd_nm = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = " \
+    #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
 
     lecture_list = GroupLectureTb.objects.select_related(
         'lecture_tb__member').filter(group_tb_id=group_id, lecture_tb__state_cd='IP', lecture_tb__use=USE,
-                                     use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                                          []),
+                                     use=USE).annotate(class_count=RawSQL(query_class_count, []),
+                                                       # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
                                                        member_auth=RawSQL(query_member_auth,
                                                                           [])).filter(class_count__gte=1)
 
@@ -1433,6 +1444,16 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
         #     error = '내가 볼수 없는 회원'group_lecture_id
         if error is None:
             member_info.lecture_tb = lecture_info.lecture_tb
+            member_info.fix_state_cd = lecture_info.fix_state_cd
+            if member_info.fix_state_cd != '' and member_info.fix_state_cd is not None:
+                try:
+                    member_info.fix_state_cd_nm = \
+                        CommonCdTb.objects.get(common_cd=member_info.fix_state_cd, use=USE).common_cd_nm
+                except ObjectDoesNotExist:
+                    member_info.fix_state_cd_nm = ''
+            else:
+                member_info.fix_state_cd = ''
+
             if member_info.sex is None:
                 member_info.sex = ''
             if member_info.birthday_dt is None or member_info.birthday_dt == '':
@@ -1524,12 +1545,15 @@ def func_get_end_group_member_list(class_id, group_id, user_id):
     query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                         "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and " \
                         "B.USE=1"
+    #
+    # query_fix_state_cd_nm = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = " \
+    #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
     lecture_list = GroupLectureTb.objects.select_related(
         'lecture_tb__member').filter(group_tb_id=group_id,
                                      lecture_tb__use=USE,
                                      use=USE).exclude(lecture_tb__state_cd='IP'
-                                                      ).annotate(class_count=RawSQL(query_class_count,
-                                                                                    []),
+                                                      ).annotate(class_count=RawSQL(query_class_count, []),
+                                                                 # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
                                                                  member_auth=RawSQL(query_member_auth,
                                                                                     [])).filter(class_count__gte=1)
 
@@ -1559,6 +1583,16 @@ def func_get_end_group_member_list(class_id, group_id, user_id):
         if error is None:
 
             member_info.lecture_tb = lecture_info.lecture_tb
+            member_info.fix_state_cd = lecture_info.fix_state_cd
+            if member_info.fix_state_cd != '' and member_info.fix_state_cd is not None:
+                try:
+                    member_info.fix_state_cd_nm = \
+                        CommonCdTb.objects.get(common_cd=member_info.fix_state_cd, use=USE).common_cd_nm
+                except ObjectDoesNotExist:
+                    member_info.fix_state_cd_nm = ''
+            else:
+                member_info.fix_state_cd = ''
+
             if member_info.sex is None:
                 member_info.sex = ''
             if member_info.birthday_dt is None or member_info.birthday_dt == '':

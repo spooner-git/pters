@@ -104,6 +104,8 @@ urlpatterns = [
     url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
     # 그룹 재개 상태 변경
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
+    # 그룹 고정 맴버 변경
+    url(r'^update_fix_group_member/$', views.update_fix_group_member_logic, name='update_fix_group_member'),
 
     # 패키지 기능 #########################################################################################################
     # 패키지 추가

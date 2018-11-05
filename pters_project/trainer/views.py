@@ -2761,9 +2761,9 @@ def add_group_member_logic(request):
                 if error is None:
                     for user_info in user_db_id_list:
                         try:
-                            package_info = PackageGroupTb.objects.get(~Q(package_tb__package_type_cd='PACKAGE'),
-                                                                      group_tb_id=json_loading_data['lecture_info']['group_id'],
-                                                                      use=USE).lastest('mod_dt')
+                            package_info = PackageGroupTb.objects.filter(
+                                ~Q(package_tb__package_type_cd='PACKAGE'),
+                                group_tb_id=json_loading_data['lecture_info']['group_id'], use=USE).latest('mod_dt')
                             package_id = package_info.package_tb_id
                         except ObjectDoesNotExist:
                             package_id = ''
@@ -2882,7 +2882,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         context = super(GetGroupIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        start_time = timezone.now()
+        # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
@@ -2902,7 +2902,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
         context['group_data'] = group_data
 
-        end_time = timezone.now()
+        # end_time = timezone.now()
         # print(str(end_time-start_time))
 
         return context
@@ -2924,8 +2924,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, []),
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
+                                                       state_cd_nm=RawSQL(query_state_cd, [])
                                                        ).order_by('-group_type_cd')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
         # for group_info in group_data:
@@ -3185,6 +3184,65 @@ def progress_group_info_logic(request):
         messages.error(request, error)
 
         return render(request, 'ajax/trainer_error_ajax.html')
+
+
+# 그룹 회원 삭제
+def update_fix_group_member_logic(request):
+    # class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
+    json_loading_data = None
+    error = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except TypeError:
+        error = '오류가 발생했습니다. [2]'
+
+    group_id = json_loading_data['group_id']
+    try:
+        group_info = GroupTb.objects.get(group_id=group_id, use=USE)
+        if len(json_loading_data['ids']) > group_info.member_num:
+            error = '그룹 정원보다 고정 회원이 많습니다.'
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [3]'
+
+    if error is None:
+        # idx = 0
+        for member_id_info in json_loading_data['ids']:
+            group_lecture_data = None
+            if error is None:
+                group_lecture_data = GroupLectureTb.objects.select_related(
+                    'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+            if error is None:
+                try:
+                    with transaction.atomic():
+                        if group_lecture_data is not None:
+                            for group_lecture_info in group_lecture_data:
+                                if group_lecture_info.lecture_tb.member_id == member_id_info:
+                                    group_lecture_info.fix_state_cd = 'FIX'
+                                else:
+                                    group_lecture_info.fix_state_cd = ''
+                                group_lecture_info.save()
+                except ValueError:
+                    error = '오류가 발생했습니다. [4]'
+                except IntegrityError:
+                    error = '오류가 발생했습니다. [5]'
+                except TypeError:
+                    error = '오류가 발생했습니다. [6]'
+                except ValidationError:
+                    error = '오류가 발생했습니다. [7]'
+                except InternalError:
+                    error = error
+
+    if error is not None:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
 
 
 # 패키지 추가

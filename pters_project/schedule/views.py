@@ -1218,8 +1218,8 @@ def add_group_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
-    if error is None:
-        error = func_check_group_schedule_enable(group_id)
+    # if error is None:
+    #     error = func_check_group_schedule_enable(group_id)
     if error is None:
         # 최초 날짜 값 셋팅
         # time_duration_temp = class_info.class_hour * int(schedule_time_duration)
@@ -1289,14 +1289,14 @@ def add_group_schedule_logic(request):
         log_data.save()
 
     if error is None:
-        not_reg_member_list = func_get_not_available_group_member_list(group_id)
+        # not_reg_member_list = func_get_not_available_group_member_list(group_id)
         member_list = func_get_available_group_member_list(group_id)
 
-        for member_info in not_reg_member_list:
-            if info_message is None or info_message == '':
-                info_message = member_info.name
-            else:
-                info_message = info_message + ',' + member_info.name
+        # for member_info in not_reg_member_list:
+        #     if info_message is None or info_message == '':
+        #         info_message = member_info.name
+        #     else:
+        #         info_message = info_message + ',' + member_info.name
 
         for member_info in member_list:
             lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
@@ -2173,16 +2173,18 @@ def add_group_repeat_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
-    if error is None and group_info.group_type_cd == 'NORMAL':
+    # if error is None and group_info.group_type_cd == 'NORMAL':
+    if error is None:
         group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                            group_tb__use=USE,
                                                            lecture_tb__state_cd='IP',
                                                            lecture_tb__lecture_avail_count__gt=0,
                                                            lecture_tb__use=USE,
+                                                           fix_state_cd='FIX',
                                                            use=USE)
 
-        if len(group_lecture_data) == 0:
-            error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
+        # if len(group_lecture_data) == 0:
+        #     error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
 
         for group_lecture_info in group_lecture_data:
             if group_schedule_reg_counter < group_lecture_info.lecture_tb.lecture_avail_count:
@@ -2217,9 +2219,9 @@ def add_group_repeat_schedule_logic(request):
         for repeat_schedule_date_info in repeat_schedule_date_list:
 
             # 그룹 스케쥴 등록 횟수 설정
-            if group_info.group_type_cd == 'NORMAL':
-                if group_schedule_reg_counter <= 0:
-                    break
+            # if group_info.group_type_cd == 'NORMAL':
+            if group_schedule_reg_counter <= 0:
+                break
 
             error_date = None
             # 데이터 넣을 날짜 setting
@@ -2281,8 +2283,8 @@ def add_group_repeat_schedule_logic(request):
                                 success_start_date = str(repeat_schedule_date_info).split(' ')[0]
                             success_end_date = str(repeat_schedule_date_info).split(' ')[0]
                             pt_schedule_input_counter += 1
-                            if group_info.group_type_cd == 'NORMAL':
-                                group_schedule_reg_counter -= 1
+                            # if group_info.group_type_cd == 'NORMAL':
+                            group_schedule_reg_counter -= 1
 
                         error = None
 
@@ -2404,89 +2406,89 @@ def add_group_repeat_schedule_confirm(request):
 
             schedule_data = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id, use=USE)
 
-            if group_info.group_type_cd == 'NORMAL':
-                member_list = func_get_available_group_member_list(group_info.group_id)
+            # if group_info.group_type_cd == 'NORMAL':
+            member_list = func_get_available_group_member_list(group_info.group_id)
 
-                for member_info in member_list:
-                    lecture_id = func_get_group_lecture_id(group_info.group_id, member_info.member_id)
-                    if lecture_id is not None and lecture_id != '':
-                        repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
-                                                                          lecture_id,
-                                                                          repeat_schedule_info.group_tb_id,
-                                                                          repeat_schedule_info.repeat_schedule_id,
-                                                                          repeat_schedule_info.repeat_type_cd,
-                                                                          repeat_schedule_info.week_info,
-                                                                          repeat_schedule_info.start_date,
-                                                                          repeat_schedule_info.end_date,
-                                                                          repeat_schedule_info.start_time,
-                                                                          repeat_schedule_info.end_time,
-                                                                          repeat_schedule_info.time_duration,
-                                                                          repeat_schedule_info.en_dis_type,
-                                                                          request.user.id)
-                        member_repeat_schedule_info = repeat_schedule_result['schedule_info']
-                        for schedule_info in schedule_data:
-                            lecture_id = func_get_group_lecture_id(group_info.group_id, member_info.member_id)
-                            if lecture_id is not None and lecture_id != '':
-                                error_temp = func_check_group_available_member_before(class_id, group_info.group_id,
-                                                                                      schedule_info.schedule_id)
-                                if error_temp is None:
-                                    try:
-                                        with transaction.atomic():
-                                            if error_temp is None:
+            for member_info in member_list:
+                lecture_id = func_get_group_lecture_id(group_info.group_id, member_info.member_id)
+                if lecture_id is not None and lecture_id != '':
+                    repeat_schedule_result = func_add_repeat_schedule(repeat_schedule_info.class_tb_id,
+                                                                      lecture_id,
+                                                                      repeat_schedule_info.group_tb_id,
+                                                                      repeat_schedule_info.repeat_schedule_id,
+                                                                      repeat_schedule_info.repeat_type_cd,
+                                                                      repeat_schedule_info.week_info,
+                                                                      repeat_schedule_info.start_date,
+                                                                      repeat_schedule_info.end_date,
+                                                                      repeat_schedule_info.start_time,
+                                                                      repeat_schedule_info.end_time,
+                                                                      repeat_schedule_info.time_duration,
+                                                                      repeat_schedule_info.en_dis_type,
+                                                                      request.user.id)
+                    member_repeat_schedule_info = repeat_schedule_result['schedule_info']
+                    for schedule_info in schedule_data:
+                        lecture_id = func_get_group_lecture_id(group_info.group_id, member_info.member_id)
+                        if lecture_id is not None and lecture_id != '':
+                            error_temp = func_check_group_available_member_before(class_id, group_info.group_id,
+                                                                                  schedule_info.schedule_id)
+                            if error_temp is None:
+                                try:
+                                    with transaction.atomic():
+                                        if error_temp is None:
 
-                                                state_cd = 'NP'
-                                                permission_state_cd = 'AP'
-                                                # if setting_schedule_auto_finish == AUTO_FINISH_ON \
-                                                #         and timezone.now() > schedule_info.end_dt:
-                                                #     state_cd = 'PE'
-                                                schedule_result = \
-                                                    func_add_schedule(class_id, lecture_id,
-                                                                      member_repeat_schedule_info.repeat_schedule_id,
-                                                                      group_info.group_id, schedule_info.schedule_id,
-                                                                      schedule_info.start_dt, schedule_info.end_dt,
-                                                                      '', ON_SCHEDULE_TYPE, request.user.id,
-                                                                      permission_state_cd,
-                                                                      state_cd)
-                                                error_temp = schedule_result['error']
+                                            state_cd = 'NP'
+                                            permission_state_cd = 'AP'
+                                            # if setting_schedule_auto_finish == AUTO_FINISH_ON \
+                                            #         and timezone.now() > schedule_info.end_dt:
+                                            #     state_cd = 'PE'
+                                            schedule_result = \
+                                                func_add_schedule(class_id, lecture_id,
+                                                                  member_repeat_schedule_info.repeat_schedule_id,
+                                                                  group_info.group_id, schedule_info.schedule_id,
+                                                                  schedule_info.start_dt, schedule_info.end_dt,
+                                                                  '', ON_SCHEDULE_TYPE, request.user.id,
+                                                                  permission_state_cd,
+                                                                  state_cd)
+                                            error_temp = schedule_result['error']
 
-                                            if error_temp is None:
-                                                error_temp = func_refresh_lecture_count(lecture_id)
+                                        if error_temp is None:
+                                            error_temp = func_refresh_lecture_count(lecture_id)
 
-                                            if error_temp is None:
-                                                error_temp = \
-                                                    func_check_group_available_member_after(class_id,
-                                                                                            group_info.group_id,
-                                                                                            schedule_info.schedule_id)
+                                        if error_temp is None:
+                                            error_temp = \
+                                                func_check_group_available_member_after(class_id,
+                                                                                        group_info.group_id,
+                                                                                        schedule_info.schedule_id)
 
-                                            if error_temp is not None:
-                                                raise InternalError
+                                        if error_temp is not None:
+                                            raise InternalError
 
-                                    except TypeError:
-                                        error_temp = 'TypeError'
-                                    except ValueError:
-                                        error_temp = 'ValueError'
-                                    except IntegrityError:
-                                        error_temp = 'IntegrityError'
-                                    except InternalError:
-                                        error_temp = 'InternalError'
+                                except TypeError:
+                                    error_temp = 'TypeError'
+                                except ValueError:
+                                    error_temp = 'ValueError'
+                                except IntegrityError:
+                                    error_temp = 'IntegrityError'
+                                except InternalError:
+                                    error_temp = 'InternalError'
 
-                                    if error_temp is not None:
-                                        error_message = error_temp
-                    if lecture_id is not None and lecture_id != '':
-                        log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
-                                         from_member_name=request.user.last_name + request.user.first_name,
-                                         to_member_name=member_info.name,
-                                         class_tb_id=class_id,
-                                         log_info='['+group_info.get_group_type_cd_name()+'] '
-                                                  + group_info.name + ' 반복 일정',
-                                         log_how='등록',
-                                         log_detail=str(start_date) + '/' + str(end_date), use=USE)
-                        log_data.save()
-                        push_lecture_id.append(lecture_id)
-                        push_title.append(class_type_name + ' 수업 - 일정 알림')
-                        push_message.append(request.user.first_name + '님이 ' + str(start_date)
-                                            + '~' + str(end_date) + ' [' + group_info.get_group_type_cd_name() + '] '
-                                            + group_info.name + ' 반복 일정을 등록했습니다')
+                                if error_temp is not None:
+                                    error_message = error_temp
+                if lecture_id is not None and lecture_id != '':
+                    log_data = LogTb(log_type='LR01', auth_member_id=request.user.id,
+                                     from_member_name=request.user.last_name + request.user.first_name,
+                                     to_member_name=member_info.name,
+                                     class_tb_id=class_id,
+                                     log_info='['+group_info.get_group_type_cd_name()+'] '
+                                              + group_info.name + ' 반복 일정',
+                                     log_how='등록',
+                                     log_detail=str(start_date) + '/' + str(end_date), use=USE)
+                    log_data.save()
+                    push_lecture_id.append(lecture_id)
+                    push_title.append(class_type_name + ' 수업 - 일정 알림')
+                    push_message.append(request.user.first_name + '님이 ' + str(start_date)
+                                        + '~' + str(end_date) + ' [' + group_info.get_group_type_cd_name() + '] '
+                                        + group_info.name + ' 반복 일정을 등록했습니다')
 
             information = '반복 일정 등록이 완료됐습니다.'
     if error is None:
