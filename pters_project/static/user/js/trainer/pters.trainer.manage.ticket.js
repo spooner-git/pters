@@ -654,10 +654,10 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             if($('.lectureStateChangeSelectPopup').attr('data-packagetype')=='package'){
                 modify_package_status($(this).attr('data-packageid'), 'complete');
             }else{
-                var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-                var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-                complete_member_reg_data_pc(lectureID, dbID);
-                $('.lectureStateChangeSelectPopup').css('display', 'none');
+                // var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+                // var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+                // complete_member_reg_data_pc(lectureID, dbID);
+                // $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
             $('#shade_caution').hide();
             hide_shadow_responsively();
@@ -670,10 +670,10 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             if($('.lectureStateChangeSelectPopup').attr('data-packagetype')=='package'){
                 modify_package_status($(this).attr('data-packageid'), 'resume');
             }else{
-                var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
-                var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
-                resume_member_reg_data_pc(lectureID, dbID);
-                $('.lectureStateChangeSelectPopup').css('display', 'none');
+                // var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
+                // var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
+                // resume_member_reg_data_pc(lectureID, dbID);
+                // $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
             $('#shade_caution').hide();
             hide_shadow_responsively();

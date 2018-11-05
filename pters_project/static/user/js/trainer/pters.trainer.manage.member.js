@@ -655,7 +655,7 @@ $(document).ready(function(){
 
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
-        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group"){
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group" && $('.lectureStateChangeSelectPopup').attr('data-packagetype') != "package"){
             var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
             var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
             var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
@@ -667,7 +667,7 @@ $(document).ready(function(){
 
     //재개 처리 버튼
     $('.lectureStateChangeSelectPopup ._resume').click(function(){
-        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group"){
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group" && $('.lectureStateChangeSelectPopup').attr('data-packagetype') != "package"){
             if(!$(this).hasClass('disabled_button')){
                 var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
                 var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
@@ -2173,6 +2173,7 @@ function shiftPackageList(type){
             break;
         case "finished":
             get_package_end_list("callback", function(jsondata){
+                console.log("get_package_end_list", jsondata)
                 var group_class_Html = package_ListHtml('finished', jsondata);
                 $('#finishedPackageList').html(group_class_Html);
             });
