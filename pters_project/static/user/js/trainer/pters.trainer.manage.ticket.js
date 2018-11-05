@@ -644,15 +644,15 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     e.stopPropagation();
     $('#shade_caution').show();
     $('.lectureStateChangeSelectPopup').css('display', 'block').attr('data-packagetype', 'package');
-    $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-packageid'));
-    $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-packageid'));
+    $('.lectureStateChangeSelectPopup ._complete').attr('data-packageid', $(this).attr('data-packageid'));
+    $('.lectureStateChangeSelectPopup ._resume').attr('data-packageid', $(this).attr('data-packageid'));
     show_shadow_reponsively();
     if($(this).attr('data-packagestatus') == "IP"){
         $('._complete').css('display', 'inline-block');
         $('._resume, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._complete', function(){
             if($('.lectureStateChangeSelectPopup').attr('data-packagetype')=='package'){
-                modify_group_status($(this).attr('data-packageid'), 'complete');
+                modify_package_status($(this).attr('data-packageid'), 'complete');
             }else{
                 var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
                 var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
@@ -668,7 +668,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
         $('._complete, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._resume', function(){
             if($('.lectureStateChangeSelectPopup').attr('data-packagetype')=='package'){
-                modify_group_status($(this).attr('data-packageid'), 'resume');
+                modify_package_status($(this).attr('data-packageid'), 'resume');
             }else{
                 var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
                 var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
@@ -3176,7 +3176,8 @@ function modify_package_from_list(package_id, package_name, package_note){
 //패키지 정보 수정
 
 //패키지 완료, 재개하기
-function modify_group_status(package_id, option){
+function modify_package_status(package_id, option){
+
     var bodywidth = window.innerWidth;
     var _URL;
     if(option == 'complete'){
