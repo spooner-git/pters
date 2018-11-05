@@ -93,7 +93,12 @@ def func_refresh_lecture_count(lecture_id):
                 lecture_info.state_cd = 'PE'
             elif lecture_info.lecture_rem_count == 1:
                 if lecture_info.state_cd != 'RF':
-                    lecture_info.state_cd = 'IP'
+                    if lecture_info.package_tb.state_cd == 'IP':
+                        lecture_info.state_cd = 'IP'
+
+            if lecture_info.state_cd == 'PE':
+                lecture_info.lecture_rem_count = 0
+
             lecture_info.save()
         else:
             error = '오류가 발생했습니다.'

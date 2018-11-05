@@ -2339,6 +2339,13 @@ def progress_lecture_info_logic(request):
             error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
+        if lecture_info.package_tb.use == UN_USE:
+            error = '해당 수강권은 진행중 상태가 아닙니다.'
+        else:
+            if lecture_info.package_tb.state_cd != 'IP':
+                error = '해당 수강권은 진행중 상태가 아닙니다.'
+
+    if error is None:
         group_data = GroupLectureTb.objects.select_related('group_tb').filter(lecture_tb_id=lecture_id, use=USE)
         error_count = 0
         for group_info in group_data:
@@ -2748,7 +2755,7 @@ def add_group_member_logic(request):
                         try:
                             package_info = PackageGroupTb.objects.get(~Q(package_tb__package_type_cd='PACKAGE'),
                                                                       group_tb_id=json_loading_data['lecture_info']['group_id'],
-                                                                      use=USE)
+                                                                      use=USE).lastest('mod_dt')
                             package_id = package_info.package_tb_id
                         except ObjectDoesNotExist:
                             package_id = ''
@@ -3257,8 +3264,8 @@ def delete_package_info_logic(request):
                                          lecture_tb__package_tb_id=package_id, lecture_tb__state_cd='IP', use=USE)
 
                 for package_lecture_info in package_lecture_data:
-                    package_lecture_info.auth_cd = 'DELETE'
-                    package_lecture_info.save()
+                    # package_lecture_info.auth_cd = 'DELETE'
+                    # package_lecture_info.save()
 
                     if package_lecture_info.lecture_tb.lecture_rem_count == package_lecture_info.lecture_tb.lecture_reg_count:
                         package_lecture_info.lecture_tb.delete()
@@ -3324,6 +3331,32 @@ def delete_package_info_logic(request):
             error = '오류가 발생했습니다. [3]'
         except ValidationError:
             error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지 추가
+def update_package_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    package_id = request.POST.get('package_id', '')
+    package_name = request.POST.get('package_name', '')
+    package_note = request.POST.get('package_note', '')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
+    error = None
+    try:
+        package_info = PackageTb.objects.get(class_tb_id=class_id, package_id=package_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+    if error is None:
+        if package_name is not None and package_name == '':
+            package_info.name = package_name
+        if package_note is not None and package_note == '':
+            package_info.note = package_note
+        package_info.save()
 
     if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -3612,23 +3645,6 @@ def finish_package_info_logic(request):
             'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW', use=USE)
 
     if error is None:
-        # if len(package_group_data) == 1:
-        #     group_id = package_group_data[0].group_tb.group_id
-        #     schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
-        #                                               end_dt__lte=now, use=USE).exclude(state_cd='PE')
-        #     schedule_data_delete = ScheduleTb.objects.filter(group_tb_id=group_id,
-        #                                                      end_dt__gt=now, use=USE).exclude(state_cd='PE')
-        #     repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id)
-        #     # group_data.update(lecture_tb__state_cd='PE',
-        #     #                   lecture_tb__lecture_avail_count=0, lecture_tb__lecture_rem_count=0)
-        #     if len(schedule_data) > 0:
-        #         schedule_data.update(state_cd='PE')
-        #     if len(schedule_data_delete) > 0:
-        #         schedule_data_delete.delete()
-        #     if len(repeat_schedule_data) > 0:
-        #         repeat_schedule_data.delete()
-        #     package_group_data[0].group_tb.state_cd = 'PE'
-        #     package_group_data[0].group_tb.save()
 
         if package_lecture_data is not None:
             for package_lecture_info in package_lecture_data:

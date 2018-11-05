@@ -3349,7 +3349,7 @@ function check_dropdown_selected(){
             select_all_check=false;
         }
     }else if(selector_ADD_PACKAGE_NEW.css('display') == "block"){
-        if(packagename.val().length > 0 && package_groups.length > 1){
+        if(packagename.val().length > 0 && package_groups.length > 0){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
