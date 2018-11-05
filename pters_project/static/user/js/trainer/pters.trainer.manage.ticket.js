@@ -643,16 +643,16 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
 $(document).on('click', '._groupstatus_disabled_false', function(e){
     e.stopPropagation();
     $('#shade_caution').show();
-    $('.lectureStateChangeSelectPopup').css('display', 'block').attr('data-grouptype', 'group');
-    $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'));
-    $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-groupid'));
+    $('.lectureStateChangeSelectPopup').css('display', 'block').attr('data-packagetype', 'package');
+    $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-packageid'));
+    $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-packageid'));
     show_shadow_reponsively();
-    if($(this).attr('data-groupstatus') == "IP"){
-        $('._complete').css('display', 'block');
+    if($(this).attr('data-packagestatus') == "IP"){
+        $('._complete').css('display', 'inline-block');
         $('._resume, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._complete', function(){
-            if($('.lectureStateChangeSelectPopup').attr('data-grouptype')=='group'){
-                modify_group_status($(this).attr('data-groupid'), 'complete');
+            if($('.lectureStateChangeSelectPopup').attr('data-packagetype')=='package'){
+                modify_group_status($(this).attr('data-packageid'), 'complete');
             }else{
                 var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
                 var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
@@ -663,12 +663,12 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
-    }else if($(this).attr('data-groupstatus') == "PE"){
-        $('._resume').css('display', 'block');
+    }else if($(this).attr('data-packagestatus') == "PE"){
+        $('._resume').css('display', 'inline-block');
         $('._complete, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._resume', function(){
-            if($('.lectureStateChangeSelectPopup').attr('data-grouptype')=='group'){
-                modify_group_status($(this).attr('data-groupid'), 'resume');
+            if($('.lectureStateChangeSelectPopup').attr('data-packagetype')=='package'){
+                modify_group_status($(this).attr('data-packageid'), 'resume');
             }else{
                 var lectureID = $('.lectureStateChangeSelectPopup').attr('data-leid');
                 var dbID = $('.lectureStateChangeSelectPopup').attr('data-dbid');
@@ -3174,3 +3174,65 @@ function modify_package_from_list(package_id, package_name, package_note){
     });
 }
 //패키지 정보 수정
+
+//패키지 완료, 재개하기
+function modify_group_status(package_id, option){
+    var bodywidth = window.innerWidth;
+    var _URL;
+    if(option == 'complete'){
+        _URL = '/trainer/finish_package_info/';
+    }else if(option == 'resume'){
+        _URL = '/trainer/progress_package_info/';
+    }
+
+    $.ajax({
+        url: _URL,
+        type:'POST',
+        data: {"package_id":package_id},
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                smart_refresh_member_group_class_list();
+                $('.lectureStateChangeSelectPopup').css('display', 'none');
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//패키지 완료, 재개하기
