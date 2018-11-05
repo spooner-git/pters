@@ -192,7 +192,7 @@ def add_schedule_logic(request):
                 lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
                 lecture_info.package_tb.save()
 
-                package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
                 for package_group_info in package_group_data:
                     func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
@@ -322,7 +322,7 @@ def delete_schedule_logic(request):
             package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
             package_tb.save()
 
-            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id)
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id, use=USE)
             for package_group_info in package_group_data:
                 func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
@@ -477,7 +477,7 @@ def finish_schedule_logic(request):
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
 
-        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
 
         if schedule_info.group_tb_id is not None and schedule_info.group_tb_id != '':
             group_repeat_schedule_id = None
@@ -1334,7 +1334,7 @@ def add_group_schedule_logic(request):
                                         func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
                                     lecture_info.package_tb.save()
 
-                                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
                                     for package_group_info in package_group_data:
                                         func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
@@ -1486,7 +1486,8 @@ def delete_group_schedule_logic(request):
                         func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
                     lecture_info.package_tb.save()
 
-                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
+                                                                       use=USE)
                     for package_group_info in package_group_data:
                         func_refresh_group_status(package_group_info.group_tb_id, None, None)
                 # func_refresh_group_status(group_id, None, None)
@@ -1692,7 +1693,8 @@ def finish_group_schedule_logic(request):
                     func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
                 lecture_info.package_tb.save()
 
-                package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+                package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
+                                                                   use=USE)
 
                 if member_group_schedule_info.group_tb_id is not None and member_group_schedule_info.group_tb_id != '':
                     group_repeat_schedule_id = None
@@ -1868,7 +1870,8 @@ def add_member_group_schedule_logic(request):
                 func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
             lecture_info.package_tb.save()
 
-            package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
+                                                               use=USE)
             for package_group_info in package_group_data:
                 func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
@@ -2028,7 +2031,7 @@ def add_other_member_group_schedule_logic(request):
                 func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
             lecture_info.package_tb.save()
 
-            package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
             for package_group_info in package_group_data:
                 func_refresh_group_status(package_group_info.group_tb_id, None, None)
 

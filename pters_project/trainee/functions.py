@@ -312,7 +312,7 @@ def func_get_class_lecture_count(context, class_id, user_id):
                         package_data.append(lecture_info)
 
                 package_group_data = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(package_tb_id=lecture_info.package_tb_id)
+                    'group_tb').filter(package_tb_id=lecture_info.package_tb_id, use=USE)
                 # group_lecture_check = 0
                 for package_group_info in package_group_data:
                     if package_group_info.group_tb.group_type_cd == 'NORMAL':
@@ -452,7 +452,7 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 if lecture_info.lecture_tb.package_tb.package_group_num == 1:
                     try:
                         package_group_info = PackageGroupTb.objects.get(
-                            package_tb_id=lecture_info.lecture_tb.package_tb_id)
+                            package_tb_id=lecture_info.lecture_tb.package_tb_id, use=USE)
                         lecture_info_data.group_member_num = package_group_info.group_tb.member_num
                     except ObjectDoesNotExist:
                         lecture_info_data.group_member_num = 'x'
