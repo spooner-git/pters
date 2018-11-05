@@ -110,6 +110,8 @@ urlpatterns = [
     url(r'^add_package_info/$', views.add_package_info_logic, name='add_package_info'),
     # 패키지 삭제
     url(r'^delete_package_info/$', views.delete_package_info_logic, name='delete_package_info'),
+    # 패키지 수정
+    url(r'^update_package_info/$', views.update_package_info_logic, name='update_package_info'),
     # 패키지에 그룹 추가
     url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
     # 패키지에 그룹 삭제
