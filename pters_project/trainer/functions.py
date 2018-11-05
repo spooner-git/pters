@@ -24,15 +24,16 @@ def func_get_class_member_id_list(class_id):
                                            lecture_tb__use=USE,
                                            use=USE
                                            ).order_by('lecture_tb__member__name')
-    member_id = None
     for class_lecture_info in class_lecture_data:
-        if member_id is None:
-            member_id = class_lecture_info.lecture_tb.member_id
+        check_member = None
+        member_id = class_lecture_info.lecture_tb.member_id
+
+        for member_info in all_member:
+            if str(member_info.member_id) == str(member_id):
+                check_member = member_info
+
+        if check_member is None:
             all_member.append(class_lecture_info.lecture_tb.member)
-        else:
-            if member_id != class_lecture_info.lecture_tb.member_id:
-                member_id = class_lecture_info.lecture_tb.member_id
-                all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
 
@@ -45,15 +46,23 @@ def func_get_class_member_ing_list(class_id):
                                                                         lecture_tb__use=USE,
                                                                         lecture_tb__member__use=USE,
                                                                         use=USE).order_by('lecture_tb__member__name')
-    member_id = None
     for class_lecture_info in class_lecture_data:
-        if member_id is None:
-            member_id = class_lecture_info.lecture_tb.member_id
+        check_member = None
+        member_id = class_lecture_info.lecture_tb.member_id
+
+        for member_info in all_member:
+            if str(member_info.member_id) == str(member_id):
+                check_member = member_info
+
+        if check_member is None:
             all_member.append(class_lecture_info.lecture_tb.member)
-        else:
-            if member_id != class_lecture_info.lecture_tb.member_id:
-                member_id = class_lecture_info.lecture_tb.member_id
-                all_member.append(class_lecture_info.lecture_tb.member)
+        # if member_id is None:
+        #     member_id = class_lecture_info.lecture_tb.member_id
+        #     all_member.append(class_lecture_info.lecture_tb.member)
+        # else:
+        #     if member_id != class_lecture_info.lecture_tb.member_id:
+        #         member_id = class_lecture_info.lecture_tb.member_id
+        #         all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
 
@@ -77,16 +86,18 @@ def func_get_class_member_end_list(class_id):
                                                                 ).order_by('lecture_tb__member__name')
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
-    member_id = None
+    # member_id = None
     for class_lecture_info in class_lecture_data:
         if class_lecture_info.ip_lecture_count == 0:
-            if member_id is None:
-                member_id = class_lecture_info.lecture_tb.member_id
+            check_member = None
+            member_id = class_lecture_info.lecture_tb.member_id
+
+            for member_info in all_member:
+                if str(member_info.member_id) == str(member_id):
+                    check_member = member_info
+
+            if check_member is None:
                 all_member.append(class_lecture_info.lecture_tb.member)
-            else:
-                if member_id != class_lecture_info.lecture_tb.member_id:
-                    member_id = class_lecture_info.lecture_tb.member_id
-                    all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
 
@@ -115,13 +126,15 @@ def func_get_class_member_one_to_one_end_list(class_id):
     member_id = None
     for class_lecture_info in class_lecture_data:
         if class_lecture_info.ip_lecture_count == 0:
-            if member_id is None:
-                member_id = class_lecture_info.lecture_tb.member_id
+            check_member = None
+            member_id = class_lecture_info.lecture_tb.member_id
+
+            for member_info in all_member:
+                if str(member_info.member_id) == str(member_id):
+                    check_member = member_info
+
+            if check_member is None:
                 all_member.append(class_lecture_info.lecture_tb.member)
-            else:
-                if member_id != class_lecture_info.lecture_tb.member_id:
-                    member_id = class_lecture_info.lecture_tb.member_id
-                    all_member.append(class_lecture_info.lecture_tb.member)
     return all_member
 
 
@@ -131,19 +144,20 @@ def func_get_member_ing_list(class_id, user_id):
 
     all_member = func_get_class_member_ing_list(class_id)
 
-    # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-    #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-    #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-    #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+    query_group_type_cd = "select count(GROUP_TB_ID) from GROUP_LECTURE_TB as B " \
+                          "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+                          "B.USE=1 and " \
+                          "(select GROUP_TYPE_CD from GROUP_TB as C" \
+                          " where C.ID=B.GROUP_TB_ID and C.use=1)=\'ONE_TO_ONE\'"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
                                          lecture_tb__use=USE,
-                                         use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []))
-                                                                    # group_check=RawSQL(query_group_type_cd, []))
+                                         use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
+                                                           check_one_to_one=RawSQL(query_group_type_cd, []))
     for member_data in all_member:
 
         if member_data.user.is_active:
@@ -192,13 +206,14 @@ def func_get_member_ing_list(class_id, user_id):
                 # group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info_data.lecture_tb_id,
                 #                                                    use=USE)
                 # for group_lecture_info in group_lecture_data:
-                check_one_to_one = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
-                                       group_tb__group_type_cd='ONE_TO_ONE').count()
-                if check_one_to_one > 0:
-                    member_data.check_one_to_one = 1
-                else:
-                    member_data.check_one_to_one = 0
+                # member_data.check_one_to_one = 1
+                # check_one_to_one = PackageGroupTb.objects.select_related(
+                #     'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
+                #                        group_tb__group_type_cd='ONE_TO_ONE', use=USE).count()
+                # if check_one_to_one > 0:
+                #     member_data.check_one_to_one = 1
+                # else:
+                #     member_data.check_one_to_one = 0
 
                 if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
@@ -247,11 +262,13 @@ def func_get_member_ing_list(class_id, user_id):
 
                 if lecture_info.use == USE:
                     if lecture_info.state_cd == 'IP':
-                        if check_one_to_one == 0:
+                        if lecture_info_data.check_one_to_one == 0:
+                            member_data.check_one_to_one = 0
                             member_data.group_reg_count += lecture_info.lecture_reg_count
                             member_data.group_rem_count += lecture_info.lecture_rem_count
                             member_data.group_avail_count += lecture_info.lecture_avail_count
                         else:
+                            member_data.check_one_to_one = 1
                             member_data.lesson_reg_count += lecture_info.lecture_reg_count
                             member_data.lesson_rem_count += lecture_info.lecture_rem_count
                             member_data.lesson_avail_count += lecture_info.lecture_avail_count
@@ -318,10 +335,10 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          " B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
@@ -485,7 +502,7 @@ def func_get_member_end_list(class_id, user_id):
     #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
@@ -659,10 +676,10 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          " B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
@@ -1130,7 +1147,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
             package_tb.save()
 
-            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id)
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id, use=USE)
             for package_group_info in package_group_data:
                 package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
                                                                                      package_group_info.group_tb_id, user_id))
@@ -1323,7 +1340,7 @@ def func_get_lecture_list(context, class_id, member_id):
 
             check_one_to_one = PackageGroupTb.objects.select_related(
                 'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
-                                   group_tb__group_type_cd='ONE_TO_ONE').count()
+                                   group_tb__group_type_cd='ONE_TO_ONE', use=USE).count()
             if check_one_to_one > 0:
                 lecture_info.check_one_to_one = 1
             else:

@@ -20,6 +20,8 @@
       [{% for schedule_info in schedule_data %}"{{ schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleFinishArray":
       [{% for schedule_info in schedule_data %}"{{ schedule_info.finish_check }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "schedulePermissionStateArray":
+      [{% for schedule_info in schedule_data %}"{{ schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "scheduleNoteArray":
       [{% for schedule_info in schedule_data %}"{{ schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
