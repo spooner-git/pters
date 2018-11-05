@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
 from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -1057,8 +1058,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
 
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
-        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         state_cd='PE')
+        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), lecture_tb_id=lecture_id)
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # schedule_data.delete()
         # repeat_schedule_data.delete()

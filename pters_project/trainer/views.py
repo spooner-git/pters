@@ -536,16 +536,16 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 = "select `AUTH_CD` from CLASS_LECTURE_TB as D" \
                   " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.CLASS_TB_ID = " + str(class_id)
             end_schedule_num += ScheduleTb.objects.select_related(
-                'lecture_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__isnull=True,
-                                                 lecture_tb__isnull=False, en_dis_type=ON_SCHEDULE_TYPE,
-                                                 state_cd='PE', use=USE
+                'lecture_tb', 'group_tb').filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+                                                 group_tb__isnull=True, lecture_tb__isnull=False,
+                                                 en_dis_type=ON_SCHEDULE_TYPE, use=USE
                                                  ).annotate(class_auth_cd=RawSQL(query_class_auth_cd, [])
                                                             ).filter(class_auth_cd='VIEW').count()
 
-            end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+            end_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
                                                           group_tb__isnull=False,
                                                           lecture_tb__isnull=True,
-                                                          en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                          en_dis_type=ON_SCHEDULE_TYPE,
                                                           use=USE).count()
         if error is None:
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
@@ -1315,9 +1315,9 @@ def delete_member_info_logic(request):
                                                                   lecture_tb_id=lecture_info.lecture_id,
                                                                   state_cd='NP')
 
-                        schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb_id=lecture_info.lecture_id,
-                                                                         state_cd='PE')
+                        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                         class_tb_id=class_id,
+                                                                         lecture_tb_id=lecture_info.lecture_id)
                         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                                lecture_tb_id=lecture_info.lecture_id)
 
@@ -1792,6 +1792,8 @@ def export_excel_member_info_logic(request):
                         ws1['C' + str(start_raw)] = time_duration_str
                         if pt_schedule_info.state_cd == 'PE':
                             ws1['D' + str(start_raw)] = '완료'
+                        elif pt_schedule_info.state_cd == 'PC':
+                            ws1['D' + str(start_raw)] = '결석'
                         else:
                             ws1['D' + str(start_raw)] = '시작전'
 
@@ -2045,7 +2047,7 @@ def update_lecture_info_logic(request):
         schedule_list = ScheduleTb.objects.filter(lecture_tb=lecture_id)
         if len(schedule_list) > 0:
             reserve_pt_count = schedule_list.count()
-            finish_pt_count = schedule_list.filter(state_cd='PE').count()
+            finish_pt_count = schedule_list.filter(Q(state_cd='PE') | Q(state_cd='PC')).count()
 
     if error is None:
         if input_lecture_reg_count < reserve_pt_count:
@@ -2168,9 +2170,10 @@ def finish_lecture_info_logic(request):
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                         end_dt__gt=now,
+                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # func_refresh_lecture_count(lecture_id)
 
@@ -2262,9 +2265,10 @@ def refund_lecture_info_logic(request):
         now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                         end_dt__gt=now,
+                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
 
         if len(schedule_data) > 0:
@@ -2278,7 +2282,8 @@ def refund_lecture_info_logic(request):
         lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
 
-        end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
+        end_schedule_counter = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                         lecture_tb_id=lecture_id).count()
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
@@ -2373,8 +2378,8 @@ def progress_lecture_info_logic(request):
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
-        schedule_data_finish_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                               state_cd='PE').count()
+        schedule_data_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                               lecture_tb_id=lecture_info.lecture_id).count()
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
         lecture_info.refund_price = 0
@@ -2553,11 +2558,13 @@ def delete_group_info_logic(request):
         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                   group_tb_id=group_id,
                                                   end_dt__lte=timezone.now(),
-                                                  en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
+                                                  en_dis_type=ON_SCHEDULE_TYPE).exclude(Q(state_cd='PE')
+                                                                                        | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
                                                          # lecture_tb__isnull=True,
                                                          end_dt__gt=timezone.now(),
-                                                         en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
+                                                         en_dis_type=ON_SCHEDULE_TYPE).exclude(Q(state_cd='PE')
+                                                                                               | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                group_tb_id=group_id)
         if len(schedule_data) > 0:
@@ -3018,9 +3025,10 @@ def finish_group_info_logic(request):
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
-                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(group_tb_id=group_id,
-                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                         end_dt__gt=now, use=USE).exclude(Q(state_cd='PE')
+                                                                                          | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id)
         # group_data.update(lecture_tb__state_cd='PE',
         #                   lecture_tb__lecture_avail_count=0, lecture_tb__lecture_rem_count=0)
@@ -3048,7 +3056,8 @@ def finish_group_info_logic(request):
                 #     schedule_data_delete.delete()
                 # if len(repeat_schedule_data) > 0:
                 # #     repeat_schedule_data.delete()
-                schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id)
                 lecture_info.lecture_avail_count = 0
                 if lecture_info.state_cd == 'RF':
                     lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
@@ -3124,7 +3133,8 @@ def progress_group_info_logic(request):
             for group_datum in group_data:
                 lecture_info = group_datum.lecture_tb
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id)
                 lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
                 lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
                 if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
@@ -3279,10 +3289,13 @@ def delete_package_info_logic(request):
                 if error is None:
                     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                               lecture_tb__package_tb_id=package_id,
-                                                              end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                              end_dt__lte=now, use=USE).exclude(Q(state_cd='PE')
+                                                                                                | Q(state_cd='PC'))
                     schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                      lecture_tb__package_tb_id=package_id,
-                                                                     end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                                     end_dt__gt=now,
+                                                                     use=USE).exclude(Q(state_cd='PE')
+                                                                                      | Q(state_cd='PC'))
                     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                            lecture_tb__package_tb_id=package_id)
 
@@ -3458,13 +3471,15 @@ def delete_package_group_info_logic(request):
                             schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                       lecture_tb__package_tb_id=package_id,
                                                                       end_dt__lte=timezone.now(),
-                                                                      en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
+                                                                      en_dis_type=ON_SCHEDULE_TYPE
+                                                                      ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                             schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                              lecture_tb__package_tb_id=package_id,
                                                                              # lecture_tb__isnull=True,
                                                                              end_dt__gt=timezone.now(),
-                                                                             en_dis_type=ON_SCHEDULE_TYPE).exclude(
-                                state_cd='PE')
+                                                                             en_dis_type=ON_SCHEDULE_TYPE
+                                                                             ).exclude(Q(state_cd='PE')
+                                                                                       | Q(state_cd='PC'))
                             repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                                    lecture_tb__package_tb_id=package_id)
                             if len(schedule_data) > 0:
@@ -3651,10 +3666,10 @@ def finish_package_info_logic(request):
                 lecture_info = package_lecture_info.lecture_tb
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                           end_dt__lte=now,
-                                                          USE=USE).exclude(state_cd='PE')
+                                                          USE=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                  end_dt__gt=now,
-                                                                 USE=USE).exclude(state_cd='PE')
+                                                                 USE=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                 # func_refresh_lecture_count(lecture_id)
                 if len(schedule_data) > 0:
@@ -3663,7 +3678,8 @@ def finish_package_info_logic(request):
                     schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
-                schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id)
                 lecture_info.lecture_avail_count = 0
                 if lecture_info.state_cd == 'RF':
                     lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
@@ -3724,7 +3740,8 @@ def progress_package_info_logic(request):
             for package_lecture_info in package_lecture_data:
                 lecture_info = package_lecture_info.lecture_tb
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id)
                 lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
                 lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
                 if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
@@ -3826,6 +3843,8 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                 group_schedule_info.end_dt = str(group_schedule_info.end_dt)
                 if group_schedule_info.state_cd == 'PE':
                     group_schedule_info.finish_check = 1
+                elif group_schedule_info.state_cd == 'PC':
+                    group_schedule_info.finish_check = 2
                 else:
                     group_schedule_info.finish_check = 0
 
@@ -4490,9 +4509,8 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
             context['new_member_num'] = new_member_num
 
         if error is None:
-            end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type=ON_SCHEDULE_TYPE,
-                                                         state_cd='PE', use=USE).count()
+            end_schedule_num = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+                                                         en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
             # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                          start_date__gte=month_first_day,
             #                                          start_date__lt=next_month_first_day, use=USE).count()

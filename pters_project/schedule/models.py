@@ -8,7 +8,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from configs.const import USE, SCHEDULE_NOT_FINISH, SCHEDULE_FINISH
+from configs.const import USE, SCHEDULE_NOT_FINISH, SCHEDULE_FINISH, SCHEDULE_ABSENCE
 from configs.models import TimeStampedModel
 from login.models import MemberTb, CommonCdTb
 from trainee.models import LectureTb
@@ -95,6 +95,8 @@ class ScheduleTb(TimeStampedModel):
     def finish_check(self):
         if self.state_cd == 'PE':
             return SCHEDULE_FINISH
+        elif self.state_cd == 'PC':
+            return SCHEDULE_ABSENCE
         else:
             return SCHEDULE_NOT_FINISH
 
