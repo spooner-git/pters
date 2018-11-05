@@ -891,6 +891,11 @@ $(document).ready(function(){
             group_delete_JSON.fullnames = [];
             group_delete_JSON.ids = [];
             close_info_popup('cal_popup_plandelete');
+        }else if(deleteTypeSelect == "package_group_delete"){
+            var package_id = $("#cal_popup_plandelete").attr('data-packageid');
+            var group_id = $("#cal_popup_plandelete").attr('data-groupid');
+            delete_group_from_package(package_id, group_id);
+            close_info_popup('cal_popup_plandelete');
         }else if(deleteTypeSelect == "grouprepeatinfodelete"){
             group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid');
             repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
@@ -1778,7 +1783,7 @@ function float_btn_managemember(option){
         grouptype = "PACKAGE";
         get_group_ing_list('callback', function(jsondata){
             console.log("get_group_ing_list", jsondata);
-            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
+            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", "pure",jsondata);
         });
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#page_addmember').show();
@@ -2031,8 +2036,7 @@ function pc_add_member(option){
         initialize_add_member_sheet();
         grouptype = "PACKAGE";
         get_group_ing_list('callback', function(jsondata){
-            console.log("get_group_ing_list", jsondata);
-            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", jsondata);
+            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", "pure", jsondata);
         });
         selector_page_addmember_input_wrap.css({'height':350+'px'});
 
@@ -4201,14 +4205,28 @@ function smart_refresh_member_group_class_list(){
             }
         });
     }else if($('#currentPackageList').css('display') == "block"){
+        var opened_package = [];
+        $('#currentPackageList div.groupWrap_selected').each(function(){
+            opened_package.push($(this).attr('data-packageid'));
+        });
         get_package_ing_list("callback", function(jsondata){
-            var group_class_Html = package_ListHtml('current', jsondata);
-            $('#currentPackageList').html(group_class_Html);
+            var package_Html = package_ListHtml('current', jsondata);
+            $('#currentPackageList').html(package_Html);
+            for(var i=0; i<opened_package.length; i++){
+               $(`#currentPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
+            }
         });
     }else if($('#finishedPackageList').css('display') == "block"){
+        var opened_package = [];
+        $('#finishedPackageList div.groupWrap_selected').each(function(){
+            opened_package.push($(this).attr('data-packageid'));
+        });
         get_package_end_list("callback", function(jsondata){
-            var group_class_Html = package_ListHtml('finished', jsondata);
-            $('#finishedPackageList').html(group_class_Html);
+            var package_Html = package_ListHtml('finished', jsondata);
+            $('#finishedPackageList').html(package_Html);
+            for(var i=0; i<opened_package.length; i++){
+               $(`#finishedPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
+            }
         });
     }else if($("#calendar").length > 0 ){
         $('#members_mobile, #members_pc').html('');

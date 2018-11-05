@@ -584,7 +584,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
     var bodywidth = window.innerWidth;
     if(!$(this).hasClass('disabled_button')){
         e.stopPropagation();
-        var group_id = $(this).attr('data-groupid');
+        var package_id = $(this).attr('data-packageid');
         var status = $(this).attr('data-edit');
 
 
@@ -593,24 +593,24 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                 ori_group_name = $(this).parent('div').siblings('._groupname').find('input').val();
                 ori_group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val();
                 ori_group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
-                ori_group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type');
+                ori_group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-package-type');
 
                 $(this).attr({'data-edit':'edit', 'src':'/static/user/res/btn-pt-complete-small.png'});
                 $(this).siblings('img._info_cancel').show();
                 $(this).siblings('img._info_download, img._info_delete').hide();
                 $('img._info_modify[data-edit="view"]').addClass('disabled_button');
-                toggle_lock_unlock_inputfield_grouplist(group_id, false);
+                toggle_lock_unlock_inputfield_grouplist(package_id, false);
                 break;
             case 'edit':
                 var group_name = $(this).parent('div').siblings('._groupname').find('input').val();
                 var group_capacity = $(this).parent('div').siblings('._grouppartystatus').find('input').val();
                 var group_memo;
                 if(bodywidth < 600){
-                    group_memo = $('div.groupMemoWrap[data-groupid="'+group_id+'"] input').val();
+                    group_memo = $('div.groupMemoWrap[data-packageid="'+package_id+'"] input').val();
                 }else{
                     group_memo = $(this).parent('div').siblings('._groupmemo').find('input').val();
                 }
-                var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-group-type');
+                var group_type = $(this).parent('div').siblings('._grouptypecd').attr('data-package-type');
 
                 if(group_memo.length == 0){
                     group_memo = " ";
@@ -618,7 +618,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
 
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type);
+                modify_group_from_list(package_id, group_name, group_capacity, group_memo, group_type);
                 break;
         }
 
@@ -635,7 +635,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
             $(this).parent('div').siblings('._groupname').find('input').val(ori_group_name);
             $(this).parent('div').siblings('._grouppartystatus').find('input').val(ori_group_capacity);
             $(this).parent('div').siblings('._groupmemo').find('input').val(ori_group_memo);
-            toggle_lock_unlock_inputfield_grouplist(group_id, true);
+            toggle_lock_unlock_inputfield_grouplist(package_id, true);
             e.stopPropagation();
         });
         //그룹 리스트에서 그룹 수정 취소 버튼을 누른다.
@@ -888,7 +888,7 @@ function delete_group_from_list(group_id, use, callback){
                 //     });
                 // }
                 smart_refresh_member_group_class_list();
-                if(use == "calback"){
+                if(use == "callback"){
                     callback();
                 }
 
@@ -2024,18 +2024,11 @@ function send_delete_member_repeat_infos(jsondata){
 
 
 
-function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
-    $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled', disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
-    $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable));
+function toggle_lock_unlock_inputfield_grouplist(package_id, disable){ //disable=false 수정가능, disable=true 수정불가
+    $('div[data-packageid="'+package_id+'"] input._editable').attr('disabled', disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
+    $('div[data-packageid="'+package_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable));
 }
 
-
-
-//test
-$('#uptext2_PC').click(function(){
-    console.log($('.addByNewRaw').length, $('.addByNewRaw:nth-child(1)').attr('data-name'), $('.addByNewRaw:nth-child(2)').attr('data-name'),$('.addByNewRaw:nth-child(3)').attr('data-name'));
-    console.log('그룹원 추가',added_member_info_to_jsonformat());
-});
 
 
 //서버로부터 그룹 목록 가져오기
@@ -2181,10 +2174,11 @@ function add_lecture_bubble_to_make_package(targetSelector, groupid, groupname){
             lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
         });
         $('#form_package_groupids').val(lecture_bubbles_groupid_array);
-        $('#selected_lectures_to_package_num').text($(`div.lecture_bubble`).length+'개 선택됨' );
+        update_selected_package_num();
     }
 }
 
+//패키지 만들때, 그룹을 빼는 이벤트
 $(document).on("click", "#selected_lectures_to_package_wrap div.lecture_bubble img", function(e){
     e.stopPropagation();
     var $thisBubble = $(this).parents("div.lecture_bubble");
@@ -2194,8 +2188,74 @@ $(document).on("click", "#selected_lectures_to_package_wrap div.lecture_bubble i
         lecture_bubbles_groupid_array.push($(this).attr("data-groupid"));
     });
     $('#form_package_groupids').val(lecture_bubbles_groupid_array);
+    $("#packaggSelector option[value='"+$(this).parents("div.lecture_bubble").attr('data-groupid')+"']").css({"background":"#ffffff"});
+    update_selected_package_num();
     check_dropdown_selected();
 });
+
+//이미 만들어진 패키지에서, 그룹을 빼는 이벤트
+$(document).on("click", "div.groupPackageWrap div.lecture_bubble_mini img", function(e){
+    e.stopPropagation();
+    var package_id = $(this).parents("div.groupPackageWrap").attr("data-packageid");
+    var group_id = $(this).attr('data-groupid');
+    var group_name = $(this).siblings('span').text();
+
+    if($(this).parents("div.groupPackageWrap").find(".lecture_bubble_mini").length<=2){
+        alert("패키지내에는 최소 2개의 수강권이 존재해야 합니다.");
+    }else{
+        deleteTypeSelect = 'package_group_delete';
+        $('#cal_popup_plandelete').show().attr({'data-packageid':package_id, 'data-groupid':group_id});
+        $('#popup_delete_question').text(`정말 패키지에서 ${group_name} 수강권을 삭제하시겠습니까?`);
+        shade_index(150);
+    };
+});
+
+//이미 만들어진 패키지에 그룹을 추가하기 위한 이벤트
+$(document).on("click", "div.groupPackageWrap img.btn_add_lecture_bubble_mini", function(e){
+    e.stopPropagation();
+    $("#add_group_to_package_selector_popup").remove();
+    var package_id = $(this).attr("data-packageid");
+    var $targetHTML = $(this).parent("div.groupPackageWrap");
+    if($targetHTML.find("#add_group_to_package_selector_popup").length <= 0){
+        var html = `<div id="add_group_to_package_selector_popup" class="dropdown" data-packageid="${package_id}">
+                        <ul id="add_group_to_package_selector" class="dropdown-menu pters_dropdown_custom_list">
+                            
+                        </ul>
+                    </div>
+                    `;
+        get_group_ing_list('callback', function(jsondata){
+            fill_single_package_list_to_dropdown_to_make_new_package("#add_group_to_package_selector", "pters", jsondata);
+        });
+        shade_index(100);
+        $targetHTML.append(html);
+    }
+});
+
+//이미 만들어진 패키지에 그룹을 추가하기 위한 이벤트
+$(document).on("click", "#add_group_to_package_selector li a", function(){
+    var package_id = $('#add_group_to_package_selector_popup').attr("data-packageid");
+    var group_id = $(this).attr("data-groupid");
+    var group_name = $(this).text();
+    add_group_from_package(package_id, group_id, "callback", function(){
+        alert(`${group_name}이 패키지에 추가 되었습니다.`);
+        shade_index(-100);
+    });
+});
+
+
+$(document).on("click", '.add_group_to_package_dropdown_title img', function(){
+    $('#add_group_to_package_selector_popup').hide();
+    shade_index(-100);
+});
+
+function update_selected_package_num(){
+    var packagenum = $(`div.lecture_bubble`).length;
+    if(packagenum == 0){
+        $('#selected_lectures_to_package_num').text('*');
+    }else{
+        $('#selected_lectures_to_package_num').text(packagenum+'개 선택됨' );
+    }
+}
 
 $('#packagename').keyup(function(){
     check_dropdown_selected();
@@ -2355,13 +2415,25 @@ function get_package_end_list(use, callback){
 //서버로부터 그룹 목록 가져오기
 
 
-function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, jsondata){
+function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, type, jsondata){
     var $targetHTML = $(targetHTML);
-    var html = ['<option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>'];
-    for(var i=0; i<jsondata.group_id.length; i++){
-        html.push(`<option value="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</option>`);
-    }
+    var html;
+    if(type == "pure"){
+        html = ['<option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>'];
+        for(var i=0; i<jsondata.group_id.length; i++){
+            html.push(`<option value="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</option>`);
+        }
+    }else if(type == "pters"){
+        html = ['<div class="add_group_to_package_dropdown_title" style="display:block;"><a disabled="">추가할 수강권 선택<img src="/static/user/res/member/icon-x-grey.png"></a></div>'];
+        var package_id = $('#add_group_to_package_selector_popup').attr('data-packageid');
+        for(var i=0; i<jsondata.group_id.length; i++){
+            if($(`div.groupPackageWrap[data-packageid="${package_id}"]`).find(`div.lecture_bubble_mini[data-groupid="${jsondata.group_id[i]}"]`).length ==0){
+                html.push(`<li><a data-groupid="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</a></option>`);
+            }else{
 
+            }
+        }
+    }
     $targetHTML.html(html.join(""));
 }
 
@@ -2798,7 +2870,7 @@ function make_new_package_info_to_json_form(){
     // var groupids = [];
 
     var jsondata = {
-                    "package_info":{"package_name":$('#packagename').val(), "package_note":""},
+                    "package_info":{"package_name":$('#packagename').val(), "package_note":$('#packagememo').val()},
                     "new_package_group_data":[]
                     };
     $('#selected_lectures_to_package_wrap .lecture_bubble').each(function(){
@@ -2858,13 +2930,13 @@ function draw_grouplist_in_package($targetHTML, jsondata){
     var htmlToJoin = [];
     for(var i=0; i<jsondata.group_id.length; i++){
         htmlToJoin.push(
-                            `<div class="lecture_bubble" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
-                                <p><span>${jsondata.group_name[i]}</span><img src="/static/user/res/member/icon-x-red.png" style="display:none;"></p>
+                            `<div class="lecture_bubble lecture_bubble_mini" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
+                                <p><span>${jsondata.group_name[i]}</span><img src="/static/user/res/member/icon-x-grey.png" data-groupid="${jsondata.group_id[i]}"></p>
                               </div>`
                         );
     }
-
-    $targetHTML.html(htmlToJoin.join(""));
+    var group_add_button = `<img src="/static/user/res/member/icon-x-red.png" data-packageid="${$targetHTML.attr("data-packageid")}" class="btn_add_lecture_bubble_mini" title="패키지에 수강권 추가하기">`;
+    $targetHTML.html(htmlToJoin.join("")+group_add_button);
 }
 
 //패키지 지우기
@@ -2877,7 +2949,7 @@ function delete_package_from_list(package_id, use, callback){
         next_page = '/trainer/get_package_end_list';
     }
     $.ajax({
-        url:'/trainer/delete_package_info_logic/',
+        url:'/trainer/delete_package_info/',
         type:'POST',
         data: {"package_id":package_id, "next_page":next_page},
         dataType : 'html',
@@ -2913,7 +2985,123 @@ function delete_package_from_list(package_id, use, callback){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 smart_refresh_member_group_class_list();
-                if(use == "calback"){
+                if(use == "callback"){
+                    callback();
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//패키지 지우기
+
+
+//패키지에서 그룹뺴기
+function delete_group_from_package(package_id, group_id, use, callback){
+    var bodywidth = window.innerWidth;
+    $.ajax({
+        url:'/trainer/delete_package_group_info/',
+        type:'POST',
+        data: {"package_id":package_id, "group_id":group_id},
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            pters_option_inspector("package_delete", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                smart_refresh_member_group_class_list();
+                if(use == "callback"){
+                    callback();
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//패키지 지우기
+
+
+//이미 있는 패키지에 그룹추가하기
+function add_group_from_package(package_id, group_id, use, callback){
+    var bodywidth = window.innerWidth;
+    $.ajax({
+        url:'/trainer/add_package_group_info/',
+        type:'POST',
+        data: {"package_id":package_id, "group_id":group_id},
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            // pters_option_inspector("package_create", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                smart_refresh_member_group_class_list();
+                if(use == "callback"){
                     callback();
                 }
 
