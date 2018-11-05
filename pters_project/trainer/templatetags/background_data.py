@@ -10,7 +10,7 @@ from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainer.models import ClassLectureTb, GroupLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb
+from trainer.models import ClassLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb
 from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
     func_get_end_package_member_list
 
@@ -133,10 +133,10 @@ def get_setting_info(request):
             for class_lecture_info in class_lecture_data:
                 lecture_info = class_lecture_info.lecture_tb
 
-                try:
-                    group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                except ObjectDoesNotExist:
-                    group_info = None
+                # try:
+                #     group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                # except ObjectDoesNotExist:
+                #     group_info = None
 
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                           end_dt__lte=now, use=USE).exclude(state_cd='PE')

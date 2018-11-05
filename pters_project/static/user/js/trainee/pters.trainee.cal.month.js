@@ -311,7 +311,6 @@ $(document).ready(function(){
 
     $(document).on('click', '.plan_raw_add', function(){
         $('#groupTimeSelect, #classTimeSelect, .timegraphtext').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="height:23px;marign:auto;"></div>');
-
         clear_pt_add_logic_form();
         $('#addpopup').show();
         //$('#shade2').css({'display':'block'});
@@ -1165,6 +1164,7 @@ $(document).ready(function(){
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata);
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
@@ -1885,35 +1885,43 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             }else{
                 var temp_count_text = '';
                 var temp_text = '';
-
-                if(jsondata.lecture_reg_count[0] != 0){
-                    temp_text +='1:1';
-                    temp_count_text += jsondata.lecture_avail_count;
-                }
-                if(jsondata.group_lecture_reg_count[0] != 0){
-                    if(temp_text == ''){
-                        temp_text += '그룹';
-                        temp_count_text += jsondata.group_lecture_avail_count;
-
-                    }else {
-                        temp_text += '/그룹';
-                        temp_count_text = temp_count_text+'/'+jsondata.group_lecture_avail_count;
+                for(var i=0; i< jsondata.package_type_cd_name.length; i++){
+                    if(i!=0) {
+                        temp_text += '/';
+                        temp_count_text += '/';
                     }
-                }
-                if(jsondata.class_lecture_reg_count[0] != 0){
-                    if(temp_text == ''){
-                        temp_text += '클래스';
-                        temp_count_text += jsondata.class_lecture_avail_count;
+                    temp_text += '['+jsondata.package_type_cd_name[i]+']'+jsondata.package_name[i];
+                    temp_count_text += jsondata.package_lecture_avail_count[i];
 
-                    }else {
-                        temp_text += '/클래스';
-                        temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
-                    }
                 }
-
-                if(temp_text == '') {
-                    temp_count_text = '0';
-                }
+                // if(jsondata.lecture_reg_count[0] != 0){
+                //     temp_text +='1:1';
+                //     temp_count_text += jsondata.lecture_avail_count;
+                // }
+                // if(jsondata.group_lecture_reg_count[0] != 0){
+                //     if(temp_text == ''){
+                //         temp_text += '그룹';
+                //         temp_count_text += jsondata.group_lecture_avail_count;
+                //
+                //     }else {
+                //         temp_text += '/그룹';
+                //         temp_count_text = temp_count_text+'/'+jsondata.group_lecture_avail_count;
+                //     }
+                // }
+                // if(jsondata.class_lecture_reg_count[0] != 0){
+                //     if(temp_text == ''){
+                //         temp_text += '클래스';
+                //         temp_count_text += jsondata.class_lecture_avail_count;
+                //
+                //     }else {
+                //         temp_text += '/클래스';
+                //         temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
+                //     }
+                // }
+                //
+                // if(temp_text == '') {
+                //     temp_count_text = '0';
+                // }
                 //     lecture_enable_test = 1;
                 // }else{
                 //     lecture_enable_test = 0;

@@ -50,6 +50,25 @@
       "group_schedule_group_type_cd_name":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
+
+      "package_type_cd_name":
+      [{% for package_info in package_data %}"{{ package_info.package_tb.package_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "package_name":
+      [{% for package_info in package_data %}"{{ package_info.package_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "package_lecture_reg_count":
+      [{% for package_info in package_data %}"{{ package_info.lecture_reg_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "package_lecture_rem_count":
+      [{% for package_info in package_data %}"{{ package_info.lecture_rem_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "package_lecture_avail_count":
+      [{% for package_info in package_data %}"{{ package_info.lecture_avail_count }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
+      "lecture_flag":
+      ["{{ lecture_flag }}"],
+      "group_lecture_flag":
+      ["{{ group_lecture_flag }}"],
+      "class_lecture_flag":
+      ["{{ class_lecture_flag }}"],
+
       "lecture_avail_count" :
       [{{ lecture_avail_count }}],
       "lecture_reg_count" :
