@@ -2144,6 +2144,7 @@ def finish_lecture_info_logic(request):
     lecture_info = None
     member_info = None
     group_info = None
+
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
@@ -3365,9 +3366,9 @@ def update_package_info_logic(request):
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다. [0]'
     if error is None:
-        if package_name is not None and package_name == '':
+        if package_name is not None and package_name != '':
             package_info.name = package_name
-        if package_note is not None and package_note == '':
+        if package_note is not None and package_note != '':
             package_info.note = package_note
         package_info.save()
 
@@ -3432,10 +3433,10 @@ def delete_package_group_info_logic(request):
     if error is None:
         try:
             with transaction.atomic():
-                package_group_info = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                    package_tb_id=package_id, group_tb_id=group_id,
                                                                    use=USE)
-                package_group_info.update(use=UN_USE)
+                package_group_data.update(use=UN_USE)
 
                 package_group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                                            lecture_tb__package_tb_id=package_id)
@@ -3449,6 +3450,7 @@ def delete_package_group_info_logic(request):
                     package_info.save()
                 except ObjectDoesNotExist:
                     package_info = None
+
                 if package_info is not None:
                     if package_info.package_group_num == 0:
                         class_lecture_data = ClassLectureTb.objects.select_related(
@@ -3490,7 +3492,32 @@ def delete_package_group_info_logic(request):
                                 repeat_schedule_data.delete()
                         package_info.use = UN_USE
                         package_info.save()
+                    else:
+                        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                  lecture_tb__package_tb_id=package_id,
+                                                                  group_tb_id=group_id,
+                                                                  end_dt__lte=timezone.now(),
+                                                                  en_dis_type=ON_SCHEDULE_TYPE
+                                                                  ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                        schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                         lecture_tb__package_tb_id=package_id,
+                                                                         group_tb_id=group_id,
+                                                                         # lecture_tb__isnull=True,
+                                                                         end_dt__gt=timezone.now(),
+                                                                         en_dis_type=ON_SCHEDULE_TYPE
+                                                                         ).exclude(Q(state_cd='PE')
+                                                                                   | Q(state_cd='PC'))
+                        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                               lecture_tb__package_tb_id=package_id,
+                                                                               group_tb_id=group_id)
+                        if len(schedule_data) > 0:
+                            schedule_data.update(state_cd='PE')
+                        if len(schedule_data_delete) > 0:
+                            schedule_data_delete.delete()
+                        if len(repeat_schedule_data) > 0:
+                            repeat_schedule_data.delete()
 
+                func_refresh_group_status(group_id, None, None)
         except ValueError:
             error = '오류가 발생했습니다.'
         except IntegrityError:
@@ -3666,10 +3693,10 @@ def finish_package_info_logic(request):
                 lecture_info = package_lecture_info.lecture_tb
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                           end_dt__lte=now,
-                                                          USE=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                                                          use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                  end_dt__gt=now,
-                                                                 USE=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                                                                 use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                 # func_refresh_lecture_count(lecture_id)
                 if len(schedule_data) > 0:
@@ -3690,8 +3717,6 @@ def finish_package_info_logic(request):
 
     if error is None:
         for package_group_info in package_group_data:
-            package_group_info.use = UN_USE
-            package_group_info.save()
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
@@ -3705,7 +3730,7 @@ def finish_package_info_logic(request):
         log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=package_info.name + package_info.get_group_type_cd_name() + ' 수강권',
+                         log_info=package_info.name + package_info.name + ' 수강권',
                          log_how='완료 처리', use=USE)
 
         log_data.save()
@@ -3729,7 +3754,7 @@ def progress_package_info_logic(request):
             error = '패키지 정보를 불러오지 못했습니다.'
 
     if error is None:
-        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id, use=USE)
+        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id)
 
         package_lecture_data = ClassLectureTb.objects.select_related(
             'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW', use=USE)
@@ -3755,8 +3780,8 @@ def progress_package_info_logic(request):
 
     if error is None:
         for package_group_info in package_group_data:
-            package_group_info.use = USE
-            package_group_info.save()
+            # package_group_info.use = USE
+            # package_group_info.save()
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     if error is None:
@@ -3770,7 +3795,7 @@ def progress_package_info_logic(request):
         log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=package_info.name + package_info.get_group_type_cd_name() + ' 수강권',
+                         log_info=package_info.name + package_info.name + ' 수강권',
                          log_how='재개', use=USE)
 
         log_data.save()
