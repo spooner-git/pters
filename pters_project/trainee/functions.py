@@ -1,6 +1,6 @@
 import datetime
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.db.models.functions import Coalesce
@@ -175,7 +175,9 @@ def func_get_trainee_group_ing_list(class_id, user_id):
     for lecture_info in lecture_data:
         group_lecture_check = 0
         try:
-            group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+            group_lecture_info = GroupLectureTb.objects.get(group_tb__state_cd='IP',
+                                                            group_tb__class_tb_id=class_id,
+                                                            group_tb__use=USE,
                                                             lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
         except ObjectDoesNotExist:
             group_lecture_check = 1
@@ -214,7 +216,8 @@ def func_get_trainee_lecture_ing_list(class_id, user_id):
     for lecture_info in lecture_data:
         group_lecture_check = 0
         try:
-            group_lecture_info = GroupLectureTb.objects.get(group_tb__class_tb_id=class_id,
+            group_lecture_info = GroupLectureTb.objects.get(group_tb__state_cd='IP', group_tb__use=USE,
+                                                            group_tb__class_tb_id=class_id,
                                                             lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
         except ObjectDoesNotExist:
             group_lecture_check = 1
@@ -312,7 +315,8 @@ def func_get_class_lecture_count(context, class_id, user_id):
                         package_data.append(lecture_info)
 
                 package_group_data = PackageGroupTb.objects.select_related(
-                    'group_tb').filter(package_tb_id=lecture_info.package_tb_id, use=USE)
+                    'group_tb').filter(group_tb__state_cd='IP', group_tb__use=USE,
+                                       package_tb_id=lecture_info.package_tb_id, use=USE)
                 # group_lecture_check = 0
                 for package_group_info in package_group_data:
                     if package_group_info.group_tb.group_type_cd == 'NORMAL':
@@ -452,8 +456,11 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 if lecture_info.lecture_tb.package_tb.package_group_num == 1:
                     try:
                         package_group_info = PackageGroupTb.objects.get(
-                            package_tb_id=lecture_info.lecture_tb.package_tb_id, use=USE)
+                            package_tb_id=lecture_info.lecture_tb.package_tb_id,
+                            group_tb__state_cd='IP', use=USE)
                         lecture_info_data.group_member_num = package_group_info.group_tb.member_num
+                    except MultipleObjectsReturned:
+                        lecture_info_data.group_member_num = 'x'
                     except ObjectDoesNotExist:
                         lecture_info_data.group_member_num = 'x'
                 else:

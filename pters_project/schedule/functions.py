@@ -32,7 +32,7 @@ def func_get_lecture_id(class_id, member_id):
 
     for lecture_info in lecture_data:
         try:
-            GroupLectureTb.objects.get(group_tb__group_type_cd='ONE_TO_ONE',
+            GroupLectureTb.objects.get(group_tb__state_cd='IP', group_tb__group_type_cd='ONE_TO_ONE',
                                        lecture_tb_id=lecture_info.lecture_tb.lecture_id,
                                        use=USE)
             lecture_id = lecture_info.lecture_tb.lecture_id
@@ -49,6 +49,7 @@ def func_get_group_lecture_id(group_id, member_id):
     lecture_id = None
 
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                       group_tb__state_cd='IP',
                                                        group_tb__use=USE,
                                                        lecture_tb__member_id=member_id,
                                                        lecture_tb__state_cd='IP',
