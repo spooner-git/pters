@@ -54,6 +54,7 @@
         {% csrf_token %}
         <input type="hidden" name="repeat_schedule_id" id="id_repeat_schedule_id_confirm"> <!--ajax로 받은 id-->
         <input type="hidden" name="repeat_confirm"   id="id_repeat_confirm">  <!--val 1, 0-->
+        <input type="hidden" name="group_member_ids" id="id_repeat_group_member_ids">
         <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
     </form>
 
@@ -283,6 +284,7 @@
             <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
             <input type="hidden" name="add_memo"          id="id_memo_mini">
             <input type="hidden" name="group_id"          id="id_group_id">
+            <input type="hidden" name="group_member_ids"  id="id_group_member_ids">
         </form>
 
         <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
