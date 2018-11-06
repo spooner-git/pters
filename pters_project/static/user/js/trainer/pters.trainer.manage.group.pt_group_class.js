@@ -1767,7 +1767,7 @@ function groupMemberListSet(group_id, jsondata){
             '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
             '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
             '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>'+
-            '<div class="_fixedmember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'">'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>';
+            '<div class="_fixedmember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'">'+'<div></div>'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>';
             //'<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
             //'<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
             //'<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
@@ -1786,7 +1786,7 @@ function groupMemberListSet(group_id, jsondata){
             '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate, '.')+'</div>' +
             '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate, '.')+'</div>' +
             '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>'+
-            '<div class="_fixedmember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'">'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>';
+            '<div class="_fixedmember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'">'+'<div></div>'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>';
 
             if(grouptype!='ONE_TO_ONE'){
                 memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>'
