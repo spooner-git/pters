@@ -391,7 +391,7 @@ def add_trainee_schedule_logic(request):
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
 
-        if lt_pus_from_trainee_lesson_alarm == lt_pus_from_trainee_lesson_alarm:
+        if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
             push_info_schedule_start_date = str(start_date).split(':')
             push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
@@ -541,7 +541,8 @@ def delete_trainee_schedule_logic(request):
             lt_pus_from_trainee_lesson_alarm = int(setting_data.setting_info)
         except ObjectDoesNotExist:
             lt_pus_from_trainee_lesson_alarm = FROM_TRAINEE_LESSON_ALARM_ON
-        if lt_pus_from_trainee_lesson_alarm == lt_pus_from_trainee_lesson_alarm:
+
+        if lt_pus_from_trainee_lesson_alarm == FROM_TRAINEE_LESSON_ALARM_ON:
             push_info_schedule_start_date = str(start_date).split(':')
             push_info_schedule_end_date = str(end_date).split(' ')[1].split(':')
 
