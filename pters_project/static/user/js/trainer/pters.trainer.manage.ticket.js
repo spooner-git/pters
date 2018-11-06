@@ -283,7 +283,9 @@ function draw_memberlist_for_addByList(targetHTML){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -735,7 +737,9 @@ function get_group_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -792,7 +796,9 @@ function get_group_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -857,7 +863,9 @@ function delete_group_from_list(group_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -982,7 +990,9 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -1065,7 +1075,9 @@ function modify_group_status(group_id, option){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -1540,7 +1552,9 @@ function get_groupmember_list(group_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'))
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
             }else{
@@ -1598,7 +1612,9 @@ function get_end_groupmember_list(group_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'))
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
             }else{
@@ -2059,7 +2075,9 @@ function get_member_group_class_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2114,7 +2132,9 @@ function get_member_group_class_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2324,7 +2344,9 @@ function get_package_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2380,7 +2402,9 @@ function get_package_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2580,7 +2604,9 @@ function get_package_member_list(package_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2638,7 +2664,9 @@ function get_end_package_member_list(package_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2835,7 +2863,9 @@ function send_new_package_info(packagedata, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2903,7 +2933,9 @@ function get_grouplist_in_package(package_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2970,7 +3002,9 @@ function delete_package_from_list(package_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -3028,7 +3062,9 @@ function delete_group_from_package(package_id, group_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -3086,7 +3122,9 @@ function add_group_from_package(package_id, group_id, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -3143,7 +3181,9 @@ function modify_package_from_list(package_id, package_name, package_note){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -3210,7 +3250,9 @@ function modify_package_status(package_id, option){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
