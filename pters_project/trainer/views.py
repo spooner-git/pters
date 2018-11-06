@@ -3243,38 +3243,49 @@ def update_fix_group_member_logic(request):
     group_id = json_loading_data['group_id']
     try:
         group_info = GroupTb.objects.get(group_id=group_id, use=USE)
-        if len(json_loading_data['ids']) > group_info.member_num:
+        if len(json_loading_data['member_info']) > group_info.member_num:
             error = '그룹 정원보다 고정 회원이 많습니다.'
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다. [3]'
 
     if error is None:
         # idx = 0
-        for member_id_info in json_loading_data['ids']:
-            group_lecture_data = None
-            if error is None:
-                group_lecture_data = GroupLectureTb.objects.select_related(
-                    'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
-            if error is None:
-                try:
-                    with transaction.atomic():
+        if error is None:
+            member_test_data = []
+            group_lecture_data = GroupLectureTb.objects.select_related(
+                'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+            for group_lecture_info in group_lecture_data:
+                check = 0
+                for member_test_info in member_test_data:
+                    if str(member_test_info) == str(group_lecture_info.lecture_tb.member_id):
+                        check = 1
+                if check == 0:
+                    member_test_data.append(group_lecture_info.lecture_tb.member_id)
+
+            if len(member_test_data) + len(json_loading_data['member_info']) > group_info.member_num:
+                error = '그룹 정원보다 고정 회원이 많습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                for json_info in json_loading_data['member_info']:
+                    group_lecture_data = None
+                    if error is None:
                         if group_lecture_data is not None:
                             for group_lecture_info in group_lecture_data:
-                                if group_lecture_info.lecture_tb.member_id == member_id_info:
-                                    group_lecture_info.fix_state_cd = 'FIX'
-                                else:
-                                    group_lecture_info.fix_state_cd = ''
+                                if group_lecture_info.lecture_tb.member_id == json_info['member_id']:
+                                    group_lecture_info.fix_state_cd = json_info['fix_info']
                                 group_lecture_info.save()
-                except ValueError:
-                    error = '오류가 발생했습니다. [4]'
-                except IntegrityError:
-                    error = '오류가 발생했습니다. [5]'
-                except TypeError:
-                    error = '오류가 발생했습니다. [6]'
-                except ValidationError:
-                    error = '오류가 발생했습니다. [7]'
-                except InternalError:
-                    error = error
+        except ValueError:
+            error = '오류가 발생했습니다. [4]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [5]'
+        except TypeError:
+            error = '오류가 발생했습니다. [6]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [7]'
+        except InternalError:
+            error = error
 
     if error is not None:
         logger.error(
@@ -4249,7 +4260,9 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
         #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
 
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
+        group_data = GroupTb.objects.filter(Q(ing_group_member_num__gte=1)
+                                            | (Q(ing_group_member_num=0) & Q(end_group_member_num=0)),
+                                            class_tb_id=class_id, use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        # group_member_num=RawSQL(query_group_member_num, [])
