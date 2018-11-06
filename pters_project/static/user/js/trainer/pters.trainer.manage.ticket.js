@@ -502,7 +502,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             repeat_list.show();
             grouplist.show();
             if(bodywidth < 600){
-               memo_list.show(); 
+               memo_list.show();
             }
             if($(this).attr('data-packagestatecd')=='current'){
                 get_package_member_list(package_id);
@@ -517,20 +517,6 @@ $(document).on('click', 'div.groupWrap', function(e){
                 });
             }
             get_group_repeat_info(package_id);
-        //}
-        // }else if(package_id == "1:1"){
-        //     $(this).addClass('groupWrap_selected');
-        //     memberlist.addClass('groupMembersWrap_selected').show();
-        //     if( $('#btnCallCurrent').hasClass('pters_selectbox_btn_selected') ){
-        //         get_member_one_to_one_ing_list("callback", function(jsondata){
-        //             memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</div>');
-        //         });
-        //     }else if( $('#btnCallFinished').hasClass('pters_selectbox_btn_selected') ){
-        //         get_member_one_to_one_end_list("callback", function(jsondata){
-        //             memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('finished', 'name', 'no', jsondata).html+'</div>');
-        //         });
-        //     }
-        // }
     }else{
         $(this).removeClass('groupWrap_selected');
         memberlist.removeClass('groupMembersWrap_selected').hide();
@@ -2217,8 +2203,8 @@ $(document).on("click", "div.groupPackageWrap div.lecture_bubble_mini img", func
     var group_id = $(this).attr('data-groupid');
     var group_name = $(this).siblings('span').text();
 
-    if($(this).parents("div.groupPackageWrap").find(".lecture_bubble_mini").length<=2){
-        alert("패키지내에는 최소 2개의 수강권이 존재해야 합니다.");
+    if($(this).parents("div.groupPackageWrap").find(".lecture_bubble_mini").length < 2){
+        alert("패키지내에는 최소 1개의 수강권이 존재해야 합니다.");
     }else{
         deleteTypeSelect = 'package_group_delete';
         $('#cal_popup_plandelete').show().attr({'data-packageid':package_id, 'data-groupid':group_id});
@@ -2555,11 +2541,11 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
 
         if(package_type == "EMPTY"){
-            htmlToJoin.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }else if(package_type == "NORMAL"){
-            htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }else if(package_type == "ONE_TO_ONE"){
-            htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }else{
             htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }
