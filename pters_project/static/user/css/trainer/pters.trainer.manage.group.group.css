@@ -524,6 +524,9 @@ div._manage{
 	div.memberline div{
 		width: 12.5%;
 	}
+	div.memberline div._manage, div.groupmemberline_thead div._manage{
+		display: none;
+	}
 	tr.memberline td{
 		width: 12.5%;
 	}
