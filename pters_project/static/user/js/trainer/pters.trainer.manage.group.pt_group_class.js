@@ -98,6 +98,7 @@ function addByNew_input_eventGroup(){
     });
 
     $(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
+        limit_char(this);
         $(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()});
         check_dropdown_selected();
     });
@@ -108,6 +109,7 @@ function addByNew_input_eventGroup(){
     });
 
     $(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
+        limit_char_only_number(this);
         $(this).parent('.addByNewRaw').attr('data-phone', $(this).val());
         check_dropdown_selected();
     });

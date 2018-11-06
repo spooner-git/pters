@@ -98,6 +98,7 @@ function addByNew_input_eventGroup(){
     });
 
     $(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
+        limit_char(this);
         $(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()});
         check_dropdown_selected();
     });
@@ -108,6 +109,7 @@ function addByNew_input_eventGroup(){
     });
 
     $(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
+        limit_char_only_number(this);
         $(this).parent('.addByNewRaw').attr('data-phone', $(this).val());
         check_dropdown_selected();
     });
@@ -679,21 +681,17 @@ $(document).on('click', '.groupWrap input', function(e){
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 $(document).on('click', 'img.btn_add_member_to_group', function(){
     var bodywidth = window.innerWidth;
-    var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid');
-    var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname');
-    var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity');
-    var group_type = $(this).parents('.groupMembersWrap').attr('data-grouptype');
+    var package_id = $(this).parents('.groupMembersWrap').attr('data-packageid');
+    var package_name = $(this).parents('.groupMembersWrap').attr('data-packagename');
+    var package_capacity = $(this).parents('.groupMembersWrap').attr('data-packagecapacity');
+    var package_type = $(this).parents('.groupMembersWrap').attr('data-packagetype');
     if(bodywidth < 600){
         float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember');
     }
-    if(group_type=='NORMAL'){
-        $('#uptext2, #uptext2_PC').text('그룹원 추가'+' ('+group_name+')');
-    }else{
-        $('#uptext2, #uptext2_PC').text('클래스원 추가'+' ('+group_name+')');
-    }
-    $('#form_member_groupid').val(group_id);
+    $('#uptext2, #uptext2_PC').text('수강권 인원 추가'+' ('+package_name+')');
+    $('#form_member_groupid').val(package_id);
 });
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 
@@ -1754,22 +1752,22 @@ function groupMemberListSet(group_id, jsondata){
 }
 //그룹원 목록을 그룹에 그리기
 
-//그룹 목록에서 그룹원 관리의 x 버튼으로 그룹에서 빼기
+//수강권 목록에서 관리의 x 버튼으로 수강권에서 회원 빼기
 $(document).on('click', 'img.substract_groupMember', function(e){
     e.stopPropagation();
 
     var groupmember_name = $(this).attr('data-fullname');
     var groupmember_dbid = $(this).attr('data-dbid');
     var groupmember_groupid = $(this).attr('data-groupid');
-    var groupname = $(`div.groupWrap[data-groupid="${groupmember_groupid}"] ._groupname input`).val();
-    group_delete_JSON = {"group_id":"", "fullnames":[], "ids":[]};
+    var groupname = $(`div.groupWrap[data-packageid="${groupmember_groupid}"] ._groupname input`).val();
+    group_delete_JSON = {"package_id":"", "fullnames":[], "ids":[]};
     group_delete_JSON.ids.push(groupmember_dbid);
     group_delete_JSON.fullnames.push(groupmember_name);
-    group_delete_JSON.group_id = groupmember_groupid;
+    group_delete_JSON.package_id = groupmember_groupid;
 
     $('#cal_popup_plandelete').css('display','block');
     $('#popup_delete_question').text(`${groupname}에서 ${groupmember_name}님을 제외 하시겠습니까?`);
-    deleteTypeSelect = "groupMember_Substract_From_Group";
+    deleteTypeSelect = "ticketMember_Substract_From_Group";
     shade_index(150);
 });
 
@@ -1778,9 +1776,9 @@ $('#popup_delete_btn_yes').click(function(){
     //if(ajax_block_during_delete_weekcal == true){
     if(!$(this).hasClass('disabled_button')){
         //ajax_block_during_delete_weekcal = false;
-        if(deleteTypeSelect == "groupMember_Substract_From_Group"){
+        if(deleteTypeSelect == "ticketMember_Substract_From_Group"){
             disable_delete_btns_during_ajax();
-            delete_groupmember_from_grouplist('callback', function(){
+            delete_ticketmember_from_grouplist('callback', function(){
                 close_info_popup('cal_popup_plandelete');
                 smart_refresh_member_group_class_list();
             });
@@ -3265,3 +3263,177 @@ function modify_package_status(package_id, option){
     });
 }
 //패키지 완료, 재개하기
+
+
+//새로운 수강권 멤버 정보 서버로 보내 등록하기
+function add_ticketmember_form_func(){
+    var bodywidth = window.innerWidth;
+    $.ajax({
+        url:'/trainer/add_package_member/',
+        type:'POST',
+        data: JSON.stringify(added_ticket_member_info_to_jsonformat()),
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            // pters_option_inspector("groupmember_create", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                // $('html').css("cursor","auto");
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                if(bodywidth < 600){
+                    //$('#page_managemember').show();
+                    $('#page_managemember').css({'height':'100%'});
+                }else{
+                    $('body').css('overflow-y', 'auto');
+                }
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                smart_refresh_member_group_class_list();
+                $('#startR').attr('selected', 'selected');
+                close_manage_popup('member_add');
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    })
+}
+
+//ajax로 서버에 보낼 때, 추가된 회원들의 정보를 form에 채운다.
+function added_ticket_member_info_to_jsonformat(){
+    var fast_check = $('#fast_check').val();
+    var search_confirm = $('#id_search_confirm').val();
+    var package_id = $('#form_member_groupid').val();
+    var counts;
+    var price;
+    var start_date;
+    var end_date;
+    var memo;
+    if(fast_check == 1){
+        counts = $('#memberCount_add').val();
+        price = $('#lecturePrice_add_value').val();
+        start_date = $('#datepicker_add').val();
+        end_date = $('#datepicker2_add').val();
+        memo = $('#comment').val();
+    }else if(fast_check == 0){
+        counts = $('#memberCount_add_fast').val();
+        price = $('#lecturePrice_add_value_fast').val();
+        start_date = $('#datepicker_fast').val();
+        end_date = $('#memberDue_add_2_fast').val();
+        memo = $('#comment_fast').val();
+    }
+
+    var dataObject = {
+        "new_member_data":[],
+        "old_member_data":[],
+        "lecture_info":{
+            "fast_check":fast_check,
+            "memo": memo,
+            "counts": counts,
+            "price": price,
+            "search_confirm": search_confirm,
+            "start_date": start_date,
+            "end_date": end_date,
+            "package_id":package_id
+        }
+    };
+
+    var len = $('#addedMemberListBox .addByNewRaw').length;
+    for(var i=1; i<len+1; i++){
+        var data;
+        if($('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid').length == 0){
+            var firstname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-firstname');
+            var lastname = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-lastname');
+            var phone = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-phone');
+            var sex = $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-sex');
+            data = {
+                "first_name" : firstname,
+                "last_name" : lastname,
+                "phone" : phone,
+                "sex" : sex,
+                "birthday_dt" : ""
+            };
+            dataObject.new_member_data.push(data);
+        }else{
+            data = {"db_id" : $('#addedMemberListBox .addByNewRaw:nth-child('+i+')').attr('data-dbid')};
+            dataObject.old_member_data.push(data);
+        }
+    }
+
+    return dataObject;
+}
+
+//수강권에서 인원 지우기
+function delete_ticketmember_from_grouplist(use, callback){
+    console.log(JSON.stringify(group_delete_JSON))
+    $.ajax({
+        url:'/trainer/delete_package_member_info/',
+        type:'POST',
+        data:JSON.stringify(group_delete_JSON),
+        //data:{"member_name":fullname, "member_id":id, "group_id":group_id, "next_page":'/trainer/get_group_info/'},
+        dataType : 'html',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+            pters_option_inspector("groupmember_delete", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            enable_delete_btns_after_ajax();
+            var jsondata = JSON.parse(data);
+            //ajax_received_json_data_member_manage(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                console.log('success');
+                if(use == "callback"){
+                    callback();
+                }
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+//수강권에서 인원 지우기
