@@ -171,7 +171,7 @@ $(document).ready(function(){
                     memberListSet('finished','date','no',jsondata);
                 });
             }
-            alignType = 'startP'
+            alignType = 'startP';
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
@@ -182,13 +182,14 @@ $(document).ready(function(){
                     memberListSet('finished','date','yes',jsondata);
                 });
             }
-            alignType = 'startR'
+            alignType = 'startR';
         }
     });
 
 //#####################회원정보 팝업 //#####################
 
-    $(document).on('click', '.memberline', function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click', '.memberline', function(e){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        e.stopPropagation();
         var bodywidth = window.innerWidth;
         var dbID = $(this).find('._id').attr('data-dbid');
         shade_index(100);
