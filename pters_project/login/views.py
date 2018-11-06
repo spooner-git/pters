@@ -175,6 +175,8 @@ class ServiceTestLoginView(TemplateView):
                                      name='1:1레슨',
                                      # ing_group_member_num=ing_group_member_num,
                                      # end_group_member_num=end_group_member_num,
+                                     reg_dt=class_data.reg_dt,
+                                     mod_dt=class_data.mod_dt,
                                      state_cd='IP', use=USE)
                 group_info.save()
 
@@ -183,6 +185,8 @@ class ServiceTestLoginView(TemplateView):
                     check_group = GroupLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
                     if len(check_group) == 0:
                         lecture_info = GroupLectureTb(group_tb_id=group_info.group_id, lecture_tb_id=class_lecture_info.lecture_tb_id,
+                                                      reg_dt=class_lecture_info.lecture_tb.reg_dt,
+                                                      mod_dt=class_lecture_info.lecture_tb.mod_dt,
                                                       use=class_lecture_info.lecture_tb.use)
                         lecture_info.save()
 
@@ -210,11 +214,17 @@ class ServiceTestLoginView(TemplateView):
                                                  state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
                                                  ing_package_member_num=group_info.ing_group_member_num,
                                                  end_package_member_num=group_info.end_group_member_num,
-                                                 package_group_num=1, use=group_info.use)
+                                                 package_group_num=1,
+                                                 reg_dt=group_info.reg_dt,
+                                                 mod_dt=group_info.mod_dt,
+                                                 use=group_info.use)
                         package_info.save()
                         package_group_info = PackageGroupTb(class_tb_id=group_info.class_tb_id,
                                                             package_tb_id=package_info.package_id,
-                                                            group_tb_id=group_info.group_id, use=group_info.use)
+                                                            group_tb_id=group_info.group_id,
+                                                            reg_dt=group_info.reg_dt,
+                                                            mod_dt=group_info.mod_dt,
+                                                            use=group_info.use)
                         package_group_info.save()
 
                         group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id)

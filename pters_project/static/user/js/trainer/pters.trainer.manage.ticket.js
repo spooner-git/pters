@@ -2506,35 +2506,35 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         var packagelist = '<div class="groupPackageWrap" data-packageid="'+package_id+'"></div>';
         var memberlist = '<div class="groupMembersWrap" data-packageid="'+package_id+'" data-packagename="'+package_name+'" data-packagecapacity="'+package_capacity+'" data-packagetype="'+package_type+'">'+package_memberlist+'</div>';
 
-        if(package_type == "ONE_TO_ONE") {
-            manageimgs = '<div class="_groupmanage"></div>';
-        }
-        else{
+        // if(package_type == "ONE_TO_ONE") {
+        //     manageimgs = '<div class="_groupmanage"></div>';
+        // }
+        // else{
             var manageimgs = '<div class="_groupmanage">' + pceditimage + pceditcancelimage + pcdeleteimage + '</div>';
             if (Options.auth_class == 0) {
                 manageimgs = '<div class="_groupmanage">' + img_lock_function + '</div>';
             }
-        }
+        // }
 
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
             '<div class="_grouptypecd" data-package-type="'+package_type+'"><input class="group_listinput input_disabled_true" value="'+package_type_nm+'" disabled>'+'</div>'+
             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+package_name+'" disabled>'+'</div>'+
             '<div class="_groupparticipants '+full_package+'">'+ package_membernum+'</div>'+
             '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_package+'" value="'+package_capacity+'" disabled>'+'</div>'
-            if(package_type == "ONE_TO_ONE") {
-                main += '<div class="_grouppartystatus '+full_package+'"><span>'+ package_membernum + ' </span> ' +'</div>';
-            }
-            else{
+            // if(package_type == "ONE_TO_ONE") {
+            //     main += '<div class="_grouppartystatus '+full_package+'"><span>'+ package_membernum + ' </span> ' +'</div>';
+            // }
+            // else{
                 main += '<div class="_grouppartystatus ' + full_package + '">' + '<div class="group_member_current_num" style="text-align:center;">' + package_membernum + '</div>' + '<span> </div>';
-            }
+            // }
             main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
 
-            if(package_type == "ONE_TO_ONE"){
-                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
-            }
-            else{
+            // if(package_type == "ONE_TO_ONE"){
+            //     main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
+            // }
+            // else{
                 main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(package_createdate,'.')+'" disabled>'+'</div>'
-            }
+            // }
             main += '<div class="_groupstatus" data-packageid="'+package_id+'">'+'<span class="_editable _groupstatus_'+packagestatus_cd+'" data-packagestatus="'+packagestatus_cd+'" data-packageid="'+package_id+'">'+packagestatus+'</span>'+'</div>'+ manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
 
@@ -2549,11 +2549,11 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         }
     }
 
-    if(htmlToJoin.length == 0){
+    if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 1){
         if(option == "current"){
-            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수강권이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
+            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
         }
     }
     return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
@@ -2738,11 +2738,11 @@ function packageMemberListSet(package_id, jsondata){
             //'<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
             //'<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
             //'<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-            if(grouptype!='ONE_TO_ONE') {
+            // if(grouptype!='ONE_TO_ONE') {
                 memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="' + groupmember_lastname + groupmember_firstname + '" data-id="' + groupmember_id + '" data-dbid="' + groupmember_dbid + '" data-groupid="' + package_id + '"></div>'
-            }else{
-                 memberRow += '<div class="_manage"></div>';
-            }
+            // }else{
+            //      memberRow += '<div class="_manage"></div>';
+            // }
             memberRow += htmlEnd;
         }else if(bodywidth >= 600){
             memberRow = htmlStart +
@@ -2754,11 +2754,11 @@ function packageMemberListSet(package_id, jsondata){
             '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate, '.')+'</div>' +
             '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>';
 
-            if(grouptype!='ONE_TO_ONE'){
+            // if(grouptype!='ONE_TO_ONE'){
                 memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+package_id+'"></div>'
-            }else{
-                 memberRow += '<div class="_manage"></div>';
-            }
+            // }else{
+            //      memberRow += '<div class="_manage"></div>';
+            // }
             memberRow += htmlEnd;
         }
 
@@ -2779,13 +2779,13 @@ function packageMemberListSet(package_id, jsondata){
 
     var addButton = '';
 
-    if(groupcapacity <= len && grouptype =='NORMAL'){
-        addButton = '';
-    }else{
+    // if(groupcapacity <= len && grouptype =='NORMAL'){
+    //     addButton = '';
+    // }else{
         addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+package_id+'"></div>';
-    }
+    // }
 
-    if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
+    if($('#finishedGroupList').css('display') == "block"){
         addButton = '';
     }
 
@@ -2793,9 +2793,9 @@ function packageMemberListSet(package_id, jsondata){
     if(jsondata.db_id.length == 0){
         if($('#currentPackageList').css('display') == "block"){
             if(grouptype == 'EMPTY') {
-                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
+                html = '<p">이 클래스에 소속된 회원이 없습니다.</p><div>' + addButton;
             }else if(grouptype == 'NORMAL'){
-                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' + addButton;
+                html = '<p">이 그룹에 소속된 회원이 없습니다.</p><div>' + addButton;
             }
         }
     }
