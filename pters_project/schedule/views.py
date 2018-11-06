@@ -1176,7 +1176,9 @@ def add_group_schedule_logic(request):
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
-    group_member_ids = request.POST.getlist('group_member_ids', '')
+    group_member_ids = request.POST.get('group_member_ids', '')
+    if group_member_ids is not None and group_member_ids != '':
+        group_member_ids = group_member_ids.split('/')
 
     error = None
     info_message = None
@@ -2107,7 +2109,7 @@ def add_group_repeat_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
-    group_member_ids = request.POST.getlist('group_member_ids', '')
+    group_member_ids = request.POST.get('group_member_ids', '')
 
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
     context = {}
@@ -2361,8 +2363,9 @@ def add_group_repeat_schedule_confirm(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
-    group_member_ids = request.POST.getlist('group_member_ids', '')
-
+    group_member_ids = request.POST.get('group_member_ids', '')
+    if group_member_ids is not None and group_member_ids != '':
+        group_member_ids = group_member_ids.split('/')
     if repeat_schedule_id == '':
         error = '확인할 반복 일정을 선택해주세요.'
     if repeat_confirm == '':
