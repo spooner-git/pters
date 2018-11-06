@@ -1718,7 +1718,7 @@ function groupMemberListSet(group_id, jsondata){
                         //'<div class="_startdate">시작일</div>'+
                         //'<div class="_finday">종료일</div>'+
                         //'<div class="_contact">연락처</div>'+
-                        '<div class="_manage">관리</div>'+
+                        // '<div class="_manage">관리</div>'+
                         '</div>');
     }else if(bodywidth >= 600){
         htmlToJoin.push('<div class="groupmemberline_thead">'+
@@ -1729,7 +1729,7 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_startdate">시작일</div>'+
                         '<div class="_finday">종료일</div>'+
                         '<div class="_contact">연락처</div>'+
-                        '<div class="_manage">관리</div>'+
+                        // '<div class="_manage">관리</div>'+
                         '</div>');
     }
     var len = jsondata.db_id.length;
@@ -1761,11 +1761,11 @@ function groupMemberListSet(group_id, jsondata){
             //'<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
             //'<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
             //'<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-            if(grouptype!='ONE_TO_ONE') {
-                memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="' + groupmember_lastname + groupmember_firstname + '" data-id="' + groupmember_id + '" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '"></div>'
-            }else{
-                 memberRow += '<div class="_manage"></div>'
-            }
+            // if(grouptype!='ONE_TO_ONE') {
+            //     memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="' + groupmember_lastname + groupmember_firstname + '" data-id="' + groupmember_id + '" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '"></div>'
+            // }else{
+            //      memberRow += '<div class="_manage"></div>'
+            // }
             memberRow += htmlEnd;
         }else if(bodywidth >= 600){
             memberRow = htmlStart +
@@ -1777,11 +1777,11 @@ function groupMemberListSet(group_id, jsondata){
             '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
             '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>'
 
-            if(grouptype!='ONE_TO_ONE'){
-                memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>'
-            }else{
-                 memberRow += '<div class="_manage"></div>';
-            }
+            // if(grouptype!='ONE_TO_ONE'){
+            //     memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>'
+            // }else{
+            //      memberRow += '<div class="_manage"></div>';
+            // }
             memberRow += htmlEnd;
         }
 

@@ -508,13 +508,13 @@ $(document).on('click', 'div.groupWrap', function(e){
             }
             if($(this).attr('data-packagestatecd')=='current'){
                 get_package_member_list(package_id);
-                get_grouplist_in_package(package_id, "callback", function(jsondata){
+                get_grouplist_in_package(package_id,'current', "callback", function(jsondata){
                     draw_grouplist_in_package(grouplist, jsondata);
                 });
             }
             else{
                 get_end_package_member_list(package_id);
-                get_grouplist_in_package(package_id, "callback", function(jsondata){
+                get_grouplist_in_package(package_id, 'finished', "callback", function(jsondata){
                     draw_grouplist_in_package(grouplist, jsondata);
                 });
             }
@@ -2893,9 +2893,15 @@ function make_new_package_info_to_json_form(){
     return jsondata;
 }
 
-function get_grouplist_in_package(package_id, use, callback){
+function get_grouplist_in_package(package_id, state, use, callback){
+    var url = '/trainer/get_package_group_list/';
+    if(state == 'current'){
+        url = '/trainer/get_package_group_list/';
+    }else if(state == 'finished'){
+        url = '/trainer/get_end_package_group_list/';
+    }
     $.ajax({
-        url:'/trainer/get_package_group_list/',
+        url: url,
         data: {"package_id": package_id},
         type:'GET',
         dataType : 'html',

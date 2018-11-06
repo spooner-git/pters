@@ -137,6 +137,9 @@ urlpatterns = [
 
     # 패키지 소속 그룹 리스트 조회
     url(r'^get_package_group_list/$', views.GetPackageGroupListViewAjax.as_view(), name='get_package_group_list'),
+    # 패키지 종료된 소속 그룹 리스트 조회
+    url(r'^get_end_package_group_list/$', views.GetEndPackageGroupListViewAjax.as_view(),
+        name='get_end_package_group_list'),
 
     # 패키지 회원 추가
     url(r'^add_package_member/$', views.add_package_member_logic, name='add_package_member'),

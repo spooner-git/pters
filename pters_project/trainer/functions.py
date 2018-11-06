@@ -1422,7 +1422,8 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
     #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
 
     lecture_list = GroupLectureTb.objects.select_related(
-        'lecture_tb__member').filter(group_tb_id=group_id, lecture_tb__state_cd='IP', lecture_tb__use=USE,
+        'lecture_tb__member').filter(group_tb_id=group_id, group_tb__state_cd='IP',
+                                     lecture_tb__state_cd='IP', lecture_tb__use=USE,
                                      use=USE).annotate(class_count=RawSQL(query_class_count, []),
                                                        # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
                                                        member_auth=RawSQL(query_member_auth,
