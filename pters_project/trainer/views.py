@@ -3261,27 +3261,29 @@ def update_fix_group_member_logic(request):
     group_id = json_loading_data['group_id']
     try:
         group_info = GroupTb.objects.get(group_id=group_id, use=USE)
-        if len(json_loading_data['member_info']) > group_info.member_num:
-            error = '그룹 정원보다 고정 회원이 많습니다.[1]'
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
 
     if error is None:
         # idx = 0
         if error is None:
-            member_test_data = []
+            member_fix_data = []
+            fix_counter = 0
             group_lecture_data = GroupLectureTb.objects.select_related(
                 'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
             for group_lecture_info in group_lecture_data:
                 check = 0
-                for member_test_info in member_test_data:
-                    if str(member_test_info) == str(group_lecture_info.lecture_tb.member_id):
+                for member_fix_info in member_fix_data:
+                    if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
                         check = 1
                 if check == 0:
                     if group_lecture_info.fix_state_cd == 'FIX':
-                        member_test_data.append(group_lecture_info.lecture_tb.member_id)
+                        member_fix_data.append(group_lecture_info.lecture_tb.member_id)
 
-            if len(member_test_data) + len(json_loading_data['member_info']) > group_info.member_num:
+            for json_info in json_loading_data['member_info']:
+                if json_info['fix_info'] == 'FIX':
+                    fix_counter += 1
+            if len(member_fix_data) + fix_counter > group_info.member_num:
                 error = '그룹 정원보다 고정 회원이 많습니다.'
 
     if error is None:
