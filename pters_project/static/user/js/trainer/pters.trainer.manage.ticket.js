@@ -2252,7 +2252,7 @@ $(document).on("click", '.add_group_to_package_dropdown_title img', function(){
 });
 
 function update_selected_package_num(){
-    var packagenum = $(`div.lecture_bubble`).length;
+    var packagenum = $(`#selected_lectures_to_package_wrap div.lecture_bubble`).length;
     if(packagenum == 0){
         $('#selected_lectures_to_package_num').text('*');
     }else{

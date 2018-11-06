@@ -1805,9 +1805,9 @@ function float_btn_managemember(option){
 
         $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
         $('#form_grouptype').val('NORMAL');
-        $('#addgrouptypename').text('신규 패키지 수강권');
+        $('#addgrouptypename').text('신규 수강권');
 
-        $('#uptext2, #uptext2_PC').text('신규 패키지 수강권');
+        $('#uptext2, #uptext2_PC').text('신규 수강권');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_PACKAGE_NEW').show();
@@ -2040,9 +2040,9 @@ function pc_add_member(option){
         });
         selector_page_addmember_input_wrap.css({'height':350+'px'});
 
-        $('#addpackagename').text('세트로 만들고자 하는 기존 수강권을 선택 해주세요.');
+        $('#addpackagename').text('수강권을 만들고자 하는 수업 선택 해주세요.');
 
-        $('#uptext2, #uptext2_PC').text('신규 패키지 수강권 추가');
+        $('#uptext2, #uptext2_PC').text('신규 수강권 추가');
 
         $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
         $('._ADD_PACKAGE_NEW').show();
