@@ -1499,17 +1499,16 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
                         if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
                                 < lecture_info.lecture_tb.end_date:
                             member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.mod_dt == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
                         member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') \
-                                > lecture_info.lecture_tb.mod_dt:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
                     if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
-                                                  '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.reg_dt == '':
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
                         member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     else:
                         if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
@@ -1638,17 +1637,16 @@ def func_get_end_group_member_list(class_id, group_id, user_id):
                         if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
                                 < lecture_info.lecture_tb.end_date:
                             member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.mod_dt == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
                         member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0], '%Y-%m-%d %H:%M:%S') \
-                                > lecture_info.lecture_tb.mod_dt:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
                     if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
-                                                  '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.reg_dt == '':
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
                         member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     else:
                         if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
@@ -1776,38 +1774,37 @@ def func_get_ing_package_in_member_list(class_id, package_id, user_id):
                         if lecture_info.lecture_tb.lecture_avail_count > 0:
                             member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
 
-                    if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None \
-                            or member_test.lecture_tb.start_date == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.start_date,
+                                                  '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
                         member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
                         if lecture_info.lecture_tb.lecture_avail_count > 0:
                             member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() \
-                                > lecture_info.lecture_tb.start_date:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date,
+                                                      '%Y-%m-%d').date() > lecture_info.lecture_tb.start_date:
                             member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
                             if lecture_info.lecture_tb.lecture_avail_count > 0:
                                 member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                    if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None \
-                            or member_test.lecture_tb.end_date == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.end_date,
+                                                  '%Y-%m-%d').date() is None or member_test.lecture_tb.end_date == '':
                         member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
-                                < lecture_info.lecture_tb.end_date:
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date.split('.')[0],
+                                                      '%Y-%m-%d').date() < lecture_info.lecture_tb.end_date:
                             member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.mod_dt == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
                         member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
-                                > lecture_info.lecture_tb.mod_dt:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
-                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                  '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.reg_dt == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
                         member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
                                                       '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
                             member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
@@ -1907,20 +1904,19 @@ def func_get_end_package_in_member_list(class_id, package_id, user_id):
                         if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
                                 < lecture_info.lecture_tb.end_date:
                             member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.mod_dt == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
                         member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
-                                > lecture_info.lecture_tb.mod_dt:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
                             member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
 
-                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                  '%Y-%m-%d %H:%M:%S') is None \
-                            or member_test.lecture_tb.reg_dt == '':
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
                         member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     else:
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
                                                       '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
                             member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
                     member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
