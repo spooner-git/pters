@@ -1812,18 +1812,31 @@ function groupMemberListSet(group_id, jsondata){
         addButton = '';
     }
 
-    var html = htmlToJoin.join('') + addButton;
+    // var html = htmlToJoin.join('') + addButton;
+    // if(jsondata.db_id.length == 0){
+    //     if($('#currentGroupList').css('display') == "block"){
+    //         if(grouptype == 'EMPTY') {
+    //             html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
+    //         }else if(grouptype == 'NORMAL'){
+    //             html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' + addButton;
+    //         }
+    //     }
+    // }
+    //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
+
+    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    var html = htmlToJoin.join('');
     if(jsondata.db_id.length == 0){
         if($('#currentGroupList').css('display') == "block"){
             if(grouptype == 'EMPTY') {
-                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
+                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>';
             }else if(grouptype == 'NORMAL'){
-                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' + addButton;
+                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>';
             }
         }
     }
 
-    $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
+    $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(html);
 }
 //그룹원 목록을 그룹에 그리기
 
