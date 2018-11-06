@@ -69,9 +69,9 @@
             <a class="KRtext">그룹<br/>추가</a><a class="JPtext">Group<br/>Lesson</a><a class="ENtext">Group<br/>Lesson</a>
         </div>
         
-        <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('openlesson')">
+        <!-- <div id="float_inner2" class="float_inner" onclick="float_btn_managemember('openlesson')">
             <a class="KRtext">클래스<br/>추가</a><a class="JPtext">Open<br/>Lesson</a><a class="ENtext">Open<br/>Lesson</a>
-        </div>
+        </div> -->
         
     </div>
     
@@ -324,11 +324,11 @@
                     <span class="ENtext"></span>
                 </div>
                 
-                <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
+                <!-- <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
                     <span class="KRtext">클래스 추가</span>
                     <span class="JPtext"></span>
                     <span class="ENtext"></span>
-                </div>
+                </div> -->
                 <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">
             </div>
 
@@ -889,7 +889,7 @@
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}><span id="addgrouptypename">신규 그룹</span><span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div id="groupNameInput">
-                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹/클래스명을 입력해주세요." maxlength="10">
+                        <input type="text" class="pters_input_namefield" id="groupname" name="groupname" placeholder="그룹명을 입력해주세요." maxlength="10">
                         <select id="grouptype">
                             <option selected disabled>그룹 타입</option>
                             <option value="NORMAL">정해진 멤버만</option>
@@ -922,15 +922,19 @@
 
                 <div class="ptaddbox _ADD_GROUP_NEW">
                     <div id="explain_group_lesson">
+
+                        <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 그룹 수업?</p>
+                        <p style="font-size: 14px;">그룹은 <span style="color:#fe4e65">해당 그룹의 수강권을 가진 수강회원</span>이 강사님이 개설한 그룹 수업에 예약 신청을 하거나,<br> 강사님이 직접 그 일정에 회원을 추가할 수도 있습니다.<br>
+                        일정표에 <span style="color:#fe4e65">그룹 일정을 추가</span>하면 <br> 해당 그룹에 "고정"을 체크한 그룹원이 <span style="color:#fe4e65">자동으로 그 일정</span>에 <span style="color:#fe4e65">추가 </span>됩니다.</p>
                         
-                        <p style="font-size: 12.5px;">정해진 멤버들로 고정적으로 운영되는 방식입니다.</p>
+                        <!-- <p style="font-size: 12.5px;">정해진 멤버들로 고정적으로 운영되는 방식입니다.</p>
 
                         <p style="margin-bottom: 0;margin-top:15px;font-size: 14px;font-weight: bold"><img src="/static/user/res/icon-info.png" style="height:14px;margin-bottom: 4px;"> 그룹?</p>
                         <p style="font-size: 14px;">그룹은 <span style="color:#fe4e65">미리 그룹과 그룹원을 구성</span>해두고, 일정표에 일정을 추가하는 방식으로 운영합니다.<br>
                         일정표에 <span style="color:#fe4e65">그룹 일정을 추가</span>하면,<br> 해당 그룹에 속한 그룹원이 <span style="color:#fe4e65">자동으로 그 일정</span>에 <span style="color:#fe4e65">추가 </span>됩니다.</p>
                         <p style="font-size: 13px;">
                             <span style="color:#fe4e65;font-weight: bold;">고정 그룹</span>은 <span style="color:#fe4e65;font-weight: bold;">정해진 정원 숫자</span> 만큼만 회원을 하위에 추가 할 수 있습니다.
-                        </p>
+                        </p> -->
                     </div>
 
                     <div id="explain_open_lesson">
