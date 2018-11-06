@@ -3262,7 +3262,7 @@ def update_fix_group_member_logic(request):
     try:
         group_info = GroupTb.objects.get(group_id=group_id, use=USE)
         if len(json_loading_data['member_info']) > group_info.member_num:
-            error = '그룹 정원보다 고정 회원이 많습니다.'
+            error = '그룹 정원보다 고정 회원이 많습니다.[1]'
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다. [3]'
 
@@ -3278,10 +3278,11 @@ def update_fix_group_member_logic(request):
                     if str(member_test_info) == str(group_lecture_info.lecture_tb.member_id):
                         check = 1
                 if check == 0:
-                    member_test_data.append(group_lecture_info.lecture_tb.member_id)
+                    if group_lecture_info.fix_state_cd == 'FIX':
+                        member_test_data.append(group_lecture_info.lecture_tb.member_id)
 
             if len(member_test_data) + len(json_loading_data['member_info']) > group_info.member_num:
-                error = '그룹 정원보다 고정 회원이 많습니다.'
+                error = '그룹 정원보다 고정 회원이 많습니다.[2]'
 
     if error is None:
         try:
