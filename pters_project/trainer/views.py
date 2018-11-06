@@ -2646,10 +2646,10 @@ def update_group_info_logic(request):
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
 
-    try:
-        pakcage_info = PackageTb.objects.get(group_id=group_id)
-    except ObjectDoesNotExist:
-        error = '오류가 발생했습니다.'
+    # try:
+    #     pakcage_info = PackageTb.objects.get(group_id=group_id)
+    # except ObjectDoesNotExist:
+    #     error = '오류가 발생했습니다.'
 
     if error is None:
 
