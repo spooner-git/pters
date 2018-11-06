@@ -3507,14 +3507,9 @@ function autoDateInput(){
 
 //특수문자 입력 제한
 function limit_char(e){
-    // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
     //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
     var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ]/gi;
     var temp = $(e).val();
-    // if(temp.length>0 && temp.replace(/(\s*)/g, "") == ""){
-    //     $(e).val("");
-    //     alert("이름을 입력 해주세요");
-    // }
     if(limit.test(temp)){
         $(e).val(temp.replace(limit, ""));
         alert("이름에 - 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
