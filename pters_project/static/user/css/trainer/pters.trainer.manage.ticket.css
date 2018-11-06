@@ -71,9 +71,10 @@
 	}
 	.btn_add_lecture_bubble_mini{
 		transform: rotate(45deg);
-		width: 10px;
+		width: 20px;
 		margin-left: 15px;
 		margin-bottom: 3px;
+		padding: 5px;
 		cursor: pointer;
 	}
 #add_group_to_package_selector_popup{
@@ -83,7 +84,8 @@
 	transform: translate(-50%, -50%);
 	width: 90%;
 	max-width: 500px;
-	height: 350px;
+	height: auto;
+	max-height: 350px;
 	background-color: #ffffff;
 	border: 1px solid #282828;
 	z-index: 300;

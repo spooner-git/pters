@@ -2424,12 +2424,12 @@ function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, ty
     var $targetHTML = $(targetHTML);
     var html;
     if(type == "pure"){
-        html = ['<option class="disabled_option" selected disabled style="color:#cccccc;">수강권 선택</option>'];
+        html = ['<option class="disabled_option" selected disabled style="color:#cccccc;">수업 선택</option>'];
         for(var i=0; i<jsondata.group_id.length; i++){
             html.push(`<option value="${jsondata.group_id[i]}">[${jsondata.group_type_cd_nm[i]}] ${jsondata.group_name[i]}</option>`);
         }
     }else if(type == "pters"){
-        html = ['<div class="add_group_to_package_dropdown_title" style="display:block;"><a disabled="">추가할 수강권 선택<img src="/static/user/res/member/icon-x-grey.png"></a></div>'];
+        html = ['<div class="add_group_to_package_dropdown_title" style="display:block;"><a disabled="">추가할 수업 선택<img src="/static/user/res/member/icon-x-grey.png"></a></div>'];
         var package_id = $('#add_group_to_package_selector_popup').attr('data-packageid');
         for(var i=0; i<jsondata.group_id.length; i++){
             if($(`div.groupPackageWrap[data-packageid="${package_id}"]`).find(`div.lecture_bubble_mini[data-groupid="${jsondata.group_id[i]}"]`).length ==0){
@@ -2437,6 +2437,9 @@ function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, ty
             }else{
 
             }
+        }
+        if(html.length == 1){
+            html.push(`<div>추가 가능한 수업이 없습니다.</div>`);
         }
     }
     $targetHTML.html(html.join(""));
