@@ -510,7 +510,7 @@ div._contact{
 	width: 35%;
 }
 div._manage{
-	display: none;
+	display: none !important;
 	width: 10%;
 }
 div._fixedmember{
