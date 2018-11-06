@@ -1424,8 +1424,8 @@ $(document).ready(function(){
                 add_group_form_func();
             }
 
-            //그룹원 추가
-        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block"){
+        //그룹원 추가
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block" && ($('#currentGroupList').css('display')=="block" || $('#finishedGroupList').css('display')=="block") ){
             check_dropdown_selected();
             if(select_all_check == true){
                 add_groupmember_form_func();
@@ -1434,13 +1434,18 @@ $(document).ready(function(){
             check_dropdown_selected();
             if(select_all_check == true){
                 var data = make_new_package_info_to_json_form();
-                console.log("data", data)
                 send_new_package_info(data, "callback", function(){
                     smart_refresh_member_group_class_list();
                     close_manage_popup('member_add');
                 });
             }
-            
+
+        //수강권 인원 추가
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block" && ($('#currentPackageList').css('display')=="block" || $('#finishedPackageList').css('display')=="block") ){
+            check_dropdown_selected();
+            if(select_all_check == true){
+                add_ticketmember_form_func();
+            }
         }
     });
     $('#addpopup_pc_label_new').click(function(){
