@@ -4008,10 +4008,6 @@ def delete_package_member_info_logic(request):
                                                      lecture_tb__member_id=user.id,
                                                      lecture_tb__use=USE,
                                                      use=USE)
-                # group_lecture_data = GroupLectureTb.objects.select_related('group_tb', 'lecture_tb'
-                #                                                            ).filter(group_tb_id=group_id,
-                #                                                                     lecture_tb__member_id=user.id,
-                #                                                                     use=USE)
             if error is None:
                 try:
                     with transaction.atomic():
@@ -4022,13 +4018,6 @@ def delete_package_member_info_logic(request):
                                                                  member_id_info)
                                 if error is not None:
                                     break
-                        # if group_lecture_data is not None:
-                        #     for group_lecture_info in group_lecture_data:
-                        #         error = func_delete_lecture_info(request.user.id, class_id,
-                        #                                          group_lecture_info.lecture_tb.lecture_id,
-                        #                                          member_id_info)
-                        #         if error is not None:
-                        #             break
 
                         if error is not None:
                             raise InternalError(str(error))

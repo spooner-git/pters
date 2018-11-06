@@ -1177,6 +1177,7 @@ def add_group_schedule_logic(request):
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
 
+
     error = None
     info_message = None
     schedule_start_datetime = None
