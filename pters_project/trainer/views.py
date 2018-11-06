@@ -10,7 +10,7 @@ from urllib.parse import quote
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
@@ -3453,6 +3453,8 @@ def add_package_group_info_logic(request):
             package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                                             package_tb_id=package_id,
                                                                                             use=USE).count()
+            package_group_info.package_tb.package_type_cd = 'PACKAGE'
+            package_group_info.package_tb.save()
             package_group_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
                                                                        lecture_tb__package_tb_id=package_id,
                                                                        lecture_tb__use=USE, use=USE)
@@ -3461,6 +3463,7 @@ def add_package_group_info_logic(request):
                                                     lecture_tb_id=package_group_lecture_info.lecture_tb_id, use=USE)
                 group_lecture_info.save()
             func_refresh_group_status(group_id, None, None)
+
 
     except ValueError:
         error = '오류가 발생했습니다.'
@@ -3502,12 +3505,23 @@ def delete_package_group_info_logic(request):
                 package_group_lecture_data.update(use=UN_USE)
                 try:
                     package_info = PackageTb.objects.get(package_id=package_id)
+                except ObjectDoesNotExist:
+                    package_info = None
+                if package_info is not None:
                     package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
                                                                                    package_tb_id=package_id,
                                                                                    use=USE).count()
+                    if package_info.package_group_num == 1:
+                        try:
+                            package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                            package_tb_id=package_id, use=USE)
+                            package_info.package_type_cd = package_group_info.group_tb.group_type_cd
+                        except MultipleObjectsReturned:
+                            package_info.package_type_cd = 'PACKAGE'
+                        except ObjectDoesNotExist:
+                            package_info.package_type_cd = package_info.package_type_cd
+
                     package_info.save()
-                except ObjectDoesNotExist:
-                    package_info = None
 
                 if package_info is not None:
                     if package_info.package_group_num == 0:
@@ -3609,7 +3623,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
             class_tb_id=class_id, state_cd='IP',
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).order_by('-package_type_cd', '-package_id')
+                                                        [])).order_by('-package_type_cd', 'package_id')
         order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
@@ -3639,7 +3653,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
                                                 use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                                                                   package_type_cd_nm=RawSQL(
                                                                       query_package_type_cd,
-                                                                      [])).order_by('-package_type_cd', '-package_id')
+                                                                      [])).order_by('-package_type_cd', 'package_id')
         order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))

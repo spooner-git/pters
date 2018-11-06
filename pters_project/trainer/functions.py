@@ -1365,22 +1365,24 @@ def func_get_lecture_list(context, class_id, member_id):
                 group_check = 0
             # group_info = lecture_info_data.get_group_lecture_info()
 
-            if group_check != 0:
-                if group_check == 1:
-                    lecture_info.group_name = '[그룹] ' + lecture_info.package_tb.name
-                elif group_check == 2:
-                    lecture_info.group_name = '[클래스] ' + lecture_info.package_tb.name
-                elif group_check == 3:
-                    lecture_info.group_name = '[패키지] ' + lecture_info.package_tb.name
-                lecture_info.group_type_cd = lecture_info.package_tb.package_type_cd
-                # lecture_info.group_member_num = group_info.group_tb.member_num
-                lecture_info.group_note = lecture_info.package_tb.note
-                lecture_info.group_state_cd = lecture_info.package_tb.state_cd
-                try:
-                    state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.state_cd)
-                    lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
-                except ObjectDoesNotExist:
-                    error = '오류가 발생했습니다.'
+            # if group_check != 0:
+            if group_check == 1:
+                lecture_info.group_name = '[그룹] ' + lecture_info.package_tb.name
+            elif group_check == 2:
+                lecture_info.group_name = '[클래스] ' + lecture_info.package_tb.name
+            elif group_check == 3:
+                lecture_info.group_name = '[패키지] ' + lecture_info.package_tb.name
+            else:
+                lecture_info.group_name = '[1:1] ' + lecture_info.package_tb.name
+            lecture_info.group_type_cd = lecture_info.package_tb.package_type_cd
+            # lecture_info.group_member_num = group_info.group_tb.member_num
+            lecture_info.group_note = lecture_info.package_tb.note
+            lecture_info.group_state_cd = lecture_info.package_tb.state_cd
+            try:
+                state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.state_cd)
+                lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
+            except ObjectDoesNotExist:
+                error = '오류가 발생했습니다.'
 
             try:
                 lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
