@@ -3264,7 +3264,7 @@ def update_fix_group_member_logic(request):
         if len(json_loading_data['member_info']) > group_info.member_num:
             error = '그룹 정원보다 고정 회원이 많습니다.[1]'
     except ObjectDoesNotExist:
-        error = '오류가 발생했습니다. [3]'
+        error = '오류가 발생했습니다.'
 
     if error is None:
         # idx = 0
@@ -3282,19 +3282,18 @@ def update_fix_group_member_logic(request):
                         member_test_data.append(group_lecture_info.lecture_tb.member_id)
 
             if len(member_test_data) + len(json_loading_data['member_info']) > group_info.member_num:
-                error = '그룹 정원보다 고정 회원이 많습니다.[2]'
+                error = '그룹 정원보다 고정 회원이 많습니다.'
 
     if error is None:
         try:
             with transaction.atomic():
                 for json_info in json_loading_data['member_info']:
-                    group_lecture_data = None
-                    if error is None:
-                        if group_lecture_data is not None:
-                            for group_lecture_info in group_lecture_data:
-                                if group_lecture_info.lecture_tb.member_id == json_info['member_id']:
-                                    group_lecture_info.fix_state_cd = json_info['fix_info']
+                    if group_lecture_data is not None:
+                        for group_lecture_info in group_lecture_data:
+                            if str(group_lecture_info.lecture_tb.member_id) == str(json_info['member_id']):
+                                group_lecture_info.fix_state_cd = json_info['fix_info']
                                 group_lecture_info.save()
+
         except ValueError:
             error = '오류가 발생했습니다. [4]'
         except IntegrityError:
