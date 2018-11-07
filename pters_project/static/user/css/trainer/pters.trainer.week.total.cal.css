@@ -432,7 +432,7 @@ img,a,div,span,p{
 
 .classTime_checked:hover{
 	/*background: #635e3b !important;*/
-	box-shadow: 0px 0.5px 5px 1px #282828;
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
@@ -443,7 +443,7 @@ img,a,div,span,p{
 
 .classTime:active,.classTime:hover{
 	/*background: #ffe466;*/
-	box-shadow: 0px 0.5px 5px 1px #282828;
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
@@ -462,7 +462,7 @@ img,a,div,span,p{
 }
 
 .offTime:active,.offTime:hover{
-	box-shadow: 0px 0.5px 5px 1px #282828;
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 	/*
 	background: #a2a2a2;
@@ -482,7 +482,7 @@ img,a,div,span,p{
 }
 .groupTime:active,.groupTime:hover{
 	/*background: #ff6c7f;*/
-	box-shadow: 0px 0.5px 5px 1px #282828;
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
@@ -492,7 +492,7 @@ img,a,div,span,p{
 
 .groupTime_checked:hover{
 	/*background: #946369 !important;*/
-	box-shadow: 0px 0.5px 5px 1px #282828;
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 

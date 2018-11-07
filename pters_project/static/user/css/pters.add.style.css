@@ -532,7 +532,7 @@ ul a{
 		display: inline-block;
 	}
 
-	.list_viewByList > div:nth-child(1){
+	/*.list_viewByList > div:nth-child(1){
 		width: 50%;
 	}
 	.list_viewByList > div:nth-child(2){
@@ -545,6 +545,21 @@ ul a{
 	}
 	.list_viewByList > div:nth-child(4){
 		width: 20%;
+	}*/
+	.list_viewByList > div:nth-child(1){
+		width: 36%;
+	}
+	.list_viewByList > div:nth-child(2){
+		width: 22%;
+		text-align: center;
+	}
+	.list_viewByList > div:nth-child(3){
+		width: 22%;
+		text-align: center;
+	}
+	.list_viewByList > div:nth-child(4){
+		width: 20%;
+		text-align: center;
 	}
 
 	.list_viewByList div > img{

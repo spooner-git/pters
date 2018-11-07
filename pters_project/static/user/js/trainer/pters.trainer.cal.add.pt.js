@@ -3157,25 +3157,27 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 function draw_groupMemberList_to_view(jsondata, targetHTML){
+    console.log("draw", jsondata)
     var len = jsondata.db_id.length;
-    var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">'+'회원명'+'</div>'+'<div>'+'예약 가능'+'</div>'+'<div>남은 횟수</div>'+'</div>'];
+    var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">회원명</div>'+'<div>예약 가능</div>'+'<div>남은 횟수</div>'+'<div>일정에 추가</div>'+'</div>'];
     var addedCount = 0;
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
             var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">';
             htmlToJoin[i] = '<div class="list_viewByList" data-lastname="'+jsondata.last_name[i-1]+
-                '" data-firstname="'+jsondata.first_name[i-1]+
-                '" data-dbid="'+jsondata.db_id[i-1]+
-                '" data-id="'+jsondata.member_id[i-1]+
-                '" data-sex="'+jsondata.sex[i-1]+
-                '" data-phone="'+jsondata.phone[i-1]+
-                '"><div data-dbid="'+jsondata.db_id[i-1]+'">'+
-                //sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+
-                sexInfo+jsondata.name[i-1]+'</div>'+
-                '<div>'+jsondata.avail_count[i-1]+'</div>'+
-                '<div>'+jsondata.rem_count[i-1]+'</div>'+
-                '</div>';
+                                '" data-firstname="'+jsondata.first_name[i-1]+
+                                '" data-dbid="'+jsondata.db_id[i-1]+
+                                '" data-id="'+jsondata.member_id[i-1]+
+                                '" data-sex="'+jsondata.sex[i-1]+
+                                '" data-phone="'+jsondata.phone[i-1]+
+                                '"><div data-dbid="'+jsondata.db_id[i-1]+'">'+
+                                //sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+
+                                sexInfo+jsondata.name[i-1]+'</div>'+
+                                '<div>'+jsondata.avail_count[i-1]+'</div>'+
+                                '<div>'+jsondata.rem_count[i-1]+'</div>'+
+                                '<div class="_fixedmember">'+'<div></div>'+'<input type="checkbox" '+"checked"+'>'+'</div>'+
+                            '</div>';
         }
     }
     if(len == 0){
