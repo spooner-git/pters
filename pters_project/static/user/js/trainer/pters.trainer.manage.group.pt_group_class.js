@@ -2253,7 +2253,7 @@ function get_member_group_class_end_list(use, callback){
 
 //회원 고정 관련 신규 이벤트와 함수
 
-$(document).on("click", "div._fixedmember", function(e){
+$(document).on("click", ".memberline div._fixedmember", function(e){
     e.stopPropagation();
     var $thisCheckbox = $(this).find('input');
     if($thisCheckbox.is(":checked")){

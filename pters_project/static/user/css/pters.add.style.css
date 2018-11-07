@@ -567,7 +567,21 @@ ul a{
 		margin-right: 5px;
 		margin-bottom: 6px;
 	}
-
+div._fixedmember{
+	width: 10%;
+	position: relative;
+}
+	div._fixedmember input{
+		-webkit-appearance:checkbox;
+		width: 20px;
+		height: 20px;
+	}
+	div._fixedmember div{
+		position: absolute;
+		width: 100% !important;
+		height: 100%;
+		top: 0;
+	}
 
 
 
