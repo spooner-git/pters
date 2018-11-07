@@ -4008,7 +4008,7 @@ class GetEndPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
         class_id = self.request.session.get('class_id', '')
         package_id = self.request.GET.get('package_id', '')
         error = None
-        print('test')
+        # print('test')
         package_group_data = PackageGroupTb.objects.select_related(
             'group_tb').filter(class_tb_id=class_id,
                                package_tb_id=package_id, group_tb__use=USE,
@@ -4022,6 +4022,7 @@ class GetEndPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, Templa
         context['package_group_data'] = package_group_data
 
         return context
+
 
 def add_package_member_logic(request):
     class_id = request.session.get('class_id', '')
