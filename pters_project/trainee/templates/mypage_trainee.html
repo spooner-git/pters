@@ -343,13 +343,14 @@
         var ptRepeatScheduleGroupNameArray =[{% for repeat_schedule_info in repeat_schedule_data %}'{{ repeat_schedule_info.get_group_name }}'{%if forloop.last == False%},{% endif %}{% endfor %}];
 
         var next_schedule = '{{ next_schedule }}';
-        var lt_res_01 =  ['{{ lt_res_01 }}'];
-        var lt_res_02 =  ['{{ lt_res_02 }}'];
-        var lt_res_03 =  ['{{ lt_res_03 }}'];
-        var lt_res_04 =  ['{{ lt_res_04 }}'];
-        var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
-        var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
-        var lt_res_enable = ['{{ lt_res_enable }}'];
+
+        var lt_res_01 =  ['{{ request.session.setting_member_reserve_time_available }}'];
+        var lt_res_02 =  ['{{ request.session.setting_member_reserve_time_prohibition }}'];
+        var lt_res_03 =  ['{{ request.session.setting_member_reserve_prohibition }}'];
+        var lt_res_enable_time = ['{{ request.session.setting_member_reserve_enable_time }}'];
+        var lt_res_cancel_time = ['{{ request.session.setting_member_reserve_cancel_time }}'];
+        var lt_res_enable = ['{{ request.session.setting_member_reserve_prohibition }}'];
+
         var class_id = ['{{ request.session.class_id }}'];
         var trainee_next_schedule = "일정이 없습니다."
         $('#uptext').text("마이페이지")

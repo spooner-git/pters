@@ -177,9 +177,10 @@ $(document).ready(function(){
                 });
             }else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+                $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                // $('.startTime_time').text(startTime_to_hangul(Options.startTime));
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 $('.plan_raw_add').hide();
                 shade_index(100);
@@ -187,9 +188,10 @@ $(document).ready(function(){
                 adjust_starttime_list_height();
             }else if($(this).hasClass('available')){
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+                $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                // $('.startTime_time').text(startTime_to_hangul(Options.startTime));
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 if($('#countRemainData span:first-child').text() == '0'){
                     $('.plan_raw_add').hide();
@@ -201,9 +203,10 @@ $(document).ready(function(){
                 adjust_starttime_list_height();
             }else{
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+                $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                // $('.startTime_time').text(startTime_to_hangul(Options.startTime));
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 $('.plan_raw_add').hide();
                 shade_index(100);

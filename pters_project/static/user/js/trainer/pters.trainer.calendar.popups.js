@@ -1058,10 +1058,10 @@
         $('#memo_mini').val("");
 
         $("#membersSelected button").removeClass("dropdown_selected");
-        var text1 = '회원/그룹/클래스 선택';
+        var text1 = '회원/그룹 선택';
         var text2 = '선택';
         if(Options.language == "KOR"){
-            text1 = '회원/그룹/클래스 선택';
+            text1 = '회원/그룹 선택';
             text2 = '선택';
         }else if(Options.language == "JPN"){
             text1 = '「会員選択」';

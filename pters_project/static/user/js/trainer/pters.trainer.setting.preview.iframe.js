@@ -329,31 +329,34 @@ $(document).ready(function(){
             })
         }else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
             $('#cal_popup_plancheck').fadeIn('fast');
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
-            $('.cancellimit_time').text(Preview_Options.cancellimit+"시간 전")
-            $('.timeDur_time').text(duration_number_to_hangul(Preview_Options.timeDur*(Preview_Options.classDur/60)))
-            $('.startTime_time').text(startTime_to_hangul(Preview_Options.startTime))
-            plancheck(yy+'_'+mm+'_'+dd, jsondataDEMO)
-            $('.plan_raw_add').hide()
-            shade_index(100)
+            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
+            $('.reservelimit_time').text("수업 시작 "+Preview_Options.limit+"시간 전");
+            $('.cancellimit_time').text(Preview_Options.cancellimit+"시간 전");
+            $('.timeDur_time').text(duration_number_to_hangul(Preview_Options.timeDur*(Preview_Options.classDur/60)));
+            // $('.startTime_time').text(startTime_to_hangul(Preview_Options.startTime))
+            plancheck(yy+'_'+mm+'_'+dd, jsondataDEMO);
+            $('.plan_raw_add').hide();
+            shade_index(100);
         }else if($(this).hasClass('available')){
-            $('#cal_popup_plancheck').css('display','block')
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
-            $('.cancellimit_time').text(Preview_Options.cancellimit+"시간 전")
-            $('.timeDur_time').text(duration_number_to_hangul(Preview_Options.timeDur*(Preview_Options.classDur/60)))
-            $('.startTime_time').text(startTime_to_hangul(Preview_Options.startTime))
-            plancheck(yy+'_'+mm+'_'+dd, jsondataDEMO)
-            $('.plan_raw_add').show()
-            shade_index(100)
+            $('#cal_popup_plancheck').css('display','block');
+            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
+            $('.reservelimit_time').text("수업 시작 "+Preview_Options.limit+"시간 전");
+            $('.cancellimit_time').text(Preview_Options.cancellimit+"시간 전");
+            $('.timeDur_time').text(duration_number_to_hangul(Preview_Options.timeDur*(Preview_Options.classDur/60)));
+            // $('.startTime_time').text(startTime_to_hangul(Preview_Options.startTime))
+            plancheck(yy+'_'+mm+'_'+dd, jsondataDEMO);
+            $('.plan_raw_add').show();
+            shade_index(100);
         }else{
             $('#cal_popup_plancheck').fadeIn('fast');
-            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'))
-            $('.cancellimit_time').text(Preview_Options.cancellimit+"시간 전")
-            $('.timeDur_time').text(duration_number_to_hangul(Preview_Options.timeDur*(Preview_Options.classDur/60)))
-            $('.startTime_time').text(startTime_to_hangul(Preview_Options.startTime))
-            plancheck(yy+'_'+mm+'_'+dd, jsondataDEMO)
-            $('.plan_raw_add').hide()
-            shade_index(100)
+            $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
+            $('.reservelimit_time').text("수업 시작 "+Preview_Options.limit+"시간 전");
+            $('.cancellimit_time').text(Preview_Options.cancellimit+"시간 전");
+            $('.timeDur_time').text(duration_number_to_hangul(Preview_Options.timeDur*(Preview_Options.classDur/60)));
+            // $('.startTime_time').text(startTime_to_hangul(Preview_Options.startTime));
+            plancheck(yy+'_'+mm+'_'+dd, jsondataDEMO);
+            $('.plan_raw_add').hide();
+            shade_index(100);
         }/*else{
          shade_index(100)
          $('#ng_popup_text').html('<p>일정은 오늘 날짜 기준</p><p>'+Options.availDate+'일 앞으로만 설정 가능합니다.</p>')

@@ -89,7 +89,7 @@
     <div id="ng_popup">
         <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
         <div id="ng_popup_text" style="margin-bottom: 20px;">
-            <p>일정은 오늘 날짜 기준</p><p> +{{ lt_res_05 }}일까지 설정 가능합니다.</p>
+            <p>일정은 오늘 날짜 기준</p><p> +{{ request.session.setting_member_reserve_date_available }}일까지 설정 가능합니다.</p>
         </div>
     </div>
 
@@ -120,7 +120,8 @@
                 <div class="timegraphtext">
                 </div>
                 <p style="margin-top:10px;margin-bottom:0;font-size:13px;">- <span class="timeDur_time" style="color:#fe4e65;"></span> 단위로 예약 할 수 있습니다.</p>
-                <p style="margin-top:0px;margin-bottom:0;font-size:13px;">- <span class="startTime_time" style="color:#fe4e65;"></span> 예약 할 수 있습니다.</p>
+{#                <p style="margin-top:0px;margin-bottom:0;font-size:13px;">- <span class="startTime_time" style="color:#fe4e65;"></span> 예약 할 수 있습니다.</p>#}
+                <p style="margin-top:0px;margin-bottom:0;font-size:13px;">- <span class="reservelimit_time" style="color:#fe4e65;"></span>까지 예약 할 수 있습니다.</p>
                 <p style="margin-top:0px;font-size:13px;">- <span class="cancellimit_time" style="color:#fe4e65;"></span>까지 취소 할 수 있습니다.</p>
             </div>
 
@@ -150,7 +151,8 @@
                     <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
                 </div>
                 <div id="groupTimeSelect"></div>
-                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! <span class="reservelimit_time"></span> 까지 예약이 가능합니다.</p>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! <span class="cancellimit_time"></span> 까지 취소가 가능합니다.</p>
             </div>
         {% endif %}
 
@@ -160,7 +162,8 @@
                     <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div>
                 </div>
                 <div id="classTimeSelect"></div>
-                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! 최소 <span class="cancellimit_time"></span> 취소가 가능합니다.</p>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! <span class="reservelimit_time"></span> 까지 예약이 가능합니다.</p>
+                <p style="margin-top:5px;font-size:13px;color:#fe4e65;">주의! <span class="cancellimit_time"></span> 까지 취소가 가능합니다.</p>
             </div>
         {% endif %}
 
@@ -191,7 +194,7 @@
             <div id="monthText"></div>
             <div id="menuName">월간 일정
             </div>
-            <div id="menuDescription">+{{ lt_res_05 }}일까지 일정 등록과 취소를 할 수 있습니다.
+            <div id="menuDescription">+{{ request.session.setting_member_reserve_date_available }}일까지 일정 등록과 취소를 할 수 있습니다.
             </div>
         </div>
     </div>
@@ -322,15 +325,15 @@
         var class_lecture_avail_count = [{{ class_lecture_avail_count }}];
         var class_lecture_reg_count = [{{ class_lecture_reg_count }}];
         var class_lecture_finish_count = [{{ class_lecture_finish_count }}];
-        var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
-        var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
+        var classDateArray = []; //수업날짜 DB데이터 가공후 만들어지는 Array
+        var classStartArray = []; //수업시간 DB데이터 가공후 만들어지는 Array
 
-        var lt_res_01 =  ['{{ lt_res_01 }}'];
-        var lt_res_02 =  ['{{ lt_res_02 }}'];
-        var lt_res_03 =  ['{{ lt_res_03 }}'];
-        var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
-        var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
-        var lt_res_enable = ['{{ lt_res_enable }}'];
+        var lt_res_01 =  ['{{ request.session.setting_member_reserve_time_available }}'];
+        var lt_res_02 =  ['{{ request.session.setting_member_reserve_time_prohibition }}'];
+        var lt_res_03 =  ['{{ request.session.setting_member_reserve_prohibition }}'];
+        var lt_res_enable_time = ['{{ request.session.setting_member_reserve_enable_time }}'];
+        var lt_res_cancel_time = ['{{ request.session.setting_member_reserve_cancel_time }}'];
+        var lt_res_enable = ['{{ request.session.setting_member_reserve_prohibition }}'];
     </script>
 
     <!-- Placed at the end of the document so the pages load faster -->

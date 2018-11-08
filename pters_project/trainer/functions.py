@@ -227,37 +227,33 @@ def func_get_member_ing_list(class_id, user_id):
 
                 if lecture_info.use != UN_USE:
                     if lecture_info.state_cd == 'IP':
+                        group_add_name = ''
                         if group_check == 0:
-                            if member_data.group_info == '':
-                                member_data.group_info = '1:1'
-                            else:
-                                if '1:1' not in member_data.group_info:
-                                    member_data.group_info = '1:1/' + member_data.group_info
+                            group_add_name = '1:1'
                         elif group_check == 1:
-                            if member_data.group_info == '':
-                                member_data.group_info = '그룹'
-                            else:
-                                if '그룹' in member_data.group_info:
-                                    member_data.group_info = member_data.group_info
-                                elif '클래스' in member_data.group_info:
-                                    if '1:1' in member_data.group_info:
-                                        member_data.group_info = '1:1/그룹/클래스'
-                                    else:
-                                        member_data.group_info = '그룹/클래스'
-                                else:
-                                    member_data.group_info += '/그룹'
+                            group_add_name = '그룹'
                         elif group_check == 2:
-                            if member_data.group_info == '':
-                                member_data.group_info = '클래스'
-                            else:
-                                if '클래스' not in member_data.group_info:
-                                        member_data.group_info += '/클래스'
+                            group_add_name = '클래스'
                         elif group_check == 3:
+                            group_add_name = '패키지'
+
+                        if member_data.group_info == '':
+                            member_data.group_info = group_add_name
+                        else:
+                            if group_add_name not in member_data.group_info:
+                                member_data.group_info += '/'+group_add_name
+
+                        group_check_name = member_data.group_info.split('/')
+                        order = ['1:1', '그룹', '클래스', '패키지']
+                        order = {key: i for i, key in enumerate(order)}
+                        group_check_name = sorted(group_check_name,
+                                                  key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                        member_data.group_info = ''
+                        for group_check_name_info in group_check_name:
                             if member_data.group_info == '':
-                                member_data.group_info = '패키지'
+                                member_data.group_info += group_check_name_info
                             else:
-                                if '패키지' not in member_data.group_info:
-                                        member_data.group_info += '/패키지'
+                                member_data.group_info += '/' + group_check_name_info
 
                 lecture_count += lecture_info_data.lecture_count
 
@@ -389,41 +385,45 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
                 if lecture_info_data.auth_cd == 'WAIT':
                     member_data.np_lecture_counts += 1
 
-                if lecture_info_data.group_check == 'NORMAL':
+                if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
-                elif lecture_info_data.group_check == 'EMPTY':
+                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                     group_check = 2
+                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
                     class_lecture_count += 1
 
                 if lecture_info.use != UN_USE:
                     if lecture_info.state_cd == 'IP':
+                        group_add_name = ''
                         if group_check == 0:
-                            if member_data.group_info == '':
-                                member_data.group_info = '1:1'
-                            else:
-                                if '1:1' not in member_data.group_info:
-                                    member_data.group_info = '1:1/' + member_data.group_info
+                            group_add_name = '1:1'
                         elif group_check == 1:
-                            if member_data.group_info == '':
-                                member_data.group_info = '그룹'
-                            else:
-                                if '그룹' in member_data.group_info:
-                                    member_data.group_info = member_data.group_info
-                                elif '클래스' in member_data.group_info:
-                                    if '1:1' in member_data.group_info:
-                                        member_data.group_info = '1:1/그룹/클래스'
-                                    else:
-                                        member_data.group_info = '그룹/클래스'
-                                else:
-                                    member_data.group_info += '/그룹'
+                            group_add_name = '그룹'
+                        elif group_check == 2:
+                            group_add_name = '클래스'
+                        elif group_check == 3:
+                            group_add_name = '패키지'
+
+                        if member_data.group_info == '':
+                            member_data.group_info = group_add_name
                         else:
+                            if group_add_name not in member_data.group_info:
+                                member_data.group_info += '/'+group_add_name
+
+                        group_check_name = member_data.group_info.split('/')
+                        order = ['1:1', '그룹', '클래스', '패키지']
+                        order = {key: i for i, key in enumerate(order)}
+                        group_check_name = sorted(group_check_name,
+                                                  key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                        member_data.group_info = ''
+                        for group_check_name_info in group_check_name:
                             if member_data.group_info == '':
-                                member_data.group_info = '클래스'
+                                member_data.group_info += group_check_name_info
                             else:
-                                if '클래스' not in member_data.group_info:
-                                    member_data.group_info += '/클래스'
+                                member_data.group_info += '/' + group_check_name_info
 
                 lecture_count += lecture_info_data.lecture_count
 
@@ -487,7 +487,6 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
             member_data.birthday_dt = str(member_data.birthday_dt)
 
         member_list.append(member_data)
-
     return member_list
 
 
@@ -565,43 +564,33 @@ def func_get_member_end_list(class_id, user_id):
                     group_check = 0
                     class_lecture_count += 1
 
+                group_add_name = ''
                 if group_check == 0:
-                    if member_data.group_info == '':
-                        member_data.group_info = '1:1'
-                    else:
-                        if '1:1' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info = '1:1/' + member_data.group_info
+                    group_add_name = '1:1'
                 elif group_check == 1:
-                    if member_data.group_info == '':
-                        member_data.group_info = '그룹'
-                    else:
-                        if '그룹' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        elif '클래스' in member_data.group_info:
-                            if '1:1' in member_data.group_info:
-                                member_data.group_info = '1:1/그룹/클래스'
-                            else:
-                                member_data.group_info = '그룹/클래스'
-                        else:
-                            member_data.group_info += '/그룹'
+                    group_add_name = '그룹'
                 elif group_check == 2:
-                    if member_data.group_info == '':
-                        member_data.group_info = '클래스'
-                    else:
-                        if '클래스' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info += '/클래스'
+                    group_add_name = '클래스'
                 elif group_check == 3:
+                    group_add_name = '패키지'
+
+                if member_data.group_info == '':
+                    member_data.group_info = group_add_name
+                else:
+                    if group_add_name not in member_data.group_info:
+                        member_data.group_info += '/' + group_add_name
+
+                group_check_name = member_data.group_info.split('/')
+                order = ['1:1', '그룹', '클래스', '패키지']
+                order = {key: i for i, key in enumerate(order)}
+                group_check_name = sorted(group_check_name,
+                                          key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                member_data.group_info = ''
+                for group_check_name_info in group_check_name:
                     if member_data.group_info == '':
-                        member_data.group_info = '패키지'
+                        member_data.group_info += group_check_name_info
                     else:
-                        if '패키지' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info += '/패키지'
+                        member_data.group_info += '/' + group_check_name_info
 
                 lecture_finish_count += lecture_info_data.lecture_count
 
@@ -734,38 +723,38 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
                     group_check = 1
                 elif lecture_info_data.group_check == 'EMPTY':
                     group_check = 2
+                elif lecture_info_data.group_check == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
 
+                group_add_name = ''
                 if group_check == 0:
-                    if member_data.group_info == '':
-                        member_data.group_info = '1:1'
-                    else:
-                        if '1:1' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info = '1:1/' + member_data.group_info
+                    group_add_name = '1:1'
                 elif group_check == 1:
-                    if member_data.group_info == '':
-                        member_data.group_info = '그룹'
-                    else:
-                        if '그룹' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        elif '클래스' in member_data.group_info:
-                            if '1:1' in member_data.group_info:
-                                member_data.group_info = '1:1/그룹/클래스'
-                            else:
-                                member_data.group_info = '그룹/클래스'
-                        else:
-                            member_data.group_info += '/그룹'
+                    group_add_name = '그룹'
+                elif group_check == 2:
+                    group_add_name = '클래스'
+                elif group_check == 3:
+                    group_add_name = '패키지'
+
+                if member_data.group_info == '':
+                    member_data.group_info = group_add_name
                 else:
+                    if group_add_name not in member_data.group_info:
+                        member_data.group_info += '/' + group_add_name
+
+                group_check_name = member_data.group_info.split('/')
+                order = ['1:1', '그룹', '클래스', '패키지']
+                order = {key: i for i, key in enumerate(order)}
+                group_check_name = sorted(group_check_name,
+                                          key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                member_data.group_info = ''
+                for group_check_name_info in group_check_name:
                     if member_data.group_info == '':
-                        member_data.group_info = '클래스'
+                        member_data.group_info += group_check_name_info
                     else:
-                        if '클래스' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info += '/클래스'
+                        member_data.group_info += '/' + group_check_name_info
 
                 lecture_finish_count += lecture_info_data.lecture_count
 
