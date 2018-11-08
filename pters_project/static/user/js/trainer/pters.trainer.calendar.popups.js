@@ -1258,7 +1258,6 @@
                         callback(jsondata, send_data);
                     }
                 }
-                
             },
 
             //보내기후 팝업창 닫기
