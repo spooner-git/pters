@@ -3216,12 +3216,16 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
             var groupmember_fixed;
-            if(jsondata.fix_state_cd[i-1] == "FIX"){
+            if(jsondata.fix_state_cd[i-1] == "FIX" && jsondata.avail_count[i-1] > 0){
                 groupmember_fixed = "checked";
             }else{
                 groupmember_fixed = "";
             }
             var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">';
+            var fix_member = '<input type="checkbox" '+groupmember_fixed+'>';
+            if(jsondata.avail_count[i-1] == 0){
+                fix_member = "";
+            }
             htmlToJoin[i] = '<div class="list_viewByList" data-lastname="'+jsondata.last_name[i-1]+
                                 '" data-firstname="'+jsondata.first_name[i-1]+
                                 '" data-dbid="'+jsondata.db_id[i-1]+
@@ -3233,7 +3237,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
                                 sexInfo+jsondata.name[i-1]+'</div>'+
                                 '<div>'+jsondata.avail_count[i-1]+'</div>'+
                                 '<div>'+jsondata.rem_count[i-1]+'</div>'+
-                                '<div class="_fixedmember" data-dbid="'+jsondata.db_id[i-1]+'">'+'<div></div>'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>'+
+                                '<div class="_fixedmember" data-dbid="'+jsondata.db_id[i-1]+'">'+'<div></div>'+fix_member+'</div>'+
                             '</div>';
         }
         if(groupmember_fixed == "checked"){
