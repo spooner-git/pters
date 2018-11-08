@@ -514,7 +514,7 @@ def delete_trainee_schedule_logic(request):
                 schedule_info.delete()
 
                 if error is None:
-                    error = func_refresh_lecture_count(lecture_id)
+                    error = func_refresh_lecture_count(class_id, lecture_id)
 
         except ValueError:
             error = '등록 값에 문제가 있습니다.'
@@ -1214,7 +1214,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                 error = schedule_result['error']
 
                 if error is None:
-                    error = func_refresh_lecture_count(lecture_id)
+                    error = func_refresh_lecture_count(class_id, lecture_id)
 
                 if error is None:
                     if group_schedule_info is not None and group_schedule_info != '':

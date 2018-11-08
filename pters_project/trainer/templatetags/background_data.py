@@ -111,43 +111,14 @@ def get_setting_info(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(not_finish_schedule_info.lecture_tb_id)
-                lecture_info = not_finish_schedule_info.lecture_tb
-                lecture_info.refresh_from_db()
-                if lecture_info is not None and lecture_info != '':
-                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.save()
-
-                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                                        " B.USE=1"
-
-                    package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id,
-                                                                       use=USE)
-                    for package_group_info in package_group_data:
-
-                        group_lecture_data = GroupLectureTb.objects.filter(
-                            group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=lecture_info.member_id,
-                            lecture_tb__use=USE,
-                            use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                                 [])).filter(class_count__gte=1)
-                        group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
-                                                                          fix_state_cd='FIX').count()
-                        if group_lecture_counter > 0:
-                            group_lecture_data.update(fix_state_cd='FIX')
-                        else:
-                            group_lecture_data.update(fix_state_cd='')
-                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
+                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
-            class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
-                                                                                            auth_cd='VIEW',
-                                                                                            lecture_tb__end_date__lt
-                                                                                            =datetime.date.today(),
-                                                                                            lecture_tb__state_cd='IP',
-                                                                                            lecture_tb__use=USE,
-                                                                                            use=USE)
+            class_lecture_data = ClassLectureTb.objects.select_related(
+                'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                 lecture_tb__end_date__lt=datetime.date.today(),
+                                                 lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                                 use=USE)
 
             for class_lecture_info in class_lecture_data:
                 lecture_info = class_lecture_info.lecture_tb
@@ -174,31 +145,18 @@ def get_setting_info(request):
                 lecture_info.save()
 
                 if lecture_info is not None and lecture_info != '':
-                    lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
-                    lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.ing_package_member_num =\
+                        len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+                    lecture_info.package_tb.end_package_member_num = \
+                        len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
                     lecture_info.package_tb.save()
 
-                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                                        " B.USE=1"
+                    group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                    group_lecture_data.update(fix_state_cd='')
 
                     package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id)
                     for package_group_info in package_group_data:
-
-                        group_lecture_data = GroupLectureTb.objects.filter(
-                            group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=lecture_info.member_id,
-                            lecture_tb__use=USE,
-                            use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                                 [])).filter(class_count__gte=1)
-                        group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
-                                                                          fix_state_cd='FIX').count()
-                        if group_lecture_counter > 0:
-                            group_lecture_data.update(fix_state_cd='FIX')
-                        else:
-                            group_lecture_data.update(fix_state_cd='')
                         func_refresh_group_status(package_group_info.group_tb_id, None, None)
-                # if group_info is not None:
-                #     func_refresh_group_status(group_info.group_tb_id, None, None)
 
     return context
 

@@ -11,9 +11,10 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
 
 from login.models import LogTb, PushInfoTb
-from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb
+from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
-from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list
+from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list, \
+    func_get_ing_package_member_list, func_get_end_group_member_list_count, func_get_ing_group_member_list_count
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
@@ -48,7 +49,8 @@ def func_get_group_lecture_id(group_id, member_id):
 
     lecture_id = None
 
-    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
+    group_lecture_data = GroupLectureTb.objects.select_related(
+        'group_tb', 'lecture_tb').filter(group_tb_id=group_id,
                                                        group_tb__state_cd='IP',
                                                        group_tb__use=USE,
                                                        lecture_tb__member_id=member_id,
@@ -64,30 +66,31 @@ def func_get_group_lecture_id(group_id, member_id):
 
 
 # 수강정보 - 횟수관련 update
-def func_refresh_lecture_count(lecture_id):
+def func_refresh_lecture_count(class_id, lecture_id):
     error = None
     lecture_info = None
+    check_lecture_state_cd = ''
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
+            lecture_info = LectureTb.objects.select_related('package_tb').get(lecture_id=lecture_id, use=USE)
+            check_lecture_state_cd = lecture_info.state_cd
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        reg_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id).count()
-        if lecture_info.lecture_reg_count >= reg_schedule_counter:
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+        if lecture_info.lecture_reg_count >= len(schedule_data):
             lecture_info.lecture_avail_count = lecture_info.lecture_reg_count\
-                                               - reg_schedule_counter
+                                               - len(schedule_data)
             lecture_info.save()
         else:
             error = '오류가 발생했습니다.'
 
     if error is None:
-        end_schedule_counter = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
-                                                         lecture_tb_id=lecture_id).count()
+        end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC')).count()
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
@@ -106,14 +109,35 @@ def func_refresh_lecture_count(lecture_id):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        package_lecture_data = ClassLectureTb.objects.select_related(
-            'lecture_tb__package_tb').filter(auth_cd='VIEW',
-                                             lecture_tb__package_tb_id=lecture_info.package_tb_id, use=USE)
-        package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
-        package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
-        lecture_info.package_tb.ing_package_member_num = package_ing_lecture_count
-        lecture_info.package_tb.end_package_member_num = package_end_lecture_count
-        lecture_info.package_tb.save()
+        if lecture_info.state_cd != check_lecture_state_cd:
+            lecture_info.package_tb.ing_package_member_num =\
+                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.end_package_member_num = \
+                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.save()
+
+    if error is None:
+        if lecture_info.state_cd != check_lecture_state_cd:
+            if lecture_info.state_cd == 'PE' or lecture_info.state_cd == 'RF':
+                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                group_lecture_data.update(fix_state_cd='')
+
+            package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb__class_tb__member').filter(group_tb__use=USE,
+                                                     package_tb__use=USE,
+                                                     package_tb_id=lecture_info.package_tb_id,
+                                                     use=USE)
+            for package_group_info in package_group_data:
+                # package_group_info.group_tb.ing_group_member_num =\
+                #     len(func_get_ing_group_member_list(class_id,
+                #                                        package_group_info.group_tb_id,
+                #                                        package_group_info.group_tb.class_tb.member_id))
+                # package_group_info.group_tb.end_group_member_num = \
+                #     len(func_get_end_group_member_list(class_id,
+                #                                        package_group_info.group_tb_id,
+                #                                        package_group_info.group_tb.class_tb.member_id))
+                # package_group_info.group_tb.save()
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     return error
 
@@ -154,35 +178,18 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
                 group_repeat_schedule_info.state_cd = 'PE'
                 group_repeat_schedule_info.save()
 
-    # 그룹 종료 처리
+    # 그룹 카운팅
     if group_id is not None and group_id != '':
         try:
             group_info = GroupTb.objects.get(group_id=group_id, use=USE)
         except ObjectDoesNotExist:
             group_info = None
         if group_info is not None:
-            group_info.ing_group_member_num = len(func_get_ing_group_member_list(group_info.class_tb_id,
-                                                                                 group_id,
-                                                                                 group_info.class_tb.member_id))
-            group_info.end_group_member_num = len(func_get_end_group_member_list(group_info.class_tb_id,
-                                                                                 group_id,
-                                                                                 group_info.class_tb.member_id))
+            group_info.ing_group_member_num = len(func_get_ing_group_member_list_count(group_info.class_tb_id,
+                                                                                       group_id))
+            group_info.end_group_member_num = len(func_get_end_group_member_list_count(group_info.class_tb_id,
+                                                                                       group_id))
             group_info.save()
-
-            # if group_info.group_type_cd == 'NORMAL':
-                # group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                #                                                           lecture_tb__use=USE,
-                #                                                           use=USE).count()
-                # group_lecture_end_count = \
-                #     GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__use=USE,
-                #                                   use=USE).exclude(lecture_tb__state_cd='IP').count()
-                # if group_info is not None:
-                #     if group_lecture_total_count == group_lecture_end_count:
-                #         group_info.state_cd = 'PE'
-                #         group_info.save()
-                #     else:
-                #         group_info.state_cd = 'IP'
-                #         group_info.save()
 
 
 # 일정 등록
