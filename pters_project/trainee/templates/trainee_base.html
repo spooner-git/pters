@@ -241,6 +241,12 @@
 
     ///********************* 회원 월간 달력 옵션*************************************///
     ///********************* 회원 월간 달력 옵션*************************************///
+
+    {% load background_trainee_data %}
+    {% autoescape off %}
+    var setting_info = {% get_setting_info request %};
+    {% endautoescape %}
+
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
     var social_login_check = '{{ request.session.social_login_check }}';
@@ -249,16 +255,17 @@
     var social_accessToken = '{{ request.session.social_accessToken }}';
 
     var class_background_img_url = [];
+
     var Options = {  "hourunit" : 30,                       // 30 or 60
         "classDur" : '{{ request.session.class_hour }}',      // 30 or 60
-        "timeDur" : '{{ lt_res_member_time_duration }}',
-        "startTime": '{{ lt_res_member_start_time }}',
-        "stoptimeStart": worktime_extract_hour('{{ lt_res_01 }}')['start'],                    //강사가 설정한 예약불가 시간 (시작)
-        "stoptimeEnd": worktime_extract_hour('{{ lt_res_01 }}')['end'] ,                        //강사가 설정한 예약불가 시간 (종료)
-        "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-        "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number('{{ lt_res_05 }}'),
-        "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
+        "timeDur" : '{{ request.session.setting_member_time_duration }}',
+        "startTime": '{{ request.session.setting_member_start_time }}',
+        "stoptimeStart": worktime_extract_hour('{{ request.session.setting_member_reserve_time_available }}')['start'],                    //강사가 설정한 예약불가 시간 (시작)
+        "stoptimeEnd": worktime_extract_hour('{{ request.session.setting_member_reserve_time_available }}')['end'] ,                        //강사가 설정한 예약불가 시간 (종료)
+        "limit":Number('{{ request.session.setting_member_reserve_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "reserve":Number('{{ request.session.setting_member_reserve_prohibition }}'),                //회원 일정 기능을 enable 1/disable 0
+        "availDate":Number('{{ request.session.setting_member_reserve_date_available }}'),
+        "cancellimit":Number('{{ request.session.setting_member_reserve_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
         "firstPushToMember":'-',
         "secondPushToMember":'-',
         "regErgentPushToMember":'-',
@@ -267,13 +274,13 @@
 
         "worktime":'',
         "worktimeWeeklyOn": "",
-        "worktimeWeekly":['{{ lt_work_sun_time_avail }}',
-                          '{{ lt_work_mon_time_avail }}',
-                          '{{ lt_work_tue_time_avail }}',
-                          '{{ lt_work_wed_time_avail }}',
-                          '{{ lt_work_ths_time_avail }}',
-                          '{{ lt_work_fri_time_avail }}',
-                          '{{ lt_work_sat_time_avail }}'],
+        "worktimeWeekly":['{{ request.session.setting_trainer_work_sun_time_avail }}',
+                          '{{ request.session.setting_trainer_work_mon_time_avail }}',
+                          '{{ request.session.setting_trainer_work_tue_time_avail }}',
+                          '{{ request.session.setting_trainer_work_wed_time_avail }}',
+                          '{{ request.session.setting_trainer_work_ths_time_avail }}',
+                          '{{ request.session.setting_trainer_work_fri_time_avail }}',
+                          '{{ request.session.setting_trainer_work_sat_time_avail }}'],
         "worktimeOffDay":[],
         "workStartTime":'',
         "workEndTime":'',
@@ -322,8 +329,8 @@
 
 
 
-    var lt_res_enable_time = ['{{ lt_res_enable_time }}'];
-    var lt_res_cancel_time = ['{{ lt_res_cancel_time }}'];
+    var lt_res_enable_time = ['{{ request.session.setting_member_reserve_enable_time }}'];
+    var lt_res_cancel_time = ['{{ request.session.setting_member_reserve_cancel_time }}'];
 
     if(Options.language=="JPN"){
         $(".KRtext, .ENtext").remove();

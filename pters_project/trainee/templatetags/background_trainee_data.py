@@ -9,6 +9,7 @@ from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
+from trainee.views import get_trainee_setting_data
 from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
 from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
     func_get_end_package_member_list
@@ -52,7 +53,7 @@ def get_setting_info(request):
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             request.session['class_center_name'] = class_info.get_center_name()
 
-        context = func_get_trainer_setting_list(context, request.user.id, class_id)
+        context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
 
         request.session['setting_member_reserve_time_available'] = context['lt_res_01']
         request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
@@ -76,6 +77,7 @@ def get_setting_info(request):
         request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
         request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
         request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
+        context = get_trainee_setting_data(context, request.user.id)
         request.session['setting_language'] = context['lt_lan_01']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
@@ -173,5 +175,4 @@ def get_setting_info(request):
                         func_refresh_group_status(package_group_info.group_tb_id, None, None)
                 # if group_info is not None:
                 #     func_refresh_group_status(group_info.group_tb_id, None, None)
-
     return context
