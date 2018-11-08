@@ -428,8 +428,8 @@ def finish_schedule_logic(request):
     if error is None:
         start_date = schedule_info.start_dt
         end_date = schedule_info.end_dt
-        if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
-            error = '완료된 스케쥴입니다.'
+        # if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
+        #     error = '완료된 스케쥴입니다.'
 
     if error is None:
         lecture_info = schedule_info.lecture_tb
