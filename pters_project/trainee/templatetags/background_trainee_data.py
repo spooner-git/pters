@@ -1,46 +1,20 @@
 import datetime
-import html.parser as parser
 import logging
 from django import template
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.expressions import RawSQL
 
 from django.utils import timezone
-from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
+from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
-from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
-from trainer.models import ClassLectureTb, BackgroundImgTb, ClassTb, PackageGroupTb, GroupLectureTb
+from trainer.models import ClassLectureTb, ClassTb, PackageGroupTb, GroupLectureTb
 from trainer.functions import func_get_trainer_setting_list, func_get_ing_package_member_list, \
     func_get_end_package_member_list
 
 register = template.Library()
 logger = logging.getLogger(__name__)
-
-
-@register.simple_tag
-def get_background_url(request):
-    class_id = request.session.get('class_id', '')
-    background_url = []
-    if class_id != '':
-        background_img_data = BackgroundImgTb.objects.select_related('class_tb').filter(class_tb_id=class_id,
-                                                                                        use=USE).order_by('-class_tb_id')
-        for background_img_info in background_img_data:
-            background_url.append(parser.unescape(background_img_info.url))
-    return background_url
-
-
-@register.simple_tag
-def get_background_type_cd(request):
-    class_id = request.session.get('class_id', '')
-    background_img_type_cd = []
-    if class_id != '':
-        background_img_data = BackgroundImgTb.objects.filter(class_tb_id=class_id,
-                                                             use=USE).order_by('-class_tb_id')
-        for background_img_info in background_img_data:
-            background_img_type_cd.append(parser.unescape(background_img_info.background_img_type_cd))
-    return background_img_type_cd
 
 
 @register.simple_tag
@@ -201,82 +175,3 @@ def get_setting_info(request):
                 #     func_refresh_group_status(group_info.group_tb_id, None, None)
 
     return context
-
-
-@register.simple_tag
-def get_function_auth_type_cd(request):
-    context = {}
-    today = datetime.date.today()
-    billing_data = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                next_payment_date__lt=today, use=USE)
-
-    payment_data = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                start_date__lte=today, end_date__gte=today,
-                                                use=USE).order_by('product_tb_id', '-end_date')
-
-    for billing_info in billing_data:
-        billing_info.state_cd = 'END'
-        # billing_info.use = UN_USE
-        billing_info.save()
-
-    request.session['product_type_name'] = ''
-    request.session['product_id'] = ''
-    payment_data_counter = 0
-    for payment_info in payment_data:
-        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
-                                                                     ).filter(product_tb_id=payment_info.product_tb_id,
-                                                                              use=USE).order_by('product_tb_id',
-                                                                                                'function_auth_tb_id',
-                                                                                                'auth_type_cd')
-        if len(function_list) > 0:
-            if payment_data_counter == 0:
-                request.session['product_type_name'] += function_list[0].product_tb.name
-                request.session['product_id'] = function_list[0].product_tb.product_id
-            else:
-                request.session['product_type_name'] += ',' + function_list[0].product_tb.name
-                request.session['product_id'] += ',' + function_list[0].product_tb.product_id
-
-        for function_info in function_list:
-            auth_info = {}
-            if function_info.auth_type_cd is None:
-                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
-            else:
-                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
-                                             + str(function_info.auth_type_cd)
-
-            auth_info['active'] = 1
-            auth_info['limit_num'] = function_info.counts
-            auth_info['limit_type'] = function_info.product_tb.name
-            context[function_auth_type_cd_name] = auth_info
-            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
-        payment_data_counter += 1
-
-    if len(payment_data) == 0:
-        function_list = ProductFunctionAuthTb.objects.select_related('function_auth_tb', 'product_tb'
-                                                                     ).filter(product_tb_id=6,
-                                                                              use=USE).order_by('product_tb_id',
-                                                                                                'function_auth_tb_id',
-                                                                                                'auth_type_cd')
-        if len(function_list) > 0:
-            request.session['product_type_name'] += function_list[0].product_tb.name
-            request.session['product_id'] = function_list[0].product_tb.product_id
-
-        for function_info in function_list:
-            auth_info = {}
-            if function_info.auth_type_cd is None:
-                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
-            else:
-                function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
-                                             + str(function_info.auth_type_cd)
-            auth_info['active'] = 1
-            auth_info['limit_num'] = function_info.counts
-            auth_info['limit_type'] = function_info.product_tb.name
-            context[function_auth_type_cd_name] = auth_info
-            # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
-
-    return context
-
-
-@register.filter
-def multiply(value, arg):
-    return int(value*arg)

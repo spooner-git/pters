@@ -1152,6 +1152,10 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             # package_tb.ing_package_member_num = package_ing_lecture_count
             # package_tb.end_package_member_num = package_end_lecture_count
 
+            query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                " B.USE=1"
+
             package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
             package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
             package_tb.save()
@@ -1163,6 +1167,18 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                 package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
                                                                                      package_group_info.group_tb_id, user_id))
                 package_group_info.group_tb.save()
+                group_lecture_data = GroupLectureTb.objects.filter(
+                    group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
+                    lecture_tb__use=USE,
+                    use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                         [])).filter(class_count__gte=1)
+                group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
+                                                                  fix_state_cd='FIX').count()
+
+                if group_lecture_counter > 0:
+                    group_lecture_data.update(fix_state_cd='FIX')
+                else:
+                    group_lecture_data.update(fix_state_cd='')
 
     return error
 

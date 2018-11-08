@@ -1506,9 +1506,9 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
 
         ordernum++;
         var full_group = "";
-        if(group_membernum == group_capacity && group_type == "NORMAL"){
-            var full_group = "red_color_text";
-        }
+        // if(group_membernum == group_capacity && group_type == "NORMAL"){
+        //     var full_group = "red_color_text";
+        // }
 
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
@@ -2302,7 +2302,7 @@ function send_member_fixed_info($this, group_id, db_id, fix, use, callback){
                 }else{
                     $this.prop("checked", true);
                 }
-                alert("변경 실패")
+                // alert("변경 실패")
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
