@@ -390,7 +390,8 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
         error = '오류가 발생했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 group_schedule_id=group_schedule_id, use=USE).count()
+                                                 group_schedule_id=group_schedule_id,
+                                                 use=USE).exclude(state_cd='PC').count()
     if schedule_counter > group_info.member_num:
         error = '정원을 초과했습니다.'
 
@@ -409,7 +410,8 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
         error = '오류가 발생했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 group_schedule_id=group_schedule_id, use=USE).count()
+                                                 group_schedule_id=group_schedule_id,
+                                                 use=USE).exclude(state_cd='PC').count()
     if schedule_counter > group_info.member_num:
         error = '정원을 초과했습니다.'
 

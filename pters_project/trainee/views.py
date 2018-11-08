@@ -152,9 +152,9 @@ class CalMonthBlankView(LoginRequiredMixin, AccessTestMixin, View):
     def get(self, request):
         # context = super(CalMonthBlankView, self).get_context_data(**kwargs)
         context = {}
-        context = get_trainee_setting_data(context, request.user.id)
+        # context = get_trainee_setting_data(context, request.user.id)
         holiday = HolidayTb.objects.filter(use=USE)
-        request.session['setting_language'] = context['lt_lan_01']
+        # request.session['setting_language'] = context['lt_lan_01']
         context['holiday'] = holiday
         return render(request, self.template_name, context)
 
@@ -199,14 +199,14 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
 
         if class_id != '' and error is None:
             context = func_get_class_lecture_count(context, class_id, request.user.id)
-            context = get_trainer_setting_data(context, class_info.member_id, class_id)
+            # context = get_trainer_setting_data(context, class_info.member_id, class_id)
             request.session['class_hour'] = class_info.class_hour
             request.session['class_type_code'] = class_info.subject_cd
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             # 회원 setting 값 로드
 
         context = func_get_holiday_schedule(context)
-        context = get_trainee_setting_data(context, request.user.id)
+        # context = get_trainee_setting_data(context, request.user.id)
         request.session['setting_language'] = context['lt_lan_01']
             # 강사 setting 값 로드
 
@@ -258,10 +258,10 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
                                                                      class_id)
                 # 강사 setting 값 로드
-                context = get_trainer_setting_data(context, class_info.member_id, class_id)
+                # context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
             # 회원 setting 값 로드
-            context = get_trainee_setting_data(context, request.user.id)
+            # context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
 
         return render(request, self.template_name, context)
@@ -816,10 +816,10 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 context = get_trainee_schedule_data_by_class_id_func(context, request.user.id,
                                                                      class_id)
                 # 강사 setting 값 로드
-                context = get_trainer_setting_data(context, class_info.member_id, class_id)
+                # context = get_trainer_setting_data(context, class_info.member_id, class_id)
 
             # 회원 setting 값 로드
-            context = get_trainee_setting_data(context, request.user.id)
+            # context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
 
         if error is None:
