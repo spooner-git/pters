@@ -3132,7 +3132,6 @@ function get_group_plan_participants(group_schedule_id, callbackoption, callback
 
 //그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max){
-    console.log("jsondata",jsondata)
     var target = $('#groupParticipants');
     var htmlToJoin = [];
     var jsonlen = jsondata.db_id.length;
