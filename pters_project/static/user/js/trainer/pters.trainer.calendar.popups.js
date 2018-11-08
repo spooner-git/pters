@@ -1247,6 +1247,7 @@
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
+                    enable_popup_btns_after_ajax();
                 }else{
                     if(jsondata.push_lecture_id.length>0){
                         for(var i=0; i<jsondata.push_lecture_id.length; i++) {
@@ -1290,6 +1291,7 @@
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
+                    enable_popup_btns_after_ajax();
                 }else{
                     if(jsondata.push_lecture_id.length>0){
                         for(var i=0; i<jsondata.push_lecture_id.length; i++) {
