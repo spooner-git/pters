@@ -937,6 +937,17 @@ $(document).ready(function(){
             $(this).parents('ul').siblings('button').addClass("dropdown_selected").text($(this).text()).val($(this).text()).attr('data-grouptype', 'group');
             $('#grouptypenumInfo, #groupInfoSelected').text($(this).attr('data-grouptypecd_nm')+' '+$(this).attr('data-membernum')+'명');
             $("#id_group_id").val($(this).attr('data-groupid'));
+
+            get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){
+                console.log(jsondata)
+                var selected_list = [];
+                for(var i=0; i<jsondata.fix_state_cd.length; i++){
+                    if(jsondata.fix_state_cd[i] == "FIX"){
+                        selected_list.push(jsondata.db_id[i]);
+                    }
+                }
+                $('#id_group_member_ids, #id_repeat_group_member_ids').val(selected_list.join('/'));
+            });
         }
 
         check_dropdown_selected_addplan();
@@ -3202,7 +3213,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
             var groupmember_fixed;
-            if(jsondata.fix_state_cd[i] == "FIX"){
+            if(jsondata.fix_state_cd[i-1] == "FIX"){
                 groupmember_fixed = "checked";
             }else{
                 groupmember_fixed = "";
@@ -3222,7 +3233,6 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
                                 '<div class="_fixedmember" data-dbid="'+jsondata.db_id[i-1]+'">'+'<div></div>'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>'+
                             '</div>';
         }
-
         if(groupmember_fixed == "checked"){
             selected_member.push(jsondata.db_id[i-1]);
         }
