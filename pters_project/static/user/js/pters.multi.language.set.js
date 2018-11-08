@@ -88,7 +88,7 @@ var multi_language_set = {
                                     "text-pleasesign":"회원님 완료 서명을 입력해주세요.",
                                     "text-participants":"참석자",
 
-                                    "text-thisgroupmember":"이 유형 회원",
+                                    "text-thisgroupmember":"이 그룹 회원",
                                     "text-listloading":"리스트 불러오는 중...",
                                     "text-moveprogram":"프로그램을 선택하면 이동합니다.",
                                     "text-memocaution":"레슨일정의 메모는 회원님께 공유됩니다.",

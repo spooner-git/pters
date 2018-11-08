@@ -103,7 +103,7 @@ def get_setting_info_center(request):
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
-                func_refresh_lecture_count(not_finish_schedule_info.lecture_tb_id)
+                func_refresh_lecture_count(class_id, not_finish_schedule_info.lecture_tb_id)
 
         if context['lt_lecture_auto_finish'] == AUTO_FINISH_ON:
             class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,

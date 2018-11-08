@@ -1296,8 +1296,9 @@ def delete_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                                           use=USE, auth_cd='VIEW')
+        class_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
+                                             use=USE, auth_cd='VIEW')
         member_name = member.name
 
     if error is None:
@@ -1307,10 +1308,7 @@ def delete_member_info_logic(request):
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
                         package_tb = lecture_info.package_tb
-                        group_id_list = []
-                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                        for group_info in group_data:
-                            group_id_list.append(group_info.group_tb_id)
+                        lecture_id = lecture_info.lecture_id
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id,
                                                                   state_cd='NP')
@@ -1367,19 +1365,16 @@ def delete_member_info_logic(request):
                             #
                             #     group_data.update(use=UN_USE)
                                 # lecture_info.save()
-                        if len(group_id_list) > 0:
-                            for group_id_info in group_id_list:
-                                try:
-                                    group_info = GroupTb.objects.get(group_id=group_id_info, use=USE)
-                                except ObjectDoesNotExist:
-                                    group_info = None
+                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+                        if len(group_data) > 0:
+                            for group_info in group_data:
                                 if group_info is not None:
-                                    group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
-                                                                                                         group_id_info,
-                                                                                                         request.user.id))
-                                    group_info.end_group_member_num = len(func_get_end_group_member_list(class_id,
-                                                                                                         group_id_info,
-                                                                                                         request.user.id))
+                                    group_info.group_tb.ing_group_member_num =\
+                                        len(func_get_ing_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
+                                    group_info.group_tb.end_group_member_num = \
+                                        len(func_get_end_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
                                     group_info.save()
                         if package_tb is not None:
                             package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
@@ -1391,10 +1386,7 @@ def delete_member_info_logic(request):
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
                         package_tb = lecture_info.package_tb
-                        group_id_list = []
-                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
-                        for group_info in group_data:
-                            group_id_list.append(group_info.group_tb_id)
+                        lecture_id = lecture_info.lecture_id
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id)
                         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
@@ -1430,23 +1422,21 @@ def delete_member_info_logic(request):
                         # group_data.delete()
 
                         # lecture_info.save()
-                        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id)
                         if len(member_lecture_list) > 0:
                             member_lecture_list.delete()
 
-                        if len(group_id_list) > 0:
-                            for group_id_info in group_id_list:
-                                try:
-                                    group_info = GroupTb.objects.get(group_id=group_id_info, use=USE)
-                                except ObjectDoesNotExist:
-                                    group_info = None
+                        group_data = GroupLectureTb.objects.select_related(
+                            'group_tb').filter(lecture_tb_id=lecture_id, use=USE)
+                        if len(group_data) > 0:
+                            for group_info in group_data:
                                 if group_info is not None:
-                                    group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
-                                                                                                         group_id_info,
-                                                                                                         request.user.id))
-                                    group_info.end_group_member_num = len(func_get_end_group_member_list(class_id,
-                                                                                                         group_id_info,
-                                                                                                         request.user.id))
+                                    group_info.group_tb.ing_group_member_num = \
+                                        len(func_get_ing_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
+                                    group_info.group_tb.end_group_member_num = \
+                                        len(func_get_end_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
                                     group_info.save()
                         if package_tb is not None:
                             package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
@@ -2193,26 +2183,13 @@ def finish_lecture_info_logic(request):
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
 
-        query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                            "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                            " B.USE=1"
+        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+        group_lecture_data.update(fix_state_cd='')
 
         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         for package_group_info in package_group_data:
-
-            group_lecture_data = GroupLectureTb.objects.filter(
-                group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
-                lecture_tb__use=USE,
-                use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                     [])).filter(class_count__gte=1)
-            group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
-                                                              fix_state_cd='FIX').count()
-            if group_lecture_counter > 0:
-                group_lecture_data.update(fix_state_cd='FIX')
-            else:
-                group_lecture_data.update(fix_state_cd='')
-
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
     # if error is None:
     #     if group_info is not None:
     #         func_refresh_group_status(group_info.group_tb_id, None, None)
@@ -2315,24 +2292,11 @@ def refund_lecture_info_logic(request):
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
 
-        query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                            "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
-                            " B.USE=1"
+        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+        group_lecture_data.update(fix_state_cd='')
+
         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         for package_group_info in package_group_data:
-            group_lecture_data = GroupLectureTb.objects.filter(
-                group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
-                lecture_tb__use=USE,
-                use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                     [])).filter(class_count__gte=1)
-            group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
-                                                              fix_state_cd='FIX').count()
-
-            if group_lecture_counter > 0:
-                group_lecture_data.update(fix_state_cd='FIX')
-            else:
-                group_lecture_data.update(fix_state_cd='')
-
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
     # if error is None:
     #     if group_info is not None:
@@ -2760,36 +2724,6 @@ def add_group_member_logic(request):
                 group_info = GroupTb.objects.get(group_id=group_id, use=USE)
             except ObjectDoesNotExist:
                 error = '오류가 발생했습니다.'
-
-            # if error is None:
-            #     # group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-            #     group_counter = group_info.ing_group_member_num
-            #     group_counter += len(json_loading_data['new_member_data'])
-            #     if group_info.group_type_cd == 'NORMAL':
-            #         if group_counter > group_info.member_num:
-            #             error = '그룹 정원을 초과했습니다.'
-
-    # if error is None:
-    #     if group_info.group_type_cd == 'NORMAL':
-    #         if json_loading_data['old_member_data'] != '[]':
-    #             for json_info in json_loading_data['old_member_data']:
-    #                 member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
-    #
-    #                 for member_lecture_info in member_lecture_data:
-    #                     lecture_group_check = 0
-    #                     try:
-    #                         GroupLectureTb.objects.get(group_tb_id=group_id,
-    #                                                    lecture_tb_id=member_lecture_info.lecture_tb_id, use=USE)
-    #                     except ObjectDoesNotExist:
-    #                         lecture_group_check = 1
-    #                     if group_info.group_type_cd == 'NORMAL':
-    #                         if lecture_group_check == 1:
-    #                             if group_info.ing_group_member_num >= group_info.member_num:
-    #                                 error = '그룹 정원을 초과했습니다.'
-    #                                 break
-    #
-    #                 if error is not None:
-    #                     break
 
     if error is None:
         try:
@@ -3748,7 +3682,8 @@ def delete_package_group_info_logic(request):
                         if len(repeat_schedule_data) > 0:
                             repeat_schedule_data.delete()
                         for class_lecture_info in class_lecture_data:
-                            error = func_refresh_lecture_count(class_lecture_info.lecture_tb_id)
+                            error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
+                                                               class_lecture_info.lecture_tb_id)
 
                 func_refresh_group_status(group_id, None, None)
 
@@ -4143,7 +4078,10 @@ def add_package_member_logic(request):
         package_id = json_loading_data['lecture_info']['package_id']
 
     if error is None:
-        package_info = PackageTb.objects.get(package_id=package_id, use=USE)
+        try:
+            package_info = PackageTb.objects.get(package_id=package_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
@@ -4184,6 +4122,10 @@ def add_package_member_logic(request):
             error = error
 
     if error is None:
+        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+        package_info.save()
+
         log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
