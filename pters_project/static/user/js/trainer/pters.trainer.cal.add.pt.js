@@ -3136,15 +3136,19 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
         var finishcheck = jsondata_scheduleFinishArray[i];
         var finish = '';
         if(finishcheck == 1){
-            finish = '(완료)';
+            finish = ' -완료';
         }else if(finishcheck == 0){
             finish = '';
+        }else if(finishcheck == 2){
+            finish = " -결석";
         }
         var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata_sexArray[i]+'.png">';
-        var name = '<span data-dbid="'+jsondata_db_id[i]+'">'+jsondata.name[i]+finish+'</span>';
+        var name = '<span class="go_member_info_window" data-dbid="'+jsondata_db_id[i]+'">'+jsondata.name[i]+finish+'</span>';
+        var absence = '<span class="group_member_absence" data-leid="'+jsondata.classArray_lecture_id[i]+'" data-scheduleid="'+jsondata.scheduleIdArray[i]+'" data-name="'+jsondata.name[i]+'" data-dbid="'+jsondata_db_id[i]+'">결석</span>';
+        var complete = '<span class="group_member_complete" data-leid="'+jsondata.classArray_lecture_id[i]+'" data-scheduleid="'+jsondata.scheduleIdArray[i]+'" data-name="'+jsondata.name[i]+'" data-dbid="'+jsondata_db_id[i]+'">완료</span>';
         var xbutton = '<img src="/static/user/res/member/icon-x-red.png" class="group_member_cancel" data-dbid="'+jsondata_db_id[i]+'" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-max="'+max+'" schedule-id="'+jsondata_scheduleIdArray[i]+'">';
         var htmlend = '</div>';
-        htmlToJoin.push(htmlstart+sex+name+xbutton+htmlend);
+        htmlToJoin.push(htmlstart+sex+name+xbutton+absence+complete+htmlend);
     }
     if(jsonlen < max){
         htmlToJoin.unshift('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>');
@@ -3329,6 +3333,26 @@ $(document).on('click', '.group_member_cancel', function(){
                                                     );
         });
     });
+});
+
+$(document).on('click', 'span.group_member_absence', function(e){
+    e.stopPropagation();
+    $('#id_member_dbid_finish').val($(this).attr("data-dbid"));
+    $('#id_member_name_finish').val($(this).attr('data-name'));
+    $('#id_lecture_id_finish').val($(this).attr('data-leid'));
+    $('#id_schedule_id_finish').val($(this).attr('data-scheduleid'));
+    deleteTypeSelect = "absence";
+    pop_up_delete_confirm({"data-dbid":$(this).attr("data-dbid")}, "결석 처리 하시겠습니까?", "callback", function(){shade_index(200);});
+});
+
+$(document).on('click', 'span.group_member_complete', function(e){
+    e.stopPropagation();
+    $('#id_member_dbid_finish').val($(this).attr("data-dbid"));
+    $('#id_member_name_finish').val($(this).attr('data-name'));
+    $('#id_lecture_id_finish').val($(this).attr('data-leid'));
+    $('#id_schedule_id_finish').val($(this).attr('data-scheduleid'));
+    deleteTypeSelect = "group_member_complete";
+    pop_up_delete_confirm({"data-dbid":$(this).attr("data-dbid")}, "개별 완료처리 하시겠습니까?", "callback", function(){shade_index(200);});
 });
 
 

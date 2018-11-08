@@ -152,7 +152,7 @@
             $("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
             $('#id_member_dbid_delete').val($(this).attr('data-dbid'));       //회원 dbid를 저장
             $('#id_lecture_id_delete').val($(this).attr('data-lectureId'));
-            pop_up_delete_confirm($(this).attr('class-schedule-id'));
+            pop_up_delete_confirm({"schedule-id":$(this).attr('class-schedule-id')}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();});
             deleteTypeSelect = "ptoffdelete";
             shade_index(100);
         }
@@ -169,7 +169,7 @@
             $('#id_date_info').val(thisIdDate_);
             $("#id_schedule_id").val($(this).attr('group-schedule-id')); //shcedule 정보 저장
             $("#id_member_name_delete").val($(this).attr('data-memberName')); //회원 이름 저장
-            pop_up_delete_confirm($(this).attr('group-schedule-id'));
+            pop_up_delete_confirm({"schedule-id":$(this).attr('group-schedule-id')}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();});
             deleteTypeSelect = "groupptdelete";
             shade_index(100);
         }
@@ -185,7 +185,7 @@
             schedule_on_off = 0;
             $('#id_date_info_off').val(thisIdDate_);
             $("#id_off_schedule_id").val($(this).attr('off-schedule-id')); //shcedule 정보 저장
-            pop_up_delete_confirm($(this).attr('off-schedule-id'));
+            pop_up_delete_confirm({"schedule-id":$(this).attr('off-schedule-id')}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();});
             deleteTypeSelect = "ptoffdelete";
             shade_index(100);
         }
@@ -276,7 +276,12 @@
         $('#popup_info').text(infoText);
         $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
-        selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'), 'data-grouptype':'class', 'data-date':thisIdDate_});
+        selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'), 
+                                          'data-grouptype':'class', 'data-date':thisIdDate_,
+                                          'data-name':$(this).attr('data-memberName'),
+                                          'data-leid': $(this).attr('data-lectureId'),
+                                          'data-dbid': $(this).attr('data-dbid')
+                                      });
         
         $('#id_date_info').val(thisIdDate_);
         $("#id_schedule_id").val($(this).attr('class-schedule-id')); //shcedule 정보 저장
@@ -544,9 +549,13 @@
         schedule_on_off = 2;
         //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
         if(bodywidth > 600){
-            selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check'), 'data-date':thisIdDate_}).css({'display':'block', 'top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
+            selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'),'data-name': $(this).attr('data-memberName'), 'data-leid':$(this).attr('data-lectureId'),
+                                                'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check'), 'data-date':thisIdDate_})
+                                        .css({'display':'block', 'top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
         }else{
-            selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check'), 'data-date':thisIdDate_}).css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
+            selector_cal_popup_plan_info.attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-name': $(this).attr('data-memberName'), 'data-leid':$(this).attr('data-lectureId'),
+                                                'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check'), 'data-date':thisIdDate_})
+                                        .css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
         }
         //disable_window_scroll();
     });
@@ -760,8 +769,19 @@
         var $signcomplete_button = $('#popup_btn_sign_complete');
         if($popup.attr('data-grouptype') == "class"){
             $signcomplete_button.attr('data-signtype', 'class');
+
+            $('#id_member_dbid_finish').val($popup.attr("data-dbid"));
+            $('#id_member_name_finish').val($popup.attr('data-name'));
+            $('#id_lecture_id_finish').val($popup.attr('data-leid'));
+            $('#id_schedule_id_finish').val($popup.attr('schedule-id'));
+
         }else if($popup.attr('data-grouptype') == "group"){
             $signcomplete_button.attr('data-signtype', 'group');
+
+            $('#id_member_dbid_finish').val($popup.attr("data-dbid"));
+            $('#id_member_name_finish').val($popup.attr('data-name'));
+            $('#id_lecture_id_finish').val($popup.attr('data-leid'));
+            $('#id_schedule_id_finish').val($popup.attr('schedule-id'));
         }
         disable_window_scroll();
     });
@@ -835,14 +855,16 @@
                 shade_index(200);
             }
             //$('#popup_delete_title').text('반복 일정 취소');
-            pop_up_delete_confirm($(this).parent('#cal_popup_planinfo').attr("schedule-id"));
+            pop_up_delete_confirm({"schedule-id":$(this).parent('#cal_popup_planinfo').attr("schedule-id")}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();})
         }
     });
 
-    function pop_up_delete_confirm(schedule_id){
-        $('#popup_delete_question').html('정말 일정을 취소하시겠습니까?');
-        $('#cal_popup_planinfo').hide();
-        $('#cal_popup_plandelete').css('display', 'block').attr({"schedule-id":schedule_id});
+    function pop_up_delete_confirm(attr, confirm_comment, use, callback){
+        $('#popup_delete_question').html(confirm_comment);
+        $('#cal_popup_plandelete').css('display', 'block').attr(attr);
+        if(use == "callback"){
+            callback();
+        }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////일정 취소 관련 이벤트
 
@@ -955,6 +977,30 @@
                     get_current_member_list();
                     get_current_group_list();
                 });
+            }else if(deleteTypeSelect == "absence"){
+                $('#id_schedule_state_cd').val("PC");
+                send_plan_complete("callback", function(){
+                    toggleGroupParticipantsList('on');
+                    $('#id_schedule_state_cd').val("");
+                    close_info_popup('cal_popup_plandelete');
+                    enable_delete_btns_after_ajax();
+                });
+            }else if(deleteTypeSelect == "group_absence"){
+                $('#id_group_schedule_state_cd').val("PC");
+                send_group_plan_complete("callback", function(){
+                    toggleGroupParticipantsList('on');
+                    $('#id_group_schedule_state_cd').val("");
+                    close_info_popup('cal_popup_plandelete');
+                    enable_delete_btns_after_ajax();
+                });
+            }else if(deleteTypeSelect == "group_member_complete"){
+                $('#id_schedule_state_cd').val("PE");
+                send_plan_complete("callback", function(){
+                    toggleGroupParticipantsList('on');
+                    $('#id_schedule_state_cd').val("");
+                    close_info_popup('cal_popup_plandelete');
+                    enable_delete_btns_after_ajax();
+                });
             }
         }
     });
@@ -963,7 +1009,8 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////이름 눌러 회원 정보 팝업 띄우기
     //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
-    $(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span', function(){
+    $(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span.go_member_info_window', function(e){
+        e.stopPropagation();
         //body_position_fixed_unset();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
