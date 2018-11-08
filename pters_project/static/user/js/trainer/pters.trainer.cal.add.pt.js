@@ -740,6 +740,38 @@ $(document).ready(function(){
     });
 
 
+
+    $("#groupmembersInfo").click(function(e){
+
+    });
+    //그룹일정 등록시 회원 추가
+    $(document).on("click", "div.list_viewByList", function(e){
+        e.stopPropagation();
+        var $thisCheckbox = $(this).find('input');
+        if($thisCheckbox.prop('disabled') == false){
+           if($thisCheckbox.is(":checked")){
+                $thisCheckbox.prop('checked', false);
+            }else{
+                $thisCheckbox.prop('checked', true);
+            }
+
+            var selected_list = [];
+            $('div._fixedmember input').each(function(){
+                if($(this).is(":checked")){
+                    selected_list.push($(this).parent("._fixedmember").attr("data-dbid"));
+                }
+            });
+            $('#id_group_member_ids, #id_repeat_group_member_ids').val(selected_list.join('/'));
+            if(selected_list.length >= $('#membersSelected button').attr("data-membernum")){
+                $(".list_viewByList div._fixedmember input:not(:checked)").prop('disabled', true);
+            }else{
+                $(".list_viewByList div._fixedmember input:not(:checked)").prop('disabled', false);
+            }
+        }
+    });
+    //그룹일정 등록시 회원 추가
+
+
     $('#memo_mini, #scheduleMemo input').keyup(function(){
         $('#id_memo_mini, #id_memo_mini_off').val($(this).val());
     });
@@ -3159,7 +3191,7 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 function draw_groupMemberList_to_view(jsondata, targetHTML){
     var len = jsondata.db_id.length;
-    var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">회원명</div>'+'<div>예약 가능</div>'+'<div>남은 횟수</div>'+'<div>일정에 추가</div>'+'</div>'];
+    var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">회원명</div>'+'<div>예약 가능</div>'+'<div>남은 횟수</div>'+'<div>선택</div>'+'</div>'];
     var addedCount = 0;
     var selected_member = [];
     for(var i=1; i<=len; i++){
@@ -3204,32 +3236,8 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
 }
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 
-//그룹일정 등록시 회원 추가
-$(document).on("click", ".list_viewByList div._fixedmember", function(e){
-    e.stopPropagation();
-    var $thisCheckbox = $(this).find('input');
-    if($thisCheckbox.prop('disabled') == false){
-       if($thisCheckbox.is(":checked")){
-        $thisCheckbox.prop('checked', false);
-        }else{
-            $thisCheckbox.prop('checked', true);
-        }
 
-        var selected_list = [];
-        $('div._fixedmember input').each(function(){
-            if($(this).is(":checked")){
-                selected_list.push($(this).parent("._fixedmember").attr("data-dbid"));
-            }
-        });
-        $('#id_group_member_ids, #id_repeat_group_member_ids').val(selected_list.join('/'));
-        if(selected_list.length >= $('#membersSelected button').attr("data-membernum")){
-            $(".list_viewByList div._fixedmember input:not(:checked)").prop('disabled', true);
-        }else{
-            $(".list_viewByList div._fixedmember input:not(:checked)").prop('disabled', false);
-        }
-    }
-});
-//그룹일정 등록시 회원 추가
+
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 //그룹일정에 참석자 추가 img.add_listedMember(플러스버튼)을 누르면 호출된다.

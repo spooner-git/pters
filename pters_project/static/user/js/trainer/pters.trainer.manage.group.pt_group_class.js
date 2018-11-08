@@ -2270,7 +2270,6 @@ function send_member_fixed_info($this, group_id, db_id, fix, use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
-    console.log({"group_id":group_id, "member_info":[{"member_id":db_id, "fix_info":fix}]});
     $.ajax({
         url:'/trainer/update_fix_group_member/',
         data:JSON.stringify({"group_id":group_id, "member_info":[{"member_id":db_id, "fix_info":fix}]}),
