@@ -799,6 +799,7 @@
             //ajax_block_during_complete_weekcal = false
             if(schedule_on_off==1){
                 //PT 일정 완료 처리시
+                $('#id_schedule_state_cd').val("PE");
                 send_plan_complete('callback', function(json, senddata){
                     send_memo("blank");
                     signImageSend(senddata);
@@ -810,6 +811,7 @@
             }else if(schedule_on_off == 2){
                 var groupOrMember = $('#popup_btn_sign_complete').attr('data-signtype');
                 $('#id_group_schedule_id_finish').val($('#cal_popup_planinfo').attr('schedule-id'));
+                $('#id_group_schedule_state_cd').val("PE");
                 if(groupOrMember == 'group'){
                     send_group_plan_complete('callback', function(json, senddata){
                         send_memo("blank");
@@ -1245,6 +1247,7 @@
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
+                    enable_popup_btns_after_ajax();
                 }else{
                     if(jsondata.push_lecture_id.length>0){
                         for(var i=0; i<jsondata.push_lecture_id.length; i++) {
@@ -1288,6 +1291,7 @@
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
+                    enable_popup_btns_after_ajax();
                 }else{
                     if(jsondata.push_lecture_id.length>0){
                         for(var i=0; i<jsondata.push_lecture_id.length; i++) {
