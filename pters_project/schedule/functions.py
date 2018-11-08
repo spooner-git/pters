@@ -707,7 +707,8 @@ def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
 
 
 def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
-    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+            "AND B.STATE_CD != \'PC\' AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(class_tb=class_id,
                                                                                lecture_tb__isnull=True,
