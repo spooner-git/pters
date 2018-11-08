@@ -3213,7 +3213,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
     var addedCount = 0;
     var selected_member = [];
     var limited_membernum = Number($('#membersSelected button').attr("data-membernum"));
-    var FIXed_number = array_element_count(jsondata.fix_state_cd, "FIX");
+    var FIXed_number = array_element_count(jsondata.fix_state_cd, "FIX") - array_element_count(jsondata.avail_count, 0);
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
