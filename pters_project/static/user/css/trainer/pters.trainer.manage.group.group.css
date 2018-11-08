@@ -513,6 +513,11 @@ div._manage{
 	display: none !important;
 	width: 10%;
 }
+
+#finishedGroupList div._fixedmember{
+	display: none;
+}
+
 div._fixedmember{
 	width: 10%;
 	position: relative;
