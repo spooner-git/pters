@@ -3212,6 +3212,8 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
     var htmlToJoin = ['<div class="list_viewByList listTitle_viewByList"><div style="padding-left:20px;">회원명</div>'+'<div>예약 가능</div>'+'<div>남은 횟수</div>'+'<div>선택</div>'+'</div>'];
     var addedCount = 0;
     var selected_member = [];
+    var limited_membernum = Number($('#membersSelected button').attr("data-membernum"));
+    var FIXed_number = array_element_count(jsondata.fix_state_cd, "FIX") - array_element_count(jsondata.avail_count, 0);
     for(var i=1; i<=len; i++){
         if($('#groupParticipants div.groupParticipantsRow[data-dbid="'+jsondata.db_id[i-1]+'"]').length == 0){
             addedCount++;
@@ -3221,8 +3223,12 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
             }else{
                 groupmember_fixed = "";
             }
+            var disabled = "";
+            if(jsondata.fix_state_cd[i-1] != "FIX" && FIXed_number >= limited_membernum){
+                disabled = "disabled";
+            }
             var sexInfo = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i-1]+'.png">';
-            var fix_member = '<input type="checkbox" '+groupmember_fixed+'>';
+            var fix_member = '<input type="checkbox" '+groupmember_fixed+' '+disabled+'>';
             if(jsondata.avail_count[i-1] == 0){
                 fix_member = "";
             }

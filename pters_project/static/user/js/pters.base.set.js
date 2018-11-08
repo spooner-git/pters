@@ -230,6 +230,19 @@ $(document).ready(function(){
     });
 });
 
+function array_element_count(array, wanted){
+    var counts = {};
+    var len = array.length;
+    for(var i=0; i<len; i++){
+        counts[array[i]] = 0;
+    }
+    for(var j=0; j<len; j++){
+        counts[array[j]] = counts[array[j]] +1;
+    }
+    return counts[wanted];
+}
+
+
 
 //Array에서 중복요소 제거
 function remove_duplicate_in_list(arraylist){
