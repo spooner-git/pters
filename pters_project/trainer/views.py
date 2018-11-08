@@ -2192,8 +2192,26 @@ def finish_lecture_info_logic(request):
         lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
+
+        query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                            "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                            " B.USE=1"
+
         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         for package_group_info in package_group_data:
+
+            group_lecture_data = GroupLectureTb.objects.filter(
+                group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
+                lecture_tb__use=USE,
+                use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                     [])).filter(class_count__gte=1)
+            group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
+                                                              fix_state_cd='FIX').count()
+            if group_lecture_counter > 0:
+                group_lecture_data.update(fix_state_cd='FIX')
+            else:
+                group_lecture_data.update(fix_state_cd='')
+
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
     # if error is None:
     #     if group_info is not None:
@@ -2296,8 +2314,25 @@ def refund_lecture_info_logic(request):
         lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
         lecture_info.package_tb.save()
+
+        query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                            "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                            " B.USE=1"
         package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
         for package_group_info in package_group_data:
+            group_lecture_data = GroupLectureTb.objects.filter(
+                group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
+                lecture_tb__use=USE,
+                use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                     [])).filter(class_count__gte=1)
+            group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
+                                                              fix_state_cd='FIX').count()
+
+            if group_lecture_counter > 0:
+                group_lecture_data.update(fix_state_cd='FIX')
+            else:
+                group_lecture_data.update(fix_state_cd='')
+
             func_refresh_group_status(package_group_info.group_tb_id, None, None)
     # if error is None:
     #     if group_info is not None:
@@ -3290,7 +3325,14 @@ def update_fix_group_member_logic(request):
         try:
             with transaction.atomic():
                 for json_info in json_loading_data['member_info']:
-                    if group_lecture_data is not None:
+                    group_lecture_counter = GroupLectureTb.objects.select_related(
+                        'lecture_tb__member').filter(group_tb_id=group_id,
+                                                     lecture_tb__member_id=json_info['member_id'],
+                                                     lecture_tb__state_cd='IP', use=USE).count()
+                    if group_lecture_counter == 0:
+                        error = '이미 종료된 회원입니다.'
+
+                    if error is None and group_lecture_data is not None:
                         for group_lecture_info in group_lecture_data:
                             if str(group_lecture_info.lecture_tb.member_id) == str(json_info['member_id']):
                                 group_lecture_info.fix_state_cd = json_info['fix_info']
@@ -3429,25 +3471,25 @@ def delete_package_info_logic(request):
                     #         package_lecture_info.lecture_tb.lecture_rem_count = 0
                     #         package_lecture_info.lecture_tb.save()
 
-                if error is None:
-                    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                              lecture_tb__package_tb_id=package_id,
-                                                              end_dt__lte=now, use=USE).exclude(Q(state_cd='PE')
-                                                                                                | Q(state_cd='PC'))
-                    schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                     lecture_tb__package_tb_id=package_id,
-                                                                     end_dt__gt=now,
-                                                                     use=USE).exclude(Q(state_cd='PE')
-                                                                                      | Q(state_cd='PC'))
-                    repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                           lecture_tb__package_tb_id=package_id)
-
-                    if len(schedule_data) > 0:
-                        schedule_data.update(state_cd='PE')
-                    if len(schedule_data_delete) > 0:
-                        schedule_data_delete.delete()
-                    if len(repeat_schedule_data) > 0:
-                        repeat_schedule_data.delete()
+                # if error is None:
+                #     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                               lecture_tb__package_tb_id=package_id,
+                #                                               end_dt__lte=now, use=USE).exclude(Q(state_cd='PE')
+                #                                                                                 | Q(state_cd='PC'))
+                #     schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                                      lecture_tb__package_tb_id=package_id,
+                #                                                      end_dt__gt=now,
+                #                                                      use=USE).exclude(Q(state_cd='PE')
+                #                                                                       | Q(state_cd='PC'))
+                #     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                                            lecture_tb__package_tb_id=package_id)
+                #
+                #     if len(schedule_data) > 0:
+                #         schedule_data.update(state_cd='PE')
+                #     if len(schedule_data_delete) > 0:
+                #         schedule_data_delete.delete()
+                #     if len(repeat_schedule_data) > 0:
+                #         repeat_schedule_data.delete()
                 if error is None:
                     package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id,
                                                                        use=USE)
@@ -3545,13 +3587,34 @@ def add_package_group_info_logic(request):
                                                                                                 use=USE).count()
                 package_group_info.package_tb.package_type_cd = 'PACKAGE'
                 package_group_info.package_tb.save()
-                package_group_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                                           lecture_tb__package_tb_id=package_id,
-                                                                           lecture_tb__use=USE, use=USE)
+                package_group_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                    lecture_tb__package_tb_id=package_id,
+                                                    lecture_tb__use=USE, use=USE)
+
+                query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                    "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                    " B.USE=1"
                 for package_group_lecture_info in package_group_lecture_data:
-                    group_lecture_info = GroupLectureTb(group_tb_id=group_id,
-                                                        lecture_tb_id=package_group_lecture_info.lecture_tb_id, use=USE)
+
+                    group_lecture_counter = GroupLectureTb.objects.filter(
+                        group_tb_id=package_group_info.group_tb_id,
+                        lecture_tb__member_id=package_group_lecture_info.lecture_tb.member_id,
+                        lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
+                        use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                             [])).filter(class_count__gte=1).count()
+                    if group_lecture_counter > 0:
+                        fix_state_cd = 'FIX'
+                    else:
+                        fix_state_cd = ''
+                    group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
+                                                        lecture_tb_id=package_group_lecture_info.lecture_tb_id,
+                                                        fix_state_cd=fix_state_cd, use=USE)
                     group_lecture_info.save()
+                    # group_lecture_info = GroupLectureTb(group_tb_id=group_id,
+                    #                                     lecture_tb_id=package_group_lecture_info.lecture_tb_id,
+                    #                                     use=USE)
+                    # group_lecture_info.save()
                 func_refresh_group_status(group_id, None, None)
 
         except ValueError:
@@ -3591,7 +3654,7 @@ def delete_package_group_info_logic(request):
                 package_group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
                                                                            lecture_tb__package_tb_id=package_id)
 
-                package_group_lecture_data.update(use=UN_USE)
+                package_group_lecture_data.update(fix_state_cd='', use=UN_USE)
                 try:
                     package_info = PackageTb.objects.get(package_id=package_id)
                 except ObjectDoesNotExist:
@@ -3614,44 +3677,50 @@ def delete_package_group_info_logic(request):
                     package_info.save()
 
                 if package_info is not None:
-                    if package_info.package_group_num == 0:
-                        class_lecture_data = ClassLectureTb.objects.select_related(
-                            'lecture_tb__package_tb').filter(class_tb_id=class_id,
-                                                             lecture_tb__package_tb_id=package_id,
-                                                             auth_cd='VIEW', lecture_tb__state_cd='IP',
-                                                             lecture_tb__use=USE, use=USE)
-                        for class_lecture_info in class_lecture_data:
-                            lecture_info = class_lecture_info.lecture_tb
 
-                            if lecture_info.lecture_rem_count == lecture_info.lecture_reg_count:
-                                lecture_info.delete()
-                            else:
-                                if lecture_info.state_cd == 'IP':
-                                    lecture_info.lecture_avail_count = 0
-                                    lecture_info.lecture_rem_count = 0
-                                    lecture_info.state_cd = 'PE'
-                                    lecture_info.save()
-                        if error is None:
-                            schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                      lecture_tb__package_tb_id=package_id,
-                                                                      end_dt__lte=timezone.now(),
-                                                                      en_dis_type=ON_SCHEDULE_TYPE
-                                                                      ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
-                            schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                             lecture_tb__package_tb_id=package_id,
-                                                                             # lecture_tb__isnull=True,
-                                                                             end_dt__gt=timezone.now(),
-                                                                             en_dis_type=ON_SCHEDULE_TYPE
-                                                                             ).exclude(Q(state_cd='PE')
-                                                                                       | Q(state_cd='PC'))
-                            repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                                   lecture_tb__package_tb_id=package_id)
-                            if len(schedule_data) > 0:
-                                schedule_data.update(state_cd='PE')
-                            if len(schedule_data_delete) > 0:
-                                schedule_data_delete.delete()
-                            if len(repeat_schedule_data) > 0:
-                                repeat_schedule_data.delete()
+                    class_lecture_data = ClassLectureTb.objects.select_related(
+                        'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                         lecture_tb__package_tb_id=package_id,
+                                                         auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                         lecture_tb__use=USE, use=USE)
+
+                    if package_info.package_group_num == 0:
+                        for class_lecture_info in class_lecture_data:
+
+                            error = func_delete_lecture_info(request.user.id, class_id,
+                                                             class_lecture_info.lecture_tb_id,
+                                                             class_lecture_info.lecture_tb.member_id)
+                            # lecture_info = class_lecture_info.lecture_tb
+                            #
+                            # if lecture_info.lecture_rem_count == lecture_info.lecture_reg_count:
+                            #     lecture_info.delete()
+                            # else:
+                            #     if lecture_info.state_cd == 'IP':
+                            #         lecture_info.lecture_avail_count = 0
+                            #         lecture_info.lecture_rem_count = 0
+                            #         lecture_info.state_cd = 'PE'
+                            #         lecture_info.save()
+                        # if error is None:
+                        #     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                        #                                               lecture_tb__package_tb_id=package_id,
+                        #                                               end_dt__lte=timezone.now(),
+                        #                                               en_dis_type=ON_SCHEDULE_TYPE
+                        #                                               ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                        #     schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                        #                                                      lecture_tb__package_tb_id=package_id,
+                        #                                                      # lecture_tb__isnull=True,
+                        #                                                      end_dt__gt=timezone.now(),
+                        #                                                      en_dis_type=ON_SCHEDULE_TYPE
+                        #                                                      ).exclude(Q(state_cd='PE')
+                        #                                                                | Q(state_cd='PC'))
+                        #     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                        #                                                            lecture_tb__package_tb_id=package_id)
+                        #     if len(schedule_data) > 0:
+                        #         schedule_data.update(state_cd='PE')
+                        #     if len(schedule_data_delete) > 0:
+                        #         schedule_data_delete.delete()
+                        #     if len(repeat_schedule_data) > 0:
+                        #         repeat_schedule_data.delete()
                         package_info.use = UN_USE
                         package_info.save()
                     else:
@@ -3678,8 +3747,14 @@ def delete_package_group_info_logic(request):
                             schedule_data_delete.delete()
                         if len(repeat_schedule_data) > 0:
                             repeat_schedule_data.delete()
+                        for class_lecture_info in class_lecture_data:
+                            error = func_refresh_lecture_count(class_lecture_info.lecture_tb_id)
 
                 func_refresh_group_status(group_id, None, None)
+
+                if error is not None:
+                    raise InternalError
+
         except ValueError:
             error = '오류가 발생했습니다.'
         except IntegrityError:
@@ -3689,7 +3764,7 @@ def delete_package_group_info_logic(request):
         except ValidationError:
             error = '오류가 발생했습니다.'
         except InternalError:
-            error = '오류가 발생했습니다.'
+            error = error
 
     if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -3878,6 +3953,27 @@ def finish_package_info_logic(request):
                     lecture_info.lecture_rem_count = 0
                     lecture_info.state_cd = 'PE'
                 lecture_info.save()
+
+                query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                    "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                    " B.USE=1"
+
+                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=package_lecture_info.group_tb,
+                                                                   use=USE)
+
+                for group_lecture_info in group_lecture_data:
+                    group_lecture_data = GroupLectureTb.objects.filter(
+                        group_tb_id=group_lecture_info.group_tb_id, lecture_tb__member_id=lecture_info.member_id,
+                        lecture_tb__use=USE,
+                        use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                             [])).filter(class_count__gte=1)
+                    group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
+                                                                         fix_state_cd='FIX').count()
+
+                    if group_lecture_counter > 0:
+                        group_lecture_data.update(fix_state_cd='FIX')
+                    else:
+                        group_lecture_data.update(fix_state_cd='')
 
     if error is None:
         for package_group_info in package_group_data:
