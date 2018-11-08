@@ -761,7 +761,7 @@ $(document).ready(function(){
                     selected_list.push($(this).parent("._fixedmember").attr("data-dbid"));
                 }
             });
-            $('#id_group_member_ids, #id_repeat_group_member_ids').val(selected_list.join('/'));
+            $('#id_group_member_ids, #id_repeat_group_member_ids, #id_repeat_confirm_group_member_ids').val(selected_list.join('/'));
             if(selected_list.length >= $('#membersSelected button').attr("data-membernum")){
                 $(".list_viewByList div._fixedmember input:not(:checked)").prop('disabled', true);
             }else{
@@ -946,7 +946,7 @@ $(document).ready(function(){
                         selected_list.push(jsondata.db_id[i]);
                     }
                 }
-                $('#id_group_member_ids, #id_repeat_group_member_ids').val(selected_list.join('/'));
+                $('#id_group_member_ids, #id_repeat_group_member_ids, #id_repeat_confirm_group_member_ids').val(selected_list.join('/'));
             });
         }
 
@@ -3249,7 +3249,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
     htmlToJoin.push("<div style='text-align:center;'><img src='/static/user/res/PTERS_logo_pure.png' style='width:50px;margin-top:3px;opacity:0.3;'></div>");
     var html = htmlToJoin.join('');
     targetHTML.html(html);
-    $('#id_group_member_ids, #id_repeat_group_member_ids').val(selected_member.join('/'));
+    $('#id_group_member_ids, #id_repeat_group_member_ids, #id_repeat_confirm_group_member_ids').val(selected_member.join('/'));
 }
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 

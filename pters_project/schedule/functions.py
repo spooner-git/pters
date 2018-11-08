@@ -50,14 +50,13 @@ def func_get_group_lecture_id(group_id, member_id):
     lecture_id = None
 
     group_lecture_data = GroupLectureTb.objects.select_related(
-        'group_tb', 'lecture_tb').filter(group_tb_id=group_id,
-                                                       group_tb__state_cd='IP',
-                                                       group_tb__use=USE,
-                                                       lecture_tb__member_id=member_id,
-                                                       lecture_tb__state_cd='IP',
-                                                       lecture_tb__lecture_avail_count__gt=0,
-                                                       lecture_tb__use=USE,
-                                                       use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+        'group_tb', 'lecture_tb').filter(group_tb_id=group_id, group_tb__state_cd='IP',
+                                         group_tb__use=USE,
+                                         lecture_tb__member_id=member_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__lecture_avail_count__gt=0,
+                                         lecture_tb__use=USE,
+                                         use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     if len(group_lecture_data) > 0:
         lecture_id = group_lecture_data[0].lecture_tb.lecture_id

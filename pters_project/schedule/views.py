@@ -1305,8 +1305,8 @@ def add_group_schedule_logic(request):
         #     else:
         #         info_message = info_message + ',' + member_info.name
         # member_list = group_member_ids
-        error_temp = None
         for group_member_id in group_member_ids:
+            error_temp = None
             # lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
             try:
                 member_info = MemberTb.objects.get(member_id=group_member_id)
@@ -2207,6 +2207,9 @@ def add_group_repeat_schedule_logic(request):
         except ObjectDoesNotExist:
             error = '오류가 발생했습니다.'
 
+    if error is None:
+        if len(group_member_ids) > group_info.member_num:
+            error = '그룹 정원보다 등록하려는 회원수가 많습니다.'
     # if error is None and group_info.group_type_cd == 'NORMAL':
     # if error is None:
     #     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
