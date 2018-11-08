@@ -108,14 +108,15 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
 
 def func_get_trainee_group_schedule(context, user_id, class_id, start_date, end_date):
     # 내가 속한 그룹 일정 조회
-    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID`" \
+            "AND B.STATE_CD !=\'PC\' AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     query_member_auth_cd \
         = "select count(`LECTURE_TB_ID`) from GROUP_LECTURE_TB as B" \
           " where B.USE=1 and B.GROUP_TB_ID = `SCHEDULE_TB`.`GROUP_TB_ID`" \
-          " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)='IP'" \
+          " and (select `STATE_CD` from LECTURE_TB as D WHERE D.ID=B.LECTURE_TB_ID)=\'IP\'" \
           " and (select `AUTH_CD` from MEMBER_LECTURE_TB as C WHERE C.LECTURE_TB_ID = B.LECTURE_TB_ID" \
-          " and C.MEMBER_ID= "+str(user_id)+")='VIEW'"
+          " and C.MEMBER_ID= "+str(user_id)+")=\'VIEW\'"
 
     group_schedule_data = ScheduleTb.objects.select_related(
         'group_tb').filter(class_tb_id=class_id, group_tb__isnull=False,

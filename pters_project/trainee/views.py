@@ -207,7 +207,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
 
         context = func_get_holiday_schedule(context)
         # context = get_trainee_setting_data(context, request.user.id)
-        request.session['setting_language'] = context['lt_lan_01']
+        # request.session['setting_language'] = context['lt_lan_01']
             # 강사 setting 값 로드
 
         return render(request, self.template_name, context)
@@ -262,7 +262,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
 
             # 회원 setting 값 로드
             # context = get_trainee_setting_data(context, request.user.id)
-            request.session['setting_language'] = context['lt_lan_01']
+            # request.session['setting_language'] = context['lt_lan_01']
 
         return render(request, self.template_name, context)
 
@@ -341,8 +341,10 @@ def add_trainee_schedule_logic(request):
             if error is None:
                 start_date = schedule_info.start_dt
                 end_date = schedule_info.end_dt
-                if schedule_info.state_cd == 'PE' or schedule_info.state_cd == 'PC':
+                if schedule_info.state_cd == 'PE':
                     error = '이미 완료된 일정입니다.'
+                elif schedule_info.state_cd == 'PC':
+                    error = '이미 결석 처리된 일정입니다.'
 
     if error is None:
         error = func_check_schedule_setting(class_id, start_date, end_date, ADD_SCHEDULE)
@@ -358,8 +360,10 @@ def add_trainee_schedule_logic(request):
                 group_schedule_info = None
 
             if group_schedule_info is not None:
-                if group_schedule_info.state_cd == 'PE' or group_schedule_info.state_cd == 'PC':
+                if group_schedule_info.state_cd == 'PE':
                     error = '이미 완료된 일정입니다.'
+                elif group_schedule_info.state_cd == 'PC':
+                    error = '이미 결석 처리된 일정입니다.'
 
                 if error is None:
                     group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_schedule_info.group_tb_id,
@@ -820,7 +824,7 @@ class GetTraineeInfoView(LoginRequiredMixin, AccessTestMixin, View):
 
             # 회원 setting 값 로드
             # context = get_trainee_setting_data(context, request.user.id)
-            request.session['setting_language'] = context['lt_lan_01']
+            # request.session['setting_language'] = context['lt_lan_01']
 
         if error is None:
             if member_info.phone is None:
