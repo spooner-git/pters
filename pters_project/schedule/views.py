@@ -2133,7 +2133,8 @@ def add_group_repeat_schedule_logic(request):
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     group_member_ids = request.POST.get('group_member_ids', '')
-
+    if group_member_ids is not None and group_member_ids != '':
+        group_member_ids = group_member_ids.split('/')
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
     context = {}
     error = None
