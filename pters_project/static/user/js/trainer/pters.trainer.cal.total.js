@@ -2431,31 +2431,31 @@ var clicked_td_date_info;
 var schedule_on_off = 0;
 
 //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
-$(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span', function(){
-    var bodywidth = window.innerWidth;
-    var dbID = $(this).attr('data-dbid');
-    //$('.popups').hide()
-    if(bodywidth < 600){
-        $('.popups').hide();
-        //$('#calendar').css('display','none')
-        $('#calendar').css('height', '0');
-        get_indiv_member_info(dbID);
-        get_indiv_repeat_info(dbID);
-        get_member_lecture_list(dbID);
-        get_member_history_list(dbID);
-        shade_index(100);
-    }else if(bodywidth >= 600){
-        get_indiv_member_info(dbID);
-        get_indiv_repeat_info(dbID);
-        get_member_lecture_list(dbID);
-        get_member_history_list(dbID);
-        $('.member_info_tool button._info_delete_img').hide();
-        $('#info_shift_base, #info_shift_lecture').show();
-        $('#info_shift_schedule, #info_shift_history').hide();
-        $('#select_info_shift_lecture').addClass('button_active');
-        $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
-    }
-});
+// $(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span', function(){
+//     var bodywidth = window.innerWidth;
+//     var dbID = $(this).attr('data-dbid');
+//     //$('.popups').hide()
+//     if(bodywidth < 600){
+//         $('.popups').hide();
+//         //$('#calendar').css('display','none')
+//         $('#calendar').css('height', '0');
+//         get_indiv_member_info(dbID);
+//         get_indiv_repeat_info(dbID);
+//         get_member_lecture_list(dbID);
+//         get_member_history_list(dbID);
+//         shade_index(100);
+//     }else if(bodywidth >= 600){
+//         get_indiv_member_info(dbID);
+//         get_indiv_repeat_info(dbID);
+//         get_member_lecture_list(dbID);
+//         get_member_history_list(dbID);
+//         $('.member_info_tool button._info_delete_img').hide();
+//         $('#info_shift_base, #info_shift_lecture').show();
+//         $('#info_shift_schedule, #info_shift_history').hide();
+//         $('#select_info_shift_lecture').addClass('button_active');
+//         $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
+//     }
+// });
 
 $('.popup_inner_month').scroll(function(e){
     e.stopPropagation();

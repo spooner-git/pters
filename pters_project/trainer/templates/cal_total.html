@@ -41,12 +41,14 @@
         <input type="hidden" name="lecture_id"   id="id_lecture_id_finish">
         <input type="hidden" name="member_name"   id="id_member_name_finish">
         <input type="hidden" name="member_id"   id="id_member_dbid_finish">
+        <input type="hidden" name="schedule_state_cd"   id="id_schedule_state_cd">
         <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
     </form>
 
     <form action="{% url 'schedule:finish_group_schedule' %}" id="group-finish-form" method="post" enctype='multipart/form-data'>
         {% csrf_token %}
         <input type="hidden" name="schedule_id" id="id_group_schedule_id_finish">
+        <input type="hidden" name="schedule_state_cd"   id="id_group_schedule_state_cd">
         <input type="hidden" name="next_page" value = '{% url 'trainer:get_error_info' %}'>
     </form>
 

@@ -173,6 +173,13 @@
 	margin-left: 10px;
 	margin-right: 10px;
 }
+#groupParticipants span.group_member_absence,
+#groupParticipants span.group_member_complete{
+	float: right;
+	cursor: pointer;
+	margin-right: 10px;
+	margin-left: 10px;
+}
 #groupParticipants img.group_member_cancel{
 	float: right;
 	cursor: pointer;
