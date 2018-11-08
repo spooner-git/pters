@@ -3132,6 +3132,7 @@ function get_group_plan_participants(group_schedule_id, callbackoption, callback
 
 //그룹에 일정에 속한 회원목록을 그린다. get_group_plan_participants와 같이 쓴다.
 function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max){
+    console.log("jsondata",jsondata)
     var target = $('#groupParticipants');
     var htmlToJoin = [];
     var jsonlen = jsondata.db_id.length;
@@ -3141,6 +3142,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
     var jsondata_scheduleFinishArray = jsondata.scheduleFinishArray;
     var jsondata_sexArray = jsondata.sexArray;
 
+    var member_number = 0;
     for(var i=0; i<jsonlen; i++){
         var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata_db_id[i]+'" schedule-id="'+jsondata_scheduleIdArray[i]+'" data-leid="'+jsondata_classArray_lecture_id[i]+'">';
         //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
@@ -3148,8 +3150,10 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
         var finish = '';
         if(finishcheck == 1){
             finish = ' -완료';
+            member_number = member_number+1;
         }else if(finishcheck == 0){
             finish = '';
+            member_number = member_number+1;
         }else if(finishcheck == 2){
             finish = " -결석";
         }
@@ -3161,7 +3165,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
         var htmlend = '</div>';
         htmlToJoin.push(htmlstart+sex+name+xbutton+absence+complete+htmlend);
     }
-    if(jsonlen < max){
+    if(jsonlen < max || member_number < max){
         htmlToJoin.unshift('<div style="margin-top:10px;margin-bottom:10px;"><img src="/static/user/res/floatbtn/btn-plus.png" class="add_groupmember_plan" group-schedule-id="'+group_schedule_id+'" data-groupid="'+group_id+'" data-membernum="'+max+'"></div>');
     }
     target.html(htmlToJoin.join(''));
