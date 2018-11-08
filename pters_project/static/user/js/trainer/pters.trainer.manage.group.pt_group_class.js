@@ -1708,7 +1708,6 @@ function get_end_groupmember_list(group_id, use, callback){
 
 //그룹원 목록을 그룹에 그리기 
 function groupMemberListSet(group_id, jsondata){
-    console.log("asdf",jsondata)
     var htmlToJoin = [];
     if(bodywidth < 600){
         htmlToJoin.push('<div class="groupmemberline_thead">'+
