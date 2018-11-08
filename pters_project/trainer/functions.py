@@ -1561,6 +1561,7 @@ def func_get_ing_group_member_list(class_id, group_id, user_id):
                     member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
                     member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
                     if member_test.fix_state_cd == '':
+                        member_info.fix_state_cd = lecture_info.fix_state_cd
                         if member_info.fix_state_cd != '' and member_info.fix_state_cd is not None:
                             try:
                                 member_test.fix_state_cd_nm = \
