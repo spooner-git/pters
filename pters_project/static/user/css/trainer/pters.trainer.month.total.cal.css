@@ -695,13 +695,13 @@ img,a,div,span,p{
 		border-right-color: #f7f7f7 !important;
 	}
 
-	.blackballoon_trainer,.balloon_trainer{
+	.blackballoon_trainer, .balloon_trainer{
 		position: relative;
 		color :#282828;
 		background-color: transparent;
 		font-size: 15px;
 		font-weight: 500;
-		width:32px;
+		width:45px;
 		margin-top: 20px;
 		left:55%;
 	}
