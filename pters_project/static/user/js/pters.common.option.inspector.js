@@ -164,7 +164,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
         }else if(option_type == "group_read"){
             if(limit_num == 0){
-                show_caution_popup(function_lock_message("delete", 1, "그룹/클래스 인원 조회", limit_type));
+                show_caution_popup(function_lock_message("delete", 1, "그룹 인원 조회", limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
@@ -418,7 +418,7 @@ function show_free_member_use_guide(view_page){
         }
     }else if(view_page == "lecture_manage"){
         if(auth_type_cd.auth_group_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹,클래스등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개씩 등록 가능(진행중)`);
+            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개 등록 가능(진행중)`);
         }
     }else if(view_page == "analytics"){
         if(auth_type_cd.auth_analytics_read.limit_type == "무료"){

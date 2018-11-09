@@ -2363,7 +2363,7 @@ def progress_lecture_info_logic(request):
                     error_count += 1
 
         if error_count > 1:
-            error = str(error_count)+'개의 그룹/클래스가 진행중 상태가 아닙니다.'
+            error = str(error_count)+'개의 그룹이 진행중 상태가 아닙니다.'
 
     # if error is None:
     #     error_count = 0
