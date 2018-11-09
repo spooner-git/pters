@@ -3073,16 +3073,15 @@ function send_push_func(lecture_id, title, message){
 
 
 //그룹..
-
 $(document).on('click', 'img.add_groupmember_plan', function(){
     $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id'));
     $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid'));
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum'));
-    $('#subpopup_addByList_plan').show();
-    //get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
+    // $('#subpopup_addByList_plan').show();
     var parentPopupHeight = $('#cal_popup_planinfo').height();
-    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));
-                                                                                        $('#subpopup_addByList_plan').css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
+    $('#subpopup_addByList_plan').show().css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
+    //get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
+    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));                                                                           
                                                                                         set_pters_scrolling_to_groupmember_add();});//특정그룹회원 목록 조회
 });
 
@@ -3175,7 +3174,7 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
-    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
+    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>예약가능횟수</div>'+'<div style="display:none">'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
     var addedCount = 0;
 
     for(var i=1; i<=len; i++){
@@ -3189,9 +3188,9 @@ function draw_groupParticipantsList_to_add(jsondata, targetHTML){
                 '" data-sex="'+jsondata.sex[i-1]+
                 '" data-phone="'+jsondata.phone[i-1]+
                 '"><div data-dbid="'+jsondata.db_id[i-1]+'">'+
-                //sexInfo+jsondata.name[i-1]+' (ID: '+jsondata.member_id[i-1]+')'+'</div>'+
-                sexInfo+jsondata.name[i-1]+'</div>'+
-                '<div>'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>';
+                sexInfo+jsondata.name[i-1]+'<p style="margin:0;">'+'('+jsondata.member_id[i-1]+')</p>'+'</div>'+
+                '<div>'+jsondata.avail_count[i-1]+'</div>'+
+                '<div style="display:none;">'+jsondata.phone[i-1]+'</div>'+'<div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_listedMember"></div>'+'</div>';
         }
     }
     if(len == 0){

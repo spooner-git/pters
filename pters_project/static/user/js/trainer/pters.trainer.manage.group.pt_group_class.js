@@ -1574,14 +1574,13 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             //         '</div></div>'+
             //         '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+'" data-grouptype="'+group_type+'">'+'</div>'
         }
-        
     }
 
-    if(htmlToJoin.length == 0){
+    if(htmlToJoin2.length == 0){
         if(option == "current"){
-            htmlToJoin.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
     //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
