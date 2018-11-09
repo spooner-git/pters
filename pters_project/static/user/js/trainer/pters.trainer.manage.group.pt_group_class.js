@@ -500,7 +500,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             memberlist.addClass('groupMembersWrap_selected').show();
             repeat_list.show();
             if(bodywidth < 600){
-               memo_list.show(); 
+               memo_list.show();
             }
             if($(this).attr('data-groupstatecd')=='current'){
                 get_groupmember_list(group_id);
@@ -1612,6 +1612,7 @@ function get_groupmember_list(group_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log("jsondata",jsondata)
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
