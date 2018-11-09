@@ -2484,13 +2484,16 @@ def add_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
+    end_color_cd = request.POST.get('end_color_cd', '#af757c')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
     try:
         with transaction.atomic():
             group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
-                                 name=name, note=note, state_cd='IP', use=USE)
+                                 name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                 state_cd='IP', use=USE)
 
             group_info.save()
 
@@ -2636,6 +2639,8 @@ def update_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '')
+    end_color_cd = request.POST.get('end_color_cd', '')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     group_info = None
     error = None
@@ -2644,11 +2649,6 @@ def update_group_info_logic(request):
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
-
-    # try:
-    #     pakcage_info = PackageTb.objects.get(group_id=group_id)
-    # except ObjectDoesNotExist:
-    #     error = '오류가 발생했습니다.'
 
     if error is None:
 
@@ -2663,21 +2663,24 @@ def update_group_info_logic(request):
 
         if note == '' or note is None:
             note = group_info.note
+
+        if ing_color_cd == '' or ing_color_cd is None:
+            ing_color_cd = group_info.ing_color_cd
+
+        if end_color_cd == '' or end_color_cd is None:
+            end_color_cd = group_info.end_color_cd
+
     if error is None:
         if int(member_num) <= 0:
             error = '정원은 1명 이상이어야 합니다.'
-
-    # if error is None:
-    #     if group_type_cd == 'NORMAL':
-    #         group_member_num = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-    #         if group_member_num > int(member_num):
-    #             error = '현재 그룹에 추가된 인원이 정원보다 많습니다.'
 
     if error is None:
         group_info.group_type_cd = group_type_cd
         group_info.member_num = member_num
         group_info.name = name
         group_info.note = note
+        group_info.ing_color_cd = ing_color_cd
+        group_info.end_color_cd = end_color_cd
         group_info.save()
 
     if error is None:

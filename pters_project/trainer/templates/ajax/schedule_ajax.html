@@ -37,6 +37,11 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_max_member_num":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_ing_color_cd":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_end_color_cd":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
       "group_schedule_current_member_num":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_current_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_group_type_cd_name":

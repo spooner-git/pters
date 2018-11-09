@@ -51,7 +51,10 @@
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_schedule_group_type_cd_name":
       [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
+      "group_schedule_ing_color_cd":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_schedule_end_color_cd":
+      [{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "package_type_cd_name":
       [{% for package_info in package_data %}"{{ package_info.package_tb.package_type_cd_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

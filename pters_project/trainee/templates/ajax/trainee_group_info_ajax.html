@@ -19,6 +19,10 @@
       [{% for group_info in group_data %}"{{ group_info.group_tb.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "group_member_num":
       [{% for group_info in group_data %}"{{ group_info.group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_ing_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.group_tb.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_end_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.group_tb.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]

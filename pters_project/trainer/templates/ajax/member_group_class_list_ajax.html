@@ -23,6 +23,10 @@
       [{% for group_info in group_data %}"{{ group_info.ing_group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
       "end_group_member_num":
       [{% for group_info in group_data %}"{{ group_info.end_group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_ing_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.ing_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_end_color_cd":
+      [{% for group_info in group_data %}"{{ group_info.end_color_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
     "db_id" :
     [{% for member_info in member_data %}"{{ member_info.user.id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],

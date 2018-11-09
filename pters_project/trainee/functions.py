@@ -139,7 +139,7 @@ def func_get_trainee_off_schedule(context, class_id, start_date, end_date):
     # off 스케쥴 전달
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=start_date,
-                                              start_dt__lt=end_date).order_by('start_dt')
+                                              start_dt__lt=end_date).exclude(state_cd='PC').order_by('start_dt')
 
     context['off_schedule_data'] = schedule_data
 

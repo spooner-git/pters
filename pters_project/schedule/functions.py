@@ -13,8 +13,8 @@ from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE
 from login.models import LogTb, PushInfoTb
 from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
-from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list, \
-    func_get_ing_package_member_list, func_get_end_group_member_list_count, func_get_ing_group_member_list_count
+from trainer.functions import func_get_ing_package_member_list, func_get_end_group_member_list_count, \
+    func_get_ing_group_member_list_count
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
@@ -432,7 +432,7 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
     seven_days_after = add_end_dt + datetime.timedelta(days=2)
     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                               start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
-                                              use=USE).exclude(schedule_id=schedule_id)
+                                              use=USE).exclude(schedule_id=schedule_id, state_cd='PC')
 
     for schedule_info in schedule_data:
         if schedule_info.start_dt >= add_start_dt:

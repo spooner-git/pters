@@ -131,6 +131,8 @@ class GroupTb(TimeStampedModel):
     group_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     class_tb = models.ForeignKey(ClassTb, on_delete=models.CASCADE, blank=True, null=True)
     group_type_cd = models.CharField(db_column='GROUP_TYPE_CD', max_length=45, blank=True, null=True)
+    ing_color_cd = models.CharField(db_column='ING_COLOR_CD', max_length=20, default='#ffacb7')
+    end_color_cd = models.CharField(db_column='END_COLOR_CD', max_length=20, default='#af757c')
     state_cd = models.CharField(db_column='STATE_CD', max_length=10, blank=True, null=True)
     member_num = models.IntegerField(db_column='MEMBER_NUM', default=2)  # Field name made lowercase.
     ing_group_member_num = models.IntegerField(db_column='ING_GROUP_MEMBER_NUM', default=0)
