@@ -273,6 +273,7 @@ function close_manage_popup(option){
         else{
             shade_index(-100);
         }
+        $('#subpopup_addByList, #subpopup_addBySearch').hide();
     }else if(option == 'group_add'){
         var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){
