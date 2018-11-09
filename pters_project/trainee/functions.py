@@ -15,8 +15,9 @@ from trainer.models import ClassTb, ClassLectureTb, GroupLectureTb, SettingTb, P
 from .models import MemberLectureTb
 
 
-def func_get_holiday_schedule(context):
+def func_get_holiday_schedule(context, start_date, end_date):
 
+    # holiday = HolidayTb.objects.filter(holiday_dt__gte=start_date, holiday_dt__lt=end_date, use=USE)
     holiday = HolidayTb.objects.filter(use=USE)
     context['holiday'] = holiday
 
@@ -67,39 +68,38 @@ def func_get_trainee_on_schedule(context, class_id, user_id, start_date, end_dat
                     if next_schedule > schedule_info.start_dt:
                         next_schedule = schedule_info.start_dt
     else:
-        lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id,
-                                                     lecture_tb__member_id=user_id,
-                                                     lecture_tb__use=USE
-                                                     ).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+        query_member_auth_cd \
+            = "select `AUTH_CD` from MEMBER_LECTURE_TB as D" \
+              " where D.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and D.MEMBER_ID = " + str(user_id)
+        lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__member').filter(class_tb_id=class_id,
+                                         lecture_tb__member_id=user_id,
+                                         lecture_tb__use=USE
+                                         ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                                                    ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date',
+                                                                                             'lecture_tb__reg_dt')
 
         idx1 = 0
         for lecture_info in lecture_list:
-            try:
-                lecture_info_data = MemberLectureTb.objects.get(auth_cd='VIEW',
-                                                                member_id=user_id,
-                                                                lecture_tb=lecture_info.lecture_tb_id)
-            except ObjectDoesNotExist:
-                lecture_info_data = None
 
-            if lecture_info_data is not None:
-                idx1 += 1
-                idx2 = 1
-                schedule_data = ScheduleTb.objects.select_related('lecture_tb__member', 'group_tb'
-                                                                  ).filter(class_tb_id=class_id,
-                                                                           en_dis_type=ON_SCHEDULE_TYPE,
-                                                                           lecture_tb_id=lecture_info_data.lecture_tb_id
-                                                                           ).order_by('start_dt')
-                for schedule_info in schedule_data:
-                    schedule_info.idx = str(idx1) + '-' + str(idx2)
-                    pt_schedule_list.append(schedule_info)
-                    idx2 += 1
+            idx1 += 1
+            idx2 = 1
+            schedule_data = ScheduleTb.objects.select_related('lecture_tb__member', 'group_tb'
+                                                              ).filter(class_tb_id=class_id,
+                                                                       en_dis_type=ON_SCHEDULE_TYPE,
+                                                                       lecture_tb_id=lecture_info.lecture_tb_id
+                                                                       ).order_by('start_dt')
+            for schedule_info in schedule_data:
+                schedule_info.idx = str(idx1) + '-' + str(idx2)
+                pt_schedule_list.append(schedule_info)
+                idx2 += 1
 
-                    if now <= schedule_info.start_dt:
-                        if next_schedule == '':
+                if now <= schedule_info.start_dt:
+                    if next_schedule == '':
+                        next_schedule = schedule_info.start_dt
+                    else:
+                        if next_schedule > schedule_info.start_dt:
                             next_schedule = schedule_info.start_dt
-                        else:
-                            if next_schedule > schedule_info.start_dt:
-                                next_schedule = schedule_info.start_dt
 
     context['pt_schedule_data'] = pt_schedule_list
     context['next_schedule'] = next_schedule
@@ -270,10 +270,6 @@ def func_get_class_lecture_count(context, class_id, user_id):
     if error is None:
         # 강사에 해당하는 강좌 정보 불러오기
 
-        # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-        #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-        #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-        #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
         query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                               " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
                               "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
@@ -283,10 +279,6 @@ def func_get_class_lecture_count(context, class_id, user_id):
                                              lecture_tb__state_cd='IP',
                                              lecture_tb__use=USE).annotate(lecture_count=RawSQL(query_lecture_count, [])
                                                                            ).order_by('lecture_tb__start_date')
-
-        # lecture_list = ClassLectureTb.objects.select_related('lecture_tb'
-        #                                                      ).filter(class_tb_id=class_id,
-        #                                                               use=USE).order_by('lecture_tb')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기

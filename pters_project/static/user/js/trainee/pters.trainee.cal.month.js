@@ -1172,6 +1172,8 @@ $(document).ready(function(){
         var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'), '-');
         var tablewidth = $('.timegraphtext').width();
         $('.mode_switch_button').addClass('disabled_button');
+        // var startTime = '';
+        // var endTime = '';
         $.ajax({
             url: '/trainee/get_trainee_schedule/',
             type : 'GET',
@@ -1179,11 +1181,14 @@ $(document).ready(function(){
             dataType : 'html',
 
             beforeSend:function(){
+                // startTime = performance.now();
             },
 
             success:function(data){
                 var jsondata = JSON.parse(data);
                 console.log(jsondata);
+                // endTime = performance.now();
+                // console.log(endTime - startTime + 'ms')
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
@@ -1883,7 +1888,8 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         var today_form = referencedate;
         var date_form = howmanydates;
     }
-
+    // var startTime = '';
+    // var endTime = '';
     $.ajax({
         url: '/trainee/get_trainee_schedule/',
         type : 'GET',
@@ -1891,6 +1897,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         dataType : 'html',
 
         beforeSend:function(){
+            // startTime = performance.now();
             beforeSend();
         },
 
@@ -1898,6 +1905,8 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
             console.log(jsondata);
+            // endTime = performance.now();
+            // console.log(endTime - startTime + 'ms');
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);

@@ -54,92 +54,66 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
 
     def get(self, request, **kwargs):
 
-        lecture_data = MemberLectureTb.objects.filter(member_id=request.user.id,
-                                                      use=USE).exclude(auth_cd='DELETE'
-                                                                       ).order_by('-lecture_tb__start_date')
+        query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
+                             " B.USE=1"
 
-        class_counter = 0
-        class_data = None
-        error = None
+        lecture_data = ClassLectureTb.objects.select_related(
+            'class_tb',
+            'lecture_tb__member').filter(
+            lecture_tb__member_id=request.user.id,
+            use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
+                                                  [])).order_by('-lecture_tb__start_date')
 
-        if len(lecture_data) > 0:
-            for idx, lecture_info in enumerate(lecture_data):
-                if idx == 0:
-                    class_data = ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb,
-                                                               use=USE).order_by('-lecture_tb__start_date')
-                else:
-                    class_data |= ClassLectureTb.objects.filter(lecture_tb=lecture_info.lecture_tb,
-                                                                use=USE).order_by('-lecture_tb__start_date')
-
-        if class_data is None or len(class_data) == 0:
+        if lecture_data is None or len(lecture_data) == 0:
             self.url = '/trainee/cal_month_blank/'
-        elif len(class_data) == 1:
-            for lecture_info_data in class_data:
-                lecture_info = lecture_info_data.lecture_tb
-                request.session['class_id'] = lecture_info_data.class_tb_id
-                request.session['lecture_id'] = lecture_info.lecture_id
-                lecture_auth_info = None
-                try:
-                    lecture_auth_info = MemberLectureTb.objects.get(member_id=request.user.id,
-                                                                    lecture_tb=lecture_info.lecture_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
 
-                if lecture_auth_info is not None:
-                    if lecture_auth_info.auth_cd == 'WAIT':
-                        self.url = '/trainee/lecture_select/'
-                    elif lecture_auth_info.auth_cd == 'DELETE':
-                        self.url = '/trainee/cal_month_blank/'
-                    else:
-                        request.session['class_hour'] = lecture_info_data.class_tb.class_hour
-                        request.session['class_type_code'] = lecture_info_data.class_tb.subject_cd
-                        request.session['class_type_name'] = lecture_info_data.class_tb.get_class_type_cd_name()
-                        request.session['class_center_name'] = lecture_info_data.class_tb.get_center_name()
-                else:
+        elif len(lecture_data) == 1:
+            for lecture_info in lecture_data:
+                request.session['class_id'] = lecture_info.class_tb_id
+                request.session['lecture_id'] = lecture_info.lecture_tb_id
+
+                if lecture_info.auth_cd == 'WAIT':
+                    self.url = '/trainee/lecture_select/'
+                elif lecture_info.auth_cd == 'DELETE':
                     self.url = '/trainee/cal_month_blank/'
+                else:
+                    request.session['class_hour'] = lecture_info.class_tb.class_hour
+                    request.session['class_type_code'] = lecture_info.class_tb.subject_cd
+                    request.session['class_type_name'] = lecture_info.class_tb.get_class_type_cd_name()
+                    request.session['class_center_name'] = lecture_info.class_tb.get_center_name()
 
         else:
-            class_id_comp = ''
+            class_tb_comp = None
+            class_counter = 0
             lecture_np_counter = 0
             lecture_id_select = ''
-            for lecture_info_data in class_data:
-                lecture_info = lecture_info_data.lecture_tb
-                lecture_auth_info = None
-                try:
-                    lecture_auth_info = MemberLectureTb.objects.get(member_id=request.user.id,
-                                                                    lecture_tb=lecture_info.lecture_id)
-                except ObjectDoesNotExist:
-                    error = '수강정보를 불러오지 못했습니다.'
-                if lecture_auth_info is not None:
-                    if lecture_auth_info.auth_cd == 'WAIT':
-                        lecture_np_counter += 1
-                if class_id_comp != lecture_info_data.class_tb_id:
-                    class_id_comp = lecture_info_data.class_tb_id
-                    if lecture_info.lecture_avail_count > 0:
-                        lecture_id_select = lecture_info.lecture_id
-
+            for lecture_info in lecture_data:
+                if lecture_info.auth_type_cd == 'WAIT':
+                    lecture_np_counter += 1
+                if class_tb_comp is not None:
+                    if str(class_tb_comp.class_id) != str(lecture_info.class_tb_id):
+                        class_tb_comp = lecture_info.class_tb
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            lecture_id_select = lecture_info.lecture_tb_id
+                        class_counter += 1
+                else:
+                    class_tb_comp = lecture_info.class_tb
+                    if lecture_info.lecture_tb.lecture_avail_count > 0:
+                        lecture_id_select = lecture_info.lecture_tb_id
                     class_counter += 1
 
-            if class_counter > 1:
+
+            if class_counter > 1 or lecture_np_counter > 0:
                 self.url = '/trainee/lecture_select/'
             else:
-                request.session['class_id'] = class_id_comp
+                self.url = '/trainee/cal_month/'
+                request.session['class_id'] = class_tb_comp.class_id
                 request.session['lecture_id'] = lecture_id_select
-                if lecture_np_counter > 0:
-                    self.url = '/trainee/lecture_select/'
-                else:
-                    self.url = '/trainee/cal_month/'
-                    class_info = None
-
-                    try:
-                        class_info = ClassTb.objects.get(class_id=class_id_comp)
-                    except ObjectDoesNotExist:
-                        error = '수강 정보를 불러오지 못했습니다.'
-                    if error is None:
-                        request.session['class_hour'] = class_info.class_hour
-                        request.session['class_type_code'] = class_info.subject_cd
-                        request.session['class_type_name'] = class_info.get_class_type_cd_name()
-                        request.session['class_center_name'] = class_info.get_center_name()
+                request.session['class_hour'] = class_tb_comp.class_hour
+                request.session['class_type_code'] = class_tb_comp.subject_cd
+                request.session['class_type_name'] = class_tb_comp.get_class_type_cd_name()
+                request.session['class_center_name'] = class_tb_comp.get_center_name()
 
         return super(IndexView, self).get(request, **kwargs)
 
@@ -191,25 +165,20 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         error = None
         class_id = request.session.get('class_id', '')
         class_info = None
+        date = request.GET.get('date', '')
+        day = request.GET.get('day', '')
+        today = datetime.date.today()
+        if date != '':
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+        if day == '':
+            day = 46
+        start_date = today - datetime.timedelta(days=int(day))
+        end_date = today + datetime.timedelta(days=int(day))
 
         if class_id != '':
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-            except ObjectDoesNotExist:
-                error = '수강 정보를 불러오지 못했습니다.'
-
-        if class_id != '' and error is None:
             context = func_get_class_lecture_count(context, class_id, request.user.id)
-            # context = get_trainer_setting_data(context, class_info.member_id, class_id)
-            request.session['class_hour'] = class_info.class_hour
-            request.session['class_type_code'] = class_info.subject_cd
-            request.session['class_type_name'] = class_info.get_class_type_cd_name()
-            # 회원 setting 값 로드
 
-        context = func_get_holiday_schedule(context)
-        # context = get_trainee_setting_data(context, request.user.id)
-        # request.session['setting_language'] = context['lt_lan_01']
-            # 강사 setting 값 로드
+        context = func_get_holiday_schedule(context, start_date, end_date)
 
         return render(request, self.template_name, context)
 
@@ -591,7 +560,7 @@ class GetTraineeScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
         context['error'] = None
-        # context = func_get_holiday_schedule(context)
+        # context = func_get_holiday_schedule(context, start_date, end_date)
         context = func_get_trainee_on_schedule(context, class_id, self.request.user.id, start_date, end_date)
         context = func_get_trainee_off_schedule(context, class_id, start_date, end_date)
         context = func_get_trainee_group_schedule(context, self.request.user.id, class_id, start_date, end_date)
@@ -705,8 +674,6 @@ def lecture_processing(request):
     next_page = request.POST.get('next_page')
     context = {}
     error = None
-    # lecture_info = None
-    member_lecture_wait_list = []
 
     if lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
@@ -715,74 +682,41 @@ def lecture_processing(request):
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        class_lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, auth_cd='VIEW', use=USE)
-        for class_lecture_info in class_lecture_list:
-            try:
-                member_lecture_info = MemberLectureTb.objects.get(member_id=request.user.id, auth_cd='WAIT',
-                                                                  lecture_tb_id=class_lecture_info.lecture_tb_id,
-                                                                  use=USE)
-            except ObjectDoesNotExist:
-                member_lecture_info = None
 
-            if member_lecture_info is not None:
-                member_lecture_wait_list.append(member_lecture_info)
+        query_auth_type_cd = "select B.AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
+                             " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = "+str(request.user.id)+" and" \
+                             " B.USE=1"
+
+        lecture_data = ClassLectureTb.objects.select_related(
+            'class_tb',
+            'lecture_tb__member').filter(
+            class_tb_id=class_id,
+            lecture_tb__member_id=request.user.id,
+            use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
+                                                  [])).order_by('-lecture_tb__start_date')
 
     if error is None:
         if check == '1':
-            for member_lecture_wait_info in member_lecture_wait_list:
-                member_lecture_wait_info.auth_cd = 'DELETE'
-                member_lecture_wait_info.save()
+            for lecture_info in lecture_data:
+                try:
+                    member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
+                                                                 member_id=request.user.id)
+                    member_lecture.auth_cd = 'DELETE'
+                    member_lecture.save()
+                except ObjectDoesNotExist:
+                    error = None
 
         elif check == '0':
-            request.session['class_id'] = class_id
-            request.session['lecture_id'] = lecture_id
-            class_type_name = ''
-            class_name = None
-            class_info = None
-            try:
-                class_info = ClassTb.objects.get(class_id=class_id)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
+            for lecture_info in lecture_data:
+                try:
+                    member_lecture = MemberLectureTb.objects.get(lecture_tb_id=lecture_info.lecture_tb_id,
+                                                                 member_id=request.user.id)
+                    member_lecture.auth_cd = 'VIEW'
+                    member_lecture.save()
+                except ObjectDoesNotExist:
+                    error = None
 
-            if error is None:
-                request.session['class_hour'] = class_info.class_hour
-                request.session['class_type_name'] = class_info.get_class_type_cd_name()
-                request.session['class_center_name'] = class_info.get_center_name()
-
-            # lecture_info.auth_cd = 'VIEW'
-            # lecture_info.save()
-            for member_lecture_wait_info in member_lecture_wait_list:
-                member_lecture_wait_info.auth_cd = 'VIEW'
-                member_lecture_wait_info.save()
-
-            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-
-            request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-            request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-            request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-            # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-
-            request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
-            request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
-            request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
-            request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-            request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
-            request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
-            request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
-
-            request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-            request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-            request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-            request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
-            request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-            request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-            request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
-            request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
-            request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
-            context = get_trainee_setting_data(context, request.user.id)
-            request.session['setting_language'] = context['lt_lan_01']
-
-        elif check == '2':
+        if check != 1:
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
             class_info = None
@@ -798,12 +732,9 @@ def lecture_processing(request):
                 request.session['class_center_name'] = class_info.get_center_name()
 
             context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-
             request.session['setting_member_reserve_time_available'] = context['lt_res_01']
             request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
             request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-            # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-
             request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
             request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
             request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
@@ -811,7 +742,6 @@ def lecture_processing(request):
             request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
             request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
             request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
-
             request.session['setting_member_reserve_date_available'] = context['lt_res_05']
             request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
             request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
@@ -823,6 +753,7 @@ def lecture_processing(request):
             request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
             context = get_trainee_setting_data(context, request.user.id)
             request.session['setting_language'] = context['lt_lan_01']
+
     if error is None:
 
         return redirect(next_page)
