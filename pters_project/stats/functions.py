@@ -281,7 +281,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                                                                                             auth_cd='VIEW', use=USE)
             finish_schedule_num = 0
             for class_lecture_info in class_lecture_list:
-                finish_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                finish_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE'),
                                                                  class_tb_id=class_id,
                                                                  group_tb__isnull=True,
                                                                  lecture_tb_id=class_lecture_info.lecture_tb_id,
@@ -291,7 +291,7 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                                                                  en_dis_type=ON_SCHEDULE_TYPE,
                                                                  use=USE).count()
 
-            finish_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+            finish_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE'),
                                                              class_tb_id=class_id,
                                                              group_tb__isnull=False,
                                                              lecture_tb__isnull=True,

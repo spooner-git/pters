@@ -536,13 +536,13 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 = "select `AUTH_CD` from CLASS_LECTURE_TB as D" \
                   " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.CLASS_TB_ID = " + str(class_id)
             end_schedule_num += ScheduleTb.objects.select_related(
-                'lecture_tb', 'group_tb').filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+                'lecture_tb', 'group_tb').filter(Q(state_cd='PE'), class_tb_id=class_id,
                                                  group_tb__isnull=True, lecture_tb__isnull=False,
                                                  en_dis_type=ON_SCHEDULE_TYPE, use=USE
                                                  ).annotate(class_auth_cd=RawSQL(query_class_auth_cd, [])
                                                             ).filter(class_auth_cd='VIEW').count()
 
-            end_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+            end_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE'), class_tb_id=class_id,
                                                           group_tb__isnull=False,
                                                           lecture_tb__isnull=True,
                                                           en_dis_type=ON_SCHEDULE_TYPE,
