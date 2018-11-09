@@ -8,7 +8,7 @@ if(Options.auth_class == 0){
     $('._groupaddbutton').append('<img src="/static/user/res/login/icon-lock-grey.png" style="margin-bottom:3px;height:16px;">');
 }
 function purchase_annai(){
-    alert('그룹 기능 이용권 구매후 이용이 가능합니다.');
+    alert('수강권 기능 이용권 구매후 이용이 가능합니다.');
 }
 /////////////옵션
 
@@ -43,7 +43,7 @@ $('button#addByNew').click(function(e){
             var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
 
             if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-                alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
+                alert('그룹 : 이미 정원이 가득 찼습니다.');
             }else{
                 pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
                     if($('#caution_popup').css('display') == "none"){
@@ -2814,16 +2814,18 @@ function send_new_package_info(packagedata, use, callback){
     var grouptype = $('#form_grouptype').val();
     var option_limit_type;
     var number_has;
-    if(grouptype == "NORMAL" ){
-        option_limit_type = "group_create";
-        number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
-    }else if(grouptype == "EMPTY"){
-        option_limit_type = "class_create";
-        number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
-    }else if(grouptype == "PACKAGE"){
-        option_limit_type = "package_create";
-        number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
-    }
+    // if(grouptype == "NORMAL" ){
+    //     option_limit_type = "group_create";
+    //     number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
+    // }else if(grouptype == "EMPTY"){
+    //     option_limit_type = "class_create";
+    //     number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
+    // }else if(grouptype == "PACKAGE"){
+    //     option_limit_type = "package_create";
+    //     number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
+    // }
+    option_limit_type = "package_create";
+    number_has = $(`div._grouptypecd[data-package-type]`).length;
     $.ajax({
         url:'/trainer/add_package_info/',
         data: JSON.stringify(packagedata),
