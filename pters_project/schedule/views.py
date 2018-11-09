@@ -1860,7 +1860,7 @@ def add_member_group_schedule_logic(request):
     if error is None:
         lecture_id = func_get_group_lecture_id(group_id, member_info.member_id)
         if lecture_id is None or lecture_id == '':
-            error = '예약 가능한 일정이 없습니다.'
+            error = '예약 가능한 횟수가 없습니다.'
 
     if error is None:
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,

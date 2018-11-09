@@ -3,6 +3,7 @@ import html.parser as parser
 import logging
 from django import template
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
 from django.utils import timezone
@@ -129,9 +130,11 @@ def get_setting_info(request):
                 #     group_info = None
 
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                          end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                          end_dt__lte=now,
+                                                          use=USE).exclude(Q(state_cd='PE')|Q(state_cd='PC'))
                 schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                                 end_dt__gt=now,
+                                                                 use=USE).exclude(Q(state_cd='PE')|Q(state_cd='PC'))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
                 if len(schedule_data) > 0:
                     schedule_data.update(state_cd='PE')
