@@ -430,9 +430,10 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 
     seven_days_ago = add_start_dt - datetime.timedelta(days=2)
     seven_days_after = add_end_dt + datetime.timedelta(days=2)
-    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+
+    schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
                                               start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
-                                              use=USE).exclude(schedule_id=schedule_id, state_cd='PC')
+                                              use=USE).exclude(schedule_id=schedule_id)
 
     for schedule_info in schedule_data:
         if schedule_info.start_dt >= add_start_dt:
