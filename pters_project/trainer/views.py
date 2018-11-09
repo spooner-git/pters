@@ -3255,8 +3255,9 @@ def update_fix_group_member_logic(request):
             for json_info in json_loading_data['member_info']:
                 if json_info['fix_info'] == 'FIX':
                     fix_counter += 1
-            if len(member_fix_data) + fix_counter > group_info.member_num:
-                error = '그룹 정원보다 고정 회원이 많습니다.'
+            if fix_counter != 0:
+                if len(member_fix_data) + fix_counter > group_info.member_num:
+                    error = '그룹 정원보다 고정 회원이 많습니다.'
 
     if error is None:
         try:
