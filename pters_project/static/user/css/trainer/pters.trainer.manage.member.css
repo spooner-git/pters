@@ -1251,14 +1251,15 @@ span.summaryInnerBoxText_Repeatendtext{
 }
 
 .button_add_member_lecture{
-	font-weight: bold !important;
+	font-weight: 400 !important;
+	margin-left: 5px;
 	border: 1px solid #cccccc !important;
 	color:#fe4e65 !important;
 	width: 15px !important;
 	line-height: 15px !important;
 	text-align:center !important;
-	padding:0 6px 0 6px;
-	font-size: 13px;
+	padding:0 6px 0 3px;
+	font-size: 12px;
 	cursor: pointer !important;
 }
 
