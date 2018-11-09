@@ -33,7 +33,6 @@ var added_New_Member_Num = 0;
 get_member_ing_list();
 $('button#addByNew').click(function(e){
     if(!$(this).hasClass('disabled_button')){
-
         pters_option_inspector("member_create", "", global_json.db_id.length);
         if($('#caution_popup').css('display') == "none"){
             var group_id = $('#form_member_groupid').val();
@@ -65,6 +64,7 @@ $('button#addByNew').click(function(e){
             }
         }
     }
+    check_dropdown_selected();
 });
 
 //회원추가된 항목에서 x버튼을 누르면 목록에서 뺀다.
@@ -86,7 +86,7 @@ $(document).on('click', 'img.substract_addedMember', function(){
 
         $('#subpopup_addByList').append(html);
     }
-
+    check_dropdown_selected();
 });
 
 //신규로 새로 그룹원으로 추가된 행의 input값들에 대한 key,드랍다운 이벤트모음
@@ -210,7 +210,6 @@ $(document).on('click', 'img.add_listedMember', function(){
 
         //회원관리 : 리스트로 그룹회원 추가
     }else{
-
         if(global_json.db_id.indexOf(selected_dbid) == -1){
             if($(this).hasClass("add_by_search")){
                 pters_option_inspector("member_create", "", global_json.db_id.length);
@@ -252,6 +251,7 @@ $(document).on('click', 'img.add_listedMember', function(){
                     $(this).parents('div.list_addByList').remove();
                 }
             }
+            check_dropdown_selected();
         }
     }
 });

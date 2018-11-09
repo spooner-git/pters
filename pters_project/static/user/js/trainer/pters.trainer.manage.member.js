@@ -3349,7 +3349,7 @@ function check_dropdown_selected(){
         }
         //그룹원 추가 창일때
     }else if($('._ADD_GROUPMEMBER_NEW').css('display') == "block"){
-        if((countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true){
+        if((countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true && $('#addedMemberListBox div.addByNewRaw').length > 0 ){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;

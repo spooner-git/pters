@@ -173,12 +173,14 @@
 	margin-left: 10px;
 	margin-right: 10px;
 }
-#groupParticipants span.group_member_absence,
-#groupParticipants span.group_member_complete{
+#groupParticipants span.group_member_absence, #groupParticipants span.group_member_complete{
 	float: right;
 	cursor: pointer;
 	margin-right: 10px;
-	margin-left: 10px;
+	margin-left: 7px;
+	padding: 0 5px 0 5px;
+	border: 1px solid #cccccc;
+	background-color: #f4f4f4;
 }
 #groupParticipants img.group_member_cancel{
 	float: right;
@@ -656,8 +658,8 @@
 		border:1px solid #e8e8e8;
 	}
 	.groupParticipantsRow{
-		padding-top: 5px;
-		padding-bottom: 5px;
+		padding-top: 8px;
+		padding-bottom: 8px;
 	}
 
 	#popup_triangle{
