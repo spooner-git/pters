@@ -384,18 +384,18 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
     auth_cd_list = auth_cd.split('/')
 
     if error is None:
-        lecture_list = ClassLectureTb.objects.select_related('lecture_tb__package_tb').filter(class_tb_id=class_id,
-                                                     lecture_tb__member_id=member_id,
-                                                     lecture_tb__use=USE
-                                                     ).order_by('-lecture_tb__start_date', '-lecture_tb__reg_dt')
+        lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                             lecture_tb__use=USE).order_by('-lecture_tb__start_date',
+                                                                           '-lecture_tb__reg_dt')
 
         for lecture_info in lecture_list:
             lecture_info_data = None
             for auth_cd_info in auth_cd_list:
                 try:
-                    lecture_info_data = MemberLectureTb.objects.get(auth_cd=auth_cd_info,
-                                                                    member_id=member_id,
-                                                                    lecture_tb=lecture_info.lecture_tb_id)
+                    lecture_info_data = MemberLectureTb.objects.select_related(
+                        'lecture_tb', 'member').get(auth_cd=auth_cd_info, member_id=member_id,
+                                                    lecture_tb=lecture_info.lecture_tb_id)
                 except ObjectDoesNotExist:
                     lecture_info_data = None
 
@@ -501,17 +501,17 @@ def func_get_lecture_connection_list(context, class_id, member_id, auth_cd):
     auth_cd_list = auth_cd.split('/')
 
     if error is None:
-        lecture_list = ClassLectureTb.objects.select_related('lecture_tb__package_tb').filter(class_tb_id=class_id,
-                                                     lecture_tb__member_id=member_id,
-                                                     use=USE).order_by('-lecture_tb__start_date')
+        lecture_list = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_id,
+                                             use=USE).order_by('-lecture_tb__start_date')
 
         for lecture_info in lecture_list:
             lecture_info_data = None
             for auth_cd_info in auth_cd_list:
                 try:
-                    lecture_info_data = MemberLectureTb.objects.get(auth_cd=auth_cd_info,
-                                                                    member_id=member_id,
-                                                                    lecture_tb=lecture_info.lecture_tb_id)
+                    lecture_info_data = MemberLectureTb.objects.select_related(
+                        'lecture_tb', 'member').get(auth_cd=auth_cd_info, member_id=member_id,
+                                                    lecture_tb=lecture_info.lecture_tb_id)
                 except ObjectDoesNotExist:
                     lecture_info_data = None
 

@@ -26,6 +26,7 @@ from configs.views import AccessTestMixin
 
 from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
+from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
 from .models import LectureTb, MemberLectureTb
 
@@ -702,7 +703,7 @@ def lecture_processing(request):
     class_id = request.POST.get('class_id', '')
     check = request.POST.get('check', '')
     next_page = request.POST.get('next_page')
-
+    context = {}
     error = None
     # lecture_info = None
     member_lecture_wait_list = []
@@ -754,6 +755,33 @@ def lecture_processing(request):
                 member_lecture_wait_info.auth_cd = 'VIEW'
                 member_lecture_wait_info.save()
 
+            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+
+            request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+            request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+            request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+            # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+
+            request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
+            request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
+            request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
+            request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+            request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
+            request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
+            request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
+
+            request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+            request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+            request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+            request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
+            request.session['setting_member_start_time'] = context['lt_res_member_start_time']
+            request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
+            request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+            request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
+            request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
+            context = get_trainee_setting_data(context, request.user.id)
+            request.session['setting_language'] = context['lt_lan_01']
+
         elif check == '2':
             request.session['class_id'] = class_id
             request.session['lecture_id'] = lecture_id
@@ -769,6 +797,32 @@ def lecture_processing(request):
                 request.session['class_type_name'] = class_info.get_class_type_cd_name()
                 request.session['class_center_name'] = class_info.get_center_name()
 
+            context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+
+            request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+            request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+            request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+            # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+
+            request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
+            request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
+            request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
+            request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+            request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
+            request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
+            request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
+
+            request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+            request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+            request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+            request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
+            request.session['setting_member_start_time'] = context['lt_res_member_start_time']
+            request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
+            request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+            request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
+            request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
+            context = get_trainee_setting_data(context, request.user.id)
+            request.session['setting_language'] = context['lt_lan_01']
     if error is None:
 
         return redirect(next_page)
@@ -1502,7 +1556,13 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
 
         lecture_finish_count = ScheduleTb.objects.select_related(
             'lecture_tb__member', 'group_tb'
-        ).filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
+        ).filter(Q(state_cd='PE'), class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
+                 ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
+                            ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt').count()
+
+        lecture_absence_count = ScheduleTb.objects.select_related(
+            'lecture_tb__member', 'group_tb'
+        ).filter(Q(state_cd='PC'), class_tb_id=class_id, en_dis_type=ON_SCHEDULE_TYPE
                  ).annotate(member_auth_cd=RawSQL(query_member_auth_cd, [])
                             ).filter(member_auth_cd='VIEW').order_by('lecture_tb__start_date', 'start_dt').count()
 
@@ -1514,6 +1574,7 @@ def get_trainee_schedule_data_by_class_id_func(context, user_id, class_id):
     context['lecture_info'] = lecture_list
     context['lecture_reg_count'] = lecture_reg_count_sum
     context['lecture_finish_count'] = lecture_finish_count
+    context['lecture_absence_count'] = lecture_absence_count
     context['lecture_rem_count'] = lecture_rem_count_sum
     context['lecture_avail_count'] = lecture_avail_count_sum
     context['pt_start_date'] = str(pt_start_date)
