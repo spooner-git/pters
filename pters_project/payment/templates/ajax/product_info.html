@@ -1,11 +1,12 @@
 {
 
 {% load background_data %}
+{% autoescape off %}
       "product_name" :
       ["{{ product_info.name }}"],
       "product_contents" :
       ["{{ product_info.contents }}"],
-
+{% endautoescape %}
 
 
       "product_function_name" :
