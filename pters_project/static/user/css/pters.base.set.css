@@ -854,14 +854,14 @@ a:focus, a:hover{
         display: none !important;
     }*/
     #ymdText{
-        height: 100px;
+        height: 65px;
     }
 
     #menuName{
         display: block;
         color : #fe4e65;
         font-size: 24px;
-        top: 20%;
+        top: 5%;
         width: 100%;
         text-align: center;
         position: absolute;

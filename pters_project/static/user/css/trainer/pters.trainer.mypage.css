@@ -39,25 +39,12 @@ body{
 		width: 100%;
 	}
 
-#ymdText{
-	position: fixed;
-	height: auto;
-	z-index: 4;
-	width: 100%;
-	/*
-	background-image: url('/static/user/res/bg.png');
-	background-size: 100%;
-	*/
-}
+
 
 .popupBtn_mini{
 	border-top: 0 !important;
 }
 
-#ymdTextWrap{
-	width: 100%;
-	text-align: center;
-}
 
 .gap{
 	height: 60px;
@@ -469,11 +456,9 @@ body{
 
 @media(min-width: 600px){
 	#summary_wrap{
-		margin-top: 130px;
+		margin-top: 90px;
 	}
-	#ymdText{
-		height: 100px;
-	}
+
 
 	.gap{
 		height: 110px;
