@@ -26,6 +26,7 @@
 #groupname{
 	width: 50%;
 	height: 35px;
+	border: 1px solid #cccccc;
 }
 #grouptype{
 	height: 26px;
