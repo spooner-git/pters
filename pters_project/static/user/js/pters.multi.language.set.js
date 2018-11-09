@@ -60,7 +60,7 @@ var multi_language_set = {
                                     "text-reservesetting":"회원 예약 설정",
                                     "text-pushsetting":"푸시 알림 설정",
                                     "text-bgsetting":"배경화면 설정",
-                                    "text-purchase":"이용권 구매",
+                                    "text-purchase":"PTERS 패스",
                                     "text-language":"Language/言語/언어",
                                     "text-fromptersteam":"피터스 공지",
                                     "text-aboutus":"About us",
