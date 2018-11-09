@@ -1417,7 +1417,6 @@ $(document).ready(function(){
                 //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
                 //입력값 확인 메시지 출력 가능
             }
-
             //그룹 추가
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "block"){
             check_dropdown_selected();
@@ -4846,7 +4845,7 @@ function add_member_form_func(){
                     });
                 }
                 
-
+                smart_refresh_member_group_class_list();
                 close_manage_popup('member_add');
                 if($('#memberInfoPopup_PC').css('display') == "block"){
                     close_manage_popup('member_info_PC');
