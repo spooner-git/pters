@@ -1128,7 +1128,7 @@ $(document).ready(function(){
                     htmltojoin.push('<div class="plan_raw" title="결석 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
                                         '<div class="plancheckmorningday">'+morningday+'</div>'+
                                         '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
-                                        '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
+                                        '<div class="plancheckname"><img src="/static/user/res/btn-absence.png" style="margin-top:16px;">'+'<p '+textsize+'>'+name+'</p></div>'+
                                     '</div>');
 
                 }else if(splited[10] == 0){
@@ -2046,7 +2046,7 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
         }else if(finish == '2'){
             // 결석
             var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>';
-            var finishImg = '<div class="monthplans"><img src="/static/user/res/btn-pt-complete.png"><span>'+classTime+groupname+'</span></div>';
+            var finishImg = '<div class="monthplans"><img src="/static/user/res/btn-absence.png" style="width:10px;"><span>'+classTime+groupname+'</span></div>';
         }
 
         if(already_added.indexOf(classDate) != -1){ //날짜 밑에 일정 카운트가 여러개 출력되는 것을 방지
