@@ -1864,7 +1864,7 @@ function clear_pt_off_add_popup(){
     $('#submitBtn_pt').removeClass('submitBtnActivated');
 
     //회원명 비우기
-    $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹/클래스 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
+    $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
 
     //예약가능 횟수 비우기;
     $("#countsSelected, #countsSelected_mini").text("");
@@ -2014,8 +2014,8 @@ function set_member_dropdown_list(jsondata){
         for(var i=0; i<memberSize; i++){
             if((jsondata.groupInfoArray[i] != "그룹") && (jsondata.groupInfoArray[i] != "클래스") && (jsondata.groupInfoArray[i] != "그룹/클래스")){
                 if(jsondata.lesson_avail_count[i] > 0){
-                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
-                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">'+jsondata.name[i]+'</a></li>');
+                    member_array_mobile.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">[1:1] '+jsondata.name[i]+'</a></li>');
+                    member_array_pc.push('<li><a data-grouptype="personal" data-lectureid="'+jsondata.lecture_id[i]+'" data-lecturecount="'+jsondata.lesson_avail_count[i]+'" data-dbid="'+jsondata.db_id[i]+'">[1:1] '+jsondata.name[i]+'</a></li>');
                 }
             }
         }
@@ -2035,7 +2035,7 @@ function set_group_dropdown_list(jsondata){
     var memberMobileList = $('#members_mobile');
     var memberPcList = $('#members_pc');
     var memberSize = jsondata.group_id.length;
-    var member_array_mobile = ['<div><a data-grouptype="personal" disabled>회원/그룹/클래스 선택</a></div>'];
+    var member_array_mobile = ['<div><a data-grouptype="personal" disabled>회원/그룹 선택</a></div>'];
     var member_array_pc = [];
 
     if(memberSize>0){

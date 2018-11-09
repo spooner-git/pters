@@ -1079,7 +1079,7 @@ function clear_pt_off_add_popup(){
     $('#submitBtn_pt').removeClass('submitBtnActivated')
 
     //회원명 비우기
-    $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹/클래스 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
+    $("#membersSelected button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
     
 
     //예약가능 횟수 비우기
@@ -1854,7 +1854,7 @@ function clear_pt_off_add_popup_mini(){
   $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected').html("<span style='color:#cccccc;'>선택</span>").val("");
 
   //회원 선택 핑크 하단선 초기화
-  $("#membersSelected button, #membersSelected_mini button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹/클래스 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
+  $("#membersSelected button, #membersSelected_mini button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
 
   //예약가능 횟수 내용 초기화
   $("#countsSelected,.countsSelected").text("")

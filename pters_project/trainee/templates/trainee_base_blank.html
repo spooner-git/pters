@@ -201,30 +201,21 @@
     var class_background_img_url = []
 
 
-    var stoptime = '{{ lt_res_01 }}'
+    var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
     if(stoptime.length>0){
-        var stoptimeStart = Number('{{ lt_res_01 }}'.split(':')[0])
-        var stoptimeEnd = Number('{{ lt_res_01 }}'.split('-')[1].split(':')[0])
+        var stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0])
+        var stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0])
     }else{
         var stoptimeStart = ''
         var stoptimeEnd = ''
     }
 
-    var worktime = '{{ lt_res_04 }}'
-    if(worktime.length>0){
-        var worktimeStart = Number('{{ lt_res_04 }}'.split(':')[0])
-        var worktimeEnd = Number('{{ lt_res_04 }}'.split('-')[1].split(':')[0])
-    }else{
-        var worktimeStart = ''
-        var worktimeEnd = ''
-    }
-
     var Options = {  "stoptimeStart": stoptimeStart ,             //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": stoptimeEnd ,                //강사가 설정한 예약불가 시간 (종료)
-        "limit":Number('{{ lt_res_02 }}'),      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "limit":Number('{{ request.session.setting_member_reserve_time_prohibition }}'),      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
         "reserve":1,    //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number({{ lt_res_05 }}),
-        "cancellimit":Number('{{ lt_res_02 }}'),
+        "availDate":Number({{ request.session.setting_member_reserve_date_available }}),
+        "cancellimit":Number('{{ request.session.setting_member_reserve_time_prohibition }}'),
 
         "firstPushToMember":'-',
         "secondPushToMember":'-',
@@ -232,8 +223,8 @@
         "planChangePush":'-',
         "regErgentPush":'-',
 
-        "workStartTime":worktimeStart,
-        "workEndTime":worktimeEnd,
+        "workStartTime":'',
+        "workEndTime":'',
 
         "language" : "KOR",             //Korea, Japan, English, Chinese, Spanish
         "location" : "Japan",           //Korea, Japan, English, Chinese

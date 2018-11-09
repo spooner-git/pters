@@ -169,6 +169,24 @@ class ServiceTestLoginView(TemplateView):
 
         class_data = ClassTb.objects.filter(member_id='5')
         for class_info in class_data:
+            group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+            if len(group_data) == 0:
+                group_data = None
+            else:
+                for group_info in group_data:
+
+                    if group_info.group_type_cd == 'NORMAL':
+                        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id,
+                                                                           lecture_tb__state_cd='IP',
+                                                                           lecture_tb__use=USE,
+                                                                           use=USE)
+                        group_lecture_data.update(fix_state_cd='FIX')
+                    elif group_info.group_type_cd == 'EMPTY':
+                        group_info.group_type_cd = 'NORMAL'
+                        group_info.save()
+
+        class_data = ClassTb.objects.filter(member_id='5')
+        for class_info in class_data:
             check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
             if len(check_group) == 0:
                 group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
@@ -231,6 +249,17 @@ class ServiceTestLoginView(TemplateView):
                         for group_lecture_info in group_lecture_data:
                             group_lecture_info.lecture_tb.package_tb_id = package_info.package_id
                             group_lecture_info.lecture_tb.save()
+
+        class_data = ClassTb.objects.filter(member_id='5')
+        for class_info in class_data:
+            package_data = PackageTb.objects.filter(class_tb_id=class_info.class_id)
+            if len(package_data) == 0:
+                package_data = None
+            else:
+                for package_info in package_data:
+                    if package_info.package_type_cd == 'EMPTY':
+                        package_info.package_type_cd = 'NORMAL'
+                        package_info.save()
 
         # group_data = GroupTb.objects.filter()
         # for group_info in group_data:
