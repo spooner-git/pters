@@ -2675,6 +2675,22 @@ def update_group_info_logic(request):
             error = '정원은 1명 이상이어야 합니다.'
 
     if error is None:
+        member_fix_data = []
+        fix_counter = 0
+        group_lecture_data = GroupLectureTb.objects.select_related(
+            'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+        for group_lecture_info in group_lecture_data:
+            check = 0
+            for member_fix_info in member_fix_data:
+                if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
+                    check = 1
+            if check == 0:
+                if group_lecture_info.fix_state_cd == 'FIX':
+                    member_fix_data.append(group_lecture_info.lecture_tb.member_id)
+        if int(member_num) < len(member_fix_data):
+            error = '정원보다 고정인원이 많습니다.'
+
+    if error is None:
         group_info.group_type_cd = group_type_cd
         group_info.member_num = member_num
         group_info.name = name
