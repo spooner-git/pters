@@ -846,7 +846,8 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type=ON_SCHEDULE_TYPE).order_by('-start_dt')
+                                                                 en_dis_type=ON_SCHEDULE_TYPE,
+                                                                 use=USE).order_by('-start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                         idx2 = len(pt_schedule_data)+1

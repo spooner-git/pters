@@ -80,7 +80,7 @@ def func_refresh_lecture_count(class_id, lecture_id):
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id)
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         if lecture_info.lecture_reg_count >= len(schedule_data):
             lecture_info.lecture_avail_count = lecture_info.lecture_reg_count\
                                                - len(schedule_data)
@@ -89,7 +89,7 @@ def func_refresh_lecture_count(class_id, lecture_id):
             error = '오류가 발생했습니다.'
 
     if error is None:
-        end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC')).count()
+        end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC'), use=USE).count()
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
@@ -724,13 +724,13 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
                                                                                start_dt__lt=end_date, use=USE)
     if group_id is None or group_id == '':
         group_schedule_data = group_schedule_data.filter(
-            group_tb__isnull=False).annotate(group_current_member_num=RawSQL(query, []),
-                                             group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+            group_tb__isnull=False, use=USE).annotate(group_current_member_num=RawSQL(query, []),
+                                                      group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     else:
         group_schedule_data = group_schedule_data.filter(
-            group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
-                                           group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+            group_tb_id=group_id, use=USE).annotate(group_current_member_num=RawSQL(query, []),
+                                                    group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     context['group_schedule_data'] = group_schedule_data
 
