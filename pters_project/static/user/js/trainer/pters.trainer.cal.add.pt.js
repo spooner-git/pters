@@ -740,7 +740,7 @@ $(document).ready(function(){
     });
 
 
-
+    //아이폰에서 checkbox가 터치가 안되서 빈 이벤트가 필요함 절대 지우지말것!
     $("#groupmembersInfo").click(function(e){
 
     });
@@ -767,6 +767,7 @@ $(document).ready(function(){
             }else{
                 $(".list_viewByList div._fixedmember input:not(:checked)").prop('disabled', false);
             }
+            $('#how_many_groupmember_selected').text(` (${selected_list.length}명 선택됨)`);
         }
     });
     //그룹일정 등록시 회원 추가
@@ -3258,6 +3259,7 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
     htmlToJoin.push("<div style='text-align:center;'><img src='/static/user/res/PTERS_logo_pure.png' style='width:50px;margin-top:3px;opacity:0.3;'></div>");
     var html = htmlToJoin.join('');
     targetHTML.html(html);
+    $('#how_many_groupmember_selected').text(` (${selected_member.length}명 선택됨)`);
     $('#id_group_member_ids, #id_repeat_group_member_ids, #id_repeat_confirm_group_member_ids').val(selected_member.join('/'));
 }
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
