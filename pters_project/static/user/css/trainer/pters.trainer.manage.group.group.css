@@ -353,6 +353,8 @@ img.substract_addedMember{
 	width: 95%;
 	height: 26px;
 	line-height: 26px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	-webkit-text-fill-color:#282828;
 	-webkit-opacity:1;
 }
