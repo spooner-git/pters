@@ -622,7 +622,8 @@ img,a,div,span,p{
 @media(min-width: 600px){
 	#calendar{
 		position: relative;
-		background:#ffffff;
+/*		background:#ffffff;*/
+		background: transparent;
 		padding-top: 64px;
 		margin-bottom: 60px;
 		padding-bottom: 0;
