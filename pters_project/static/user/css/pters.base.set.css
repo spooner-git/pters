@@ -35,8 +35,8 @@ button:focus{
 @media(min-width:600px){
     #free_member_use_guide{
         position: absolute;
-        top: 65px;
-        bottom:unset;
+        top: unset;
+        bottom: 0;
         font-size: 14px;
         font-weight: 400;
         z-index: 10;
