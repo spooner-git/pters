@@ -535,17 +535,32 @@ $(document).on('click', 'div.groupWrap', function(e){
 
 $(document).on('click', 'div._groupplancolor', function(e){
     e.stopPropagation();
-    if($(this).find("div.colorpalette").length == 0){
-        $(this).append(
-                            `<div class="colorpalette">
-                                <div class="plancolor_yellow"></div>
-                                <div class="plancolor_pink"></div>
-                                <div class="plancolor_orange"></div>
-                                <div class="plancolor_blue"></div>
-                                <div class="plancolor_green"></div>
-                                <div class="plancolor_purple"></div>
-                            </div>`
-                        );
+    var grouptype = $(this).siblings('div._grouptypecd').attr('data-group-type');
+    if(grouptype == "ONE_TO_ONE"){
+        if($(this).find("div.colorpalette").length == 0){
+            $(this).append(
+                                `<div class="colorpalette" style="min-width:unset;">
+                                    <div class="plancolor_yellow"></div>
+                                </div>`
+                            );
+        }else{
+            $(this).find("div.colorpalette").remove();
+        }
+    }else{
+        if($(this).find("div.colorpalette").length == 0){
+            $(this).append(
+                                `<div class="colorpalette">
+                                    <div class="plancolor_yellow"></div>
+                                    <div class="plancolor_pink"></div>
+                                    <div class="plancolor_orange"></div>
+                                    <div class="plancolor_blue"></div>
+                                    <div class="plancolor_green"></div>
+                                    <div class="plancolor_purple"></div>
+                                </div>`
+                            );
+        }else{
+            $(this).find("div.colorpalette").remove();
+        }
     }
 });
 
@@ -563,25 +578,25 @@ $(document).on('click', 'div.colorpalette div', function(e){
         ing_font_color = "#282828";
         end_font_color = "#282828";
     }else if(selected_color == "pink"){
-        ing_bg_color = "#fe4e65";
+        ing_bg_color = "#ffacb7";
         end_bg_color = "#af757c";
         ing_font_color = "#282828";
         end_font_color = "#282828";
     }else if(selected_color == "blue"){
-        ing_bg_color = "#5757ff";
-        end_bg_color = "#0000ff";
-        ing_font_color = "#ffffff";
-        end_font_color = "#ffffff";
+        ing_bg_color = "#9a9af9";
+        end_bg_color = "#3939a7";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
     }else if(selected_color == "green"){
         ing_bg_color = "#00a700";
         end_bg_color = "#008000";
         ing_font_color = "#282828";
         end_font_color = "#282828";
     }else if(selected_color == "purple"){
-        ing_bg_color = "#cc00cc";
-        end_bg_color = "#800080";
-        ing_font_color = "#ffffff";
-        end_font_color = "#ffffff";
+        ing_bg_color = "#f488fb";
+        end_bg_color = "#95239c";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
     }else if(selected_color == "yellow"){
         ing_bg_color = "#fbf3bd";
         end_bg_color = "#8c8763";
@@ -670,7 +685,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
 
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type);
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                 break;
         }
 
@@ -1065,12 +1080,12 @@ function delete_groupmember_from_grouplist(use, callback){
 //그룹원 지우기
 
 //그룹 정보 수정
-function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type){
+function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, ing_bg_color, end_bg_color, ing_font_color, end_font_color){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/update_group_info/',
         type:'POST',
-        data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
+        data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type, "ing_color_cd":ing_bg_color, "end_color_cd":end_bg_color, "ing_font_color_cd":ing_font_color, "end_font_color_cd":end_font_color},
         dataType : 'html',
 
         beforeSend:function(xhr, settings) {
@@ -1512,6 +1527,7 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function group_class_ListHtml(option, jsondata){ //option : current, finished
+    console.log(jsondata)
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');
@@ -1553,6 +1569,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var group_capacity = jsondata.member_num[i];
         var groupstatus = jsondata.state_cd_name[i];
         var groupstatus_cd = jsondata.state_cd[i];
+        var groupplancolor = jsondata.group_ing_color_cd[i];
 
         var group_membernum;
         switch(option){
@@ -1595,7 +1612,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
             '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-            '<div class="_groupplancolor"><div class="plancolor"></div></div>';
+            '<div class="_groupplancolor"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>';
             '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
             '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
             if(group_type == "ONE_TO_ONE") {

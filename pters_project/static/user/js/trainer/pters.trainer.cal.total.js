@@ -1607,7 +1607,6 @@ function fake_show(){
 }
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-    
     //중복일정 ㅇㄷ
     //var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ    
@@ -1643,6 +1642,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
             planfinished = ' classTime_checked';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planMemberNum = '';
             planGroupid = '';
             planCode = '';
@@ -1657,6 +1660,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planScheduleFinishArray = '';
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
@@ -1674,6 +1681,11 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planScheduleFinishArray = jsondata.group_schedule_finish_check;
             planColor = 'groupTime';
             planfinished = ' groupTime_checked';
+            plancolor_ing_bg_cd = jsondata.group_schedule_ing_color_cd;
+            plancolor_ing_font_cd = jsondata.group_schedule_ing_font_color_cd;
+            plancolor_end_bg_cd = jsondata.group_schedule_end_color_cd;
+            plancolor_end_font_cd = jsondata.group_schedule_end_font_color_cd;
+
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
@@ -1766,6 +1778,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display', 'none');
 
+        var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
@@ -1774,6 +1787,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                 planColor_ = planColor;
             }else{
                 planColor_ = planColor+planfinished;
+                group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
             }
         }else{
             planColor_ = planColor;
@@ -1884,6 +1898,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     group_user_color+
                                                      //중복 일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      //'width:'+planWidth+'%'+

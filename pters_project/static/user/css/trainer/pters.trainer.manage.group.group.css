@@ -259,7 +259,6 @@ img.substract_addedMember{
 		display: inline-block;
 		width: 20px;
 		height: 20px;
-		border: 1px solid #cccccc;
 		margin-bottom: 2px;
 		vertical-align: middle;
 	}
@@ -279,26 +278,26 @@ img.substract_addedMember{
 		width: 18px;
 		height: 18px;
 		margin: 5px;
-		border: 1px solid #cccccc;
+		border: 1px solid #e2e2e2;
 		vertical-align: middle;
 	}
 	.plancolor_orange{
-		background-color: orange;
+		background-color: #ffa500;
 	}
 	.plancolor_pink{
-		background-color: #fe4e65;
+		background-color: #ffacb7;
 	}
 	.plancolor_blue{
-		background-color: blue;
+		background-color: #9a9af9;
 	}
 	.plancolor_green{
-		background-color: green;
-	}
-	.plancolor_red{
-		background-color: red;
+		background-color: #00a700;
 	}
 	.plancolor_purple{
-		background-color: purple;
+		background-color: #f488fb;
+	}
+	.plancolor_yellow{
+		background-color: #fbf3bd;
 	}
 
 
