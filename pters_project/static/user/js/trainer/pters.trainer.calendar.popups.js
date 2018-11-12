@@ -989,6 +989,8 @@
                     $('#id_schedule_state_cd').val("");
                     close_info_popup('cal_popup_plandelete');
                     enable_delete_btns_after_ajax();
+                    super_ajaxClassTime();
+                    disable_window_scroll();
                 });
             }else if(deleteTypeSelect == "group_absence"){
                 $('#id_group_schedule_state_cd').val("PC");
@@ -997,6 +999,8 @@
                     $('#id_group_schedule_state_cd').val("");
                     close_info_popup('cal_popup_plandelete');
                     enable_delete_btns_after_ajax();
+                    super_ajaxClassTime();
+                    disable_window_scroll();
                 });
             }else if(deleteTypeSelect == "group_member_complete"){
                 $('#id_schedule_state_cd').val("PE");
@@ -1005,6 +1009,8 @@
                     $('#id_schedule_state_cd').val("");
                     close_info_popup('cal_popup_plandelete');
                     enable_delete_btns_after_ajax();
+                    super_ajaxClassTime();
+                    disable_window_scroll();
                 });
             }
         }

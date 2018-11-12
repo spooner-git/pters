@@ -3143,19 +3143,22 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 
     var member_number = 0;
     for(var i=0; i<jsonlen; i++){
-        var htmlstart = '<div class="groupParticipantsRow" data-dbid="'+jsondata_db_id[i]+'" schedule-id="'+jsondata_scheduleIdArray[i]+'" data-leid="'+jsondata_classArray_lecture_id[i]+'">';
         //var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata.sex[i]+'.png">'
         var finishcheck = jsondata_scheduleFinishArray[i];
         var finish = '';
         if(finishcheck == 1){
             finish = ' -완료';
+            typeclass = "_type_complete";
             member_number = member_number+1;
         }else if(finishcheck == 0){
             finish = '';
+            typeclass = "";
             member_number = member_number+1;
         }else if(finishcheck == 2){
             finish = " -결석";
+            typeclass= "_type_absence";
         }
+        var htmlstart = '<div class="groupParticipantsRow '+typeclass+'" data-dbid="'+jsondata_db_id[i]+'" schedule-id="'+jsondata_scheduleIdArray[i]+'" data-leid="'+jsondata_classArray_lecture_id[i]+'">';
         var sex = '<img src="/static/user/res/member/icon-sex-'+jsondata_sexArray[i]+'.png">';
         var name = '<span class="go_member_info_window" data-dbid="'+jsondata_db_id[i]+'">'+jsondata.name[i]+finish+'</span>';
         var absence = '<span class="group_member_absence" data-leid="'+jsondata.classArray_lecture_id[i]+'" data-scheduleid="'+jsondata.scheduleIdArray[i]+'" data-name="'+jsondata.name[i]+'" data-dbid="'+jsondata_db_id[i]+'">결석</span>';
@@ -3350,8 +3353,9 @@ $(document).on('click', '.group_member_cancel', function(){
         }
         get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
             draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+            var participants_number = $('div.groupParticipantsRow').length - $('div._type_absence').length;
             $('#groupplan_participants_status').text(
-                                                        ' ('+$('div.groupParticipantsRow').length +
+                                                        ' ('+participants_number +
                                                         '/'+
                                                         max+')'
                                                     );

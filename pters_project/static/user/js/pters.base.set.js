@@ -187,6 +187,12 @@ function toggleGroupParticipantsList(onoff){
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
                 draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+                var participants_number = $('div.groupParticipantsRow').length - $('div._type_absence').length;
+                $('#groupplan_participants_status').text(
+                                                        ' ('+participants_number +
+                                                        '/'+
+                                                        max+')'
+                                                    );
                 selector_grouopParticipants.css({'height':'auto'});
                 completeSend();
             });

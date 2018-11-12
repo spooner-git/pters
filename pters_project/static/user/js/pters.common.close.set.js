@@ -82,7 +82,11 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        enable_window_scroll();
+        if($('#cal_popup_planinfo').css('display') == "block"){
+
+        }else{
+            enable_window_scroll();
+        }
         //$('body').css('overflow-y','overlay');
     }else if(option =="cal_popup_repeatconfirm"){
         $('#'+option).css('display', 'none');
