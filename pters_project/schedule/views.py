@@ -1864,7 +1864,7 @@ def add_member_group_schedule_logic(request):
 
     if error is None:
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,
-                                                        lecture_tb__member_id=member_id)
+                                                        lecture_tb__member_id=member_id, use=USE)
         if len(group_schedule_data) != 0:
             error = '일정에 포함되어있는 회원입니다.'
 

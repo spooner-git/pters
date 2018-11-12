@@ -2583,12 +2583,18 @@ def delete_group_info_logic(request):
                                                                  ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                        group_tb_id=group_id)
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 class_tb_id=class_id,
+                                                                 group_tb_id=group_id,
+                                                                 en_dis_type=ON_SCHEDULE_TYPE)
                 if len(schedule_data) > 0:
-                    schedule_data.update(state_cd='PE')
+                    schedule_data.update(state_cd='PE', use=UN_USE)
                 if len(schedule_data_delete) > 0:
                     schedule_data_delete.delete()
                 if len(repeat_schedule_data) > 0:
                     repeat_schedule_data.delete()
+                if len(schedule_data_finish) > 0:
+                    schedule_data_finish.update(use=UN_USE)
             if error is None:
                 group_info.state_cd = 'PE'
                 group_info.use = UN_USE
@@ -4505,7 +4511,9 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                       auth_cd='VIEW', mod_member_id=request.user.id, use=USE)
                     member_class_info.save()
                     one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
-                                                    group_type_cd='ONE_TO_ONE', state_cd='IP', member_num=1, use=USE)
+                                                    group_type_cd='ONE_TO_ONE',
+                                                    ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+                                                    state_cd='IP', member_num=1, use=USE)
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
                                              package_type_cd='ONE_TO_ONE', package_group_num=1, state_cd='IP', use=USE)
