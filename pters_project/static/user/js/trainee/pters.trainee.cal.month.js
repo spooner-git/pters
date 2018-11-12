@@ -1922,6 +1922,9 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
                     temp_count_text += jsondata.package_lecture_avail_count[i];
 
                 }
+                if(temp_count_text==''){
+                    temp_count_text = '0';
+                }
                 // if(jsondata.lecture_reg_count[0] != 0){
                 //     temp_text +='1:1';
                 //     temp_count_text += jsondata.lecture_avail_count;
