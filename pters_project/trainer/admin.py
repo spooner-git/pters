@@ -29,7 +29,8 @@ class ClassLectureTbAdmin(admin.ModelAdmin):
 @admin.register(GroupTb)
 class GroupTbAdmin(admin.ModelAdmin):
     list_display = ('group_id', 'class_tb', 'name', 'group_type_cd', 'member_num',
-                    'ing_group_member_num', 'end_group_member_num', 'state_cd', 'ing_color_cd', 'end_color_cd',
+                    'ing_group_member_num', 'end_group_member_num', 'state_cd',
+                    'ing_color_cd', 'end_color_cd', 'ing_font_color_cd', 'end_font_color_cd',
                     'note', 'reg_dt', 'mod_dt', 'use')
 
 
