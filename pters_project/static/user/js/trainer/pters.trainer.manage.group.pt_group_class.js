@@ -1770,7 +1770,7 @@ function groupMemberListSet(group_id, jsondata){
             if(grouptype!='ONE_TO_ONE') {
                 memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
             }else{
-                memberRow += '<div class=""></div>';
+                memberRow += '<div class="" style="width:10%"></div>';
             }
             //'<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
             //'<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
