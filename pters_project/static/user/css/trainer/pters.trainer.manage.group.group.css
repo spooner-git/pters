@@ -266,12 +266,13 @@ img.substract_addedMember{
 		position: absolute;
 		left: 40px;
 		top: 0;
-		min-width: 200px;
-		max-width: 300px;
+		min-width: 120px;
+		max-width: 120px;
 		height: auto;
 		padding: 2px;
 		border: 1px solid #cccccc;
 		background: #ffffff;
+		z-index: 1;
 	}
 	.colorpalette > div{
 		display: inline-block;
@@ -602,6 +603,10 @@ div._fixedmember{
 	}
 	tr.memberline td{
 		width: 12.5%;
+	}
+	.colorpalette{
+		min-width: 200px;
+		max-width: 300px;
 	}
 }
 
