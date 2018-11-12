@@ -245,13 +245,65 @@ img.substract_addedMember{
 }
 ._groupnum{
 	display: table-cell;
-	width: 4%;
+	width: 5%;
 }
 ._groupname{
 	width: 16%;
 }
+._groupplancolor{
+	position: relative;
+	width: 5%;
+	text-align: center;
+}
+	._groupplancolor > .plancolor{
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		border: 1px solid #cccccc;
+		margin-bottom: 2px;
+		vertical-align: middle;
+	}
+	.colorpalette{
+		position: absolute;
+		left: 40px;
+		top: 0;
+		min-width: 200px;
+		max-width: 300px;
+		height: auto;
+		padding: 2px;
+		border: 1px solid #cccccc;
+		background: #ffffff;
+	}
+	.colorpalette > div{
+		display: inline-block;
+		width: 18px;
+		height: 18px;
+		margin: 5px;
+		border: 1px solid #cccccc;
+		vertical-align: middle;
+	}
+	.plancolor_orange{
+		background-color: orange;
+	}
+	.plancolor_pink{
+		background-color: #fe4e65;
+	}
+	.plancolor_blue{
+		background-color: blue;
+	}
+	.plancolor_green{
+		background-color: green;
+	}
+	.plancolor_red{
+		background-color: red;
+	}
+	.plancolor_purple{
+		background-color: purple;
+	}
+
+
 ._grouptypecd{
-	width: 8%;
+	width: 5%;
 }
 ._groupparticipants{
 	width: 7%;
@@ -288,7 +340,7 @@ img.substract_addedMember{
 }
 ._groupcreatedate{
 	display: table-cell;
-	width: 17%;
+	width: 15%;
 	font-size: 13px;
 }
 ._groupstatus{

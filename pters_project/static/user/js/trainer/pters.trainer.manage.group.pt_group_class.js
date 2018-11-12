@@ -533,6 +533,66 @@ $(document).on('click', 'div.groupWrap', function(e){
     }
 });
 
+$(document).on('click', 'div._groupplancolor', function(e){
+    e.stopPropagation();
+    if($(this).find("div.colorpalette").length == 0){
+        $(this).append(
+                            `<div class="colorpalette">
+                                <div class="plancolor_yellow"></div>
+                                <div class="plancolor_pink"></div>
+                                <div class="plancolor_orange"></div>
+                                <div class="plancolor_blue"></div>
+                                <div class="plancolor_green"></div>
+                                <div class="plancolor_purple"></div>
+                            </div>`
+                        );
+    }
+});
+
+$(document).on('click', 'div.colorpalette div', function(e){
+    e.stopPropagation();
+    var group_id = $(this).parents('div.groupWrap').attr('data-groupid');
+    var selected_color = $(this).attr("class").split('_')[1];
+    var ing_bg_color;
+    var end_bg_color;
+    var ing_font_color;
+    var end_font_color;
+    if(selected_color == "orange"){
+        ing_bg_color = "#ffa500";
+        end_bg_color = "#b77600";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "pink"){
+        ing_bg_color = "#fe4e65";
+        end_bg_color = "#af757c";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "blue"){
+        ing_bg_color = "#5757ff";
+        end_bg_color = "#0000ff";
+        ing_font_color = "#ffffff";
+        end_font_color = "#ffffff";
+    }else if(selected_color == "green"){
+        ing_bg_color = "#00a700";
+        end_bg_color = "#008000";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "purple"){
+        ing_bg_color = "#cc00cc";
+        end_bg_color = "#800080";
+        ing_font_color = "#ffffff";
+        end_font_color = "#ffffff";
+    }else if(selected_color == "yellow"){
+        ing_bg_color = "#fbf3bd";
+        end_bg_color = "#8c8763";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }
+
+    modify_group_from_list(group_id, "", "", "", "", ing_bg_color, end_bg_color, ing_font_color, end_font_color);
+    $(this).parent('.colorpalette').remove();
+});
+
 //그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
 $(document).on('click', 'div._groupmanage', function(e){
     e.stopPropagation();
@@ -1514,13 +1574,13 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
         var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
-        var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">'
+        var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">';
 
         var htmlstart = '<div class="groupWrap" data-groupstatecd="'+option+'" data-groupid="'+group_id+'">';
         var htmlend = '</div>';
         var memolist = '<div class="groupMemoWrap" data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
         var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>';
-        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
+        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>';
 
         if(group_type == "ONE_TO_ONE") {
             manageimgs = '<div class="_groupmanage"></div>';
@@ -1535,21 +1595,22 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
             '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
+            '<div class="_groupplancolor"><div class="plancolor"></div></div>';
             '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
-            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'
+            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
             if(group_type == "ONE_TO_ONE") {
                 main += '<div class="_grouppartystatus '+"full_group"+'"><span>'+ group_membernum + ' </span> ' +'</div>';
             }
             else{
-                main += '<div class="_grouppartystatus ' + full_group + '">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>'
+                main += '<div class="_grouppartystatus ' + full_group + '">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
             }
-            main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'
+            main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
 
             if(group_type == "ONE_TO_ONE"){
                 main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
             }
             else{
-                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'
+                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>';
             }
             main += '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+ manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
