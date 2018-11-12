@@ -909,7 +909,8 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
                                          start_date=start_date, end_date=end_date,
                                          note=contents, use=USE)
                 lecture_info.save()
-                auth_cd = 'DELETE'
+                # auth_cd = 'DELETE'
+                auth_cd = 'WAIT'
                 # if package_id != '' and package_id is not None:
                 #     auth_cd = 'WAIT'
 
