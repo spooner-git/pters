@@ -1629,6 +1629,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
     var planGroupid = '';
     var planCode = '';
     var planGroupClassName = '';
+    var plancolor_ing_bg_cd = "";
+    var plancolor_ing_font_cd = "";
+    var plancolor_end_bg_cd = "";
+    var plancolor_end_font_cd = "";
     switch(option){
         case 'class':
             plan = option;
@@ -2030,6 +2034,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
     var planGroupid = '';
     var planCode = '';
     var planGroupClassName = '';
+    var plancolor_ing_bg_cd = "";
+    var plancolor_ing_font_cd = "";
+    var plancolor_end_bg_cd = "";
+    var plancolor_end_font_cd = "";
     switch(option){
         case 'class':
             plan = option;
@@ -2042,6 +2050,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planNoteArray = jsondata.scheduleNoteArray;
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planfinished = ' classTime_checked';
             planMemberNum = '';
             planGroupid = '';
@@ -2057,6 +2069,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planScheduleFinishArray = '';
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
@@ -2074,6 +2090,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planScheduleFinishArray = jsondata.group_schedule_finish_check;
             planColor = 'groupTime';
             planfinished = ' groupTime_checked';
+            plancolor_ing_bg_cd = jsondata.group_schedule_ing_color_cd;
+            plancolor_ing_font_cd = jsondata.group_schedule_ing_font_color_cd;
+            plancolor_end_bg_cd = jsondata.group_schedule_end_color_cd;
+            plancolor_end_font_cd = jsondata.group_schedule_end_font_color_cd;
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
@@ -2156,6 +2176,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var tdPlan = $("#"+planStart);
         //tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
 
+        var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
@@ -2164,6 +2185,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                 planColor_ = planColor;
             }else{
                 planColor_ = planColor+planfinished;
+                group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
             }
         }else{
             planColor_ = planColor;
@@ -2239,7 +2261,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                             '" data-memberName="'+memberName+
                             '" data-group-type-cd-name="'+planGroupClassName[i]+
                             '" class="'+planColor_+
-                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
+                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+group_user_color+
                             '">'+
                                 innerNameTag+
                            '</div>';
