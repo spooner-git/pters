@@ -680,7 +680,8 @@ function playSound() {
                 registrations.forEach(function (v) {
                         send_message_to_sw(v.active, "hello cal week").then(function (m) {
                         playSound();
-                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')){
+                        console.log(window.location.pathname);
+                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')|| (window.location.pathname=='/trainer/cal_total/')){
                             ajaxClassTime();
                         }
                         messageCommunicationWithWorker();

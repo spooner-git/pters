@@ -2486,6 +2486,8 @@ def add_group_info_logic(request):
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
     end_color_cd = request.POST.get('end_color_cd', '#af757c')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#000000')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#000000')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
@@ -2493,6 +2495,7 @@ def add_group_info_logic(request):
         with transaction.atomic():
             group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
                                  name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                 ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
                                  state_cd='IP', use=USE)
 
             group_info.save()
@@ -2641,6 +2644,8 @@ def update_group_info_logic(request):
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '')
     end_color_cd = request.POST.get('end_color_cd', '')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     group_info = None
     error = None
@@ -2670,6 +2675,12 @@ def update_group_info_logic(request):
         if end_color_cd == '' or end_color_cd is None:
             end_color_cd = group_info.end_color_cd
 
+        if ing_font_color_cd == '' or ing_font_color_cd is None:
+            ing_font_color_cd = group_info.ing_font_color_cd
+
+        if end_font_color_cd == '' or end_font_color_cd is None:
+            end_font_color_cd = group_info.end_font_color_cd
+
     if error is None:
         if int(member_num) <= 0:
             error = '정원은 1명 이상이어야 합니다.'
@@ -2696,6 +2707,8 @@ def update_group_info_logic(request):
         group_info.note = note
         group_info.ing_color_cd = ing_color_cd
         group_info.end_color_cd = end_color_cd
+        group_info.ing_font_color_cd = ing_font_color_cd
+        group_info.end_font_color_cd = end_font_color_cd
         group_info.save()
 
     if error is None:
