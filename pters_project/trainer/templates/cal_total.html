@@ -386,7 +386,7 @@
             </div>
 
             <div id="groupmembersInfo" class="ptaddbox">
-                <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class="KRtext"> 그룹원 정보</span><span class="JPtext">予約可能回数</span><span class="ENtext">Available Reserv. Counts</span></div>
+                <div class="ptaddboxtext"><img class="icons" style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> <span class=""> 그룹원 정보</span><span id="how_many_groupmember_selected"></span></div>
                 <!-- 남은 횟수 DB연동 필요 -->
                 <div id="groupmemberInfo" class="" placeholder="ー"></div>
             </div>
@@ -874,7 +874,7 @@
 
             <div id="memberRegHistory_info_wrap" class="member_info_wrap">
                 <label class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 이력
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강권 이력
                     <!--<span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>-->
                 </label>
                 <div id="memberRegHistory_info">
@@ -1010,7 +1010,7 @@
                 <span id="memberFinishCount_info_PC" readonly></span>회
             </div>
             <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-                <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">수강 이력
+                <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">수강권 이력
                     <!--<span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>-->
                 </label>
                 <div id="memberRegHistory_info_PC">
