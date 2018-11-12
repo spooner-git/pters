@@ -2676,7 +2676,6 @@ def update_group_info_logic(request):
 
     if error is None:
         member_fix_data = []
-        fix_counter = 0
         group_lecture_data = GroupLectureTb.objects.select_related(
             'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
         for group_lecture_info in group_lecture_data:
@@ -3405,7 +3404,7 @@ def delete_package_info_logic(request):
             with transaction.atomic():
                 package_lecture_data = ClassLectureTb.objects.select_related(
                     'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                         lecture_tb__package_tb_id=package_id, lecture_tb__state_cd='IP', use=USE)
+                                         lecture_tb__package_tb_id=package_id, use=USE)
 
                 for package_lecture_info in package_lecture_data:
                     # package_lecture_info.auth_cd = 'DELETE'
@@ -3913,22 +3912,10 @@ def finish_package_info_logic(request):
                                     "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
                                     " B.USE=1"
 
-                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=package_lecture_info.group_tb,
+                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=package_lecture_info.lecture_tb_id,
+                                                                   lecture_tb__state_cd='IP',
                                                                    use=USE)
-
-                for group_lecture_info in group_lecture_data:
-                    group_lecture_data = GroupLectureTb.objects.filter(
-                        group_tb_id=group_lecture_info.group_tb_id, lecture_tb__member_id=lecture_info.member_id,
-                        lecture_tb__use=USE,
-                        use=USE).annotate(class_count=RawSQL(query_class_count,
-                                                             [])).filter(class_count__gte=1)
-                    group_lecture_counter = group_lecture_data.filter(lecture_tb__state_cd='IP',
-                                                                         fix_state_cd='FIX').count()
-
-                    if group_lecture_counter > 0:
-                        group_lecture_data.update(fix_state_cd='FIX')
-                    else:
-                        group_lecture_data.update(fix_state_cd='')
+                group_lecture_data.update(fix_state_cd='')
 
     if error is None:
         for package_group_info in package_group_data:
