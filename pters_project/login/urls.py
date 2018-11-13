@@ -109,6 +109,10 @@ urlpatterns = [
         views.password_change,
         {'post_change_redirect': 'login:auth_password_change_done'},
         name='auth_password_change'),
+    url(r'^password/change_social/$',
+        views.password_change_social,
+        {'post_change_redirect': 'login:auth_password_change_done'},
+        name='auth_password_change_social'),
 
     url(r'^password/change/done/$',
         views.password_change_done,

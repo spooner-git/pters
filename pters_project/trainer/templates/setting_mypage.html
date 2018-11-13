@@ -266,7 +266,7 @@
 
     <script>
 {#        var social_login_type = '{{ social_login_type }}';#}
-
+        var check_password_changed = '{{ check_password_changed }}';
         $(document).on('keyup', '#id_first_name', function(){
             limit_char(this);
         });
@@ -656,9 +656,12 @@
                 if(Number(social_login_check) == 0){
                     location.href= "/login/password/change/";
                 }else if(Number(social_login_check) == 1){
-                    location.href= "/login/password/reset/";
+                    if(Number(check_password_changed) == 0) {
+                        location.href = "/login/password/change_social/";
+                    }else{
+                        location.href= "/login/password/change/";
+                    }
                 }
-                
 
             }else if(option == "delAccount"){
                 location.href="/trainer/delete_account/";

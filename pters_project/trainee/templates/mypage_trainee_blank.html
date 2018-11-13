@@ -365,7 +365,7 @@
         $('.trainerWorkTimeInfo span:nth-child(2)').text(Options.workStartTime+'시 ~ '+Options.workEndTime+'시')
 
         birthChangeEventGroup();
-
+        var check_password_changed = '{{ check_password_changed }}';
 
         if(Number(social_login_check) == 0){
 
@@ -528,9 +528,12 @@
                 if(Number(social_login_check) == 0){
                     location.href= "/login/password/change/";
                 }else if(Number(social_login_check) == 1){
-                    location.href= "/login/password/reset/";
+                    if(Number(check_password_changed) == 0) {
+                        location.href = "/login/password/change_social/";
+                    }else{
+                        location.href= "/login/password/change/";
+                    }
                 }
-                
 
             }else if(option == "delAccount"){
                 location.href="/trainer/delete_account/";

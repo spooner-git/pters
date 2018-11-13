@@ -46,7 +46,7 @@ from trainee.models import MemberLectureTb
 from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list
 from trainer.models import GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
 
-from .forms import MyPasswordResetForm
+from .forms import MyPasswordResetForm, MyPasswordChangeForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
 
 logger = logging.getLogger(__name__)
@@ -1945,6 +1945,39 @@ def password_change(request,
     return TemplateResponse(request, template_name, context)
 
 
+@sensitive_post_parameters()
+@csrf_protect
+@login_required
+@deprecate_current_app
+def password_change_social(request,
+                           template_name='password_change_form.html',
+                           post_change_redirect=None,
+                           password_change_form=MyPasswordChangeForm,
+                           extra_context=None):
+    if post_change_redirect is None:
+        post_change_redirect = reverse('password_change_done')
+    else:
+        post_change_redirect = resolve_url(post_change_redirect)
+    if request.method == "POST":
+        form = password_change_form(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Updating the password logs out all other sessions for the user
+            # except the current one.
+            update_session_auth_hash(request, form.user)
+            return HttpResponseRedirect(post_change_redirect)
+    else:
+        form = password_change_form(user=request.user)
+    context = {
+        'form': form,
+        'title': _('Password change'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
 @login_required
 @deprecate_current_app
 def password_change_done(request,
@@ -1955,5 +1988,9 @@ def password_change_done(request,
     }
     if extra_context is not None:
         context.update(extra_context)
+    sns_id = request.session.get('social_login_id', '')
+    if sns_id != '' and sns_id is not None:
+        sns_data = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id, use=USE)
+        sns_data.update(change_password_check=1)
 
     return TemplateResponse(request, template_name, context)

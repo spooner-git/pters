@@ -36,7 +36,7 @@ from login.views import add_member_no_email_func
 
 from board.models import BoardTb
 from center.models import CenterTrainerTb
-from login.models import MemberTb, LogTb, CommonCdTb
+from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 # from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
@@ -459,6 +459,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         # context = super(MyPageView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
+        sns_id = request.session.get('social_login_id', '')
         error = None
         class_info = None
         now = timezone.now()
@@ -579,6 +580,12 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context['next_schedule_start_dt'] = str(next_schedule_start_dt)
         context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['end_schedule_num'] = end_schedule_num
+        context['check_password_changed'] = 1
+        if sns_id != '' and sns_id is not None:
+            sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
+                                                                 change_password_check=1, use=USE).count()
+            if sns_password_change_check == 0:
+                context['check_password_changed'] = 0
 
         return render(request, self.template_name, context)
 

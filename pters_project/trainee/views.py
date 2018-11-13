@@ -24,7 +24,7 @@ from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_
 
 from configs.views import AccessTestMixin
 
-from login.models import MemberTb, LogTb, CommonCdTb
+from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
@@ -142,6 +142,7 @@ class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         member_info = None
         error = None
+        sns_id = request.session.get('social_login_id', '')
         try:
             member_info = MemberTb.objects.get(member_id=request.user.id)
         except ObjectDoesNotExist:
@@ -153,6 +154,12 @@ class MyPageBlankView(LoginRequiredMixin, AccessTestMixin, View):
             if member_info.birthday_dt is None:
                 member_info.birthday_dt = ''
             context['member_info'] = member_info
+        context['check_password_changed'] = 1
+        if sns_id != '' and sns_id is not None:
+            sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
+                                                                 change_password_check=1, use=USE).count()
+            if sns_password_change_check == 0:
+                context['check_password_changed'] = 0
         return render(request, self.template_name, context)
 
 
@@ -191,6 +198,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         error = None
         class_id = request.session.get('class_id', '')
+        sns_id = request.session.get('social_login_id', '')
         member_info = None
         class_info = None
         # today = datetime.date.today()
@@ -234,6 +242,12 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
             # context = get_trainee_setting_data(context, request.user.id)
             # request.session['setting_language'] = context['lt_lan_01']
 
+        context['check_password_changed'] = 1
+        if sns_id != '' and sns_id is not None:
+            sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
+                                                                 change_password_check=1, use=USE).count()
+            if sns_password_change_check == 0:
+                context['check_password_changed'] = 0
         return render(request, self.template_name, context)
 
 
