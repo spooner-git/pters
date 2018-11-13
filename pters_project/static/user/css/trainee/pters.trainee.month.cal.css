@@ -8,6 +8,49 @@ body{
 	background-color: #ffffff;
 }
 
+#remain_count_board{
+	position: fixed;
+	display: none;
+	background-color: #282828;
+	color: #ffffff;
+	border: 1px solid #fe4e65;
+	padding: 20px;
+	width: 100%;
+	max-width: 400px;
+	height: auto;
+	max-height: 500px;
+	overflow-y: auto;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 15;
+}
+	.remain_count_board_table{
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+	}
+	.remain_count_board_table > div{
+		display: table-cell;
+	}
+	.remain_count_board_table > div:nth-of-type(1){
+		width: 40%;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+	.remain_count_board_table > div:nth-of-type(2){
+		width: 20%;
+		text-align: center;
+	}
+	.remain_count_board_table > div:nth-of-type(3){
+		width: 20%;
+		text-align: center;
+	}
+	.remain_count_board_table > div:nth-of-type(4){
+		width: 20%;
+		text-align: center;
+	}
+
 #gap{
 	height:50px;
 }
@@ -262,12 +305,25 @@ img,a,div,span,p{
 }
 
 #countRemain{
+	display: none;
+
 	position: relative;
 	height: 24px;
 	color: #ffffff;
 	font-size: 13.5px;
 	font-weight: 300;
 	margin-bottom: 3px;
+}
+
+#click_to_see_remain_count_board{
+	position: relative;
+	height: 24px;
+	color: #ffffff;
+	font-size: 13.5px;
+	font-weight: 300;
+	margin-bottom: 3px;
+	background-color: rgba(40, 40, 40, 0.35);
+	cursor: pointer;
 }
 
 

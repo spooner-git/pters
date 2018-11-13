@@ -1905,8 +1905,6 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             var jsondata = JSON.parse(data);
             initialJSON = jsondata;
             console.log(jsondata);
-            // endTime = performance.now();
-            // console.log(endTime - startTime + 'ms');
             if(jsondata.messageArray.length>0){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
@@ -1918,59 +1916,17 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
                         temp_text += '/';
                         temp_count_text += '/';
                     }
-                    temp_text += '['+jsondata.package_type_cd_name[i]+']'+jsondata.package_name[i];
+                    temp_text += '['+jsondata.package_type_cd_name[i]+']'+jsondata.package_name[i]+':'+jsondata.package_lecture_avail_count[i];
                     temp_count_text += jsondata.package_lecture_avail_count[i];
 
                 }
                 if(temp_count_text==''){
                     temp_count_text = '0';
                 }
-                // if(jsondata.lecture_reg_count[0] != 0){
-                //     temp_text +='1:1';
-                //     temp_count_text += jsondata.lecture_avail_count;
-                // }
-                // if(jsondata.group_lecture_reg_count[0] != 0){
-                //     if(temp_text == ''){
-                //         temp_text += '그룹';
-                //         temp_count_text += jsondata.group_lecture_avail_count;
-                //
-                //     }else {
-                //         temp_text += '/그룹';
-                //         temp_count_text = temp_count_text+'/'+jsondata.group_lecture_avail_count;
-                //     }
-                // }
-                // if(jsondata.class_lecture_reg_count[0] != 0){
-                //     if(temp_text == ''){
-                //         temp_text += '클래스';
-                //         temp_count_text += jsondata.class_lecture_avail_count;
-                //
-                //     }else {
-                //         temp_text += '/클래스';
-                //         temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
-                //     }
-                // }
-                //
-                // if(temp_text == '') {
-                //     temp_count_text = '0';
-                // }
-                //     lecture_enable_test = 1;
-                // }else{
-                //     lecture_enable_test = 0;
-                // }
 
-                // if(jsondata.group_lecture_reg_count[0] != 0 && jsondata.lecture_reg_count[0] != 0 && jsondata.class_lecture_reg_count[0] != 0){
-                    $('#countRemainData span:first-child').text(temp_count_text);
-                    $('#countRemainData span:nth-of-type(2)').text('회 ('+temp_text+')');
-                // }
-                // else if(jsondata.group_lecture_reg_count[0] != 0){
-                //     $('#countRemainData span:first-child').text(jsondata.group_lecture_avail_count)
-                //     $('#countRemainData span:nth-of-type(2)').text('회 (그룹)')
-                // }
-                // else{
-                //     $('#countRemainData span:first-child').text(jsondata.lecture_avail_count)
-                //     $('#countRemainData span:nth-of-type(2)').text('회 (1:1)')
-                // }
-
+                $('#countRemainData span:first-child').text(temp_count_text);
+                $('#countRemainData span:nth-of-type(2)').text('('+temp_text+')');
+                fill_remain_count_board(jsondata);
 
                 $('.classTime,.offTime').parent().html('<div></div>');
                 $('.blackballoon, .balloon').html('');
@@ -1996,6 +1952,22 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             console.log('server error');
         }
     });
+}
+
+function fill_remain_count_board(jsondata){
+    var $targetHTML = $('#remain_count_board');
+    var len = jsondata.package_lecture_avail_count.length;
+    
+    var htmlToJoin = [`<p>나의 진행 현황</p><div class="remain_count_board_table" style="margin-bottom:10px;"><div>수업명</div><div>등록 횟수</div><div>예약가능</div><div>남은 횟수</div></div>`];
+    for(var i=0; i<len; i++){
+        htmlToJoin.push(`<div class="remain_count_board_table">
+                            <div>[${jsondata.package_type_cd_name[i]}]${jsondata.package_name[i]}</div>
+                            <div><span style="font-weight:500;">${jsondata.package_lecture_reg_count[i]}</span>회</div>
+                            <div><span style="color:#fe4e65;font-weight:500;">${jsondata.package_lecture_avail_count[i]}</span>회</div>
+                            <div><span style="font-weight:400;">${jsondata.package_lecture_rem_count[i]}</span>회</div>
+                        </div>`);
+    }
+    $targetHTML.html(htmlToJoin.join(""));
 }
 
 function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
