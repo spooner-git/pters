@@ -439,6 +439,9 @@
 
         $('input').keyup(function(){
             var targetID = $('#'+$(this).attr('name'));
+            if($(this).attr('name') == "first_name"){
+                limit_char(this);
+            }
             targetID.val($(this).val());
         });
 

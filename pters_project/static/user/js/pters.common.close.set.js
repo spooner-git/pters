@@ -117,6 +117,7 @@ function close_planadd_popup(){
     $('#page-addplan').css('display', 'none');
     $('#calendar').css('position', 'relative');
     $('.add_time_unit').removeClass('checked');
+    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
     enable_window_scroll();
     if(bodywidth<=820){

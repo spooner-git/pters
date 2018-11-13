@@ -393,30 +393,33 @@
 
         $('button.changeMemberInfo').click(function(){
             if($(this).attr('data-type') == "modify"){
-                $(this).attr('data-type','complete')
-                $(this).siblings('button.cancelMemberInfo').show()
-                $(this).parents('.trainerInfo').find('._originalInfo').hide()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').show()
+                $(this).attr('data-type', 'complete');
+                $(this).siblings('button.cancelMemberInfo').show();
+                $(this).parents('.trainerInfo').find('._originalInfo').hide();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').show();
             }else if($(this).attr('data-type') == "complete"){
-                $(this).attr('data-type','modify')
-                $(this).siblings('button.cancelMemberInfo').hide()
-                $(this).parents('.trainerInfo').find('._originalInfo').show()
-                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-                send_modified_member_info()
+                $(this).attr('data-type', 'modify');
+                $(this).siblings('button.cancelMemberInfo').hide();
+                $(this).parents('.trainerInfo').find('._originalInfo').show();
+                $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+                send_modified_member_info();
             }
-        })
+        });
 
         $('button.cancelMemberInfo').click(function(){
-            $(this).hide()
-            $(this).siblings('button.changeMemberInfo').attr('data-type','modify')
-            $(this).parents('.trainerInfo').find('._originalInfo').show()
-            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide()
-        })
+            $(this).hide();
+            $(this).siblings('button.changeMemberInfo').attr('data-type', 'modify');
+            $(this).parents('.trainerInfo').find('._originalInfo').show();
+            $(this).parents('.trainerInfo').find('.modifyInfoTool').hide();
+        });
 
         $('input').keyup(function(){
-            var targetID = $('#'+$(this).attr('name'))
-            targetID.val($(this).val())
-        })
+            var targetID = $('#'+$(this).attr('name'));
+            if($(this).attr('name') == "first_name"){
+                limit_char(this);
+            }
+            targetID.val($(this).val());
+        });
 
 
         //send_modified_member_info()

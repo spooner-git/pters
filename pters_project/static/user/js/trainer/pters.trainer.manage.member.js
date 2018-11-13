@@ -296,6 +296,7 @@ $(document).ready(function(){
                 if(keyCode === 13 || keyCode === 9){
                     limit_char(this);
                     $('#form_firstname_modify').val($(this).val());
+                    check_dropdown_selected();
                 }
             });
         }else{
@@ -306,12 +307,14 @@ $(document).ready(function(){
             $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
                 limit_char(this);
                 $('#form_firstname_modify').val($(this).val());
+                check_dropdown_selected();
             });
         }
 
         $('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
-            limit_char_only_number(this)
+            limit_char_only_number(this);
             $('#form_phone_modify').val($(this).val());
+            check_dropdown_selected();
         });
 
 
@@ -1210,7 +1213,9 @@ $(document).ready(function(){
             if(keyCode === 13 || keyCode === 9){
                 if($(this).val().length>=1){
                     limit_char(this);
-                    $(this).addClass("dropdown_selected");
+                    if($(this).val().length > 0){
+                        $(this).addClass("dropdown_selected");
+                    }
                     check_dropdown_selected();
                 }else{
                     limit_char(this);
@@ -1230,7 +1235,9 @@ $(document).ready(function(){
             var selector_memberFirstName_add = $('#memberFirstName_add');
             if($(this).val().length>=1){
                 limit_char(this);
-                $(this).addClass("dropdown_selected");
+                if($(this).val().length > 0){
+                    $(this).addClass("dropdown_selected");
+                }
                 check_dropdown_selected();
             }else{
                 limit_char(this);
@@ -3507,26 +3514,7 @@ function autoDateInput(){
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
 }
 
-//특수문자 입력 제한
-function limit_char(e){
-    //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
-    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ]/gi;
-    var temp = $(e).val();
-    if(limit.test(temp)){
-        $(e).val(temp.replace(limit, ""));
-        alert("이름에 - 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
-    }
-}
 
-function limit_char_only_number(e){
-    // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
-    var limit =  /[^0-9\,]/gi;
-    var temp = $(e).val();
-    if(limit.test(temp)){
-        $(e).val(temp.replace(limit, ""));
-        alert("숫자만 입력하실 수 있습니다.");
-    }
-}
 
 
 //회원정보////////////////////////////////////////////////////////

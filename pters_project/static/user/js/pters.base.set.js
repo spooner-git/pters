@@ -1183,3 +1183,25 @@ function body_position_fixed_unset(){
         $('html, body').removeClass('bodyfixed');
     }
 }
+
+
+//특수문자 입력 제한
+function limit_char(e){
+    //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
+    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ]/gi;
+    var temp = $(e).val();
+    if(limit.test(temp)){
+        $(e).val(temp.replace(limit, ""));
+        alert("이름에 - 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
+    }
+}
+
+function limit_char_only_number(e){
+    // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+    var limit =  /[^0-9\,]/gi;
+    var temp = $(e).val();
+    if(limit.test(temp)){
+        $(e).val(temp.replace(limit, ""));
+        alert("숫자만 입력하실 수 있습니다.");
+    }
+}
