@@ -1505,7 +1505,7 @@ def export_excel_member_list_logic(request):
     start_raw = 3
 
     ws1['A2'] = '회원명'
-    ws1['B2'] = '수강유형'
+    ws1['B2'] = '수강권'
     ws1['C2'] = '회원 ID'
     ws1['D2'] = '등록 횟수'
     ws1['E2'] = '남은 횟수'
@@ -1649,7 +1649,7 @@ def export_excel_member_info_logic(request):
                 ws1.title = lecture_info.start_date + ' 수강정보'
                 ws1['A1'] = '수강 정보'
                 ws1['A1'].font = Font(bold=True, size=15)
-                ws1['A2'] = '수강유형'
+                ws1['A2'] = '수강권'
                 ws1['B2'] = '시작일자'
                 ws1['C2'] = '종료일자'
                 ws1['D2'] = '등록횟수'
