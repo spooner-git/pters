@@ -1225,7 +1225,8 @@ $(document).ready(function(){
                 $('#form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
                 $('#add_member_form_first_name').val(selector_memberFirstName_add.val());
                 $('#add_member_form_last_name').val(selector_memberLastName_add.val());
-                $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+                // $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+                $('#add_member_form_name').val(selector_memberFirstName_add.val());
             }
         });
     }else{
@@ -1246,7 +1247,8 @@ $(document).ready(function(){
             $('#form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
             $('#add_member_form_first_name').val(selector_memberFirstName_add.val());
             $('#add_member_form_last_name').val(selector_memberLastName_add.val());
-            $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+            // $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+            $('#add_member_form_name').val(selector_memberFirstName_add.val());
         });
     }
 
