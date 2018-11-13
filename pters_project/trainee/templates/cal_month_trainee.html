@@ -173,7 +173,9 @@
 
 
     <!-- 월간 달력 -->
+    <div id="remain_count_board"></div>
     <div id="ymdText">
+        
         <div class='arrowButton'>
             <a id="leftArrowButton" style="left: 4%">
                 <img src={% static_url "user/res/btn-today-left.png" %} alt="" class="_pinkarrowbefore setunVisible" style="width: 11px;margin-top:1px;margin-right: 10px;visibility: hidden;">
@@ -188,8 +190,11 @@
         </div>
         <div id="ymdTextWrap">
             <div id="countRemain"><div style="position: absolute;width: 100%;height: 100%;background: #ffffff;opacity: 0.16;"></div>
-                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;"></span><span id="countRemainDataUnit">회</span></span>
+                <span id="countRemainData"> 예약 가능 횟수 <span style="color:#fe4e65;font-weight: bold;font-size: 16px;display:none;"></span><span id="countRemainDataUnit">회</span></span>
             </div>
+
+
+            <div id="click_to_see_remain_count_board">여기를 눌러 나의 현황 보기</div>
             <div id="yearText"></div>
             <div id="monthText"></div>
             <div id="menuName">월간 일정
@@ -244,6 +249,7 @@
         <div id="cal_box" class="cal_box"></div>
         <div id="gap">
         </div>
+        
         <div class="ads_cal_insideTop ads_wrap">
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <!-- 달력하단_반응형_디스플레이 -->
@@ -257,6 +263,8 @@
             </script>
         </div>
     </div>
+
+    
 
     <div class="ads_cal_side ads_wrap">
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -350,47 +358,59 @@
             onlyExternal: true,
         });
 
-        var count = 0
-        var count1 = 0
+        var count = 0;
+        var count1 = 0;
 
         $('#ymdText-pc-prev-btn, #leftArrowButton').click(function(){
             if(count==0){
-                myswiper.slidePrev(300)
-                count++
-                setTimeout(function(){count=0},400)
+                myswiper.slidePrev(300);
+                count++;
+                setTimeout(function(){count=0},400);
             }else if(count>0){
-                console.log('wait!')
+                console.log('wait!');
             }
         })
 
         $('#ymdText-pc-next-btn, #rightArrowButton').click(function(){
             if(count1==0){
-                myswiper.slideNext(300)
-                count1++
-                setTimeout(function(){count1=0},400)
+                myswiper.slideNext(300);
+                count1++;
+                setTimeout(function(){count1=0},400);
             }else if(count>0){
-                console.log('wait!')
+                console.log('wait!');
             }
         })
 
         function left_page(){
             if(count==0){
-                myswiper.slidePrev(300)
-                count++
-                setTimeout(function(){count=0},400)
+                myswiper.slidePrev(300);
+                count++;
+                setTimeout(function(){count=0},400);
             }else if(count>0){
-                console.log('wait!')
+                console.log('wait!');
             }
         }
         function right_page(){
             if(count1==0){
-                myswiper.slideNext(300)
-                count1++
-                setTimeout(function(){count1=0},400)
+                myswiper.slideNext(300);
+                count1++;
+                setTimeout(function(){count1=0},400);
             }else if(count>0){
-                console.log('wait!')
+                console.log('wait!');
             }
         }
+
+        $('#ymdText').click(function(){
+            if($('#remain_count_board').css('display') == "none"){
+                $('#remain_count_board').show();
+            }else{
+                $('#remain_count_board').hide();
+            }
+        });
+
+        $('#remain_count_board').click(function(){
+            $(this).hide();
+        });
 
 
     </script>
