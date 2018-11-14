@@ -561,7 +561,7 @@ $(document).ready(function(){
         }else{
             $('._complete, ._refund').css('display', 'block');
         }
-        selector_lectureStateChangeSelectPopup.find('._explain').html('※진행완료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※종료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
         show_shadow_reponsively();
     });
 
@@ -990,7 +990,7 @@ $(document).ready(function(){
 //#####################회원정보 도움말 팝업 //#####################
     $('._regcount, ._remaincount').mouseenter(function(){
         var text = '등록횟수는 회원님께서 계약시 등록하신 횟수를 의미합니다.';
-        var text2 = '남은횟수는 회원님의 등록횟수에서 현재까지 진행완료된 강의 횟수를 뺀 값을 의미합니다.';
+        var text2 = '남은횟수는 회원님의 등록횟수에서 현재까지 종료, 결석 강의 횟수를 뺀 값을 의미합니다.';
         if(Options.language == "JPN"){
             text = "登録回数はメンバーが契約時に登録した回数です。";
             text2 = "残り回数はメンバーの登録回数から現在まで進行完了した授業回数をひいた値です。";
@@ -4336,7 +4336,7 @@ function get_member_lecture_list(dbID, use, callback){
 }
 
 function notice_lecture_status_changed_to_inprogress(lecturename, member_name){
-    show_caution_popup(`진행완료 되었던 ${member_name} 회원님의 <br> <span style="color:#fe4e65;font-weight:500";>수강정보 [${lecturename}]의</span> <br> 상태가 <span style="color:green">진행중</span>으로 변경됩니다.<p></p>`);
+    show_caution_popup(`종료 되었던 ${member_name} 회원님의 <br> <span style="color:#fe4e65;font-weight:500";>수강정보 [${lecturename}]의</span> <br> 상태가 <span style="color:green">진행중</span>으로 변경됩니다.<p></p>`);
 }
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.

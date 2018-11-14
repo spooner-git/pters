@@ -546,7 +546,7 @@ $(document).on('click', '._groupmanage img._info_delete', function(e){
     if($(this).css('opacity') == 1){
         deleteTypeSelect = 'packagedelete';
         $('#cal_popup_plandelete').show();
-        $('#popup_delete_question').text('정말 삭제하시겠습니까?');
+        $('#popup_delete_question').html('정말 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
         //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
         var package_id = $(this).attr('data-packageid');
         var memberLen = $('div.memberline[data-packageid="'+package_id+'"]').length;
@@ -638,6 +638,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     $('.lectureStateChangeSelectPopup ._resume').attr('data-packageid', $(this).attr('data-packageid'));
     show_shadow_reponsively();
     if($(this).attr('data-packagestatus') == "IP"){
+        var change_explain_text = '1) 소속된 회원의 수강권이 종료됩니다.';
+        $('._explain').html(change_explain_text);
         $('._complete').css('display', 'inline-block');
         $('._resume, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._complete', function(){
@@ -654,6 +656,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-packagestatus') == "PE"){
+        var change_explain_text = '1) 남은 횟수가 있는 소속된 회원의 수강권이 재개됩니다.';
+        $('._explain').html(change_explain_text);
         $('._resume').css('display', 'inline-block');
         $('._complete, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._resume', function(){

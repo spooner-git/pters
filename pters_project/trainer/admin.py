@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import ClassTb, MemberClassTb, ClassLectureTb, GroupTb, GroupLectureTb, SettingTb, BackgroundImgTb, \
-    PackageTb, PackageLectureTb, PackageGroupTb
+    PackageTb, PackageGroupTb
 
 
 @admin.register(ClassTb)
@@ -56,11 +56,6 @@ class PackageTbAdmin(admin.ModelAdmin):
     list_display = ('package_id', 'class_tb', 'name', 'package_type_cd',
                     'ing_package_member_num', 'end_package_member_num',
                     'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
-
-
-@admin.register(PackageLectureTb)
-class PackageLectureTbAdmin(admin.ModelAdmin):
-    list_display = ('package_lecture_id', 'package_tb', 'lecture_tb', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(PackageGroupTb)
