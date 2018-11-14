@@ -260,7 +260,7 @@
             <!-- <p class="_step1_label"><img src="/static/user/res/PTERS_logo_pure.png">ID 유형 선택
             <div class="registerbox_sublabel _step1_label">STEP 1<br>원하는 ID유형을 선택해주세요.<p style="font-size: 17px;">강사님께서 생성해주신 <span style="color: #fe4e65;text-decoration: underline;font-weight: 500">초기 ID와 비밀번호를 변경한 후</span> 계속 이용이 가능합니다.</p></div> -->
             <p class="_step2_label"><img src="/static/user/res/PTERS_logo_pure.png"><span></span>
-            <div class="registerbox_sublabel _step2_label"><br>회원정보를 입력해주세요.<p>강사님께서 생성해주신 <span style="color: #fe4e65;text-decoration: underline;font-weight: 500">초기 ID와 비밀번호를 변경한 후</span> 계속 이용이 가능합니다.</p></div>
+            <div class="registerbox_sublabel _step2_label"><br>회원정보를 입력해주세요.<p> <span style="color: #fe4e65;text-decoration: underline;font-weight: 500">초기 ID와 비밀번호를 변경한 후</span> 계속 이용이 가능합니다.</p></div>
             <p class="_step3_label"><img src="/static/user/res/PTERS_logo_pure.png"><span>가입 약관</span>
             <div class="registerbox_sublabel _step3_label">STEP 3<br>제공하는 서비스를 사용하기 위한 약관입니다.</div>
         </div>
@@ -710,16 +710,16 @@
             {#                        <label>Email<span class="email_confirm" style="margin-left: 15px;"></span></label>#}
                         <div class="outerbox">
                             <input type="text" name="" placeholder="이메일"  id="email_input" style="width:28%;"> @
-                            <input type="text" name="" placeholder="이메일 뒷부분"  id="email_input_re" style="width:37%;" readonly>
+                            <input type="text" name="" placeholder="이메일 뒷부분"  id="email_input_re" style="width:37%;" >
     {#                        <span onclick="check_email()" class="button_duplicate_check">중복체크</span>#}
                             <div style="display: inline-block;">
                                 <img src="/static/user/res/icon-down-grey.png" style="position: absolute;width: 10px;margin-top:15px;margin-left:66px;opacity: 0.5;">
                                     <select class="login_dropdown" id="email_option" title="email">
-                                        <option id="optionnone">선택</option>
+                                        <option id="self">직접 입력</option>
+{#                                        <option id="optionnone">선택</option>#}
                                         <option id="gmail">gmail.com</option>
                                         <option id="naver">naver.com</option>
                                         <option id="daum">daum.net</option>
-                                        <option id="self">직접 입력</option>
                                     </select>
                             </div>
                             <span class="email_confirm" style="margin-top: 0;"></span>
@@ -781,6 +781,17 @@
 
     $('#naverIdLogin').click(function (){
         window.location.href = "/login/?social_type=naver";
+    });
+
+    $('.contractread_check span').click(function(e){
+        e.stopPropagation();
+        var $checkbox = $(this).siblings('input');
+        console.log($checkbox.is(':checked'))
+        if($checkbox.is(':checked')){
+            $checkbox.prop('checked', false);
+        }else{
+            $checkbox.prop('checked', true);
+        }
     });
 
     function goHome(){

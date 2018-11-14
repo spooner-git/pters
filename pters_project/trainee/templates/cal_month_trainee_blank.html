@@ -71,7 +71,7 @@
     <div id="ng_popup">
         <img src="/static/user/res/stopmark.png" alt="Caution!" style="width:30px;margin: 20px;">
         <div id="ng_popup_text" style="margin-bottom: 20px;">
-            <p>일정은 오늘 날짜 기준</p><p>+{{ lt_res_05 }}일까지 설정 가능합니다.</p>
+            <p>일정은 오늘 날짜 기준</p><p>+{{ request.session.setting_member_reserve_date_available }}일까지 설정 가능합니다.</p>
         </div>
     </div>
 
@@ -84,7 +84,7 @@
         </div>
 
         <div id="timeGraph" class="paddingside15px tdgraph_trainee_popup" style="display: block;">
-            <div class="ptaddboxtext" style="margin-top: 12px;margin-bottom:4px;">예약 가능 시간 <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
+            <div class="ptaddboxtext_trainee" style="margin-top: 12px;margin-bottom:4px;">예약 가능 시간 <div class="tdgraph" style="display: inline-block;margin-bottom:2px;"></div></div>
             <table class="timegraphtext">
                 <tbody>
                 <tr>
@@ -145,7 +145,7 @@
         </div>
 
         <div id="offStartTime" class="ptaddbox_nomargin addpopupinner" style="position:relative;">
-            <div class="ptaddboxtext ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시각</div>
+            <div class="ptaddboxtext_trainee ptaddboxtext_trainee_popup"><img class="icons" src={% static_url "user/res/ptadd/icon-start.png" %}> 시작 시각</div>
             <div id="starttimesSelected" class="dropdown_trainee_popup">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
                 <ul id="starttimes" class="dropdown-menu pters_dropdown_custom" style="max-height: 194px;">
@@ -155,7 +155,7 @@
         </div>
 
         <div id="offDuration" class="ptaddbox_nomargin addpopupinner" style="margin-bottom:40px;display:none">
-            <div class="ptaddboxtext"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
+            <div class="ptaddboxtext_trainee"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %}> 진행 시간</div>
             <div id="durationsSelected" class="dropdown">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom" type="button" data-toggle="dropdown">선택<span class="caret"></span></button>
                 <ul id="durations" class="dropdown-menu pters_dropdown_custom" style="max-height: 103px;">
@@ -274,9 +274,9 @@
         var classDateArray = [] //수업날짜 DB데이터 가공후 만들어지는 Array
         var classStartArray = [] //수업시간 DB데이터 가공후 만들어지는 Array
 
-        var lt_res_01 =  ['{{ lt_res_01 }}'];
-        var lt_res_02 =  ['{{ lt_res_02 }}'];
-        var lt_res_03 =  ['{{ lt_res_03 }}'];
+        var lt_res_01 =  ['{{ request.session.setting_member_reserve_time_available }}'];
+        var lt_res_02 =  ['{{ request.session.setting_member_reserve_time_prohibition }}'];
+        var lt_res_03 =  ['{{ request.session.setting_member_reserve_prohibition }}'];
     </script>
 
     <!-- Placed at the end of the document so the pages load faster -->

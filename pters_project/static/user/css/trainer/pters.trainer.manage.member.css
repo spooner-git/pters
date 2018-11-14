@@ -361,13 +361,13 @@ select:focus > option:checked {
 }
 
 .memberline:hover{
-	background:#fdfdfd;
-	color: #fe4e65 !important;
+	background:#f4f4f4 !important;
+	transition: background-color 0.12s cubic-bezier(0.4,0,0.2,1);
 
 }
 
 
-#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
+#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 	width: 91.6%;
 	margin-bottom: 40px;
 }
@@ -909,6 +909,9 @@ select:focus > option:checked {
 .historyState_PE{
 	color: green;
 }
+.historyState_PC{
+	color: red;
+}
 .historyState_NP,.historyState_IP{
 	color: #fe4e65;
 }
@@ -1248,14 +1251,15 @@ span.summaryInnerBoxText_Repeatendtext{
 }
 
 .button_add_member_lecture{
-	font-weight: bold !important;
+	font-weight: 400 !important;
+	margin-left: 5px;
 	border: 1px solid #cccccc !important;
 	color:#fe4e65 !important;
 	width: 15px !important;
 	line-height: 15px !important;
 	text-align:center !important;
-	padding:0 6px 0 6px;
-	font-size: 13px;
+	padding:0 6px 0 3px;
+	font-size: 12px;
 	cursor: pointer !important;
 }
 
@@ -1424,11 +1428,15 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 	.ymdText-pc-add-member:hover{
 		background-color: #fe4e65;
+		border-color: #fe4e65;
 		color: #ffffff;
+		transition: background-color 0.17s cubic-bezier(0.4,0,0.2,1);
 	}
 	.ymdText-pc-add-member-again:hover{
 		background: #282828;
+		border-color: #282828;
 		color: #ffffff;
+		transition: background-color 0.17s cubic-bezier(0.4,0,0.2,1);
 	}
 
 
@@ -1499,7 +1507,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 
-	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList{
+	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 		/*width: 1080px;*/
 		/*height: 600px;*/
 		height: auto;

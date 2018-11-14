@@ -105,14 +105,14 @@
             <span id="popup_planinfo_title" class="popup_title"></span>
             <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
         </div>
-        <div class="popup_info_text">
+        <div class="popup_info_text" style="padding-bottom: 5px;">
             <p id="popup_info"></p>
             <p id="popup_info2"></p>
-            <form style="width:200px;display:inline-block;">
+            <form style="width:200px;height:30px;display:inline-block;">
                 <input id="popup_info3_memo" type="text" maxlength="15" title="메모" readonly>
             </form>
-            <img src="/static/user/res/icon-pencil.png" style="width: 12px;cursor:pointer;margin-left: 5px;" title="Edit" id="popup_info3_memo_modify" data-type="view">
-            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup text_memocaution"></p>
+            <img src="/static/user/res/icon-pencil.png" style="width: 17px;cursor:pointer;margin-left: 5px;margin-bottom:5px;" title="Edit" id="popup_info3_memo_modify" data-type="view">
+            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup text-memocaution"></p>
         </div>
         <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
             <span class="text-plancomplete"></span>
@@ -311,6 +311,11 @@
                             <a class="sidebar_text text-lecturemanage">
                             </a>
                         </div>
+
+                        <div class="sidebar_div" onclick="sideGoPage('ticket_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                            <a class="sidebar_text text-ticketmanage">
+                            </a>
+                        </div>
                         
                         <!-- 
                         <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
@@ -433,6 +438,10 @@
                 
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:lecture_manage' %}" class="centermenu_text text-lecturemanage"></a>
+                </div> 
+
+                <div class="centermenu_div">
+                    <a href="{% url 'trainer:ticket_manage' %}" class="centermenu_text text-ticketmanage"></a>
                 </div> 
 
                 
@@ -671,7 +680,8 @@ function playSound() {
                 registrations.forEach(function (v) {
                         send_message_to_sw(v.active, "hello cal week").then(function (m) {
                         playSound();
-                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')){
+                        console.log(window.location.pathname);
+                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')|| (window.location.pathname=='/trainer/cal_total/')){
                             ajaxClassTime();
                         }
                         messageCommunicationWithWorker();

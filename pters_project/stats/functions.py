@@ -281,22 +281,24 @@ def get_stats_member_data(class_id, month_first_day, finish_date):
                                                                                             auth_cd='VIEW', use=USE)
             finish_schedule_num = 0
             for class_lecture_info in class_lecture_list:
-                finish_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+                finish_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE'),
+                                                                 class_tb_id=class_id,
                                                                  group_tb__isnull=True,
                                                                  lecture_tb_id=class_lecture_info.lecture_tb_id,
                                                                  start_dt__gte=month_first_day,
                                                                  start_dt__lt
                                                                  =month_last_day + datetime.timedelta(days=1),
-                                                                 en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                                 en_dis_type=ON_SCHEDULE_TYPE,
                                                                  use=USE).count()
 
-            finish_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+            finish_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE'),
+                                                             class_tb_id=class_id,
                                                              group_tb__isnull=False,
                                                              lecture_tb__isnull=True,
                                                              start_dt__gte=month_first_day,
                                                              start_dt__lt
                                                              =month_last_day + datetime.timedelta(days=1),
-                                                             en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                             en_dis_type=ON_SCHEDULE_TYPE,
                                                              use=USE).count()
             total_month_new_reg_member += month_new_reg_member
             total_month_re_reg_member += month_re_reg_member

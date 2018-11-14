@@ -3,7 +3,9 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
+from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
 from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, FROM_TRAINEE_LESSON_ALARM_ON, \
@@ -12,7 +14,7 @@ from configs.const import ON_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, AUTO_F
 from login.models import MemberTb, LogTb, CommonCdTb
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.models import LectureTb, MemberLectureTb
-from .models import ClassLectureTb, GroupLectureTb, GroupTb, ClassTb, SettingTb
+from .models import ClassLectureTb, GroupLectureTb, GroupTb, ClassTb, SettingTb, PackageGroupTb
 
 
 def func_get_class_member_id_list(class_id):
@@ -23,15 +25,16 @@ def func_get_class_member_id_list(class_id):
                                            lecture_tb__use=USE,
                                            use=USE
                                            ).order_by('lecture_tb__member__name')
-    member_id = None
     for class_lecture_info in class_lecture_data:
-        if member_id is None:
-            member_id = class_lecture_info.lecture_tb.member_id
+        check_member = None
+        member_id = class_lecture_info.lecture_tb.member_id
+
+        for member_info in all_member:
+            if str(member_info.member_id) == str(member_id):
+                check_member = member_info
+
+        if check_member is None:
             all_member.append(class_lecture_info.lecture_tb.member)
-        else:
-            if member_id != class_lecture_info.lecture_tb.member_id:
-                member_id = class_lecture_info.lecture_tb.member_id
-                all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
 
@@ -44,15 +47,23 @@ def func_get_class_member_ing_list(class_id):
                                                                         lecture_tb__use=USE,
                                                                         lecture_tb__member__use=USE,
                                                                         use=USE).order_by('lecture_tb__member__name')
-    member_id = None
     for class_lecture_info in class_lecture_data:
-        if member_id is None:
-            member_id = class_lecture_info.lecture_tb.member_id
+        check_member = None
+        member_id = class_lecture_info.lecture_tb.member_id
+
+        for member_info in all_member:
+            if str(member_info.member_id) == str(member_id):
+                check_member = member_info
+
+        if check_member is None:
             all_member.append(class_lecture_info.lecture_tb.member)
-        else:
-            if member_id != class_lecture_info.lecture_tb.member_id:
-                member_id = class_lecture_info.lecture_tb.member_id
-                all_member.append(class_lecture_info.lecture_tb.member)
+        # if member_id is None:
+        #     member_id = class_lecture_info.lecture_tb.member_id
+        #     all_member.append(class_lecture_info.lecture_tb.member)
+        # else:
+        #     if member_id != class_lecture_info.lecture_tb.member_id:
+        #         member_id = class_lecture_info.lecture_tb.member_id
+        #         all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
 
@@ -76,16 +87,18 @@ def func_get_class_member_end_list(class_id):
                                                                 ).order_by('lecture_tb__member__name')
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
     # class_lecture_data = class_lecture_data.values('lecture_tb__member').distinct()
-    member_id = None
+    # member_id = None
     for class_lecture_info in class_lecture_data:
         if class_lecture_info.ip_lecture_count == 0:
-            if member_id is None:
-                member_id = class_lecture_info.lecture_tb.member_id
+            check_member = None
+            member_id = class_lecture_info.lecture_tb.member_id
+
+            for member_info in all_member:
+                if str(member_info.member_id) == str(member_id):
+                    check_member = member_info
+
+            if check_member is None:
                 all_member.append(class_lecture_info.lecture_tb.member)
-            else:
-                if member_id != class_lecture_info.lecture_tb.member_id:
-                    member_id = class_lecture_info.lecture_tb.member_id
-                    all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
 
@@ -114,14 +127,15 @@ def func_get_class_member_one_to_one_end_list(class_id):
     member_id = None
     for class_lecture_info in class_lecture_data:
         if class_lecture_info.ip_lecture_count == 0:
-            if member_id is None:
-                member_id = class_lecture_info.lecture_tb.member_id
+            check_member = None
+            member_id = class_lecture_info.lecture_tb.member_id
+
+            for member_info in all_member:
+                if str(member_info.member_id) == str(member_id):
+                    check_member = member_info
+
+            if check_member is None:
                 all_member.append(class_lecture_info.lecture_tb.member)
-            else:
-                if member_id != class_lecture_info.lecture_tb.member_id:
-                    member_id = class_lecture_info.lecture_tb.member_id
-                    all_member.append(class_lecture_info.lecture_tb.member)
-    # print(len(all_member))
     return all_member
 
 
@@ -131,18 +145,20 @@ def func_get_member_ing_list(class_id, user_id):
 
     all_member = func_get_class_member_ing_list(class_id)
 
-    query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-                          "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+    query_group_type_cd = "select count(GROUP_TB_ID) from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          "B.USE=1 and " \
+                          "(select GROUP_TYPE_CD from GROUP_TB as C" \
+                          " where C.ID=B.GROUP_TB_ID and C.use=1)=\'ONE_TO_ONE\'"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
-        'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                             lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                    lecture_count=RawSQL(query_lecture_count, []))
+        'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__use=USE,
+                                         use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
+                                                           check_one_to_one=RawSQL(query_group_type_cd, []))
     for member_data in all_member:
 
         if member_data.user.is_active:
@@ -188,50 +204,68 @@ def func_get_member_ing_list(class_id, user_id):
                 if lecture_info_data.auth_cd == 'WAIT':
                     member_data.np_lecture_counts += 1
 
-                if lecture_info_data.group_check == 'NORMAL':
+                # group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info_data.lecture_tb_id,
+                #                                                    use=USE)
+                # for group_lecture_info in group_lecture_data:
+                # member_data.check_one_to_one = 1
+                # check_one_to_one = PackageGroupTb.objects.select_related(
+                #     'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
+                #                        group_tb__group_type_cd='ONE_TO_ONE', use=USE).count()
+                # if check_one_to_one > 0:
+                #     member_data.check_one_to_one = 1
+                # else:
+                #     member_data.check_one_to_one = 0
+
+                if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
-                elif lecture_info_data.group_check == 'EMPTY':
+                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                     group_check = 2
+                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
 
                 if lecture_info.use != UN_USE:
                     if lecture_info.state_cd == 'IP':
+                        group_add_name = ''
                         if group_check == 0:
-                            if member_data.group_info == '':
-                                member_data.group_info = '1:1'
-                            else:
-                                if '1:1' not in member_data.group_info:
-                                    member_data.group_info = '1:1/' + member_data.group_info
+                            group_add_name = '1:1'
                         elif group_check == 1:
-                            if member_data.group_info == '':
-                                member_data.group_info = '그룹'
-                            else:
-                                if '그룹' in member_data.group_info:
-                                    member_data.group_info = member_data.group_info
-                                elif '클래스' in member_data.group_info:
-                                    if '1:1' in member_data.group_info:
-                                        member_data.group_info = '1:1/그룹/클래스'
-                                    else:
-                                        member_data.group_info = '그룹/클래스'
-                                else:
-                                    member_data.group_info += '/그룹'
+                            group_add_name = '그룹'
+                        elif group_check == 2:
+                            group_add_name = '클래스'
+                        elif group_check == 3:
+                            group_add_name = '패키지'
+
+                        if member_data.group_info == '':
+                            member_data.group_info = group_add_name
                         else:
+                            if group_add_name not in member_data.group_info:
+                                member_data.group_info += '/'+group_add_name
+
+                        group_check_name = member_data.group_info.split('/')
+                        order = ['1:1', '그룹', '클래스', '패키지']
+                        order = {key: i for i, key in enumerate(order)}
+                        group_check_name = sorted(group_check_name,
+                                                  key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                        member_data.group_info = ''
+                        for group_check_name_info in group_check_name:
                             if member_data.group_info == '':
-                                member_data.group_info = '클래스'
+                                member_data.group_info += group_check_name_info
                             else:
-                                if '클래스' not in member_data.group_info:
-                                    member_data.group_info += '/클래스'
+                                member_data.group_info += '/' + group_check_name_info
 
                 lecture_count += lecture_info_data.lecture_count
 
                 if lecture_info.use == USE:
                     if lecture_info.state_cd == 'IP':
-                        if group_check != 0:
+                        if lecture_info_data.check_one_to_one == 0:
+                            member_data.check_one_to_one = 0
                             member_data.group_reg_count += lecture_info.lecture_reg_count
                             member_data.group_rem_count += lecture_info.lecture_rem_count
                             member_data.group_avail_count += lecture_info.lecture_avail_count
                         else:
+                            member_data.check_one_to_one = 1
                             member_data.lesson_reg_count += lecture_info.lecture_reg_count
                             member_data.lesson_rem_count += lecture_info.lecture_rem_count
                             member_data.lesson_avail_count += lecture_info.lecture_avail_count
@@ -298,15 +332,16 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          " B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
-        'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                             lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                    lecture_count=RawSQL(query_lecture_count, []))
+        'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__use=USE,
+                                         use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
+                                                           lecture_count=RawSQL(query_lecture_count, []))
     for member_data in all_member:
 
         if member_data.user.is_active:
@@ -350,41 +385,45 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
                 if lecture_info_data.auth_cd == 'WAIT':
                     member_data.np_lecture_counts += 1
 
-                if lecture_info_data.group_check == 'NORMAL':
+                if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
-                elif lecture_info_data.group_check == 'EMPTY':
+                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                     group_check = 2
+                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
                     class_lecture_count += 1
 
                 if lecture_info.use != UN_USE:
                     if lecture_info.state_cd == 'IP':
+                        group_add_name = ''
                         if group_check == 0:
-                            if member_data.group_info == '':
-                                member_data.group_info = '1:1'
-                            else:
-                                if '1:1' not in member_data.group_info:
-                                    member_data.group_info = '1:1/' + member_data.group_info
+                            group_add_name = '1:1'
                         elif group_check == 1:
-                            if member_data.group_info == '':
-                                member_data.group_info = '그룹'
-                            else:
-                                if '그룹' in member_data.group_info:
-                                    member_data.group_info = member_data.group_info
-                                elif '클래스' in member_data.group_info:
-                                    if '1:1' in member_data.group_info:
-                                        member_data.group_info = '1:1/그룹/클래스'
-                                    else:
-                                        member_data.group_info = '그룹/클래스'
-                                else:
-                                    member_data.group_info += '/그룹'
+                            group_add_name = '그룹'
+                        elif group_check == 2:
+                            group_add_name = '클래스'
+                        elif group_check == 3:
+                            group_add_name = '패키지'
+
+                        if member_data.group_info == '':
+                            member_data.group_info = group_add_name
                         else:
+                            if group_add_name not in member_data.group_info:
+                                member_data.group_info += '/'+group_add_name
+
+                        group_check_name = member_data.group_info.split('/')
+                        order = ['1:1', '그룹', '클래스', '패키지']
+                        order = {key: i for i, key in enumerate(order)}
+                        group_check_name = sorted(group_check_name,
+                                                  key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                        member_data.group_info = ''
+                        for group_check_name_info in group_check_name:
                             if member_data.group_info == '':
-                                member_data.group_info = '클래스'
+                                member_data.group_info += group_check_name_info
                             else:
-                                if '클래스' not in member_data.group_info:
-                                    member_data.group_info += '/클래스'
+                                member_data.group_info += '/' + group_check_name_info
 
                 lecture_count += lecture_info_data.lecture_count
 
@@ -414,13 +453,13 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
                                 if member_data.end_date < lecture_info.end_date:
                                     member_data.end_date = lecture_info.end_date
 
-                    if member_data.mod_dt is None or member_data.mod_dt == '':
-                        member_data.mod_dt = lecture_info.mod_dt
-                    else:
-                        if member_data.mod_dt > lecture_info.mod_dt:
-                            member_data.mod_dt = lecture_info.mod_dt
+                            if member_data.mod_dt is None or member_data.mod_dt == '':
+                                member_data.mod_dt = lecture_info.mod_dt
+                            else:
+                                if member_data.mod_dt > lecture_info.mod_dt:
+                                    member_data.mod_dt = lecture_info.mod_dt
 
-                    member_data.lecture_id = lecture_info.lecture_id
+                            member_data.lecture_id = lecture_info.lecture_id
 
         member_data.lecture_counts = class_lecture_count
 
@@ -448,7 +487,6 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
             member_data.birthday_dt = str(member_data.birthday_dt)
 
         member_list.append(member_data)
-
     return member_list
 
 
@@ -458,18 +496,18 @@ def func_get_member_end_list(class_id, user_id):
 
     all_member = func_get_class_member_end_list(class_id)
 
-    query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-                          "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                          "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+    # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+    #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+    #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+    #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
-        'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                             lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                    lecture_count=RawSQL(query_lecture_count, []))
+        'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__use=USE,
+                                         use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []))
     for member_data in all_member:
 
         if member_data.user.is_active:
@@ -513,43 +551,46 @@ def func_get_member_end_list(class_id, user_id):
                 if lecture_info_data.auth_cd == 'WAIT':
                     member_data.np_lecture_counts += 1
 
-                if lecture_info_data.group_check == 'NORMAL':
+                # group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info_data.lecture_tb_id,
+                #                                                    use=USE)
+                # for group_lecture_info in group_lecture_data:
+                if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
-                elif lecture_info_data.group_check == 'EMPTY':
+                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                     group_check = 2
+                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
                     class_lecture_count += 1
 
+                group_add_name = ''
                 if group_check == 0:
-                    if member_data.group_info == '':
-                        member_data.group_info = '1:1'
-                    else:
-                        if '1:1' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info = '1:1/' + member_data.group_info
+                    group_add_name = '1:1'
                 elif group_check == 1:
-                    if member_data.group_info == '':
-                        member_data.group_info = '그룹'
-                    else:
-                        if '그룹' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        elif '클래스' in member_data.group_info:
-                            if '1:1' in member_data.group_info:
-                                member_data.group_info = '1:1/그룹/클래스'
-                            else:
-                                member_data.group_info = '그룹/클래스'
-                        else:
-                            member_data.group_info += '/그룹'
+                    group_add_name = '그룹'
+                elif group_check == 2:
+                    group_add_name = '클래스'
+                elif group_check == 3:
+                    group_add_name = '패키지'
+
+                if member_data.group_info == '':
+                    member_data.group_info = group_add_name
                 else:
+                    if group_add_name not in member_data.group_info:
+                        member_data.group_info += '/' + group_add_name
+
+                group_check_name = member_data.group_info.split('/')
+                order = ['1:1', '그룹', '클래스', '패키지']
+                order = {key: i for i, key in enumerate(order)}
+                group_check_name = sorted(group_check_name,
+                                          key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                member_data.group_info = ''
+                for group_check_name_info in group_check_name:
                     if member_data.group_info == '':
-                        member_data.group_info = '클래스'
+                        member_data.group_info += group_check_name_info
                     else:
-                        if '클래스' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info += '/클래스'
+                        member_data.group_info += '/' + group_check_name_info
 
                 lecture_finish_count += lecture_info_data.lecture_count
 
@@ -620,14 +661,15 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
     member_list = []
 
     all_member = func_get_class_member_one_to_one_end_list(class_id)
+    # all_member = func_get_class_member_one_to_one_end_list(class_id)
 
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+                          " B.USE=1)"
     query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
                           " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
-                          "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+                          " B.USE=1"
 
     all_lecture_list = ClassLectureTb.objects.select_related(
         'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
@@ -681,38 +723,38 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
                     group_check = 1
                 elif lecture_info_data.group_check == 'EMPTY':
                     group_check = 2
+                elif lecture_info_data.group_check == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
 
+                group_add_name = ''
                 if group_check == 0:
-                    if member_data.group_info == '':
-                        member_data.group_info = '1:1'
-                    else:
-                        if '1:1' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info = '1:1/' + member_data.group_info
+                    group_add_name = '1:1'
                 elif group_check == 1:
-                    if member_data.group_info == '':
-                        member_data.group_info = '그룹'
-                    else:
-                        if '그룹' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        elif '클래스' in member_data.group_info:
-                            if '1:1' in member_data.group_info:
-                                member_data.group_info = '1:1/그룹/클래스'
-                            else:
-                                member_data.group_info = '그룹/클래스'
-                        else:
-                            member_data.group_info += '/그룹'
+                    group_add_name = '그룹'
+                elif group_check == 2:
+                    group_add_name = '클래스'
+                elif group_check == 3:
+                    group_add_name = '패키지'
+
+                if member_data.group_info == '':
+                    member_data.group_info = group_add_name
                 else:
+                    if group_add_name not in member_data.group_info:
+                        member_data.group_info += '/' + group_add_name
+
+                group_check_name = member_data.group_info.split('/')
+                order = ['1:1', '그룹', '클래스', '패키지']
+                order = {key: i for i, key in enumerate(order)}
+                group_check_name = sorted(group_check_name,
+                                          key=lambda group_check_name_info: order.get(group_check_name_info, 0))
+                member_data.group_info = ''
+                for group_check_name_info in group_check_name:
                     if member_data.group_info == '':
-                        member_data.group_info = '클래스'
+                        member_data.group_info += group_check_name_info
                     else:
-                        if '클래스' in member_data.group_info:
-                            member_data.group_info = member_data.group_info
-                        else:
-                            member_data.group_info += '/클래스'
+                        member_data.group_info += '/' + group_check_name_info
 
                 lecture_finish_count += lecture_info_data.lecture_count
 
@@ -725,31 +767,31 @@ def func_get_member_one_to_one_end_list(class_id, user_id):
                         member_data.lesson_reg_count += lecture_info.lecture_reg_count
                         member_data.lesson_rem_count += lecture_info.lecture_rem_count
                         member_data.lesson_avail_count += lecture_info.lecture_avail_count
-                    member_data.lecture_reg_count += lecture_info.lecture_reg_count
-                    member_data.lecture_rem_count += lecture_info.lecture_rem_count
-                    member_data.lecture_avail_count += lecture_info.lecture_avail_count
+                        member_data.lecture_reg_count += lecture_info.lecture_reg_count
+                        member_data.lecture_rem_count += lecture_info.lecture_rem_count
+                        member_data.lecture_avail_count += lecture_info.lecture_avail_count
 
-                    if member_data.start_date is None or member_data.start_date == '':
-                        member_data.start_date = lecture_info.start_date
-                    else:
-                        if member_data.start_date > lecture_info.start_date:
+                        if member_data.start_date is None or member_data.start_date == '':
                             member_data.start_date = lecture_info.start_date
-                            # if lecture_info.lecture_avail_count > 0:
-                            #     member_data.lecture_available_id = lecture_info.lecture_id
+                        else:
+                            if member_data.start_date > lecture_info.start_date:
+                                member_data.start_date = lecture_info.start_date
+                                # if lecture_info.lecture_avail_count > 0:
+                                #     member_data.lecture_available_id = lecture_info.lecture_id
 
-                    if member_data.end_date is None or member_data.end_date == '':
-                        member_data.end_date = lecture_info.end_date
-                    else:
-                        if member_data.end_date < lecture_info.end_date:
+                        if member_data.end_date is None or member_data.end_date == '':
                             member_data.end_date = lecture_info.end_date
+                        else:
+                            if member_data.end_date < lecture_info.end_date:
+                                member_data.end_date = lecture_info.end_date
 
-                    if member_data.mod_dt is None or member_data.mod_dt == '':
-                        member_data.mod_dt = lecture_info.mod_dt
-                    else:
-                        if member_data.mod_dt > lecture_info.mod_dt:
+                        if member_data.mod_dt is None or member_data.mod_dt == '':
                             member_data.mod_dt = lecture_info.mod_dt
+                        else:
+                            if member_data.mod_dt > lecture_info.mod_dt:
+                                member_data.mod_dt = lecture_info.mod_dt
 
-                    member_data.lecture_id = lecture_info.lecture_id
+                        member_data.lecture_id = lecture_info.lecture_id
 
         member_data.lecture_counts = class_lecture_count
         if member_data.reg_info is None or str(member_data.reg_info) != str(user_id):
@@ -804,7 +846,8 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
 
                 if error is None:
                     pt_schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                                 en_dis_type=ON_SCHEDULE_TYPE).order_by('-start_dt')
+                                                                 en_dis_type=ON_SCHEDULE_TYPE,
+                                                                 use=USE).order_by('-start_dt')
 
                     if pt_schedule_data is not None and len(pt_schedule_data) > 0:
                         idx2 = len(pt_schedule_data)+1
@@ -823,7 +866,7 @@ def func_get_trainee_schedule_list(context, class_id, member_id):
     return context
 
 
-def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, group_id, counts, price,
+def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, package_id, counts, price,
                           start_date, end_date, contents, member_id, setting_lecture_auto_finish):
 
     error = None
@@ -859,17 +902,18 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
     if error is None:
         try:
             with transaction.atomic():
-
                 lecture_info = LectureTb(member_id=member_id,
+                                         package_tb_id=package_id,
                                          lecture_reg_count=counts, lecture_rem_count=lecture_rem_count,
                                          lecture_avail_count=lecture_rem_count, price=price, option_cd='DC',
                                          state_cd=state_cd,
                                          start_date=start_date, end_date=end_date,
                                          note=contents, use=USE)
                 lecture_info.save()
-                auth_cd = 'DELETE'
-                if group_id != '' and group_id is not None:
-                    auth_cd = 'WAIT'
+                # auth_cd = 'DELETE'
+                auth_cd = 'WAIT'
+                # if package_id != '' and package_id is not None:
+                #     auth_cd = 'WAIT'
 
                 member_lecture_counts = MemberLectureTb.objects.filter(member_id=member_id, mod_member_id=user_id,
                                                                        auth_cd='VIEW', use=USE).count()
@@ -884,20 +928,75 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
                                                     auth_cd='VIEW', mod_member_id=user_id, use=USE)
                 class_lecture_info.save()
 
-                if group_id != '' and group_id is not None:
-                    group_info = GroupLectureTb(group_tb_id=group_id, lecture_tb_id=lecture_info.lecture_id, use=USE)
-                    group_info.save()
+                if package_id != '' and package_id is not None:
+
+                    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                        " B.USE=1"
+
+                    # error_count = 0
+                    package_group_data = PackageGroupTb.objects.select_related(
+                        'group_tb').filter(package_tb_id=package_id, use=USE)
+                    for package_group_info in package_group_data:
+                        # if package_group_info.group_tb.group_type_cd == 'NORMAL':
+                        #     if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
+                        #
+                        #         group_lecture_counter = GroupLectureTb.objects.filter(
+                        #             group_tb_id=package_group_info.group_tb_id, lecture_tb__state_cd='IP',
+                        #             lecture_tb__member_id=member_id,
+                        #             lecture_tb__use=USE,
+                        #             use=USE).annotate(class_count=RawSQL(query_class_count,
+                        #                                                  [])).filter(class_count__gte=1).count()
+                        #         if group_lecture_counter == 0:
+                        #             error = package_group_info.group_tb.name
+                        #             error_count += 1
+                        group_lecture_counter = GroupLectureTb.objects.filter(
+                            group_tb_id=package_group_info.group_tb_id, lecture_tb__member_id=member_id,
+                            lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
+                            use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                                 [])).filter(class_count__gte=1).count()
+                        if group_lecture_counter > 0:
+                            fix_state_cd = 'FIX'
+                        else:
+                            fix_state_cd = ''
+                        group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
+                                                            lecture_tb_id=lecture_info.lecture_id,
+                                                            fix_state_cd=fix_state_cd, use=USE)
+                        group_lecture_info.save()
+
+                    # if error_count == 1:
+                    #     error += ' 그룹의 정원을 초과했습니다.'
+                    # elif error_count > 1:
+                    #     error = '해당 패키지의 ' + str(error_count) + '개의 그룹 정원을 초과했습니다.'
+                    if error is not None:
+                        raise InternalError
 
         except ValueError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[1]'
         except IntegrityError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[2]'
         except TypeError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[3]'
         except ValidationError:
-            error = '등록 값에 문제가 있습니다.'
+            error = '등록 값에 문제가 있습니다.[4]'
+        except InternalError:
+            error = error
 
     if error is None:
+        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+        lecture_info.package_tb.save()
+
+        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(package_tb_id=package_id, use=USE)
+        for package_group_info in package_group_data:
+            package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                                                  package_group_info.group_tb_id,
+                                                                                                  user_id))
+            package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                                                  package_group_info.group_tb_id,
+                                                                                                  user_id))
+            package_group_info.group_tb.save()
+
         member_name = ''
         try:
             user_info = MemberTb.objects.get(member_id=member_id)
@@ -907,7 +1006,7 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, gr
 
         log_data = LogTb(log_type='LB01', auth_member_id=user_id, from_member_name=user_last_name+user_first_name,
                          to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='등록', use=USE)
+                         log_info='수강권', log_how='등록', use=USE)
 
         log_data.save()
 
@@ -920,6 +1019,7 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
     lecture_info = None
     user = None
     member = None
+    group_id_list = []
 
     if error is None:
         try:
@@ -946,17 +1046,22 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
+
     if error is None:
+        package_tb = lecture_info.package_tb
         # group_data = None
         # schedule_data = None
         # schedule_data_finish = None
         # repeat_schedule_data = None
         # member_lecture_list = None
         group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+        group_data.update(fix_state_cd='')
+        # for group_info in group_data:
+        #     group_id_list.append(group_info.group_tb_id)
+
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
                                                   state_cd='NP')
-        schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         state_cd='PE')
+        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), lecture_tb_id=lecture_id)
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # schedule_data.delete()
         # repeat_schedule_data.delete()
@@ -970,25 +1075,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                 repeat_schedule_data.delete()
                 lecture_info.delete()
 
-                if len(group_data) > 0:
-                    for group_info in group_data:
-                        group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                              use=USE).count()
-                        group_data_end_size = \
-                            GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                          use=USE).exclude(lecture_tb__state_cd='IP').count()
-                        group_info_data = group_info.group_tb
-                        # try:
-                        #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                        # except ObjectDoesNotExist:
-                        #     error = '그룹 정보를 불러오지 못했습니다.'
-                        if group_info_data.use == USE:
-                            if group_data_total_size == group_data_end_size:
-                                group_info_data.state_cd = 'PE'
-                                group_info_data.save()
-                            else:
-                                group_info_data.state_cd = 'IP'
-                                group_info_data.save()
             else:
                 if len(group_data) > 0:
                     group_data.update(use=UN_USE)
@@ -1011,25 +1097,6 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
                         # lecture_info.use = UN_USE
                         lecture_info.save()
 
-                if len(group_data) > 0:
-                    for group_info in group_data:
-                        group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                              use=USE).count()
-                        group_data_end_size = \
-                            GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                          use=USE).exclude(lecture_tb__state_cd='IP').count()
-                        group_info_data = group_info.group_tb
-                        # try:
-                        #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                        # except ObjectDoesNotExist:
-                        #     error = '그룹 정보를 불러오지 못했습니다.'
-                        if group_info_data.use == USE:
-                            if group_data_total_size == group_data_end_size:
-                                group_info_data.state_cd = 'PE'
-                                group_info_data.save()
-                            else:
-                                group_info_data.state_cd = 'IP'
-                                group_info_data.save()
         else:
             class_lecture_info.delete()
             member_lecture_list.delete()
@@ -1039,26 +1106,27 @@ def func_delete_lecture_info(user_id, class_id, lecture_id, member_id):
             lecture_info.delete()
             # 회원의 수강정보가 더이상 없는경우
 
-            if len(group_data) > 0:
-                for group_info in group_data:
-                    group_data_total_size = GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                          use=USE).count()
-                    group_data_end_size = \
-                        GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                      use=USE).exclude(lecture_tb__state_cd='IP').count()
-
-                    group_info_data = group_info.group_tb
-                    if group_info_data.use == USE:
-                        if group_data_total_size == group_data_end_size:
-                            group_info_data.state_cd = 'PE'
-                            group_info_data.save()
-
             if member.reg_info is not None:
                 if str(member.reg_info) == str(user_id):
                     member_lecture_list_confirm = MemberLectureTb.objects.filter(member_id=user.id).count()
                     if member_lecture_list_confirm == 0:
                         member.delete()
                         user.delete()
+
+        if package_tb is not None:
+
+            package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
+            package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
+            package_tb.save()
+
+            package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_tb.package_id, use=USE)
+            for package_group_info in package_group_data:
+                package_group_info.group_tb.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                                     package_group_info.group_tb_id, user_id))
+                package_group_info.group_tb.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                                     package_group_info.group_tb_id, user_id))
+                package_group_info.group_tb.save()
+
     return error
 
 
@@ -1201,10 +1269,10 @@ def func_get_lecture_list(context, class_id, member_id):
 
     if error is None:
 
-        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+        #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+        #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+        #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
         # query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID =" \
         #                       " `CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and" \
         #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
@@ -1214,13 +1282,11 @@ def func_get_lecture_list(context, class_id, member_id):
                                "B.USE=1"
 
         lecture_data = ClassLectureTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                 lecture_tb__member_id=member_id,
-                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                        lecture_finish_count
-                                                                        =RawSQL(query_schedule_count, [])
-                                                                        ).order_by('-lecture_tb__start_date',
-                                                                                   '-lecture_tb__reg_dt')
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
+                                             lecture_tb__use=USE,
+                                             use=USE).annotate(lecture_finish_count=RawSQL(query_schedule_count, [])
+                                                               ).order_by('-lecture_tb__start_date',
+                                                                          '-lecture_tb__reg_dt')
         # lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
         #                                                                           lecture_tb__member_id=member_id,
         #                                                                           lecture_tb__use=USE,
@@ -1244,27 +1310,42 @@ def func_get_lecture_list(context, class_id, member_id):
             #                                                               lecture_tb_id=lecture_info.lecture_id,
             #                                                               state_cd='PE').count()
 
-            if lecture_info_data.group_check == 'NORMAL':
+            check_one_to_one = PackageGroupTb.objects.select_related(
+                'group_tb').filter(package_tb_id=lecture_info.package_tb_id,
+                                   group_tb__group_type_cd='ONE_TO_ONE', use=USE).count()
+            if check_one_to_one > 0:
+                lecture_info.check_one_to_one = 1
+            else:
+                lecture_info.check_one_to_one = 0
+
+            if lecture_info.package_tb.package_type_cd == 'NORMAL':
                 group_check = 1
-            elif lecture_info_data.group_check == 'EMPTY':
+            elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                 group_check = 2
+            elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                group_check = 3
             else:
                 group_check = 0
-            group_info = lecture_info_data.get_group_lecture_info()
-            if group_check != 0:
-                if group_check == 1:
-                    lecture_info.group_name = '[그룹] ' + group_info.group_tb.name
-                else:
-                    lecture_info.group_name = '[클래스] ' + group_info.group_tb.name
-                lecture_info.group_type_cd = group_info.group_tb.group_type_cd
-                lecture_info.group_member_num = group_info.group_tb.member_num
-                lecture_info.group_note = group_info.group_tb.note
-                lecture_info.group_state_cd = group_info.group_tb.state_cd
-                try:
-                    state_cd_nm = CommonCdTb.objects.get(common_cd=group_info.group_tb.state_cd)
-                    lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
-                except ObjectDoesNotExist:
-                    error = '오류가 발생했습니다.'
+            # group_info = lecture_info_data.get_group_lecture_info()
+
+            # if group_check != 0:
+            if group_check == 1:
+                lecture_info.group_name = '[그룹] ' + lecture_info.package_tb.name
+            elif group_check == 2:
+                lecture_info.group_name = '[클래스] ' + lecture_info.package_tb.name
+            elif group_check == 3:
+                lecture_info.group_name = '[패키지] ' + lecture_info.package_tb.name
+            else:
+                lecture_info.group_name = '[1:1] ' + lecture_info.package_tb.name
+            lecture_info.group_type_cd = lecture_info.package_tb.package_type_cd
+            # lecture_info.group_member_num = group_info.group_tb.member_num
+            lecture_info.group_note = lecture_info.package_tb.note
+            lecture_info.group_state_cd = lecture_info.package_tb.state_cd
+            try:
+                state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.state_cd)
+                lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
+            except ObjectDoesNotExist:
+                error = '오류가 발생했습니다.'
 
             try:
                 lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
@@ -1291,3 +1372,620 @@ def func_get_lecture_list(context, class_id, member_id):
 
     return context
 
+
+def func_get_ing_group_member_list_count(class_id, group_id):
+    member_data = []
+    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                        "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and " \
+                        "B.USE=1"
+    # query_fix_state_cd_nm = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = " \
+    #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
+
+    lecture_list = GroupLectureTb.objects.select_related(
+        'lecture_tb__member').filter(group_tb__class_tb_id=class_id,
+                                     group_tb_id=group_id, group_tb__state_cd='IP',
+                                     lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                     use=USE).annotate(class_count=RawSQL(query_class_count, []),
+                                                       # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
+                                                       member_auth=RawSQL(query_member_auth,
+                                                                          [])).filter(class_count__gte=1)
+
+    for lecture_info in lecture_list:
+        error = None
+        member_info = lecture_info.lecture_tb.member_id
+        if error is None:
+            check_add_flag = 0
+            for member_test in member_data:
+                if str(member_test) == str(member_info):
+                    check_add_flag = 1
+            if check_add_flag == 0:
+                member_data.append(member_info)
+    return member_data
+
+
+def func_get_end_group_member_list_count(class_id, group_id):
+    member_data = []
+    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                        "B.USE=1"
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and " \
+                        "B.USE=1"
+    #
+    # query_fix_state_cd_nm = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = " \
+    #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
+    lecture_list = GroupLectureTb.objects.select_related(
+        'lecture_tb__member').filter(group_tb__class_tb_id=class_id,
+                                     group_tb_id=group_id,
+                                     lecture_tb__use=USE,
+                                     use=USE).exclude(lecture_tb__state_cd='IP'
+                                                      ).annotate(class_count=RawSQL(query_class_count, []),
+                                                                 # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
+                                                                 member_auth=RawSQL(query_member_auth,
+                                                                                    [])).filter(class_count__gte=1)
+
+    for lecture_info in lecture_list:
+        error = None
+        member_info = lecture_info.lecture_tb.member
+        group_lecture_test = GroupLectureTb.objects.select_related(
+            'lecture_tb__member').filter(group_tb_id=group_id,
+                                         lecture_tb__member_id=lecture_info.lecture_tb.member_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).count()
+        if group_lecture_test > 0:
+            error = '진행중인 항목 있음'
+        if error is None:
+            check_add_flag = 0
+            for member_test in member_data:
+                if str(member_test.member_id) == str(member_info.member_id):
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_data.append(member_info)
+
+    return member_data
+
+
+def func_get_ing_group_member_list(class_id, group_id, user_id):
+    member_data = []
+    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                        "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and " \
+                        "B.USE=1"
+    # query_fix_state_cd_nm = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = " \
+    #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
+
+    lecture_list = GroupLectureTb.objects.select_related(
+        'lecture_tb__member').filter(group_tb__class_tb_id=class_id, group_tb_id=group_id, group_tb__state_cd='IP',
+                                     lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                     use=USE).annotate(class_count=RawSQL(query_class_count, []),
+                                                       # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
+                                                       member_auth=RawSQL(query_member_auth,
+                                                                          [])).filter(class_count__gte=1)
+
+    for lecture_info in lecture_list:
+        # member_info = lecture_info.lecture_tb
+        error = None
+        member_info = lecture_info.lecture_tb.member
+        member_info.auth_cd = lecture_info.member_auth
+        # member_info = lecture_info.lecture_tb.member
+        # try:
+        #     member_info = MemberLectureTb.objects.select_related('lecture_tb', 'member').get(
+        #         lecture_tb_id=lecture_info.lecture_tb_id, lecture_tb__use=USE, use=USE)
+        # except ObjectDoesNotExist:
+        #     error = '회원 정보를 불러오지 못했습니다.'
+        # class_lecture_test = ClassLectureTb.objects.filter(class_tb_id=class_id,
+        #                                                    lecture_tb_id=lecture_info.lecture_tb_id,
+        #                                                    auth_cd='VIEW', use=USE).count()
+        # if class_lecture_test == 0:
+        #     error = '내가 볼수 없는 회원'group_lecture_id
+        if error is None:
+            member_info.lecture_tb = lecture_info.lecture_tb
+
+            if member_info.sex is None:
+                member_info.sex = ''
+            if member_info.birthday_dt is None or member_info.birthday_dt == '':
+                member_info.birthday_dt = ''
+            else:
+                member_info.birthday_dt = str(member_info.birthday_dt)
+
+            if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
+                if member_info.auth_cd != 'VIEW':
+                    member_info.sex = ''
+                    member_info.birthday_dt = ''
+                    if member_info.phone is None:
+                        member_info.phone = ''
+                    else:
+                        member_info.phone = '***-****-' + member_info.phone[7:]
+
+            if member_info.phone is None:
+                member_info.phone = ''
+
+            check_add_flag = 0
+            for member_test in member_data:
+                if str(member_test.member_id) == str(member_info.member_id):
+
+                    if member_test.lecture_tb.lecture_available_id == '':
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None \
+                            or member_test.lecture_tb.start_date == '':
+                        member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() \
+                                > lecture_info.lecture_tb.start_date:
+                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None \
+                            or member_test.lecture_tb.end_date == '':
+                        member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
+                                < lecture_info.lecture_tb.end_date:
+                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
+                        member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
+                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
+                        member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
+                    member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
+                    member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
+                    if member_test.fix_state_cd == '':
+                        member_info.fix_state_cd = lecture_info.fix_state_cd
+                        if member_info.fix_state_cd != '' and member_info.fix_state_cd is not None:
+                            try:
+                                member_test.fix_state_cd_nm = \
+                                    CommonCdTb.objects.get(common_cd=member_info.fix_state_cd, use=USE).common_cd_nm
+                            except ObjectDoesNotExist:
+                                member_test.fix_state_cd_nm = ''
+
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_info.fix_state_cd = lecture_info.fix_state_cd
+                if member_info.fix_state_cd != '' and member_info.fix_state_cd is not None:
+                    try:
+                        member_info.fix_state_cd_nm = \
+                            CommonCdTb.objects.get(common_cd=member_info.fix_state_cd, use=USE).common_cd_nm
+                    except ObjectDoesNotExist:
+                        member_info.fix_state_cd_nm = ''
+                else:
+                    member_info.fix_state_cd = ''
+                member_info.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                member_info.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                member_info.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
+                member_info.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
+
+                member_info.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
+                member_info.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
+                member_info.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
+                member_info.lecture_tb.lecture_available_id = ''
+                if lecture_info.lecture_tb.lecture_avail_count > 0:
+                    member_info.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                member_data.append(member_info)
+    return member_data
+
+
+def func_get_end_group_member_list(class_id, group_id, user_id):
+    member_data = []
+    query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                        "B.USE=1"
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and " \
+                        "B.USE=1"
+    #
+    # query_fix_state_cd_nm = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = " \
+    #                         "`GROUP_LECTURE_TB`.`FIX_STATE_CD`"
+    lecture_list = GroupLectureTb.objects.select_related(
+        'lecture_tb__member').filter(group_tb__class_tb_id=class_id, group_tb_id=group_id,
+                                     lecture_tb__use=USE,
+                                     use=USE).exclude(lecture_tb__state_cd='IP'
+                                                      ).annotate(class_count=RawSQL(query_class_count, []),
+                                                                 # fix_state_cd_nm=RawSQL(query_fix_state_cd_nm, []),
+                                                                 member_auth=RawSQL(query_member_auth,
+                                                                                    [])).filter(class_count__gte=1)
+
+    for lecture_info in lecture_list:
+        # member_info = lecture_info.lecture_tb
+        error = None
+        member_info = lecture_info.lecture_tb.member
+        member_info.auth_cd = lecture_info.member_auth
+        # try:
+        #     member_info = MemberLectureTb.objects.select_related('lecture_tb', 'member').get(
+        #         lecture_tb_id=lecture_info.lecture_tb_id, lecture_tb__use=USE, use=USE)
+        # except ObjectDoesNotExist:
+        #     error = '회원 정보를 불러오지 못했습니다.'
+        group_lecture_test = GroupLectureTb.objects.select_related(
+            'lecture_tb__member').filter(group_tb_id=group_id,
+                                         lecture_tb__member_id=lecture_info.lecture_tb.member_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).count()
+        # class_lecture_test = ClassLectureTb.objects.filter(class_tb_id=class_id,
+        #                                                    lecture_tb_id=lecture_info.lecture_tb_id,
+        #                                                    auth_cd='VIEW', use=USE).count()
+        # if group_lecture_test > 0 or class_lecture_test == 0:
+        if group_lecture_test > 0:
+            error = '진행중인 항목 있음'
+
+        if error is None:
+
+            member_info.lecture_tb = lecture_info.lecture_tb
+            member_info.fix_state_cd = lecture_info.fix_state_cd
+            if member_info.fix_state_cd != '' and member_info.fix_state_cd is not None:
+                try:
+                    member_info.fix_state_cd_nm = \
+                        CommonCdTb.objects.get(common_cd=member_info.fix_state_cd, use=USE).common_cd_nm
+                except ObjectDoesNotExist:
+                    member_info.fix_state_cd_nm = ''
+            else:
+                member_info.fix_state_cd = ''
+
+            if member_info.sex is None:
+                member_info.sex = ''
+            if member_info.birthday_dt is None or member_info.birthday_dt == '':
+                member_info.birthday_dt = ''
+            else:
+                member_info.birthday_dt = str(member_info.birthday_dt)
+
+            if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
+                if member_info.auth_cd != 'VIEW':
+                    member_info.sex = ''
+                    member_info.birthday_dt = ''
+                    if member_info.phone is None:
+                        member_info.phone = ''
+                    else:
+                        member_info.phone = '***-****-' + member_info.phone[7:]
+
+            if member_info.phone is None:
+                member_info.phone = ''
+
+            check_add_flag = 0
+            for member_test in member_data:
+                if str(member_test.member_id) == str(member_info.member_id):
+
+                    if member_test.lecture_tb.lecture_available_id == '':
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None \
+                            or member_test.lecture_tb.start_date == '':
+                        member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() \
+                                > lecture_info.lecture_tb.start_date:
+                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None \
+                            or member_test.lecture_tb.end_date == '':
+                        member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
+                                < lecture_info.lecture_tb.end_date:
+                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
+                        member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
+                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
+                        member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
+                    member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
+                    member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_info.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                member_info.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                member_info.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
+                member_info.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
+
+                member_info.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
+                member_info.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
+                member_info.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
+                member_info.lecture_tb.lecture_available_id = ''
+                if lecture_info.lecture_tb.lecture_avail_count > 0:
+                    member_info.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                member_data.append(member_info)
+
+    return member_data
+
+
+def func_get_ing_package_member_list(class_id, package_id):
+    member_data = []
+    class_lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__member', 'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                               lecture_tb__package_tb_id=package_id,
+                                                               lecture_tb__state_cd='IP',
+                                                               auth_cd='VIEW', use=USE)
+    for class_lecture_info in class_lecture_list:
+        error = None
+        if error is None:
+            member_info = class_lecture_info.lecture_tb.member_id
+            check_add_flag = 0
+            for member_test in member_data:
+                if str(member_test) == str(member_info):
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_data.append(member_info)
+
+    return member_data
+
+
+def func_get_end_package_member_list(class_id, package_id):
+    member_data = []
+    class_lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__member', 'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                               lecture_tb__package_tb_id=package_id,
+                                                               auth_cd='VIEW',
+                                                               use=USE).exclude(lecture_tb__state_cd='IP')
+
+    for class_lecture_info in class_lecture_list:
+        error = None
+        group_lecture_test = LectureTb.objects.select_related(
+            'member').filter(package_tb_id=package_id, member_id=class_lecture_info.lecture_tb.member_id,
+                             state_cd='IP', use=USE).count()
+        if group_lecture_test > 0:
+            error = '진행중인 항목 있음'
+
+        if error is None:
+            member_info = class_lecture_info.lecture_tb.member_id
+            check_add_flag = 0
+            for member_test in member_data:
+                if str(member_test) == str(member_info):
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_data.append(member_info)
+
+    return member_data
+
+
+def func_get_ing_package_in_member_list(class_id, package_id, user_id):
+    member_data = []
+
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.USE=1"
+
+    lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                     lecture_tb__package_tb_id=package_id,
+                                     lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                     use=USE).annotate(member_auth=RawSQL(query_member_auth, []))
+
+    for lecture_info in lecture_list:
+        error = None
+        member_info = lecture_info.lecture_tb.member
+        member_info.auth_cd = lecture_info.member_auth
+        if error is None:
+            member_info.lecture_tb = lecture_info.lecture_tb
+            if member_info.sex is None:
+                member_info.sex = ''
+            if member_info.birthday_dt is None or member_info.birthday_dt == '':
+                member_info.birthday_dt = ''
+            else:
+                member_info.birthday_dt = str(member_info.birthday_dt)
+
+            if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
+                if member_info.auth_cd != 'VIEW':
+                    member_info.sex = ''
+                    member_info.birthday_dt = ''
+                    if member_info.phone is None:
+                        member_info.phone = ''
+                    else:
+                        member_info.phone = '***-****-' + member_info.phone[7:]
+
+            if member_info.phone is None:
+                member_info.phone = ''
+
+            check_add_flag = 0
+            for member_test in member_data:
+                if member_test.user.id == member_info.member_id:
+
+                    if member_test.lecture_tb.lecture_available_id == '':
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.start_date,
+                                                  '%Y-%m-%d').date() is None or member_test.lecture_tb.start_date == '':
+                        member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date,
+                                                      '%Y-%m-%d').date() > lecture_info.lecture_tb.start_date:
+                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    if datetime.datetime.strptime(member_test.lecture_tb.end_date,
+                                                  '%Y-%m-%d').date() is None or member_test.lecture_tb.end_date == '':
+                        member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date.split('.')[0],
+                                                      '%Y-%m-%d').date() < lecture_info.lecture_tb.end_date:
+                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
+                        member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
+                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
+                        member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
+                    member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
+                    member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_info.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                member_info.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                member_info.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
+                member_info.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
+
+                member_info.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
+                member_info.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
+                member_info.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
+                member_info.lecture_tb.lecture_available_id = ''
+                if lecture_info.lecture_tb.lecture_avail_count > 0:
+                    member_info.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                member_data.append(member_info)
+    return member_data
+
+
+def func_get_end_package_in_member_list(class_id, package_id, user_id):
+    member_data = []
+
+    query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                        "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and " \
+                        "B.USE=1"
+
+    lecture_list = ClassLectureTb.objects.select_related(
+        'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                     lecture_tb__package_tb_id=package_id, lecture_tb__use=USE,
+                                     use=USE).exclude(lecture_tb__state_cd='IP'
+                                                      ).annotate(member_auth=RawSQL(query_member_auth, []))
+
+    for lecture_info in lecture_list:
+        # member_info = lecture_info.lecture_tb
+        error = None
+        member_info = lecture_info.lecture_tb.member
+        member_info.auth_cd = lecture_info.member_auth
+        package_lecture_test = ClassLectureTb.objects.select_related(
+            'lecture_tb__member').filter(lecture_tb__package_tb_id=package_id,
+                                         lecture_tb__member_id=lecture_info.lecture_tb.member_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__use=USE,
+                                         use=USE).count()
+        if package_lecture_test > 0:
+            error = '진행중인 항목 있음'
+
+        if error is None:
+
+            member_info.lecture_tb = lecture_info.lecture_tb
+            if member_info.sex is None:
+                member_info.sex = ''
+            if member_info.birthday_dt is None or member_info.birthday_dt == '':
+                member_info.birthday_dt = ''
+            else:
+                member_info.birthday_dt = str(member_info.birthday_dt)
+
+            if member_info.reg_info is None or str(member_info.reg_info) != str(user_id):
+                if member_info.auth_cd != 'VIEW':
+                    member_info.sex = ''
+                    member_info.birthday_dt = ''
+                    if member_info.phone is None:
+                        member_info.phone = ''
+                    else:
+                        member_info.phone = '***-****-' + member_info.phone[7:]
+
+            if member_info.phone is None:
+                member_info.phone = ''
+
+            check_add_flag = 0
+            for member_test in member_data:
+                if member_test.user.id == member_info.member_id:
+
+                    if member_test.lecture_tb.lecture_available_id == '':
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None \
+                            or member_test.lecture_tb.start_date == '':
+                        member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                        if lecture_info.lecture_tb.lecture_avail_count > 0:
+                            member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() \
+                                > lecture_info.lecture_tb.start_date:
+                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                            if lecture_info.lecture_tb.lecture_avail_count > 0:
+                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+                    if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None \
+                            or member_test.lecture_tb.end_date == '':
+                        member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
+                                < lecture_info.lecture_tb.end_date:
+                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                    if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.mod_dt == '':
+                        member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.mod_dt:
+                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
+
+                    if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                  '%Y-%m-%d %H:%M:%S') is None or member_test.lecture_tb.reg_dt == '':
+                        member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    else:
+                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt.split('.')[0],
+                                                      '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
+                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
+                    member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
+                    member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
+                    member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
+                    check_add_flag = 1
+
+            if check_add_flag == 0:
+                member_info.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
+                member_info.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
+                member_info.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
+                member_info.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
+
+                member_info.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
+                member_info.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
+                member_info.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
+                member_info.lecture_tb.lecture_available_id = ''
+                if lecture_info.lecture_tb.lecture_avail_count > 0:
+                    member_info.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
+
+                member_data.append(member_info)
+
+    return member_data

@@ -59,13 +59,16 @@ $(document).ready(function(){
 
 
     $('.hastooltips').click(function(e){
+        e.preventDefault();
         e.stopPropagation();
         var $title = $(this).find(".mobile_title_popup");
-        if( !$title.length ){
-            $(this).append('<span class="mobile_title_popup" style="position:absolute;top:20px;background:white;border:1px solid #cccccc;padding:4px;left:0;max-width:100%;">'+$(this).find(".mobile_title").val()+'</span>');
-        }else{
-            $title.remove();
-        }
+        // if($('#upbutton-modify').attr('data-type') == "view"){
+            if( !$title.length ){
+                $(this).append('<span class="mobile_title_popup" style="position:absolute;top:20px;background:white;border:1px solid #cccccc;padding:4px;left:0;max-width:100%;">'+$(this).find(".mobile_title").val()+'</span>');
+            }else{
+                $title.remove();
+            }
+        //}
     });
 
     $(document).on('click', '.phonesms', function(e){
@@ -171,7 +174,7 @@ $(document).ready(function(){
                     memberListSet('finished','date','no',jsondata);
                 });
             }
-            alignType = 'startP'
+            alignType = 'startP';
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
@@ -182,13 +185,14 @@ $(document).ready(function(){
                     memberListSet('finished','date','yes',jsondata);
                 });
             }
-            alignType = 'startR'
+            alignType = 'startR';
         }
     });
 
 //#####################회원정보 팝업 //#####################
 
-    $(document).on('click', '.memberline', function(){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+    $(document).on('click', '.memberline', function(e){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        e.stopPropagation();
         var bodywidth = window.innerWidth;
         var dbID = $(this).find('._id').attr('data-dbid');
         shade_index(100);
@@ -283,17 +287,19 @@ $(document).ready(function(){
     modify_member_base_info_eventGroup();
     function modify_member_base_info_eventGroup(){
         if(varUA.match('firefox')){
-            $('#memberName_info_lastName_PC, #memberName_info_lastName').bind('keydown',function(e){
+            $('#memberName_info_lastName_PC, #memberName_info_lastName').bind('keydown', function(e){
                 var keyCode = e.which || e.keyCode;
                 if(keyCode === 13 || keyCode === 9){
                     $('#form_lastname_modify').val($(this).val());
                 }
             });
 
-            $('#memberName_info_firstName_PC, #memberName_info_firstName').bind('keydown',function(e){
+            $('#memberName_info_firstName_PC, #memberName_info_firstName').bind('keydown', function(e){
                 var keyCode = e.which || e.keyCode;
                 if(keyCode === 13 || keyCode === 9){
+                    limit_char(this);
                     $('#form_firstname_modify').val($(this).val());
+                    check_dropdown_selected();
                 }
             });
         }else{
@@ -302,12 +308,16 @@ $(document).ready(function(){
             });
 
             $('#memberName_info_firstName_PC, #memberName_info_firstName').keyup(function(){
+                limit_char(this);
                 $('#form_firstname_modify').val($(this).val());
+                check_dropdown_selected();
             });
         }
 
         $('#memberPhone_info, #memberPhone_info_PC').keyup(function(){
+            limit_char_only_number(this);
             $('#form_phone_modify').val($(this).val());
+            check_dropdown_selected();
         });
 
 
@@ -551,7 +561,7 @@ $(document).ready(function(){
         }else{
             $('._complete, ._refund').css('display', 'block');
         }
-        selector_lectureStateChangeSelectPopup.find('._explain').html('※진행완료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
+        selector_lectureStateChangeSelectPopup.find('._explain').html('※종료 : 남은 횟수를 0으로 만들고 종료 처리<br>※환불 : 환불 금액을 입력하고 종료 처리');
         show_shadow_reponsively();
     });
 
@@ -652,7 +662,7 @@ $(document).ready(function(){
 
     //진행 완료 처리 버튼
     $('.lectureStateChangeSelectPopup ._complete').click(function(){
-        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group"){
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group" && $('.lectureStateChangeSelectPopup').attr('data-packagetype') != "package"){
             var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
             var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
             var dbID = selectore_lectureStateChangeSelectPopup.attr('data-dbid');
@@ -664,7 +674,7 @@ $(document).ready(function(){
 
     //재개 처리 버튼
     $('.lectureStateChangeSelectPopup ._resume').click(function(){
-        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group"){
+        if($('.lectureStateChangeSelectPopup').attr('data-grouptype') != "group" && $('.lectureStateChangeSelectPopup').attr('data-packagetype') != "package"){
             if(!$(this).hasClass('disabled_button')){
                 var selectore_lectureStateChangeSelectPopup = $('.lectureStateChangeSelectPopup');
                 var lectureID = selectore_lectureStateChangeSelectPopup.attr('data-leid');
@@ -871,6 +881,28 @@ $(document).ready(function(){
             group_delete_JSON.fullnames = [];
             group_delete_JSON.ids = [];
             close_info_popup('cal_popup_plandelete');
+        }else if(deleteTypeSelect == "packagedelete"){
+            var groupmember_fullnames = group_delete_JSON.fullnames;
+            var groupmember_ids = group_delete_JSON.ids;
+            group_id = group_delete_JSON.package_id;
+
+            //그룹을 지운다.
+            delete_package_from_list(group_delete_JSON.package_id, "callback", function(){
+                // //그룹원들에게서 그룹에 대한 수강이력을 지운다.
+                // delete_groupmember_from_grouplist();
+            });
+            
+            enable_delete_btns_after_ajax();
+
+            group_delete_JSON.package_id = "";
+            group_delete_JSON.fullnames = [];
+            group_delete_JSON.ids = [];
+            close_info_popup('cal_popup_plandelete');
+        }else if(deleteTypeSelect == "package_group_delete"){
+            var package_id = $("#cal_popup_plandelete").attr('data-packageid');
+            var group_id = $("#cal_popup_plandelete").attr('data-groupid');
+            delete_group_from_package(package_id, group_id);
+            close_info_popup('cal_popup_plandelete');
         }else if(deleteTypeSelect == "grouprepeatinfodelete"){
             group_id = $(this).parent('#cal_popup_plandelete').attr('data-groupid');
             repeat_schedule_id = $(this).parent('#cal_popup_plandelete').attr('data-repeatid');
@@ -958,7 +990,7 @@ $(document).ready(function(){
 //#####################회원정보 도움말 팝업 //#####################
     $('._regcount, ._remaincount').mouseenter(function(){
         var text = '등록횟수는 회원님께서 계약시 등록하신 횟수를 의미합니다.';
-        var text2 = '남은횟수는 회원님의 등록횟수에서 현재까지 진행완료된 강의 횟수를 뺀 값을 의미합니다.';
+        var text2 = '남은횟수는 회원님의 등록횟수에서 현재까지 종료, 결석 강의 횟수를 뺀 값을 의미합니다.';
         if(Options.language == "JPN"){
             text = "登録回数はメンバーが契約時に登録した回数です。";
             text2 = "残り回数はメンバーの登録回数から現在まで進行完了した授業回数をひいた値です。";
@@ -1176,7 +1208,7 @@ $(document).ready(function(){
     });
 
     if(varUA.match('firefox')){
-        $("#memberLastName_add, #memberFirstName_add").bind("keydown",function(e){  //이름 입력시 하단에 핑크선
+        $("#memberLastName_add, #memberFirstName_add").bind("keydown", function(e){  //이름 입력시 하단에 핑크선
             var keyCode = e.which || e.keyCode;
             var selector_memberLastName_add = $('#memberLastName_add');
             var selector_memberFirstName_add = $('#memberFirstName_add');
@@ -1184,7 +1216,9 @@ $(document).ready(function(){
             if(keyCode === 13 || keyCode === 9){
                 if($(this).val().length>=1){
                     limit_char(this);
-                    $(this).addClass("dropdown_selected");
+                    if($(this).val().length > 0){
+                        $(this).addClass("dropdown_selected");
+                    }
                     check_dropdown_selected();
                 }else{
                     limit_char(this);
@@ -1194,7 +1228,8 @@ $(document).ready(function(){
                 $('#form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
                 $('#add_member_form_first_name').val(selector_memberFirstName_add.val());
                 $('#add_member_form_last_name').val(selector_memberLastName_add.val());
-                $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+                // $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+                $('#add_member_form_name').val(selector_memberFirstName_add.val());
             }
         });
     }else{
@@ -1203,7 +1238,9 @@ $(document).ready(function(){
             var selector_memberFirstName_add = $('#memberFirstName_add');
             if($(this).val().length>=1){
                 limit_char(this);
-                $(this).addClass("dropdown_selected");
+                if($(this).val().length > 0){
+                    $(this).addClass("dropdown_selected");
+                }
                 check_dropdown_selected();
             }else{
                 limit_char(this);
@@ -1213,28 +1250,31 @@ $(document).ready(function(){
             $('#form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
             $('#add_member_form_first_name').val(selector_memberFirstName_add.val());
             $('#add_member_form_last_name').val(selector_memberLastName_add.val());
-            $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+            // $('#add_member_form_name').val(selector_memberLastName_add.val()+selector_memberFirstName_add.val());
+            $('#add_member_form_name').val(selector_memberFirstName_add.val());
         });
     }
 
 
 
-    $(document).on('click','#memberSex .selectboxopt',function(){
+    $(document).on('click', '#memberSex .selectboxopt', function(e){
+        e.stopPropagation();
         if($('#memberSearchButton').attr('data-type') == "searched"){
 
         }else{
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
-            $('#form_sex').attr('value',$(this).attr('value'));
+            $('#form_sex').attr('value', $(this).attr('value'));
             check_dropdown_selected();
         }
     });
 
-    $(document).on('click','#memberSex_info .selectboxopt',function(){
+    $(document).on('click', '#memberSex_info .selectboxopt', function(e){
+        e.stopPropagation();
         if($('#upbutton-modify').attr('data-type') == "modify"){
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
-            $('#form_sex_modify').attr('value',$(this).attr('value'));
+            $('#form_sex_modify').attr('value', $(this).attr('value'));
         }else{
 
         }
@@ -1242,11 +1282,11 @@ $(document).ready(function(){
 
     $("#memberPhone_add").keyup(function(){  //전화번호 입력시 하단에 핑크선
         if($(this).val().length>8){
-            limit_char(this);
+            limit_char_only_number("#memberPhone_add");
             $(this).addClass("dropdown_selected");
             check_dropdown_selected();
         }else{
-            limit_char(this);
+            limit_char_only_number("#memberPhone_add");
             $(this).removeClass("dropdown_selected");
             check_dropdown_selected();
         }
@@ -1280,8 +1320,7 @@ $(document).ready(function(){
         */
         $('#fast_check').val('0');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
-            $('#form_member_groupid').val($('#simpleReg select.grouptypeselect').val().split('/')[0]);
-            $('#form_group_package_type').val($('#simpleReg select.grouptypeselect').val().split('/')[1]);
+            $('#form_member_groupid, #form_member_groupid_no_email').val($('#simpleReg select.grouptypeselect').val().split('/')[0]);
         }
         check_dropdown_selected();
     });
@@ -1303,8 +1342,7 @@ $(document).ready(function(){
         */
         $('#fast_check').val('1');
         if($('._ADD_GROUPMEMBER_NEW').css('display') == 'none'){
-            $('#form_member_groupid').val($('#manualReg select.grouptypeselect').val().split('/')[0]);
-            $('#form_group_package_type').val($('#manualReg select.grouptypeselect').val().split('/')[1]);
+            $('#form_member_groupid, #form_member_groupid_no_email').val($('#manualReg select.grouptypeselect').val().split('/')[0]);
         }
         check_dropdown_selected();
     });
@@ -1347,6 +1385,7 @@ $(document).ready(function(){
     });
 
     $('#memberCount_add_fast').keyup(function(e){
+        limit_char_only_number(this);
         if($(this).val() > 0){
             $('#memberCount_add_fast').addClass("dropdown_selected");
         }else{
@@ -1362,9 +1401,7 @@ $(document).ready(function(){
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
-        $('#form_member_groupid').val($(this).val().split('/')[0]);
-        $('#form_group_package_type').val($(this).val().split('/')[1]);
-
+        $('#form_member_groupid, #form_member_groupid_no_email').val($(this).val().split('/')[0]);
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
@@ -1375,7 +1412,8 @@ $(document).ready(function(){
         var selector_page_addmember = $('#page_addmember');
         var selector_ADD_GROUP_NEW = $('._ADD_GROUP_NEW');
         var selector_ADD_GROUPMEMBER_NEW = $('._ADD_GROUPMEMBER_NEW');
-        if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none"){
+        var selector_ADD_PACKAGE_NEW = $('._ADD_PACKAGE_NEW');
+        if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "none" && selector_ADD_GROUPMEMBER_NEW.css('display') == "none" && (selector_ADD_PACKAGE_NEW.css('display') == "none"||selector_ADD_PACKAGE_NEW.css('display') == undefined) ){
             var id_search_confirm = $('#id_search_confirm').val();
             check_dropdown_selected();
             if(select_all_check == true){
@@ -1393,7 +1431,6 @@ $(document).ready(function(){
                 //$('#errorMessageText').text('모든 필수 정보를 입력해주세요')
                 //입력값 확인 메시지 출력 가능
             }
-
             //그룹 추가
         }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUP_NEW.css('display') == "block"){
             check_dropdown_selected();
@@ -1401,16 +1438,34 @@ $(document).ready(function(){
                 add_group_form_func();
             }
 
-            //그룹원 추가
-        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block"){
+        //그룹원 추가
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block" && ($('#currentGroupList').css('display')=="block" || $('#finishedGroupList').css('display')=="block") ){
             check_dropdown_selected();
             if(select_all_check == true){
                 add_groupmember_form_func();
             }
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_PACKAGE_NEW.css('display') == "block"){
+            check_dropdown_selected();
+            if(select_all_check == true){
+                var data = make_new_package_info_to_json_form();
+                send_new_package_info(data, "callback", function(){
+                    smart_refresh_member_group_class_list();
+                    close_manage_popup('member_add');
+                });
+            }
+
+        //수강권 인원 추가
+        }else if(selector_page_addmember.css('display')=='block' && selector_ADD_GROUPMEMBER_NEW.css('display') == "block" && ($('#currentPackageList').css('display')=="block" || $('#finishedPackageList').css('display')=="block") ){
+            check_dropdown_selected();
+            if(select_all_check == true){
+                add_ticketmember_form_func();
+            }
         }
-
-
     });
+    $('#addpopup_pc_label_new').click(function(){
+        //테스트
+        make_new_package_info_to_json_form();
+    })
 
     //PC 회원기본 정보 수정 버튼 (회원정보창에서)
     $(document).on('click', 'button._info_baseedit', function(){
@@ -1426,7 +1481,7 @@ $(document).ready(function(){
 
 
             $('#memberName_info_PC').hide();
-            $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').show();
+            $('#memberName_info_firstName_PC').show();
 
 
         }else if($(this).attr('data-view') == 'edit'){
@@ -1440,7 +1495,7 @@ $(document).ready(function(){
 
             // $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val());
             $('#memberName_info_PC').show().val($('#memberName_info_firstName_PC').val());
-            $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide();
+            $('#memberName_info_firstName_PC').hide();
             var dbID = $('#memberInfoPopup_PC').attr('data-dbid');
             send_modified_member_base_data(dbID);
         }
@@ -1464,7 +1519,7 @@ $(document).ready(function(){
             $(this).attr('data-type','modify');
 
             $('#memberName_info').hide();
-            $('#memberName_info_lastName, #memberName_info_firstName').show();
+            $('#memberName_info_firstName').show();
 
             $('#form_sex_modify').val();
             $('#form_birth_modify').val();
@@ -1472,15 +1527,15 @@ $(document).ready(function(){
             $('#form_name_modify').val();
             $('#form_id_modify').val($('#memberId').val());
 
-            $('#mobile_basic_info #memberName_info, #mobile_basic_info #memberPhone_info, #mobile_basic_info select, #memberName_info_lastName, #memberName_info_firstName').attr('disabled',false).addClass('input_available');
+            $('#mobile_basic_info #memberName_info, #mobile_basic_info #memberPhone_info, #mobile_basic_info select, #memberName_info_firstName').attr('disabled',false).addClass('input_available');
             $('#memberInfoPopup button._info_delete').hide();
 
         }else if($(this).attr('data-type') == "modify" ){
             // if(select_all_check==false){
             var dbID = $('#memberInfoPopup #memberId').attr('data-dbid');
             send_modified_member_base_data(dbID);
-            $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val());
-            $('#memberName_info_lastName, #memberName_info_firstName').hide();
+            $('#memberName_info').show().val($('#memberName_info_firstName').val());
+            $('#memberName_info_firstName').hide();
             /*
              }else{
              scrollToDom($('#memberInfoPopup'));
@@ -1534,7 +1589,9 @@ function send_modified_member_base_data(dbID){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 $('#upbutton-modify img').attr('src', '/static/user/res/icon-pencil.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }
@@ -1603,9 +1660,9 @@ function float_btn_managemember(option){
         }
     }else if(option == 1){ //모바일 플로팅 버튼 신규회원 추가
         initialize_add_member_sheet();
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); });
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); });
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});
         selector_page_addmember.css('display','block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
         $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
@@ -1659,8 +1716,7 @@ function float_btn_managemember(option){
 
         $('#uptext2, #uptext2_PC').text('신규 그룹 추가');
 
-        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        //$('._ADD_GROUPMEMBER_NEW').show()
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
         shade_index(100);
 
@@ -1675,7 +1731,6 @@ function float_btn_managemember(option){
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
             $('#page_managemember').css({'height':'0'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -1691,7 +1746,7 @@ function float_btn_managemember(option){
 
         $('#uptext2, #uptext2_PC').text('신규 클래스 추가');
 
-        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUP_NEW').show();
         shade_index(100);
     }else if(option == "groupmember"){
@@ -1710,8 +1765,73 @@ function float_btn_managemember(option){
             shade_index(100);
         }
 
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
+    }else if(option == "solo_ticket"){
+        initialize_add_member_sheet();
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
+        $('#page_addmember').show();
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').hide();
+
+        scrollToDom($('#page_addmember'));
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
+        }
+
+        $('#grouptype').hide();
+        $('#explain_group_lesson, #explain_open_lesson').hide();
+        $('#explain_solo_ticket').show();
+
+        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('NORMAL');
+        $('#addgrouptypename').text('신규 단일 수강권');
+
+        $('#uptext2, #uptext2_PC').text('신규 단일 수강권');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
+        $('._ADD_GROUP_NEW').show();
+        shade_index(100);
+
+    }else if(option == "package_ticket"){
+        initialize_add_member_sheet();
+        grouptype = "PACKAGE";
+        get_group_ing_list('callback', function(jsondata){
+            console.log("get_group_ing_list", jsondata);
+            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", "pure",jsondata);
+        });
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
+        $('#page_addmember').show();
+        $('#float_inner1,#float_inner2').animate({'opacity':'0','bottom':'25px'},10);
+        $('#float_btn_wrap').hide();
+
+        scrollToDom($('#page_addmember'));
+        if(bodywidth < 600){
+            //$('#page_managemember').hide();
+            $('#page_managemember').css({'height':'0'});
+            $('#page-base').css('display','none');
+            $('#page-base-addstyle').css('display','block');
+            shade_index(100);
+        }
+
+        $('#grouptype').hide();
+        $('#explain_group_lesson').show();
+        $('#explain_open_lesson').hide();
+
+        $('#grouptype option[value="NORMAL"]').attr({'selected':true,'disabled':true});
+        $('#form_grouptype').val('NORMAL');
+        $('#addgrouptypename').text('신규 수강권');
+
+        $('#uptext2, #uptext2_PC').text('신규 수강권');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_PACKAGE_NEW').show();
+        shade_index(100);
+
     }
 }
 
@@ -1737,34 +1857,6 @@ function pc_add_member(option){
 
     var userID;
     if(option == 0){ //PC버전에서 회원추가 버튼 누름
-        /*
-        initialize_add_member_sheet();
-        $('#uptext2, #uptext2_PC').text(text);
-
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
-        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('#memberBirthDate, #memberBirthDate_info').html('');
-        birth_dropdown_set();
-
-        selector_memberSearchButton.attr('data-type','');
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
-        if($('._nomember').length>0){
-            $('#how_to_add_member').show();
-        }else{
-            $('#how_to_add_member').css('display','none');
-        }
-
-        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        if( selector_page_addmember.height() > $(window).height() ){
-            centerLoc = '70px';
-        }
-
-        selector_page_addmember.show().css({'top':centerLoc,
-            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
-
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        */
-
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text);
 
@@ -1788,36 +1880,12 @@ function pc_add_member(option){
                                             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())
                                             });
 
-        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-
+        get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
-        /*
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
-        $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
-        $('#memberBirthDate, #memberBirthDate_info').html('');
-        birth_dropdown_set();
-
-        selector_memberSearchButton.attr('data-type','');
-        $('#memberSex .selectboxopt').removeClass('selectbox_disable');
-
-        var centerLoc = (($(window).height()-selector_page_addmember.outerHeight())/2+$(window).scrollTop());
-        if( selector_page_addmember.height() > $(window).height() ){
-            centerLoc = '70px';
-        }
-
-        selector_page_addmember.show().css({'top':centerLoc,
-            'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
-
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json)});
-        */
-        initialize_add_member_sheet();
-        $('#uptext2, #uptext2_PC').text(text2);
-
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
@@ -1831,14 +1899,12 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
+        get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
 
-        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
         birth_dropdown_set();
@@ -1855,7 +1921,7 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
         var regEnddate = [];
         $('.lec_end_date').each(function(index){
-            regEnddate.push($(this).val().replace(/\./gi,'-'));
+            regEnddate.push($(this).val().replace(/\./gi, '-'));
         });
 
         $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
@@ -1874,7 +1940,8 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
@@ -1892,11 +1959,11 @@ function pc_add_member(option){
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
         var regEnddate = [];
         $('.wraps .lec_end_date').each(function(index){
-            regEnddate.push($(this).val().replace(/\./gi,'-'))
+            regEnddate.push($(this).val().replace(/\./gi, '-'));
         });
-        $('#datepicker_fast').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#datepicker_add').datepicker('setDate',find_max_date(regEnddate)).addClass("dropdown_selected");
-        $('#datepicker2_add').datepicker('option','minDate',find_max_date(regEnddate));
+        $('#datepicker_fast').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker_add').datepicker('setDate', find_max_date(regEnddate)).addClass("dropdown_selected");
+        $('#datepicker2_add').datepicker('option', 'minDate', find_max_date(regEnddate));
 
         check_dropdown_selected();
         /*회원정보창에서 수강추가를 했을때 가장마지막 종료일을 시작일로 셋팅해준다.*/
@@ -1905,7 +1972,7 @@ function pc_add_member(option){
         close_manage_popup('member_info');
         $('#page_managemember').css({'height':'0'});
         
-        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
         $('#memberBirthDate, #memberBirthDate_info').html('');
 
@@ -1913,7 +1980,8 @@ function pc_add_member(option){
         selector_memberSearchButton.attr('data-type','');
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
-        get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+        // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
+            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
@@ -1960,14 +2028,50 @@ function pc_add_member(option){
     }else if(option == 'groupmember'){
         initialize_add_member_sheet();
 
-        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_MEMBER_NEW, ._SEARCH_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._ADD_GROUPMEMBER_NEW, ._ADD_MEMBER_REG').show();
 
         $('body').css('overflow-y','hidden');
         selector_page_addmember_input_wrap.css('height',window_height - 100 - title_height - buttonwrap_height);
         $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
             'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+
+    }else if(option == "solo_ticket"){
+        initialize_add_member_sheet();
+        selector_page_addmember_input_wrap.css({'height':260+'px'});
+        $('#explain_group_lesson, #explain_open_lesson').hide();
+        $('#explain_solo_ticket').show();
+        $('#addgrouptypename').text('신규 단일 수강권');
+
+        $('#uptext2, #uptext2_PC').text('신규 단일 수강권 추가');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
+        $('._ADD_GROUP_NEW').show();
+
+        $('body').css('overflow-y','hidden');
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
+    }else if(option == "package_ticket"){
+        initialize_add_member_sheet();
+        grouptype = "PACKAGE";
+        get_group_ing_list('callback', function(jsondata){
+            fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", "pure", jsondata);
+        });
+        selector_page_addmember_input_wrap.css({'height':350+'px'});
+
+        $('#addpackagename').text('수강권을 만들고자 하는 수업 선택 해주세요.');
+
+        $('#uptext2, #uptext2_PC').text('신규 수강권 추가');
+
+        $('._ADD_MEMBER_NEW, ._ADD_MEMBER_REG ,._SEARCH_MEMBER_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_GROUP_NEW').hide();
+        $('._ADD_PACKAGE_NEW').show();
+
+        $('body').css('overflow-y', 'hidden');
+        $('#page_addmember').show().css({'top':(($(window).height()-$('#page_addmember').outerHeight())/2+$(window).scrollTop()),
+            'left':(($(window).width()-$('#page_addmember').outerWidth())/2+$(window).scrollLeft())});
     }
+
+
     shade_index(300);
 }
 
@@ -2072,6 +2176,34 @@ function shiftPtGroupClassList(type){
     }
 }
 
+//진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
+function shiftPackageList(type){
+    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
+    switch(type){
+        case "current":
+            get_package_ing_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml('current', jsondata);
+                $('#currentPackageList').html(group_class_Html);
+            });
+            $('#currentPackageList, #memberNumber_current_group').css('display', 'block');
+            $('#memberNumber_finish_group, #finishedPackageList, #finishGroupNum').css('display', 'none');
+            $('._GROUP_THEAD').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            break;
+        case "finished":
+            get_package_end_list("callback", function(jsondata){
+                console.log("get_package_end_list", jsondata)
+                var group_class_Html = package_ListHtml('finished', jsondata);
+                $('#finishedPackageList').html(group_class_Html);
+            });
+            $('#finishedPackageList, #memberNumber_finish_group').css('display', 'block');
+            $('#memberNumber_current_group, #currentPackageList, #currentGroupNum').css('display', 'none');
+            $('._GROUP_THEAD').show();
+            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            break;
+    }
+}
+
 
 //간편 가격입력
 function priceInput(price, type, selector){
@@ -2100,6 +2232,7 @@ function priceInput(price, type, selector){
 }
 //수동 가격입력
 $('#lecturePrice_add, #lecturePrice_add_2').keyup(function(){
+    limit_char_only_number(this);
     var priceInputValue = $(this).val().replace(/,/g, "");
     $(this).val(numberWithCommas(priceInputValue));
     $(this).siblings('input').val(priceInputValue);
@@ -2189,10 +2322,9 @@ function birth_dropdown_set(){
 //등록유형 드랍다운
 function grouptype_dropdown_set(grouplistJSON){
     var len = grouplistJSON.group_id.length;
-    var optionsToJoin = ['<option value="">1:1 레슨</option>'];
-    // var optionsToJoin = [''];
-    // $('#form_member_groupid').val(grouplistJSON.group_id[0]);
-    // $('#form_group_package_type').val('group');
+    // var optionsToJoin = ['<option value="">1:1 레슨</option>'];
+    var optionsToJoin = [''];
+    $('#form_member_groupid, #form_member_groupid_no_email').val(grouplistJSON.group_id[0]);
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+grouplistJSON.group_id[i]+'/group">['+grouplistJSON.group_type_cd_nm[i]+'] '+grouplistJSON.group_name[i]+'</option>');
     }
@@ -2202,10 +2334,11 @@ function grouptype_dropdown_set(grouplistJSON){
 function package_type_dropdown_set(packagelistJSON){
     var len = packagelistJSON.package_id.length;
     var optionsToJoin = [''];
+    $('#form_member_groupid, #form_member_groupid_no_email').val(packagelistJSON.package_id[0]);
     for(var i=0; i<len; i++){
-        optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">[패키지] '+packagelistJSON.package_name[i]+'</option>');
+        optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">['+packagelistJSON.package_type_cd_nm[i]+'] '+packagelistJSON.package_name[i]+'</option>');
     }
-    $('.grouptypeselect').append(optionsToJoin.join(''));
+    $('.grouptypeselect').html(optionsToJoin.join(''));
 }
 
 //DB데이터를 memberListSet에서 사용가능하도록 가공
@@ -2501,7 +2634,9 @@ function get_member_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2560,7 +2695,9 @@ function get_member_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2616,7 +2753,9 @@ function get_member_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2673,7 +2812,9 @@ function get_member_one_to_one_ing_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -2729,7 +2870,9 @@ function get_member_one_to_one_end_list(use, callback){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -3159,6 +3302,8 @@ function show_shadow_reponsively(){
 // }
 
 function check_dropdown_selected(){
+    // limit_char("#memberLastName_add");
+    limit_char("#memberFirstName_add");
     var emailInput = $("#memberEmail_add");
     var lastnameInput = $("#memberLastName_add");
     var firstnameInput = $("#memberFirstName_add");
@@ -3179,15 +3324,19 @@ function check_dropdown_selected(){
     var grouptype = $('#grouptype');
     var groupcapacity = $('#groupcapacity');
 
+    var packagename = $('#packagename');
+    var package_groups = $('#selected_lectures_to_package_wrap .lecture_bubble');
+
 
     var fast = $('#fast_check').val();
 
     //회원추가, 회원재등록 창일때
     var selector_ADD_GROUP_NEW = $('._ADD_GROUP_NEW');
+    var selector_ADD_PACKAGE_NEW = $('._ADD_PACKAGE_NEW');
     var selector_upbutton_check = $("#upbutton-check");
     var selector_page_addmember_submitBtn_first_child = $('#page_addmember .submitBtn:first-child');
 
-    if(selector_ADD_GROUP_NEW.css('display')=="none" && $('._ADD_MEMBER_NEW').css('display')=="block"){
+    if(selector_ADD_GROUP_NEW.css('display') == "none" && $('._ADD_MEMBER_NEW').css('display') == "block"){
         if((firstnameInput).hasClass("dropdown_selected")==true && (countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true && (dueInput_fast).hasClass("dropdown_selected") == true && sexInput.length>0){
             selector_upbutton_check.html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             selector_page_addmember_submitBtn_first_child.addClass('submitBtnActivated');
@@ -3199,7 +3348,7 @@ function check_dropdown_selected(){
             select_all_check=false;
         }
         //그룹 추가 창일때
-    }else if(selector_ADD_GROUP_NEW.css('display')=="block"){
+    }else if(selector_ADD_GROUP_NEW.css('display') == "block"){
         //if(groupname.val().length > 0 && grouptype.val().length > 0 && groupcapacity.val().length > 0){
         if(groupname.val().length > 0 && $('#form_grouptype').val().length > 0 && groupcapacity.val().length > 0){
 
@@ -3212,12 +3361,22 @@ function check_dropdown_selected(){
             select_all_check=false;
         }
         //그룹원 추가 창일때
-    }else if($('._ADD_GROUPMEMBER_NEW').css('display')=="block"){
-        if((countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true){
+    }else if($('._ADD_GROUPMEMBER_NEW').css('display') == "block"){
+        if((countInput_fast).hasClass("dropdown_selected")==true && (priceInput_fast).length>0 && (dateInput_fast).hasClass("dropdown_selected")==true && $('#addedMemberListBox div.addByNewRaw').length > 0 ){
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
             select_all_check=true;
 
+        }else{
+            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
+            $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
+            select_all_check=false;
+        }
+    }else if(selector_ADD_PACKAGE_NEW.css('display') == "block"){
+        if(packagename.val().length > 0 && package_groups.length > 0){
+            $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete-checked.png' style='width:100%;'>");
+            $('#page_addmember .submitBtn:first-child').addClass('submitBtnActivated');
+            select_all_check=true;
         }else{
             $("#upbutton-check").html("<img src='/static/user/res/ptadd/btn-complete.png' style='width:100%;'>");
             $('#page_addmember .submitBtn:first-child').removeClass('submitBtnActivated');
@@ -3360,14 +3519,7 @@ function autoDateInput(){
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
 }
 
-//특수문자 입력 제한
-function limit_char(e){
-    var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
-    var temp = $(e).val();
-    if(limit.test(temp)){
-        $(e).val(temp.replace(limit,""));
-    }
-}
+
 
 
 //회원정보////////////////////////////////////////////////////////
@@ -3811,11 +3963,11 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageText').text('');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback", function(jsondata){
-                        memberListSet('current', 'date', 'yes', jsondata);
+                        memberListSet('current', 'name', 'no', jsondata);
                     });
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback", function(jsondata){
-                        memberListSet('finished', 'date', 'yes', jsondata);
+                        memberListSet('finished', 'name', 'no', jsondata);
                     });
                 }else if($("#calendar").length > 0 ){
                     $('#members_mobile, #members_pc').html('');
@@ -4016,11 +4168,11 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
 function smart_refresh_member_group_class_list(){
     if($('#currentMemberList').css('display') == "block"){
         get_member_ing_list("callback", function(jsondata){
-            memberListSet('current', 'date', 'yes', jsondata);
+            memberListSet('current', 'name', 'no', jsondata);
         });
     }else if($('#finishedMemberList').css('display') == "block"){
         get_member_end_list("callback", function(jsondata){
-            memberListSet('finished', 'date', 'yes', jsondata);
+            memberListSet('finished', 'name', 'no', jsondata);
         });
     }else if($('#currentGroupList').css('display') == "block"){
         var opened_group = [];
@@ -4046,6 +4198,30 @@ function smart_refresh_member_group_class_list(){
             $('#finishedGroupList').html(group_class_Html);
             for(var i=0; i<opened_group.length; i++){
                 $(`#finishedGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
+            }
+        });
+    }else if($('#currentPackageList').css('display') == "block"){
+        var opened_package = [];
+        $('#currentPackageList div.groupWrap_selected').each(function(){
+            opened_package.push($(this).attr('data-packageid'));
+        });
+        get_package_ing_list("callback", function(jsondata){
+            var package_Html = package_ListHtml('current', jsondata);
+            $('#currentPackageList').html(package_Html);
+            for(var i=0; i<opened_package.length; i++){
+               $(`#currentPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
+            }
+        });
+    }else if($('#finishedPackageList').css('display') == "block"){
+        var opened_package = [];
+        $('#finishedPackageList div.groupWrap_selected').each(function(){
+            opened_package.push($(this).attr('data-packageid'));
+        });
+        get_package_end_list("callback", function(jsondata){
+            var package_Html = package_ListHtml('finished', jsondata);
+            $('#finishedPackageList').html(package_Html);
+            for(var i=0; i<opened_package.length; i++){
+               $(`#finishedPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
             }
         });
     }else if($("#calendar").length > 0 ){
@@ -4160,7 +4336,7 @@ function get_member_lecture_list(dbID, use, callback){
 }
 
 function notice_lecture_status_changed_to_inprogress(lecturename, member_name){
-    show_caution_popup(`진행완료 되었던 ${member_name} 회원님의 <br> <span style="color:#fe4e65;font-weight:500";>수강정보 [${lecturename}]의</span> <br> 상태가 <span style="color:green">진행중</span>으로 변경됩니다.<p></p>`);
+    show_caution_popup(`종료 되었던 ${member_name} 회원님의 <br> <span style="color:#fe4e65;font-weight:500";>수강정보 [${lecturename}]의</span> <br> 상태가 <span style="color:green">진행중</span>으로 변경됩니다.<p></p>`);
 }
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
@@ -4477,6 +4653,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
     var text7 = '시작전';
     var text9 = '시간';
     var text10 = '회차';
+    var text11 = '결석';
     if(Options.language == "JPN"){
         text = '授業日';
         text2 = '進行時間';
@@ -4487,6 +4664,7 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         text7 = '未完了';
         text9 = '時間';
         text10 = 'No.';
+        text11 = '完了'
     }else if(Options.language == "ENG"){
         text = 'Date';
         text2 = 'Period';
@@ -4497,10 +4675,11 @@ function draw_member_history_list_table(jsondata, PCorMobile){
         text7 = 'Yet';
         text9 = 'h';
         text10 = 'No.';
+        text11 = 'Abs.';
     }
 
     var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>'];
-    var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7};
+    var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7, "PC":text11};
     for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay();
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2]);
@@ -4620,7 +4799,9 @@ function add_member_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'))
+                if(bodywidth < 600){
+                   scrollToDom($('#page_addmember')) 
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4659,7 +4840,7 @@ function add_member_form_func(){
                     });
                 }
                 
-
+                smart_refresh_member_group_class_list();
                 close_manage_popup('member_add');
                 if($('#memberInfoPopup_PC').css('display') == "block"){
                     close_manage_popup('member_info_PC');
@@ -4701,8 +4882,10 @@ function add_member_form_noemail_func(){
             var jsondata = JSON.parse(data);
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4764,7 +4947,9 @@ function add_group_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4848,7 +5033,9 @@ function add_groupmember_form_func(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4921,7 +5108,9 @@ function deleteMemberAjax(){
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
-                scrollToDom($('#page_addmember'));
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }
@@ -4946,12 +5135,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet ('current','name','no',json);
                                 $('#name').attr('selected','selected');
-                            })
-                        }else if($selector_finishedMemberList.css('display') == "block"){
+                            });
+                        }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','name','no',json);
                                 $('#name').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'countH':
@@ -4959,12 +5148,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','yes',json);
                                 $('#countH').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','yes',json);
                                 $('#countH').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'countL':
@@ -4972,12 +5161,12 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','count','no',json);
                                 $('#countL').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','count','no',json);
                                 $('#countL').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'startP':
@@ -4989,23 +5178,23 @@ function deleteMemberAjax(){
                         get_member_ing_list('callback',function(json){
                             memberListSet('current','date','no',json);
                             $('#startP').attr('selected','selected');
-                        })
+                        });
                         get_member_end_list('callback',function(json){
                             memberListSet('finished','date','no',json);
                             $('#startP').attr('selected','selected');
-                        })
+                        });
                         break;
                     case 'startR':
                         if(selector_currentMemberList.css('display') == "block"){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#startR').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#startR').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                     case 'recent':
@@ -5013,15 +5202,16 @@ function deleteMemberAjax(){
                             get_member_ing_list('callback',function(json){
                                 memberListSet('current','date','yes',json);
                                 $('#recent').attr('selected','selected');
-                            })
+                            });
                         }else if(selector_finishedMemberList.css('display') == "block"){
                             get_member_end_list('callback',function(json){
                                 memberListSet('finished','date','yes',json);
                                 $('#recent').attr('selected','selected');
-                            })
+                            });
                         }
                         break;
                 }
+                smart_refresh_member_group_class_list();
                 console.log('success');
             }
         },
@@ -5042,8 +5232,12 @@ function deleteMemberAjax(){
 
 
 function initialize_add_member_sheet(){
+    $('#form_grouptype, #form_groupcapacity').val("");
+    $('#grouptype option:nth-child(1)').prop("selected", true);
+    $('#groupcapacity option:nth-child(1)').prop("selected", true);
+
     $('#id_search_confirm').val('0');
-    $('#form_member_groupid').val('');
+    $('#form_member_groupid, #form_member_groupid_no_email').val('');
     $('#memberLastName_add').prop('disabled', false);
     $('#memberFirstName_add').prop('disabled', false);
     $('#memberPhone_add').prop('disabled', false);
@@ -5078,7 +5272,10 @@ function initialize_add_member_sheet(){
     $('#addedMemberListBox span').text('0 명');
     added_New_Member_Num = 0;
     //그룹추가관련 입력 초기화
-    $("#page_addmember input").css({"-webkit-text-fill-color":"#cccccc"})
+    $("#page_addmember input").css({"-webkit-text-fill-color":"#cccccc"});
+
+    //패키지 수강권 입력 초기화
+    $('#selected_lectures_to_package_wrap').empty();
 }
 
 

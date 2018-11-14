@@ -177,9 +177,10 @@ $(document).ready(function(){
                 });
             }else if($(this).hasClass('notavailable') && $(this).find('div').hasClass('dateMytime')){
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+                $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                // $('.startTime_time').text(startTime_to_hangul(Options.startTime));
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 $('.plan_raw_add').hide();
                 shade_index(100);
@@ -187,9 +188,10 @@ $(document).ready(function(){
                 adjust_starttime_list_height();
             }else if($(this).hasClass('available')){
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+                $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                // $('.startTime_time').text(startTime_to_hangul(Options.startTime));
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 if($('#countRemainData span:first-child').text() == '0'){
                     $('.plan_raw_add').hide();
@@ -201,9 +203,10 @@ $(document).ready(function(){
                 adjust_starttime_list_height();
             }else{
                 $('.popup_ymdText').html(infoText).attr('data-date',$(this).attr('data-date'));
-                $('.cancellimit_time').text(Options.cancellimit+"시간 전");
+                $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+                $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
                 $('.timeDur_time').text(duration_number_to_hangul(Options.timeDur*(Options.classDur/60)));
-                $('.startTime_time').text(startTime_to_hangul(Options.startTime));
+                // $('.startTime_time').text(startTime_to_hangul(Options.startTime));
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
                 $('.plan_raw_add').hide();
                 shade_index(100);
@@ -311,7 +314,6 @@ $(document).ready(function(){
 
     $(document).on('click', '.plan_raw_add', function(){
         $('#groupTimeSelect, #classTimeSelect, .timegraphtext').html('<div style="width:100%;"><img src="/static/user/res/ajax/loading.gif" style="height:23px;marign:auto;"></div>');
-
         clear_pt_add_logic_form();
         $('#addpopup').show();
         //$('#shade2').css({'display':'block'});
@@ -331,6 +333,9 @@ $(document).ready(function(){
         // startTimeSet(yy+'_'+mm+'_'+dd);  //일정등록 가능한 시작시간 리스트 채우기
         ajaxTimeGraphSet($(this));
         $('#id_training_date, #id_training_end_date').val(yy+'-'+mm+'-'+dd);
+        $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+        $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
+        shade_index(150);
     });
 
 
@@ -455,7 +460,8 @@ $(document).ready(function(){
                     ajaxClassTime("this", 46, "callback", function(json){
                         plancheck(clicked_td_date_info, json)
                     });
-                    close_reserve_popup()
+                    close_reserve_popup();
+                    shade_index(100);
                 }
             },
 
@@ -924,27 +930,39 @@ $(document).ready(function(){
                         }
                     }
                     //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
-    
-                    //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화
-                    if(jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) !=  -1){
-                        disable = "disabled_button";
-                        myreserve = "<span style='color:#fe4e65'> - 내 예약</span>";
-                        myreservecheckbox1 = 'checked ';
-                        myreservecheckbox2 = 'ptersCheckboxInner';
-                    }
-    
+
+
                     //완료된 그룹은 비활성화
-                    if(jsondata.group_schedule_finish_check[i] == 1){
+                    if(jsondata.group_schedule_finish_check[i] == 1) {
                         disable = "disabled_button";
-                        fulled = " (종료)";
+                        fulled = " (완료)";
+                    }else if(jsondata.group_schedule_finish_check[i] == 2) {
+                        disable = "disabled_button";
+                        fulled = " (결석)";
                     }
-    
                     if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
                         //var fulled = ""
                     }else if(jsondata.group_schedule_current_member_num[i] == jsondata.group_schedule_max_member_num[i]){
                         disable = "disabled_button";
-                        fulled = "(마감)";
+                        fulled = " (마감)";
                     }
+
+                    //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화
+                    var check_my_schedule = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]);
+                    if(check_my_schedule !=  -1){
+                        disable = "disabled_button";
+                        myreserve = "<span style='color:#fe4e65'> - 내 예약 </span>";
+                        myreservecheckbox1 = 'checked ';
+                        myreservecheckbox2 = 'ptersCheckboxInner';
+                        if(jsondata.scheduleFinishArray[check_my_schedule] == 1){
+                            myreserve = "<span style='color:#fe4e65'> - 내 예약 (완료)</span>";
+                            fulled = '';
+                        }else if(jsondata.scheduleFinishArray[check_my_schedule] == 2){
+                            myreserve = "<span style='color:#fe4e65'> - 내 예약 (결석)</span>";
+                            fulled = '';
+                        }
+                    }
+
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
                     var starttime = jsondata.group_schedule_start_datetime[i].split(' ')[1];
                     var endtime = jsondata.group_schedule_end_datetime[i].split(' ')[1];
@@ -1113,6 +1131,19 @@ $(document).ready(function(){
                                         '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
                                     '</div>');
 
+                }else if(splited[10]==2){
+                    /*
+                    htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                        '<span class="plancheckmorningday">'+morningday+'</span>'+
+                                        '<span class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</span>'+
+                                        '<span class="plancheckname">'+name+'<img src="/static/user/res/btn-pt-complete.png"></span>'+
+                                    '</div>')*/
+                    htmltojoin.push('<div class="plan_raw" title="결석 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                                        '<div class="plancheckmorningday">'+morningday+'</div>'+
+                                        '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                        '<div class="plancheckname"><img src="/static/user/res/btn-absence.png" style="margin-top:16px;">'+'<p '+textsize+'>'+name+'</p></div>'+
+                                    '</div>');
+
                 }else if(splited[10] == 0){
                     /*
                     htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-membernum="'+groupmax+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
@@ -1154,6 +1185,8 @@ $(document).ready(function(){
         var today_form = date_format_to_yyyymmdd(clicked.attr('data-date'), '-');
         var tablewidth = $('.timegraphtext').width();
         $('.mode_switch_button').addClass('disabled_button');
+        // var startTime = '';
+        // var endTime = '';
         $.ajax({
             url: '/trainee/get_trainee_schedule/',
             type : 'GET',
@@ -1161,10 +1194,14 @@ $(document).ready(function(){
             dataType : 'html',
 
             beforeSend:function(){
+                // startTime = performance.now();
             },
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                console.log(jsondata);
+                // endTime = performance.now();
+                // console.log(endTime - startTime + 'ms')
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
@@ -1192,7 +1229,7 @@ $(document).ready(function(){
                     }
 
                     draw_time_group_graph('group', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form, '_'));
-                    draw_time_group_graph('class', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form, '_'));
+                    // draw_time_group_graph('class', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form, '_'));
 
                     $('.mode_switch_button').removeClass('disabled_button');
                 }
@@ -1864,7 +1901,8 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         var today_form = referencedate;
         var date_form = howmanydates;
     }
-
+    // var startTime = '';
+    // var endTime = '';
     $.ajax({
         url: '/trainee/get_trainee_schedule/',
         type : 'GET',
@@ -1872,6 +1910,7 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
         dataType : 'html',
 
         beforeSend:function(){
+            // startTime = performance.now();
             beforeSend();
         },
 
@@ -1885,53 +1924,22 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             }else{
                 var temp_count_text = '';
                 var temp_text = '';
-
-                if(jsondata.lecture_reg_count[0] != 0){
-                    temp_text +='1:1';
-                    temp_count_text += jsondata.lecture_avail_count;
-                }
-                if(jsondata.group_lecture_reg_count[0] != 0){
-                    if(temp_text == ''){
-                        temp_text += '그룹';
-                        temp_count_text += jsondata.group_lecture_avail_count;
-
-                    }else {
-                        temp_text += '/그룹';
-                        temp_count_text = temp_count_text+'/'+jsondata.group_lecture_avail_count;
+                for(var i=0; i< jsondata.package_type_cd_name.length; i++){
+                    if(i!=0) {
+                        temp_text += '/';
+                        temp_count_text += '/';
                     }
-                }
-                if(jsondata.class_lecture_reg_count[0] != 0){
-                    if(temp_text == ''){
-                        temp_text += '클래스';
-                        temp_count_text += jsondata.class_lecture_avail_count;
+                    temp_text += '['+jsondata.package_type_cd_name[i]+']'+jsondata.package_name[i]+':'+jsondata.package_lecture_avail_count[i];
+                    temp_count_text += jsondata.package_lecture_avail_count[i];
 
-                    }else {
-                        temp_text += '/클래스';
-                        temp_count_text = temp_count_text+'/'+jsondata.class_lecture_avail_count;
-                    }
                 }
-
-                if(temp_text == '') {
+                if(temp_count_text==''){
                     temp_count_text = '0';
                 }
-                //     lecture_enable_test = 1;
-                // }else{
-                //     lecture_enable_test = 0;
-                // }
 
-                // if(jsondata.group_lecture_reg_count[0] != 0 && jsondata.lecture_reg_count[0] != 0 && jsondata.class_lecture_reg_count[0] != 0){
-                    $('#countRemainData span:first-child').text(temp_count_text);
-                    $('#countRemainData span:nth-of-type(2)').text('회 ('+temp_text+')');
-                // }
-                // else if(jsondata.group_lecture_reg_count[0] != 0){
-                //     $('#countRemainData span:first-child').text(jsondata.group_lecture_avail_count)
-                //     $('#countRemainData span:nth-of-type(2)').text('회 (그룹)')
-                // }
-                // else{
-                //     $('#countRemainData span:first-child').text(jsondata.lecture_avail_count)
-                //     $('#countRemainData span:nth-of-type(2)').text('회 (1:1)')
-                // }
-
+                $('#countRemainData span:first-child').text(temp_count_text);
+                $('#countRemainData span:nth-of-type(2)').text('('+temp_text+')');
+                fill_remain_count_board(jsondata);
 
                 $('.classTime,.offTime').parent().html('<div></div>');
                 $('.blackballoon, .balloon').html('');
@@ -1957,6 +1965,26 @@ function ajaxClassTime(referencedate, howmanydates, use, callback){
             console.log('server error');
         }
     });
+}
+
+function fill_remain_count_board(jsondata){
+    var $targetHTML = $('#remain_count_board');
+    var len = jsondata.package_lecture_avail_count.length;
+    
+    var htmlToJoin = [`<p>나의 진행 현황</p><div class="remain_count_board_table" style="margin-bottom:10px;"><div>수강권</div><div>등록 횟수</div><div>남은횟수</div><div>예약중</div><div>예약가능</div></div>`];
+    for(var i=0; i<len; i++){
+        htmlToJoin.push(`<div class="remain_count_board_table">
+                            <div>[${jsondata.package_type_cd_name[i]}]${jsondata.package_name[i]}</div>
+                            <div><span style="font-weight:500;">${jsondata.package_lecture_reg_count[i]}</span>회</div>
+                            <div><span style="font-weight:400;">${jsondata.package_lecture_rem_count[i]}</span>회</div>
+                            <div><span style="font-weight:400;">${jsondata.package_lecture_rem_count[i] - jsondata.package_lecture_avail_count[i]}</span>회</div>
+                            <div><span style="color:#fe4e65;font-weight:500;">${jsondata.package_lecture_avail_count[i]}</span>회</div>
+                        </div>`);
+    }
+    if(len == 0){
+        htmlToJoin.push(`<div style="text-align:center;color:#fe4e65;">진행중인 수강권이 없습니다.</div>`);
+    }
+    $targetHTML.html(htmlToJoin.join(""));
 }
 
 function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytimeDates 배열에 넣으면, 날짜 핑크 표시
@@ -2008,12 +2036,18 @@ function classDates(jsondata){ //나의 PT 날짜를 DB로부터 받아서 mytim
         var index = count_date_info.dateResult.indexOf(jsondata.classTimeArray_start_date[i].split(' ')[0]);
         var count = count_date_info.countResult[index];
 
+        // 완료
         if(finish == '1'){
             var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>';
             var finishImg = '<div class="monthplans"><img src="/static/user/res/btn-pt-complete.png"><span>'+classTime+groupname+'</span></div>';
         }else if(finish == '0'){
+            // 진행 예정
             var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>';
             var finishImg = '<div class="monthplans"><span>'+classTime+groupname+'</span></div>';
+        }else if(finish == '2'){
+            // 결석
+            var mobile = '<div class="monthplans_count"><img src="/static/user/res/icon-cal-mini.png">'+count+'</div>';
+            var finishImg = '<div class="monthplans"><img src="/static/user/res/btn-absence.png" style="width:10px;"><span>'+classTime+groupname+'</span></div>';
         }
 
         if(already_added.indexOf(classDate) != -1){ //날짜 밑에 일정 카운트가 여러개 출력되는 것을 방지
@@ -2263,6 +2297,7 @@ function availableDateIndicator(availableStartTime, Endtime){
     if(Options.reserve == 1){
         $('td:not([schedule-id])').addClass('option_notavailable');
         $('.blackballoon').parent('td').addClass('option_notavailable');
+        $('#menuDescription').hide();
     }else{
         if(currentHour<Endtime && currentHour>=availableStartTime){
             var availability = 'available';

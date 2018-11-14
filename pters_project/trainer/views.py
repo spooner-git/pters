@@ -10,10 +10,11 @@ from urllib.parse import quote
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError, MultipleObjectsReturned
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, request
 from django.shortcuts import redirect, render
@@ -35,12 +36,12 @@ from login.views import add_member_no_email_func
 
 from board.models import BoardTb
 from center.models import CenterTrainerTb
-from login.models import MemberTb, LogTb, CommonCdTb
+from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 # from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
-    PackageTb
+    PackageTb, PackageGroupTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
@@ -48,7 +49,9 @@ from stats.functions import get_sales_data, get_stats_member_data
 from .functions import func_get_class_member_id_list, func_get_trainee_schedule_list, \
     func_get_trainer_setting_list, func_get_lecture_list, func_add_lecture_info, \
     func_delete_lecture_info, func_get_member_ing_list, func_get_member_end_list, \
-    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list
+    func_get_class_member_ing_list, func_get_class_member_end_list, func_get_member_one_to_one_ing_list, func_get_member_one_to_one_end_list, \
+    func_get_ing_group_member_list, func_get_end_group_member_list, func_get_ing_package_member_list, \
+    func_get_end_package_member_list, func_get_ing_package_in_member_list, func_get_end_package_in_member_list
 
 logger = logging.getLogger(__name__)
 
@@ -312,6 +315,14 @@ class ManageLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageLectureView, self).get_context_data(**kwargs)
         return context
 
+# 수강권 관리 181030
+class ManageTicketView(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'manage_ticket.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManageTicketView, self).get_context_data(**kwargs)
+        return context
+
 
 class ManageMemberView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_member.html'
@@ -448,6 +459,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context = {}
         # context = super(MyPageView, self).get_context_data(**kwargs)
         class_id = request.session.get('class_id', '')
+        sns_id = request.session.get('social_login_id', '')
         error = None
         class_info = None
         now = timezone.now()
@@ -458,6 +470,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         month_first_day = today.replace(day=1)
         next_year = int(month_first_day.strftime('%Y')) + 1
         next_month = (int(month_first_day.strftime('%m')) + 1) % 12
+
         if next_month == 0:
             next_month = 12
         next_month_first_day = month_first_day.replace(month=next_month)
@@ -525,16 +538,16 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
                 = "select `AUTH_CD` from CLASS_LECTURE_TB as D" \
                   " where D.LECTURE_TB_ID = `SCHEDULE_TB`.`LECTURE_TB_ID` and D.CLASS_TB_ID = " + str(class_id)
             end_schedule_num += ScheduleTb.objects.select_related(
-                'lecture_tb', 'group_tb').filter(class_tb_id=class_id, group_tb__isnull=True,
-                                                 lecture_tb__isnull=False, en_dis_type=ON_SCHEDULE_TYPE,
-                                                 state_cd='PE', use=USE
+                'lecture_tb', 'group_tb').filter(Q(state_cd='PE'), class_tb_id=class_id,
+                                                 group_tb__isnull=True, lecture_tb__isnull=False,
+                                                 en_dis_type=ON_SCHEDULE_TYPE, use=USE
                                                  ).annotate(class_auth_cd=RawSQL(query_class_auth_cd, [])
                                                             ).filter(class_auth_cd='VIEW').count()
 
-            end_schedule_num += ScheduleTb.objects.filter(class_tb_id=class_id,
+            end_schedule_num += ScheduleTb.objects.filter(Q(state_cd='PE'), class_tb_id=class_id,
                                                           group_tb__isnull=False,
                                                           lecture_tb__isnull=True,
-                                                          en_dis_type=ON_SCHEDULE_TYPE, state_cd='PE',
+                                                          en_dis_type=ON_SCHEDULE_TYPE,
                                                           use=USE).count()
         if error is None:
             # 남은 횟수 1개 이상인 경우 - 180314 hk.kim
@@ -568,6 +581,12 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         context['next_schedule_start_dt'] = str(next_schedule_start_dt)
         context['next_schedule_end_dt'] = str(next_schedule_end_dt)
         context['end_schedule_num'] = end_schedule_num
+        context['check_password_changed'] = 1
+        if sns_id != '' and sns_id is not None:
+            sns_password_change_check = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id,
+                                                                 change_password_check=1, use=USE).count()
+            if sns_password_change_check == 0:
+                context['check_password_changed'] = 0
 
         return render(request, self.template_name, context)
 
@@ -724,8 +743,11 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         error = None
         log_data = None
         if error is None:
+            today = datetime.date.today()
+            three_days_ago = today - datetime.timedelta(days=3)
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                                            use=USE).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -780,9 +802,11 @@ class AlarmPCView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         error = None
         log_data = None
         if error is None:
+            today = datetime.date.today()
+            three_days_ago = today - datetime.timedelta(days=3)
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('-reg_dt')
-            # log_data.order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                                            use=USE).order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
@@ -1285,8 +1309,9 @@ def delete_member_info_logic(request):
             error = '회원 ID를 확인해 주세요.'
 
     if error is None:
-        class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                                           use=USE, auth_cd='VIEW')
+        class_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
+                                             use=USE, auth_cd='VIEW')
         member_name = member.name
 
     if error is None:
@@ -1295,14 +1320,15 @@ def delete_member_info_logic(request):
                 if user.is_active == 1:
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
-                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                        package_tb = lecture_info.package_tb
+                        lecture_id = lecture_info.lecture_id
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id,
                                                                   state_cd='NP')
 
-                        schedule_data_finish = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                         lecture_tb_id=lecture_info.lecture_id,
-                                                                         state_cd='PE')
+                        schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                         class_tb_id=class_id,
+                                                                         lecture_tb_id=lecture_info.lecture_id)
                         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
                                                                                lecture_tb_id=lecture_info.lecture_id)
 
@@ -1332,31 +1358,48 @@ def delete_member_info_logic(request):
                                 lecture_info.state_cd = 'PE'
                                 lecture_info.save()
 
-                            if len(group_data) > 0:
-                                for group_info in group_data:
-                                    group_data_total_size = \
-                                        GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                      use=USE).count()
-                                    group_data_end_size = \
-                                        GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                      use=USE).exclude(lecture_tb__state_cd='IP'
-                                                                                       ).count()
-                                    group_info_data = group_info.group_tb
-
-                                    if group_data_total_size == group_data_end_size:
-                                        group_info_data.state_cd = 'PE'
-                                        group_info_data.save()
-                                    else:
-                                        group_info_data.state_cd = 'IP'
-                                        group_info_data.save()
-
-                                group_data.update(use=UN_USE)
+                            # if len(group_data) > 0:
+                            #     for group_info in group_data:
+                            #         group_data_total_size = \
+                            #             GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                            #                                           use=USE).count()
+                            #         group_data_end_size = \
+                            #             GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                            #                                           use=USE).exclude(lecture_tb__state_cd='IP'
+                            #                                                            ).count()
+                            #         group_info_data = group_info.group_tb
+                            #
+                            #         if group_data_total_size == group_data_end_size:
+                            #             group_info_data.state_cd = 'PE'
+                            #             group_info_data.save()
+                            #         else:
+                            #             group_info_data.state_cd = 'IP'
+                            #             group_info_data.save()
+                            #
+                            #     group_data.update(use=UN_USE)
                                 # lecture_info.save()
+                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+                        if len(group_data) > 0:
+                            for group_info in group_data:
+                                if group_info is not None:
+                                    group_info.group_tb.ing_group_member_num =\
+                                        len(func_get_ing_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
+                                    group_info.group_tb.end_group_member_num = \
+                                        len(func_get_end_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
+                                    group_info.save()
+                        if package_tb is not None:
+                            package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
+                            package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
+                            package_tb.save()
+
                     class_lecture_data.update(auth_cd='DELETE', mod_member_id=request.user.id)
                 else:
                     for class_lecture_info in class_lecture_data:
                         lecture_info = class_lecture_info.lecture_tb
-                        group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                        package_tb = lecture_info.package_tb
+                        lecture_id = lecture_info.lecture_id
                         schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
                                                                   lecture_tb_id=lecture_info.lecture_id)
                         repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
@@ -1370,31 +1413,48 @@ def delete_member_info_logic(request):
                         # lecture_info.lecture_avail_count = lecture_info.lecture_rem_count
                         lecture_info.delete()
 
-                        if len(group_data) > 0:
-                            for group_info in group_data:
-                                group_data_total_size = \
-                                    GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=USE).count()
-                                group_data_end_size = \
-                                    GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
-                                                                  use=USE).exclude(lecture_tb__state_cd='IP').count()
-                                group_info_data = group_info.group_tb
-
-                                # try:
-                                #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
-                                # except ObjectDoesNotExist:
-                                #     error = '그룹 정보를 불러오지 못했습니다.'
-                                if group_data_total_size == group_data_end_size:
-                                    group_info_data.state_cd = 'PE'
-                                    group_info_data.save()
-                                else:
-                                    group_info_data.state_cd = 'IP'
-                                    group_info_data.save()
-                        group_data.delete()
+                        # if len(group_data) > 0:
+                        #     for group_info in group_data:
+                        #         group_data_total_size = \
+                        #             GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id, use=USE).count()
+                        #         group_data_end_size = \
+                        #             GroupLectureTb.objects.filter(group_tb_id=group_info.group_tb_id,
+                        #                                           use=USE).exclude(lecture_tb__state_cd='IP').count()
+                        #         group_info_data = group_info.group_tb
+                        #
+                        #         # try:
+                        #         #     group_info_data = GroupTb.objects.get(group_id=group_info.group_tb_id)
+                        #         # except ObjectDoesNotExist:
+                        #         #     error = '그룹 정보를 불러오지 못했습니다.'
+                        #         if group_data_total_size == group_data_end_size:
+                        #             group_info_data.state_cd = 'PE'
+                        #             group_info_data.save()
+                        #         else:
+                        #             group_info_data.state_cd = 'IP'
+                        #             group_info_data.save()
+                        # group_data.delete()
 
                         # lecture_info.save()
-                        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                        member_lecture_list = MemberLectureTb.objects.filter(lecture_tb_id=lecture_id)
                         if len(member_lecture_list) > 0:
                             member_lecture_list.delete()
+
+                        group_data = GroupLectureTb.objects.select_related(
+                            'group_tb').filter(lecture_tb_id=lecture_id, use=USE)
+                        if len(group_data) > 0:
+                            for group_info in group_data:
+                                if group_info is not None:
+                                    group_info.group_tb.ing_group_member_num = \
+                                        len(func_get_ing_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
+                                    group_info.group_tb.end_group_member_num = \
+                                        len(func_get_end_group_member_list(class_id, group_info.group_tb_id,
+                                                                           request.user.id))
+                                    group_info.save()
+                        if package_tb is not None:
+                            package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_tb.package_id))
+                            package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_tb.package_id))
+                            package_tb.save()
 
                     class_lecture_data.delete()
                     if member.reg_info is not None:
@@ -1423,7 +1483,7 @@ def delete_member_info_logic(request):
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id,
-                         log_info='수강 정보', log_how='삭제', use=USE)
+                         log_info='정보', log_how='삭제', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -1451,7 +1511,7 @@ def export_excel_member_list_logic(request):
     start_raw = 3
 
     ws1['A2'] = '회원명'
-    ws1['B2'] = '수강유형'
+    ws1['B2'] = '수강권'
     ws1['C2'] = '회원 ID'
     ws1['D2'] = '등록 횟수'
     ws1['E2'] = '남은 횟수'
@@ -1561,26 +1621,24 @@ def export_excel_member_info_logic(request):
 
     # 수강 정보 불러 오기
     if error is None:
-        query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
-                              "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                              "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                              "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
-        query_group_name = "select NAME from GROUP_TB WHERE ID = " \
-                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
-                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
-                           "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
+        #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+        #                       "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+        #                       "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
+        # query_group_name = "select NAME from GROUP_TB WHERE ID = " \
+        #                    "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
+        #                    "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
+        #                    "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1)"
         query_lecture_count = "select count(*) from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
                               "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
                               "(select A.USE from LECTURE_TB as A where A.ID=B.LECTURE_TB_ID)=1 and B.USE=1"
 
         lecture_list = ClassLectureTb.objects.select_related(
-            'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                 lecture_tb__member_id=member_id,
-                                 lecture_tb__use=USE, use=USE).annotate(group_check=RawSQL(query_group_type_cd, []),
-                                                                        group_name=RawSQL(query_group_name, []),
-                                                                        lecture_count=RawSQL(query_lecture_count, [])
-                                                                        ).order_by('-lecture_tb__start_date',
-                                                                                   'lecture_tb__reg_dt')
+            'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
+                                             lecture_tb__use=USE,
+                                             use=USE).annotate(lecture_count=RawSQL(query_lecture_count, [])
+                                                               ).order_by('-lecture_tb__start_date',
+                                                                          'lecture_tb__reg_dt')
 
     if error is None:
         # 강사 클래스의 반복일정 불러오기
@@ -1597,7 +1655,7 @@ def export_excel_member_info_logic(request):
                 ws1.title = lecture_info.start_date + ' 수강정보'
                 ws1['A1'] = '수강 정보'
                 ws1['A1'].font = Font(bold=True, size=15)
-                ws1['A2'] = '수강유형'
+                ws1['A2'] = '수강권'
                 ws1['B2'] = '시작일자'
                 ws1['C2'] = '종료일자'
                 ws1['D2'] = '등록횟수'
@@ -1636,10 +1694,12 @@ def export_excel_member_info_logic(request):
                     np_lecture_counts += 1
                 lecture_counts += 1
 
-                if lecture_list_info.group_check == 'NORMAL':
+                if lecture_info.package_tb.package_type_cd == 'NORMAL':
                     group_check = 1
-                elif lecture_list_info.group_check == 'EMPTY':
+                elif lecture_info.package_tb.package_type_cd == 'EMPTY':
                     group_check = 2
+                elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
+                    group_check = 3
                 else:
                     group_check = 0
 
@@ -1650,9 +1710,11 @@ def export_excel_member_info_logic(request):
                     if group_check == 0:
                         lecture_list_info.group_info = '1:1 레슨'
                     elif group_check == 1:
-                        lecture_list_info.group_info = '[그룹]'+lecture_list_info.group_name
+                        lecture_list_info.group_info = '[그룹]'+lecture_info.package_tb.name
+                    elif group_check == 2:
+                        lecture_list_info.group_info = '[클래스]'+lecture_info.package_tb.name
                     else:
-                        lecture_list_info.group_info = '[클래스]'+lecture_list_info.group_name
+                        lecture_list_info.group_info = '[패키지]'+lecture_info.package_tb.name
 
                 if '\r\n' in lecture_info.note:
                     lecture_info.note = lecture_info.note.replace('\r\n', ' ')
@@ -1733,6 +1795,8 @@ def export_excel_member_info_logic(request):
                         ws1['C' + str(start_raw)] = time_duration_str
                         if pt_schedule_info.state_cd == 'PE':
                             ws1['D' + str(start_raw)] = '완료'
+                        elif pt_schedule_info.state_cd == 'PC':
+                            ws1['D' + str(start_raw)] = '결석'
                         else:
                             ws1['D' + str(start_raw)] = '시작전'
 
@@ -1807,7 +1871,7 @@ def add_lecture_info_logic(request):
     end_date_fast = request.POST.get('end_date_fast')
     search_confirm = request.POST.get('search_confirm', '0')
     class_id = request.session.get('class_id', '')
-    group_id = request.POST.get('group_id', '')
+    package_id = request.POST.get('group_id', '')
     setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     group_package_type = request.POST.get('group_package_type', 'group')
     next_page = request.POST.get('next_page')
@@ -1820,13 +1884,7 @@ def add_lecture_info_logic(request):
     input_price = 0
     # lecture_info = None
     input_contents = ''
-    package_id = ''
     # username = name
-
-    if group_package_type == 'package':
-        package_id = group_id
-        group_id = ''
-        error = 'package test'
 
     if user_id is None or user_id == '':
         error = '오류가 발생했습니다.'
@@ -1896,7 +1954,7 @@ def add_lecture_info_logic(request):
     if error is None:
 
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                      class_id, group_id, input_counts, input_price,
+                                      class_id, package_id, input_counts, input_price,
                                       input_start_date, input_end_date, input_contents,
                                       user.id, setting_lecture_auto_finish)
     if error is None:
@@ -1989,14 +2047,14 @@ def update_lecture_info_logic(request):
             note = lecture_info.note
 
     if error is None:
-        if input_lecture_reg_count < lecture_info.lecture_reg_count - lecture_info.lecture_avail_count:
-            error = '등록 횟수가 이미 등록한 스케쥴보다 적습니다.'
-
-    if error is None:
         schedule_list = ScheduleTb.objects.filter(lecture_tb=lecture_id)
         if len(schedule_list) > 0:
             reserve_pt_count = schedule_list.count()
-            finish_pt_count = schedule_list.filter(state_cd='PE').count()
+            finish_pt_count = schedule_list.filter(Q(state_cd='PE') | Q(state_cd='PC')).count()
+
+    if error is None:
+        if input_lecture_reg_count < reserve_pt_count:
+            error = '등록 횟수가 이미 등록한 스케쥴보다 적습니다.'
 
     if error is None:
         lecture_info.start_date = start_date
@@ -2010,20 +2068,23 @@ def update_lecture_info_logic(request):
             lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
             lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
         else:
-            if lecture_info.lecture_reg_count < input_lecture_reg_count:
-                lecture_info.lecture_reg_count = input_lecture_reg_count
-                lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
-                lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
-                lecture_info.refund_price = 0
-                lecture_info.refund_date = None
-                lecture_info.state_cd = 'IP'
+            # if lecture_info.lecture_reg_count < input_lecture_reg_count:
+            lecture_info.lecture_reg_count = input_lecture_reg_count
+            lecture_info.lecture_rem_count = input_lecture_reg_count - finish_pt_count
+            lecture_info.lecture_avail_count = input_lecture_reg_count - reserve_pt_count
+            # lecture_info.refund_price = 0
+            # lecture_info.refund_date = None
+            if lecture_info.state_cd == 'PE':
+                lecture_info.lecture_rem_count = 0
+                lecture_info.lecture_avail_count = 0
+                # lecture_info.state_cd = 'IP'
         lecture_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='수정', use=USE)
+                         log_info='수강권', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -2053,19 +2114,19 @@ def delete_lecture_info_logic(request):
 
     if error is None:
         error = func_delete_lecture_info(request.user.id, class_id, lecture_id, member_id)
-    if error is None:
-        try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_id, None, None)
+    # if error is None:
+    #     try:
+    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+    #     except ObjectDoesNotExist:
+    #         group_info = None
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보', log_how='삭제', use=USE)
+                         log_info='수강권', log_how='삭제', use=USE)
 
         log_data.save()
 
@@ -2102,20 +2163,21 @@ def finish_lecture_info_logic(request):
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
 
-    if error is None:
-        try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
+    # if error is None:
+    #     try:
+    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+    #     except ObjectDoesNotExist:
+    #         group_info = None
 
     if error is None:
         now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         # schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).exclude(state_cd='PE')
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                         end_dt__gt=now,
+                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
         # func_refresh_lecture_count(lecture_id)
 
@@ -2130,15 +2192,26 @@ def finish_lecture_info_logic(request):
         lecture_info.state_cd = 'PE'
         lecture_info.save()
 
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.save()
+
+        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+        group_lecture_data.update(fix_state_cd='')
+
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
+    # if error is None:
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='완료 처리', use=USE)
+                         log_info='수강권', log_how='종료 처리', use=USE)
 
         log_data.save()
 
@@ -2191,19 +2264,20 @@ def refund_lecture_info_logic(request):
     if error is None:
         if input_refund_price > lecture_info.price:
             error = '환불 금액이 등록 금액보다 많습니다.'
-
-    if error is None:
-        try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
+    #
+    # if error is None:
+    #     try:
+    #         group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
+    #     except ObjectDoesNotExist:
+    #         group_info = None
     if error is None:
         now = timezone.now()
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_id,
-                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                         end_dt__gt=now,
+                                                         use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_id)
 
         if len(schedule_data) > 0:
@@ -2217,7 +2291,8 @@ def refund_lecture_info_logic(request):
         lecture_info.refund_date = refund_date
         lecture_info.lecture_avail_count = 0
 
-        end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
+        end_schedule_counter = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                         lecture_tb_id=lecture_id).count()
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
@@ -2226,15 +2301,25 @@ def refund_lecture_info_logic(request):
         lecture_info.state_cd = 'RF'
         lecture_info.save()
 
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.save()
+
+        group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+        group_lecture_data.update(fix_state_cd='')
+
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    # if error is None:
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='환불 처리', use=USE)
+                         log_info='수강권', log_how='환불 처리', use=USE)
 
         log_data.save()
 
@@ -2253,7 +2338,7 @@ def progress_lecture_info_logic(request):
     class_id = request.session.get('class_id', '')
     error = None
     member_info = None
-    group_info = None
+    group_data = None
     lecture_info = None
 
     if lecture_id is None or lecture_id == '':
@@ -2272,30 +2357,67 @@ def progress_lecture_info_logic(request):
             error = '회원정보를 불러오지 못했습니다.'
 
     if error is None:
-        try:
-            group_info = GroupLectureTb.objects.get(lecture_tb_id=lecture_id, use=USE)
-        except ObjectDoesNotExist:
-            group_info = None
+        if lecture_info.package_tb.use == UN_USE:
+            error = '해당 수강권은 진행중 상태가 아닙니다.'
+        else:
+            if lecture_info.package_tb.state_cd != 'IP':
+                error = '해당 수강권은 진행중 상태가 아닙니다.'
+
+    if error is None:
+        group_data = GroupLectureTb.objects.select_related('group_tb').filter(lecture_tb_id=lecture_id, use=USE)
+        error_count = 0
+        for group_info in group_data:
+            if group_info.group_tb.state_cd != 'IP':
+                if group_info.group_tb.group_type_cd == 'NORMAL':
+                    error = group_info.group_tb.name + ' 그룹이 진행중 상태가 아닙니다.'
+                    error_count += 1
+                elif group_info.group_tb.group_type_cd == 'EMPTY':
+                    error = group_info.group_tb.name + ' 클래스가 진행중 상태가 아닙니다.'
+                    error_count += 1
+
+        if error_count > 1:
+            error = str(error_count)+'개의 그룹이 진행중 상태가 아닙니다.'
+
+    # if error is None:
+    #     error_count = 0
+    #     for group_info in group_data:
+    #         if group_info.group_tb.group_type_cd == 'NORMAL':
+    #             if group_info.group_tb.ing_group_member_num >= group_info.group_tb.member_num:
+    #                 error = group_info.group_tb.name + ' 그룹이 정원을 초과했습니다.'
+    #                 error_count += 1
+    #     if error_count > 1:
+    #         error = str(error_count)+'개의 그룹이 정원을 초과했습니다.'
+
     if error is None:
         # group_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
         schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
-        schedule_data_finish_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
-                                                               state_cd='PE').count()
+        schedule_data_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                               lecture_tb_id=lecture_info.lecture_id).count()
+
+    if error is None:
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
         lecture_info.refund_price = 0
         lecture_info.refund_date = None
         lecture_info.state_cd = 'IP'
         lecture_info.save()
-    if error is None:
-        if group_info is not None:
-            func_refresh_group_status(group_info.group_tb_id, None, None)
+        lecture_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+        lecture_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, lecture_info.package_tb_id))
+        # print(str(lecture_info.package_tb.ing_package_member_num))
+        # print(str(lecture_info.package_tb.end_package_member_num))
+        lecture_info.package_tb.save()
+        package_group_data = PackageGroupTb.objects.filter(package_tb_id=lecture_info.package_tb_id, use=USE)
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+    # if error is None:
+    #     if group_info is not None:
+    #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='진행중 처리', use=USE)
+                         log_info='수강권', log_how='재개 처리', use=USE)
 
         log_data.save()
 
@@ -2359,7 +2481,7 @@ def update_lecture_connection_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보 연동', log_how='수정', use=USE)
+                         log_info='수강권 연동 상태', log_how='수정', use=USE)
 
         log_data.save()
 
@@ -2377,31 +2499,46 @@ def add_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
+    end_color_cd = request.POST.get('end_color_cd', '#af757c')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#000000')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#000000')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
     try:
         with transaction.atomic():
             group_info = GroupTb(class_tb_id=class_id, group_type_cd=group_type_cd, member_num=member_num,
-                                 name=name, note=note, state_cd='IP', use=USE)
+                                 name=name, note=note, ing_color_cd=ing_color_cd, end_color_cd=end_color_cd,
+                                 ing_font_color_cd=ing_font_color_cd, end_font_color_cd=end_font_color_cd,
+                                 state_cd='IP', use=USE)
 
             group_info.save()
+
+            package_info = PackageTb(class_tb_id=class_id, name=name,
+                                     package_type_cd=group_type_cd, note=note, state_cd='IP', use=USE)
+            package_info.save()
+
+            package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_info.package_id,
+                                                group_tb_id=group_info.group_id, use=USE)
+            package_group_info.save()
     except ValueError:
-        error = '오류가 발생했습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. [1]'
     except IntegrityError:
-        error = '오류가 발생했습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. [2]'
     except TypeError:
-        error = '오류가 발생했습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. [3]'
     except ValidationError:
-        error = '오류가 발생했습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. [4]'
     except InternalError:
-        error = '오류가 발생했습니다. 다시 시도해주세요.'
+        error = '오류가 발생했습니다. [5]'
 
     if error is None:
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보', log_how='등록', use=USE)
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
+                         log_how='등록', use=USE)
         log_data.save()
 
     else:
@@ -2421,43 +2558,94 @@ def delete_group_info_logic(request):
         group_info = GroupTb.objects.get(group_id=group_id)
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
+    # try:
+    #     package_info = PackageTb.objects.get(package_id=package_id)
+    # except ObjectDoesNotExist:
+    #     error = '오류가 발생했습니다.'
+
+    package_data = PackageGroupTb.objects.filter(group_tb_id=group_id, use=USE)
 
     if error is None:
-        group_data = GroupLectureTb.objects.select_related('lecture_tb').filter(group_tb_id=group_id, use=USE)
+        group_data = GroupLectureTb.objects.select_related(
+            'lecture_tb__package_tb', 'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+    try:
+        with transaction.atomic():
+
+            if error is None:
+                if group_data is not None:
+                    for group_datum in group_data:
+                        group_datum.use = UN_USE
+                        group_datum.save()
+                        if group_datum.lecture_tb.package_tb.package_group_num == 1:
+                            error = func_delete_lecture_info(request.user.id, class_id, group_datum.lecture_tb_id,
+                                                             group_datum.lecture_tb.member_id)
+                            if error is not None:
+                                break
+                            # lecture_info = group_datum.lecture_tb
+                            # lecture_info.lecture_avail_count = 0
+                            # lecture_info.lecture_rem_count = 0
+                            # lecture_info.state_cd = 'PE'
+                            # lecture_info.save()
+            if error is None:
+                schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                          group_tb_id=group_id,
+                                                          end_dt__lte=timezone.now(),
+                                                          en_dis_type=ON_SCHEDULE_TYPE).exclude(Q(state_cd='PE')
+                                                                                                | Q(state_cd='PC'))
+                schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
+                                                                 # lecture_tb__isnull=True,
+                                                                 end_dt__gt=timezone.now(),
+                                                                 en_dis_type=ON_SCHEDULE_TYPE
+                                                                 ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                       group_tb_id=group_id)
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 class_tb_id=class_id,
+                                                                 group_tb_id=group_id,
+                                                                 en_dis_type=ON_SCHEDULE_TYPE)
+                if len(schedule_data) > 0:
+                    schedule_data.update(state_cd='PE', use=UN_USE)
+                if len(schedule_data_delete) > 0:
+                    schedule_data_delete.delete()
+                if len(repeat_schedule_data) > 0:
+                    repeat_schedule_data.delete()
+                if len(schedule_data_finish) > 0:
+                    schedule_data_finish.update(use=UN_USE)
+            if error is None:
+                group_info.state_cd = 'PE'
+                group_info.use = UN_USE
+                group_info.save()
+                # package_info.state_cd = 'PE'
+                # package_info.use = 0
+                # package_info.save()
+                for package_data_info in package_data:
+                    package_data_info.use = 0
+                    package_data_info.save()
+                    package_data_info.package_tb.package_group_num = PackageGroupTb.objects.filter(
+                        package_tb_id=package_data_info.package_tb_id, group_tb__state_cd='IP', use=USE).count()
+                    if package_data_info.package_tb.package_group_num <= 0:
+                        package_data_info.package_tb.state_cd = 'PE'
+                        package_data_info.package_tb.use = UN_USE
+                        package_data_info.package_tb.save()
+            if error is not None:
+                raise InternalError
+
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except IntegrityError:
+        error = '오류가 발생했습니다. [2]'
+    except TypeError:
+        error = '오류가 발생했습니다. [3]'
+    except ValidationError:
+        error = '오류가 발생했습니다. [4]'
+    except InternalError:
+        error = error
 
     if error is None:
-        if group_data is not None:
-            for group_datum in group_data:
-                lecture_info = group_datum.lecture_tb
-                lecture_info.lecture_avail_count = 0
-                lecture_info.lecture_rem_count = 0
-                lecture_info.state_cd = 'PE'
-                lecture_info.save()
-    if error is None:
-        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                  group_tb_id=group_id,
-                                                  end_dt__lte=timezone.now(),
-                                                  en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
-        schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id,
-                                                         # lecture_tb__isnull=True,
-                                                         end_dt__gt=timezone.now(),
-                                                         en_dis_type=ON_SCHEDULE_TYPE).exclude(state_cd='PE')
-        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
-                                                               group_tb_id=group_id)
-        if len(schedule_data) > 0:
-            schedule_data.update(state_cd='PE')
-        if len(schedule_data_delete) > 0:
-            schedule_data_delete.delete()
-        if len(repeat_schedule_data) > 0:
-            repeat_schedule_data.delete()
-    if error is None:
-        group_info.state_cd = 'PE'
-        group_info.use = 0
-        group_info.save()
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
                          log_how='삭제', use=USE)
         log_data.save()
     else:
@@ -2476,6 +2664,10 @@ def update_group_info_logic(request):
     member_num = request.POST.get('member_num', '')
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
+    ing_color_cd = request.POST.get('ing_color_cd', '')
+    end_color_cd = request.POST.get('end_color_cd', '')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     group_info = None
     error = None
@@ -2498,28 +2690,54 @@ def update_group_info_logic(request):
 
         if note == '' or note is None:
             note = group_info.note
+
+        if ing_color_cd == '' or ing_color_cd is None:
+            ing_color_cd = group_info.ing_color_cd
+
+        if end_color_cd == '' or end_color_cd is None:
+            end_color_cd = group_info.end_color_cd
+
+        if ing_font_color_cd == '' or ing_font_color_cd is None:
+            ing_font_color_cd = group_info.ing_font_color_cd
+
+        if end_font_color_cd == '' or end_font_color_cd is None:
+            end_font_color_cd = group_info.end_font_color_cd
+
     if error is None:
         if int(member_num) <= 0:
             error = '정원은 1명 이상이어야 합니다.'
 
     if error is None:
-        if group_type_cd == 'NORMAL':
-            group_member_num = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-            if group_member_num > int(member_num):
-                error = '현재 그룹에 추가된 인원이 정원보다 많습니다.'
+        member_fix_data = []
+        group_lecture_data = GroupLectureTb.objects.select_related(
+            'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+        for group_lecture_info in group_lecture_data:
+            check = 0
+            for member_fix_info in member_fix_data:
+                if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
+                    check = 1
+            if check == 0:
+                if group_lecture_info.fix_state_cd == 'FIX':
+                    member_fix_data.append(group_lecture_info.lecture_tb.member_id)
+        if int(member_num) < len(member_fix_data):
+            error = '정원보다 고정인원이 많습니다.'
 
     if error is None:
         group_info.group_type_cd = group_type_cd
         group_info.member_num = member_num
         group_info.name = name
         group_info.note = note
+        group_info.ing_color_cd = ing_color_cd
+        group_info.end_color_cd = end_color_cd
+        group_info.ing_font_color_cd = ing_font_color_cd
+        group_info.end_font_color_cd = end_font_color_cd
         group_info.save()
 
     if error is None:
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
                          log_how='수정', use=USE)
         log_data.save()
 
@@ -2560,39 +2778,6 @@ def add_group_member_logic(request):
             except ObjectDoesNotExist:
                 error = '오류가 발생했습니다.'
 
-            if error is None:
-                group_counter = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE).count()
-                group_counter += len(json_loading_data['new_member_data']) + len(json_loading_data['old_member_data'])
-                if group_info.group_type_cd == 'NORMAL':
-                    if group_counter > group_info.member_num:
-                        error = '그룹 정원을 초과했습니다.'
-
-    if error is None:
-        if group_info.group_type_cd == 'NORMAL':
-            if json_loading_data['old_member_data'] != '[]':
-                for json_info in json_loading_data['old_member_data']:
-                    member_info = None
-                    try:
-                        member_info = MemberTb.objects.get(member_id=json_info['db_id'])
-                    except ObjectDoesNotExist:
-                        error = '회원 정보를 불러오지 못했습니다.'
-
-                    member_lecture_data = MemberLectureTb.objects.filter(member_id=json_info['db_id'], use=USE)
-
-                    for member_lecture_info in member_lecture_data:
-                        lecture_group_check = 0
-                        try:
-                            GroupLectureTb.objects.get(group_tb_id=group_id,
-                                                       lecture_tb_id=member_lecture_info.lecture_tb_id, use=USE)
-                        except ObjectDoesNotExist:
-                            lecture_group_check = 1
-                        if group_info.group_type_cd == 'NORMAL':
-                            if lecture_group_check == 0:
-                                error = member_info.name + ' 회원님이 이미 그룹에 포함되어있습니다.'
-                                break
-                    if error is not None:
-                        break
-
     if error is None:
         try:
             with transaction.atomic():
@@ -2618,8 +2803,15 @@ def add_group_member_logic(request):
 
                 if error is None:
                     for user_info in user_db_id_list:
+                        try:
+                            package_info = PackageGroupTb.objects.filter(
+                                ~Q(package_tb__package_type_cd='PACKAGE'),
+                                group_tb_id=json_loading_data['lecture_info']['group_id'], use=USE).latest('mod_dt')
+                            package_id = package_info.package_tb_id
+                        except ObjectDoesNotExist:
+                            package_id = ''
                         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, json_loading_data['lecture_info']['group_id'],
+                                                      class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],
@@ -2635,7 +2827,7 @@ def add_group_member_logic(request):
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원',
                          log_how='등록', use=USE)
         log_data.save()
 
@@ -2707,12 +2899,12 @@ def delete_group_member_info_logic(request):
                 except ValidationError:
                     error = '오류가 발생했습니다.'
                 except InternalError:
-                    error = '오류가 발생했습니다.'
+                    error = error
 
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_name, class_tb_id=class_id,
-                             log_info='수강 정보',
+                             log_info='수강권',
                              log_how='삭제', use=USE)
             log_data.save()
 
@@ -2733,7 +2925,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         context = super(GetGroupIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         error = None
-        start_time = timezone.now()
+        # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
@@ -2753,7 +2945,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
         context['group_data'] = group_data
 
-        end_time = timezone.now()
+        # end_time = timezone.now()
         # print(str(end_time-start_time))
 
         return context
@@ -2775,8 +2967,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
 
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-                                                       state_cd_nm=RawSQL(query_state_cd, []),
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
+                                                       state_cd_nm=RawSQL(query_state_cd, [])
                                                        ).order_by('-group_type_cd')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
         # for group_info in group_data:
@@ -2824,100 +3015,31 @@ class GetGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # context = {}
         context = super(GetGroupMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
         group_id = self.request.GET.get('group_id', '')
         error = None
-        member_data = []
-        lecture_list = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+        # member_data = []
+        member_data = func_get_ing_group_member_list(class_id, group_id, self.request.user.id)
 
-        for lecture_info in lecture_list:
-            # member_info = lecture_info.lecture_tb
-            try:
-                member_info = MemberLectureTb.objects.select_related('lecture_tb', 'member').get(lecture_tb_id=lecture_info.lecture_tb_id, use=USE)
-            except ObjectDoesNotExist:
-                error = '회원 정보를 불러오지 못했습니다.'
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
 
-            if error is None:
-                member_info.member.lecture_tb = lecture_info.lecture_tb
-                if member_info.member.sex is None:
-                    member_info.member.sex = ''
-                if member_info.member.birthday_dt is None or member_info.member.birthday_dt == '':
-                    member_info.member.birthday_dt = ''
-                else:
-                    member_info.member.birthday_dt = str(member_info.member.birthday_dt)
+        context['member_data'] = member_data
+        return context
 
-                if member_info.member.reg_info is None or str(member_info.member.reg_info) != str(self.request.user.id):
-                    if member_info.auth_cd != 'VIEW':
-                        member_info.member.sex = ''
-                        member_info.member.birthday_dt = ''
-                        if member_info.member.phone is None:
-                            member_info.member.phone = ''
-                        else:
-                            member_info.member.phone = '***-****-' + member_info.member.phone[7:]
 
-                if member_info.member.phone is None:
-                    member_info.member.phone = ''
+class GetEndGroupMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/group_member_ajax.html'
 
-                check_add_flag = 0
-                for member_test in member_data:
-                    if member_test.user.id == member_info.member.user.id:
-
-                        if member_test.lecture_tb.lecture_available_id == '':
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() is None \
-                                or member_test.lecture_tb.start_date == '':
-                            member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                            if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.start_date, '%Y-%m-%d').date() \
-                                    > lecture_info.lecture_tb.start_date:
-                                member_test.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                                if lecture_info.lecture_tb.lecture_avail_count > 0:
-                                    member_test.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-                        if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() is None \
-                                or member_test.lecture_tb.end_date == '':
-                            member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.end_date, '%Y-%m-%d').date() \
-                                    < lecture_info.lecture_tb.end_date:
-                                member_test.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                        if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') is None \
-                                or member_test.lecture_tb.mod_dt == '':
-                            member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.mod_dt, '%Y-%m-%d %H:%M:%S') \
-                                    > lecture_info.lecture_tb.mod_dt:
-                                member_test.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt)
-
-                        if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                      '%Y-%m-%d %H:%M:%S') is None \
-                                or member_test.lecture_tb.reg_dt == '':
-                            member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                        else:
-                            if datetime.datetime.strptime(member_test.lecture_tb.reg_dt,
-                                                          '%Y-%m-%d %H:%M:%S') > lecture_info.lecture_tb.reg_dt:
-                                member_test.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt)
-                        member_test.lecture_tb.lecture_reg_count += lecture_info.lecture_tb.lecture_reg_count
-                        member_test.lecture_tb.lecture_rem_count += lecture_info.lecture_tb.lecture_rem_count
-                        member_test.lecture_tb.lecture_avail_count += lecture_info.lecture_tb.lecture_avail_count
-                        check_add_flag = 1
-
-                if check_add_flag == 0:
-                    member_info.member.lecture_tb.start_date = str(lecture_info.lecture_tb.start_date)
-                    member_info.member.lecture_tb.end_date = str(lecture_info.lecture_tb.end_date)
-                    member_info.member.lecture_tb.mod_dt = str(lecture_info.lecture_tb.mod_dt).split('.')[0]
-                    member_info.member.lecture_tb.reg_dt = str(lecture_info.lecture_tb.reg_dt).split('.')[0]
-
-                    member_info.member.lecture_tb.lecture_reg_count = lecture_info.lecture_tb.lecture_reg_count
-                    member_info.member.lecture_tb.lecture_rem_count = lecture_info.lecture_tb.lecture_rem_count
-                    member_info.member.lecture_tb.lecture_avail_count = lecture_info.lecture_tb.lecture_avail_count
-                    member_info.member.lecture_tb.lecture_available_id = ''
-                    if lecture_info.lecture_tb.lecture_avail_count > 0:
-                        member_info.member.lecture_tb.lecture_available_id = lecture_info.lecture_tb.lecture_id
-
-                    member_data.append(member_info.member)
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetEndGroupMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        group_id = self.request.GET.get('group_id', '')
+        error = None
+        member_data = func_get_end_group_member_list(class_id, group_id, self.request.user.id)
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -2943,12 +3065,14 @@ def finish_group_info_logic(request):
             error = '오류가 발생했습니다.'
     if error is None:
         group_data = GroupLectureTb.objects.select_related('lecture_tb').filter(group_tb_id=group_id, use=USE)
+        # group_data.update(use=UN_USE)
 
     if error is None:
         schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
-                                                  end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                                                  end_dt__lte=now, use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
         schedule_data_delete = ScheduleTb.objects.filter(group_tb_id=group_id,
-                                                         end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                                                         end_dt__gt=now, use=USE).exclude(Q(state_cd='PE')
+                                                                                          | Q(state_cd='PC'))
         repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id)
         # group_data.update(lecture_tb__state_cd='PE',
         #                   lecture_tb__lecture_avail_count=0, lecture_tb__lecture_rem_count=0)
@@ -2958,6 +3082,9 @@ def finish_group_info_logic(request):
             schedule_data_delete.delete()
         if len(repeat_schedule_data) > 0:
             repeat_schedule_data.delete()
+
+        group_info.state_cd = 'PE'
+        group_info.save()
 
         if group_data is not None:
             for group_datum in group_data:
@@ -2976,18 +3103,69 @@ def finish_group_info_logic(request):
                 #     schedule_data_delete.delete()
                 # if len(repeat_schedule_data) > 0:
                 # #     repeat_schedule_data.delete()
-                lecture_info.lecture_avail_count = 0
-                lecture_info.lecture_rem_count = 0
-                lecture_info.state_cd = 'PE'
-                lecture_info.save()
-        group_info.state_cd = 'PE'
+                if lecture_info.package_tb.package_group_num == 1:
+                    schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                     lecture_tb_id=lecture_info.lecture_id)
+                    lecture_info.lecture_avail_count = 0
+                    if lecture_info.state_cd == 'RF':
+                        lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+                    else:
+                        lecture_info.lecture_rem_count = 0
+                        lecture_info.state_cd = 'PE'
+                    lecture_info.save()
+
+        package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id, use=USE)
+        for package_group_info in package_group_data:
+            # package_group_info.use = UN_USE
+            # package_group_info.save()
+
+            # package_lecture_data = ClassLectureTb.objects.select_related(
+            #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
+            #                                      lecture_tb__package_tb_id=package_group_info.package_tb_id, use=USE)
+            # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
+            # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
+            # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
+            # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
+
+            package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id,
+                                                                                                        package_group_info.package_tb_id))
+            package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id,
+                                                                                                        package_group_info.package_tb_id))
+            package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                group_tb__state_cd='IP',
+                                                                package_tb_id=package_group_info.package_tb_id,
+                                                                use=USE).count()
+            package_group_info.package_tb.package_group_num = package_group_count
+            if package_group_info.package_tb.package_group_num == 0:
+                package_group_info.package_tb.state_cd = 'PE'
+            elif package_group_info.package_tb.package_group_num == 1:
+                try:
+                    package_type_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                   group_tb__state_cd='IP',
+                                                                   package_tb_id=package_group_info.package_tb_id,
+                                                                   use=USE)
+                    package_group_info.package_tb.package_type_cd = package_type_info.group_tb.group_type_cd
+                except MultipleObjectsReturned:
+                    package_group_info.package_tb.package_type_cd = 'PACKAGE'
+                except ObjectDoesNotExist:
+                    package_group_info.package_tb.package_type_cd = package_group_info.package_tb.package_type_cd
+            package_group_info.package_tb.save()
+
+    if error is None:
+
+        group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                             group_id,
+                                                                             request.user.id))
+        group_info.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                             group_id,
+                                                                             request.user.id))
         group_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 수강 정보',
+                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
                          log_how='완료 처리', use=USE)
 
         log_data.save()
@@ -3014,25 +3192,67 @@ def progress_group_info_logic(request):
             error = '그룹 정보를 불러오지 못했습니다.'
 
     if error is None:
-        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
+        group_data = GroupLectureTb.objects.filter(group_tb_id=group_id)
+        # group_data.update(use=USE)
     if error is None:
         if group_data is not None:
             for group_datum in group_data:
                 lecture_info = group_datum.lecture_tb
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
-                schedule_data_finish = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, state_cd='PE')
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id)
                 lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
                 lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
-                lecture_info.state_cd = 'IP'
+                if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
+                    lecture_info.state_cd = 'IP'
                 lecture_info.save()
         group_info.state_cd = 'IP'
         group_info.save()
 
+        package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, group_tb_id=group_id, use=USE)
+        for package_group_info in package_group_data:
+            # package_group_info.use = USE
+            # package_group_info.save()
+
+            # package_lecture_data = ClassLectureTb.objects.select_related(
+            #     'lecture_tb__package_tb').filter(auth_cd='VIEW',
+            #                                      lecture_tb__package_tb_id=package_group_info.package_tb_id, use=USE)
+            # package_ing_lecture_count = package_lecture_data.filter(lecture_tb__state_cd='IP').count()
+            # package_end_lecture_count = package_lecture_data.count() - package_ing_lecture_count
+            # package_group_info.package_tb.ing_package_member_num = package_ing_lecture_count
+            # package_group_info.package_tb.end_package_member_num = package_end_lecture_count
+
+            package_group_info.package_tb.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_group_info.package_tb_id))
+            package_group_info.package_tb.end_package_member_num = len(func_get_end_package_member_list(class_id, package_group_info.package_tb_id))
+
+            package_group_count = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                group_tb__state_cd='IP',
+                                                                package_tb_id=package_group_info.package_tb_id,
+                                                                use=USE).count()
+            package_group_info.package_tb.package_group_num = package_group_count
+            if package_group_info.package_tb.package_group_num == 0:
+                package_group_info.package_tb.state_cd = 'PE'
+            elif package_group_info.package_tb.package_group_num == 1:
+                package_group_info.package_tb.state_cd = 'IP'
+                package_group_info.package_tb.package_type_cd = group_info.group_type_cd
+            else:
+                package_group_info.package_tb.package_type_cd = 'PACKAGE'
+
+            package_group_info.package_tb.save()
+
+        group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_id,
+                                                                             group_id,
+                                                                             request.user.id))
+        group_info.end_group_member_num = len(func_get_end_group_member_list(class_id,
+                                                                             group_id,
+                                                                             request.user.id))
+        group_info.save()
+
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 수강 정보',
+                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
                          log_how='재개', use=USE)
 
         log_data.save()
@@ -3045,6 +3265,521 @@ def progress_group_info_logic(request):
         return render(request, 'ajax/trainer_error_ajax.html')
 
 
+# 그룹 회원 삭제
+def update_fix_group_member_logic(request):
+    # class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
+    json_loading_data = None
+    error = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. [1]'
+    except TypeError:
+        error = '오류가 발생했습니다. [2]'
+
+    group_id = json_loading_data['group_id']
+    try:
+        group_info = GroupTb.objects.get(group_id=group_id, use=USE)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        # idx = 0
+        if error is None:
+            member_fix_data = []
+            fix_counter = 0
+            group_lecture_data = GroupLectureTb.objects.select_related(
+                'lecture_tb__member').filter(group_tb_id=group_id, use=USE)
+            for group_lecture_info in group_lecture_data:
+                check = 0
+                for member_fix_info in member_fix_data:
+                    if str(member_fix_info) == str(group_lecture_info.lecture_tb.member_id):
+                        check = 1
+                if check == 0:
+                    if group_lecture_info.fix_state_cd == 'FIX':
+                        member_fix_data.append(group_lecture_info.lecture_tb.member_id)
+
+            for json_info in json_loading_data['member_info']:
+                if json_info['fix_info'] == 'FIX':
+                    fix_counter += 1
+            if fix_counter != 0:
+                if len(member_fix_data) + fix_counter > group_info.member_num:
+                    error = '그룹 정원보다 고정 회원이 많습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                for json_info in json_loading_data['member_info']:
+                    group_lecture_counter = GroupLectureTb.objects.select_related(
+                        'lecture_tb__member').filter(group_tb_id=group_id,
+                                                     lecture_tb__member_id=json_info['member_id'],
+                                                     lecture_tb__state_cd='IP', use=USE).count()
+                    if group_lecture_counter == 0:
+                        error = '이미 종료된 회원입니다.'
+
+                    if error is None and group_lecture_data is not None:
+                        for group_lecture_info in group_lecture_data:
+                            if str(group_lecture_info.lecture_tb.member_id) == str(json_info['member_id']):
+                                group_lecture_info.fix_state_cd = json_info['fix_info']
+                                group_lecture_info.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [4]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [5]'
+        except TypeError:
+            error = '오류가 발생했습니다. [6]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [7]'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(
+            request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지 추가
+def add_package_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
+    json_loading_data = None
+    error = None
+    package_info = None
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다. [0]'
+    except TypeError:
+        error = '오류가 발생했습니다. [1]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                package_name = json_loading_data['package_info']['package_name']
+                # package_type_cd = ''
+                if package_name is None or package_name == '':
+                    error = '패키지 이름을 입력하세요.'
+                    raise InternalError
+
+                if len(json_loading_data['new_package_group_data']) == 0:
+                    error = '패키지는 1가지 이상의 수강권을 선택하셔야 합니다.'
+                    raise InternalError
+                elif len(json_loading_data['new_package_group_data']) > 1:
+                    package_type_cd = 'PACKAGE'
+                elif len(json_loading_data['new_package_group_data']) == 1:
+                    group_id = json_loading_data['new_package_group_data'][0]['group_id']
+                    try:
+                        package_type_cd = GroupTb.objects.get(group_id=group_id, use=USE).group_type_cd
+                    except ObjectDoesNotExist:
+                        error = '오류가 발생했습니다. [3]'
+                else:
+                    error = '오류가 발생했습니다. [4]'
+
+                package_info = PackageTb(class_tb_id=class_id, name=package_name,
+                                         state_cd='IP', package_type_cd=package_type_cd,
+                                         package_group_num=len(json_loading_data['new_package_group_data']),
+                                         ing_package_member_num=0, end_package_member_num=0,
+                                         note=json_loading_data['package_info']['package_note'], use=USE)
+                package_info.save()
+
+                if json_loading_data['new_package_group_data'] != '[]':
+                    for json_info in json_loading_data['new_package_group_data']:
+                        if json_info['group_id'] is None or json_info['group_id'] == '':
+                            error = '오류가 발생했습니다. [5]'
+                            raise InternalError
+                        else:
+
+                            package_group_counter = PackageGroupTb.objects.filter(package_tb_id=package_info.package_id,
+                                                                                  group_tb_id=json_info['group_id'],
+                                                                                  use=USE).count()
+                            if package_group_counter > 0:
+                                error = '오류가 발생했습니다. [6]'
+                                raise InternalError
+
+                            if error is None:
+                                package_group_info = PackageGroupTb(class_tb_id=class_id,
+                                                                    package_tb_id=package_info.package_id,
+                                                                    group_tb_id=json_info['group_id'],
+                                                                    use=USE)
+                                package_group_info.save()
+
+        except InternalError:
+            error = error
+
+    if error is not None:
+        log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권',
+                         log_how='등록', use=USE)
+        log_data.save()
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지 삭제
+def delete_package_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    package_id = request.POST.get('package_id', '')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
+    error = None
+    package_info = None
+    try:
+        package_info = PackageTb.objects.get(class_tb_id=class_id, package_id=package_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                package_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                         lecture_tb__package_tb_id=package_id, use=USE)
+
+                for package_lecture_info in package_lecture_data:
+                    # package_lecture_info.auth_cd = 'DELETE'
+                    # package_lecture_info.save()
+
+                    error = func_delete_lecture_info(request.user.id, class_id, package_lecture_info.lecture_tb_id,
+                                                     package_lecture_info.lecture_tb.member_id)
+                    if error is not None:
+                        break
+                    # if package_lecture_info.lecture_tb.lecture_rem_count \
+                    #         == package_lecture_info.lecture_tb.lecture_reg_count:
+                    #     package_lecture_info.lecture_tb.delete()
+                    # else:
+                    #     if package_lecture_info.lecture_tb.state_cd == 'IP':
+                    #         package_lecture_info.lecture_tb.state_cd = 'PE'
+                    #         package_lecture_info.lecture_tb.lecture_avail_count = 0
+                    #         package_lecture_info.lecture_tb.lecture_rem_count = 0
+                    #         package_lecture_info.lecture_tb.save()
+
+                # if error is None:
+                #     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                               lecture_tb__package_tb_id=package_id,
+                #                                               end_dt__lte=now, use=USE).exclude(Q(state_cd='PE')
+                #                                                                                 | Q(state_cd='PC'))
+                #     schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                                      lecture_tb__package_tb_id=package_id,
+                #                                                      end_dt__gt=now,
+                #                                                      use=USE).exclude(Q(state_cd='PE')
+                #                                                                       | Q(state_cd='PC'))
+                #     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                #                                                            lecture_tb__package_tb_id=package_id)
+                #
+                #     if len(schedule_data) > 0:
+                #         schedule_data.update(state_cd='PE')
+                #     if len(schedule_data_delete) > 0:
+                #         schedule_data_delete.delete()
+                #     if len(repeat_schedule_data) > 0:
+                #         repeat_schedule_data.delete()
+                if error is None:
+                    package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id, package_tb_id=package_id,
+                                                                       use=USE)
+                    for package_group_info in package_group_data:
+                        package_group_info.use = UN_USE
+                        package_group_info.save()
+                        func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
+                # if error is None:
+                #     if len(package_group_data) == 1:
+                #         group_id = package_group_data[0].group_tb.group_id
+                        # schedule_data = ScheduleTb.objects.filter(group_tb_id=group_id,
+                        #                                           end_dt__lte=now, use=USE).exclude(state_cd='PE')
+                        # schedule_data_delete = ScheduleTb.objects.filter(group_tb_id=group_id,
+                        #                                                  end_dt__gt=now, use=USE).exclude(state_cd='PE')
+                        # repeat_schedule_data = RepeatScheduleTb.objects.filter(group_tb_id=group_id)
+                        #
+                        # if len(schedule_data) > 0:
+                        #     schedule_data.update(state_cd='PE')
+                        # if len(schedule_data_delete) > 0:
+                        #     schedule_data_delete.delete()
+                        # if len(repeat_schedule_data) > 0:
+                        #     repeat_schedule_data.delete()
+                        # package_group_data[0].group_tb.state_cd = 'PE'
+                        # package_group_data[0].group_tb.use = UN_USE
+                        # package_group_data[0].group_tb.save()
+
+                package_info.state_cd = 'PE'
+                package_info.use = UN_USE
+                package_info.save()
+
+        except ValueError:
+            error = '오류가 발생했습니다. [1]'
+        except IntegrityError:
+            error = '오류가 발생했습니다. [2]'
+        except TypeError:
+            error = '오류가 발생했습니다. [3]'
+        except ValidationError:
+            error = '오류가 발생했습니다. [4]'
+
+    if error is not None:
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권',
+                         log_how='삭제', use=USE)
+        log_data.save()
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지 추가
+def update_package_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    package_id = request.POST.get('package_id', '')
+    package_name = request.POST.get('package_name', '')
+    package_note = request.POST.get('package_note', '')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
+    error = None
+    try:
+        package_info = PackageTb.objects.get(class_tb_id=class_id, package_id=package_id)
+    except ObjectDoesNotExist:
+        error = '오류가 발생했습니다. [0]'
+    if error is None:
+        if package_name is not None and package_name != '':
+            package_info.name = package_name
+        if package_note is not None and package_note != '':
+            package_info.note = package_note
+        package_info.save()
+
+    if error is not None:
+        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권',
+                         log_how='수정', use=USE)
+        log_data.save()
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지에 그룹 추가
+def add_package_group_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    package_id = request.POST.get('package_id', '')
+    group_id = request.POST.get('group_id', '')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
+    error = None
+    package_group_counter = PackageGroupTb.objects.filter(package_tb_id=package_id, group_tb_id=group_id,
+                                                          use=USE).count()
+    if package_group_counter > 0:
+        error = '이미 포함된 그룹입니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                package_group_info = PackageGroupTb(class_tb_id=class_id, package_tb_id=package_id,
+                                                    group_tb_id=group_id, use=USE)
+                package_group_info.save()
+                package_group_info.package_tb.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                                group_tb__state_cd='IP',
+                                                                                                package_tb_id=package_id,
+                                                                                                use=USE).count()
+                package_group_info.package_tb.package_type_cd = 'PACKAGE'
+                package_group_info.package_tb.save()
+                package_group_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__member').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                    lecture_tb__package_tb_id=package_id,
+                                                    lecture_tb__use=USE, use=USE)
+
+                query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                    "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                    " B.USE=1"
+                for package_group_lecture_info in package_group_lecture_data:
+
+                    group_lecture_counter = GroupLectureTb.objects.filter(
+                        group_tb_id=package_group_info.group_tb_id,
+                        lecture_tb__member_id=package_group_lecture_info.lecture_tb.member_id,
+                        lecture_tb__state_cd='IP', lecture_tb__use=USE, fix_state_cd='FIX',
+                        use=USE).annotate(class_count=RawSQL(query_class_count,
+                                                             [])).filter(class_count__gte=1).count()
+                    if group_lecture_counter > 0:
+                        fix_state_cd = 'FIX'
+                    else:
+                        fix_state_cd = ''
+                    group_lecture_info = GroupLectureTb(group_tb_id=package_group_info.group_tb_id,
+                                                        lecture_tb_id=package_group_lecture_info.lecture_tb_id,
+                                                        fix_state_cd=fix_state_cd, use=USE)
+                    group_lecture_info.save()
+                    # group_lecture_info = GroupLectureTb(group_tb_id=group_id,
+                    #                                     lecture_tb_id=package_group_lecture_info.lecture_tb_id,
+                    #                                     use=USE)
+                    # group_lecture_info.save()
+                func_refresh_group_status(group_id, None, None)
+
+        except ValueError:
+            error = '오류가 발생했습니다.'
+        except IntegrityError:
+            error = '오류가 발생했습니다.'
+        except TypeError:
+            error = '오류가 발생했습니다.'
+        except ValidationError:
+            error = '오류가 발생했습니다.'
+        except InternalError:
+            error = '오류가 발생했습니다.'
+
+    if error is not None:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지에서 그룹 삭제
+def delete_package_group_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    package_id = request.POST.get('package_id', '')
+    group_id = request.POST.get('group_id', '')
+    next_page = request.POST.get('next_page', '/trainer/get_error_info/')
+    error = None
+
+    if error is None:
+        try:
+            with transaction.atomic():
+                package_group_data = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                   package_tb_id=package_id, group_tb_id=group_id,
+                                                                   use=USE)
+                package_group_data.update(use=UN_USE)
+
+                package_group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
+                                                                           lecture_tb__package_tb_id=package_id)
+
+                package_group_lecture_data.update(fix_state_cd='', use=UN_USE)
+                try:
+                    package_info = PackageTb.objects.get(package_id=package_id)
+                except ObjectDoesNotExist:
+                    package_info = None
+                if package_info is not None:
+                    package_info.package_group_num = PackageGroupTb.objects.filter(class_tb_id=class_id,
+                                                                                   group_tb__state_cd='IP',
+                                                                                   package_tb_id=package_id,
+                                                                                   use=USE).count()
+                    if package_info.package_group_num == 1:
+                        try:
+                            package_group_info = PackageGroupTb.objects.get(class_tb_id=class_id,
+                                                                            package_tb_id=package_id, use=USE)
+                            package_info.package_type_cd = package_group_info.group_tb.group_type_cd
+                        except MultipleObjectsReturned:
+                            package_info.package_type_cd = 'PACKAGE'
+                        except ObjectDoesNotExist:
+                            package_info.package_type_cd = package_info.package_type_cd
+
+                    package_info.save()
+
+                if package_info is not None:
+
+                    class_lecture_data = ClassLectureTb.objects.select_related(
+                        'lecture_tb__package_tb').filter(class_tb_id=class_id,
+                                                         lecture_tb__package_tb_id=package_id,
+                                                         auth_cd='VIEW', lecture_tb__state_cd='IP',
+                                                         lecture_tb__use=USE, use=USE)
+
+                    if package_info.package_group_num == 0:
+                        for class_lecture_info in class_lecture_data:
+
+                            error = func_delete_lecture_info(request.user.id, class_id,
+                                                             class_lecture_info.lecture_tb_id,
+                                                             class_lecture_info.lecture_tb.member_id)
+                            # lecture_info = class_lecture_info.lecture_tb
+                            #
+                            # if lecture_info.lecture_rem_count == lecture_info.lecture_reg_count:
+                            #     lecture_info.delete()
+                            # else:
+                            #     if lecture_info.state_cd == 'IP':
+                            #         lecture_info.lecture_avail_count = 0
+                            #         lecture_info.lecture_rem_count = 0
+                            #         lecture_info.state_cd = 'PE'
+                            #         lecture_info.save()
+                        # if error is None:
+                        #     schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                        #                                               lecture_tb__package_tb_id=package_id,
+                        #                                               end_dt__lte=timezone.now(),
+                        #                                               en_dis_type=ON_SCHEDULE_TYPE
+                        #                                               ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                        #     schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                        #                                                      lecture_tb__package_tb_id=package_id,
+                        #                                                      # lecture_tb__isnull=True,
+                        #                                                      end_dt__gt=timezone.now(),
+                        #                                                      en_dis_type=ON_SCHEDULE_TYPE
+                        #                                                      ).exclude(Q(state_cd='PE')
+                        #                                                                | Q(state_cd='PC'))
+                        #     repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                        #                                                            lecture_tb__package_tb_id=package_id)
+                        #     if len(schedule_data) > 0:
+                        #         schedule_data.update(state_cd='PE')
+                        #     if len(schedule_data_delete) > 0:
+                        #         schedule_data_delete.delete()
+                        #     if len(repeat_schedule_data) > 0:
+                        #         repeat_schedule_data.delete()
+                        package_info.use = UN_USE
+                        package_info.save()
+                    else:
+                        schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                  lecture_tb__package_tb_id=package_id,
+                                                                  group_tb_id=group_id,
+                                                                  end_dt__lte=timezone.now(),
+                                                                  en_dis_type=ON_SCHEDULE_TYPE
+                                                                  ).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                        schedule_data_delete = ScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                         lecture_tb__package_tb_id=package_id,
+                                                                         group_tb_id=group_id,
+                                                                         # lecture_tb__isnull=True,
+                                                                         end_dt__gt=timezone.now(),
+                                                                         en_dis_type=ON_SCHEDULE_TYPE
+                                                                         ).exclude(Q(state_cd='PE')
+                                                                                   | Q(state_cd='PC'))
+                        repeat_schedule_data = RepeatScheduleTb.objects.filter(class_tb_id=class_id,
+                                                                               lecture_tb__package_tb_id=package_id,
+                                                                               group_tb_id=group_id)
+                        if len(schedule_data) > 0:
+                            schedule_data.update(state_cd='PE')
+                        if len(schedule_data_delete) > 0:
+                            schedule_data_delete.delete()
+                        if len(repeat_schedule_data) > 0:
+                            repeat_schedule_data.delete()
+                        for class_lecture_info in class_lecture_data:
+                            error = func_refresh_lecture_count(class_lecture_info.class_tb_id,
+                                                               class_lecture_info.lecture_tb_id)
+
+                func_refresh_group_status(group_id, None, None)
+
+                if error is not None:
+                    raise InternalError
+
+        except ValueError:
+            error = '오류가 발생했습니다.'
+        except IntegrityError:
+            error = '오류가 발생했습니다.'
+        except TypeError:
+            error = '오류가 발생했습니다.'
+        except ValidationError:
+            error = '오류가 발생했습니다.'
+        except InternalError:
+            error = error
+
+    if error is not None:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
 class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'ajax/package_info_ajax.html'
 
@@ -3054,19 +3789,17 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         error = None
 
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        package_data = PackageTb.objects.filter(class_tb_id=class_id, state_cd='IP',
-                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd,
-                                                                                     [])).order_by('-package_id')
-        # query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-        #
-        # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
-        #                                     ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
-        #                                                state_cd_nm=RawSQL(query_state_cd, []),
-        #                                                group_member_num=RawSQL(query_group_member_num, [])
-        #                                                ).order_by('-group_type_cd')
+        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        package_data = PackageTb.objects.filter(
+            class_tb_id=class_id, state_cd='IP',
+            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                              package_type_cd_nm=RawSQL(query_package_type_cd,
+                                                        [])).order_by('-package_type_cd', 'package_id')
+        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        order = {key: i for i, key in enumerate(order)}
+        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -3085,9 +3818,17 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
         error = None
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
-        package_data = PackageTb.objects.filter(
-            class_tb_id=class_id,
-            use=USE).exclude(state_cd='IP').annotate(state_cd_nm=RawSQL(query_state_cd, [])).order_by('-package_id')
+        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        package_data = PackageTb.objects.filter(Q(state_cd='PE') | Q(end_package_member_num__gt=0),
+                                                class_tb_id=class_id,
+                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                                                                  package_type_cd_nm=RawSQL(
+                                                                      query_package_type_cd,
+                                                                      [])).order_by('-package_type_cd', 'package_id')
+        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        order = {key: i for i, key in enumerate(order)}
+        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3097,6 +3838,448 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         context['package_data'] = package_data
 
         return context
+
+
+class GetSinglePackageViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetSinglePackageViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        error = None
+
+        query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
+        query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
+                                "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
+        query_package_group_id = "select GROUP_TB_ID from PACKAGE_GROUP_TB as B " \
+                                 "where B.PACKAGE_TB_ID = `PACKAGE_TB`.`ID`"
+        package_data = PackageTb.objects.filter(
+            ~Q(package_type_cd='PACKAGE'), class_tb_id=class_id, state_cd='IP',
+            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                              group_tb_id=RawSQL(query_package_group_id, []),
+                              package_type_cd_nm=RawSQL(query_package_type_cd,
+                                                        [])).order_by('-package_type_cd', '-package_id')
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['package_data'] = package_data
+
+        return context
+
+
+class GetPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_member_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetPackageMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        package_id = self.request.GET.get('package_id', '')
+        error = None
+        # member_data = []
+        member_data = func_get_ing_package_in_member_list(class_id, package_id, self.request.user.id)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['member_data'] = member_data
+        return context
+
+
+class GetEndPackageMemberViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_member_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        # context = {}
+        context = super(GetEndPackageMemberViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        package_id = self.request.GET.get('package_id', '')
+        error = None
+        member_data = func_get_end_package_in_member_list(class_id, package_id, self.request.user.id)
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['member_data'] = member_data
+        return context
+
+
+def finish_package_info_logic(request):
+    # next_page = request.POST.get('next_page', '')
+    package_id = request.POST.get('package_id', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    package_info = None
+    now = timezone.now()
+
+    if error is None:
+        try:
+            package_info = PackageTb.objects.get(package_id=package_id)
+        except ObjectDoesNotExist:
+            error = '오류가 발생했습니다.'
+
+    if error is None:
+        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(
+            package_tb_id=package_id, group_tb__state_cd='IP', use=USE)
+
+        package_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW', use=USE)
+
+    if error is None:
+
+        if package_lecture_data is not None:
+            for package_lecture_info in package_lecture_data:
+                lecture_info = package_lecture_info.lecture_tb
+                schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                          end_dt__lte=now,
+                                                          use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
+                                                                 end_dt__gt=now,
+                                                                 use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
+                repeat_schedule_data = RepeatScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+                # func_refresh_lecture_count(lecture_id)
+                if len(schedule_data) > 0:
+                    schedule_data.update(state_cd='PE')
+                if len(schedule_data_delete) > 0:
+                    schedule_data_delete.delete()
+                if len(repeat_schedule_data) > 0:
+                    repeat_schedule_data.delete()
+                schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 lecture_tb_id=lecture_info.lecture_id)
+                lecture_info.lecture_avail_count = 0
+                if lecture_info.state_cd == 'RF':
+                    lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+                else:
+                    lecture_info.lecture_rem_count = 0
+                    lecture_info.state_cd = 'PE'
+                lecture_info.save()
+
+                query_class_count = "select count(*) from CLASS_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                    "`GROUP_LECTURE_TB`.`LECTURE_TB_ID` and B.AUTH_CD=\'VIEW\' and " \
+                                    " B.USE=1"
+
+                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=package_lecture_info.lecture_tb_id,
+                                                                   lecture_tb__state_cd='IP',
+                                                                   use=USE)
+                group_lecture_data.update(fix_state_cd='')
+
+    if error is None:
+        for package_group_info in package_group_data:
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
+    if error is None:
+        package_info.package_group_num = len(package_group_data)
+        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+        package_info.state_cd = 'PE'
+        package_info.save()
+
+    if error is None:
+        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + package_info.name + ' 수강권',
+                         log_how='완료 처리', use=USE)
+
+        log_data.save()
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
+def progress_package_info_logic(request):
+    package_id = request.POST.get('package_id', '')
+    class_id = request.session.get('class_id', '')
+    error = None
+    if error is None:
+        try:
+            package_info = PackageTb.objects.get(package_id=package_id)
+        except ObjectDoesNotExist:
+            error = '패키지 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(
+            package_tb_id=package_id, group_tb__state_cd='IP', use=USE)
+        if len(package_group_data) == 0:
+            error = '패키지에 소속된 그룹이 없어 재개할수 없습니다.'
+
+    if error is None:
+        package_lecture_data = ClassLectureTb.objects.select_related(
+            'lecture_tb').filter(class_tb_id=class_id, lecture_tb__package_tb_id=package_id, auth_cd='VIEW', use=USE)
+
+        # group_data = GroupLectureTb.objects.filter(group_tb_id=group_id, use=USE)
+    if error is None:
+
+        for package_lecture_info in package_lecture_data:
+            lecture_info = package_lecture_info.lecture_tb
+            schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id)
+            schedule_data_finish = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                             lecture_tb_id=lecture_info.lecture_id)
+            lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - len(schedule_data)
+            lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - len(schedule_data_finish)
+            if lecture_info.lecture_rem_count > 0 and lecture_info.state_cd == 'PE':
+                lecture_info.state_cd = 'IP'
+            lecture_info.save()
+
+    # if error is None:
+    #     if len(package_group_data) == 1:
+    #         package_group_data[0].group_tb.state_cd = 'PE'
+    #         package_group_data[0].group_tb.save()
+
+    if error is None:
+        for package_group_info in package_group_data:
+            # package_group_info.use = USE
+            # package_group_info.save()
+            func_refresh_group_status(package_group_info.group_tb_id, None, None)
+
+    if error is None:
+        package_info.package_group_num = len(package_group_data)
+        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+        package_info.state_cd = 'IP'
+        package_info.save()
+
+    if error is None:
+        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + package_info.name + ' 수강권',
+                         log_how='재개', use=USE)
+
+        log_data.save()
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return render(request, 'ajax/trainer_error_ajax.html')
+
+
+class GetPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetPackageGroupListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        package_id = self.request.GET.get('package_id', '')
+        error = None
+
+        package_group_data = PackageGroupTb.objects.select_related(
+            'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+                               package_tb_id=package_id, group_tb__use=USE,
+                               use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['package_group_data'] = package_group_data
+
+        return context
+
+
+class GetEndPackageGroupListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
+    template_name = 'ajax/package_group_info_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GetEndPackageGroupListViewAjax, self).get_context_data(**kwargs)
+        class_id = self.request.session.get('class_id', '')
+        package_id = self.request.GET.get('package_id', '')
+        error = None
+        # print('test')
+        package_group_data = PackageGroupTb.objects.select_related(
+            'group_tb').filter(class_tb_id=class_id,
+                               package_tb_id=package_id, group_tb__use=USE,
+                               use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+
+        if error is not None:
+            logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
+                self.request.user.id) + ']' + error)
+            messages.error(self.request, error)
+
+        context['package_group_data'] = package_group_data
+
+        return context
+
+
+def add_package_member_logic(request):
+    class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_package_ing_list/')
+    json_loading_data = None
+    error = None
+    user_db_id_list = []
+    user_name_list = []
+    package_info = None
+    package_id = None
+    setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        package_id = json_loading_data['lecture_info']['package_id']
+
+    if error is None:
+        try:
+            package_info = PackageTb.objects.get(package_id=package_id, use=USE)
+        except ObjectDoesNotExist:
+            error = '수강권 정보를 불러오지 못했습니다.'
+
+    if error is None:
+        try:
+            with transaction.atomic():
+
+                if json_loading_data['new_member_data'] != '[]':
+                    for json_info in json_loading_data['new_member_data']:
+                        context = add_member_no_email_func(request.user.id,
+                                                           json_info['first_name'], json_info['last_name'],
+                                                           json_info['phone'], json_info['sex'],
+                                                           json_info['birthday_dt'])
+
+                        if context['error'] is None:
+                            user_name_list.append(json_info['last_name'] + json_info['first_name'])
+                            user_db_id_list.append(context['user_db_id'])
+                        else:
+                            error = context['error']
+                            break
+
+                if error is None:
+                    if json_loading_data['old_member_data'] != '[]':
+                        for json_info in json_loading_data['old_member_data']:
+                            user_db_id_list.append(json_info['db_id'])
+
+                if error is None:
+                    for user_info in user_db_id_list:
+                        error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
+                                                      class_id, package_id,
+                                                      json_loading_data['lecture_info']['counts'],
+                                                      json_loading_data['lecture_info']['price'],
+                                                      json_loading_data['lecture_info']['start_date'],
+                                                      json_loading_data['lecture_info']['end_date'],
+                                                      json_loading_data['lecture_info']['memo'],
+                                                      user_info, setting_lecture_auto_finish)
+                if error is not None:
+                    raise InternalError
+        except InternalError:
+            error = error
+
+    if error is None:
+        package_info.ing_package_member_num = len(func_get_ing_package_member_list(class_id, package_id))
+        package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
+        package_info.save()
+
+        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권에 회원',
+                         log_how='등록', use=USE)
+        log_data.save()
+
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
+            request.user.id) + ']' + error)
+        messages.error(request, error)
+
+    return redirect(next_page)
+
+
+# 패키지 회원 삭제
+def delete_package_member_info_logic(request):
+    class_id = request.session.get('class_id', '')
+    json_data = request.body.decode('utf-8')
+    next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
+    json_loading_data = None
+    error = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+
+    package_id = json_loading_data['package_id']
+
+    if error is None:
+        # idx = 0
+        for member_id_info in json_loading_data['ids']:
+            member_name = None
+            package_lecture_data = None
+            if error is None:
+                try:
+                    user = User.objects.get(id=member_id_info)
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
+                try:
+                    member = MemberTb.objects.get(user_id=user.id)
+                    member_name = member.name
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
+            if error is None:
+                package_lecture_data = ClassLectureTb.objects.select_related(
+                    'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW',
+                                                     lecture_tb__package_tb_id=package_id,
+                                                     lecture_tb__member_id=user.id,
+                                                     lecture_tb__use=USE,
+                                                     use=USE)
+            if error is None:
+                try:
+                    with transaction.atomic():
+                        if package_lecture_data is not None:
+                            for package_lecture_info in package_lecture_data:
+                                error = func_delete_lecture_info(request.user.id, class_id,
+                                                                 package_lecture_info.lecture_tb.lecture_id,
+                                                                 member_id_info)
+                                if error is not None:
+                                    break
+
+                        if error is not None:
+                            raise InternalError(str(error))
+
+                except ValueError:
+                    error = '오류가 발생했습니다.'
+                except IntegrityError:
+                    error = '오류가 발생했습니다.'
+                except TypeError:
+                    error = '오류가 발생했습니다.'
+                except ValidationError:
+                    error = '오류가 발생했습니다.'
+                except InternalError:
+                    error = error
+
+            log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
+                             from_member_name=request.user.last_name + request.user.first_name,
+                             to_member_name=member_name, class_tb_id=class_id,
+                             log_info='수강권',
+                             log_how='삭제', use=USE)
+            log_data.save()
+
+    if error is None:
+
+        return redirect(next_page)
+    else:
+        logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
+        messages.error(request, error)
+
+        return redirect(next_page)
 
 
 class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
@@ -3136,6 +4319,8 @@ class GetGroupMemberScheduleListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                 group_schedule_info.end_dt = str(group_schedule_info.end_dt)
                 if group_schedule_info.state_cd == 'PE':
                     group_schedule_info.finish_check = 1
+                elif group_schedule_info.state_cd == 'PC':
+                    group_schedule_info.finish_check = 2
                 else:
                     group_schedule_info.finish_check = 0
 
@@ -3203,25 +4388,25 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
-        for group_info in group_data:
-            member_data = []
-            lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-                                                                                              lecture_tb__use=USE, use=USE)
-            for lecture_info in lecture_data:
-                member_info = lecture_info.lecture_tb
-                if error is None:
-                    check_add_flag = 0
-                    for member_test in member_data:
-                        if member_test.user.id == member_info.member.user.id:
-                            check_add_flag = 1
+                                                       ).order_by('-group_type_cd', 'ing_group_member_num')
+        # for group_info in group_data:
+        #     member_data = []
+        #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
+        #                                                                                       lecture_tb__use=USE, use=USE)
+        #     for lecture_info in lecture_data:
+        #         member_info = lecture_info.lecture_tb
+        #         if error is None:
+        #             check_add_flag = 0
+        #             for member_test in member_data:
+        #                 if member_test.user.id == member_info.member.user.id:
+        #                     check_add_flag = 1
+        #
+        #             if check_add_flag == 0:
+        #                 member_data.append(member_info.member)
+        #     group_info.group_member_num = len(member_data)
 
-                    if check_add_flag == 0:
-                        member_data.append(member_info.member)
-            group_info.group_member_num = len(member_data)
-
-        member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
-        context['member_data'] = member_data
+        # member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
+        # context['member_data'] = member_data
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3229,7 +4414,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
             messages.error(self.request, error)
 
         context['group_data'] = group_data
-        end_time = timezone.now()
+        # end_time = timezone.now()
         # print(str(end_time-start_time))
         return context
 
@@ -3244,32 +4429,28 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
+        group_data = GroupTb.objects.filter(Q(end_group_member_num__gt=0) | ~Q(state_cd='IP'),
+                                            class_tb_id=class_id, use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
-                                                       # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
-        for group_info in group_data:
-            member_data = []
-            lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-                                                                                      lecture_tb__use=USE, use=USE)
-            for lecture_info in lecture_data:
-                member_info = lecture_info.lecture_tb
-                if error is None:
-                    check_add_flag = 0
-                    for member_test in member_data:
-                        if member_test.user.id == member_info.member.user.id:
-                            check_add_flag = 1
-
-                    if check_add_flag == 0:
-                        member_data.append(member_info.member)
-            group_info.group_member_num = len(member_data)
-        member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
-        context['member_data'] = member_data
+                                                       ).order_by('-group_type_cd', 'end_group_member_num')
+        # for group_info in group_data:
+        #     member_data = []
+        #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
+        #                                                                                       lecture_tb__use=USE, use=USE)
+        #     for lecture_info in lecture_data:
+        #         member_info = lecture_info.lecture_tb
+        #         if error is None:
+        #             check_add_flag = 0
+        #             for member_test in member_data:
+        #                 if member_test.user.id == member_info.member.user.id:
+        #                     check_add_flag = 1
+        #
+        #             if check_add_flag == 0:
+        #                 member_data.append(member_info.member)
+        #     group_info.group_member_num = len(member_data)
+        # member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
+        # context['member_data'] = member_data
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3363,9 +4544,18 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     member_class_info = MemberClassTb(member_id=request.user.id, class_tb_id=class_info.class_id,
                                                       auth_cd='VIEW', mod_member_id=request.user.id, use=USE)
                     member_class_info.save()
-                    # one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
-                    #                                 group_type_cd='ONE_TO_ONE', state_cd='IP', member_num=1, use=USE)
-                    # one_to_one_group_info.save()
+                    one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
+                                                    group_type_cd='ONE_TO_ONE',
+                                                    ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+                                                    state_cd='IP', member_num=1, use=USE)
+                    one_to_one_group_info.save()
+                    package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
+                                             package_type_cd='ONE_TO_ONE', package_group_num=1, state_cd='IP', use=USE)
+                    package_info.save()
+                    package_group_info = PackageGroupTb(class_tb_id=class_info.class_id,
+                                                        package_tb_id=package_info.package_id,
+                                                        group_tb_id=one_to_one_group_info.group_id, use=USE)
+                    package_group_info.save()
 
             except ValueError:
                 error = '등록 값에 문제가 있습니다.'
@@ -3388,7 +4578,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
-                             log_info='프로그램 정보', log_how='등록', use=USE)
+                             log_info='프로그램', log_how='등록', use=USE)
 
             log_data.save()
 
@@ -3439,7 +4629,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='프로그램 정보', log_how='연동 해제', use=USE)
+                             log_info='프로그램', log_how='삭제', use=USE)
 
             log_data.save()
 
@@ -3509,7 +4699,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='프로그램 정보', log_how='수정', use=USE)
+                             log_info='프로그램', log_how='수정', use=USE)
 
             log_data.save()
 
@@ -3689,7 +4879,7 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='배경 화면 정보', log_how='삭제', use=USE)
+                             log_info='배경 화면', log_how='삭제', use=USE)
 
             log_data.save()
 
@@ -3798,9 +4988,8 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
             context['new_member_num'] = new_member_num
 
         if error is None:
-            end_schedule_num = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                         en_dis_type=ON_SCHEDULE_TYPE,
-                                                         state_cd='PE', use=USE).count()
+            end_schedule_num = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'), class_tb_id=class_id,
+                                                         en_dis_type=ON_SCHEDULE_TYPE, use=USE).count()
             # new_member_num = LectureTb.objects.filter(class_tb_id=class_info.class_id,
             #                                          start_date__gte=month_first_day,
             #                                          start_date__lt=next_month_first_day, use=USE).count()
@@ -4016,7 +5205,7 @@ def update_setting_push_logic(request):
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='PUSH 설정 정보', log_how='수정', use=USE)
+                         log_info='PUSH 설정', log_how='수정', use=USE)
         log_data.save()
         return redirect(next_page)
     else:
@@ -4166,7 +5355,7 @@ def update_setting_basic_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='설정 정보', log_how='수정', use=USE)
+                         class_tb_id=class_id, log_info='기본 설정', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)

@@ -84,6 +84,7 @@
         <input type="hidden" name="last_name" id="add_member_form_last_name" value="" >
         <input type="hidden" name="name" id="add_member_form_name" value="">
         <input type="hidden" name="phone" id="id_phone" value="">
+        <input type="hidden" name="group_id" id="form_member_groupid_no_email" value="">
     </form>
 
     <form action="{% url 'trainer:delete_member_info' %}" method="POST" class="member-form" id="member-delete-form">
@@ -238,7 +239,7 @@
     <div id="page_managemember">
         <div id="ymdText">
             <div id="ymdTextWrap">
-                <div id="menuName">회원 관리
+                <div id="menuName">회원
                 </div>
                 <div id="menuDescription">전체 회원 목록을 관리합니다.
                 </div>
@@ -450,10 +451,12 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
                     <span id="npSituationPresent"></span>
                 </label>
-                <div class="mobileinfo hastooltips">
-                    <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
-                    <!-- <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled> -->
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" maxlength="11" disabled>
+                <div class="mobileinfo">
+                    <div class="hastooltips">
+                        <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
+                        <!-- <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled> -->
+                        <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" maxlength="11" disabled>
+                    </div>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>
@@ -475,11 +478,11 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 생년월일
                 </label>
                 <div id="memberBirth_info">
-                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_year_info" disabled>
+                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_year_info" style="width:40%" disabled>
                     </select>
-                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_month_info" disabled>
+                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_month_info" style="width:25%" disabled>
                     </select>
-                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_date_info" disabled>
+                    <select class="mobileinfo_birth dropdown_birth_info" id="birth_date_info" style="width:25%" disabled>
                     </select>
                 </div>
             </div>
@@ -542,8 +545,8 @@
 
             <div id="memberRegHistory_info_wrap" class="member_info_wrap">
                 <label class="ptaddboxtext">
-                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 이력
-                    <span class="button_add_member_lecture" onclick="pc_add_member(3)">+</span>
+                    <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강권 이력
+                    <span class="button_add_member_lecture" onclick="pc_add_member(3)">+재등록</span>
                 </label>
                 <div id="memberRegHistory_info">
 
@@ -679,8 +682,8 @@
                 <span id="memberFinishCount_info_PC" readonly></span>회
             </div>
             <div id="memberRegHistory_info_PC_wrap" class="member_info_PC_wrap">
-                <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">수강 이력
-                    <span class="button_add_member_lecture" onclick="pc_add_member(2)">+</span>
+                <label><img src="/static/user/res/member/icon-count-grey.png" style="width: 12px;margin-right: 8px;">수강권 이력
+                    <span class="button_add_member_lecture" onclick="pc_add_member(2)">+재등록</span>
                 </label>
                 <div id="memberRegHistory_info_PC">
 
@@ -761,7 +764,6 @@
             <input type="hidden" name="username" id="id_username_info">
             <input type="hidden" name="search_confirm" id="id_search_confirm" value="0">
             <input type="hidden" name="group_id" id="form_member_groupid" value="">
-            <input type="hidden" name="group_package_type" id="form_group_package_type" value="group">
 
             <!--그룹추가 관련 Form-->
 
@@ -795,14 +797,14 @@
                     </div>
                 </div>
 
-                <div class="ptaddbox form-group _ADD_MEMBER_NEW">
+                <div class="ptaddbox form-group _ADD_MEMBER_NEW" style="height: 103px;">
                     <label for="memberNameSex" class="ptaddboxtext">
                         <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명 <span style="color: #fe4e65;">*</span><img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <p class="icons_description" style="margin-bottom: 5px;"> 회원님 초기 접속 ID는 회원등록 후 자동생성 되며, 초기 비밀번호는 0000입니다.</p>
                     <div id="memberName_reg" class="dropdown pters_input_custom">
                         <!-- <input type="text" class="pters_input_namefield form-control" id="memberLastName_add" name="lastname" placeholder="성" maxlength="10"> -->
-                        <input type="text" class="pters_input_namefield form-control" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="11">
+                        <input type="text" class="pters_input_namefield form-control pters_field_style" id="memberFirstName_add" name="firstname" placeholder="성명" maxlength="11">
                     </div>
                     <div id="memberSex" class="pters_input_custom">
                         <div id="memberMale" class="selectboxopt selectboxopt_left" value="M">남</div>
@@ -815,7 +817,7 @@
                         <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-phone.png" %}> 연락처 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                     </label>
                     <div class="dropdown pters_input_custom">
-                        <input type="tel" class="form-control" id="memberPhone_add" name="phone" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
+                        <input type="tel" class="form-control pters_field_style" id="memberPhone_add" name="phone" placeholder="'-'를 제외하고 숫자만 입력해주세요." maxlength="11">
                     </div>
                 </div>
 
@@ -965,7 +967,7 @@
                     <div id="manualReg" class="manualReg"> <!-- 세부 설정 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강권
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
@@ -1023,7 +1025,7 @@
                     <div id="simpleReg" class="simpleReg"> <!-- 빠른 입력 방식 -->
                         <div class="ptaddbox form-group _SEARCH_MEMBER_NEW">
                             <label for="memberGroupType" class="ptaddboxtext">
-                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강 유형
+                                <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-count.png" %}> 수강권
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
                             <select class="dropdown pters_input_custom grouptypeselect">
@@ -1113,7 +1115,7 @@
                                 <img class="icons"  style="width:13px;" src={% static_url "user/res/ptadd/icon-cal.png" %}> 종료 일자
                                 <img src="/static/user/res/icon-link.png" class="link-icon" title="회원님께도 보이는 정보">
                             </label>
-                            <div class="dropdown pters_input_custom">
+                            <div class="dropdown datepicktext">
                                 <!-- <input type="hidden" id="memberDue_add_2_fast" name="end_date_fast"> -->
                                 <!-- <input type="tel" class="form-control" id="memberDue_add_2"  placeholder="자동 입력" maxlength="3" style="font-size:13.5px;" readonly> -->
                                 <input type="tel" class="form-control" id="memberDue_add_2_fast" name="end_date_fast" placeholder="선택" maxlength="3" style="font-size:13.5px;">
@@ -1162,7 +1164,7 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
     <script>
         $('a.text-membermanage').css('color', '#fe4e65;');
-        $('#uptext').text("회원 관리");
+        $('#uptext').text("회원");
         $('footer').hide();
 
         //var DB = {};

@@ -39,7 +39,8 @@ from login.models import MemberTb, LogTb, CommonCdTb
 from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
-from trainer.models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb
+from trainer.models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
+    PackageGroupTb
 
 from schedule.functions import func_get_trainer_schedule, func_get_trainer_off_repeat_schedule, \
     func_refresh_group_status, func_get_trainer_group_schedule, func_refresh_lecture_count
@@ -1710,7 +1711,7 @@ def add_lecture_info_logic(request):
     end_date_fast = request.POST.get('end_date_fast')
     search_confirm = request.POST.get('search_confirm', '0')
     class_id = request.session.get('class_id', '')
-    group_id = request.POST.get('group_id', '')
+    package_id = request.POST.get('group_id', '')
     setting_lecture_auto_finish = request.session.get('setting_lecture_auto_finish', AUTO_FINISH_OFF)
     next_page = request.POST.get('next_page')
 
@@ -1791,7 +1792,7 @@ def add_lecture_info_logic(request):
 
     if error is None:
         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                      class_id, group_id, input_counts, input_price,
+                                      class_id, package_id, input_counts, input_price,
                                       input_start_date, input_end_date, input_contents,
                                       user.id, setting_lecture_auto_finish)
     if error is None:
@@ -2495,8 +2496,13 @@ def add_group_member_logic(request):
 
                 if error is None:
                     for user_info in user_db_id_list:
+                        try:
+                            package_info = PackageGroupTb.objects.get(~Q(package_tb__package_type_cd='PACKAGE'),group_tb_id=json_loading_data['lecture_info']['group_id'])
+                            package_id = package_info.package_tb_id
+                        except ObjectDoesNotExist:
+                            package_id = ''
                         error = func_add_lecture_info(request.user.id, request.user.last_name, request.user.first_name,
-                                                      class_id, json_loading_data['lecture_info']['group_id'],
+                                                      class_id, package_id,
                                                       json_loading_data['lecture_info']['counts'],
                                                       json_loading_data['lecture_info']['price'],
                                                       json_loading_data['lecture_info']['start_date'],

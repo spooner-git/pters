@@ -26,6 +26,7 @@
 #groupname{
 	width: 50%;
 	height: 35px;
+	border: 1px solid #cccccc;
 }
 #grouptype{
 	height: 26px;
@@ -49,6 +50,7 @@
 	width: 100%;
 	text-align: center;
 }
+
 .groupMemberAddBox > .buttonGroup > button{
 	width: 31%;
 	font-size:12.5px;
@@ -56,10 +58,18 @@
 	height: 30px;
 	-webkit-appearance:none;
 	border-radius: 0;
-	border: 1px solid #cccccc;
+	border: 1px solid #eaeaea;
 	background: #f4f4f4;
-	color: #fe4e65;
+	color: #282828;
+	border-radius: 5px;
 }
+	.groupMemberAddBox > .buttonGroup > button:hover{
+		border-color: #fe4e65;
+		color: #fe4e65;
+	}
+	.groupMemberAddBox > .buttonGroup > button:active{
+		border-color: #282828;
+	}
 
 .subpopup_addGroup{
 	display: none;
@@ -217,7 +227,7 @@ img.substract_addedMember{
 .groupWrap:hover{
 	background: #e4e4e4;
 	font-weight: bold;
-
+	transition: background 0.12s cubic-bezier(0.4,0,0.2,1);
 }
 
 .red_color_text{
@@ -235,13 +245,67 @@ img.substract_addedMember{
 }
 ._groupnum{
 	display: table-cell;
-	width: 4%;
+	width: 5%;
 }
 ._groupname{
 	width: 16%;
 }
+._groupplancolor{
+	display: none !important; /*임시로 색상선택 닫아둠*/
+	position: relative;
+	width: 5%;
+	text-align: center;
+}
+	._groupplancolor > .plancolor{
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		margin-bottom: 2px;
+		vertical-align: middle;
+		border-radius: 50%;
+	}
+	.colorpalette{
+		position: absolute;
+		left: 40px;
+		top: 0;
+		min-width: 120px;
+		max-width: 120px;
+		height: auto;
+		border: 1px solid #cccccc;
+		background: #ffffff;
+		z-index: 1;
+	}
+	.colorpalette > div{
+		display: inline-block;
+		width: 18px;
+		height: 18px;
+		margin: 5px;
+		border: 1px solid #e2e2e2;
+		vertical-align: middle;
+		border-radius: 50%;
+	}
+	.plancolor_orange{
+		background-color: #ffa500;
+	}
+	.plancolor_pink{
+		background-color: #ffacb7;
+	}
+	.plancolor_blue{
+		background-color: #9a9af9;
+	}
+	.plancolor_green{
+		background-color: #00a700;
+	}
+	.plancolor_purple{
+		background-color: #f488fb;
+	}
+	.plancolor_yellow{
+		background-color: #fbf3bd;
+	}
+
+
 ._grouptypecd{
-	width: 8%;
+	width: 7%;
 }
 ._groupparticipants{
 	width: 7%;
@@ -252,7 +316,7 @@ img.substract_addedMember{
 	display: none !important;
 }
 ._grouppartystatus{
-	width: 14%;
+	width: 12%;
 }
 .group_member_current_num{
 	width: 40%;
@@ -278,7 +342,7 @@ img.substract_addedMember{
 }
 ._groupcreatedate{
 	display: table-cell;
-	width: 17%;
+	width: 15%;
 	font-size: 13px;
 }
 ._groupstatus{
@@ -291,6 +355,8 @@ img.substract_addedMember{
 	width: 95%;
 	height: 26px;
 	line-height: 26px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	-webkit-text-fill-color:#282828;
 	-webkit-opacity:1;
 }
@@ -326,6 +392,17 @@ div._groupmanage img._info_delete{
 		-webkit-text-fill-color:#282828 !important;
 		text-align: left;
 	}
+	
+.groupPackageWrap{
+	display: none;
+	width: 100%;
+	height: auto;
+	border-left: 1px solid #fe4e65;
+	border-right: 1px solid #fe4e65;
+	text-align: left;
+	font-size: 12px;
+	padding: 3px 0 3px 0;
+}
 
 .groupRepeatWrap{
 	display: none;
@@ -490,8 +567,29 @@ div._contact{
 	width: 35%;
 }
 div._manage{
+	display: none !important;
 	width: 10%;
 }
+
+#finishedGroupList div._fixedmember{
+	display: none;
+}
+
+div._fixedmember{
+	width: 10%;
+	position: relative;
+}
+	div._fixedmember input{
+		-webkit-appearance:checkbox;
+		width: 20px;
+		height: 20px;
+	}
+	div._fixedmember div{
+		position: absolute;
+		width: 100% !important;
+		height: 100%;
+		top: 0;
+	}
 
 @media(min-width: 600px){
 	.list_addByList_padding{
@@ -504,8 +602,23 @@ div._manage{
 	div.memberline div{
 		width: 12.5%;
 	}
+	div.memberline div._manage, div.groupmemberline_thead div._manage{
+		display: none;
+	}
 	tr.memberline td{
 		width: 12.5%;
+	}
+	.colorpalette{
+		min-width: 200px;
+		max-width: 300px;
+	}
+	._groupplancolor > .plancolor{
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		margin-bottom: 2px;
+		vertical-align: middle;
+		border-radius: 50%;
 	}
 }
 

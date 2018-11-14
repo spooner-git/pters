@@ -254,19 +254,19 @@
     var class_name = '{{ request.session.class_type_name }}';
     var class_code = '{{ request.session.class_type_code }}';
 
-    var stoptime = '{{ lt_res_01 }}'
+    var stoptime = '{{ request.session.setting_member_reserve_time_available }}'
     if(stoptime.length>0){
-        var stoptimeStart = Number('{{ lt_res_01 }}'.split(':')[0])
-        var stoptimeEnd = Number('{{ lt_res_01 }}'.split('-')[1].split(':')[0])
+        var stoptimeStart = Number('{{ request.session.setting_member_reserve_time_available }}'.split(':')[0])
+        var stoptimeEnd = Number('{{ request.session.setting_member_reserve_time_available }}'.split('-')[1].split(':')[0])
     }else{
         var stoptimeStart = ''
         var stoptimeEnd = ''
     }
 
-    var worktime = '{{ lt_res_04 }}'
+    var worktime = '{{ request.session.setting_trainer_work_time_available }}'
     if(worktime.length>0){
-        var worktimeStart = Number('{{ lt_res_04 }}'.split(':')[0])
-        var worktimeEnd = Number('{{ lt_res_04 }}'.split('-')[1].split(':')[0])
+        var worktimeStart = Number('{{ request.session.setting_trainer_work_time_available }}'.split(':')[0])
+        var worktimeEnd = Number('{{ request.session.setting_trainer_work_time_available }}'.split('-')[1].split(':')[0])
     }else{
         var worktimeStart = ''
         var worktimeEnd = ''
@@ -280,10 +280,10 @@
         "startTime": 2,
         "stoptimeStart": stoptimeStart ,                    //강사가 설정한 예약불가 시간 (시작)
         "stoptimeEnd": stoptimeEnd ,                        //강사가 설정한 예약불가 시간 (종료)
-        "limit":Number('{{ lt_res_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
-        "reserve":Number('{{ lt_res_03 }}'),                //회원 일정 기능을 enable 1/disable 0
-        "availDate":Number({{ lt_res_05 }}),
-        "cancellimit":Number('{{ lt_res_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
+        "limit":Number('{{ request.session.setting_member_reserve_enable_time }}')/60,      //현재시간으로부터 몇시간뒤에 일정 추가가능하게 할지 셋팅
+        "reserve":Number('{{ request.session.setting_member_reserve_prohibition }}'),                //회원 일정 기능을 enable 1/disable 0
+        "availDate":Number({{ request.session.setting_member_reserve_date_available }}),
+        "cancellimit":Number('{{ request.session.setting_member_reserve_cancel_time }}')/60,  //예약시간으로부터 몇시간전에 일정 취소가능하게 할지 셋팅
 
         "firstPushToMember":'-',
         "secondPushToMember":'-',

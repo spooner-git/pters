@@ -11,8 +11,10 @@ from configs import settings
 from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
 
 from login.models import LogTb, PushInfoTb
-from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb
+from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
 from trainee.models import LectureTb, MemberLectureTb
+from trainer.functions import func_get_ing_package_member_list, func_get_end_group_member_list_count, \
+    func_get_ing_group_member_list_count
 from .models import ScheduleTb, RepeatScheduleTb, DeleteScheduleTb, DeleteRepeatScheduleTb
 
 
@@ -31,12 +33,13 @@ def func_get_lecture_id(class_id, member_id):
 
     for lecture_info in lecture_data:
         try:
-            GroupLectureTb.objects.get(~Q(group_tb__group_type_cd='ONE_TO_ONE'),
+            GroupLectureTb.objects.get(group_tb__state_cd='IP', group_tb__group_type_cd='ONE_TO_ONE',
                                        lecture_tb_id=lecture_info.lecture_tb.lecture_id,
                                        use=USE)
-        except ObjectDoesNotExist:
             lecture_id = lecture_info.lecture_tb.lecture_id
             break
+        except ObjectDoesNotExist:
+            lecture_id = None
 
     return lecture_id
 
@@ -46,13 +49,14 @@ def func_get_group_lecture_id(group_id, member_id):
 
     lecture_id = None
 
-    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__use=USE,
-                                                       lecture_tb__member_id=member_id,
-                                                       lecture_tb__state_cd='IP',
-                                                       lecture_tb__lecture_avail_count__gt=0,
-                                                       lecture_tb__use=USE,
-                                                       use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
+    group_lecture_data = GroupLectureTb.objects.select_related(
+        'group_tb', 'lecture_tb').filter(group_tb_id=group_id, group_tb__state_cd='IP',
+                                         group_tb__use=USE,
+                                         lecture_tb__member_id=member_id,
+                                         lecture_tb__state_cd='IP',
+                                         lecture_tb__lecture_avail_count__gt=0,
+                                         lecture_tb__use=USE,
+                                         use=USE).order_by('lecture_tb__start_date', 'lecture_tb__reg_dt')
 
     if len(group_lecture_data) > 0:
         lecture_id = group_lecture_data[0].lecture_tb.lecture_id
@@ -61,29 +65,31 @@ def func_get_group_lecture_id(group_id, member_id):
 
 
 # 수강정보 - 횟수관련 update
-def func_refresh_lecture_count(lecture_id):
+def func_refresh_lecture_count(class_id, lecture_id):
     error = None
     lecture_info = None
+    check_lecture_state_cd = ''
     if lecture_id is None or lecture_id == '':
         error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
         try:
-            lecture_info = LectureTb.objects.get(lecture_id=lecture_id, use=USE)
+            lecture_info = LectureTb.objects.select_related('package_tb').get(lecture_id=lecture_id, use=USE)
+            check_lecture_state_cd = lecture_info.state_cd
         except ObjectDoesNotExist:
             error = '수강정보를 불러오지 못했습니다.'
 
     if error is None:
-        reg_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id).count()
-        if lecture_info.lecture_reg_count >= reg_schedule_counter:
+        schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, use=USE)
+        if lecture_info.lecture_reg_count >= len(schedule_data):
             lecture_info.lecture_avail_count = lecture_info.lecture_reg_count\
-                                               - reg_schedule_counter
+                                               - len(schedule_data)
             lecture_info.save()
         else:
             error = '오류가 발생했습니다.'
 
     if error is None:
-        end_schedule_counter = ScheduleTb.objects.filter(lecture_tb_id=lecture_id, state_cd='PE').count()
+        end_schedule_counter = schedule_data.filter(Q(state_cd='PE') | Q(state_cd='PC'), use=USE).count()
         if lecture_info.lecture_reg_count >= end_schedule_counter:
             lecture_info.lecture_rem_count = lecture_info.lecture_reg_count\
                                                - end_schedule_counter
@@ -91,10 +97,46 @@ def func_refresh_lecture_count(lecture_id):
                 lecture_info.state_cd = 'PE'
             elif lecture_info.lecture_rem_count == 1:
                 if lecture_info.state_cd != 'RF':
-                    lecture_info.state_cd = 'IP'
+                    if lecture_info.package_tb.state_cd == 'IP':
+                        lecture_info.state_cd = 'IP'
+
+            if lecture_info.state_cd == 'PE':
+                lecture_info.lecture_rem_count = 0
+
             lecture_info.save()
         else:
             error = '오류가 발생했습니다.'
+
+    if error is None:
+        if lecture_info.state_cd != check_lecture_state_cd:
+            lecture_info.package_tb.ing_package_member_num =\
+                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.end_package_member_num = \
+                len(func_get_ing_package_member_list(class_id, lecture_info.package_tb_id))
+            lecture_info.package_tb.save()
+
+    if error is None:
+        if lecture_info.state_cd != check_lecture_state_cd:
+            if lecture_info.state_cd == 'PE' or lecture_info.state_cd == 'RF':
+                group_lecture_data = GroupLectureTb.objects.filter(lecture_tb_id=lecture_info.lecture_id, use=USE)
+                group_lecture_data.update(fix_state_cd='')
+
+            package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb__class_tb__member').filter(group_tb__use=USE,
+                                                     package_tb__use=USE,
+                                                     package_tb_id=lecture_info.package_tb_id,
+                                                     use=USE)
+            for package_group_info in package_group_data:
+                # package_group_info.group_tb.ing_group_member_num =\
+                #     len(func_get_ing_group_member_list(class_id,
+                #                                        package_group_info.group_tb_id,
+                #                                        package_group_info.group_tb.class_tb.member_id))
+                # package_group_info.group_tb.end_group_member_num = \
+                #     len(func_get_end_group_member_list(class_id,
+                #                                        package_group_info.group_tb_id,
+                #                                        package_group_info.group_tb.class_tb.member_id))
+                # package_group_info.group_tb.save()
+                func_refresh_group_status(package_group_info.group_tb_id, None, None)
 
     return error
 
@@ -109,7 +151,8 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
         except ObjectDoesNotExist:
             group_schedule_info = None
         group_schedule_total_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, use=USE).count()
-        group_schedule_end_count = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id, state_cd='PE',
+        group_schedule_end_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                             group_schedule_id=group_schedule_id,
                                                              use=USE).count()
 
         if group_schedule_info is not None:
@@ -134,34 +177,25 @@ def func_refresh_group_status(group_id, group_schedule_id, group_repeat_schedule
                 group_repeat_schedule_info.state_cd = 'PE'
                 group_repeat_schedule_info.save()
 
-    # 그룹 종료 처리
+    # 그룹 카운팅
     if group_id is not None and group_id != '':
         try:
             group_info = GroupTb.objects.get(group_id=group_id, use=USE)
         except ObjectDoesNotExist:
             group_info = None
         if group_info is not None:
-            if group_info.group_type_cd == 'NORMAL':
-                group_lecture_total_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                          lecture_tb__use=USE,
-                                                                          use=USE).count()
-                group_lecture_end_count = \
-                    GroupLectureTb.objects.filter(group_tb_id=group_id, lecture_tb__use=USE,
-                                                  use=USE).exclude(lecture_tb__state_cd='IP').count()
-                if group_info is not None:
-                    if group_lecture_total_count == group_lecture_end_count:
-                        group_info.state_cd = 'PE'
-                        group_info.save()
-                    else:
-                        group_info.state_cd = 'IP'
-                        group_info.save()
+            group_info.ing_group_member_num = len(func_get_ing_group_member_list_count(group_info.class_tb_id,
+                                                                                       group_id))
+            group_info.end_group_member_num = len(func_get_end_group_member_list_count(group_info.class_tb_id,
+                                                                                       group_id))
+            group_info.save()
 
 
 # 일정 등록
 def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                       group_id, group_schedule_id,
                       start_datetime, end_datetime,
-                      note, en_dis_type, user_id, state_cd):
+                      note, en_dis_type, user_id, permission_state_cd, state_cd):
     error = None
     context = {'error': None, 'schedule_id': ''}
 
@@ -182,7 +216,7 @@ def func_add_schedule(class_id, lecture_id, repeat_schedule_id,
                                            group_schedule_id=group_schedule_id,
                                            repeat_schedule_tb_id=repeat_schedule_id,
                                            start_dt=start_datetime, end_dt=end_datetime,
-                                           state_cd=state_cd, permission_state_cd='AP',
+                                           state_cd=state_cd, permission_state_cd=permission_state_cd,
                                            note=note, member_note='', en_dis_type=en_dis_type,
                                            reg_member_id=user_id)
             add_schedule_info.save()
@@ -333,8 +367,8 @@ def func_update_repeat_schedule(repeat_schedule_id):
 
     if error is None:
         repeat_schedule_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id).count()
-        repeat_schedule_finish_count = ScheduleTb.objects.filter(repeat_schedule_tb_id=repeat_schedule_id,
-                                                                 state_cd='PE').count()
+        repeat_schedule_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
+                                                                 repeat_schedule_tb_id=repeat_schedule_id).count()
         if repeat_schedule_count == 0:
             repeat_schedule_result = func_delete_repeat_schedule(repeat_schedule_id)
             error = repeat_schedule_result['error']
@@ -362,8 +396,9 @@ def func_check_group_available_member_before(class_id, group_id, group_schedule_
         error = '오류가 발생했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 group_schedule_id=group_schedule_id, use=USE).count()
-    if schedule_counter == group_info.member_num:
+                                                 group_schedule_id=group_schedule_id,
+                                                 use=USE).exclude(state_cd='PC').count()
+    if schedule_counter > group_info.member_num:
         error = '정원을 초과했습니다.'
 
     return error
@@ -381,7 +416,8 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
         error = '오류가 발생했습니다.'
 
     schedule_counter = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                 group_schedule_id=group_schedule_id, use=USE).count()
+                                                 group_schedule_id=group_schedule_id,
+                                                 use=USE).exclude(state_cd='PC').count()
     if schedule_counter > group_info.member_num:
         error = '정원을 초과했습니다.'
 
@@ -394,7 +430,8 @@ def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_e
 
     seven_days_ago = add_start_dt - datetime.timedelta(days=2)
     seven_days_after = add_end_dt + datetime.timedelta(days=2)
-    schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
+
+    schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
                                               start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
                                               use=USE).exclude(schedule_id=schedule_id)
 
@@ -486,16 +523,16 @@ def func_check_group_schedule_enable(group_id):
     except ObjectDoesNotExist:
         error = '오류가 발생했습니다.'
 
-    if group_info.group_type_cd == 'NORMAL':
-        group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                                 group_tb__use=USE,
-                                                                 lecture_tb__state_cd='IP',
-                                                                 lecture_tb__lecture_avail_count__gt=0,
-                                                                 lecture_tb__use=USE,
-                                                                 use=USE).count()
-
-        if group_lecture_data_count == 0:
-            error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
+    # if group_info.group_type_cd == 'NORMAL':
+    #     group_lecture_data_count = GroupLectureTb.objects.filter(group_tb_id=group_id,
+    #                                                              group_tb__use=USE,
+    #                                                              lecture_tb__state_cd='IP',
+    #                                                              lecture_tb__lecture_avail_count__gt=0,
+    #                                                              lecture_tb__use=USE,
+    #                                                              use=USE).count()
+    #
+    #     if group_lecture_data_count == 0:
+    #         error = '그룹 회원들의 예약 가능 횟수가 없습니다.'
 
     return error
 
@@ -503,10 +540,11 @@ def func_check_group_schedule_enable(group_id):
 def func_get_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__group_type_cd='NORMAL',
+                                                       # group_tb__group_type_cd='NORMAL',
                                                        group_tb__use=USE,
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__use=USE,
+                                                       fix_state_cd='FIX',
                                                        use=USE)
 
     for group_lecture_info in group_lecture_data:
@@ -526,11 +564,12 @@ def func_get_group_member_list(group_id):
 def func_get_available_group_member_list(group_id):
     member_list = []
     group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__group_type_cd='NORMAL',
+                                                       # group_tb__group_type_cd='NORMAL',
                                                        group_tb__use=USE,
                                                        lecture_tb__state_cd='IP',
                                                        lecture_tb__use=USE,
                                                        lecture_tb__lecture_avail_count__gt=0,
+                                                       fix_state_cd='FIX',
                                                        use=USE)
 
     for group_lecture_info in group_lecture_data:
@@ -538,7 +577,7 @@ def func_get_available_group_member_list(group_id):
             member_list.append(group_lecture_info.lecture_tb.member)
         check_info = 0
         for member_info in member_list:
-            if group_lecture_info.lecture_tb.member.member_id == member_info.member_id:
+            if str(group_lecture_info.lecture_tb.member.member_id) == str(member_info.member_id):
                 check_info = 1
 
         if check_info == 0:
@@ -550,10 +589,10 @@ def func_get_available_group_member_list(group_id):
 # 그룹회원중 예약 가능하지 않은 회원들의 리스트
 def func_get_not_available_group_member_list(group_id):
     member_list = []
-    group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_id,
-                                                       group_tb__group_type_cd='NORMAL',
+    group_lecture_data = GroupLectureTb.objects.filter(Q(lecture_tb__lecture_avail_count=0) | ~Q(fix_state_cd='FIX'),
+                                                       group_tb_id=group_id,
+                                                       # group_tb__group_type_cd='NORMAL',
                                                        group_tb__use=USE,
-                                                       lecture_tb__lecture_avail_count=0,
                                                        lecture_tb__use=USE,
                                                        use=USE)
 
@@ -675,7 +714,8 @@ def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
 
 
 def func_get_trainer_group_schedule(context, class_id, start_date, end_date, group_id):
-    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` AND B.USE=1"
+    query = "select count(*) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
+            "AND B.STATE_CD != \'PC\' AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
     group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(class_tb=class_id,
                                                                                lecture_tb__isnull=True,
@@ -684,13 +724,13 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
                                                                                start_dt__lt=end_date, use=USE)
     if group_id is None or group_id == '':
         group_schedule_data = group_schedule_data.filter(
-            group_tb__isnull=False).annotate(group_current_member_num=RawSQL(query, []),
-                                             group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+            group_tb__isnull=False, use=USE).annotate(group_current_member_num=RawSQL(query, []),
+                                                      group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     else:
         group_schedule_data = group_schedule_data.filter(
-            group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
-                                           group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+            group_tb_id=group_id, use=USE).annotate(group_current_member_num=RawSQL(query, []),
+                                                    group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
 
     context['group_schedule_data'] = group_schedule_data
 

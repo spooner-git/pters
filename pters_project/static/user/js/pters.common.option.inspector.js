@@ -164,7 +164,7 @@ function pters_option_inspector(option_type, xhr, option_element){
             }
         }else if(option_type == "group_read"){
             if(limit_num == 0){
-                show_caution_popup(function_lock_message("delete", 1, "그룹/클래스 인원 조회", limit_type));
+                show_caution_popup(function_lock_message("delete", 1, "그룹 인원 조회", limit_type));
                 if(xhr != ""){
                     xhr.abort(); // ajax중지
                     completeSend(); // ajax 로딩 이미지 숨기기
@@ -247,7 +247,23 @@ function pters_option_inspector(option_type, xhr, option_element){
         
         //패키지 관리
         else if(option_type == "package_create"){
+            var current_package_num = option_element;
+            if(current_package_num >= limit_num){
+                show_caution_popup(function_lock_message("create", limit_num, "수강권 추가", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                }
+            }
         }else if(option_type == "package_delete"){
+            if(limit_num == 0){
+                show_caution_popup(function_lock_message("delete", 1, "삭제", limit_type));
+                if(xhr != ""){
+                    xhr.abort(); // ajax중지
+                    completeSend(); // ajax 로딩 이미지 숨기기
+                    enable_delete_btns_after_ajax();
+                }
+            }
         }else if(option_type == "package_read"){
         }else if(option_type == "package_update"){
         }
@@ -398,11 +414,15 @@ function show_free_member_use_guide(view_page){
         }
     }else if(view_page == "member_manage"){
         if(auth_type_cd.auth_member_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_member_create.limit_type}이용자) 회원등록: 최대 ${auth_type_cd.auth_member_create.limit_num}명 등록 가능(진행중)`);
+            $popup.show().text(`(${auth_type_cd.auth_member_create.limit_type}이용자) 회원 등록: 최대 ${auth_type_cd.auth_member_create.limit_num}명 등록 가능(진행중)`);
         }
     }else if(view_page == "lecture_manage"){
         if(auth_type_cd.auth_group_create.limit_type == "무료"){
-            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹,클래스등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개씩 등록 가능(진행중)`);
+            $popup.show().text(`(${auth_type_cd.auth_group_create.limit_type}이용자) 그룹 등록: 최대 ${auth_type_cd.auth_group_create.limit_num}개 등록 가능(진행중)`);
+        }
+    }else if(view_page == "ticket_manage"){
+        if(auth_type_cd.auth_package_create.limit_type == "무료"){
+            $popup.show().text(`(${auth_type_cd.auth_package_create.limit_type}이용자) 수강권 등록: 최대 ${auth_type_cd.auth_package_create.limit_num}개 등록 가능(진행중)`);
         }
     }else if(view_page == "analytics"){
         if(auth_type_cd.auth_analytics_read.limit_type == "무료"){

@@ -187,6 +187,12 @@ function toggleGroupParticipantsList(onoff){
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
                 draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
+                var participants_number = $('div.groupParticipantsRow').length - $('div._type_absence').length;
+                $('#groupplan_participants_status').text(
+                                                        ' ('+participants_number +
+                                                        '/'+
+                                                        max+')'
+                                                    );
                 selector_grouopParticipants.css({'height':'auto'});
                 completeSend();
             });
@@ -229,6 +235,19 @@ $(document).ready(function(){
         }
     });
 });
+
+function array_element_count(array, wanted){
+    var counts = {};
+    var len = array.length;
+    for(var i=0; i<len; i++){
+        counts[array[i]] = 0;
+    }
+    for(var j=0; j<len; j++){
+        counts[array[j]] = counts[array[j]] +1;
+    }
+    return counts[wanted];
+}
+
 
 
 //Array에서 중복요소 제거
@@ -716,7 +735,7 @@ function scrollToDom_custom(parentselector, dom){
 function disable_window_scroll(){
     if(bodywidth < 600){
        //$('#calendar').css('position', 'fixed');
-       $('html, body').css({"overflow": "hidden",
+       $('html, body').css({
                             "position": "relative"
                             });
     }else{
@@ -733,7 +752,7 @@ function disable_window_scroll(){
 function enable_window_scroll(){
     if(bodywidth < 600){
        //$('#calendar').css('position','relative');
-       $('html, body').css({"overflow": "unset",
+       $('html, body').css({
                             "position": "unset"
                             });
     }else{
@@ -1162,5 +1181,27 @@ function body_position_fixed_set(){
 function body_position_fixed_unset(){
     if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null){
         $('html, body').removeClass('bodyfixed');
+    }
+}
+
+
+//특수문자 입력 제한
+function limit_char(e){
+    //var limit =  /[\[\]~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\＠§※☆★○●◎◇◆□■△▲▽▼→←↑↓↔〓◁◀▷▶♤♠♡♥♧♣⊙◈▣◐◑▒▤▥▨▧▦▩♨☏☎☜☞¶†‡↕↗↙↖↘♭♩♪♬㉿㈜№㏇™㏂㏘℡]/gi;
+    var limit =  /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\-_一-龠々ぁ-んーァ-ヾ]/gi;
+    var temp = $(e).val();
+    if(limit.test(temp)){
+        $(e).val(temp.replace(limit, ""));
+        alert("이름에 - 와 _ 를 제외한 특수문자는 입력하실 수 없습니다.");
+    }
+}
+
+function limit_char_only_number(e){
+    // var limit =  /[~!@\#$%^&*\()\-=+_'|\:;\"\'\?.,/\\]/gi;
+    var limit =  /[^0-9\,]/gi;
+    var temp = $(e).val();
+    if(limit.test(temp)){
+        $(e).val(temp.replace(limit, ""));
+        alert("숫자만 입력하실 수 있습니다.");
     }
 }

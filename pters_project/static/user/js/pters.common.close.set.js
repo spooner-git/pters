@@ -38,7 +38,7 @@ function clear_pt_off_add_popup_mini(){
     $('#classDuration_mini #durationsSelected button').removeClass('dropdown_selected').html("<span style='color:#cccccc;'>선택</span>").val("");
 
     //회원 선택 핑크 하단선 초기화
-    $("#membersSelected button, #membersSelected_mini button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹/클래스 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
+    $("#membersSelected button, #membersSelected_mini button").removeClass("dropdown_selected").html("<span style='color:#cccccc;'>회원/그룹 선택</span><img src='/static/user/res/ajax/loading.gif' alt='' class='ajaxloading_dropdown'>").val("");
 
     //예약가능 횟수 내용 초기화
     $("#countsSelected,.countsSelected").text("");
@@ -82,7 +82,11 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
-        enable_window_scroll();
+        if($('#cal_popup_planinfo').css('display') == "block"){
+
+        }else{
+            enable_window_scroll();
+        }
         //$('body').css('overflow-y','overlay');
     }else if(option =="cal_popup_repeatconfirm"){
         $('#'+option).css('display', 'none');
@@ -113,6 +117,7 @@ function close_planadd_popup(){
     $('#page-addplan').css('display', 'none');
     $('#calendar').css('position', 'relative');
     $('.add_time_unit').removeClass('checked');
+    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
     enable_window_scroll();
     if(bodywidth<=820){
@@ -138,10 +143,10 @@ function close_planadd_popup_mobile(){
     $('#page-base').css('display', 'block');
     $('#page-base-addstyle').css('display', 'none');
 
-    var text1 = '회원/그룹/클래스 선택';
+    var text1 = '회원/그룹 선택';
     var text2 = '선택';
     if(Options.language == "KOR"){
-        text1 = '회원/그룹/클래스 선택';
+        text1 = '회원/그룹 선택';
         text2 = '선택';
     }else if(Options.language == "JPN"){
         text1 = '「会員選択」';
@@ -237,6 +242,7 @@ function close_manage_popup(option){
                 close_info_popup('cal_popup_plancheck');
                 close_info_popup('cal_popup_planinfo');
             }
+            $('span.mobile_title_popup').remove();
         }
     }else if(option == 'member_info_PC'){
         $('body').css('overflow-y','auto');
@@ -247,8 +253,9 @@ function close_manage_popup(option){
         }else{
             shade_index(-100);
         }
+        $('span.mobile_title_popup').remove();
     }else if(option == 'member_add'){
-        $('body').css('overflow-y','auto');
+        $('body').css('overflow-y', 'auto');
         var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();
@@ -264,7 +271,7 @@ function close_manage_popup(option){
         $('.ptaddbox input,#memberDue_add_2, .ptaddbox textarea').val("");
         var selector_birth_year_month_date = $('#birth_year, #birth_month, #birth_date');
         selector_birth_year_month_date.find('option:first').prop('selected', true);
-        selector_birth_year_month_date.css('color','#cccccc');
+        selector_birth_year_month_date.css('color', '#cccccc');
         if($('#memberInfoPopup_PC').css('display')=="block"){
             shade_index(100);
         }else if($('#mshade').css('z-index')==150){
@@ -273,6 +280,7 @@ function close_manage_popup(option){
         else{
             shade_index(-100);
         }
+        $('#subpopup_addByList, #subpopup_addBySearch').hide();
     }else if(option == 'group_add'){
         var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){

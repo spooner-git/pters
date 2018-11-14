@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, logout, login, get_user_model, upd
 from django.db import IntegrityError
 from django.db import InternalError
 from django.db import transaction
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, resolve_url
 from django.template.loader import render_to_string
@@ -42,9 +43,11 @@ from configs.const import USE, UN_USE
 from payment.functions import func_cancel_period_billing_schedule
 from payment.models import PaymentInfoTb, BillingInfoTb, BillingCancelInfoTb
 from trainee.models import MemberLectureTb
-from trainer.models import MemberClassTb
+from trainer.functions import func_get_ing_group_member_list, func_get_end_group_member_list, \
+    func_get_ing_package_member_list, func_get_end_package_member_list
+from trainer.models import GroupTb, PackageTb, ClassTb, ClassLectureTb, GroupLectureTb, PackageGroupTb
 
-from .forms import MyPasswordResetForm
+from .forms import MyPasswordResetForm, MyPasswordChangeForm
 from .models import MemberTb, PushInfoTb, SnsInfoTb
 
 logger = logging.getLogger(__name__)
@@ -164,27 +167,137 @@ class ServiceTestLoginView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
-        trainer_list = MemberTb.objects.filter(use=USE)
-        for trainer_info in trainer_list:
 
-            user_for_group = User.objects.get(id=trainer_info.user_id)
-            group = user_for_group.groups.get(user=trainer_info.user_id)
-            if str(group.id) == '3':
-                payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
-                                             product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
-                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
-                                             start_date='2018-10-29', end_date='2028-10-29', period_month='120',
-                                             payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
-                                             buyer_name=trainer_info.name, use=USE)
-                billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
-                                             product_tb_id='10',
-                                             customer_uid='c_free_event_'+str(trainer_info.user_id),
-                                             payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
-                                             payment_type_cd='SINGLE', price=0, card_name='없음',
-                                             payed_date='29',
-                                             state_cd='IP', use=USE)
-                payment_info.save()
-                billing_info.save()
+        # Empty 를 Normal로 변경 및 FIX 체크
+        class_data = ClassTb.objects.filter(member_id='5')
+        for class_info in class_data:
+            # 프로그램에 속한 그룹 불러오기
+            group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+            if len(group_data) == 0:
+                group_data = None
+            else:
+                for group_info in group_data:
+
+                    if group_info.group_type_cd == 'NORMAL':
+                        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id,
+                                                                           lecture_tb__state_cd='IP',
+                                                                           lecture_tb__use=USE,
+                                                                           use=USE)
+                        group_lecture_data.update(fix_state_cd='FIX')
+                    elif group_info.group_type_cd == 'EMPTY':
+                        group_info.group_type_cd = 'NORMAL'
+                        group_info.save()
+
+        # 1:1 그룹 생성
+        class_data = ClassTb.objects.filter(member_id='5')
+        for class_info in class_data:
+            # 그룹중에 1:1 그룹 불러오기
+            check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
+            # 1개도 없는 경우 생성
+            if len(check_group) == 0:
+                group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
+                                     name='1:1레슨',
+                                     # ing_group_member_num=ing_group_member_num,
+                                     # end_group_member_num=end_group_member_num,
+                                     ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+                                     reg_dt=class_data.reg_dt,
+                                     mod_dt=class_data.mod_dt,
+                                     state_cd='IP', use=USE)
+                group_info.save()
+
+                class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id)
+                for class_lecture_info in class_lecture_data:
+                    check_group = GroupLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
+                    # 1:1 그룹인 경우 GroupLecture가 없음. 1:1에 대한 GroupLecture 생성
+                    if len(check_group) == 0:
+                        lecture_info = GroupLectureTb(group_tb_id=group_info.group_id,
+                                                      lecture_tb_id=class_lecture_info.lecture_tb_id,
+                                                      reg_dt=class_lecture_info.lecture_tb.reg_dt,
+                                                      mod_dt=class_lecture_info.lecture_tb.mod_dt,
+                                                      fix_state_cd='',
+                                                      use=class_lecture_info.lecture_tb.use)
+                        lecture_info.save()
+
+        # 그룹 숫자 업데이트 패키지 정보 업데이트
+        class_data = ClassTb.objects.filter(member_id='5')
+        for class_info in class_data:
+            group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+            if len(group_data) == 0:
+                group_data = None
+            else:
+                for group_info in group_data:
+                    # 그룹에 해당하는 인원 체크
+                    group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_info.class_id,
+                                                                                         group_info.group_id,
+                                                                                         class_info.member_id))
+                    group_info.end_group_member_num = len(func_get_end_group_member_list(class_info.class_id,
+                                                                                         group_info.group_id,
+                                                                                         class_info.member_id))
+                    group_info.save()
+
+                    package_group_test = PackageGroupTb.objects.filter(group_tb_id=group_info.group_id)
+                    if len(package_group_test) > 0:
+                        # 패키지에 해당하는 그룹이 만들어져있는 경우 (패키지가 이미 만들어져있는 경우)
+                        for package_group_test_info in package_group_test:
+                            package_group_test_info.package_tb.ing_package_member_num = \
+                                len(func_get_ing_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
+                            package_group_test_info.package_tb.end_package_member_num = \
+                                len(func_get_end_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
+                            package_group_test_info.save()
+
+                    else:
+                        package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+                                                 state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
+                                                 ing_package_member_num=group_info.ing_group_member_num,
+                                                 end_package_member_num=group_info.end_group_member_num,
+                                                 package_group_num=1,
+                                                 reg_dt=group_info.reg_dt,
+                                                 mod_dt=group_info.mod_dt,
+                                                 use=group_info.use)
+                        package_info.save()
+                        package_group_info = PackageGroupTb(class_tb_id=group_info.class_tb_id,
+                                                            package_tb_id=package_info.package_id,
+                                                            group_tb_id=group_info.group_id,
+                                                            reg_dt=group_info.reg_dt,
+                                                            mod_dt=group_info.mod_dt,
+                                                            use=group_info.use)
+                        package_group_info.save()
+
+                        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id)
+                        for group_lecture_info in group_lecture_data:
+                            group_lecture_info.lecture_tb.package_tb_id = package_info.package_id
+                            group_lecture_info.lecture_tb.save()
+
+
+        # group_data = GroupTb.objects.filter()
+        # for group_info in group_data:
+        #     package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+        #                              state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
+        #                              package_group_num=1, use=group_info.use)
+        #     package_info.save()
+        # for lecture_info in lecture_data:
+        #     package_lecture_info =
+        # trainer_list = MemberTb.objects.filter(use=USE)
+        # for trainer_info in trainer_list:
+        #
+        #     user_for_group = User.objects.get(id=trainer_info.user_id)
+        #     group = user_for_group.groups.get(user=trainer_info.user_id)
+        #     if str(group.id) == '3':
+        #         payment_info = PaymentInfoTb(name='초기 이용 고객 감사 이벤트', member_id=trainer_info.user_id,
+        #                                      product_tb_id='10', merchant_uid='m_free_event_'+str(trainer_info.user_id),
+        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
+        #                                      start_date='2018-10-29', end_date='2028-10-29', period_month='120',
+        #                                      payment_type_cd='SINGLE', price=0, card_name='없음', status='paid',
+        #                                      buyer_name=trainer_info.name, use=USE)
+        #         billing_info = BillingInfoTb(name='초기 이용 고객 감사 이벤트', member_id=str(trainer_info.user_id),
+        #                                      product_tb_id='10',
+        #                                      customer_uid='c_free_event_'+str(trainer_info.user_id),
+        #                                      payment_reg_date='2018-10-29', next_payment_date='2028-10-29',
+        #                                      payment_type_cd='SINGLE', price=0, card_name='없음',
+        #                                      payed_date='29',
+        #                                      state_cd='IP', use=USE)
+        #         payment_info.save()
+        #         billing_info.save()
         return context
 
 
@@ -932,14 +1045,38 @@ class AddMemberNoEmailView(View):
         sex = request.POST.get('sex', '')
         birthday_dt = request.POST.get('birthday', '')
         phone = request.POST.get('phone', '')
+        package_id = request.POST.get('group_id', '')
         # group_id = request.POST.get('group_id', '')
-        context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
-        if context['error'] is not None:
-            logger.error(name+'[강사 회원가입]'+context['error'])
-            messages.error(request, context['error'])
+        error = None
+        # error_count = 0
+        # if package_id is not None and package_id != '':
+        #     package_group_data = PackageGroupTb.objects.filter(package_tb_id=package_id, use=USE)
+        #     for package_group_info in package_group_data:
+        #         if package_group_info.group_tb.group_type_cd == 'NORMAL':
+        #
+        #             if package_group_info.group_tb.ing_group_member_num >= package_group_info.group_tb.member_num:
+        #                 error = package_group_info.group_tb.name
+        #                 error_count += 1
+        #     if error_count == 1:
+        #         error += ' 그룹의 정원을 초과했습니다.'
+        #     elif error_count > 1:
+        #         error = '해당 패키지의 '+str(error_count)+'개의 그룹 정원을 초과했습니다.'
 
-        return render(request, self.template_name, {'username': context['username'],
-                                                    'user_db_id': context['user_db_id']})
+        if error is None:
+            context = add_member_no_email_func(request.user.id, first_name, last_name, phone, sex, birthday_dt)
+
+        if error is not None:
+            logger.error(name + '[강사 회원가입]' + error)
+            messages.error(request, error)
+            return render(request, self.template_name, {'username': '',
+                                                        'user_db_id': ''})
+        else:
+            if context['error'] is not None:
+                logger.error(name+'[강사 회원가입]'+context['error'])
+                messages.error(request, context['error'])
+
+            return render(request, self.template_name, {'username': context['username'],
+                                                        'user_db_id': context['user_db_id']})
 
 
 class CheckMemberIdView(TemplateView):
@@ -1816,6 +1953,39 @@ def password_change(request,
     return TemplateResponse(request, template_name, context)
 
 
+@sensitive_post_parameters()
+@csrf_protect
+@login_required
+@deprecate_current_app
+def password_change_social(request,
+                           template_name='password_change_form.html',
+                           post_change_redirect=None,
+                           password_change_form=MyPasswordChangeForm,
+                           extra_context=None):
+    if post_change_redirect is None:
+        post_change_redirect = reverse('password_change_done')
+    else:
+        post_change_redirect = resolve_url(post_change_redirect)
+    if request.method == "POST":
+        form = password_change_form(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Updating the password logs out all other sessions for the user
+            # except the current one.
+            update_session_auth_hash(request, form.user)
+            return HttpResponseRedirect(post_change_redirect)
+    else:
+        form = password_change_form(user=request.user)
+    context = {
+        'form': form,
+        'title': _('Password change'),
+    }
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return TemplateResponse(request, template_name, context)
+
+
 @login_required
 @deprecate_current_app
 def password_change_done(request,
@@ -1826,5 +1996,9 @@ def password_change_done(request,
     }
     if extra_context is not None:
         context.update(extra_context)
+    sns_id = request.session.get('social_login_id', '')
+    if sns_id != '' and sns_id is not None:
+        sns_data = SnsInfoTb.objects.filter(member_id=request.user.id, sns_id=sns_id, use=USE)
+        sns_data.update(change_password_check=1)
 
     return TemplateResponse(request, template_name, context)

@@ -98,6 +98,7 @@ class SnsInfoTb(TimeStampedModel):
     sns_name = models.CharField(db_column='SNS_NAME', max_length=255, blank=True, default='')  # Field name made lowercase.
     sns_profile = models.CharField(db_column='SNS_PROFILE', max_length=255, blank=True, default='')  # Field name made lowercase.
     sns_connect_date = models.DateField(db_column='SNS_CONNECT_DATE', blank=True, null=True)  # Field name made lowercase.
+    change_password_check = models.IntegerField(db_column='CHANGE_PASSWORD_CHECK', default=0)  # Field name made lowercase.
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

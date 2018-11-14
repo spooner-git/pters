@@ -22,6 +22,7 @@ $('#ymdText').click(function(e){
     }
 
     if(current_calendar_type == "month"){
+        $('#hidetoggle').show();
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
         var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
@@ -32,22 +33,28 @@ $('#ymdText').click(function(e){
         }else{
             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
         }
+
         $calendar.removeClass('_calmonth');
-        $('#week').css('display', 'table');
-        $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-        $('#date').css('display', 'none');
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 week_calendar_mobile(yyyy_mm_dd);
+                $('#week').css('display', 'table');
+                $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+                $('#date').css('display', 'none');
+                $('#ymdText_weekcal').css('display', 'inline-block');
+                $('#ymdText_monthcal').css('display', 'none');
             }else{
-                week_calendar(yyyy_mm_dd);
+                //week_calendar(yyyy_mm_dd);
             }
-            $('#ymdText_weekcal').css('display', 'inline-block');
-            $('#ymdText_monthcal').css('display', 'none');
+
         }else if(bodywidth<=600){
             week_calendar_mobile(yyyy_mm_dd);
+            $('#week').css('display', 'table');
+            $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+            $('#date').css('display', 'none');
         }
     }else if(current_calendar_type == "week"){
+        $('#hidetoggle').hide();
         var $ymdText_start = $('#ymdText-pc-month-start');
         var $ymdText_end = $('#ymdText-pc-month-end');
         var $ymdText_day_start = $('#ymdText-pc-date-start');
@@ -67,23 +74,37 @@ $('#ymdText').click(function(e){
             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
         }
         $calendar.removeClass('_calweek');
-        $('#week').css('display', 'none');
-        $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-        $('#date').css('display', 'block');
-        month_calendar(yyyy_mm_dd);
-        $('.swiper-slide-active').css('width', $('#calendar').width());
-        $('#ymdText_monthcal').css('display', 'inline-block');
-        $('#ymdText_weekcal').css('display', 'none');
+        if(bodywidth > 600){
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                month_calendar(yyyy_mm_dd);
+                $('#week').css('display', 'none');
+                $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+                $('#date').css('display', 'block');
+                $('.swiper-slide-active').css('width', $('#calendar').width());
+                $('#ymdText_monthcal').css('display', 'inline-block');
+                $('#ymdText_weekcal').css('display', 'none');
+            }else{
+                //week_calendar(yyyy_mm_dd);
+            }
+        }else if(bodywidth <= 600){
+            month_calendar(yyyy_mm_dd);
+            $('#week').css('display', 'none');
+            $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+            $('#date').css('display', 'block');
+            $('.swiper-slide-active').css('width', $('#calendar').width());
+            $('#ymdText_monthcal').css('display', 'inline-block');
+            $('#ymdText_weekcal').css('display', 'none');
+        }
     }
 });
 
 var calendar_select ="week";
 $('#change_to_weekcal').click(function(e){
     if(calendar_select == "month"){
+        $('#hidetoggle').show();
         calendar_select = "week";
         e.stopPropagation();
         var $calendar = $('#calendar');
-
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
         var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
@@ -114,6 +135,8 @@ $('#change_to_weekcal').click(function(e){
 
 $('#change_to_monthcal').click(function(e){
     if(calendar_select == "week"){
+        hidetoggle_on_off("off");
+        $('#hidetoggle').hide();
         calendar_select = "month";
         e.stopPropagation();
         var $calendar = $('#calendar');
@@ -1355,7 +1378,6 @@ function dateText(){
 }
 
 function krHoliday_week(){
-    console.log("krholiday")
     $('.holiday').removeClass('holiday');
     $('.holidayName').text('');
     for(var i=0; i<krHolidayList.length; i++){
@@ -1607,7 +1629,6 @@ function fake_show(){
 }
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
-    
     //중복일정 ㅇㄷ
     //var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ    
@@ -1630,6 +1651,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
     var planGroupid = '';
     var planCode = '';
     var planGroupClassName = '';
+    var plancolor_ing_bg_cd = "";
+    var plancolor_ing_font_cd = "";
+    var plancolor_end_bg_cd = "";
+    var plancolor_end_font_cd = "";
     switch(option){
         case 'class':
             plan = option;
@@ -1643,6 +1668,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
             planfinished = ' classTime_checked';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planMemberNum = '';
             planGroupid = '';
             planCode = '';
@@ -1657,6 +1686,10 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planScheduleFinishArray = '';
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
@@ -1674,6 +1707,11 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             planScheduleFinishArray = jsondata.group_schedule_finish_check;
             planColor = 'groupTime';
             planfinished = ' groupTime_checked';
+            plancolor_ing_bg_cd = jsondata.group_schedule_ing_color_cd;
+            plancolor_ing_font_cd = jsondata.group_schedule_ing_font_color_cd;
+            plancolor_end_bg_cd = jsondata.group_schedule_end_color_cd;
+            plancolor_end_font_cd = jsondata.group_schedule_end_font_color_cd;
+
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
@@ -1766,14 +1804,16 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display', 'none');
 
+        var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
         if(option != 'off'){
-            if(planScheduleFinishArray[i] == 1){
-                planColor_ = planColor+planfinished;
-            }else{
+            if(planScheduleFinishArray[i] == 0){
                 planColor_ = planColor;
+            }else{
+                planColor_ = planColor+planfinished;
+                group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
             }
         }else{
             planColor_ = planColor;
@@ -1884,6 +1924,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" class="'+planColor_+
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     group_user_color+
                                                      //중복 일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      //'width:'+planWidth+'%'+
@@ -2015,6 +2056,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
     var planGroupid = '';
     var planCode = '';
     var planGroupClassName = '';
+    var plancolor_ing_bg_cd = "";
+    var plancolor_ing_font_cd = "";
+    var plancolor_end_bg_cd = "";
+    var plancolor_end_font_cd = "";
     switch(option){
         case 'class':
             plan = option;
@@ -2027,6 +2072,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planNoteArray = jsondata.scheduleNoteArray;
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planfinished = ' classTime_checked';
             planMemberNum = '';
             planGroupid = '';
@@ -2042,6 +2091,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planScheduleFinishArray = '';
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
+            plancolor_ing_bg_cd = "";
+            plancolor_ing_font_cd = "";
+            plancolor_end_bg_cd = "";
+            plancolor_end_font_cd = "";
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
@@ -2059,6 +2112,10 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             planScheduleFinishArray = jsondata.group_schedule_finish_check;
             planColor = 'groupTime';
             planfinished = ' groupTime_checked';
+            plancolor_ing_bg_cd = jsondata.group_schedule_ing_color_cd;
+            plancolor_ing_font_cd = jsondata.group_schedule_ing_font_color_cd;
+            plancolor_end_bg_cd = jsondata.group_schedule_end_color_cd;
+            plancolor_end_font_cd = jsondata.group_schedule_end_font_color_cd;
             planMemberNum = jsondata.group_schedule_max_member_num;
             planMemberDbid = '';
             planCode = '';
@@ -2141,14 +2198,16 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var tdPlan = $("#"+planStart);
         //tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
 
+        var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
         if(option != 'off'){
-            if(planScheduleFinishArray[i] == 1){
-                planColor_ = planColor+planfinished;
-            }else{
+            if(planScheduleFinishArray[i] == 0){
                 planColor_ = planColor;
+            }else{
+                planColor_ = planColor+planfinished;
+                group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
             }
         }else{
             planColor_ = planColor;
@@ -2224,7 +2283,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                             '" data-memberName="'+memberName+
                             '" data-group-type-cd-name="'+planGroupClassName[i]+
                             '" class="'+planColor_+
-                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
+                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+group_user_color+
                             '">'+
                                 innerNameTag+
                            '</div>';
@@ -2338,7 +2397,6 @@ function know_duplicated_plans(jsondata){
         var planlength = duplicate_dic[plan].length;
         for(var plans in duplicate_dic){
             if(duplicate_dic[plans].indexOf(plan) >= 0 && planlength < duplicate_dic[plans].length ){
-                console.log('여기')
                 delete duplicate_dic[plan];
             }
         }
@@ -2431,31 +2489,31 @@ var clicked_td_date_info;
 var schedule_on_off = 0;
 
 //회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
-$(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span', function(){
-    var bodywidth = window.innerWidth;
-    var dbID = $(this).attr('data-dbid');
-    //$('.popups').hide()
-    if(bodywidth < 600){
-        $('.popups').hide();
-        //$('#calendar').css('display','none')
-        $('#calendar').css('height', '0');
-        get_indiv_member_info(dbID);
-        get_indiv_repeat_info(dbID);
-        get_member_lecture_list(dbID);
-        get_member_history_list(dbID);
-        shade_index(100);
-    }else if(bodywidth >= 600){
-        get_indiv_member_info(dbID);
-        get_indiv_repeat_info(dbID);
-        get_member_lecture_list(dbID);
-        get_member_history_list(dbID);
-        $('.member_info_tool button._info_delete_img').hide();
-        $('#info_shift_base, #info_shift_lecture').show();
-        $('#info_shift_schedule, #info_shift_history').hide();
-        $('#select_info_shift_lecture').addClass('button_active');
-        $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
-    }
-});
+// $(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span', function(){
+//     var bodywidth = window.innerWidth;
+//     var dbID = $(this).attr('data-dbid');
+//     //$('.popups').hide()
+//     if(bodywidth < 600){
+//         $('.popups').hide();
+//         //$('#calendar').css('display','none')
+//         $('#calendar').css('height', '0');
+//         get_indiv_member_info(dbID);
+//         get_indiv_repeat_info(dbID);
+//         get_member_lecture_list(dbID);
+//         get_member_history_list(dbID);
+//         shade_index(100);
+//     }else if(bodywidth >= 600){
+//         get_indiv_member_info(dbID);
+//         get_indiv_repeat_info(dbID);
+//         get_member_lecture_list(dbID);
+//         get_member_history_list(dbID);
+//         $('.member_info_tool button._info_delete_img').hide();
+//         $('#info_shift_base, #info_shift_lecture').show();
+//         $('#info_shift_schedule, #info_shift_history').hide();
+//         $('#select_info_shift_lecture').addClass('button_active');
+//         $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
+//     }
+// });
 
 $('.popup_inner_month').scroll(function(e){
     e.stopPropagation();
@@ -2736,9 +2794,9 @@ function month_calendar(referencedate){
     var page2 = $('.swiper-slide:nth-of-type(2)');
     var page3 = $('.swiper-slide:nth-of-type(3)');
 
-    page1.html('')
-    page2.html('')
-    page3.html('')
+    page1.html('');
+    page2.html('');
+    page3.html('');
 
     var year = Number(referencedate.split('-')[0]);
     var month = Number(referencedate.split('-')[1]);

@@ -98,16 +98,54 @@ urlpatterns = [
     url(r'^get_group_end_list/$', views.GetGroupEndListViewAjax.as_view(), name='get_group_end_list'),
     # 그룹 회원 조회
     url(r'^get_group_member/$', views.GetGroupMemberViewAjax.as_view(), name='get_group_member'),
+    # 그룹 종료 회원 조회
+    url(r'^get_end_group_member/$', views.GetEndGroupMemberViewAjax.as_view(), name='get_end_group_member'),
     # 그룹 종료 상태 변경
     url(r'^finish_group_info/$', views.finish_group_info_logic, name='finish_group_info'),
     # 그룹 재개 상태 변경
     url(r'^progress_group_info/$', views.progress_group_info_logic, name='progress_group_info'),
+    # 그룹 고정 맴버 변경
+    url(r'^update_fix_group_member/$', views.update_fix_group_member_logic, name='update_fix_group_member'),
 
     # 패키지 기능 #########################################################################################################
+    # 패키지 추가
+    url(r'^add_package_info/$', views.add_package_info_logic, name='add_package_info'),
+    # 패키지 삭제
+    url(r'^delete_package_info/$', views.delete_package_info_logic, name='delete_package_info'),
+    # 패키지 수정
+    url(r'^update_package_info/$', views.update_package_info_logic, name='update_package_info'),
+    # 패키지에 그룹 추가
+    url(r'^add_package_group_info/$', views.add_package_group_info_logic, name='add_package_group_info'),
+    # 패키지에 그룹 삭제
+    url(r'^delete_package_group_info/$', views.delete_package_group_info_logic, name='delete_package_group_info'),
     # 진행중 패키지 list 조회
     url(r'^get_package_ing_list/$', views.GetPackageIngListViewAjax.as_view(), name='get_package_ing_list'),
     # 완료된 패키지 list 조회
     url(r'^get_package_end_list/$', views.GetPackageEndListViewAjax.as_view(), name='get_package_end_list'),
+    # 패키지 만들 list 조회
+    url(r'^get_single_package_list/$', views.GetSinglePackageViewAjax.as_view(),
+        name='get_single_package_list'),
+    # 패키지 회원 조회
+    url(r'^get_package_member/$', views.GetPackageMemberViewAjax.as_view(), name='get_package_member'),
+    # 패키지 종료 회원 조회
+    url(r'^get_end_package_member/$', views.GetEndPackageMemberViewAjax.as_view(), name='get_end_package_member'),
+
+    # 패키지 종료 상태 변경
+    url(r'^finish_package_info/$', views.finish_package_info_logic, name='finish_package_info'),
+    # 패키지 재개 상태 변경
+    url(r'^progress_package_info/$', views.progress_package_info_logic, name='progress_package_info'),
+
+    # 패키지 소속 그룹 리스트 조회
+    url(r'^get_package_group_list/$', views.GetPackageGroupListViewAjax.as_view(), name='get_package_group_list'),
+    # 패키지 종료된 소속 그룹 리스트 조회
+    url(r'^get_end_package_group_list/$', views.GetEndPackageGroupListViewAjax.as_view(),
+        name='get_end_package_group_list'),
+
+    # 패키지 회원 추가
+    url(r'^add_package_member/$', views.add_package_member_logic, name='add_package_member'),
+    # 패키지 회원 삭제
+    url(r'^delete_package_member_info/$', views.delete_package_member_info_logic, name='delete_package_member_info'),
+
 
 
     # 수업 관리 기능 ######################################################################################################
@@ -195,6 +233,8 @@ urlpatterns = [
     url(r'^cal_total/$', views.CalTotalView.as_view(), name='cal_total'),
     # 회원/그룹/클래스 통합 뷰 페이지
     url(r'^lecture_manage/$', views.ManageLectureView.as_view(), name='lecture_manage'),
+    # 수강권 페이지
+    url(r'^ticket_manage/$', views.ManageTicketView.as_view(), name='ticket_manage'),
     # 회원 관리 페이지
     url(r'^member_manage/$', views.ManageMemberView.as_view(), name='member_manage'),
     # 그룹 관리 페이지

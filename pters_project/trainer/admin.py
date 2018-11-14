@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import ClassTb, MemberClassTb, ClassLectureTb, GroupTb, GroupLectureTb, SettingTb, BackgroundImgTb, \
-    PackageTb, PackageLectureTb, PackageGroupTb
+    PackageTb, PackageGroupTb
 
 
 @admin.register(ClassTb)
@@ -28,7 +28,9 @@ class ClassLectureTbAdmin(admin.ModelAdmin):
 
 @admin.register(GroupTb)
 class GroupTbAdmin(admin.ModelAdmin):
-    list_display = ('group_id','class_tb', 'group_type_cd', 'member_num', 'name',
+    list_display = ('group_id', 'class_tb', 'name', 'group_type_cd', 'member_num',
+                    'ing_group_member_num', 'end_group_member_num', 'state_cd',
+                    'ing_color_cd', 'end_color_cd', 'ing_font_color_cd', 'end_font_color_cd',
                     'note', 'reg_dt', 'mod_dt', 'use')
 
 
@@ -51,12 +53,9 @@ class BackgroundImgTbAdmin(admin.ModelAdmin):
 
 @admin.register(PackageTb)
 class PackageTbAdmin(admin.ModelAdmin):
-    list_display = ('package_id', 'class_tb', 'name', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
-
-
-@admin.register(PackageLectureTb)
-class PackageLectureTbAdmin(admin.ModelAdmin):
-    list_display = ('package_lecture_id', 'package_tb', 'lecture_tb', 'reg_dt', 'mod_dt', 'use')
+    list_display = ('package_id', 'class_tb', 'name', 'package_type_cd',
+                    'ing_package_member_num', 'end_package_member_num',
+                    'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
 
 
 @admin.register(PackageGroupTb)

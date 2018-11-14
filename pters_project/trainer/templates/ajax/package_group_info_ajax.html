@@ -1,0 +1,34 @@
+    {
+      "package_id":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_id":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_type_cd":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_type_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_type_cd_nm":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_type_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "member_num":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.member_num  }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_name":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_note":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_reg_dt":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.reg_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_mod_dt":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.mod_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "state_cd_name":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.state_cd_nm }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      "group_member_num":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_member_num }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_ing_color_cd":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_ing_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+      "group_end_color_cd":
+      [{% for package_group_info in package_group_data %}"{{ package_group_info.group_tb.group_end_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
+
+
+      "messageArray" :
+      [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
+    }

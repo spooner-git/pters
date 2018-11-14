@@ -98,6 +98,7 @@ function addByNew_input_eventGroup(){
     });
 
     $(document).on('keyup', '.addByNewRaw input.new_member_firstname', function(){
+        limit_char(this);
         $(this).parent('.addByNewRaw').attr({'data-firstname': $(this).val()});
         check_dropdown_selected();
     });
@@ -108,6 +109,7 @@ function addByNew_input_eventGroup(){
     });
 
     $(document).on('keyup', '.addByNewRaw input.new_member_phone', function(){
+        limit_char_only_number(this);
         $(this).parent('.addByNewRaw').attr('data-phone', $(this).val());
         check_dropdown_selected();
     });
@@ -498,9 +500,14 @@ $(document).on('click', 'div.groupWrap', function(e){
             memberlist.addClass('groupMembersWrap_selected').show();
             repeat_list.show();
             if(bodywidth < 600){
-               memo_list.show(); 
+               memo_list.show();
             }
-            get_groupmember_list(group_id);
+            if($(this).attr('data-groupstatecd')=='current'){
+                get_groupmember_list(group_id);
+            }
+            else{
+                get_end_groupmember_list(group_id);
+            }
             get_group_repeat_info(group_id);
         }else if(group_id == "1:1"){
             $(this).addClass('groupWrap_selected');
@@ -526,6 +533,81 @@ $(document).on('click', 'div.groupWrap', function(e){
     }
 });
 
+$(document).on('click', 'div._groupplancolor', function(e){
+    e.stopPropagation();
+    var grouptype = $(this).siblings('div._grouptypecd').attr('data-group-type');
+    if(grouptype == "ONE_TO_ONE"){
+        if($(this).find("div.colorpalette").length == 0){
+            $(this).append(
+                                `<div class="colorpalette" style="min-width:unset;">
+                                    <div class="plancolor_yellow"></div>
+                                </div>`
+                            );
+        }else{
+            $(this).find("div.colorpalette").remove();
+        }
+    }else{
+        if($(this).find("div.colorpalette").length == 0){
+            $(this).append(
+                                `<div class="colorpalette">
+                                    <div class="plancolor_yellow"></div>
+                                    <div class="plancolor_pink"></div>
+                                    <div class="plancolor_orange"></div>
+                                    <div class="plancolor_blue"></div>
+                                    <div class="plancolor_green"></div>
+                                    <div class="plancolor_purple"></div>
+                                </div>`
+                            );
+        }else{
+            $(this).find("div.colorpalette").remove();
+        }
+    }
+});
+
+$(document).on('click', 'div.colorpalette div', function(e){
+    e.stopPropagation();
+    var group_id = $(this).parents('div.groupWrap').attr('data-groupid');
+    var selected_color = $(this).attr("class").split('_')[1];
+    var ing_bg_color;
+    var end_bg_color;
+    var ing_font_color;
+    var end_font_color;
+    if(selected_color == "orange"){
+        ing_bg_color = "#ffa500";
+        end_bg_color = "#b77600";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "pink"){
+        ing_bg_color = "#ffacb7";
+        end_bg_color = "#af757c";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "blue"){
+        ing_bg_color = "#9a9af9";
+        end_bg_color = "#3939a7";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "green"){
+        ing_bg_color = "#00a700";
+        end_bg_color = "#008000";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "purple"){
+        ing_bg_color = "#f488fb";
+        end_bg_color = "#95239c";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }else if(selected_color == "yellow"){
+        ing_bg_color = "#fbf3bd";
+        end_bg_color = "#8c8763";
+        ing_font_color = "#282828";
+        end_font_color = "#282828";
+    }
+
+    modify_group_from_list(group_id, "", "", "", "", ing_bg_color, end_bg_color, ing_font_color, end_font_color);
+    $(this).parent('.colorpalette').remove();
+});
+
 //그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
 $(document).on('click', 'div._groupmanage', function(e){
     e.stopPropagation();
@@ -541,7 +623,7 @@ $(document).on('click', '._groupmanage img._info_delete', function(e){
     if($(this).css('opacity') == 1){
         deleteTypeSelect = 'groupdelete';
         $('#cal_popup_plandelete').show();
-        $('#popup_delete_question').text('정말 삭제하시겠습니까?');
+        $('#popup_delete_question').html('정말 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
         //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
         var group_id = $(this).attr('data-groupid');
         var memberLen = $('div.memberline[data-groupid="'+group_id+'"]').length;
@@ -603,7 +685,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
 
                 $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type);
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                 break;
         }
 
@@ -635,8 +717,14 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     $('.lectureStateChangeSelectPopup ._complete').attr('data-groupid', $(this).attr('data-groupid'));
     $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-groupid'));
     show_shadow_reponsively();
+    var display_type = "block";
+    if(bodywidth > 600){
+        display_type = "inline-block";
+    }
     if($(this).attr('data-groupstatus') == "IP"){
-        $('._complete').css('display', 'block');
+        var change_explain_text = '1) 수강권에서 해당 그룹이 제외됩니다.<br/>2) 소속된 회원의 수강권이 종료됩니다.';
+        $('._explain').html(change_explain_text);
+        $('._complete').css('display', display_type);
         $('._resume, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._complete', function(){
             if($('.lectureStateChangeSelectPopup').attr('data-grouptype')=='group'){
@@ -652,7 +740,9 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-groupstatus') == "PE"){
-        $('._resume').css('display', 'block');
+        var change_explain_text = '1) 해당 그룹이 포함되었던 수강권에 다시 추가됩니다.<br/>2) 남은 횟수가 있는 소속된 회원의 수강권이 재개됩니다.';
+        $('._explain').html(change_explain_text);
+        $('._resume').css('display', display_type);
         $('._complete, ._refund, ._delete').css('display', 'none');
         $(document).on('click', 'div.lectureStateChangeSelectPopup ._resume', function(){
             if($('.lectureStateChangeSelectPopup').attr('data-grouptype')=='group'){
@@ -775,6 +865,7 @@ function get_package_ing_list(use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log("get_package_ing_list", jsondata)
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -997,12 +1088,12 @@ function delete_groupmember_from_grouplist(use, callback){
 //그룹원 지우기
 
 //그룹 정보 수정
-function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type){
+function modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, ing_bg_color, end_bg_color, ing_font_color, end_font_color){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/update_group_info/',
         type:'POST',
-        data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type},
+        data: {"group_id":group_id, "name":group_name, "member_num":group_capacity, "note":group_memo, "group_type_cd":group_type, "ing_color_cd":ing_bg_color, "end_color_cd":end_bg_color, "ing_font_color_cd":ing_font_color, "end_font_color_cd":end_font_color},
         dataType : 'html',
 
         beforeSend:function(xhr, settings) {
@@ -1444,6 +1535,7 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function group_class_ListHtml(option, jsondata){ //option : current, finished
+    console.log(jsondata)
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');
@@ -1456,20 +1548,20 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             text_membernum = "종료된 그룹 ";
             break;
     }
-
-    var htmlToAdd = '<div class="groupWrap" data-groupid="'+'1:1"'+' group_id="'+'1:1"'+'">'+
-                    '<div class="_groupnum"></div>'+
-                        '<div class="_grouptypecd" data-group-type="'+"group_type"+'"><input class="group_listinput input_disabled_true" value="'+"1:1"+'" disabled>'+'</div>'+
-                        '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+"1:1 레슨"+'" disabled>'+'</div>'+
-                        '<div class="_groupparticipants '+"full_group"+'">'+ "group_membernum"+'</div>'+
-                        '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+"full_group"+'" value="'+"group_capacity"+'" disabled>'+'</div>'+
-                        '<div class="_grouppartystatus '+"full_group"+'"><span>'+ g_ptmembernum + ' </span> ' +'</div>'+
-                        '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+""+'" disabled>'+'</div>'+
-                        '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>'+
-                        '<div class="_groupstatus" data-groupid="'+"group_id"+'">'+'<span class="_editable _groupstatus_'+"groupstatus_cd"+'" data-groupstatus="'+"groupstatus_cd"+'" data-groupid="'+"group_id"+'">'+"-"+'</span>'+'</div>'+
-                        '<div class="_groupmanage">'+'</div>'+
-                    '</div></div>'+
-                    '<div class="groupMembersWrap" data-groupid="'+'1:1'+'" data-groupname="'+'1:1'+'" data-groupcapacity="'+'" data-grouptype="'+'1:1'+'">'+'</div>'
+    var htmlToAdd = [];
+    // var htmlToAdd = '<div class="groupWrap" data-groupid="'+'1:1"'+' group_id="'+'1:1"'+'">'+
+    //                 '<div class="_groupnum"></div>'+
+    //                     '<div class="_grouptypecd" data-group-type="'+"group_type"+'"><input class="group_listinput input_disabled_true" value="'+"1:1"+'" disabled>'+'</div>'+
+    //                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+"1:1 레슨"+'" disabled>'+'</div>'+
+    //                     '<div class="_groupparticipants '+"full_group"+'">'+ "group_membernum"+'</div>'+
+    //                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+"full_group"+'" value="'+"group_capacity"+'" disabled>'+'</div>'+
+    //                     '<div class="_grouppartystatus '+"full_group"+'"><span>'+ g_ptmembernum + ' </span> ' +'</div>'+
+    //                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+""+'" disabled>'+'</div>'+
+    //                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>'+
+    //                     '<div class="_groupstatus" data-groupid="'+"group_id"+'">'+'<span class="_editable _groupstatus_'+"groupstatus_cd"+'" data-groupstatus="'+"groupstatus_cd"+'" data-groupid="'+"group_id"+'">'+"-"+'</span>'+'</div>'+
+    //                     '<div class="_groupmanage">'+'</div>'+
+    //                 '</div></div>'+
+    //                 '<div class="groupMembersWrap" data-groupid="'+'1:1'+'" data-groupname="'+'1:1'+'" data-groupcapacity="'+'" data-grouptype="'+'1:1'+'">'+'</div>'
     var htmlToJoin = [];
     var htmlToJoin2 = [];
     var groupNum = jsondata.group_id.length;
@@ -1482,57 +1574,99 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
         var group_memo = jsondata.group_note[i];
         var group_memberlist = [];
-        var group_membernum = jsondata.group_member_num[i];
         var group_capacity = jsondata.member_num[i];
         var groupstatus = jsondata.state_cd_name[i];
         var groupstatus_cd = jsondata.state_cd[i];
+        var groupplancolor = jsondata.group_ing_color_cd[i];
+
+        var group_membernum;
+        switch(option){
+            case 'current':
+                group_membernum = jsondata.group_member_num[i];
+                break;
+            case 'finished':
+                group_membernum = jsondata.end_group_member_num[i];
+                break;
+        }
 
         ordernum++;
         var full_group = "";
-        if(group_membernum == group_capacity && group_type == "NORMAL"){
-            var full_group = "red_color_text";
-        }
+        // if(group_membernum == group_capacity && group_type == "NORMAL"){
+        //     var full_group = "red_color_text";
+        // }
 
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
         var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
-        var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">'
+        var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">';
 
-        var htmlstart = '<div class="groupWrap" data-groupid="'+group_id+'">';
+        var htmlstart = '<div class="groupWrap" data-groupstatecd="'+option+'" data-groupid="'+group_id+'">';
         var htmlend = '</div>';
         var memolist = '<div class="groupMemoWrap" data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
         var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>';
-        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>'
-        var manageimgs = '<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>';
-        if(Options.auth_class == 0){
-            manageimgs ='<div class="_groupmanage">'+img_lock_function+'</div>';
+        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>';
+
+        if(group_type == "ONE_TO_ONE") {
+            manageimgs = '<div class="_groupmanage"></div>';
+        }
+        else{
+            var manageimgs = '<div class="_groupmanage">' + pceditimage + pceditcancelimage + pcdeleteimage + '</div>';
+            if (Options.auth_class == 0) {
+                manageimgs = '<div class="_groupmanage">' + img_lock_function + '</div>';
+            }
         }
 
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
             '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
+            '<div class="_groupplancolor"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>';
             '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
-            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-            '<div class="_grouppartystatus '+full_group+'">'+'<div class="group_member_current_num">'+group_membernum+'</div>'+'<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>'+
-            '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>'+
-            '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>'+
-            '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+
-            manageimgs;
+            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
+            if(group_type == "ONE_TO_ONE") {
+                main += '<div class="_grouppartystatus '+"full_group"+'"><span>'+ group_membernum + ' </span> ' +'</div>';
+            }
+            else{
+                main += '<div class="_grouppartystatus ' + full_group + '">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
+            }
+            main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+
+            if(group_type == "ONE_TO_ONE"){
+                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
+            }
+            else{
+                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>';
+            }
+            main += '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+ manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+
         if(group_type == "EMPTY"){
             htmlToJoin.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
         }else if(group_type == "NORMAL"){
             htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
-        };
-        
+        }else if(group_type == "ONE_TO_ONE"){
+            htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            // htmlToAdd = '<div class="groupWrap" data-groupstatecd="'+option+'" data-groupid="'+group_id+'">'+
+            //         '<div class="_groupnum">'+ordernum+'</div>'+
+            //             '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+            //             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
+            //             '<div class="_groupparticipants '+"full_group"+'">'+ "group_membernum"+'</div>'+
+            //             '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+"full_group"+'" value="'+"group_capacity"+'" disabled>'+'</div>'+
+            //             '<div class="_grouppartystatus '+"full_group"+'"><span>'+ group_membernum + ' </span> ' +'</div>'+
+            //             '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+""+'" disabled>'+'</div>'+
+            //             '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>'+
+            //             '<div class="_groupstatus" data-groupid="'+"group_id"+'">'+'<span class="_editable _groupstatus_'+"groupstatus_cd"+'" data-groupstatus="'+"groupstatus_cd"+'" data-groupid="'+"group_id"+'">'+"-"+'</span>'+'</div>'+
+            //             '<div class="_groupmanage">'+'</div>'+
+            //         '</div></div>'+
+            //         '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+'" data-grouptype="'+group_type+'">'+'</div>'
+        }
     }
 
-    if(htmlToJoin.length == 0){
+    if(htmlToJoin2.length == 0){
         if(option == "current"){
-            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin.push('<div class="groupWrap" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
     //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
@@ -1563,6 +1697,65 @@ function get_groupmember_list(group_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
+            console.log("jsondata",jsondata)
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                scrollToDom($('#page_addmember'))
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray)
+            }else{
+                $('#errorMessageBar').hide()
+                $('#errorMessageText').text('')
+                if(bodywidth < 600){
+                    $('#page_managemember').show();
+                }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                if(use == 'callback'){
+                    callback(jsondata)
+                }else{
+                    groupMemberListSet(group_id, jsondata)
+                    $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1)
+                }
+
+                console.log('success');
+
+
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show()
+            $('#errorMessageText').text('통신 에러: 관리자 문의')
+        },
+    })
+}
+
+//그룹원 목록을 그룹에 뿌리기
+function get_end_groupmember_list(group_id, use, callback){
+    var bodywidth = window.innerWidth;
+    $.ajax({
+        url:'/trainer/get_end_group_member/',
+        data: {"group_id":group_id},
+        type:'GET',
+        dataType : 'html',
+
+        beforeSend:function(xhr){
+            beforeSend();
+            pters_option_inspector("group_read", xhr, "");
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log(jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -1611,6 +1804,7 @@ function groupMemberListSet(group_id, jsondata){
                         //'<div class="_startdate">시작일</div>'+
                         //'<div class="_finday">종료일</div>'+
                         //'<div class="_contact">연락처</div>'+
+                        '<div class="_fixedmember">고정</div>'+
                         '<div class="_manage">관리</div>'+
                         '</div>');
     }else if(bodywidth >= 600){
@@ -1622,6 +1816,7 @@ function groupMemberListSet(group_id, jsondata){
                         '<div class="_startdate">시작일</div>'+
                         '<div class="_finday">종료일</div>'+
                         '<div class="_contact">연락처</div>'+
+                        '<div class="_fixedmember">고정</div>'+
                         '<div class="_manage">관리</div>'+
                         '</div>');
     }
@@ -1640,6 +1835,12 @@ function groupMemberListSet(group_id, jsondata){
         var groupmember_startdate = jsondata.start_date[i];
         var groupmember_enddate = jsondata.end_date[i];
         var groupmember_phone = jsondata.phone[i];
+        var groupmember_fixed;
+        if(jsondata.fix_state_cd[i] == "FIX"){
+            groupmember_fixed = "checked";
+        }else{
+            groupmember_fixed = "";
+        }
 
         var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">';
         var htmlEnd = '</div>';
@@ -1650,25 +1851,44 @@ function groupMemberListSet(group_id, jsondata){
             '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
             '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
             '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
-            '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
+            '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>';
+
+            if(grouptype!='ONE_TO_ONE') {
+                memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
+            }else{
+                memberRow += '<div class="" style="width:10%"></div>';
+            }
             //'<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
             //'<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
             //'<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-            '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
-            htmlEnd;
+            if(grouptype!='ONE_TO_ONE') {
+                memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="' + groupmember_lastname + groupmember_firstname + '" data-id="' + groupmember_id + '" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '"></div>'
+            }else{
+                 memberRow += '<div class="_manage"></div>';
+            }
+            memberRow += htmlEnd;
         }else if(bodywidth >= 600){
             memberRow = htmlStart +
             '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'" title="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
             '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'" title="'+groupmember_id+'">'+groupmember_id+'</div>' +
             '<div class="_regcount" data-name="'+groupmember_regcount+'">'+groupmember_regcount+'</div>' +
             '<div class="_remaincount" data-name="'+groupmember_remcount+'">'+groupmember_remcount+'</div>' +
-            '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate,'.')+'</div>' +
-            '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate,'.')+'</div>' +
-            '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>' +
-            '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>' +
-            htmlEnd;
+            '<div class="_startdate" data-name="'+groupmember_startdate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_startdate, '.')+'</div>' +
+            '<div class="_finday" data-name="'+groupmember_enddate+'">'+date_format_yyyymmdd_to_yyyymmdd_split(groupmember_enddate, '.')+'</div>' +
+            '<div class="_contact" data-name="'+groupmember_phone+'">'+groupmember_phone+'</div>';
+            if(grouptype!='ONE_TO_ONE') {
+                memberRow += '<div class="_fixedmember" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'">'+'<div></div>'+'<input type="checkbox" '+groupmember_fixed+'>'+'</div>';
+            }else{
+                memberRow += '<div class=""></div>';
+            }
+            if(grouptype!='ONE_TO_ONE'){
+                memberRow += '<div class="_manage"><img src="/static/user/res/member/icon-x-red.png" class="substract_groupMember" data-fullname="'+groupmember_lastname+groupmember_firstname+'" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'"></div>'
+            }else{
+                 memberRow += '<div class="_manage"></div>';
+            }
+            memberRow += htmlEnd;
         }
-        
+
 
         htmlToJoin.push(memberRow);
     }
@@ -1680,30 +1900,47 @@ function groupMemberListSet(group_id, jsondata){
     }else if(grouptype == "NORMAL"){
         //var group_type = group_capacity+"인 비공개"
         EMPTY_EXPLAIN = "";
-    }
-
-    var addButton;
-    if(Options.auth_class == 0){
-        addButton = '<div><img src="/static/user/res/login/icon-lock-grey.png" style="width:20px;margin-top: 10px;margin-bottom:10px;"  title="기능 구매 후 이용가능" onclick="purchase_annai()"></div>';
     }else{
-        if(groupcapacity <= len && grouptype =='NORMAL'){
-            addButton = '';
-        }else{
-            addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
-        }
+        EMPTY_EXPLAIN = "";
     }
 
-    var html = htmlToJoin.join('') + addButton;
+    var addButton = '';
+
+    if(groupcapacity <= len && grouptype =='NORMAL'){
+        addButton = '';
+    }else{
+        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+    }
+
+    if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
+        addButton = '';
+    }
+
+    // var html = htmlToJoin.join('') + addButton;
+    // if(jsondata.db_id.length == 0){
+    //     if($('#currentGroupList').css('display') == "block"){
+    //         if(grouptype == 'EMPTY') {
+    //             html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
+    //         }else if(grouptype == 'NORMAL'){
+    //             html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' + addButton;
+    //         }
+    //     }
+    // }
+    //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
+
+    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    var html = htmlToJoin.join('');
     if(jsondata.db_id.length == 0){
-        if(grouptype == 'EMPTY') {
-            html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
-        }
-        else if(grouptype == 'NORMAL'){
-            html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="' + grouptype + '" data-groupid="' + group_id + '"></div>';
+        if($('#currentGroupList').css('display') == "block"){
+            if(grouptype == 'EMPTY') {
+                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>';
+            }else if(grouptype == 'NORMAL'){
+                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>';
+            }
         }
     }
 
-    $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
+    $('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(html);
 }
 //그룹원 목록을 그룹에 그리기
 
@@ -2105,3 +2342,78 @@ function get_member_group_class_end_list(use, callback){
         }
     });
 }
+
+
+//회원 고정 관련 신규 이벤트와 함수
+
+$(document).on("click", ".memberline div._fixedmember", function(e){
+    e.stopPropagation();
+    var $thisCheckbox = $(this).find('input');
+    if($thisCheckbox.is(":checked")){
+        $thisCheckbox.prop('checked', false);
+        send_member_fixed_info($thisCheckbox, $(this).attr("data-groupid"), $(this).attr("data-dbid"), "");
+    }else{
+        $thisCheckbox.prop('checked', true);
+        send_member_fixed_info($thisCheckbox, $(this).attr("data-groupid"), $(this).attr("data-dbid"), "FIX");
+    }
+});
+
+
+function send_member_fixed_info($this, group_id, db_id, fix, use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/update_fix_group_member/',
+        data:JSON.stringify({"group_id":group_id, "member_info":[{"member_id":db_id, "fix_info":fix}]}),
+        dataType : 'html',
+        type:'POST',
+
+        beforeSend:function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+                if(fix = "FIX"){
+                    $this.prop("checked", false);
+                }else{
+                    $this.prop("checked", true);
+                }
+                // alert("변경 실패")
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //groupListSet('current',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+

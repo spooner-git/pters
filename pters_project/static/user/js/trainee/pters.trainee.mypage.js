@@ -209,7 +209,7 @@ $(document).ready(function(){
     }
 
     function draw_trainee_lecture_history(jsondata, targetHTML){
-        var stateCodeDict = {"PE":"완료", "NP":"시작전", "IP":"시작전"};
+        var stateCodeDict = {"PE":"완료", "NP":"시작전", "IP":"시작전", "PC":"결석"};
         var $Loc = targetHTML;
         var tableHeader = '<div class="lecture_history_table_header">'+
             '<div class="cell1">회차</div>'+

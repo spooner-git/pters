@@ -12,6 +12,10 @@ input{
     -webkit-opacity:1;
 }
 
+button:focus{
+    outline: unset;
+}
+
 #free_member_use_guide{
     position: fixed;
     display: none;
@@ -31,8 +35,8 @@ input{
 @media(min-width:600px){
     #free_member_use_guide{
         position: absolute;
-        top: 65px;
-        bottom:unset;
+        top: unset;
+        bottom: 0;
         font-size: 14px;
         font-weight: 400;
         z-index: 10;
@@ -732,13 +736,14 @@ a:focus, a:hover{
 .centermenu_text{
     line-height: 60px;
     font-size: 13.5px;
-    font-weight: 600;
+    font-weight: 500;
     color: #282828;
     cursor: pointer;
 }
 
-.centermenu_text:hover,.centermenu_text:focus{
+.centermenu_text:hover, .centermenu_text:focus{
     color:#fe4e65;
+    transition: color 0.13s cubic-bezier(0.4,0,0.2,1);
 }
 
 .centermenu_logo{
@@ -849,14 +854,14 @@ a:focus, a:hover{
         display: none !important;
     }*/
     #ymdText{
-        height: 100px;
+        height: 65px;
     }
 
     #menuName{
         display: block;
         color : #fe4e65;
         font-size: 24px;
-        top: 20%;
+        top: 5%;
         width: 100%;
         text-align: center;
         position: absolute;
