@@ -451,10 +451,12 @@
                     <img class="icons" src={% static_url "user/res/ptadd/icon-name.png" %}> 회원명
                     <span id="npSituationPresent"></span>
                 </label>
-                <div class="mobileinfo hastooltips">
-                    <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
-                    <!-- <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled> -->
-                    <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" maxlength="11" disabled>
+                <div class="mobileinfo">
+                    <div class="hastooltips">
+                        <input type="text" class="mobileinfo_input mobile_title" id="memberName_info" name="name" disabled>
+                        <!-- <input type="text" class="mobileinfo_input" id="memberName_info_lastName" name="name" disabled> -->
+                        <input type="text" class="mobileinfo_input" id="memberName_info_firstName" name="name" maxlength="11" disabled>
+                    </div>
                     <div id="memberSex_info">
                         <div id="memberMale_info" class="selectboxopt selectboxopt_left selectbox_disable" value="M">남</div>
                         <div id="memberFemale_info" class="selectboxopt selectboxopt_right selectbox_disable" value="W">여</div>

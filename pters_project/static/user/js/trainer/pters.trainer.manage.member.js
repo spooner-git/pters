@@ -59,13 +59,16 @@ $(document).ready(function(){
 
 
     $('.hastooltips').click(function(e){
+        e.preventDefault();
         e.stopPropagation();
         var $title = $(this).find(".mobile_title_popup");
-        if( !$title.length ){
-            $(this).append('<span class="mobile_title_popup" style="position:absolute;top:20px;background:white;border:1px solid #cccccc;padding:4px;left:0;max-width:100%;">'+$(this).find(".mobile_title").val()+'</span>');
-        }else{
-            $title.remove();
-        }
+        // if($('#upbutton-modify').attr('data-type') == "view"){
+            if( !$title.length ){
+                $(this).append('<span class="mobile_title_popup" style="position:absolute;top:20px;background:white;border:1px solid #cccccc;padding:4px;left:0;max-width:100%;">'+$(this).find(".mobile_title").val()+'</span>');
+            }else{
+                $title.remove();
+            }
+        //}
     });
 
     $(document).on('click', '.phonesms', function(e){
@@ -1254,7 +1257,8 @@ $(document).ready(function(){
 
 
 
-    $(document).on('click', '#memberSex .selectboxopt', function(){
+    $(document).on('click', '#memberSex .selectboxopt', function(e){
+        e.stopPropagation();
         if($('#memberSearchButton').attr('data-type') == "searched"){
 
         }else{
@@ -1265,7 +1269,8 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('click','#memberSex_info .selectboxopt',function(){
+    $(document).on('click', '#memberSex_info .selectboxopt', function(e){
+        e.stopPropagation();
         if($('#upbutton-modify').attr('data-type') == "modify"){
             $(this).addClass('selectbox_checked');
             $(this).siblings().removeClass('selectbox_checked');
@@ -3958,11 +3963,11 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageText').text('');
                 if($('#currentMemberList').css('display') == "block"){
                     get_member_ing_list("callback", function(jsondata){
-                        memberListSet('current', 'date', 'yes', jsondata);
+                        memberListSet('current', 'name', 'no', jsondata);
                     });
                 }else if($('#finishedMemberList').css('display') == "block"){
                     get_member_end_list("callback", function(jsondata){
-                        memberListSet('finished', 'date', 'yes', jsondata);
+                        memberListSet('finished', 'name', 'no', jsondata);
                     });
                 }else if($("#calendar").length > 0 ){
                     $('#members_mobile, #members_pc').html('');
@@ -4163,11 +4168,11 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
 function smart_refresh_member_group_class_list(){
     if($('#currentMemberList').css('display') == "block"){
         get_member_ing_list("callback", function(jsondata){
-            memberListSet('current', 'date', 'yes', jsondata);
+            memberListSet('current', 'name', 'no', jsondata);
         });
     }else if($('#finishedMemberList').css('display') == "block"){
         get_member_end_list("callback", function(jsondata){
-            memberListSet('finished', 'date', 'yes', jsondata);
+            memberListSet('finished', 'name', 'no', jsondata);
         });
     }else if($('#currentGroupList').css('display') == "block"){
         var opened_group = [];
