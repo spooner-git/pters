@@ -242,6 +242,7 @@ function close_manage_popup(option){
                 close_info_popup('cal_popup_plancheck');
                 close_info_popup('cal_popup_planinfo');
             }
+            $('span.mobile_title_popup').remove();
         }
     }else if(option == 'member_info_PC'){
         $('body').css('overflow-y','auto');
@@ -252,6 +253,7 @@ function close_manage_popup(option){
         }else{
             shade_index(-100);
         }
+        $('span.mobile_title_popup').remove();
     }else if(option == 'member_add'){
         $('body').css('overflow-y', 'auto');
         var selector_float_btn_member_add = $('#float_btn');
