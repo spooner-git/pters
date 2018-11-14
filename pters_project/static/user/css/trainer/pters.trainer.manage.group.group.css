@@ -251,6 +251,7 @@ img.substract_addedMember{
 	width: 16%;
 }
 ._groupplancolor{
+	display: none;
 	position: relative;
 	width: 5%;
 	text-align: center;
