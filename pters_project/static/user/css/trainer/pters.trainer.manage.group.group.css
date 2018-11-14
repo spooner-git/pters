@@ -251,7 +251,7 @@ img.substract_addedMember{
 	width: 16%;
 }
 ._groupplancolor{
-	display: none;
+	display: none !important; /*임시로 색상선택 닫아둠*/
 	position: relative;
 	width: 5%;
 	text-align: center;
