@@ -333,6 +333,9 @@ $(document).ready(function(){
         // startTimeSet(yy+'_'+mm+'_'+dd);  //일정등록 가능한 시작시간 리스트 채우기
         ajaxTimeGraphSet($(this));
         $('#id_training_date, #id_training_end_date').val(yy+'-'+mm+'-'+dd);
+        $('.reservelimit_time').text("수업 시작 "+Options.limit+"시간 전");
+        $('.cancellimit_time').text("수업 시작 "+Options.cancellimit+"시간 전");
+        shade_index(150);
     });
 
 
@@ -457,7 +460,8 @@ $(document).ready(function(){
                     ajaxClassTime("this", 46, "callback", function(json){
                         plancheck(clicked_td_date_info, json)
                     });
-                    close_reserve_popup()
+                    close_reserve_popup();
+                    shade_index(100);
                 }
             },
 
