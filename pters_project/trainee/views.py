@@ -64,7 +64,6 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             lecture_tb__member_id=request.user.id,
             use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
                                                   [])).order_by('-lecture_tb__start_date')
-
         if lecture_data is None or len(lecture_data) == 0:
             self.url = '/trainee/cal_month_blank/'
 
@@ -73,9 +72,9 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 request.session['class_id'] = lecture_info.class_tb_id
                 request.session['lecture_id'] = lecture_info.lecture_tb_id
 
-                if lecture_info.auth_cd == 'WAIT':
+                if lecture_info.auth_type_cd == 'WAIT':
                     self.url = '/trainee/lecture_select/'
-                elif lecture_info.auth_cd == 'DELETE':
+                elif lecture_info.auth_type_cd == 'DELETE':
                     self.url = '/trainee/cal_month_blank/'
                 else:
                     request.session['class_hour'] = lecture_info.class_tb.class_hour
@@ -102,7 +101,6 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                     if lecture_info.lecture_tb.lecture_avail_count > 0:
                         lecture_id_select = lecture_info.lecture_tb_id
                     class_counter += 1
-
 
             if class_counter > 1 or lecture_np_counter > 0:
                 self.url = '/trainee/lecture_select/'
