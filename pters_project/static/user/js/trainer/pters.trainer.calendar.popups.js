@@ -193,7 +193,7 @@
 
     $(document).on('click', 'div.classTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('body').css('overflow-y', 'hidden');
+        disable_window_scroll()
         var info = $(this).attr('class-time').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -331,7 +331,7 @@
     //Off 일정 클릭시 팝업 Start
     $(document).on('click', 'div.offTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('body').css('overflow-y', 'hidden');
+        disable_window_scroll()
         var info = $(this).attr('off-time').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -424,7 +424,7 @@
     //스케쥴 클릭시 팝업 Start
     $(document).on('click', 'div.groupTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        $('body').css('overflow-y', 'hidden');
+        disable_window_scroll()
         var info = $(this).attr('group-time').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -444,7 +444,7 @@
         if(bodywidth > 600){
             toggleGroupParticipantsList('on');
         }else{
-            //$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+            toggleGroupParticipantsList('off');
         }
         $('.pt_memo_guide_popup').css('display', 'block');
         deleteTypeSelect = '';

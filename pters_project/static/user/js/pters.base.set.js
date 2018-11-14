@@ -735,7 +735,7 @@ function scrollToDom_custom(parentselector, dom){
 function disable_window_scroll(){
     if(bodywidth < 600){
        //$('#calendar').css('position', 'fixed');
-       $('html, body').css({"overflow": "hidden",
+       $('html, body').css({
                             "position": "relative"
                             });
     }else{
@@ -752,7 +752,7 @@ function disable_window_scroll(){
 function enable_window_scroll(){
     if(bodywidth < 600){
        //$('#calendar').css('position','relative');
-       $('html, body').css({"overflow": "unset",
+       $('html, body').css({
                             "position": "unset"
                             });
     }else{
