@@ -926,15 +926,8 @@ $(document).ready(function(){
                         }
                     }
                     //그룹 일정중 지난시간 일정은 선택 불가능 하도록, 근접예약 방지 옵션 값 적용
-    
-                    //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화
-                    if(jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) !=  -1){
-                        disable = "disabled_button";
-                        myreserve = "<span style='color:#fe4e65'> - 내 예약</span>";
-                        myreservecheckbox1 = 'checked ';
-                        myreservecheckbox2 = 'ptersCheckboxInner';
-                    }
-    
+
+
                     //완료된 그룹은 비활성화
                     if(jsondata.group_schedule_finish_check[i] == 1) {
                         disable = "disabled_button";
@@ -943,13 +936,29 @@ $(document).ready(function(){
                         disable = "disabled_button";
                         fulled = " (결석)";
                     }
-    
                     if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
                         //var fulled = ""
                     }else if(jsondata.group_schedule_current_member_num[i] == jsondata.group_schedule_max_member_num[i]){
                         disable = "disabled_button";
-                        fulled = "(마감)";
+                        fulled = " (마감)";
                     }
+
+                    //내 일정중 그룹일정 리스트와 같은 시간 항목이 있으면 그 그룹시간은 비활성화
+                    var check_my_schedule = jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]);
+                    if(check_my_schedule !=  -1){
+                        disable = "disabled_button";
+                        myreserve = "<span style='color:#fe4e65'> - 내 예약 </span>";
+                        myreservecheckbox1 = 'checked ';
+                        myreservecheckbox2 = 'ptersCheckboxInner';
+                        if(jsondata.scheduleFinishArray[check_my_schedule] == 1){
+                            myreserve = "<span style='color:#fe4e65'> - 내 예약 (완료)</span>";
+                            fulled = '';
+                        }else if(jsondata.scheduleFinishArray[check_my_schedule] == 2){
+                            myreserve = "<span style='color:#fe4e65'> - 내 예약 (결석)</span>";
+                            fulled = '';
+                        }
+                    }
+
                     ///////////////////////////////////////////////////////////////////그룹 일정 막기 여러가지 경우////////////////////////////////////
                     var starttime = jsondata.group_schedule_start_datetime[i].split(' ')[1];
                     var endtime = jsondata.group_schedule_end_datetime[i].split(' ')[1];
@@ -1216,7 +1225,7 @@ $(document).ready(function(){
                     }
 
                     draw_time_group_graph('group', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form, '_'));
-                    draw_time_group_graph('class', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form, '_'));
+                    // draw_time_group_graph('class', jsondata, date_format_yyyy_mm_dd_to_yyyy_m_d(today_form, '_'));
 
                     $('.mode_switch_button').removeClass('disabled_button');
                 }
