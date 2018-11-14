@@ -1141,6 +1141,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
     fifteen_days_after = today + datetime.timedelta(days=15)
     group_schedule_info = None
     group_id = None
+    note = ''
     # start_date = None
     # end_date = None
     if lecture_id is None or lecture_id == '':
@@ -1163,6 +1164,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
             try:
                 group_schedule_info = ScheduleTb.objects.get(schedule_id=group_schedule_id)
                 group_id = group_schedule_info.group_tb_id
+                note = group_schedule_info.note
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
         else:
@@ -1207,7 +1209,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                 permission_state_cd = 'AP'
                 schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                     group_id, group_schedule_id,
-                                                    start_date, end_date, '', ON_SCHEDULE_TYPE, request.user.id,
+                                                    start_date, end_date, note, ON_SCHEDULE_TYPE, request.user.id,
                                                     permission_state_cd,
                                                     'NP')
                 error = schedule_result['error']

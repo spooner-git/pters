@@ -742,8 +742,11 @@ class AlarmView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         error = None
         log_data = None
         if error is None:
+            today = datetime.date.today()
+            three_days_ago = today - datetime.timedelta(days=3)
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                                            use=USE).order_by('-reg_dt')
             # log_data.order_by('-reg_dt')
 
         if error is None:
@@ -798,9 +801,11 @@ class AlarmPCView(LoginRequiredMixin, AccessTestMixin, AjaxListView):
         error = None
         log_data = None
         if error is None:
+            today = datetime.date.today()
+            three_days_ago = today - datetime.timedelta(days=3)
             # log_data = LogTb.objects.filter(class_tb_id=self.request.user.id, use=USE).order_by('-reg_dt')
-            log_data = LogTb.objects.filter(class_tb_id=class_id, use=USE).order_by('-reg_dt')
-            # log_data.order_by('-reg_dt')
+            log_data = LogTb.objects.filter(class_tb_id=class_id, reg_dt__gte=three_days_ago,
+                                            use=USE).order_by('-reg_dt')
 
         if error is None:
             for log_info in log_data:
@@ -2387,6 +2392,8 @@ def progress_lecture_info_logic(request):
         schedule_data_count = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id).count()
         schedule_data_finish_count = ScheduleTb.objects.filter(Q(state_cd='PE') | Q(state_cd='PC'),
                                                                lecture_tb_id=lecture_info.lecture_id).count()
+
+    if error is None:
         lecture_info.lecture_avail_count = lecture_info.lecture_reg_count - schedule_data_count
         lecture_info.lecture_rem_count = lecture_info.lecture_reg_count - schedule_data_finish_count
         lecture_info.refund_price = 0
@@ -2529,7 +2536,8 @@ def add_group_info_logic(request):
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보', log_how='등록', use=USE)
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_how='등록', use=USE)
         log_data.save()
 
     else:
@@ -3153,10 +3161,10 @@ def finish_group_info_logic(request):
         group_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 수강 정보',
+                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
                          log_how='완료 처리', use=USE)
 
         log_data.save()
@@ -3240,10 +3248,10 @@ def progress_group_info_logic(request):
         group_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 수강 정보',
+                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
                          log_how='재개', use=USE)
 
         log_data.save()
@@ -3343,6 +3351,7 @@ def add_package_info_logic(request):
     next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     json_loading_data = None
     error = None
+    package_info = None
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -3406,6 +3415,12 @@ def add_package_info_logic(request):
             error = error
 
     if error is not None:
+        log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권',
+                         log_how='등록', use=USE)
+        log_data.save()
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -3418,8 +3433,7 @@ def delete_package_info_logic(request):
     package_id = request.POST.get('package_id', '')
     next_page = request.POST.get('next_page', '/trainer/get_error_info/')
     error = None
-    now = timezone.now()
-
+    package_info = None
     try:
         package_info = PackageTb.objects.get(class_tb_id=class_id, package_id=package_id)
     except ObjectDoesNotExist:
@@ -3510,6 +3524,12 @@ def delete_package_info_logic(request):
             error = '오류가 발생했습니다. [4]'
 
     if error is not None:
+        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권',
+                         log_how='삭제', use=USE)
+        log_data.save()
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -3536,6 +3556,12 @@ def update_package_info_logic(request):
         package_info.save()
 
     if error is not None:
+        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+                         from_member_name=request.user.last_name + request.user.first_name,
+                         class_tb_id=class_id,
+                         log_info=package_info.name + ' 수강권',
+                         log_how='수정', use=USE)
+        log_data.save()
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
