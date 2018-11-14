@@ -74,7 +74,7 @@ var multi_language_set = {
 
                                     "text-inprogress":"진행중",
                                     "text-finish":"종료",
-                                    "text-processend":"진행 완료",
+                                    "text-processend":"종료",
                                     "text-resume":"재개",
                                     "text-refund":"환불",
                                     "text-unconnect":"연결해제",
