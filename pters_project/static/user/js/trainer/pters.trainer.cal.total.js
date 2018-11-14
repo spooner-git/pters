@@ -22,6 +22,7 @@ $('#ymdText').click(function(e){
     }
 
     if(current_calendar_type == "month"){
+        $('#hidetoggle').show();
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
         var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
@@ -32,22 +33,28 @@ $('#ymdText').click(function(e){
         }else{
             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
         }
+
         $calendar.removeClass('_calmonth');
-        $('#week').css('display', 'table');
-        $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-        $('#date').css('display', 'none');
         if(bodywidth > 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 week_calendar_mobile(yyyy_mm_dd);
+                $('#week').css('display', 'table');
+                $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+                $('#date').css('display', 'none');
+                $('#ymdText_weekcal').css('display', 'inline-block');
+                $('#ymdText_monthcal').css('display', 'none');
             }else{
-                week_calendar(yyyy_mm_dd);
+                //week_calendar(yyyy_mm_dd);
             }
-            $('#ymdText_weekcal').css('display', 'inline-block');
-            $('#ymdText_monthcal').css('display', 'none');
+
         }else if(bodywidth<=600){
             week_calendar_mobile(yyyy_mm_dd);
+            $('#week').css('display', 'table');
+            $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+            $('#date').css('display', 'none');
         }
     }else if(current_calendar_type == "week"){
+        $('#hidetoggle').hide();
         var $ymdText_start = $('#ymdText-pc-month-start');
         var $ymdText_end = $('#ymdText-pc-month-end');
         var $ymdText_day_start = $('#ymdText-pc-date-start');
@@ -67,23 +74,37 @@ $('#ymdText').click(function(e){
             yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
         }
         $calendar.removeClass('_calweek');
-        $('#week').css('display', 'none');
-        $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-        $('#date').css('display', 'block');
-        month_calendar(yyyy_mm_dd);
-        $('.swiper-slide-active').css('width', $('#calendar').width());
-        $('#ymdText_monthcal').css('display', 'inline-block');
-        $('#ymdText_weekcal').css('display', 'none');
+        if(bodywidth > 600){
+            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                month_calendar(yyyy_mm_dd);
+                $('#week').css('display', 'none');
+                $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+                $('#date').css('display', 'block');
+                $('.swiper-slide-active').css('width', $('#calendar').width());
+                $('#ymdText_monthcal').css('display', 'inline-block');
+                $('#ymdText_weekcal').css('display', 'none');
+            }else{
+                //week_calendar(yyyy_mm_dd);
+            }
+        }else if(bodywidth <= 600){
+            month_calendar(yyyy_mm_dd);
+            $('#week').css('display', 'none');
+            $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+            $('#date').css('display', 'block');
+            $('.swiper-slide-active').css('width', $('#calendar').width());
+            $('#ymdText_monthcal').css('display', 'inline-block');
+            $('#ymdText_weekcal').css('display', 'none');
+        }
     }
 });
 
 var calendar_select ="week";
 $('#change_to_weekcal').click(function(e){
     if(calendar_select == "month"){
+        $('#hidetoggle').show();
         calendar_select = "week";
         e.stopPropagation();
         var $calendar = $('#calendar');
-
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
         var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
@@ -114,6 +135,8 @@ $('#change_to_weekcal').click(function(e){
 
 $('#change_to_monthcal').click(function(e){
     if(calendar_select == "week"){
+        hidetoggle_on_off("off");
+        $('#hidetoggle').hide();
         calendar_select = "month";
         e.stopPropagation();
         var $calendar = $('#calendar');
@@ -1355,7 +1378,6 @@ function dateText(){
 }
 
 function krHoliday_week(){
-    console.log("krholiday")
     $('.holiday').removeClass('holiday');
     $('.holidayName').text('');
     for(var i=0; i<krHolidayList.length; i++){
@@ -2375,7 +2397,6 @@ function know_duplicated_plans(jsondata){
         var planlength = duplicate_dic[plan].length;
         for(var plans in duplicate_dic){
             if(duplicate_dic[plans].indexOf(plan) >= 0 && planlength < duplicate_dic[plans].length ){
-                console.log('여기')
                 delete duplicate_dic[plan];
             }
         }
@@ -2773,9 +2794,9 @@ function month_calendar(referencedate){
     var page2 = $('.swiper-slide:nth-of-type(2)');
     var page3 = $('.swiper-slide:nth-of-type(3)');
 
-    page1.html('')
-    page2.html('')
-    page3.html('')
+    page1.html('');
+    page2.html('');
+    page3.html('');
 
     var year = Number(referencedate.split('-')[0]);
     var month = Number(referencedate.split('-')[1]);
