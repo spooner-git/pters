@@ -1156,6 +1156,7 @@
         }else if($('._calmonth').length >0){
             calendar = "month";
         }
+
         if(calendar == "week"){
             var $weekNum4 = $('#weekNum_4').attr('data-date');
             today_form = $weekNum4.substr(0, 4)+'-'+$weekNum4.substr(4, 2)+'-'+$weekNum4.substr(6, 2);

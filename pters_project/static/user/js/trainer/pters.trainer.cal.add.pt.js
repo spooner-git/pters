@@ -940,7 +940,6 @@ $(document).ready(function(){
             $("#id_group_id").val($(this).attr('data-groupid'));
 
             get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){
-                console.log(jsondata)
                 var selected_list = [];
                 for(var i=0; i<jsondata.fix_state_cd.length; i++){
                     if(jsondata.fix_state_cd[i] == "FIX"){
