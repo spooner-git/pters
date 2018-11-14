@@ -28,6 +28,7 @@ body{
 		display: table;
 		table-layout: fixed;
 		width: 100%;
+		font-size: 12.5px;
 	}
 	.remain_count_board_table > div{
 		display: table-cell;
@@ -39,15 +40,19 @@ body{
 		overflow: hidden;
 	}
 	.remain_count_board_table > div:nth-of-type(2){
-		width: 20%;
+		width: 15%;
 		text-align: center;
 	}
 	.remain_count_board_table > div:nth-of-type(3){
-		width: 20%;
+		width: 15%;
 		text-align: center;
 	}
 	.remain_count_board_table > div:nth-of-type(4){
-		width: 20%;
+		width: 15%;
+		text-align: center;
+	}
+	.remain_count_board_table > div:nth-of-type(5){
+		width: 15%;
 		text-align: center;
 	}
 
