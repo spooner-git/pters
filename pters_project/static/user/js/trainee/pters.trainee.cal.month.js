@@ -2280,6 +2280,7 @@ function availableDateIndicator(availableStartTime, Endtime){
     if(Options.reserve == 1){
         $('td:not([schedule-id])').addClass('option_notavailable');
         $('.blackballoon').parent('td').addClass('option_notavailable');
+        $('#menuDescription').hide();
     }else{
         if(currentHour<Endtime && currentHour>=availableStartTime){
             var availability = 'available';
