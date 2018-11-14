@@ -1482,7 +1482,7 @@ def delete_member_info_logic(request):
         log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_name, class_tb_id=class_id,
-                         log_info='수강 정보', log_how='삭제', use=USE)
+                         log_info='정보', log_how='삭제', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -2083,7 +2083,7 @@ def update_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='수정', use=USE)
+                         log_info='수강권', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
@@ -2125,7 +2125,7 @@ def delete_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보', log_how='삭제', use=USE)
+                         log_info='수강권', log_how='삭제', use=USE)
 
         log_data.save()
 
@@ -2210,7 +2210,7 @@ def finish_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='완료 처리', use=USE)
+                         log_info='수강권', log_how='종료 처리', use=USE)
 
         log_data.save()
 
@@ -2318,7 +2318,7 @@ def refund_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='환불 처리', use=USE)
+                         log_info='수강권', log_how='환불 처리', use=USE)
 
         log_data.save()
 
@@ -2416,7 +2416,7 @@ def progress_lecture_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강 정보', log_how='진행중 처리', use=USE)
+                         log_info='수강권', log_how='재개 처리', use=USE)
 
         log_data.save()
 
@@ -2480,7 +2480,7 @@ def update_lecture_connection_info_logic(request):
         log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강 정보 연동', log_how='수정', use=USE)
+                         log_info='수강권 연동 상태', log_how='수정', use=USE)
 
         log_data.save()
 
@@ -2536,7 +2536,7 @@ def add_group_info_logic(request):
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
                          log_how='등록', use=USE)
         log_data.save()
 
@@ -2644,7 +2644,7 @@ def delete_group_info_logic(request):
         log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
                          log_how='삭제', use=USE)
         log_data.save()
     else:
@@ -2736,7 +2736,7 @@ def update_group_info_logic(request):
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
                          log_how='수정', use=USE)
         log_data.save()
 
@@ -2826,7 +2826,7 @@ def add_group_member_logic(request):
         log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원 정보',
+                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원',
                          log_how='등록', use=USE)
         log_data.save()
 
@@ -2903,7 +2903,7 @@ def delete_group_member_info_logic(request):
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_name, class_tb_id=class_id,
-                             log_info='수강 정보',
+                             log_info='수강권',
                              log_how='삭제', use=USE)
             log_data.save()
 
@@ -4188,7 +4188,7 @@ def add_package_member_logic(request):
         log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info=package_info.name + '수강권 회원 정보',
+                         log_info=package_info.name + ' 수강권에 회원',
                          log_how='등록', use=USE)
         log_data.save()
 
@@ -4267,7 +4267,7 @@ def delete_package_member_info_logic(request):
             log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              to_member_name=member_name, class_tb_id=class_id,
-                             log_info='수강 정보',
+                             log_info='수강권',
                              log_how='삭제', use=USE)
             log_data.save()
 
@@ -4577,7 +4577,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
         if error is None:
             log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
-                             log_info='프로그램 정보', log_how='등록', use=USE)
+                             log_info='프로그램', log_how='등록', use=USE)
 
             log_data.save()
 
@@ -4628,7 +4628,7 @@ class DeleteClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='프로그램 정보', log_how='연동 해제', use=USE)
+                             log_info='프로그램', log_how='삭제', use=USE)
 
             log_data.save()
 
@@ -4698,7 +4698,7 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='프로그램 정보', log_how='수정', use=USE)
+                             log_info='프로그램', log_how='수정', use=USE)
 
             log_data.save()
 
@@ -4878,7 +4878,7 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
                              from_member_name=request.user.last_name + request.user.first_name,
                              class_tb_id=class_id,
-                             log_info='배경 화면 정보', log_how='삭제', use=USE)
+                             log_info='배경 화면', log_how='삭제', use=USE)
 
             log_data.save()
 
@@ -5204,7 +5204,7 @@ def update_setting_push_logic(request):
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
                          class_tb_id=class_id,
-                         log_info='PUSH 설정 정보', log_how='수정', use=USE)
+                         log_info='PUSH 설정', log_how='수정', use=USE)
         log_data.save()
         return redirect(next_page)
     else:
@@ -5354,7 +5354,7 @@ def update_setting_basic_logic(request):
 
         log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
                          from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='설정 정보', log_how='수정', use=USE)
+                         class_tb_id=class_id, log_info='기본 설정', log_how='수정', use=USE)
         log_data.save()
 
         return redirect(next_page)
