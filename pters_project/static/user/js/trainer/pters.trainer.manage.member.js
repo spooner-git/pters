@@ -1476,7 +1476,7 @@ $(document).ready(function(){
 
 
             $('#memberName_info_PC').hide();
-            $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').show();
+            $('#memberName_info_firstName_PC').show();
 
 
         }else if($(this).attr('data-view') == 'edit'){
@@ -1490,7 +1490,7 @@ $(document).ready(function(){
 
             // $('#memberName_info_PC').show().val($('#memberName_info_lastName_PC').val()+$('#memberName_info_firstName_PC').val());
             $('#memberName_info_PC').show().val($('#memberName_info_firstName_PC').val());
-            $('#memberName_info_lastName_PC, #memberName_info_firstName_PC').hide();
+            $('#memberName_info_firstName_PC').hide();
             var dbID = $('#memberInfoPopup_PC').attr('data-dbid');
             send_modified_member_base_data(dbID);
         }
@@ -1514,7 +1514,7 @@ $(document).ready(function(){
             $(this).attr('data-type','modify');
 
             $('#memberName_info').hide();
-            $('#memberName_info_lastName, #memberName_info_firstName').show();
+            $('#memberName_info_firstName').show();
 
             $('#form_sex_modify').val();
             $('#form_birth_modify').val();
@@ -1522,15 +1522,15 @@ $(document).ready(function(){
             $('#form_name_modify').val();
             $('#form_id_modify').val($('#memberId').val());
 
-            $('#mobile_basic_info #memberName_info, #mobile_basic_info #memberPhone_info, #mobile_basic_info select, #memberName_info_lastName, #memberName_info_firstName').attr('disabled',false).addClass('input_available');
+            $('#mobile_basic_info #memberName_info, #mobile_basic_info #memberPhone_info, #mobile_basic_info select, #memberName_info_firstName').attr('disabled',false).addClass('input_available');
             $('#memberInfoPopup button._info_delete').hide();
 
         }else if($(this).attr('data-type') == "modify" ){
             // if(select_all_check==false){
             var dbID = $('#memberInfoPopup #memberId').attr('data-dbid');
             send_modified_member_base_data(dbID);
-            $('#memberName_info').show().val($('#memberName_info_lastName').val()+$('#memberName_info_firstName').val());
-            $('#memberName_info_lastName, #memberName_info_firstName').hide();
+            $('#memberName_info').show().val($('#memberName_info_firstName').val());
+            $('#memberName_info_firstName').hide();
             /*
              }else{
              scrollToDom($('#memberInfoPopup'));
