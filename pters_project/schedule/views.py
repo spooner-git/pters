@@ -599,6 +599,11 @@ def update_memo_schedule_logic(request):
             error = '일정 정보를 불러오지 못했습니다.'
 
     if error is None:
+        group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=schedule_id)
+        if len(group_schedule_data) > 0:
+            group_schedule_data.update(note=note)
+
+    if error is None:
         schedule_info.note = note
         schedule_info.save()
 
@@ -1806,9 +1811,9 @@ def finish_group_schedule_logic(request):
 def add_member_group_schedule_logic(request):
     member_id = request.POST.get('member_id')
     group_schedule_id = request.POST.get('schedule_id')
-    note = request.POST.get('add_memo', '')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
+    # note = request.POST.get('add_memo', '')
+    # date = request.POST.get('date', '')
+    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
@@ -1830,8 +1835,8 @@ def add_member_group_schedule_logic(request):
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
 
-    if note is None:
-        note = ''
+    # if note is None:
+    #     note = ''
 
     if error is None:
         # 스케쥴 정보 가져오기
@@ -1884,7 +1889,7 @@ def add_member_group_schedule_logic(request):
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
-                                                        note, ON_SCHEDULE_TYPE,
+                                                        schedule_info.note, ON_SCHEDULE_TYPE,
                                                         request.user.id, permission_state_cd, state_cd)
                     error = schedule_result['error']
 
@@ -2017,7 +2022,7 @@ def add_other_member_group_schedule_logic(request):
     if error is None:
         # 회원 정보 가져오기
         try:
-            lecture_info = LectureTb.objects.get(member_id=member_id)
+            lecture_info = LectureTb.objects.get(lecture_id=lecture_id)
             if lecture_info.lecture_avail_count == 0:
                 error = '예약 가능 횟수가 없습니다.'
         except ObjectDoesNotExist:
@@ -2045,7 +2050,7 @@ def add_other_member_group_schedule_logic(request):
                     schedule_result = func_add_schedule(class_id, lecture_id, None,
                                                         group_id, group_schedule_id,
                                                         schedule_info.start_dt, schedule_info.end_dt,
-                                                        note, ON_SCHEDULE_TYPE,
+                                                        schedule_info.note, ON_SCHEDULE_TYPE,
                                                         request.user.id, permission_state_cd, state_cd)
                     error = schedule_result['error']
 

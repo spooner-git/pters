@@ -193,6 +193,7 @@ class ServiceTestLoginView(TemplateView):
                                      name='1:1레슨',
                                      # ing_group_member_num=ing_group_member_num,
                                      # end_group_member_num=end_group_member_num,
+                                     ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
                                      reg_dt=class_data.reg_dt,
                                      mod_dt=class_data.mod_dt,
                                      state_cd='IP', use=USE)
