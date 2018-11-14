@@ -1967,6 +1967,9 @@ function fill_remain_count_board(jsondata){
                             <div><span style="font-weight:400;">${jsondata.package_lecture_rem_count[i]}</span>회</div>
                         </div>`);
     }
+    if(len == 0){
+        htmlToJoin.push(`<div style="text-align:center;color:#fe4e65;">진행중인 수강권이 없습니다.</div>`);
+    }
     $targetHTML.html(htmlToJoin.join(""));
 }
 
