@@ -259,9 +259,10 @@
                     <span class="icon-bar" style="width:60%;"></span>
                     <span class="icon-bar" style="width: 20px;"></span>
                 </button>
-                {% block nav_center_img %}
+                <!-- {% block nav_center_img %}
                     <a id="uptext" class="uptext">{{user.first_name }}  <span></span></a>
-                {% endblock %}
+                {% endblock %} -->
+                <a id="uptext" class="uptext"></a>
                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
                     <a><img src="{% static_url "user/res/member/icon-repeat-white.png" %}" style="width:20px;"></a>
                 </button>
@@ -274,7 +275,7 @@
                 <div id="inner_Sidenav" class="sidenav">
 
                     <div class="sidebar_upper" onclick="location.href='{% url 'index' %}'">
-                        <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_pure.png" %}" alt="#"></div>
+                        <div style="z-index: 1"><img src="{% static_url "user/res/PTERS_logo_site.png" %}" alt="#"></div>
                         <div id="user_name">{{user.first_name}}
                             <span class="text-nameAttach"></span>
                         </div>
@@ -307,12 +308,12 @@
                             </a>
                         </div>
                         
-                        <div class="sidebar_div" onclick="sideGoPage('lecture_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('lecture_manage')"><img src="{% static_url "user/res/icon-lesson.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-lecturemanage">
                             </a>
                         </div>
 
-                        <div class="sidebar_div" onclick="sideGoPage('ticket_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        <div class="sidebar_div" onclick="sideGoPage('ticket_manage')"><img src="{% static_url "user/res/icon-lessonpass.png" %}" class="sidebar_icon" alt="#">
                             <a class="sidebar_text text-ticketmanage">
                             </a>
                         </div>
@@ -333,7 +334,7 @@
                             </a>
                         </div> -->
                         
-                            <div class="sidebar_div"><img src={% static_url "user/res/icon-pencil.png" %} class="sidebar_icon" alt="#">
+                            <div class="sidebar_div"><img src={% static_url "user/res/icon-statistic.png" %} class="sidebar_icon" alt="#">
                                 <a href="{% url 'trainer:work_manage' %}" class="sidebar_text text-workmanage">
                                 </a>
                             </div>
@@ -408,7 +409,7 @@
 
     <nav class="navbar navbar-fixed-top" id="pcver">
         <div class="centermenu">
-            <img src="/static/user/res/PTERS_logo_pure.png" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
+            <img src="/static/user/res/PTERS_logo_pure.png?v2" alt="PTERS" class="centermenu_logo"  onclick="location.href='{% url 'index' %}'" style="cursor: pointer;">
             <div class="centermenu_box">
                 <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:cal_day' %}" class="centermenu_text text-todayplan"></a>
