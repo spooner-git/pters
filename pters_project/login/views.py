@@ -169,104 +169,107 @@ class ServiceTestLoginView(TemplateView):
         context = super(ServiceTestLoginView, self).get_context_data(**kwargs)
 
         # Empty 를 Normal로 변경 및 FIX 체크
-        class_data = ClassTb.objects.filter(member_id='5')
-        for class_info in class_data:
-            # 프로그램에 속한 그룹 불러오기
-            group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
-            if len(group_data) == 0:
-                group_data = None
-            else:
-                for group_info in group_data:
-
-                    if group_info.group_type_cd == 'NORMAL':
-                        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id,
-                                                                           lecture_tb__state_cd='IP',
-                                                                           lecture_tb__use=USE,
-                                                                           use=USE)
-                        group_lecture_data.update(fix_state_cd='FIX')
-                    elif group_info.group_type_cd == 'EMPTY':
-                        group_info.group_type_cd = 'NORMAL'
-                        group_info.save()
+        # class_data = ClassTb.objects.filter()
+        # for class_info in class_data:
+        #     # 프로그램에 속한 그룹 불러오기
+        #     group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+        #     if len(group_data) == 0:
+        #         group_data = None
+        #     else:
+        #         for group_info in group_data:
+        #
+        #             if group_info.group_type_cd == 'NORMAL':
+        #                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id,
+        #                                                                    lecture_tb__state_cd='IP',
+        #                                                                    lecture_tb__use=USE,
+        #                                                                    use=USE)
+        #                 group_lecture_data.update(fix_state_cd='FIX')
+        #             elif group_info.group_type_cd == 'EMPTY':
+        #                 group_info.group_type_cd = 'NORMAL'
+        #                 group_info.save()
 
         # 1:1 그룹 생성
-        class_data = ClassTb.objects.filter(member_id='5')
-        for class_info in class_data:
-            # 그룹중에 1:1 그룹 불러오기
-            check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
-            # 1개도 없는 경우 생성
-            if len(check_group) == 0:
-                group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
-                                     name='1:1레슨',
-                                     # ing_group_member_num=ing_group_member_num,
-                                     # end_group_member_num=end_group_member_num,
-                                     ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
-                                     reg_dt=class_data.reg_dt,
-                                     mod_dt=class_data.mod_dt,
-                                     state_cd='IP', use=USE)
-                group_info.save()
-
-                class_lecture_data = ClassLectureTb.objects.filter(class_tb_id=class_info.class_id)
-                for class_lecture_info in class_lecture_data:
-                    check_group = GroupLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
-                    # 1:1 그룹인 경우 GroupLecture가 없음. 1:1에 대한 GroupLecture 생성
-                    if len(check_group) == 0:
-                        lecture_info = GroupLectureTb(group_tb_id=group_info.group_id,
-                                                      lecture_tb_id=class_lecture_info.lecture_tb_id,
-                                                      reg_dt=class_lecture_info.lecture_tb.reg_dt,
-                                                      mod_dt=class_lecture_info.lecture_tb.mod_dt,
-                                                      fix_state_cd='',
-                                                      use=class_lecture_info.lecture_tb.use)
-                        lecture_info.save()
+        # class_data = ClassTb.objects.filter(class_id__gte='502')
+        # for class_info in class_data:
+        #     # 그룹중에 1:1 그룹 불러오기
+        #     check_group = GroupTb.objects.filter(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE')
+        #     # 1개도 없는 경우 생성
+        #     if len(check_group) == 0:
+        #         group_info = GroupTb(class_tb_id=class_info.class_id, group_type_cd='ONE_TO_ONE', member_num=1,
+        #                              name='1:1레슨',
+        #                              # ing_group_member_num=ing_group_member_num,
+        #                              # end_group_member_num=end_group_member_num,
+        #                              ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+        #                              reg_dt=class_info.reg_dt,
+        #                              mod_dt=class_info.mod_dt,
+        #                              state_cd='IP', use=USE)
+        #         group_info.save()
+        #     else:
+        #         group_info = check_group[0]
+        #     class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_info.class_id)
+        #     if len(class_lecture_data) > 0:
+        #         for class_lecture_info in class_lecture_data:
+        #             if class_lecture_info.lecture_tb is not None and class_lecture_info.lecture_tb != '':
+        #                 check_group = GroupLectureTb.objects.filter(lecture_tb_id=class_lecture_info.lecture_tb_id)
+        #                 # 1:1 그룹인 경우 GroupLecture가 없음. 1:1에 대한 GroupLecture 생성
+        #                 if len(check_group) == 0:
+        #                     lecture_info = GroupLectureTb(group_tb_id=group_info.group_id,
+        #                                                   lecture_tb_id=class_lecture_info.lecture_tb_id,
+        #                                                   reg_dt=class_lecture_info.lecture_tb.reg_dt,
+        #                                                   mod_dt=class_lecture_info.lecture_tb.mod_dt,
+        #                                                   fix_state_cd='',
+        #                                                   use=class_lecture_info.lecture_tb.use)
+        #                     lecture_info.save()
 
         # 그룹 숫자 업데이트 패키지 정보 업데이트
-        class_data = ClassTb.objects.filter(member_id='5')
-        for class_info in class_data:
-            group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
-            if len(group_data) == 0:
-                group_data = None
-            else:
-                for group_info in group_data:
-                    # 그룹에 해당하는 인원 체크
-                    group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_info.class_id,
-                                                                                         group_info.group_id,
-                                                                                         class_info.member_id))
-                    group_info.end_group_member_num = len(func_get_end_group_member_list(class_info.class_id,
-                                                                                         group_info.group_id,
-                                                                                         class_info.member_id))
-                    group_info.save()
-
-                    package_group_test = PackageGroupTb.objects.filter(group_tb_id=group_info.group_id)
-                    if len(package_group_test) > 0:
-                        # 패키지에 해당하는 그룹이 만들어져있는 경우 (패키지가 이미 만들어져있는 경우)
-                        for package_group_test_info in package_group_test:
-                            package_group_test_info.package_tb.ing_package_member_num = \
-                                len(func_get_ing_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
-                            package_group_test_info.package_tb.end_package_member_num = \
-                                len(func_get_end_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
-                            package_group_test_info.save()
-
-                    else:
-                        package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
-                                                 state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
-                                                 ing_package_member_num=group_info.ing_group_member_num,
-                                                 end_package_member_num=group_info.end_group_member_num,
-                                                 package_group_num=1,
-                                                 reg_dt=group_info.reg_dt,
-                                                 mod_dt=group_info.mod_dt,
-                                                 use=group_info.use)
-                        package_info.save()
-                        package_group_info = PackageGroupTb(class_tb_id=group_info.class_tb_id,
-                                                            package_tb_id=package_info.package_id,
-                                                            group_tb_id=group_info.group_id,
-                                                            reg_dt=group_info.reg_dt,
-                                                            mod_dt=group_info.mod_dt,
-                                                            use=group_info.use)
-                        package_group_info.save()
-
-                        group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id)
-                        for group_lecture_info in group_lecture_data:
-                            group_lecture_info.lecture_tb.package_tb_id = package_info.package_id
-                            group_lecture_info.lecture_tb.save()
+        # class_data = ClassTb.objects.filter()
+        # for class_info in class_data:
+        #     group_data = GroupTb.objects.filter(class_tb_id=class_info.class_id)
+        #     if len(group_data) == 0:
+        #         group_data = None
+        #     else:
+        #         for group_info in group_data:
+        #             # 그룹에 해당하는 인원 체크
+        #             group_info.ing_group_member_num = len(func_get_ing_group_member_list(class_info.class_id,
+        #                                                                                  group_info.group_id,
+        #                                                                                  class_info.member_id))
+        #             group_info.end_group_member_num = len(func_get_end_group_member_list(class_info.class_id,
+        #                                                                                  group_info.group_id,
+        #                                                                                  class_info.member_id))
+        #             group_info.save()
+        #
+        #             package_group_test = PackageGroupTb.objects.filter(group_tb_id=group_info.group_id)
+        #             if len(package_group_test) > 0:
+        #                 # 패키지에 해당하는 그룹이 만들어져있는 경우 (패키지가 이미 만들어져있는 경우)
+        #                 for package_group_test_info in package_group_test:
+        #                     package_group_test_info.package_tb.ing_package_member_num = \
+        #                         len(func_get_ing_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
+        #                     package_group_test_info.package_tb.end_package_member_num = \
+        #                         len(func_get_end_package_member_list(class_info.class_id, package_group_test_info.package_tb_id))
+        #                     package_group_test_info.save()
+        #
+        #             else:
+        #                 package_info = PackageTb(class_tb_id=group_info.class_tb_id, name=group_info.name,
+        #                                          state_cd=group_info.state_cd, package_type_cd=group_info.group_type_cd,
+        #                                          ing_package_member_num=group_info.ing_group_member_num,
+        #                                          end_package_member_num=group_info.end_group_member_num,
+        #                                          package_group_num=1,
+        #                                          reg_dt=group_info.reg_dt,
+        #                                          mod_dt=group_info.mod_dt,
+        #                                          use=group_info.use)
+        #                 package_info.save()
+        #                 package_group_info = PackageGroupTb(class_tb_id=group_info.class_tb_id,
+        #                                                     package_tb_id=package_info.package_id,
+        #                                                     group_tb_id=group_info.group_id,
+        #                                                     reg_dt=group_info.reg_dt,
+        #                                                     mod_dt=group_info.mod_dt,
+        #                                                     use=group_info.use)
+        #                 package_group_info.save()
+        #
+        #                 group_lecture_data = GroupLectureTb.objects.filter(group_tb_id=group_info.group_id)
+        #                 for group_lecture_info in group_lecture_data:
+        #                     group_lecture_info.lecture_tb.package_tb_id = package_info.package_id
+        #                     group_lecture_info.lecture_tb.save()
 
 
         # group_data = GroupTb.objects.filter()
