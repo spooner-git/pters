@@ -1170,6 +1170,8 @@
             today_form = yyyy+'-'+ mm +'-'+"01";
             searchdate = 46;
         }
+        // var start_time = '';
+        // var end_time = '';
         $.ajax({
             url: '/trainer/get_trainer_schedule/',
             type : 'GET',
@@ -1178,12 +1180,16 @@
 
             beforeSend:function(){
                 beforeSend_();
+
+                // start_time = performance.now();
                 // console.log(getTimeStamp());
                 $('.ymdText-pc-add-off, .ymdText-pc-add-pt').addClass('disabled_button').attr('onclick', '');
             },
 
             success:function(data){
                 var jsondata = JSON.parse(data);
+                // end_time = performance.now();
+                // console.log(end_time-start_time + 'ms');
                 if(jsondata.messageArray.length>0){
                     $('#errorMessageBar').show();
                     $('#errorMessageText').text(jsondata.messageArray);
