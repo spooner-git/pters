@@ -51,7 +51,7 @@ var multi_language_set = {
                                     "text-programselect":"프로그램 선택",
                                     "text-mypage":"마이페이지",
                                     "text-help":"이용문의",
-                                    "text-payment":"PTERS패스",
+                                    "text-payment":"PTERS 패스",
                                     "text-w":"주",
                                     "text-m":"월",
 
