@@ -251,7 +251,7 @@ img.substract_addedMember{
 	width: 16%;
 }
 ._groupplancolor{
-	display: none !important; /*임시로 색상선택 닫아둠*/
+	
 	position: relative;
 	width: 5%;
 	text-align: center;
@@ -268,8 +268,8 @@ img.substract_addedMember{
 		position: absolute;
 		left: 40px;
 		top: 0;
-		min-width: 120px;
-		max-width: 120px;
+		min-width: 130px;
+		max-width: 130px;
 		height: auto;
 		border: 1px solid #cccccc;
 		background: #ffffff;
@@ -284,23 +284,29 @@ img.substract_addedMember{
 		vertical-align: middle;
 		border-radius: 50%;
 	}
-	.plancolor_orange{
-		background-color: #ffa500;
-	}
-	.plancolor_pink{
-		background-color: #ffacb7;
-	}
-	.plancolor_blue{
-		background-color: #9a9af9;
-	}
-	.plancolor_green{
-		background-color: #00a700;
-	}
-	.plancolor_purple{
-		background-color: #f488fb;
-	}
-	.plancolor_yellow{
+	.plancolor_fbf3bd{
 		background-color: #fbf3bd;
+	}
+	.plancolor_dbe6f7{
+		background-color: #dbe6f7;
+	}
+	.plancolor_ffd3d9{
+		background-color: #ffd3d9;
+	}
+	.plancolor_ffe3c2{
+		background-color: #ffe3c2;
+	}
+	.plancolor_ceeac4{
+		background-color: #ceeac4;
+	}
+	.plancolor_d8d6ff{
+		background-color: #d8d6ff;
+	}
+	.plancolor_ead8f2{
+		background-color: #ead8f2;
+	}
+	.plancolor_d9c3ab{
+		background-color: #d9c3ab;
 	}
 
 
@@ -609,7 +615,7 @@ div._fixedmember{
 		width: 12.5%;
 	}
 	.colorpalette{
-		min-width: 200px;
+		min-width: 150px;
 		max-width: 300px;
 	}
 	._groupplancolor > .plancolor{
