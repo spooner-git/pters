@@ -426,7 +426,7 @@ img,a,div,span,p{
 }
 
 .classTime_checked{
-	background: #8c8763 !important;
+	background: #d2d1cf !important;
 
 }
 
@@ -451,7 +451,7 @@ img,a,div,span,p{
 	position: absolute;
 	top: 0px;
 	width: 99%;
-	background: #e2e2e2;
+	background: #eeeeee;
 	opacity: 0.9;
 	z-index: 100;
 	cursor: pointer;
