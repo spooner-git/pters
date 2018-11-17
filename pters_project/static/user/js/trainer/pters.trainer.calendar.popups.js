@@ -1263,8 +1263,13 @@
             type:'POST',
             data:send_data,
 
-            beforeSend:function(){
+            beforeSend:function(xhr){
                 beforeSend();
+                if(send_data[4].value.length == 0){
+                    xhr.abort(); // ajax중지
+                    alert("에러발생: ID값이 지정되지 않았습니다. 다시 시도해주세요.\n 현재 페이지가 자동으로 새로 고침됩니다.");
+                    window.location.reload();
+                }
             },
             //통신성공시 처리
             success:function(data){
