@@ -250,6 +250,10 @@ img.substract_addedMember{
 ._groupname{
 	width: 16%;
 }
+	._groupname > input{
+		text-align: left;
+		padding-left: 	3px;
+	}
 ._groupplancolor{
 	
 	position: relative;
@@ -346,9 +350,13 @@ img.substract_addedMember{
 ._groupmemo{
 	width: 22%;
 }
+	._groupmemo > input{
+		text-align: left;
+		padding-left: 3px;
+	}
 ._groupcreatedate{
 	display: table-cell;
-	width: 15%;
+	width: 10%;
 	font-size: 13px;
 }
 ._groupstatus{
@@ -485,9 +493,9 @@ div._groupmanage img._info_delete{
 }
 
 @media(max-width: 600px){
-	._groupnum, ._groupmemo, ._groupcreatedate{
+	/*._groupnum, ._groupmemo, ._groupcreatedate{
 		display: none !important;
-	}
+	}*/
 
 	div._id, div._startdate, div._finday, div._contact{
 		display: none !important;
@@ -518,7 +526,11 @@ div._groupmanage img._info_delete{
 		top: 92px;
 	}
 }
-
+@media(max-width: 750px){
+	._groupnum, ._groupmemo, ._groupcreatedate{
+		display: none !important;
+	}
+}
 /*그룹 탭에서 그룹들 나열*/
 
 
