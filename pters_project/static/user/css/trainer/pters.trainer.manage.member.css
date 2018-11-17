@@ -1512,6 +1512,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		/*height: 600px;*/
 		height: auto;
 		overflow-y: overlay;
+		padding-bottom: 50px;
 	}
 
 	.npCountImg_wait{
