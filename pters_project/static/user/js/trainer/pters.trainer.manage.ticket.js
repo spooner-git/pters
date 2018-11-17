@@ -2028,12 +2028,18 @@ function send_delete_member_repeat_infos(jsondata){
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 
 
-
 function toggle_lock_unlock_inputfield_grouplist(package_id, disable){ //disable=false 수정가능, disable=true 수정불가
+    var ori_name = $('div[data-packageid="'+package_id+'"]').find("._groupname input").val();
+    if(disable == true){
+        $('div[data-packageid="'+package_id+'"]').find("._groupname input").val(ori_name);
+    }else if(disable == false){
+        var namesplitarray = $('div[data-packageid="'+package_id+'"]').find("._groupname input").val().split(' ');
+        namesplitarray.splice(0, 1);
+        $('div[data-packageid="'+package_id+'"]').find("._groupname input").val(namesplitarray.join(' '));
+    }
     $('div[data-packageid="'+package_id+'"] input._editable').attr('disabled', disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
     $('div[data-packageid="'+package_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable));
 }
-
 
 
 //서버로부터 그룹 목록 가져오기
