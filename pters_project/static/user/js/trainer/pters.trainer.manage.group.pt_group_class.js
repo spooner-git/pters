@@ -1637,7 +1637,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
 
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
         '<div class="_groupplancolor"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>'+
-            // '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+            '<div class="_grouptypecd" data-group-type="'+group_type+'" style="display:none;"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+'['+group_type_nm+'] '+group_name+'" disabled>'+'</div>'+
             
             '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
