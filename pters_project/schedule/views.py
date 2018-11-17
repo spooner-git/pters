@@ -419,11 +419,24 @@ def finish_schedule_logic(request):
             schedule_state_cd_name = '결석 처리'
 
     if error is None:
-        if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
-            if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
-                member_name = schedule_info.lecture_tb.member.name
+        if member_id is None or member_id == '':
+            if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
+                if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
+                    member_name = schedule_info.lecture_tb.member.name
+            else:
+                member_name = ''
         else:
-            member_name = ''
+            try:
+                member_info = MemberTb.objects.get(member_id=str(member_id))
+                member_name = member_info.name
+            except ObjectDoesNotExist:
+                member_name = ''
+                logger.error(request.user.first_name+'['+str(request.user.id)+']'+':'
+                             + str(schedule_id) + ':'+str(member_id))
+            except ValueError:
+                member_name = ''
+                logger.error(request.user.first_name+'['+str(request.user.id)+']'+':'
+                             + str(schedule_id) + ':'+str(member_id))
 
     if error is None:
         start_date = schedule_info.start_dt
