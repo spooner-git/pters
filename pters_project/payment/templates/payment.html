@@ -242,7 +242,7 @@
                             </div>
                         </div>
                     </div>
-                    <p style="color:#ffffff;text-align: center;margin-top:20px;margin-bottom:20px;">하루 330원으로 더 편리하게 레슨 관리 하세요.</p>
+                    <p style="color:#ffffff;text-align: center;margin-top:20px;margin-bottom:20px;">하루 330원으로 더 편리하게 레슨을 관리 하세요.</p>
 
                     <div class="ticket_wrap">
                         <div class="ticket_left pay_product_function">
@@ -665,7 +665,7 @@
                                 initialJSON = jsondata;
                                 if(jsondata.messageArray.length>0){
                                     msg = '결제에 실패하였습니다.';
-                                    msg += '에러내용 : ' + jsondata.messageArray;
+                                    msg += ' : ' + jsondata.messageArray;
                                     url_move = "/payment/";
                                 }else {
                                     msg = '결제가 완료되었습니다.';
@@ -691,7 +691,7 @@
 
                     } else {
                         msg = '결제에 실패하였습니다.';
-                        msg += '에러내용 : ' + rsp.error_msg;
+                        msg += ' : ' + rsp.error_msg;
                         shade_index(-100)
                         alert(msg);
                         location.href="/payment/";

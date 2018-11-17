@@ -540,7 +540,7 @@ $(document).on('click', 'div._groupplancolor', function(e){
         if($(this).find("div.colorpalette").length == 0){
             $(this).append(
                                 `<div class="colorpalette" style="min-width:unset;">
-                                    <div class="plancolor_yellow"></div>
+                                    <div class="plancolor_fbf3bd"></div>
                                 </div>`
                             );
         }else{
@@ -550,12 +550,14 @@ $(document).on('click', 'div._groupplancolor', function(e){
         if($(this).find("div.colorpalette").length == 0){
             $(this).append(
                                 `<div class="colorpalette">
-                                    <div class="plancolor_yellow"></div>
-                                    <div class="plancolor_pink"></div>
-                                    <div class="plancolor_orange"></div>
-                                    <div class="plancolor_blue"></div>
-                                    <div class="plancolor_green"></div>
-                                    <div class="plancolor_purple"></div>
+                                    <div class="plancolor_fbf3bd"></div>
+                                    <div class="plancolor_dbe6f7"></div>
+                                    <div class="plancolor_ffd3d9"></div>
+                                    <div class="plancolor_ffe3c2"></div>
+                                    <div class="plancolor_ceeac4"></div>
+                                    <div class="plancolor_d8d6ff"></div>
+                                    <div class="plancolor_ead8f2"></div>
+                                    <div class="plancolor_d9c3ab"></div>
                                 </div>`
                             );
         }else{
@@ -572,37 +574,53 @@ $(document).on('click', 'div.colorpalette div', function(e){
     var end_bg_color;
     var ing_font_color;
     var end_font_color;
-    if(selected_color == "orange"){
-        ing_bg_color = "#ffa500";
-        end_bg_color = "#b77600";
-        ing_font_color = "#282828";
-        end_font_color = "#282828";
-    }else if(selected_color == "pink"){
-        ing_bg_color = "#ffacb7";
-        end_bg_color = "#af757c";
-        ing_font_color = "#282828";
-        end_font_color = "#282828";
-    }else if(selected_color == "blue"){
-        ing_bg_color = "#9a9af9";
-        end_bg_color = "#3939a7";
-        ing_font_color = "#282828";
-        end_font_color = "#282828";
-    }else if(selected_color == "green"){
-        ing_bg_color = "#00a700";
-        end_bg_color = "#008000";
-        ing_font_color = "#282828";
-        end_font_color = "#282828";
-    }else if(selected_color == "purple"){
-        ing_bg_color = "#f488fb";
-        end_bg_color = "#95239c";
-        ing_font_color = "#282828";
-        end_font_color = "#282828";
-    }else if(selected_color == "yellow"){
-        ing_bg_color = "#fbf3bd";
-        end_bg_color = "#8c8763";
-        ing_font_color = "#282828";
-        end_font_color = "#282828";
-    }
+
+    ing_bg_color = `#${selected_color}`;
+    end_bg_color = "#d2d1cf";
+    ing_font_color = "#282828";
+    end_font_color = "#282828";
+
+    // if(selected_color == "fbf3bd"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "dbe6f7"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "ffd3d9"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "ffe3c2"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "ceeac4"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "d8d6ff"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "ead8f2"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }else if(selected_color == "d9c3ab"){
+    //     ing_bg_color = selected_color;
+    //     end_bg_color = "#d2d1cf";
+    //     ing_font_color = "#282828";
+    //     end_font_color = "#282828";
+    // }
 
     modify_group_from_list(group_id, "", "", "", "", ing_bg_color, end_bg_color, ing_font_color, end_font_color);
     $(this).parent('.colorpalette').remove();
@@ -1618,9 +1636,10 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         }
 
         var main = '<div class="_groupnum">'+ordernum+'</div>'+
-            '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
-            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-            '<div class="_groupplancolor"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>';
+        '<div class="_groupplancolor"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>'+
+            // '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+'['+group_type_nm+'] '+group_name+'" disabled>'+'</div>'+
+            
             '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
             '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
             if(group_type == "ONE_TO_ONE") {
@@ -2211,13 +2230,18 @@ function send_delete_member_repeat_infos(jsondata){
 }
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 
-
-
 function toggle_lock_unlock_inputfield_grouplist(group_id, disable){ //disable=false 수정가능, disable=true 수정불가
+    var ori_name = $('div[data-groupid="'+group_id+'"]').find("._groupname input").val();
+    if(disable == true){
+        $('div[data-groupid="'+group_id+'"]').find("._groupname input").val(ori_name);
+    }else if(disable == false){
+        var namesplitarray = $('div[data-groupid="'+group_id+'"]').find("._groupname input").val().split(' ');
+        namesplitarray.splice(0, 1);
+        $('div[data-groupid="'+group_id+'"]').find("._groupname input").val(namesplitarray.join(' '));
+    }
     $('div[data-groupid="'+group_id+'"] input._editable').attr('disabled', disable).removeClass('input_disabled_true').removeClass('input_disabled_false').addClass('input_disabled_'+String(disable));
     $('div[data-groupid="'+group_id+'"] span._editable').removeClass('_groupstatus_disabled_false').removeClass('_groupstatus_disabled_true').addClass('_groupstatus_disabled_'+String(disable));
 }
-
 
 
 //test

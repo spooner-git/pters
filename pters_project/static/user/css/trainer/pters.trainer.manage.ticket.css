@@ -319,8 +319,12 @@ img.substract_addedMember{
 	width: 4%;
 }
 ._groupname{
-	width: 16%;
+	width: 22%;
 }
+	._groupname > input{
+		text-align: left;
+		padding-left:3px;
+	}
 ._grouptypecd{
 	width: 8%;
 }
@@ -333,7 +337,7 @@ img.substract_addedMember{
 	display: none !important;
 }
 ._grouppartystatus{
-	width: 14%;
+	width: 8%;
 }
 .group_member_current_num{
 	width: 40%;
@@ -357,9 +361,13 @@ img.substract_addedMember{
 ._groupmemo{
 	width: 22%;
 }
+	._groupmemo > input{
+		text-align: left;
+		padding-left: 3px;
+	}
 ._groupcreatedate{
 	display: table-cell;
-	width: 17%;
+	width: 10%;
 	font-size: 13px;
 }
 ._groupstatus{
@@ -372,6 +380,8 @@ img.substract_addedMember{
 	width: 95%;
 	height: 26px;
 	line-height: 26px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	-webkit-text-fill-color:#282828;
 	-webkit-opacity:1;
 }

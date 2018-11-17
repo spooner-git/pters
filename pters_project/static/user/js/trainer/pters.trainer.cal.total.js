@@ -1808,12 +1808,15 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
+        var finished_style;
         if(option != 'off'){
             if(planScheduleFinishArray[i] == 0){
                 planColor_ = planColor;
+                finished_style = "";
             }else{
                 planColor_ = planColor+planfinished;
                 group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
+                finished_style = "style='text-decoration:line-through;'";
             }
         }else{
             planColor_ = planColor;
@@ -1891,7 +1894,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                      //'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
-                                                    '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                                    '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
                                                 ' </span>'+
                                                 '<span class="memberTime '+hideornot+'">'+ 
                                                     '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
@@ -1930,7 +1933,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                      //'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
-                                                        '<p class="groupnametag">'+planCode+memberName+'</p>'+
+                                                        '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
                                                         groupstatus+
                                                 '</span>'+
                                                 '<span class="memberTime '+hideornot+'">'+ 
@@ -2202,12 +2205,15 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
+        var finished_style;
         if(option != 'off'){
             if(planScheduleFinishArray[i] == 0){
                 planColor_ = planColor;
+                finished_style = "";
             }else{
                 planColor_ = planColor+planfinished;
                 group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
+                finished_style = "style='text-decoration:line-through;'";
             }
         }else{
             planColor_ = planColor;
@@ -2248,7 +2254,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
                 planhtml = '<div class-time="'+planArrayForTag.join('_')+
                             '" class-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
@@ -2269,7 +2275,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         }else if(option == 'group'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
                 planhtml = '<div group-time="'+planArrayForTag.join('_')+
                             '" group-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
