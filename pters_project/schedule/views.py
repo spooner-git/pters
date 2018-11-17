@@ -420,7 +420,7 @@ def finish_schedule_logic(request):
 
     if error is None:
         try:
-            member_info = MemberTb.objects.get(member_id=member_id)
+            member_info = MemberTb.objects.get(member_id=str(member_id))
             member_name = member_info.name
         except ObjectDoesNotExist:
             error = '회원 정보를 불러오지 못했습니다.'
