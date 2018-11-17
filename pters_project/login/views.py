@@ -1335,6 +1335,7 @@ def out_member_logic(request):
                     user.is_active = 0
                     user.set_password('0000')
                     user.save()
+                    member.save()
 
                 if len(sns_data) > 0:
                     sns_data.update(use=UN_USE)

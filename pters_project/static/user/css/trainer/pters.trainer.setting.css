@@ -130,8 +130,9 @@ body{
 	
 	#from_pters_team img:first-child{
 		height: 50px;
-		width: 160px;
+		width: 140px;
 		opacity: 0.3;
+		padding: 10px;
 	}
 
 	#salesSetting .settingImg{
