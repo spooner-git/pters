@@ -346,6 +346,11 @@ def add_trainee_schedule_logic(request):
                     error = '이미 완료된 일정입니다.'
                 elif group_schedule_info.state_cd == 'PC':
                     error = '이미 결석 처리된 일정입니다.'
+                if error is None:
+                    group_schedule_num = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,
+                                                                   use=USE).count()
+                    if group_schedule_num >= group_schedule_info.group_tb.member_num:
+                        error = '정원을 초과했습니다.'
 
                 if error is None:
                     group_schedule_data = ScheduleTb.objects.filter(group_tb_id=group_schedule_info.group_tb_id,

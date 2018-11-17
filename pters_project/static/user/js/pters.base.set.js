@@ -207,7 +207,6 @@ function toggleGroupParticipantsList(onoff){
 
 $(document).ready(function(){
 
-    var upText = "PTERS";
     var thisfilefullname = document.URL.substring(document.URL.lastIndexOf("/") + 1, document.URL.length);
 
     $("#outer_Sidenav").click(function(){ // When any `div.container` is clicked
@@ -216,10 +215,8 @@ $(document).ready(function(){
 
     if($('meta[name="upperText"]').attr('content') == "main_trainer"){ //상단바에 텍스트 표시. 각 페이지의 Meta를 읽어와서 upperText를 셋팅
         //	 	  $('#uptext').text(upText[0]); //Main페이지에서는 Peters 표시
-        var selector_uptext = $('#uptext');
-        selector_uptext.text(upText);
         $('.icon-bar').css('background-color', 'white');
-        selector_uptext.css({'color':'#fe4e65', 'font-size':'16px'});
+        $('#uptext').html(`<img src="/static/user/res/PTERS_logo_site.png" style="height: 22px;margin-left: 10px;">`);
     }else{
         //	  	$('#uptext').text(upText[1]); //그외의 페이지에서는 "이름"+코치님 일정 표기
     }

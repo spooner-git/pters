@@ -34,7 +34,7 @@ button:focus{
 }
 @media(min-width:600px){
     #free_member_use_guide{
-        position: absolute;
+        position: fixed;
         top: unset;
         bottom: 0;
         font-size: 14px;
@@ -313,7 +313,7 @@ a:focus, a:hover{
 }
 
 .sidebar_upper img{
-    width: 50px;
+    width: 100px;
     margin: auto;
 }
 

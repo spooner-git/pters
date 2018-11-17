@@ -148,7 +148,7 @@ def get_sales_info(class_id, month_first_day):
 
         for price_info in price_data:
             try:
-                price_lecture_info = ClassLectureTb.objects.select_related('lecture_tb').filter(
+                price_lecture_info = ClassLectureTb.objects.select_related('lecture_tb__member').filter(
                     ~Q(lecture_tb_id=price_info.lecture_tb_id), class_tb_id=class_id,
                     lecture_tb__member_id=price_info.lecture_tb.member_id,
                     lecture_tb__start_date__lte=price_info.lecture_tb.start_date,
@@ -170,11 +170,13 @@ def get_sales_info(class_id, month_first_day):
             price_info = {'date': str(price_info.lecture_tb.start_date),
                           'trade_type': trade_type,
                           'trade_info': trade_info,
-                          'price': price_info.lecture_tb.price}
+                          'price': price_info.lecture_tb.price,
+                          'member_db_id': price_info.lecture_tb.member_id,
+                          'member_name': price_info.lecture_tb.member.name}
             price_list.append(price_info)
 
         # 환불 정보 가져오기
-        refund_price_data = ClassLectureTb.objects.select_related('lecture_tb').filter(
+        refund_price_data = ClassLectureTb.objects.select_related('lecture_tb__member').filter(
                                 Q(lecture_tb__refund_date__gte=month_first_day)
                                 & Q(lecture_tb__refund_date__lte=month_last_day),
                                 class_tb_id=class_id, auth_cd='VIEW', lecture_tb__use=USE,
@@ -190,7 +192,9 @@ def get_sales_info(class_id, month_first_day):
             price_info = {'date': str(refund_price_info.lecture_tb.refund_date),
                           'trade_type': trade_type,
                           'trade_info': trade_info,
-                          'price': refund_price_info.lecture_tb.refund_price}
+                          'price': refund_price_info.lecture_tb.refund_price,
+                          'member_db_id': refund_price_info.lecture_tb.member_id,
+                          'member_name': refund_price_info.lecture_tb.member.name}
             price_list.append(price_info)
 
         price_list.sort(key=lambda x: x['date'], reverse=True)

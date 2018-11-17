@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb, ProductFunctionAuthTb, FunctionAuthTb
+from .models import PaymentInfoTb, BillingInfoTb, ProductTb, ProductPriceTb, ProductFunctionAuthTb, FunctionAuthTb, \
+    BillingCancelInfoTb
 
 
 @admin.register(PaymentInfoTb)
@@ -42,3 +43,8 @@ class ProductFunctionAuthTbAdmin(admin.ModelAdmin):
     list_display = ('product_function_auth_id', 'product_tb', 'function_auth_tb', 'auth_type_cd', 'counts_type',
                     'counts', 'reg_dt', 'mod_dt', 'use')
 
+
+@admin.register(BillingCancelInfoTb)
+class BillingCancelInfoTbAdmin(admin.ModelAdmin):
+    list_display = ('billing_info_id', 'member', 'billing_info_tb', 'cancel_type', 'cancel_reason',
+                    'reg_dt', 'mod_dt', 'use')
