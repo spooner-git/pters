@@ -425,6 +425,8 @@ def finish_schedule_logic(request):
                     member_name = schedule_info.lecture_tb.member.name
             else:
                 member_name = ''
+            logger.error(request.user.first_name+'['+str(request.user.id)+']'+' schedule_id:'
+                         + str(schedule_id) + ', member_id:'+str(member_id))
         else:
             if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
                 if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
