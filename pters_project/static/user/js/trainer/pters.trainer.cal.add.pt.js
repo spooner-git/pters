@@ -740,7 +740,7 @@ $(document).ready(function(){
         shade_index(100);
     });
 
-    $(document).on('click',"#durations_mini li a",function(){
+    $(document).on('click', "#durations_mini li a", function(){
         $("#classDuration_mini #durationsSelected button").addClass("dropdown_selected").text($(this).text()).val($(this).attr('data-dur'));
 
         if(addTypeSelect == "ptadd" || addTypeSelect == "groupptadd"){ //Form 셋팅
@@ -3096,11 +3096,11 @@ $(document).on('click', 'img.add_groupmember_plan', function(){
     $('#form_add_member_group_plan_scheduleid').val($(this).attr('group-schedule-id'));
     $('#form_add_member_group_plan_groupid').val($(this).attr('data-groupid'));
     $('#form_add_member_group_plan_max').val($(this).attr('data-membernum'));
-    // $('#subpopup_addByList_plan').show();
+    $('#subpopup_addByList_plan').show();
     var parentPopupHeight = $('#cal_popup_planinfo').height();
     $('#subpopup_addByList_plan').show().css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
-    //get_current_member_list('callback',function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
-    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));                                                                           
+    get_current_member_list('callback', function(jsondata){console.log("전체회원",jsondata); draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
+    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){console.log("이그룹회원",jsondata); draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));                                                                        
                                                                                         set_pters_scrolling_to_groupmember_add();});//특정그룹회원 목록 조회
 });
 
@@ -3196,7 +3196,8 @@ function draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_
 //참석자에서 + 버튼을 눌렀을때 회원 리스트 불러오기
 function draw_groupParticipantsList_to_add(jsondata, targetHTML){
     var len = jsondata.db_id.length;
-    var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>예약가능횟수</div>'+'<div style="display:none">'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
+    //var htmlToJoin = ['<div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>'+'<div class="list_addByList listTitle_addByList"><div>'+'회원명(ID)'+'</div>'+'<div>예약가능횟수</div>'+'<div style="display:none">'+'연락처'+'</div>'+'<div>추가</div>'+'</div>'];
+    var htmlToJoin = [];
     var addedCount = 0;
 
     for(var i=1; i<=len; i++){
@@ -3285,7 +3286,25 @@ function draw_groupMemberList_to_view(jsondata, targetHTML){
 }
 //일정 등록시 그룹 선택시 그룹원 정보를 보여준다.
 
-
+function draw_groupParticipants_lectureList_to_add(jsondata, targetHTML){
+    var $targetHTML = $(targetHTML);
+    var len = jsondata.lectureIdArray.length;
+    var htmlToJoin = [];
+    for(var i=0; i<len; i++){
+        if(jsondata.lectureStateArray[i] == "IP"){
+            htmlToJoin.push(`<div class="groupParticipans_lectureList_table">
+                                <div>${jsondata.groupNameArray[i]}</div>
+                                <div>${jsondata.availCountArray[i]}</div>
+                                <div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_wholemember_plan"></div>
+                             </div>
+                            `);
+        }
+    }
+    $targetHTML.html(htmlToJoin.join(""));
+}
+$('.close_subpopup_groupParticipans_lecturelist_wrap').click(function(){
+    $('#subpopup_groupParticipans_lecturelist_wrap').hide();
+});
 
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.

@@ -143,15 +143,30 @@
         </div>
 
         <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:50%;width: 100%;">
-            <div class="mode_switch_button_wrap_cal" style="margin-top:5px;">
+            <div class="mode_switch_button_wrap_cal" style="margin:unset;margin-top:5px;display:table;">
                 <div class="mode_switch_button mode_active text-thisgroupmember" data-page="thisgroup" style="width: 90px;"></div>
                 <span style="position: absolute;right: 0;top: 0;margin-top:3px;margin-right:11px;cursor: pointer;" id="close_subpopup_addBylist_plan">
                     <img src="/static/user/res/member/icon-x-grey.png" style="width: 10px;margin-bottom:3px;margin-right: 2px;"><span class="text-close"></span>
                 </span>
-                <!--<div class="mode_switch_button" data-page="whole">전체 회원</div>-->
+                <div class="mode_switch_button" data-page="whole">전체 회원</div>
             </div>
+            <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>
+            <div class="list_addByList listTitle_addByList"><div>회원명(ID)</div><div>예약가능횟수</div><div style="display:none"></div><div>추가</div></div>
             <div id="subpopup_addByList_whole">"<div class='list_addByList text-listloading'></div>"</div>
             <div id="subpopup_addByList_thisgroup">"<div class='list_addByList text-listloading'></div>"</div>
+            <div id="subpopup_groupParticipans_lecturelist_wrap">
+                <div class="subpopup_groupParticipans_lecturelist_title">횟수를 차감할 수강권을 선택 <span class="close_subpopup_groupParticipans_lecturelist_wrap">
+                    <img src="/static/user/res/member/icon-x-grey.png" style="width: 10px;margin-bottom:3px;margin-right: 2px;">닫기</span>
+                </div>
+                <div class="groupParticipans_lectureList_table groupParticipans_lectureList_table_title">
+                    <div>수강권</div>
+                    <div>예약가능</div>
+                    <div>선택</div>
+                </div>
+                <div id="subpopup_groupParticipans_lecturelist">
+                    
+                </div>
+            </div>
         </div>
     </div>
     <!--일정 눌렀을때 팝업메뉴-->
