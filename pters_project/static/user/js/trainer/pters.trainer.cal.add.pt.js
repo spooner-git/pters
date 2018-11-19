@@ -3373,7 +3373,7 @@ function send_add_othergroupmember_plan(dbid, leid, schedule_id, use, callback){
         url: '/schedule/add_other_member_group_schedule/',
         type : 'POST',
         dataType: 'html',
-        data: {"member_id":dbid, "lecture_id":leid, "schedule_id":schedule_id, "next_page":"{% url 'trainer:get_error_info' %}"},
+        data: {"member_id":dbid, "lecture_id":leid, "schedule_id":schedule_id, "next_page":'/trainer/get_error_info'},
 
         beforeSend:function(xhr, settings){
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
