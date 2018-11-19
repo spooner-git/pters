@@ -15,7 +15,7 @@
       "classTimeArray_member_name" :
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_member_id" :
-      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.lecture_tb.member_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_start_date" : 
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classTimeArray_end_date" : 

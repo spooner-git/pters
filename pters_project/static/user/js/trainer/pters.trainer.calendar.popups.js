@@ -277,6 +277,9 @@
         $('#popup_info').text(infoText);
         $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
+        console.log($(this).attr('class-schedule-id'))
+        console.log($(this).attr('ata-lectureId'))
+        console.log($(this).attr('data-dbid'))
         selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'), 
                                           'data-grouptype':'class', 'data-date':thisIdDate_,
                                           'data-name':$(this).attr('data-memberName'),
@@ -659,6 +662,9 @@
             var schedule_finish_check = $(this).attr('data-schedule-check');
             var dbid = $(this).attr('data-dbid');
             var name = $(this).attr('data-membername');
+            console.log($(this).attr('schedule-id'));
+            console.log(dbid);
+            console.log(name);
             //var selectedDate = $('.popup_ymdText').text()
             var selectedTime = $(this).find('.planchecktime').text().split(':')[0];
             var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0];
@@ -734,9 +740,56 @@
                 schedule_on_off = 1;
             }
             if(bodywidth > 600){
-                $("#cal_popup_planinfo").css({'display':'block', 'top':(($(window).height()-$("#cal_popup_planinfo").outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-$("#cal_popup_planinfo").outerWidth())/2+$(window).scrollLeft())}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+                if($(this).attr('data-grouptype') == "group") {
+                    $("#cal_popup_planinfo").css({
+                        'display': 'block',
+                        'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()),
+                        'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
+                    }).attr({
+                        'schedule-id': $(this).attr('schedule-id'),
+                        'data-grouptype': $(this).attr('data-grouptype'),
+                        'group_plan_finish_check': $(this).attr('data-schedule-check')
+                    });
+                }else{
+                    $("#cal_popup_planinfo").css({
+                        'display': 'block',
+                        'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()),
+                        'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
+                    }).attr({'schedule-id': $(this).attr('schedule-id'),
+                                          'data-grouptype':'class',
+                                          'data-name':$(this).attr('data-memberName'),
+                                          'data-leid': $(this).attr('data-lectureId'),
+                                          'data-dbid': $(this).attr('data-dbid')
+                    });
+                }
             }else{
-                $('#cal_popup_planinfo').css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+
+                if($(this).attr('data-grouptype') == "group") {
+                    $('#cal_popup_planinfo').css({
+                        'display': 'block',
+                        'top': '50%',
+                        'left': '50%',
+                        'transform': 'translate(-50%, -50%)',
+                        'position': 'fixed'
+                    }).attr({
+                        'schedule-id': $(this).attr('schedule-id'),
+                        'data-grouptype': $(this).attr('data-grouptype'),
+                        'group_plan_finish_check': $(this).attr('data-schedule-check')
+                    });
+                }else{
+                    $('#cal_popup_planinfo').css({
+                        'display': 'block',
+                        'top': '50%',
+                        'left': '50%',
+                        'transform': 'translate(-50%, -50%)',
+                        'position': 'fixed'
+                    }).attr({'schedule-id': $(this).attr('schedule-id'),
+                                          'data-grouptype':'class',
+                                          'data-name':$(this).attr('data-memberName'),
+                                          'data-leid': $(this).attr('data-lectureId'),
+                                          'data-dbid': $(this).attr('data-dbid')
+                    });
+                }
             }
         }
     });
