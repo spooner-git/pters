@@ -465,7 +465,8 @@ $(document).ready(function(){
             endMin
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
-        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
+        .attr('data-date',date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
 
         $('.typeSelected').removeClass('typeSelected');
         $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
@@ -617,7 +618,8 @@ $(document).ready(function(){
             endMin
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
-        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));
+        ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
+        .attr('data-date',date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'));;
 
         $('.typeSelected').removeClass('typeSelected');
         $('#typeSelector_'+addTypeSelect).addClass('typeSelected');
@@ -706,19 +708,36 @@ $(document).ready(function(){
         $(this).addClass('typeSelected');
         $(this).siblings('.toggleBtnWrap').removeClass('typeSelected');
         if($(this).attr('id').split('_')[1]=="ptadd"){
-            $('#memberName_mini, #remainCount_mini').css('display', 'block');
+            $('#memberName_mini').css('display', 'block');
             $('.pt_memo_guide_mini').css('visibility', 'unset');
+            if($('#membersSelected_mini button').val().length > 0){
+                if($('#membersSelected_mini button').attr('data-grouptype') == "group"){
+                    $('#groupInfo_mini').css('display', 'block');
+                }else{
+                    $('#remainCount_mini').css('display', 'block');
+                }
+            }
             if($('#membersSelected_mini button').attr('data-grouptype') == "group"){
                 addTypeSelect = "groupptadd";
             }else{
                 addTypeSelect = "ptadd";
             }
         }else if($(this).attr('id').split('_')[1]=="offadd"){
-            $('#memberName_mini, #remainCount_mini').css('display', 'none');
+            $('#memberName_mini, #remainCount_mini, #groupInfo_mini').css('display', 'none');
             $('.pt_memo_guide_mini').css('visibility', 'hidden');
             addTypeSelect = "offadd";
         }
         check_dropdown_selected_addplan();
+    });
+
+    $('#go_to_detail_plan_reg').click(function(){
+        var type = $('#typeSelector .typeSelected').attr('id').split('_')[1];
+        var thisDate = $('#datetext_mini').attr("data-date");
+        clear_pt_off_add_popup();
+        open_pt_off_add_popup(type, thisDate);
+        set_member_group_dropdown_list();
+        ajaxTimeGraphSet(thisDate);
+        shade_index(100);
     });
 
     $(document).on('click',"#durations_mini li a",function(){
