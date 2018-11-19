@@ -425,16 +425,12 @@ def finish_schedule_logic(request):
                     member_name = schedule_info.lecture_tb.member.name
             else:
                 member_name = ''
-            logger.error(request.user.first_name+'['+str(request.user.id)+']'+' schedule_id:'
-                         + str(schedule_id) + ', member_id:'+str(member_id))
         else:
             if schedule_info.lecture_tb is not None and schedule_info.lecture_tb != '':
                 if schedule_info.lecture_tb.member is not None and schedule_info.lecture_tb.member != '':
                     member_name = schedule_info.lecture_tb.member.name
             else:
                 member_name = ''
-            logger.error(request.user.first_name+'['+str(request.user.id)+']'+' schedule_id:'
-                         + str(schedule_id) + ', member_id:'+str(member_id))
 
     if error is None:
         start_date = schedule_info.start_dt
@@ -1822,9 +1818,6 @@ def finish_group_schedule_logic(request):
 def add_member_group_schedule_logic(request):
     member_id = request.POST.get('member_id')
     group_schedule_id = request.POST.get('schedule_id')
-    # note = request.POST.get('add_memo', '')
-    # date = request.POST.get('date', '')
-    # day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
@@ -1979,9 +1972,6 @@ def add_other_member_group_schedule_logic(request):
     member_id = request.POST.get('member_id')
     lecture_id = request.POST.get('lecture_id')
     group_schedule_id = request.POST.get('schedule_id')
-    note = request.POST.get('add_memo', '')
-    date = request.POST.get('date', '')
-    day = request.POST.get('day', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
     next_page = request.POST.get('next_page')
@@ -2002,9 +1992,6 @@ def add_other_member_group_schedule_logic(request):
 
     if group_schedule_id == '':
         error = '일정을 선택해 주세요.'
-
-    if note is None:
-        note = ''
 
     if error is None:
         # 스케쥴 정보 가져오기
@@ -2041,7 +2028,7 @@ def add_other_member_group_schedule_logic(request):
 
     if error is None:
         group_schedule_data = ScheduleTb.objects.filter(group_schedule_id=group_schedule_id,
-                                                        lecture_tb__member_id=member_id)
+                                                        lecture_tb__member_id=member_id, use=USE)
         if len(group_schedule_data) != 0:
             error = '일정에 포함되어있는 회원입니다.'
 

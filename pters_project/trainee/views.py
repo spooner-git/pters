@@ -257,7 +257,7 @@ class LectureSelectView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class DeleteTraineeAccountView(AccessTestMixin, TemplateView):
+class DeleteTraineeAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'delete_trainee_account_form.html'
 
     def get_context_data(self, **kwargs):

@@ -356,7 +356,7 @@ class ManageCenterView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class HelpPtersView(AccessTestMixin, TemplateView):
+class HelpPtersView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
 
     def get_context_data(self, **kwargs):
@@ -366,7 +366,7 @@ class HelpPtersView(AccessTestMixin, TemplateView):
         return context
 
 
-class FromPtersView(AccessTestMixin, TemplateView):
+class FromPtersView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_from_pters_team.html'
 
     def get_context_data(self, **kwargs):
@@ -375,7 +375,7 @@ class FromPtersView(AccessTestMixin, TemplateView):
         return context
 
 
-class AboutUsView(AccessTestMixin, TemplateView):
+class AboutUsView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_about_us.html'
 
     def get_context_data(self, **kwargs):
@@ -384,7 +384,7 @@ class AboutUsView(AccessTestMixin, TemplateView):
         return context
 
 
-class BGSettingView(AccessTestMixin, View):
+class BGSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_background.html'
 
     def get(self, request):
@@ -590,7 +590,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class DeleteAccountView(AccessTestMixin, TemplateView):
+class DeleteAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'delete_account_form.html'
 
     def get_context_data(self, **kwargs):
@@ -599,7 +599,7 @@ class DeleteAccountView(AccessTestMixin, TemplateView):
         return context
 
 
-class TrainerSettingView(AccessTestMixin, TemplateView):
+class TrainerSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting.html'
 
     def get_context_data(self, **kwargs):
@@ -608,7 +608,7 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class PushSettingView(AccessTestMixin, View):
+class PushSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_push.html'
 
     def get(self, request):
@@ -620,7 +620,7 @@ class PushSettingView(AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class ReserveSettingView(AccessTestMixin, View):
+class ReserveSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_reserve.html'
 
     def get(self, request):
@@ -629,7 +629,7 @@ class ReserveSettingView(AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class BasicSettingView(AccessTestMixin, View):
+class BasicSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_basic.html'
 
     def get(self, request):
@@ -638,7 +638,7 @@ class BasicSettingView(AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class SalesSettingView(AccessTestMixin, TemplateView):
+class SalesSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
@@ -646,7 +646,7 @@ class SalesSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class ClassSettingView(AccessTestMixin, TemplateView):
+class ClassSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_class.html'
 
     def get_context_data(self, **kwargs):
@@ -654,7 +654,7 @@ class ClassSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class LanguageSettingView(AccessTestMixin, TemplateView):
+class LanguageSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_language.html'
 
     def get_context_data(self, **kwargs):
