@@ -3099,8 +3099,8 @@ $(document).on('click', 'img.add_groupmember_plan', function(){
     $('#subpopup_addByList_plan').show();
     var parentPopupHeight = $('#cal_popup_planinfo').height();
     $('#subpopup_addByList_plan').show().css({'top': (parentPopupHeight-$('#subpopup_addByList_plan').height())/2});
-    get_current_member_list('callback', function(jsondata){console.log("전체회원",jsondata); draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
-    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){console.log("이그룹회원",jsondata); draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));                                                                        
+    get_current_member_list('callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_whole'))});//전체회원 조회
+    get_groupmember_list($(this).attr('data-groupid'), 'callback', function(jsondata){draw_groupParticipantsList_to_add(jsondata, $('#subpopup_addByList_thisgroup'));                                                                        
                                                                                         set_pters_scrolling_to_groupmember_add();});//특정그룹회원 목록 조회
 });
 
@@ -3292,7 +3292,7 @@ function draw_groupParticipants_lectureList_to_add(jsondata, targetHTML){
     var htmlToJoin = [];
     for(var i=0; i<len; i++){
         if(jsondata.lectureStateArray[i] == "IP"){
-            htmlToJoin.push(`<div class="groupParticipans_lectureList_table">
+            htmlToJoin.push(`<div class="groupParticipans_lectureList_table" data-leid="${jsondata.lectureIdArray[i]}">
                                 <div>${jsondata.groupNameArray[i]}</div>
                                 <div>${jsondata.availCountArray[i]}</div>
                                 <div><img src="/static/user/res/floatbtn/btn-plus.png" class="add_wholemember_plan"></div>
@@ -3366,6 +3366,63 @@ function send_add_groupmember_plan(use, callback){
     });
 }
 
+
+//그룹일정에 전체회원에서 참석자 추가시 img.add_wholemember_plan(플러스버튼)을 누르면 호출된다.
+function send_add_othergroupmember_plan(dbid, leid, schedule_id, use, callback){
+    $.ajax({
+        url: '/schedule/add_other_member_group_schedule/',
+        type : 'POST',
+        dataType: 'html',
+        data: {"member_id":dbid, "lecture_id":leid, "schedule_id":schedule_id, "next_page":"{% url 'trainer:get_error_info' %}"},
+
+        beforeSend:function(xhr, settings){
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+            beforeSend();
+        },
+
+        success:function(data){
+            //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+                enable_group_member_add_after_ajax();
+            }else{
+                if(jsondata.push_lecture_id.length>0){
+                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                        send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
+                    }
+                }
+                if(use == 'callback'){
+                    callback(jsondata);
+                }else{
+                    if(bodywidth>600){
+                        scheduleTime('class', jsondata, calendarSize);
+                        scheduleTime('off', jsondata, calendarSize);
+                        scheduleTime('group', jsondata, calendarSize);
+                    }else{
+                        scheduleTime_Mobile('class', jsondata, calendarSize);
+                        scheduleTime_Mobile('off', jsondata, calendarSize);
+                        scheduleTime_Mobile('group', jsondata, calendarSize);
+                    }
+                    get_group_plan_participants(sendData[2]["value"], 'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"]);});
+                    alert('일정 참석자 정상 등록되었습니다.');
+                }
+            }
+        },
+
+        complete:function(){
+            completeSend();
+        },
+
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text("서버 통신 실패-관리자에게 문의해주세요.");
+        }
+    });
+}
 
 //그룹/클래스 일정내에서 그룹원을 일정에 추가할때
 function set_pters_scrolling_to_groupmember_add($selector){ //subpopup_addByList_thisgroup or subpopup_addByList_whole
