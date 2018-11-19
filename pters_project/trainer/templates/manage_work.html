@@ -437,12 +437,11 @@
 
                 success:function(data){
                     var jsondata = JSON.parse(data);
-                    console.log(jsondata)
                     if(jsondata.messageArray.length>0){
                         $('#errorMessageBar').show();
                         $('#errorMessageText').text(jsondata.messageArray);
                     }else{
-                        fill_profit_details_monthly_table(month_date, jsondata.date, jsondata.price, jsondata.trade_info, jsondata.trade_type, jsondata.member_name, jsondata.member_name)
+                        fill_profit_details_monthly_table(month_date, jsondata.date, jsondata.price, jsondata.trade_info, jsondata.trade_type, jsondata.member_name, jsondata.package_name)
                         
                     }
 
