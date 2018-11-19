@@ -82,6 +82,12 @@ function close_info_popup(option){
         }else{
             shade_index(-100);
         }
+
+        if($('._calmonth').css('display') == "block" && $('#cal_popup_planinfo').css('display') == "block"){
+            shade_index(150);
+        }
+
+
         if($('#cal_popup_planinfo').css('display') == "block"){
 
         }else{

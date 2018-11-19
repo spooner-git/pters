@@ -277,9 +277,6 @@
         $('#popup_info').text(infoText);
         $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
-        console.log($(this).attr('class-schedule-id'))
-        console.log($(this).attr('ata-lectureId'))
-        console.log($(this).attr('data-dbid'))
         selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'), 
                                           'data-grouptype':'class', 'data-date':thisIdDate_,
                                           'data-name':$(this).attr('data-memberName'),
@@ -427,7 +424,7 @@
     //스케쥴 클릭시 팝업 Start
     $(document).on('click', 'div.groupTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        disable_window_scroll()
+        disable_window_scroll();
         var info = $(this).attr('group-time').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -662,9 +659,6 @@
             var schedule_finish_check = $(this).attr('data-schedule-check');
             var dbid = $(this).attr('data-dbid');
             var name = $(this).attr('data-membername');
-            console.log($(this).attr('schedule-id'));
-            console.log(dbid);
-            console.log(name);
             //var selectedDate = $('.popup_ymdText').text()
             var selectedTime = $(this).find('.planchecktime').text().split(':')[0];
             var selectedMinute = $(this).find('.planchecktime').text().split(':')[1].split(' - ')[0];
@@ -720,7 +714,11 @@
 
             $('#subpopup_addByList_plan').hide();
             if($(this).attr('data-grouptype') == "group"){
-                $('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
+                var group_current_member_num =$(this).attr('data-currentmembernum');
+                var group_max_member_num = $(this).attr('data-membernum');
+                var popuptext = '<span data-name="'+name+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_type_name+'">['+group_type_name+'] '+name+'<span id="groupplan_participants_status"> ('+group_current_member_num+'/'+group_max_member_num+')</span> </span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+                $('#popup_info2').html(popuptext);
+                //$('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
                     'data-groupid': $(this).attr('data-groupid'),
                     'group-schedule-id':$(this).attr('schedule-id')
@@ -730,7 +728,7 @@
                 if(bodywidth > 600){
                     toggleGroupParticipantsList('on');
                 }else{
-                    //$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+                    toggleGroupParticipantsList('off');
                 }
                 schedule_on_off = 2;
             }else{
@@ -743,7 +741,7 @@
                 if($(this).attr('data-grouptype') == "group") {
                     $("#cal_popup_planinfo").css({
                         'display': 'block',
-                        'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()),
+                        'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()) - 20,
                         'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
                     }).attr({
                         'schedule-id': $(this).attr('schedule-id'),
@@ -763,7 +761,6 @@
                     });
                 }
             }else{
-
                 if($(this).attr('data-grouptype') == "group") {
                     $('#cal_popup_planinfo').css({
                         'display': 'block',
