@@ -213,6 +213,7 @@ body{
 
 .sales_detail_monthly_row{
 	display: table;
+	table-layout: fixed;
 	width: 100%;
 	margin-bottom: 5px;
 	margin-top: 5px;
@@ -223,7 +224,23 @@ body{
 }
 	.sales_detail_monthly_row div{
 		display: table-cell;
-		width: 33%;
+		width: 33.33%;
+	}
+	.sales_detail_monthly_row div:nth-child(3), .sales_detail_monthly_row div:nth-child(4){
+		display: none;
+	}
+	@media(min-width:600px){
+		.sales_detail_monthly_row div{
+			width: 20%;
+		}
+		.sales_detail_monthly_row div:nth-child(3), .sales_detail_monthly_row div:nth-child(4){
+			display: table-cell;
+		}
+		.sales_detail_monthly_row div:nth-child(3) > p, .sales_detail_monthly_row div:nth-child(4) > p{
+			white-space: normal;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
 	}
 
 #selectBox{
