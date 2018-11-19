@@ -731,9 +731,10 @@ $(document).ready(function(){
     });
 
     $('#go_to_detail_plan_reg').click(function(){
+        var type = $('#typeSelector .typeSelected').attr('id').split('_')[1];
         var thisDate = $('#datetext_mini').attr("data-date");
         clear_pt_off_add_popup();
-        open_pt_off_add_popup('ptadd', thisDate);
+        open_pt_off_add_popup(type, thisDate);
         set_member_group_dropdown_list();
         ajaxTimeGraphSet(thisDate);
         shade_index(100);
