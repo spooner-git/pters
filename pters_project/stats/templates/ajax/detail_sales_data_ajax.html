@@ -11,6 +11,8 @@
       [{% for price_info in price_data %}"{{ price_info.member_db_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
         "member_name":
       [{% for price_info in price_data %}"{{ price_info.member_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+        "package_name":
+      [{% for price_info in price_data %}"{{ price_info.package_name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 
       "messageArray" :
       [{% for message in messages %}"{% if message.tags == "error" %}{{ message }}{% endif %}"{%if forloop.last == False%},{% endif %}{% endfor %}]
