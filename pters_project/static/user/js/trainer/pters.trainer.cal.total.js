@@ -22,6 +22,7 @@ $('#ymdText').click(function(e){
     }
 
     if(current_calendar_type == "month"){
+        $.cookie('calendar_selected_last', 'week', {expires : 30});
         $('#hidetoggle').show();
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
@@ -54,6 +55,7 @@ $('#ymdText').click(function(e){
             $('#date').css('display', 'none');
         }
     }else if(current_calendar_type == "week"){
+        $.cookie('calendar_selected_last', 'month', {expires : 30});
         $('#hidetoggle').hide();
         var $ymdText_start = $('#ymdText-pc-month-start');
         var $ymdText_end = $('#ymdText-pc-month-end');
@@ -98,9 +100,9 @@ $('#ymdText').click(function(e){
     }
 });
 
-var calendar_select ="week";
 $('#change_to_weekcal').click(function(e){
     if(calendar_select == "month"){
+        $.cookie('calendar_selected_last', 'week', {expires : 30});
         $('#hidetoggle').show();
         calendar_select = "week";
         e.stopPropagation();
@@ -135,6 +137,7 @@ $('#change_to_weekcal').click(function(e){
 
 $('#change_to_monthcal').click(function(e){
     if(calendar_select == "week"){
+        $.cookie('calendar_selected_last', 'month', {expires : 30});
         hidetoggle_on_off("off");
         $('#hidetoggle').hide();
         calendar_select = "month";
