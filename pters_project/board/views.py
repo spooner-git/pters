@@ -63,6 +63,10 @@ class GetQuestionDataView(LoginRequiredMixin, TemplateView):
                                             ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
                                                        status_type_cd_name=RawSQL(query_status, [])
                                                        ).order_by('-reg_dt')
+        for question_info in question_list:
+            if question_info.read == 0 and question_info.status_type_cd == 'QA_COMPLETE':
+                question_info.read = 1
+                question_info.save()
         context['question_data'] = question_list
 
         return context

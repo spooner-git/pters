@@ -7,6 +7,8 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 
 from django.utils import timezone
+
+from board.models import QATb
 from configs.const import USE, UN_USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
 from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
@@ -56,6 +58,9 @@ def get_setting_info(request):
         request.session['device_info'] = 'app'
 
     if class_id != '':
+        question_counts = QATb.objects.filter(member_id=request.user.id, status_type_cd='QA_COMPLETE',
+                                              read=0, use=USE).count()
+        request.session['question_counts'] = question_counts
 
         token_data = PushInfoTb.objects.filter(member_id=request.user.id, device_id=device_id, use=USE)
         if len(token_data) == 0:

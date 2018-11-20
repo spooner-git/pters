@@ -40,6 +40,7 @@ from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 # from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
+from trainer.templatetags.background_data import get_setting_info
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
     PackageTb, PackageGroupTb
 
@@ -91,6 +92,8 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 self.url = '/trainer/class_select/'
         else:
             self.url = '/trainer/trainer_main/'
+
+        get_setting_info(request)
 
         if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
