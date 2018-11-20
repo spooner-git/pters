@@ -7,11 +7,13 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.utils import timezone
 
 # Create your views here.
 
@@ -238,8 +240,13 @@ def billing_check_logic(request):
 
     if error is None:
         if member_info is not None:
-            logger.info(str(member_info.name) + '님 정기 결제 완료['
-                        + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
+            logger.error(str(member_info.name) + '님 정기 결제 완료['
+                         + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
+
+            email = EmailMessage('[PTERS 결제]' + request.user.first_name + '회원 결제 완료',
+                                 '정기 결제 완료 : ' + datetime.date.today() + '\n\n' + str(timezone.now()),
+                                 to=['support@pters.co.kr'])
+            email.send()
     else:
         if member_info is not None:
             logger.error(str(member_info.name) + '님 결제 오류['
