@@ -922,7 +922,9 @@ $(document).ready(function(){
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }
-
+                if($('#calendar').length > 0){
+                    ajaxClassTime();
+                }
             });
             // get_member_repeat_id_in_group_repeat(repeat_schedule_id, 'callback', function(jsondata){
             //     for(var i=0; i<jsondata.repeatScheduleIdArray.length; i++){
@@ -5515,7 +5517,7 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                     }
                 }
-                ajaxClassTime();
+                // ajaxClassTime();
                 if(use == 'callback'){
                     callback(jsondata);
                 }
