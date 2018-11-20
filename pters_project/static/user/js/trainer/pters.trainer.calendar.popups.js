@@ -1106,6 +1106,9 @@
             $('#info_shift_schedule, #info_shift_history').hide();
             $('#select_info_shift_lecture').addClass('button_active');
             $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
+            if($('._calmonth').length > 0){
+                shade_index(100);
+            }
         }
     });
 /////////////////////////////////////////////////////////////////////////////////////////////이름 눌러 회원 정보 팝업 띄우기

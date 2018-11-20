@@ -255,8 +255,9 @@ function close_manage_popup(option){
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         $('#memberInfoPopup_PC').removeClass('display_block');
         if($('#pshade').css('z-index')==150 || $('#mshade').css('z-index') == 150){
-
+            console.log('11',$('#pshade').css('z-index'))
         }else{
+            console.log('22',$('#pshade').css('z-index'))
             shade_index(-100);
         }
         $('span.mobile_title_popup').remove();
