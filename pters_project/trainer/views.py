@@ -2501,9 +2501,9 @@ def add_group_info_logic(request):
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
-    end_color_cd = request.POST.get('end_color_cd', '#af757c')
-    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#000000')
-    end_font_color_cd = request.POST.get('end_font_color_cd', '#000000')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
@@ -4547,7 +4547,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     member_class_info.save()
                     one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
                                                     group_type_cd='ONE_TO_ONE',
-                                                    ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+                                                    ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     state_cd='IP', member_num=1, use=USE)
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
