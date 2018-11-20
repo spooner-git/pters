@@ -191,6 +191,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             all_member = func_get_class_member_ing_list(class_id)
             total_member_num = len(all_member)
 
+            class_lecture_list = ClassLectureTb.objects.select_related(
+                'lecture_tb__member').filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                             auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
+
             for member_info in all_member:
                 # member_data = member_info
 
@@ -198,26 +202,28 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                class_lecture_list = ClassLectureTb.objects.select_related(
-                    'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_info,
-                                         lecture_tb__state_cd='IP', lecture_tb__use=USE,
-                                         auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
-                start_date = ''
+                # class_lecture_list = ClassLectureTb.objects.select_related(
+                #     'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_info,
+                #                          lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                #                          auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
                 if len(class_lecture_list) > 0:
+                    start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
-                        if lecture_info_data.auth_cd == 'WAIT':
-                            np_member_num += 1
-                        member_lecture_reg_count += lecture_info.lecture_reg_count
-                        member_lecture_rem_count += lecture_info.lecture_rem_count
-                        member_lecture_avail_count += lecture_info.lecture_avail_count
+                        if str(lecture_info.member_id) == str(member_info.member_id):
+                            if lecture_info_data.auth_cd == 'WAIT':
+                                np_member_num += 1
+                            member_lecture_reg_count += lecture_info.lecture_reg_count
+                            member_lecture_rem_count += lecture_info.lecture_rem_count
+                            member_lecture_avail_count += lecture_info.lecture_avail_count
 
-                        if lecture_info.state_cd == 'IP':
-                            if start_date == '':
-                                start_date = lecture_info.start_date
-                            else:
-                                if start_date > lecture_info.start_date:
+                            if lecture_info.state_cd == 'IP':
+                                if start_date == '':
                                     start_date = lecture_info.start_date
+                                else:
+                                    if start_date > lecture_info.start_date:
+                                        start_date = lecture_info.start_date
+
                     if start_date != '':
                         if month_first_day <= start_date < next_month_first_day:
                             new_member_num += 1
@@ -2501,9 +2507,9 @@ def add_group_info_logic(request):
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
-    end_color_cd = request.POST.get('end_color_cd', '#af757c')
-    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#000000')
-    end_font_color_cd = request.POST.get('end_font_color_cd', '#000000')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
@@ -4547,7 +4553,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     member_class_info.save()
                     one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
                                                     group_type_cd='ONE_TO_ONE',
-                                                    ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+                                                    ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     state_cd='IP', member_num=1, use=USE)
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',
