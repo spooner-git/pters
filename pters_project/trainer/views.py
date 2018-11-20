@@ -921,7 +921,7 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if day == '':
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(47))
+        end_date = today + datetime.timedelta(days=int(day))
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         # end_time = timezone.now()
         # print(str(end_time-start_time))
