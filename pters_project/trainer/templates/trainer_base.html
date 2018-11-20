@@ -473,11 +473,11 @@
                 <div class="centermenu_div">
                     <a href="{% url 'trainer:trainer_setting' %}" class="centermenu_text text-setting"></a>
                 </div>
-
+                {% if request.session.device_info != 'app' %}
                 <div class="centermenu_div">
                     <a href="{% url 'payment:index' %}" class="centermenu_text text-payment"></a>
                 </div>
-
+                {% endif %}
                 <div class="centermenu_div" style="display: none;">
                     <a href="{% url 'trainer:help_setting' %}" class="centermenu_text text-help"></a>
                 </div>
