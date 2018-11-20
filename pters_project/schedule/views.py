@@ -392,6 +392,7 @@ def finish_schedule_logic(request):
     schedule_state_cd = request.POST.get('schedule_state_cd', 'PE')
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
+
     schedule_state_cd_name = '완료'
     error = None
     schedule_info = None

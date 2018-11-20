@@ -703,7 +703,7 @@ def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
                                                                              en_dis_type=ON_SCHEDULE_TYPE,
                                                                              start_dt__gte=start_date,
                                                                              start_dt__lt=end_date,
-                                                                             use=USE).order_by('start_dt')
+                                                                             use=USE).order_by('start_dt', 'reg_dt')
 
 
 def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
