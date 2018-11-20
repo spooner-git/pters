@@ -1363,6 +1363,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 	#search_member_input, #search_lecture_input{
 		height: 28px;
+		line-height: 	28px;
 		width: 130px;
 		margin-left: 10px;
 		margin-top: 2px;
