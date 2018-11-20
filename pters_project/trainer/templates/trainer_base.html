@@ -641,8 +641,8 @@ function playSound() {
                 $('.ads_wrap').css('display', 'none');
                 $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
             } else if (device_info == "web") { //브라우저일때
-                platform_check = "mobile_browser"
-                $('a.text-payment').parent('div').css('display', 'block');
+                platform_check = "mobile_browser";
+                $('a.text-payment').parent('div').css('display', 'inline-block');
             }
         } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
             platform_check = 'mobile';
@@ -653,12 +653,13 @@ function playSound() {
                 $('.ads_wrap').css('display', 'none');
                 $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
             } else if (device_info == "web") { //브라우저일때
-                platform_check = "mobile_browser"
-                $('a.text-payment').parent('div').css('display', 'block');
+                platform_check = "mobile_browser";
+                $('a.text-payment').parent('div').css('display', 'inline-block');
             }
 
         } else {
             platform_check = 'pc';
+            $('a.text-payment').parent('div').css('display', 'inline-block');
         }
 
         if(platform_check=='pc'){
