@@ -93,8 +93,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         else:
             self.url = '/trainer/trainer_main/'
 
-        get_setting_info(request)
-
+        # get_setting_info(request)
         if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + error)
