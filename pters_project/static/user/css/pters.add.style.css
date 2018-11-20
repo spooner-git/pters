@@ -404,6 +404,7 @@ ul a{
 	-webkit-border-radius: 0px;
 	height: 100%;
 	font-size: 13px;
+	background-color: #ffffff;
 }
 
 .pters_input_custom textarea{
@@ -1412,6 +1413,7 @@ option{
 	.pters_input_custom input{
 		height: 100%;
 		width: 100% !important;
+		background-color: #f4f4f4;
 	}
 
 	#memberSearchButton{
