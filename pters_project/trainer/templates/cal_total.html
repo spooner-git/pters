@@ -362,12 +362,12 @@
                     <img src="/static/user/res/memberadd/icon-down.png" alt="" class="icondown">
                     <ul id="members_mobile" class="dropdown-menu pters_dropdown_custom_list">
                         <!-- 회원명 DB연동 필요
-                {# {% for lecture in trainer_member %}
-                <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
-                    {{ lecture.trainer_member.name }}</a>
+{#                 {% for lecture in trainer_member %}#}
+{#                <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">#}
+{#                    {{ lecture.trainer_member.name }}</a>#}
                 </li>
-                {% endfor %}
-                 #}
+{#                {% endfor %}#}
+
                 -->
                     </ul>
                 </div>
@@ -715,7 +715,7 @@
         </div>
 
         <div id="classDuration_mini" class="ptaddbox_mini">
-            <div class="ptaddboxtext_mini"><img class="icons" src={% static_url "user/res/ptadd/icon-clock.png" %} title="진행시간 선택"> <!-- <span class="KRtext"> 진행 시간</span> --></div>
+            <div class="ptaddboxtext_mini"><img class="icons" title="진행시간 선택" src={% static_url "user/res/ptadd/icon-clock.png" %}> <!-- <span class="KRtext"> 진행 시간</span> --></div>
             <div id="durationsSelected" class="dropdown_mini">
                 <button class="btn btn-default dropdown-toggle pters_dropdown_custom pters_dropdown_custom_mini pters_field_style" type="button" data-toggle="dropdown" style="width: 198px;">
                     <span class="KRtext" style="color:#cccccc;">선택</span>
@@ -755,11 +755,11 @@
         <ul id="members_li" class="dropdown-menu" style="max-height: 300px;overflow: auto;">
             <!-- 회원명 DB연동 필요-->
             <li><a id="viewEntire">전체</a></li>
-            {% for lecture in trainer_member %}
-                <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">
-                    {{ lecture.trainer_member.name }}</a>
-                </li>
-            {% endfor %}
+{#            {% for lecture in trainer_member %}#}
+{#                <li><a data-lecturecount="{{ lecture.lecture_avail_count }}" data-lectureid="{{ lecture.lecture_id}}">#}
+{#                    {{ lecture.trainer_member.name }}</a>#}
+{#                </li>#}
+{#            {% endfor %}#}
         </ul>
     </div>
 

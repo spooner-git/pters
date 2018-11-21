@@ -1,13 +1,12 @@
     {
       "offScheduleIdArray" :
-      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [],
       "offTimeArray_start_date" :
-      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.start_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [],
       "offTimeArray_end_date" :
-      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.end_dt }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+      [],
       "offScheduleNoteArray":
-      [{% for off_schedule_info in off_schedule_data %}"{{ off_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
-
+      [],
       "scheduleIdArray" :
       [{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
       "classArray_lecture_id" :

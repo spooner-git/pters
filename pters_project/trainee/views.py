@@ -71,7 +71,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             for lecture_info in lecture_data:
                 request.session['class_id'] = lecture_info.class_tb_id
                 request.session['lecture_id'] = lecture_info.lecture_tb_id
-
+                request.session['trainer_id'] = lecture_info.class_tb.member_id
                 if lecture_info.auth_type_cd == 'WAIT':
                     self.url = '/trainee/lecture_select/'
                 elif lecture_info.auth_type_cd == 'DELETE':
@@ -106,6 +106,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
                 self.url = '/trainee/lecture_select/'
             else:
                 self.url = '/trainee/cal_month/'
+                request.session['trainer_id'] = class_tb_comp.member_id
                 request.session['class_id'] = class_tb_comp.class_id
                 request.session['lecture_id'] = lecture_id_select
                 request.session['class_hour'] = class_tb_comp.class_hour

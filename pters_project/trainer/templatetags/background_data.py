@@ -136,7 +136,7 @@ def get_setting_info(request):
 
                 schedule_data = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                           end_dt__lte=now,
-                                                          use=USE).exclude(Q(state_cd='PE')|Q(state_cd='PC'))
+                                                          use=USE).exclude(Q(state_cd='PE') | Q(state_cd='PC'))
                 schedule_data_delete = ScheduleTb.objects.filter(lecture_tb_id=lecture_info.lecture_id,
                                                                  end_dt__gt=now,
                                                                  use=USE).exclude(Q(state_cd='PE')|Q(state_cd='PC'))

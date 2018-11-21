@@ -7,6 +7,7 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 from configs.const import USE, AUTO_FINISH_ON, ON_SCHEDULE_TYPE
 from login.models import PushInfoTb
+from payment.models import BillingInfoTb, PaymentInfoTb, ProductFunctionAuthTb
 from schedule.functions import func_refresh_lecture_count, func_refresh_group_status
 from schedule.models import ScheduleTb, RepeatScheduleTb
 from trainee.views import get_trainee_setting_data
@@ -142,3 +143,89 @@ def get_setting_info(request):
                             group_lecture_data.update(fix_state_cd='')
                         func_refresh_group_status(package_group_info.group_tb_id, None, None)
     return context
+
+
+@register.simple_tag
+def get_function_auth_type_cd(request):
+    context = {}
+    today = datetime.date.today()
+    class_id = request.session.get('class_id', '')
+    trainer_id = request.session.get('trainer_id', '')
+
+    if trainer_id is None or trainer_id == '':
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+            trainer_id = class_info.member_id
+        except ObjectDoesNotExist:
+            trainer_id = ''
+
+    if trainer_id != '' and trainer_id is not None:
+        billing_data = BillingInfoTb.objects.filter(member_id=trainer_id,
+                                                    next_payment_date__lt=today, use=USE)
+
+        payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='paid',
+                                                    start_date__lte=today, end_date__gte=today,
+                                                    use=USE).order_by('product_tb_id', '-end_date')
+
+        for billing_info in billing_data:
+            billing_info.state_cd = 'END'
+            # billing_info.use = UN_USE
+            billing_info.save()
+
+        request.session['product_type_name'] = ''
+        request.session['product_id'] = ''
+        payment_data_counter = 0
+        for payment_info in payment_data:
+            function_list = ProductFunctionAuthTb.objects.select_related(
+                'function_auth_tb', 'product_tb').filter(product_tb_id=payment_info.product_tb_id,
+                                                         use=USE).order_by('product_tb_id',
+                                                                           'function_auth_tb_id',
+                                                                           'auth_type_cd')
+            if len(function_list) > 0:
+                if payment_data_counter == 0:
+                    request.session['product_type_name'] += function_list[0].product_tb.name
+                    request.session['product_id'] = function_list[0].product_tb.product_id
+                else:
+                    request.session['product_type_name'] += ',' + function_list[0].product_tb.name
+                    request.session['product_id'] += ',' + function_list[0].product_tb.product_id
+
+            for function_info in function_list:
+                auth_info = {}
+                if function_info.auth_type_cd is None:
+                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+                else:
+                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                                 + str(function_info.auth_type_cd)
+
+                auth_info['active'] = 1
+                auth_info['limit_num'] = function_info.counts
+                auth_info['limit_type'] = function_info.product_tb.name
+                context[function_auth_type_cd_name] = auth_info
+                # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
+            payment_data_counter += 1
+
+        if len(payment_data) == 0:
+            function_list = ProductFunctionAuthTb.objects.select_related(
+                'function_auth_tb', 'product_tb').filter(product_tb_id=6,
+                                                         use=USE).order_by('product_tb_id',
+                                                                           'function_auth_tb_id',
+                                                                           'auth_type_cd')
+            if len(function_list) > 0:
+                request.session['product_type_name'] += function_list[0].product_tb.name
+                request.session['product_id'] = function_list[0].product_tb.product_id
+
+            for function_info in function_list:
+                auth_info = {}
+                if function_info.auth_type_cd is None:
+                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd
+                else:
+                    function_auth_type_cd_name = function_info.function_auth_tb.function_auth_type_cd \
+                                                 + str(function_info.auth_type_cd)
+                auth_info['active'] = 1
+                auth_info['limit_num'] = function_info.counts
+                auth_info['limit_type'] = function_info.product_tb.name
+                context[function_auth_type_cd_name] = auth_info
+                # merchandise_type_cd_list.append(function_info.function_auth_tb.function_auth_type_cd)
+
+    return context
+
