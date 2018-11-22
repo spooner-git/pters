@@ -2930,6 +2930,269 @@ $('#page_managemember').scroll(function(){
 
 
 //회원목록을 테이블로 화면에 뿌리는 함수
+// function memberListSet (type,option,Reverse, jsondata){
+//     var bodywidth = window.innerWidth;
+//     var text = '소진시까지';
+//     var text2 = '이번달 신규회원';
+//     if(Options.language == "JPN"){
+//         text = '残余回数終わるまで';
+//         text2 = '今月新規メンバー';
+//     }else if(Options.language == "ENG"){
+//         text = '';
+//         text2 = 'New Member this month';
+//     }
+
+//     var tbodyStart = '<tbody>';
+//     var tbodyEnd = '</tbody>';
+//     var tbodyToAppend = $(tbodyStart);
+//     var data;
+//     var countList;
+//     var nameList;
+//     var dateList;
+//     var $table;
+//     var $tabletbody;
+//     var $membernum;
+//     var text_membernum;
+//     switch(type){
+//         case 'current':
+//             data = DataFormatting(jsondata);
+//             countList = data["countSorted"];
+//             nameList = data["nameSorted"];
+//             dateList = data["dateSorted"];
+//             $table = $('#currentMember');
+//             $tabletbody = $('#currentMember tbody');
+//             $membernum = $('#memberNumber_current_member');
+//             text_membernum = "진행중인 회원 ";
+//             break;
+//         case 'finished':
+//             data = DataFormatting(jsondata);
+//             countList = data["countSorted"];
+//             nameList = data["nameSorted"];
+//             dateList = data["dateSorted"];
+//             $table = $('#finishedMember');
+//             $tabletbody = $('#finishedMember tbody');
+//             $membernum = $('#memberNumber_finish_member');
+//             text_membernum = "종료된 회원 ";
+//             break;
+//     }
+
+//     var countLists;
+//     var nameLists;
+//     var dateLists;
+//     if(Reverse == 'yes'){
+//         countLists =countList.sort().reverse();
+//         nameLists = nameList.sort().reverse();
+//         dateLists = dateList.sort().reverse();
+//     }else{
+//         countLists =countList.sort();
+//         nameLists = nameList.sort();
+//         dateLists = dateList.sort();
+//     }
+
+//     var len = countLists.length;
+//     var arrayResult = [];
+//     var array;
+//     var email;
+//     var arrayforemail;
+//     var name;
+//     var id;
+//     var dbId;
+//     var contents;
+//     var count;
+//     var regcount;
+//     var starts;
+//     var ends;
+//     var phoneToEdit;
+//     var npCounts;
+//     var rjCounts;
+//     var yetRegCounts;
+//     var yetCounts;
+//     var groupType;
+//     var groupType2;
+//     var groupType3;
+
+//     for(var i=0; i<len; i++){
+//         if(option == "count"){
+//             array = countLists[i].split('/');
+//             email = array[8];
+//             name = array[2];
+//             id = array[3];
+//             dbId = array[13];
+//             contents = array[5];
+//             count = array[0];
+//             regcount = array[1];
+//             starts = array[6];
+//             ends = array[7];
+//             phoneToEdit = array[4].replace(/-| |/gi,"");
+//             if(name.length>10){
+//                 name = array[2].substr(0,9)+'..';
+//             }
+//             npCounts = array[9];
+//             rjCounts = array[10];
+//             yetRegCounts = array[11];
+//             yetCounts = array[12];
+//             groupType = array[14];
+//             if(array[15]){
+//                 groupType2 = '/'+array[15];
+//             }else{
+//                 groupType2 = '';
+//             }
+//             if(array[16]){
+//                 groupType3 = '/'+array[16];
+//             }else{
+//                 groupType3 = '';
+//             }
+//         }else if(option == "name"){
+//             array = nameLists[i].split('/');
+//             email = array[8];
+//             name = array[0];
+//             id = array[1];
+//             dbId = array[13];
+//             contents = array[3];
+//             count = array[4];
+//             regcount = array[5];
+//             starts = array[6];
+//             ends = array[7];
+//             phoneToEdit = array[2].replace(/-| |/gi,"");
+//             if(name.length>10){
+//                 name = array[0].substr(0,9)+'..';
+//             }
+//             npCounts = array[9];
+//             rjCounts = array[10];
+//             yetRegCounts = array[11];
+//             yetCounts = array[12];
+//             groupType = array[14];
+//             if(array[15]){
+//                 groupType2 = '/'+array[15];
+//             }else{
+//                 groupType2 = '';
+//             }
+//             if(array[16]){
+//                 groupType3 = '/'+array[16];
+//             }else{
+//                 groupType3 = '';
+//             }
+//         }else if(option == "date"){
+//             array = dateLists[i].split('/');
+//             arrayforemail = dateLists[i].split('/');
+//             email = array[8];
+//             name = array[1];
+//             id = array[2];
+//             dbId = array[13];
+//             contents = array[4];
+//             count = array[5];
+//             regcount = array[6];
+//             starts = array[0];
+//             ends = array[7];
+//             phoneToEdit = array[3].replace(/-| |/gi,"");
+//             if(name.length>10){
+//                 name = array[1].substr(0,9)+'..';
+//             }
+//             npCounts = array[9];
+//             rjCounts = array[10];
+//             yetRegCounts = array[11];
+//             yetCounts = array[12];
+//             groupType = array[14];
+//             if(array[15]){
+//                 groupType2 = '/'+array[15];
+//             }else{
+//                 groupType2 = '';
+//             }
+//             if(array[16]){
+//                 groupType3 = '/'+array[16];
+//             }else{
+//                 groupType3 = '';
+//             }
+//         }
+
+//         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
+//         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
+//         if(end == "9999.12.31"){
+//             end = text;
+//         }
+
+//         var newReg = "";
+//         if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
+//             newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
+//         }
+
+//         var phone;
+//         if(phoneToEdit.substr(0,2)=="02"){
+//             phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4);
+//         }else{
+//             phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
+//         }
+
+//         var npCountImg = "";
+//         if(npCounts == 0 && rjCounts == 0){
+//             npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
+//         }else if(rjCounts > 0){
+//             npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
+//         }
+
+//         var yetReg = "";
+//         var yet = "";
+//         if(yetRegCounts > 0){
+//             yetReg = '(+'+yetRegCounts+')';
+//         }
+//         if(yetCounts > 0){
+//             yet = '(+'+yetCounts+')';
+//         }
+
+
+
+//         count = remove_front_zeros(count);
+//         regcount = remove_front_zeros(regcount);
+
+//         var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
+//         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
+//         var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
+//         var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
+//         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
+//         var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
+//         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
+//         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
+//         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
+
+//         var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
+//         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
+//         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
+//         var emailtd = '<td class="_email">'+email+'</td>';
+//         var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
+//         var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
+//         var startdatetd = '<td class="_startdate">'+start+'</td>';
+//         var enddatetd = '<td class="_finday">'+end+'</td>';
+//         if(phoneToEdit != ""){
+//             var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
+//         }else{
+//             var mobiletd = '<td class="_contact">-'+'</td>';
+//         }
+//         var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
+//         var scrolltd = '<td class="forscroll"></td>';
+
+//         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+//         // arrayResult[i] = td;
+//         arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+//     }
+//     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
+
+
+//     var resultToAppend = arrayResult.join("");
+//     if(type=='current' && len == 0){
+//         resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
+//         if(bodywidth > 600){
+//             $('#please_add_member_pc').show();
+//         }else{
+//             $('#please_add_member').show();
+//         }
+//     }else if(type=="finished" && len ==0){
+//         resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
+//     }
+//     var result = tbodyStart + resultToAppend + tbodyEnd;
+//     $tabletbody.remove();
+//     $table.append(result);
+// }
+
 function memberListSet (type,option,Reverse, jsondata){
     var bodywidth = window.innerWidth;
     var text = '소진시까지';
@@ -2942,8 +3205,8 @@ function memberListSet (type,option,Reverse, jsondata){
         text2 = 'New Member this month';
     }
 
-    var tbodyStart = '<tbody>';
-    var tbodyEnd = '</tbody>';
+    var tbodyStart = '<div style="text-align:center;">';
+    var tbodyEnd = '</div>';
     var tbodyToAppend = $(tbodyStart);
     var data;
     var countList;
@@ -2960,7 +3223,7 @@ function memberListSet (type,option,Reverse, jsondata){
             nameList = data["nameSorted"];
             dateList = data["dateSorted"];
             $table = $('#currentMember');
-            $tabletbody = $('#currentMember tbody');
+            $tabletbody = $('#currentMember > div');
             $membernum = $('#memberNumber_current_member');
             text_membernum = "진행중인 회원 ";
             break;
@@ -2970,7 +3233,7 @@ function memberListSet (type,option,Reverse, jsondata){
             nameList = data["nameSorted"];
             dateList = data["dateSorted"];
             $table = $('#finishedMember');
-            $tabletbody = $('#finishedMember tbody');
+            $tabletbody = $('#finishedMember > div');
             $membernum = $('#memberNumber_finish_member');
             text_membernum = "종료된 회원 ";
             break;
@@ -3140,7 +3403,6 @@ function memberListSet (type,option,Reverse, jsondata){
         }
 
 
-
         count = remove_front_zeros(count);
         regcount = remove_front_zeros(regcount);
 
@@ -3154,45 +3416,75 @@ function memberListSet (type,option,Reverse, jsondata){
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
 
-        var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
-        var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
-        var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
-        var emailtd = '<td class="_email">'+email+'</td>';
-        var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
-        var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
-        var startdatetd = '<td class="_startdate">'+start+'</td>';
-        var enddatetd = '<td class="_finday">'+end+'</td>';
+        var grouptypetd = '<div class="_grouptype _member_list_pc_style" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</div>';
+        var nametd = '<div class="_tdname _member_list_pc_style" data-name="'+name+'">'+newReg+name+'</div>';
+        var idtd = '<div class="_id _member_list_pc_style" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</div>';
+        var emailtd = '<div class="_email">'+email+'</div>';
+        var regcounttd = '<div class="_regcount _member_list_pc_style">'+regcount+yetReg+'</div>';
+        var remaincounttd = '<div class="_remaincount _member_list_pc_style">'+count+yet+'</div>';
+        var startdatetd = '<div class="_startdate _member_list_pc_style">'+start+'</div>';
+        var enddatetd = '<div class="_finday _member_list_pc_style">'+end+'</div>';
+        var mobiletd;
         if(phoneToEdit != ""){
-            var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
+            mobiletd = '<div class="_contact _member_list_pc_style">'+phoneimage+smsimage+'</div>';
         }else{
-            var mobiletd = '<td class="_contact">-'+'</td>';
+            mobiletd = '<div class="_contact _member_list_pc_style">-'+'</div>';
         }
-        var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
-        var scrolltd = '<td class="forscroll"></td>';
+        var pctd = '<div class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</div>';
+        var scrolltd = '<div class="forscroll"></div>';
 
+        var pc_html = nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd;
+        
+        var mobile_phone_img;
+        var mobile_sms_img;
+        if(phone == "--"){
+            mobile_phone_img = `<img src="/static/user/res/memberadd/phone.png" class="" style="width:23px;opacity:0.2">`;
+            mobile_sms_img = `<img src="/static/user/res/memberadd/sms.png" class=""  style="width:25px;opacity:0.2">`;
+        }else{
+            mobile_phone_img = `<a href="tel:'${phone}'"><img src="/static/user/res/memberadd/phone.png" class="" style="width:23px;"></a>`;
+            mobile_sms_img = `<a href="sms:'${phone}'"><img src="/static/user/res/memberadd/sms.png" class=""  style="width:25px;"></a>`;
+        }
+        var mobile_html = `<div class="_member_list_mobile_style">
+                                <div style="display:table-cell;width:70%;">
+                                    <div style="width:100%;height:35px;line-height:40px;font-size:22px;font-weight:500;padding-left:10px;">${name}</div>
+                                    <div style="width:100%;height:35px;line-height:28px;padding-left:13px;">
+                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">등록</span><span style="font-size:16px;color:#282828;">${regcount}</span></div>
+                                        <div style="display:inline-block;width:1px;height:12px;background-color:#cccccc;margin-right:10px;margin-left:12px;"></div>
+                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">남은횟수</span><span style="font-size:16px;color:#282828;">${count}</span></div>
+                                    </div>
+                                </div>
+                                <div style="display:table-cell;width:30%;vertical-align:middle;opacity:0.7;text-align:center;padding-right:10px;">
+                                    <div style="display:inline-block;">${mobile_phone_img}</div>
+                                    <div class="phone_sms_gap"></div>
+                                    <div style="display:inline-block;">${mobile_sms_img}</div>
+                                </div>
+                           </div>`;
+        
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
         // arrayResult[i] = td;
-        arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+        //arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</div>';
+        
+        arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+pc_html+mobile_html+'</div>';
+        
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
 
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
-        resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
+        resultToAppend = '<div class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
         if(bodywidth > 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();
         }
     }else if(type=="finished" && len ==0){
-        resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
+        resultToAppend = '<div class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</div>';
     }
     var result = tbodyStart + resultToAppend + tbodyEnd;
     $tabletbody.remove();
     $table.append(result);
 }
-
 
 
 //shade 보이기, 숨기기
