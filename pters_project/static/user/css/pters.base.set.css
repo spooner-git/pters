@@ -730,6 +730,7 @@ a:focus, a:hover{
 .centermenu_div{
     display: inline-block;
     margin-left: 13px;
+    margin-left: 30px;
     margin-right: 0px;
 }
 
