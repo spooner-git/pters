@@ -1403,7 +1403,12 @@ $(document).ready(function(){
 
     //등록유형 선택
     $('.grouptypeselect').change(function(){
-        $('#form_member_groupid, #form_member_groupid_no_email').val($(this).val().split('/')[0]);
+        if($(this).val() == "go_to_make_new_package"){
+            location.href="/trainer/ticket_manage";
+        }else{
+            $('#form_member_groupid, #form_member_groupid_no_email').val($(this).val().split('/')[0]);  
+        }
+        
     });
     //빠른 입력 방식, 세부설정 방식 버튼 기능//////////////////////////////////////////////////
 
@@ -2339,6 +2344,9 @@ function package_type_dropdown_set(packagelistJSON){
     $('#form_member_groupid, #form_member_groupid_no_email').val(packagelistJSON.package_id[0]);
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">['+packagelistJSON.package_type_cd_nm[i]+'] '+packagelistJSON.package_name[i]+'</option>');
+    }
+    if(len == 1){
+        optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 수강권 만들기</option>");
     }
     $('.grouptypeselect').html(optionsToJoin.join(''));
 }
