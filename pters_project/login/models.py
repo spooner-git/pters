@@ -14,7 +14,6 @@ from configs.models import TimeStampedModel
 
 
 class MemberTb(TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     member_id = models.AutoField(db_column='ID', primary_key=True, null=False)
     name = models.CharField(db_column='NAME', max_length=20, blank=True, default='')  # Field name made lowercase.
     phone = models.CharField(db_column='PHONE', max_length=20, blank=True, default='')  # Field name made lowercase.
@@ -26,6 +25,7 @@ class MemberTb(TimeStampedModel):
     job = models.CharField(db_column='JOB', max_length=20, blank=True, default='')  # Field name made lowercase.
     contents = models.CharField(db_column='CONTENTS', max_length=255, blank=True, default='')
     reg_info = models.CharField(db_column='REG_INFO', max_length=20, blank=True, default='')  # Field name made lowercase
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     use = models.IntegerField(db_column='USE', default=1)  # Field name made lowercase.
 
     class Meta:

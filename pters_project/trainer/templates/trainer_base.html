@@ -143,15 +143,30 @@
         </div>
 
         <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:50%;width: 100%;">
-            <div class="mode_switch_button_wrap_cal" style="margin-top:5px;">
+            <div class="mode_switch_button_wrap_cal" style="margin:unset;margin-top:5px;display:table;">
                 <div class="mode_switch_button mode_active text-thisgroupmember" data-page="thisgroup" style="width: 90px;"></div>
                 <span style="position: absolute;right: 0;top: 0;margin-top:3px;margin-right:11px;cursor: pointer;" id="close_subpopup_addBylist_plan">
                     <img src="/static/user/res/member/icon-x-grey.png" style="width: 10px;margin-bottom:3px;margin-right: 2px;"><span class="text-close"></span>
                 </span>
-                <!--<div class="mode_switch_button" data-page="whole">전체 회원</div>-->
+                <div class="mode_switch_button" data-page="whole">전체 회원</div>
             </div>
+            <div class="list_addByList listTitle_addByList" style="border-color:#ffffff;text-align:center;">내 리스트에서 추가</div>
+            <div class="list_addByList listTitle_addByList"><div>회원명(ID)</div><div>예약가능횟수</div><div style="display:none"></div><div>추가</div></div>
             <div id="subpopup_addByList_whole">"<div class='list_addByList text-listloading'></div>"</div>
             <div id="subpopup_addByList_thisgroup">"<div class='list_addByList text-listloading'></div>"</div>
+            <div id="subpopup_groupParticipans_lecturelist_wrap">
+                <div class="subpopup_groupParticipans_lecturelist_title">횟수를 차감할 수강권을 선택 <span class="close_subpopup_groupParticipans_lecturelist_wrap">
+                    <img src="/static/user/res/member/icon-x-grey.png" style="width: 10px;margin-bottom:3px;margin-right: 2px;">닫기</span>
+                </div>
+                <div class="groupParticipans_lectureList_table groupParticipans_lectureList_table_title">
+                    <div>수강권</div>
+                    <div>예약가능</div>
+                    <div>선택</div>
+                </div>
+                <div id="subpopup_groupParticipans_lecturelist">
+                    
+                </div>
+            </div>
         </div>
     </div>
     <!--일정 눌렀을때 팝업메뉴-->
@@ -259,9 +274,9 @@
                     <span class="icon-bar" style="width:60%;"></span>
                     <span class="icon-bar" style="width: 20px;"></span>
                 </button>
-                <!-- {% block nav_center_img %}
-                    <a id="uptext" class="uptext">{{user.first_name }}  <span></span></a>
-                {% endblock %} -->
+{#                <!-- {% block nav_center_img %}#}
+{#                    <a id="uptext" class="uptext">{{user.first_name }}  <span></span></a>#}
+{#                {% endblock %} -->#}
                 <a id="uptext" class="uptext"></a>
                 <button id="upbutton-alarm" class="navbar-toggle" aria-controls="navbar" onclick="open_lecture_select_popup()">
                     <a><img src="{% static_url "user/res/member/icon-repeat-white.png" %}" style="width:20px;"></a>
@@ -295,11 +310,12 @@
                             <a class="sidebar_text text-plan">
                             </a>
                         </div>
-                        <!-- <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+                        <!--
+{#                         <div class="sidebar_div" onclick="sideGoPage('cal_week')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">#}
                             <a class="sidebar_text text-weekplan">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">
+{#                        <div class="sidebar_div" onclick="sideGoPage('cal_month')"><img src="{% static_url "user/res/icon-calendar-week.png" %}" class="sidebar_icon" alt="#">#}
                             <a class="sidebar_text text-monthplan">
                             </a>
                         </div> -->
@@ -319,17 +335,18 @@
                         </div>
                         
                         <!-- 
-                        <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+{#                        <div class="sidebar_div" onclick="sideGoPage('group_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">#}
                             <a class="sidebar_text text-groupmanage">
                             </a>
                         </div>
-                        <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+{#                        <div class="sidebar_div" onclick="sideGoPage('class_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">#}
                             <a class="sidebar_text text-classmanage">
                             </a>
                         </div> -->
                         
                         
-                        <!-- <div class="sidebar_div" onclick="sideGoPage('center_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">
+                        <!--
+{#                         <div class="sidebar_div" onclick="sideGoPage('center_manage')"><img src="{% static_url "user/res/icon-group-setting.png" %}" class="sidebar_icon" alt="#">#}
                             <a class="sidebar_text text-centermanage">
                             </a>
                         </div> -->
@@ -352,8 +369,9 @@
                         <div class="sidebar_div"><img src="{% static_url "user/res/icon-info.png" %}" class="sidebar_icon" alt="#">
                             <a href="{% url 'trainer:help_setting' %}" class="sidebar_text text-help"></a>
                         </div>
-                        <!--<div class="sidebar_div"><img src="{% static_url "user/res/icon-card@3x.png" %}" class="sidebar_icon" alt="#">
-                            <a href="{% url 'payment:index' %}" class="sidebar_text text-payment"></a>
+                        <!--<div class="sidebar_div">
+{#                        <img src="{% static_url "user/res/icon-card@3x.png" %}" class="sidebar_icon" alt="#">#}
+{#                            <a href="{% url 'payment:index' %}" class="sidebar_text text-payment"></a>#}
                         </div>-->
                     </div>
                     <!--<div style="height: 100%; border-top:0.5px solid #cccccc;background:#ffffff;"></div>-->
@@ -419,10 +437,10 @@
                 </div>
                 
                 <!-- <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text text-weekplan"></a>
+{#                    <a href="{% url 'trainer:cal_week' %}" class="centermenu_text text-weekplan"></a>#}
                 </div>
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text text-monthplan"></a>
+{#                    <a href="{% url 'trainer:cal_month' %}" class="centermenu_text text-monthplan"></a>#}
                 </div> -->
 
                 <div class="centermenu_div">
@@ -430,11 +448,11 @@
                 </div>
                 
                 <!-- <div class="centermenu_div">
-                    <a href="{% url 'trainer:group_manage' %}" class="centermenu_text text-groupmanage"></a>
+{#                    <a href="{% url 'trainer:group_manage' %}" class="centermenu_text text-groupmanage"></a>#}
                 </div>
 
                 <div class="centermenu_div">
-                    <a href="{% url 'trainer:class_manage' %}" class="centermenu_text text-classmanage"></a>
+{#                    <a href="{% url 'trainer:class_manage' %}" class="centermenu_text text-classmanage"></a>#}
                 </div> -->
                 
                 <div class="centermenu_div">
@@ -447,7 +465,7 @@
 
                 
                 <!-- <div class="centermenu_div">
-                    <a href="{% url 'trainer:center_manage' %}" class="centermenu_text text-centermanage"></a>
+{#                    <a href="{% url 'trainer:center_manage' %}" class="centermenu_text text-centermanage"></a>#}
                 </div> -->
                 
 
@@ -616,33 +634,37 @@ function playSound() {
     var device_info = '{{ request.session.device_info }}';
 
     var varUA = navigator.userAgent.toLowerCase();
-    window.addEventListener('load', function () {
-        if (varUA.match('android') != null) {
-            platform_check = 'mobile';
-            if (device_info != "web") { //앱일떄
-                $('#paymentSetting').css('display', 'none');
-                $('._company').css('display', 'none');
-                $('a.text-payment').parent('div').css('display', 'none');
-                $('.ads_wrap').css('display', 'none');
-                $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-            } else if (device_info == "web") { //브라우저일때
-                platform_check = "mobile_browser"
-            }
-        } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
-            platform_check = 'mobile';
-            if (device_info != "web") { //앱일때
-                $('#paymentSetting').css('display', 'none');
-                $('._company').css('display', 'none');
-                $('a.text-payment').parent('div').css('display', 'none');
-                $('.ads_wrap').css('display', 'none');
-                $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-            } else if (device_info == "web") { //브라우저일때
-                platform_check = "mobile_browser"
-            }
-
-        } else {
-            platform_check = 'pc';
+    if (varUA.match('android') != null) {
+        platform_check = 'mobile';
+        if (device_info != "web") { //앱일떄
+            $('#paymentSetting').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('a.text-payment').parent('div').css('display', 'none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        } else if (device_info == "web") { //브라우저일때
+            platform_check = "mobile_browser";
+{#                $('a.text-payment').parent('div').css('display', 'inline-block');#}
         }
+    } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+        platform_check = 'mobile';
+        if (device_info != "web") { //앱일때
+            $('#paymentSetting').css('display', 'none');
+            $('._company').css('display', 'none');
+            $('a.text-payment').parent('div').css('display', 'none');
+            $('.ads_wrap').css('display', 'none');
+            $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
+        } else if (device_info == "web") { //브라우저일때
+            platform_check = "mobile_browser";
+{#                $('a.text-payment').parent('div').css('display', 'inline-block');#}
+        }
+
+    } else {
+        platform_check = 'pc';
+{#            $('a.text-payment').parent('div').css('display', 'inline-block');#}
+    }
+
+    window.addEventListener('load', function () {
 
         if(platform_check=='pc'){
             Push.Permission.request(onGranted, onDenied);

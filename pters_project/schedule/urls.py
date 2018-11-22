@@ -47,7 +47,7 @@ urlpatterns = [
     url(r'^finish_group_schedule/$', views.finish_group_schedule_logic, name='finish_group_schedule'),
     # 그룹 일정에 그룹회원 일정 등록
     url(r'^add_member_group_schedule/$', views.add_member_group_schedule_logic, name='add_member_group_schedule'),
-    # 그룹 일정에 그룹회원 일정 등록
+    # 그룹 일정에 다른 그룹회원 일정 등록
     url(r'^add_other_member_group_schedule/$', views.add_other_member_group_schedule_logic,
         name='add_other_member_group_schedule'),
     # 그룹 반복일정 등록

@@ -9,6 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
 
 # Create your views here.
+from configs.const import USE
+from trainee.models import MemberLectureTb
 
 logger = logging.getLogger(__name__)
 
@@ -32,19 +34,18 @@ class CheckView(LoginRequiredMixin, RedirectView):
 
     def get(self, request, **kwargs):
         user_for_group = User.objects.get(id=request.user.id)
-        group = user_for_group.groups.get(user=request.user.id)
-        request.session['base_html'] = group.name+'_base.html'
-        request.session['group_name'] = group.name
-        if group.name == 'trainee':
-            self.url = '/trainee/'
-        elif group.name == 'trainer':
-            self.url = '/trainer/'
-        elif group.name == 'admin':
-            self.url = '/spooner_adm/'
-        elif group.name == 'center':
-            self.url = '/center/'
+        group_list = user_for_group.groups.filter(user=request.user.id)
+        if len(group_list) == 1:
+            group = group_list[0]
+
+            request.session['base_html'] = group.name + '_base.html'
+            request.session['group_name'] = group.name
+            if group.name == 'admin':
+                self.url = '/spooner_adm/'
+            else:
+                self.url = '/' + group.name + '/'
         else:
-            self.url = ''
+            self.url = '/login/logout/'
         return super(CheckView, self).get(request, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
@@ -88,12 +89,13 @@ class AccessTestMixin(UserPassesTestMixin):
 
         if error is None:
             if group_name == '':
-                try:
-                    group = user_for_group.groups.filter(user=self.request.user.id)[0]
-                    self.request.session['base_html'] = group.name+'_base.html'
-                    group_name = group.name
-                except ObjectDoesNotExist:
-                    error = '그룹 정보를 가져오지 못했습니다'
+                group_list = user_for_group.groups.filter(user=self.request.user.id)
+                if len(group_list) == 1:
+                    group_name = group_list[0].name
+                    self.request.session['base_html'] = group_name+'_base.html'
+                    self.request.session['group_name'] = group_name
+                else:
+                    error = '세션이 만료됐습니다.'
 
         if error is None:
             url = self.request.get_full_path().split('/')

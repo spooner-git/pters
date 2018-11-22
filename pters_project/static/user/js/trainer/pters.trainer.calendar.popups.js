@@ -424,7 +424,7 @@
     //스케쥴 클릭시 팝업 Start
     $(document).on('click', 'div.groupTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        disable_window_scroll()
+        disable_window_scroll();
         var info = $(this).attr('group-time').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -714,7 +714,11 @@
 
             $('#subpopup_addByList_plan').hide();
             if($(this).attr('data-grouptype') == "group"){
-                $('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
+                var group_current_member_num =$(this).attr('data-currentmembernum');
+                var group_max_member_num = $(this).attr('data-membernum');
+                var popuptext = '<span data-name="'+name+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_type_name+'">['+group_type_name+'] '+name+'<span id="groupplan_participants_status"> ('+group_current_member_num+'/'+group_max_member_num+')</span> </span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+                $('#popup_info2').html(popuptext);
+                //$('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
                     'data-groupid': $(this).attr('data-groupid'),
                     'group-schedule-id':$(this).attr('schedule-id')
@@ -724,7 +728,7 @@
                 if(bodywidth > 600){
                     toggleGroupParticipantsList('on');
                 }else{
-                    //$('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button')
+                    toggleGroupParticipantsList('off');
                 }
                 schedule_on_off = 2;
             }else{
@@ -734,9 +738,55 @@
                 schedule_on_off = 1;
             }
             if(bodywidth > 600){
-                $("#cal_popup_planinfo").css({'display':'block', 'top':(($(window).height()-$("#cal_popup_planinfo").outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-$("#cal_popup_planinfo").outerWidth())/2+$(window).scrollLeft())}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+                if($(this).attr('data-grouptype') == "group") {
+                    $("#cal_popup_planinfo").css({
+                        'display': 'block',
+                        'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()) - 20,
+                        'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
+                    }).attr({
+                        'schedule-id': $(this).attr('schedule-id'),
+                        'data-grouptype': $(this).attr('data-grouptype'),
+                        'group_plan_finish_check': $(this).attr('data-schedule-check')
+                    });
+                }else{
+                    $("#cal_popup_planinfo").css({
+                        'display': 'block',
+                        'top': (($(window).height() - $("#cal_popup_planinfo").outerHeight()) / 2 + $(window).scrollTop()),
+                        'left': (($(window).width() - $("#cal_popup_planinfo").outerWidth()) / 2 + $(window).scrollLeft())
+                    }).attr({'schedule-id': $(this).attr('schedule-id'),
+                                          'data-grouptype':'class',
+                                          'data-name':$(this).attr('data-memberName'),
+                                          'data-leid': $(this).attr('data-lectureId'),
+                                          'data-dbid': $(this).attr('data-dbid')
+                    });
+                }
             }else{
-                $('#cal_popup_planinfo').css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'}).attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')});
+                if($(this).attr('data-grouptype') == "group") {
+                    $('#cal_popup_planinfo').css({
+                        'display': 'block',
+                        'top': '50%',
+                        'left': '50%',
+                        'transform': 'translate(-50%, -50%)',
+                        'position': 'fixed'
+                    }).attr({
+                        'schedule-id': $(this).attr('schedule-id'),
+                        'data-grouptype': $(this).attr('data-grouptype'),
+                        'group_plan_finish_check': $(this).attr('data-schedule-check')
+                    });
+                }else{
+                    $('#cal_popup_planinfo').css({
+                        'display': 'block',
+                        'top': '50%',
+                        'left': '50%',
+                        'transform': 'translate(-50%, -50%)',
+                        'position': 'fixed'
+                    }).attr({'schedule-id': $(this).attr('schedule-id'),
+                                          'data-grouptype':'class',
+                                          'data-name':$(this).attr('data-memberName'),
+                                          'data-leid': $(this).attr('data-lectureId'),
+                                          'data-dbid': $(this).attr('data-dbid')
+                    });
+                }
             }
         }
     });
@@ -1056,6 +1106,9 @@
             $('#info_shift_schedule, #info_shift_history').hide();
             $('#select_info_shift_lecture').addClass('button_active');
             $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
+            if($('._calmonth').length > 0){
+                shade_index(100);
+            }
         }
     });
 /////////////////////////////////////////////////////////////////////////////////////////////이름 눌러 회원 정보 팝업 띄우기

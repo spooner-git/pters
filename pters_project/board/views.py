@@ -54,8 +54,6 @@ class GetQuestionDataView(LoginRequiredMixin, TemplateView):
     template_name = 'ajax/qa_data_ajax.html'
 
     def get_context_data(self, **kwargs):
-        # start_time = timezone.now()
-        # context = {}
         context = super(GetQuestionDataView, self).get_context_data(**kwargs)
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`QA_TYPE_CD`"
         query_status = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `QA_TB`.`STATUS`"
@@ -63,7 +61,23 @@ class GetQuestionDataView(LoginRequiredMixin, TemplateView):
                                             ).annotate(qa_type_cd_name=RawSQL(query_type_cd, []),
                                                        status_type_cd_name=RawSQL(query_status, [])
                                                        ).order_by('-reg_dt')
+        for question_info in question_list:
+            if question_info.read == 0 and question_info.status_type_cd == 'QA_COMPLETE':
+                question_info.read = 1
+                question_info.save()
         context['question_data'] = question_list
 
         return context
 
+
+class ClearQuestionDataView(LoginRequiredMixin, TemplateView):
+    template_name = 'ajax/qa_data_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ClearQuestionDataView, self).get_context_data(**kwargs)
+        question_list = QATb.objects.filter(member_id=self.request.user.id, read=0,
+                                            status_type_cd='QA_COMPLETE', use=USE).order_by('-reg_dt')
+        question_list.update(read=1)
+        context['question_data'] = question_list
+
+        return context
