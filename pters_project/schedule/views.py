@@ -281,7 +281,7 @@ def delete_schedule_logic(request):
                 member_name = member_info.name
             except ObjectDoesNotExist:
                 error = '회원 정보를 불러오지 못했습니다.'
-            package_tb = schedule_info.lecture_tb.package_tb
+            # package_tb = schedule_info.lecture_tb.package_tb
 
     if error is None:
         lecture_id = schedule_info.lecture_tb_id
@@ -2740,35 +2740,6 @@ def delete_group_repeat_schedule_logic(request):
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+str(error))
         messages.error(request, error)
         return redirect(next_page)
-
-
-def delete_schedule_logic_func(schedule_id, lecture_id, repeat_schedule_id, en_dis_type, member_id):
-
-    error = None
-
-    if error is None:
-        try:
-            with transaction.atomic():
-                schedule_result = func_delete_schedule(schedule_id, member_id)
-                error = schedule_result['error']
-                if en_dis_type == ON_SCHEDULE_TYPE:
-                    error = func_refresh_lecture_count(class_id, lecture_id)
-
-                    if repeat_schedule_id is not None and repeat_schedule_id != '':
-                        error = func_update_repeat_schedule(repeat_schedule_id)
-
-        except TypeError:
-            error = '등록 값에 문제가 있습니다.'
-        except ValueError:
-            error = '등록 값에 문제가 있습니다.'
-        except IntegrityError:
-            error = '취소된 일정입니다.'
-        except InternalError:
-            error = '취소된 일정입니다.'
-        except ValidationError:
-            error = '예약 가능 횟수를 확인해주세요.'
-
-    return error
 
 
 def send_push_to_trainer_logic(request):
