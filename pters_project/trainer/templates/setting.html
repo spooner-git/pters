@@ -13,64 +13,65 @@
     <div id="settingMenuBox">
         <div id="myPage" class="settingMenu" onclick="location.href='{% url 'trainer:trainer_mypage' %}'">
             <img src="/static/user/res/icon-user-setting.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-mypage"></span>
+            <span class="settingText"><span class="text-mypage"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="salesSetting" class="settingMenu" onclick="location.href='{% url 'trainer:class_setting' %}'">
             <img src="/static/user/res/icon-money.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-programmanage"></span>
+            <span class="settingText"><span class="text-programmanage"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="basicSetting" class="settingMenu" onclick="location.href='{% url 'trainer:basic_setting' %}'">
             <img src="/static/user/res/ptadd/icon-start.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-basicsetting"></span>
+            <span class="settingText"><span class="text-basicsetting"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="reserveSetting" class="settingMenu" onclick="location.href='{% url 'trainer:reserve_setting' %}'">
             <img src="/static/user/res/ptadd/icon-clock.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-reservesetting"></span>
+            <span class="settingText"><span class="text-reservesetting"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="pushSetting" class="settingMenu" onclick="location.href='{% url 'trainer:push_setting' %}'">
             <img src="/static/user/res/icon-setting.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-pushsetting"></span>
+            <span class="settingText"><span class="text-pushsetting"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="bgSetting" class="settingMenu" onclick="location.href='{% url 'trainer:background_setting' %}'">
             <img src="/static/user/res/icon-setting.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-bgsetting"></span>
+            <span class="settingText"><span class="text-bgsetting"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
 
+        {% if request.session.device_info != 'app' %}
         <div id="paymentSetting" class="settingMenu" onclick="location.href='{% url 'payment:index' %}'">
             <img src="/static/user/res/icon-card@3x.png" alt="" class="settingImg">
-            <span class="settingText"><span class="text-purchase"></span>
+            <span class="settingText"><span class="text-purchase"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
-        
+        {% endif %}
          
         <!--<div id="languageSetting" class="settingMenu" onclick="location.href='{% url 'trainer:language_setting' %}'">-->
         <div id="languageSetting" class="settingMenu" style="opacity: 0.5;">
             <img src="/static/user/res/icon-earth.png" alt="" class="settingImg">
-            <span class="settingText text-language"></span>
+            <span class="settingText text-language"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="from_pters_team" class="settingMenu" onclick="location.href='{% url 'trainer:frompters_setting' %}'">
             <img src="/static/user/res/PTERS_logo_pure.png?v2" alt="" class="settingImg">
-            <span class="settingText"><span class="text-fromptersteam"></span>
+            <span class="settingText"><span class="text-fromptersteam"></span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 
         <div id="about_us" class="settingMenu" onclick="location.href='{% url 'trainer:aboutus_setting' %}'">
             <img src="/static/user/res/PTERS_logo_pure.png?v2" alt="" class="settingImg">
-            <span class="settingText"><span class="text-aboutus">About us</span>
+            <span class="settingText"><span class="text-aboutus">About us</span></span>
             <img src="/static/user/res/icon-setting-arrow.png" alt="" class="settingArrow">
         </div>
 

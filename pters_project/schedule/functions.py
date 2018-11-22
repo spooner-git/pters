@@ -690,20 +690,19 @@ def func_get_trainer_schedule(context, class_id, start_date, end_date):
     func_get_trainer_on_schedule(context, class_id, start_date, end_date)
     func_get_trainer_off_schedule(context, class_id, start_date, end_date)
     func_get_trainer_group_schedule(context, class_id, start_date, end_date, None)
-
     return context
 
 
 def func_get_trainer_on_schedule(context, class_id, start_date, end_date):
     # PT 스케쥴 정보 셋팅
     context['pt_schedule_data'] = ScheduleTb.objects.select_related('lecture_tb__member'
-                                                                    ).filter(class_tb=class_id,
-                                                                             lecture_tb__isnull=False,
+                                                                    ).filter(lecture_tb__isnull=False,
                                                                              lecture_tb__use=USE,
+                                                                             class_tb=class_id,
                                                                              en_dis_type=ON_SCHEDULE_TYPE,
                                                                              start_dt__gte=start_date,
                                                                              start_dt__lt=end_date,
-                                                                             use=USE).order_by('start_dt')
+                                                                             use=USE).order_by('start_dt', 'reg_dt')
 
 
 def func_get_trainer_off_schedule(context, class_id, start_date, end_date):
@@ -717,12 +716,12 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
     query = "select count(B.ID) from SCHEDULE_TB as B where B.GROUP_SCHEDULE_ID = `SCHEDULE_TB`.`ID` " \
             "AND B.STATE_CD != \'PC\' AND B.USE=1"
     query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as C where C.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
-    group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(class_tb=class_id,
+    group_schedule_data = ScheduleTb.objects.select_related('group_tb').filter(group_tb__isnull=False,
                                                                                lecture_tb__isnull=True,
-                                                                               group_tb__isnull=False,
-                                                                               en_dis_type=ON_SCHEDULE_TYPE,
+                                                                               class_tb=class_id,
                                                                                start_dt__gte=start_date,
-                                                                               start_dt__lt=end_date, use=USE)
+                                                                               start_dt__lt=end_date,
+                                                                               en_dis_type=ON_SCHEDULE_TYPE, use=USE)
     if group_id is None or group_id == '':
         group_schedule_data = group_schedule_data.annotate(group_current_member_num=RawSQL(query, []),
                                                            group_type_cd_name=RawSQL(query_type_cd,

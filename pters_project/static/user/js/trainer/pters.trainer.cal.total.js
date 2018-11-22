@@ -22,6 +22,7 @@ $('#ymdText').click(function(e){
     }
 
     if(current_calendar_type == "month"){
+        $.cookie('calendar_selected_last', 'week', {expires : 30});
         $('#hidetoggle').show();
         var $ymdData = $('#ymdText-pc-year');
         var yyyy_mm_dd;
@@ -54,6 +55,7 @@ $('#ymdText').click(function(e){
             $('#date').css('display', 'none');
         }
     }else if(current_calendar_type == "week"){
+        $.cookie('calendar_selected_last', 'month', {expires : 30});
         $('#hidetoggle').hide();
         var $ymdText_start = $('#ymdText-pc-month-start');
         var $ymdText_end = $('#ymdText-pc-month-end');
@@ -98,9 +100,9 @@ $('#ymdText').click(function(e){
     }
 });
 
-var calendar_select ="week";
 $('#change_to_weekcal').click(function(e){
     if(calendar_select == "month"){
+        $.cookie('calendar_selected_last', 'week', {expires : 30});
         $('#hidetoggle').show();
         calendar_select = "week";
         e.stopPropagation();
@@ -135,6 +137,7 @@ $('#change_to_weekcal').click(function(e){
 
 $('#change_to_monthcal').click(function(e){
     if(calendar_select == "week"){
+        $.cookie('calendar_selected_last', 'month', {expires : 30});
         hidetoggle_on_off("off");
         $('#hidetoggle').hide();
         calendar_select = "month";
@@ -2664,7 +2667,7 @@ function classInfoProcessed(jsondata){
 function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
     var len1 = jsondata.scheduleIdArray.length;
     var len2 = jsondata.group_schedule_id.length;
-    var dateplans = []
+    var dateplans = [];
     // var groupmaxarray = []
 
     for(var i=0; i<len2; i++){  //시간순 정렬을 위해 'group' 정보를 가공하여 dateplans에 넣는다.
@@ -2685,18 +2688,18 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         var groupmax = jsondata.group_schedule_max_member_num[i];
         var groupcurrent = jsondata.group_schedule_current_member_num[i];
         var groupParticipants = '(' + groupcurrent + '/' + groupmax + ')';
-        var name = jsondata.group_schedule_group_name[i]+groupParticipants;
+        var name = jsondata.group_schedule_group_name[i];
         var group_type_cd_name = jsondata.group_schedule_group_type_cd_name[i];
         if(stime1.length<2){
-            var stime1 = '0'+stime1
+            var stime1 = '0'+stime1;
         }else if(stime1 == '24'){
-            var stime1 = '00'
+            var stime1 = '00';
         }
-        var stime = stime1+'_'+sminute
-        var etime = etime1+'_'+eminute
-        var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
+        var stime = stime1+'_'+sminute;
+        var etime = etime1+'_'+eminute;
+        var ymd = yy+'_'+Number(mm)+'_'+Number(dd);
         if(ymd == dateinfo){
-            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_'+groupmax+'_/'+memoArray)
+            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_'+groupmax+'_'+groupcurrent+'_/'+memoArray)
             // groupmaxarray.push(groupmax)
         }
     }
@@ -2728,8 +2731,9 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
         var name = ''+jsondata.classTimeArray_member_name[i]
         var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
         if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-            groupmax = 1
-            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_'+groupmax+'_/'+memoArray)
+            groupmax = 1;
+            groupcurrent = 1;
+            dateplans.push(stime+'_'+etime+'_'+name+'_'+ymd+'_'+scheduleID+'_'+classLectureID+'_'+scheduleFinish+'_'+dbID+'_'+grouptype+'_'+group_id+'_'+group_type_cd_name+'_'+groupmax+'_'+groupcurrent+'_/'+memoArray)
         }
     }
 
@@ -2738,60 +2742,63 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
     var htmltojoin = []
     if(dateplans.length>0){
         for(var i=1;i<=dateplans.length;i++){
-            var splited = dateplans[i-1].split('_')
-            var stime = Number(splited[0])
-            var sminute = splited[1]
-            var etime = Number(splited[2])
-            var eminute = splited[3]
-            var name = splited[4];
-            // var groupo_type_cd_name = '';
-            var textsize = ""
-            if(splited[14] != ''){
-                name = '['+splited[14]+'] '+splited[4];
+            var splited = dateplans[i-1].split('_');
+            var stime = Number(splited[0]);
+            var sminute = splited[1];
+            var etime = Number(splited[2]);
+            var eminute = splited[3];
+            var groupmaxnum = splited[15];
+            var groupcurrent = splited[16];
+            if(splited[12] == "group"){
+                name = '['+splited[14]+'] ' + splited[4] + '('+groupcurrent+'/'+groupmaxnum+')';
+            }else{
+                name = splited[4];
             }
+            // var groupo_type_cd_name = '';
+            var textsize = "";
 
             if(name.length > 12 ){
-                textsize = 'style="font-size:11.5px"'
+                textsize = 'style="font-size:11.5px"';
             }else if(name.length > 9){
-                textsize = 'style="font-size:12px"'
+                textsize = 'style="font-size:12px"';
             }
 
-            var morningday = ""
+            var morningday = "";
             if(stime==0 & dateplans[i-2]==undefined){
-                var morningday = "오전"
+                var morningday = "오전";
             }else if(stime<12 & dateplans[i-2]==undefined){
-                var morningday = "오전"
+                var morningday = "오전";
             }else if(stime>=12 && dateplans[i-2]!=undefined){
-                var splitedprev = dateplans[i-2].split('_')
+                var splitedprev = dateplans[i-2].split('_');
                 if(splitedprev[0]<12){
-                    var morningday = "오후"
+                    var morningday = "오후";
                 }
             }else if(stime>=12 && dateplans[i-2]==undefined){
-                var morningday = "오후"
+                var morningday = "오후";
             }
             if(splited[10]==1){
-                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
                                     '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                     '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
-                                '</div>')
+                                '</div>');
 
             }else if(splited[10] == 0){
-                htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-membernum="'+splited[15]+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
+                htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
                                     '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
                                     '<div class="plancheckname"><p '+textsize+'>'+name+'</p></div>'+
-                                '</div>')
+                                '</div>');
             }
         }
     }else{
-        htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>')
+        htmltojoin.push('<div class="plan_raw_blank">등록된 일정이 없습니다.</div>');
 
     }
     htmltojoin.push('<div class="plan_raw_blank plan_raw_add" data-date="'+dateinfo+'"><img src="/static/user/res/floatbtn/btn-plus.png" style="width:20px;cursor:pointer;"></div>')
 
 
-    $('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''))
+    $('#cal_popup_plancheck .popup_inner_month').html(htmltojoin.join(''));
 }
 
 function month_calendar(referencedate){

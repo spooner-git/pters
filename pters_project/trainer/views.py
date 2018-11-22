@@ -40,6 +40,7 @@ from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 # from payment.models import PaymentInfoTb, ProductTb
 from schedule.models import ScheduleTb, RepeatScheduleTb, HolidayTb
 from trainee.models import LectureTb, MemberLectureTb
+from trainer.templatetags.background_data import get_setting_info
 from .models import ClassLectureTb, GroupTb, GroupLectureTb, ClassTb, MemberClassTb, BackgroundImgTb, SettingTb, \
     PackageTb, PackageGroupTb
 
@@ -92,6 +93,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
         else:
             self.url = '/trainer/trainer_main/'
 
+        # get_setting_info(request)
         if error is not None:
             logger.error(request.user.last_name + ' ' + request.user.first_name + '['
                          + str(request.user.id) + ']' + error)
@@ -191,6 +193,10 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             all_member = func_get_class_member_ing_list(class_id)
             total_member_num = len(all_member)
 
+            class_lecture_list = ClassLectureTb.objects.select_related(
+                'lecture_tb__member').filter(class_tb_id=class_id, lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                             auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
+
             for member_info in all_member:
                 # member_data = member_info
 
@@ -198,26 +204,28 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
                 member_lecture_rem_count = 0
                 member_lecture_avail_count = 0
                 # 강좌에 해당하는 수강/회원 정보 가져오기
-                class_lecture_list = ClassLectureTb.objects.select_related(
-                    'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_info,
-                                         lecture_tb__state_cd='IP', lecture_tb__use=USE,
-                                         auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
-                start_date = ''
+                # class_lecture_list = ClassLectureTb.objects.select_related(
+                #     'lecture_tb').filter(class_tb_id=class_id, lecture_tb__member_id=member_info,
+                #                          lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                #                          auth_cd='VIEW', use=USE).order_by('-lecture_tb__start_date')
                 if len(class_lecture_list) > 0:
+                    start_date = ''
                     for lecture_info_data in class_lecture_list:
                         lecture_info = lecture_info_data.lecture_tb
-                        if lecture_info_data.auth_cd == 'WAIT':
-                            np_member_num += 1
-                        member_lecture_reg_count += lecture_info.lecture_reg_count
-                        member_lecture_rem_count += lecture_info.lecture_rem_count
-                        member_lecture_avail_count += lecture_info.lecture_avail_count
+                        if str(lecture_info.member_id) == str(member_info.member_id):
+                            if lecture_info_data.auth_cd == 'WAIT':
+                                np_member_num += 1
+                            member_lecture_reg_count += lecture_info.lecture_reg_count
+                            member_lecture_rem_count += lecture_info.lecture_rem_count
+                            member_lecture_avail_count += lecture_info.lecture_avail_count
 
-                        if lecture_info.state_cd == 'IP':
-                            if start_date == '':
-                                start_date = lecture_info.start_date
-                            else:
-                                if start_date > lecture_info.start_date:
+                            if lecture_info.state_cd == 'IP':
+                                if start_date == '':
                                     start_date = lecture_info.start_date
+                                else:
+                                    if start_date > lecture_info.start_date:
+                                        start_date = lecture_info.start_date
+
                     if start_date != '':
                         if month_first_day <= start_date < next_month_first_day:
                             new_member_num += 1
@@ -315,6 +323,7 @@ class ManageLectureView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         context = super(ManageLectureView, self).get_context_data(**kwargs)
         return context
 
+
 # 수강권 관리 181030
 class ManageTicketView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'manage_ticket.html'
@@ -356,7 +365,7 @@ class ManageCenterView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         return context
 
 
-class HelpPtersView(AccessTestMixin, TemplateView):
+class HelpPtersView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_help.html'
 
     def get_context_data(self, **kwargs):
@@ -366,7 +375,7 @@ class HelpPtersView(AccessTestMixin, TemplateView):
         return context
 
 
-class FromPtersView(AccessTestMixin, TemplateView):
+class FromPtersView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_from_pters_team.html'
 
     def get_context_data(self, **kwargs):
@@ -375,7 +384,7 @@ class FromPtersView(AccessTestMixin, TemplateView):
         return context
 
 
-class AboutUsView(AccessTestMixin, TemplateView):
+class AboutUsView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_about_us.html'
 
     def get_context_data(self, **kwargs):
@@ -384,7 +393,7 @@ class AboutUsView(AccessTestMixin, TemplateView):
         return context
 
 
-class BGSettingView(AccessTestMixin, View):
+class BGSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_background.html'
 
     def get(self, request):
@@ -591,7 +600,7 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class DeleteAccountView(AccessTestMixin, TemplateView):
+class DeleteAccountView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'delete_account_form.html'
 
     def get_context_data(self, **kwargs):
@@ -600,7 +609,7 @@ class DeleteAccountView(AccessTestMixin, TemplateView):
         return context
 
 
-class TrainerSettingView(AccessTestMixin, TemplateView):
+class TrainerSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting.html'
 
     def get_context_data(self, **kwargs):
@@ -609,7 +618,7 @@ class TrainerSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class PushSettingView(AccessTestMixin, View):
+class PushSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_push.html'
 
     def get(self, request):
@@ -621,7 +630,7 @@ class PushSettingView(AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class ReserveSettingView(AccessTestMixin, View):
+class ReserveSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_reserve.html'
 
     def get(self, request):
@@ -630,7 +639,7 @@ class ReserveSettingView(AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class BasicSettingView(AccessTestMixin, View):
+class BasicSettingView(LoginRequiredMixin, AccessTestMixin, View):
     template_name = 'setting_basic.html'
 
     def get(self, request):
@@ -639,7 +648,7 @@ class BasicSettingView(AccessTestMixin, View):
         return render(request, self.template_name, context)
 
 
-class SalesSettingView(AccessTestMixin, TemplateView):
+class SalesSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_sales.html'
 
     def get_context_data(self, **kwargs):
@@ -647,7 +656,7 @@ class SalesSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class ClassSettingView(AccessTestMixin, TemplateView):
+class ClassSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_class.html'
 
     def get_context_data(self, **kwargs):
@@ -655,7 +664,7 @@ class ClassSettingView(AccessTestMixin, TemplateView):
         return context
 
 
-class LanguageSettingView(AccessTestMixin, TemplateView):
+class LanguageSettingView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     template_name = 'setting_language.html'
 
     def get_context_data(self, **kwargs):
@@ -916,7 +925,7 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if day == '':
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(47))
+        end_date = today + datetime.timedelta(days=int(day))
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         # end_time = timezone.now()
         # print(str(end_time-start_time))
@@ -2502,9 +2511,9 @@ def add_group_info_logic(request):
     name = request.POST.get('name', '')
     note = request.POST.get('note', '')
     ing_color_cd = request.POST.get('ing_color_cd', '#ffacb7')
-    end_color_cd = request.POST.get('end_color_cd', '#af757c')
-    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#000000')
-    end_font_color_cd = request.POST.get('end_font_color_cd', '#000000')
+    end_color_cd = request.POST.get('end_color_cd', '#d2d1cf')
+    ing_font_color_cd = request.POST.get('ing_font_color_cd', '#282828')
+    end_font_color_cd = request.POST.get('end_font_color_cd', '#282828')
     next_page = request.POST.get('next_page', '/trainer/get_group_ing_list/')
     error = None
     group_info = None
@@ -4548,7 +4557,7 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                     member_class_info.save()
                     one_to_one_group_info = GroupTb(class_tb_id=class_info.class_id, name='1:1 레슨',
                                                     group_type_cd='ONE_TO_ONE',
-                                                    ing_color_cd='#fbf3bd', end_color_cd='#8c8763',
+                                                    ing_color_cd='#fbf3bd', end_color_cd='#d2d1cf',
                                                     state_cd='IP', member_num=1, use=USE)
                     one_to_one_group_info.save()
                     package_info = PackageTb(class_tb_id=class_info.class_id, name='1:1 레슨',

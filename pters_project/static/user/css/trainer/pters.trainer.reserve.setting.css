@@ -76,6 +76,11 @@ li a{
 	min-width: 80px;
 }
 
+.dropdown{
+	background-color: #ffffff;
+}
+
+
 .dropdown button{
 
 }
@@ -388,6 +393,10 @@ li a{
 }
 
 @media(min-width: 600px){
+	.dropdown{
+		background-color: #ffffff !important;
+	}
+
 	#preview_option_values{
 		display: block;
 		text-align: center;

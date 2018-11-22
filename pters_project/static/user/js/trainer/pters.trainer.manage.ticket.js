@@ -2974,7 +2974,11 @@ function draw_grouplist_in_package($targetHTML, jsondata){
                         );
     }
     var group_add_button = `<img src="/static/user/res/member/icon-x-red.png" data-packageid="${$targetHTML.attr("data-packageid")}" class="btn_add_lecture_bubble_mini" title="패키지에 수강권 추가하기">`;
-    $targetHTML.html(htmlToJoin.join("")+group_add_button);
+    //var html = htmlToJoin.join("");
+    //if(jsondata.group_type_cd != "ONE_TO_ONE"){
+        html = htmlToJoin.join("")+group_add_button;
+    //
+    $targetHTML.html(html);
 }
 
 //패키지 지우기
