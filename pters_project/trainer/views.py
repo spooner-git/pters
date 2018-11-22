@@ -5720,7 +5720,7 @@ def alarm_delete_logic(request):
 
     error = None
     if log_size == '0':
-        error = '알람이 없습니다.'
+        error_info = '알람이 없습니다.'
 
     if error is None:
 
