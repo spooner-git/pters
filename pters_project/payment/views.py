@@ -244,7 +244,7 @@ def billing_check_logic(request):
     if error is None:
         if member_info is not None:
             logger.info(str(member_info.name) + '님 정기 결제 완료['
-                         + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
+                        + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
             try:
                 product_info = ProductTb.objects.get(product_id=product_id, use=USE)
                 product_name = product_info.name
