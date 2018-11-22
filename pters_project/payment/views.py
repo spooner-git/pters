@@ -244,7 +244,7 @@ def billing_check_logic(request):
                          + str(member_info.member_id) + ']' + str(payment_result['merchant_uid']))
 
             email = EmailMessage('[PTERS 결제]' + member_info.name + '회원 결제 완료',
-                                 '정기 결제 완료 : ' + datetime.date.today() + '\n\n' + str(timezone.now()),
+                                 '정기 결제 완료 : ' + str(timezone.now()),
                                  to=['support@pters.co.kr'])
             email.send()
     else:
