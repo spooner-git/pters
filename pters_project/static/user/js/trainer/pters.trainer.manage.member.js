@@ -2096,7 +2096,10 @@ function shiftMemberList(type){
             $('#currentMemberList, #memberNumber_current_member').css('display', 'block');
             $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
-            selector_MEMBER_THEAD__memberaddbutton.show();
+            if(bodywidth>1000){
+                selector_MEMBER_THEAD__memberaddbutton.show();
+            }
+            
             break;
         case "finished":
             //if($('#btnCallMemberList').hasClass('list_switch_selected')){
@@ -2106,7 +2109,9 @@ function shiftMemberList(type){
             $('#finishedMemberList, #memberNumber_finish_member').css('display', 'block');
             $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
-            selector_MEMBER_THEAD__memberaddbutton.show();
+            if(bodywidth>1000){
+                selector_MEMBER_THEAD__memberaddbutton.show();
+            }
             break;
     }
 }
