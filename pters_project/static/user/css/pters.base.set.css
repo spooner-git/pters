@@ -15,7 +15,9 @@ input{
 button:focus{
     outline: unset;
 }
-
+.form-control{
+    border-radius: 0;
+}
 #free_member_use_guide{
     position: fixed;
     display: none;

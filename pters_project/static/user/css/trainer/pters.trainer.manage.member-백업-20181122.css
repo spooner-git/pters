@@ -1,9 +1,4 @@
-html{
-	background-color: #f4f4f4 !important;
-}
-
 body{
-	background-color: #f4f4f4 !important;
 	padding-top: 50px;
 	font-family: 'Noto Sans KR';
 }
@@ -116,7 +111,6 @@ body{
 }
 
 #page_managemember #tableThead{
-	display: none;
 	width: 91.6%;
 	margin:0 auto;
 }
@@ -302,7 +296,6 @@ select:focus > option:checked {
 
 ._grouptype{
 	display: none;
-	vertical-align: middle;
 }
 
 ._id{
@@ -364,18 +357,13 @@ select:focus > option:checked {
 
 .memberline{
 	cursor: pointer;
-	height: 70px;
-	margin-bottom: 10px;
-	/*border: 1px solid #cccccc;*/
-	display: inline-block;
-	width: 100%;
-	background-color: #ffffff;
+	height: 40px;
 }
 
 .memberline:hover{
-	/*background:#f4f4f4 !important;*/
-	box-shadow: 1px 1px 1px 1px #cccccc;
+	background:#f4f4f4 !important;
 	transition: background-color 0.12s cubic-bezier(0.4,0,0.2,1);
+
 }
 
 
@@ -1274,16 +1262,8 @@ span.summaryInnerBoxText_Repeatendtext{
 	font-size: 12px;
 	cursor: pointer !important;
 }
-._member_list_mobile_style{
-	display: table !important;
-	text-align: left;
-	width: 100%;
-}
-._member_list_pc_style{
-	display: none !important;
-}
+
 @media(min-width: 600px){
-	
 	.pters_selectbox_wrapper{
 		margin-top: 20px;
 	}
@@ -1313,17 +1293,9 @@ span.summaryInnerBoxText_Repeatendtext{
 	}
 
 
-	/*.memberline{
+	.memberline{
 		height: 35px;
-		margin-bottom: 0px;
-		border: 0px;
-
-		display: table;
-		width: 100%;
-		table-layout: fixed;
-		text-align: center;
-		vertical-align: middle;
-	}*/
+	}
 
 	._grouptype{
 		display: table-cell;
@@ -1500,58 +1472,8 @@ span.summaryInnerBoxText_Repeatendtext{
 
 }
 
-.phone_sms_gap{
-	display:inline-block;
-	width:1px;
-	height:12px;
-	background-color:#cccccc;
-	margin-right:15px;
-	margin-left:12px;
-}
-@media(min-width:600px){
-	.memberline{
-		width:48%;
-		margin: 1%;
-	}
-
-	.phone_sms_gap{
-		margin-right:6px;
-		margin-left:6px;
-	}
-}
-
-
 @media(min-width: 1000px){
-	html, body{
-		background-color: #ffffff !important;
-	}
-	#page_managemember #tableThead{
-		display: table;
-	}
-		._member_list_pc_style{
-			display: table-cell !important;
-		}
-		._member_list_mobile_style{
-			display: none !important;
-		}
-		.memberline{
-			height: 35px;
-			margin-bottom: 0px;
-			border: 0px;
-			border-bottom: 1px solid #cccccc;
 
-			display: table;
-			width: 100%;
-			table-layout: fixed;
-			text-align: center;
-			vertical-align: middle;
-			margin: 0;
-			max-width: unset;
-		}
-	.memberline:hover{
-		box-shadow: unset;
-		background-color: #f4f4f4;
-	}
 	#align_type_text{
 		display: inline;
 		right: 290px;
@@ -1690,18 +1612,6 @@ span.summaryInnerBoxText_Repeatendtext{
 		border-right: 0.5px solid #ffffff !important;
 		font-weight: 500;
 	}
-
-
-
-	.memberline div{
-		font-size : 13px;
-		overflow:hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		vertical-align: middle;
-	}
-
-
 
 	.nameimg{
 		display: none;
