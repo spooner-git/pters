@@ -246,7 +246,7 @@ nav.upperbar span{
 		background-color: #282828;
 		width: 	45%;
 	}
-	.content_page_right_wrapper{
+	.content_page_right > .content_page_right_wrapper{
 		padding: 60px 0 30px 50px;
 	}
 	#content_wrap{
