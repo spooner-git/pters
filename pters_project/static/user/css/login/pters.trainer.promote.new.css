@@ -71,6 +71,7 @@ nav.upperbar span{
 	width: 	100%;
 	height: 	15px;
 	text-align: 	right;
+	z-index: 100;
 }
 	#pagination_mobile > div{
 		display: inline-block;
