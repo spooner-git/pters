@@ -64,7 +64,22 @@ nav.upperbar span{
 		margin-bottom: 5px;
 	}
 
-
+#pagination_mobile{
+	width: 	100%;
+	height: 	15px;
+	text-align: 	right;
+}
+	#pagination_mobile > div{
+		display: inline-block;
+		width: 	2px;
+		height: 100%;
+		margin-right: 9px;
+		background-color: 	#ffffff;
+	}
+	.pagination_mobile_selected{
+		background-color: 	#fe4e65 !important;
+		width: 	3px !important;
+	}
 
 #pagination_pc{
 	display: none;
@@ -97,15 +112,16 @@ nav.upperbar span{
 }
 .text_pink{
 	color: #fe4e65;
+	font-weight: 500;
 }
 #content_wrap{
 	position: relative;
-	width: 95%;
+	width: 100%;
 	max-width: 1080px;
 	margin: 0 auto;
-	margin-top: 30px;
+	margin-top: 10px;
 	margin-bottom: 100px;
-	height: 650px;
+	height: 720px;
 	background-color: #282828;
 }
 	.content_page{
@@ -117,7 +133,7 @@ nav.upperbar span{
 	}
 	.content_page_left{
 		display: inline-block;
-		width: 54%;
+		width: 100%;
 		height: 100%;
 		background-color: #f4f4f4;
 	}
@@ -127,12 +143,16 @@ nav.upperbar span{
 			color: #282828;
 			font-size: 30px;
 			font-weight: bold;
+
+			display: 	none;
 		}
 	.content_page_right{
+		position: 	absolute;
+		top: 	0;
 		display: inline-block;
-		width: 45%;
+		width: 100%;
 		height: 100%;
-		background-color: #282828;
+		background-color: rgba(40, 40, 40, 0.86);
 		color: #ffffff;
 	}
 		.content_page_right label{
@@ -141,15 +161,18 @@ nav.upperbar span{
 		}
 		.content_page_right > .content_page_right_wrapper{
 			position: absolute;
-			padding: 60px 0 30px 50px;
+			padding: 60px 0 30px 15px;
 		}
 		.content_page_right > .content_page_right_wrapper > div{
 			margin-top: 30px;
-			font-size: 14px;
+			font-size: 15px;
 		}
 		.content_page_right > .content_page_right_wrapper p{
 			margin: 0;
 			margin-top: 10px;
+		}
+		.content_page_right > .content_page_right_wrapper p > span{
+			display: 	inline-block;
 		}
 
 
@@ -170,8 +193,11 @@ nav.upperbar span{
 		background-image: url("/static/user/res/promotion/promote_1.jpg");
 		background-size: cover;
 	}
-
-	.page_2 > .content_page_left, .page_3 > .content_page_left ,.page_4 > .content_page_left, .page_5 > .content_page_left,.page_6 > .content_page_left, .page_7 > .content_page_left{
+	.page_2 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_2.jpg");
+		background-size: cover;
+	}
+	.page_3 > .content_page_left ,.page_4 > .content_page_left, .page_5 > .content_page_left,.page_6 > .content_page_left, .page_7 > .content_page_left{
 		background-image: url("/static/user/res/promotion/promote_1.jpg");
 		background-size: cover;
 	}
@@ -190,5 +216,26 @@ nav.upperbar span{
 		height: 30px;
 		margin-left: 40px;
 		color: #ffffff;
+	}
+}
+@media(min-width:1080px){
+	.content_page_left > p{
+		display: 	block;
+	}
+	.content_page_left{
+		width: 	54%;
+	}
+	.content_page_right{
+		position: 	relative;
+		top: 	unset;
+		background-color: #282828;
+		width: 	45%;
+	}
+	.content_page_right_wrapper{
+		padding: 60px 0 30px 50px;
+	}
+	#content_wrap{
+		height: 	700px;
+		margin-top: 	30px;
 	}
 }
