@@ -1726,6 +1726,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		overflow:hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		vertical-align: middle;
 	}
 
 
