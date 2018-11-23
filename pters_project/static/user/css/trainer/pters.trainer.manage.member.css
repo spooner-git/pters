@@ -1510,9 +1510,8 @@ span.summaryInnerBoxText_Repeatendtext{
 }
 @media(min-width:600px){
 	.memberline{
-		width:100%;
-		max-width: 260px;
-		margin: 7px;
+		width:48%;
+		margin: 1%;
 	}
 
 	.phone_sms_gap{
@@ -1520,34 +1519,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		margin-left:6px;
 	}
 }
-@media(min-width:650px){
-	.memberline{
-		width:100%;
-		max-width: 280px;
-		margin: 8px;
-	}
-	.phone_sms_gap{
-		margin-right:8px;
-		margin-left:10px;
-	}
-}
-@media(min-width:700px){
-	.memberline{
-		width:100%;
-		max-width: 300px;
-		margin: 10px;
-	}
-	.phone_sms_gap{
-		margin-right:11px;
-		margin-left:11px;
-	}
-}
-@media(min-width:800px){
-	.memberline{
-		max-width:350px;
-		margin: 8px;
-	}
-}
+
 
 @media(min-width: 1000px){
 	html, body{

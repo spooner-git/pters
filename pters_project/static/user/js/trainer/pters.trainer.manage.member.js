@@ -3210,7 +3210,7 @@ function memberListSet (type,option,Reverse, jsondata){
         text2 = 'New Member this month';
     }
 
-    var tbodyStart = '<div style="text-align:center;">';
+    var tbodyStart = '<div>';
     var tbodyEnd = '</div>';
     var tbodyToAppend = $(tbodyStart);
     var data;
@@ -3452,7 +3452,7 @@ function memberListSet (type,option,Reverse, jsondata){
         var mobile_html = `<div class="_member_list_mobile_style">
                                 <div style="display:table-cell;width:70%;">
                                     <div style="width:100%;height:35px;line-height:40px;font-size:22px;font-weight:500;padding-left:10px;">${name}</div>
-                                    <div style="width:100%;height:35px;line-height:28px;padding-left:13px;">
+                                    <div style="width:100%;height:35px;line-height:32px;padding-left:13px;">
                                         <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">등록</span><span style="font-size:16px;color:#282828;">${regcount}</span></div>
                                         <div style="display:inline-block;width:1px;height:12px;background-color:#cccccc;margin-right:10px;margin-left:12px;"></div>
                                         <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">남은횟수</span><span style="font-size:16px;color:#282828;">${count}</span></div>
