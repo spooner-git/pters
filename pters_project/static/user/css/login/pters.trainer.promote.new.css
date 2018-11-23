@@ -130,7 +130,7 @@ nav.upperbar span{
 	max-width: 1080px;
 	margin: 0 auto;
 	margin-top: 10px;
-	margin-bottom: 100px;
+	margin-bottom: 0px;
 	height: 720px;
 	background-color: #282828;
 }
@@ -246,11 +246,12 @@ nav.upperbar span{
 		background-color: #282828;
 		width: 	45%;
 	}
-	.content_page_right_wrapper{
+	.content_page_right > .content_page_right_wrapper{
 		padding: 60px 0 30px 50px;
 	}
 	#content_wrap{
 		height: 	700px;
 		margin-top: 	30px;
+		margin-bottom: 100px;
 	}
 }
