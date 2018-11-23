@@ -18,16 +18,16 @@ $(document).ready(function(){
         e.stopPropagation();
         // e.preventDefault();
         var search_value = $(this).val();
-        $('tr.memberline').hide();
+        $('div.memberline').hide();
 
-        $('tr.memberline').each(function(){
+        $('div.memberline').each(function(){
             if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
                 $(this).show();
             }
         });
 
         if(search_value.length == 0){
-            $('tr.memberline').show();
+            $('div.memberline').show();
         }
     });
 
