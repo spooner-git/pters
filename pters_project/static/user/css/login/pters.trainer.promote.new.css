@@ -1,16 +1,18 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 html,body{
-	background-color: #282828;
+	/*background-color: #282828;*/
 }
 
-body{
+html{
 	font-family: 'Noto Sans KR',sans-serif !important;
 	background-image: url('/static/common/promote_mobile/1.jpg?v=2018-10-30');
+	background-size: cover;
 }
 @media(min-width:600px){
-	body{
+	html{
 		background-image: url('/static/common/promote_pc/1.jpg?v=2018-10-30');
+		background-size: cover;
 	}
 }
 nav.upperbar img{
@@ -113,6 +115,10 @@ nav.upperbar span{
 	#pagination_pc{
 		display: block;
 	}
+	#pagination_mobile{
+		display: none;
+	}
+
 }
 .text_pink{
 	color: #fe4e65;
@@ -207,7 +213,11 @@ nav.upperbar span{
 		background-size: cover;
 	}
 
-
+@media(min-width:600px){
+	.content_page_right > .content_page_right_wrapper{
+		padding-left: 80px;
+	}
+}
 @media(min-width:1024px){
 	nav.upperbar img{
 		display: inline-block;
