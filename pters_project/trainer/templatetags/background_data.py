@@ -95,6 +95,7 @@ def get_setting_info(request):
         request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
         request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
         request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
         request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
         request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
         request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']

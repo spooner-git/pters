@@ -17,6 +17,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, request
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
@@ -925,9 +926,9 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             day = 46
         start_date = today - datetime.timedelta(days=int(day))
         end_date = today + datetime.timedelta(days=int(day))
-        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         # end_time = timezone.now()
         # print(str(end_time-start_time))
+        context = func_get_trainer_schedule(context, class_id, start_date, end_date)
         return context
 
 
