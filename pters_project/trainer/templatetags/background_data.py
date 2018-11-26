@@ -112,9 +112,9 @@ def get_setting_info(request):
         request.session['setting_language'] = context['lt_lan_01']
 
         if context['lt_schedule_auto_finish'] == AUTO_FINISH_ON:
-            not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id,
-                                                                 end_dt__lte=now, state_cd='NP',
-                                                                 en_dis_type=ON_SCHEDULE_TYPE, use=USE)
+            not_finish_schedule_data = ScheduleTb.objects.filter(class_tb_id=class_id, state_cd='NP',
+                                                                 en_dis_type=ON_SCHEDULE_TYPE, end_dt__lte=now,
+                                                                 use=USE)
             for not_finish_schedule_info in not_finish_schedule_data:
                 not_finish_schedule_info.state_cd = 'PE'
                 not_finish_schedule_info.save()
