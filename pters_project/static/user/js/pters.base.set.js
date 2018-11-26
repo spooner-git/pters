@@ -1132,6 +1132,7 @@ function update_push_token(token, device_id) {
 
         //통신성공시 처리
         success:function(){
+            $('a.text-payment').parent('div').css('display', 'inline-block');
             if(device_id != 'pc') {
                 // $('a.text-payment').parent('div').css('display', 'none');
                 $('.ads_wrap').css('display', 'none');
