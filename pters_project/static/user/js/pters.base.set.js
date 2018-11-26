@@ -1133,13 +1133,13 @@ function update_push_token(token, device_id) {
         //통신성공시 처리
         success:function(){
             if(device_id != 'pc') {
-                $('a.text-payment').parent('div').css('display', 'none');
+                // $('a.text-payment').parent('div').css('display', 'none');
                 $('.ads_wrap').css('display', 'none');
                 $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
-                $('#paymentSetting').css('display', 'none');
+                // $('#paymentSetting').css('display', 'none');
                 $('._company').css('display', 'none');
             }else{
-                $('a.text-payment').parent('div').css('display', 'inline-block');
+                // $('a.text-payment').parent('div').css('display', 'inline-block');
             }
             console.log('토큰 등록 완료');
         },
