@@ -319,7 +319,7 @@ img.substract_addedMember{
 
 .groupWrap > div{
 	display: table-cell;
-	/*line-height: 36px;*/
+	line-height: 36px;
 }
 ._groupnum{
 	display: table-cell;

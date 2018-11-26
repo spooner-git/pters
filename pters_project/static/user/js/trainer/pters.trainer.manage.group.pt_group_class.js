@@ -550,9 +550,9 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).addClass('groupWrap_selected');
             memberlist.addClass('groupMembersWrap_selected').show();
             repeat_list.show();
-            if(bodywidth < 600){
-               memo_list.show();
-            }
+            // if(bodywidth < 600){
+            //    memo_list.show();
+            // }
             if($(this).attr('data-groupstatecd')=='current'){
                 get_groupmember_list(group_id);
             }
@@ -578,7 +578,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         memberlist.removeClass('groupMembersWrap_selected').hide();
         repeat_list.hide();
         if(bodywidth < 600){
-           memo_list.hide(); 
+           memo_list.hide();
         }
         $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
     }
