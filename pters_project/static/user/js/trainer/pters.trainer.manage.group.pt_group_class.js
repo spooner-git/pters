@@ -2022,12 +2022,12 @@ function groupMemberListSet(group_id, jsondata){
 
 //수업 정보 모바일 팝업
 function set_lecture_info_for_mobile_popup(group_id, group_name, group_type, group_membernum, group_membercapacity, group_memo){
-    var html = `<div>${group_id}</div>
-                <div>${group_name}</div>
-                <div>${group_type}</div>
-                <div>${group_membernum}</div>
-                <div>${group_membercapacity}</div>
-                <div>${group_memo}</div>`;
+    var html = `<div>그룹 id: ${group_id}</div>
+                <div>그룹 이름: ${group_name}</div>
+                <div>그룹 타입: ${group_type}</div>
+                <div>그룹 참여 인원: ${group_membernum}</div>
+                <div>그룹 수강 정원: ${group_membercapacity}</div>
+                <div>그룹 메모: ${group_memo}</div>`;
     $('#popup_lecture_info_mobile_basic').html(html);
 }
 //수업 정보 모바일 팝업
