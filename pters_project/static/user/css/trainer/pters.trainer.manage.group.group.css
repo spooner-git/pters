@@ -206,16 +206,15 @@ img.substract_addedMember{
 /*그룹 탭에서 그룹들 나열*/
 #popup_lecture_info_mobile{
 	display: none;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	background-color: #f4f4f4;
 	z-index: 10;
-	overflow-y: auto;
 	padding: 50px 20px 20px 20px;
-	-webkit-overflow-scrolling:touch;
+	height: auto;
 }
 	#popup_lecture_info_mobile_memberlist .groupmemberline_thead{
 		background-color: #282828;
