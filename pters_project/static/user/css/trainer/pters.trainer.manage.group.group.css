@@ -243,6 +243,7 @@ img.substract_addedMember{
 		width: 100%;
 		border-bottom: 1px solid #f4f4f4;
 		padding:0 5px 0 5px;
+		line-height: 35px;
 	}
 		.groupinfo_mobile_upper > div{
 			display: table-cell;
@@ -262,6 +263,7 @@ img.substract_addedMember{
 		display: table;
 		width: 100%;
 		padding:0 5px 0 5px;
+		line-height: 35px;
 	}
 
 
