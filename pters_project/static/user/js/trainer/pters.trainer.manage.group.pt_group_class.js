@@ -1618,19 +1618,6 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             break;
     }
     var htmlToAdd = [];
-    // var htmlToAdd = '<div class="groupWrap" data-groupid="'+'1:1"'+' group_id="'+'1:1"'+'">'+
-    //                 '<div class="_groupnum"></div>'+
-    //                     '<div class="_grouptypecd" data-group-type="'+"group_type"+'"><input class="group_listinput input_disabled_true" value="'+"1:1"+'" disabled>'+'</div>'+
-    //                     '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+"1:1 레슨"+'" disabled>'+'</div>'+
-    //                     '<div class="_groupparticipants '+"full_group"+'">'+ "group_membernum"+'</div>'+
-    //                     '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+"full_group"+'" value="'+"group_capacity"+'" disabled>'+'</div>'+
-    //                     '<div class="_grouppartystatus '+"full_group"+'"><span>'+ g_ptmembernum + ' </span> ' +'</div>'+
-    //                     '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+""+'" disabled>'+'</div>'+
-    //                     '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>'+
-    //                     '<div class="_groupstatus" data-groupid="'+"group_id"+'">'+'<span class="_editable _groupstatus_'+"groupstatus_cd"+'" data-groupstatus="'+"groupstatus_cd"+'" data-groupid="'+"group_id"+'">'+"-"+'</span>'+'</div>'+
-    //                     '<div class="_groupmanage">'+'</div>'+
-    //                 '</div></div>'+
-    //                 '<div class="groupMembersWrap" data-groupid="'+'1:1'+'" data-groupname="'+'1:1'+'" data-groupcapacity="'+'" data-grouptype="'+'1:1'+'">'+'</div>'
     var htmlToJoin = [];
     var htmlToJoin2 = [];
     var groupNum = jsondata.group_id.length;
@@ -1660,10 +1647,6 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
 
         ordernum++;
         var full_group = "";
-        // if(group_membernum == group_capacity && group_type == "NORMAL"){
-        //     var full_group = "red_color_text";
-        // }
-
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
@@ -1672,63 +1655,67 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
 
         var htmlstart = '<div class="groupWrap" data-groupstatecd="'+option+'" data-groupid="'+group_id+'">';
         var htmlend = '</div>';
-        var memolist = '<div class="groupMemoWrap" data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
-        var repeatlist = '<div class="groupRepeatWrap" data-groupid="'+group_id+'"></div>';
-        var memberlist = '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>';
+        var memolist = '<div class="groupMemoWrap " data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+        var repeatlist = '<div class="groupRepeatWrap " data-groupid="'+group_id+'"></div>';
+        var memberlist = '<div class="groupMembersWrap " data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>';
 
         if(group_type == "ONE_TO_ONE") {
-            manageimgs = '<div class="_groupmanage"></div>';
+            manageimgs = '<div class="_groupmanage _group_list_pc_style"></div>';
         }
         else{
-            var manageimgs = '<div class="_groupmanage">' + pceditimage + pceditcancelimage + pcdeleteimage + '</div>';
+            var manageimgs = '<div class="_groupmanage _group_list_pc_style">' + pceditimage + pceditcancelimage + pcdeleteimage + '</div>';
             if (Options.auth_class == 0) {
-                manageimgs = '<div class="_groupmanage">' + img_lock_function + '</div>';
+                manageimgs = '<div class="_groupmanage _group_list_pc_style">' + img_lock_function + '</div>';
             }
         }
 
-        var main = '<div class="_groupnum">'+ordernum+'</div>'+
-        '<div class="_groupplancolor"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>'+
-            '<div class="_grouptypecd" data-group-type="'+group_type+'" style="display:none;"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
-            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+'['+group_type_nm+'] '+group_name+'" disabled>'+'</div>'+
-            
-            '<div class="_groupparticipants '+full_group+'">'+ group_membernum+'</div>'+
-            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
+        var main = '<div class="_groupnum _group_list_pc_style">'+ordernum+'</div>'+
+                    '<div class="_groupplancolor _group_list_pc_style"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>'+
+                    '<div class="_grouptypecd" data-group-type="'+group_type+'" style="display:none;"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+                    '<div class="_groupname _group_list_pc_style"><input class="group_listinput input_disabled_true _editable" value="'+'['+group_type_nm+'] '+group_name+'" disabled>'+'</div>'+
+                    '<div class="_groupparticipants '+full_group+' _group_list_pc_style">'+ group_membernum+'</div>'+
+                    '<div class="_groupcapacity _group_list_pc_style">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
             if(group_type == "ONE_TO_ONE") {
-                main += '<div class="_grouppartystatus '+"full_group"+'"><span>'+ group_membernum + ' </span> ' +'</div>';
+                main += '<div class="_grouppartystatus '+"full_group"+' _group_list_pc_style"><span>'+ group_membernum + ' </span> ' +'</div>';
             }
             else{
-                main += '<div class="_grouppartystatus ' + full_group + '">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
+                main += '<div class="_grouppartystatus ' + full_group + ' _group_list_pc_style">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
             }
-            main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+            main += '<div class="_groupmemo _group_list_pc_style"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
 
             if(group_type == "ONE_TO_ONE"){
-                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
+                main += '<div class="_groupcreatedate _group_list_pc_style"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
             }
             else{
-                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>';
+                main += '<div class="_groupcreatedate _group_list_pc_style"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>';
             }
-            main += '<div class="_groupstatus" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+ manageimgs;
+            main += '<div class="_groupstatus _group_list_pc_style" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+ manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+        
+        var main_mobile = `<div class="_groupname_mobile _group_list_mobile_style" style="border-top:6px solid ${groupplancolor}">
+                                <span>${group_name}</span>
+                           </div>
+                           <div class="_groupinfo_mobile _group_list_mobile_style">
+                                <div class="groupinfo_mobile_upper">
+                                    <div>${group_type_nm}</div>
+                                    <div><span style="color:#8d8d8d;font-weight:400">참여중 </span><span style="float:right;"> ${group_membernum}</span></div>
+                                    <span style="margin-left:10px;margin-right:10px;font-size:18px;color:#f4f4f4;font-weight:300">|</span>
+                                    <div><span style="color:#8d8d8d;font-weight:400">정원 </span><span style="float:right;"> ${group_capacity}</span></div>
+                                </div>
+                                <div class="groupinfo_mobile_lower">
+                                    <div>${group_memo}</div>
+                                </div>
+                           </div>
+                           `;
 
+
+        var html = htmlstart+main+main_mobile+htmlend+memolist+repeatlist+memberlist;
         if(group_type == "EMPTY"){
-            htmlToJoin.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            htmlToJoin.push(html);
         }else if(group_type == "NORMAL"){
-            htmlToJoin2.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
+            htmlToJoin2.push(html);
         }else if(group_type == "ONE_TO_ONE"){
-            htmlToAdd.push(htmlstart+main+htmlend+memolist+repeatlist+memberlist);
-            // htmlToAdd = '<div class="groupWrap" data-groupstatecd="'+option+'" data-groupid="'+group_id+'">'+
-            //         '<div class="_groupnum">'+ordernum+'</div>'+
-            //             '<div class="_grouptypecd" data-group-type="'+group_type+'"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
-            //             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+group_name+'" disabled>'+'</div>'+
-            //             '<div class="_groupparticipants '+"full_group"+'">'+ "group_membernum"+'</div>'+
-            //             '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+"full_group"+'" value="'+"group_capacity"+'" disabled>'+'</div>'+
-            //             '<div class="_grouppartystatus '+"full_group"+'"><span>'+ group_membernum + ' </span> ' +'</div>'+
-            //             '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+""+'" disabled>'+'</div>'+
-            //             '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>'+
-            //             '<div class="_groupstatus" data-groupid="'+"group_id"+'">'+'<span class="_editable _groupstatus_'+"groupstatus_cd"+'" data-groupstatus="'+"groupstatus_cd"+'" data-groupid="'+"group_id"+'">'+"-"+'</span>'+'</div>'+
-            //             '<div class="_groupmanage">'+'</div>'+
-            //         '</div></div>'+
-            //         '<div class="groupMembersWrap" data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+'" data-grouptype="'+group_type+'">'+'</div>'
+            htmlToAdd.push(html);
         }
     }
 

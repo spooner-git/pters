@@ -3464,13 +3464,10 @@ function memberListSet (type,option,Reverse, jsondata){
                                     <div style="display:inline-block;">${mobile_sms_img}</div>
                                 </div>
                            </div>`;
-        
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
         // arrayResult[i] = td;
         //arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</div>';
-        
         arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+pc_html+mobile_html+'</div>';
-        
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
 

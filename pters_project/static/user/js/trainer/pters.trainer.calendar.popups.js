@@ -193,7 +193,7 @@
 
     $(document).on('click', 'div.classTime', function(e){ //일정을 클릭했을때 팝업 표시
         e.stopPropagation();
-        disable_window_scroll()
+        disable_window_scroll();
         var info = $(this).attr('class-time').split('_');
         var yy=info[0];
         var mm=info[1];
@@ -232,20 +232,6 @@
         var yourplan = " 일정";
         var day = dayarryKR[dayraw];
         var text = '1:1 레슨 일정';
-        switch(Options.language){
-            case "JPN" :
-                member = "様の ";
-                yourplan = " 日程";
-                day = dayarryJP[dayraw];
-                text = 'PT 日程';
-                break;
-            case "ENG" :
-                member = "'s schedule at ";
-                yourplan = "";
-                day = dayarryEN[dayraw];
-                text = 'PT Plan';
-                break;
-        }
         var selector_cal_popup_planinfo = $('#cal_popup_planinfo');
         var selector_popup_btn_complete = $('#popup_btn_complete');
         var selector_popup_info3_memo = $('#popup_info3_memo');

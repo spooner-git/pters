@@ -210,10 +210,62 @@ img.substract_addedMember{
 	height: 40px;
 	background: #ffffff;
 	border:1px solid #ffffff;
-	border-bottom: 1px solid #cccccc;
+	
 	text-align: center;
 	cursor: pointer !important;
 	font-size: 12px;
+
+	margin-top: 10px;
+	border: 0;
+	height: 70px;
+}
+
+._group_list_pc_style{
+	display: none !important;
+}
+._group_list_mobile_style{
+	display: table-cell;
+}
+	._groupname_mobile{
+		width: 35%;
+		font-size: 17px;
+		font-weight: 500;
+		vertical-align: middle;
+		padding: 0 5px 0 5px;
+	}
+	._groupinfo_mobile{
+		width: 64%;
+		text-align: left;
+		border-left: 5px solid #f4f4f4;
+	}
+	.groupinfo_mobile_upper{
+		display: table;
+		width: 100%;
+		border-bottom: 1px solid #f4f4f4;
+		padding:0 5px 0 5px;
+	}
+		.groupinfo_mobile_upper > div{
+			display: table-cell;
+			width:33%;
+			font-size: 16px;
+		}
+	.groupinfo_mobile_lower{
+		display: table;
+		width: 100%;
+		padding:0 5px 0 5px;
+	}
+@media(min-width:1000px){
+	.groupWrap{
+		height: 40px;
+		margin-bottom: 0;
+		border-bottom: 1px solid #cccccc;
+	}
+	._group_list_pc_style{
+		display: table-cell !important;
+	}
+	._group_list_mobile_style{
+		display: none !important;
+	}
 }
 
 .groupWrap_selected{
@@ -465,7 +517,13 @@ div._groupmanage img._info_delete{
 	font-size: 12.5px;
 }
 .groupMembersWrap .memberline{
-	background: #f9f9f9;
+	background: #ffffff;
+	margin-bottom: 0;
+	border-bottom: 1px solid #f4f4f4;
+	margin: 0;
+}
+.groupMembersWrap .memberline:hover{
+	box-shadow: unset;
 }
 .groupMembersWrap .groupmemberline_thead{
 	background: #444444;

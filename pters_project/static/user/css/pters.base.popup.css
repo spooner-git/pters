@@ -1,4 +1,8 @@
 
+
+
+
+
 .pshade,.mshade{
 	position: fixed;
 	display: none;
@@ -110,12 +114,6 @@
 	border:1px solid #cccccc;
 	width: 	100%;
 	max-width: 	330px;
-	/*
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform:translate(-50%,-50%);
-	*/
 	z-index: 150;
 	text-align: center;
 }
