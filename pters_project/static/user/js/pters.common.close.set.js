@@ -10,6 +10,15 @@ function closePopup_mobile(buttonname){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height', '100%');
             }
+        }else if(thisAttr == "lecture_info"){
+            $('#page_managemember').css('height', '100%');
+            $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#page-base').css('display', 'block');
+            $('#page-base-modifystyle').css('display', 'none');
+        }else if(thisAttr == "memberinfo"){
+            $('#uptext2').text('수업 정보');
+            close_manage_popup('member_info');
+            $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
         }
     }else if(buttonname == "upbutton-x-modify"){
         var bodywidth = window.innerWidth;
@@ -20,6 +29,19 @@ function closePopup_mobile(buttonname){
         if(bodywidth<600 && selector_calendar.length != 0){
             //$('#calendar').css('display','block')
             selector_calendar.css('height', '100%');
+        }
+        var thisAttr = $("#upbutton-x-modify").attr('data-page');
+        if(thisAttr == "lecture_info"){
+            $('#page_managemember').css('height', '100%');
+            $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#page-base').css('display', 'block');
+            $('#page-base-modifystyle').css('display', 'none');
+        }else if(thisAttr == "memberinfo"){
+            $('#page_managemember').css('height', '100%');
+            $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#uptext2').text('수업 정보');
+            close_manage_popup('member_info');
+            $('#upbutton-x, #upbutton-x-modify').attr('data-page', '');
         }
         enable_window_scroll();
     }
@@ -212,11 +234,11 @@ function close_manage_popup(option){
         }
 
         function base_show(){
-            $('#page-base').css('display','block');
+            $('#page-base').css('display', 'block');
         }
 
         function base_modify_hide(){
-            $('#page-base-modifystyle').css('display','none');
+            $('#page-base-modifystyle').css('display', 'none');
         }
         var selector_upbutton_modify = $('#upbutton-modify');
         selector_upbutton_modify.find('img').attr({'src':'/static/user/res/icon-pencil.png'});

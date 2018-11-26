@@ -201,8 +201,9 @@ $(document).ready(function(){
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
+            $('#uptext3').text('회원 정보');
         }else if(bodywidth >= 600){
-            $('body').css('overflow-y','hidden');
+            $('body').css('overflow-y', 'hidden');
             get_indiv_member_info(dbID);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
@@ -216,7 +217,7 @@ $(document).ready(function(){
     });
 
     //PC 회원 이력 엑셀 다운로드 버튼 (회원목록에서)
-    $(document).on('click','._manage img._info_download',function(e){
+    $(document).on('click', '._manage img._info_download', function(e){
         e.stopPropagation();
         // var memberID = $(this).parent('td').siblings('.id').text();
         var dbID = $(this).parent('td').siblings('._id').attr('data-dbid');
@@ -1670,10 +1671,10 @@ function float_btn_managemember(option){
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); });
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});
-        selector_page_addmember.css('display','block');
-        $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
-        $('#float_inner1,#float_inner2').css({'opacity':'0','bottom':'25px'});
-        $('#float_btn_wrap').css('display','none');
+        selector_page_addmember.css('display', 'block');
+        $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberadd');
+        $('#float_inner1,#float_inner2').css({'opacity':'0', 'bottom':'25px'});
+        $('#float_btn_wrap').css('display', 'none');
         $('#uptext2').text(text);
 
         scrollToDom(selector_page_addmember);
@@ -2139,6 +2140,7 @@ function shiftGroupClassList(type){
 
 //진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
 function shiftPtGroupClassList(type){
+    var bodywidth = $(window).width();
     $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
     switch(type){
         case "current":
