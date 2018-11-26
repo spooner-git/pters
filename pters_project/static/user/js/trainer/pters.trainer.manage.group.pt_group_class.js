@@ -596,6 +596,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
+        $('#popup_lecture_info_mobile_memberlist').html('');
         $('#popup_lecture_info_mobile').css({'display':'block'});
 
         set_lecture_info_for_mobile_popup(group_id, group_name, group_type, group_membernum, group_membercapacity, group_memo);
