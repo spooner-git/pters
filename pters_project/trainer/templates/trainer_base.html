@@ -638,9 +638,9 @@ function playSound() {
     if (varUA.match('android') != null) {
         platform_check = 'mobile';
         if (device_info != "web") { //앱일떄
-            $('#paymentSetting').css('display', 'none');
+{#            $('#paymentSetting').css('display', 'none');#}
             $('._company').css('display', 'none');
-            $('a.text-payment').parent('div').css('display', 'none');
+{#            $('a.text-payment').parent('div').css('display', 'none');#}
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
         } else if (device_info == "web") { //브라우저일때
@@ -650,9 +650,9 @@ function playSound() {
     } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
         platform_check = 'mobile';
         if (device_info != "web") { //앱일때
-            $('#paymentSetting').css('display', 'none');
+{#            $('#paymentSetting').css('display', 'none');#}
             $('._company').css('display', 'none');
-            $('a.text-payment').parent('div').css('display', 'none');
+{#            $('a.text-payment').parent('div').css('display', 'none');#}
             $('.ads_wrap').css('display', 'none');
             $('.sidebar_div_last2 a').attr('href', '/trainer/help_setting/').attr('target', '');
         } else if (device_info == "web") { //브라우저일때
