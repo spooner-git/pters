@@ -731,6 +731,7 @@ def func_get_trainer_group_schedule(context, class_id, start_date, end_date, gro
         group_schedule_data = group_schedule_data.filter(
             group_tb_id=group_id).annotate(group_current_member_num=RawSQL(query, []),
                                            group_type_cd_name=RawSQL(query_type_cd, [])).order_by('start_dt')
+
     context['group_schedule_data'] = group_schedule_data
 
 

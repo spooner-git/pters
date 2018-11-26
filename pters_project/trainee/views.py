@@ -63,7 +63,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             'lecture_tb__member').filter(
             lecture_tb__member_id=request.user.id,
             use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                  [])).order_by('-lecture_tb__start_date')
+                                                  [])).exclude(auth_type_cd='DELETE').order_by('-lecture_tb__start_date')
         if lecture_data is None or len(lecture_data) == 0:
             self.url = '/trainee/cal_month_blank/'
 
