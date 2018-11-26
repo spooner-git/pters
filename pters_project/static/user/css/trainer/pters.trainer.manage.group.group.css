@@ -204,6 +204,29 @@ img.substract_addedMember{
 
 
 /*그룹 탭에서 그룹들 나열*/
+#popup_lecture_info_mobile{
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #f4f4f4;
+	z-index: 10;
+	overflow-y: auto;
+	padding: 50px 20px 20px 20px;
+}
+	#popup_lecture_info_mobile_memberlist .groupmemberline_thead{
+		background-color: #282828;
+		color: #ffffff;
+		text-align: center;
+	}
+	#popup_lecture_info_mobile_memberlist .memberline{
+		margin: 0;
+		text-align: center;
+	}
+
+
 .groupWrap{
 	display: table;
 	width: 100%;
@@ -279,6 +302,33 @@ img.substract_addedMember{
 	box-shadow: 1px 1px 1px 1px #cccccc;
 	transition: box-shadow 0.25s cubic-bezier(0.4,0,0.2,1);
 }
+#popup_lecture_info_mobile_close_btn{
+	display: none;
+}
+@media(min-width: 600px){
+	#popup_lecture_info_mobile{
+		padding-top: 65px;
+		background-color: #f4f4f4;
+	}
+	#popup_lecture_info_mobile_close_btn{
+		display: block;
+		background-color: #282828;
+		color: #ffffff;
+		padding: 3px 5px 3px 5px;
+		width: auto;
+		margin-bottom: 10px;
+		height: 50px;
+		line-height: 50px;
+		cursor: pointer;
+	}
+	#popup_lecture_info_mobile_close_btn > img{
+		height: 17px;
+		margin-right: 10px;
+		margin-left: 10px;
+		margin-bottom: 3px;
+		transform: rotate(180deg);
+	}
+}
 @media(min-width: 750px){
 	.groupWrap{
 		display: inline-flex;
@@ -319,7 +369,7 @@ img.substract_addedMember{
 
 .groupWrap > div{
 	display: table-cell;
-	/*line-height: 36px;*/
+	line-height: 36px;
 }
 ._groupnum{
 	display: table-cell;
@@ -625,6 +675,7 @@ div.groupmemberline_thead{
 	width: 100%;
 	background:#f4f4f4;
 }
+
 div.groupmemberline_thead div{
 	display: table-cell;
 	border: 1px solid #ffffff;
