@@ -474,7 +474,8 @@ div._groupmanage img._info_delete{
 	font-size: 12.5px;
 }
 .groupMembersWrap .memberline{
-	background: #f9f9f9;
+	background: #ffffff;
+	margin: 0;
 }
 .groupMembersWrap .groupmemberline_thead{
 	background: #444444;
