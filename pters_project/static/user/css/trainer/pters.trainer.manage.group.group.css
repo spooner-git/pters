@@ -231,7 +231,7 @@ img.substract_addedMember{
 		font-size: 17px;
 		font-weight: 500;
 		vertical-align: middle;
-		padding: 0 5px 0 5px;
+		padding: 5px 5px 0 5px;
 	}
 	._groupinfo_mobile{
 		width: 64%;
@@ -317,7 +317,7 @@ img.substract_addedMember{
 
 .groupWrap > div{
 	display: table-cell;
-	line-height: 36px;
+	/*line-height: 36px;*/
 }
 ._groupnum{
 	display: table-cell;
