@@ -596,10 +596,16 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
+        $('#popup_lecture_info_mobile_memberlist').html('');
         $('#popup_lecture_info_mobile').css({'display':'block'});
 
         set_lecture_info_for_mobile_popup(group_id, group_name, group_type, group_membernum, group_membercapacity, group_memo);
-        get_groupmember_list(group_id);
+        if($(this).attr('data-groupstatecd')=='current'){
+            get_groupmember_list(group_id);
+        }
+        else{
+            get_end_groupmember_list(group_id);
+        }
     }
 });
 
@@ -1738,11 +1744,11 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         }
     }
 
-    if(htmlToJoin2.length == 0){
+    if(htmlToJoin2.length == 0 && htmlToAdd.length == 0){
         if(option == "current"){
-            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 그룹이 없습니다.</div>');
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수업이 없습니다.</div>');
         }else if(option == "finished"){
-            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수업이 없습니다.</div>');
         }
     }
     //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
