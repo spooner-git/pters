@@ -3,16 +3,21 @@
 <head>
 
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>
+
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');</script>
+    })(window,document,'script', 'dataLayer', 'GTM-WG2KK6D');
+
+    </script>
     <!-- End Google Tag Manager -->
     <!--Google Adsense-->
 
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
+
     (adsbygoogle = window.adsbygoogle || []).push({
         google_ad_client: "ca-pub-4554121851965192",
         enable_page_level_ads: true
@@ -32,14 +37,14 @@
     <link rel="apple-touch-icon" href="/static/common/favicon-48.png">
     <link rel="shortcut icon" href="/static/common/favicon-48.png">
 
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href={% static_url "common/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href="/static/common/css/jquery-ui.1.12.1.css">
+    <link rel="stylesheet" href="/static/common/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/common/css/swiper.min.css">
     <link rel="stylesheet" href={% static_url "user/css/pters.base.set.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.common.module.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/pters.base.popup.css" %}>
     <link rel="stylesheet" href={% static_url "user/css/trainer/pters.trainer.select.class.css" %}>
-    <link rel="stylesheet" href={% static_url "common/css/swiper.min.css"%}>
     {% block local_css %}
     {% endblock %}
 </head>
