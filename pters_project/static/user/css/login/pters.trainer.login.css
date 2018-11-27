@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(/static/common/fonts/notosanskr.css);
 
 html,body{
 	/*height: 100%;*/
@@ -540,7 +540,7 @@ nav.main_nav{
 
 /*promotion.css 병합*/
 
-@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(/static/common/fonts/notosanskr.css);
 
 html,body{
 	/*height: 100%;*/
