@@ -382,7 +382,7 @@ select:focus > option:checked {
 	position: fixed;
 	width: 100%;
 	background-color: #f4f4f4;
-	z-index: 10;
+	z-index: 9;
 }
 #currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 	width: 91.6%;
