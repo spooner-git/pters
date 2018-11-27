@@ -202,6 +202,9 @@ $(document).ready(function(){
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
             $('#uptext3').text('회원 정보');
+            if($('#popup_lecture_info_mobile').length > 0 ){
+                closePopup_mobile('upbutton-x-modify');
+            }
         }else if(bodywidth >= 600){
             $('body').css('overflow-y', 'hidden');
             get_indiv_member_info(dbID);

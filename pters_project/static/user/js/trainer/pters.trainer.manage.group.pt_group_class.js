@@ -591,7 +591,6 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth <= 1000){
-
         $('#uptext3').text('수업 정보');
         $('#page_managemember').css({'height':'0'});
         $('#page-base').css('display', 'none');
@@ -607,9 +606,10 @@ $(document).on('click', 'div.groupWrap', function(e){
         else{
             get_end_groupmember_list(group_id);
         }
-        // if(bodywidth<600){
-        //     shade_index(100);    
-        // }
+        if(bodywidth<600){
+            shade_index(100);
+            $('#mshade').css('display','none');
+        }
         
     }
 });
