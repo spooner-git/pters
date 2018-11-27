@@ -344,6 +344,9 @@ img.substract_addedMember{
 		margin: 0;
 		border-bottom: 1px solid #cccccc;
 	}
+	.groupWrap > div{
+		line-height: 36px;
+	}
 	._group_list_pc_style{
 		display: table-cell !important;
 	}
@@ -369,7 +372,7 @@ img.substract_addedMember{
 
 .groupWrap > div{
 	display: table-cell;
-	line-height: 36px;
+	/*line-height: 36px;*/
 }
 ._groupnum{
 	display: table-cell;
