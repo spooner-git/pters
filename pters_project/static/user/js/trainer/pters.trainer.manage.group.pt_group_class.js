@@ -608,9 +608,8 @@ $(document).on('click', 'div.groupWrap', function(e){
         }
         if(bodywidth<600){
             shade_index(100);
-            $('#mshade').css('display','none');
+            $('#mshade').css('display', 'none');
         }
-        
     }
 });
 
