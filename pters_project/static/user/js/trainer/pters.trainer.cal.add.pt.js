@@ -1606,8 +1606,8 @@ $(document).ready(function(){
     canvas.addEventListener("mousemove", listener);
     canvas.addEventListener("mouseup", listener);
     canvas.addEventListener("mouseout", listener);
-    canvas.addEventListener("touchstart", listener);
-    canvas.addEventListener("touchmove", listener);
+    canvas.addEventListener("touchstart", listener, {passive: true});
+    canvas.addEventListener("touchmove", listener, {passive: true});
     canvas.addEventListener("touchend", listener);
     canvas.addEventListener("touchcancel", listener);
 
