@@ -378,10 +378,21 @@ select:focus > option:checked {
 	transition: background-color 0.12s cubic-bezier(0.4,0,0.2,1);
 }
 
-
+.upper_fixed_parts{
+	position: fixed;
+	width: 100%;
+	background-color: #f4f4f4;
+	z-index: 9;
+}
 #currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 	width: 91.6%;
 	margin-bottom: 40px;
+}
+#currentMemberList, #finishedMemberList{
+	margin-top: 160px;
+}
+#currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
+	margin-top: 110px;
 }
 
 #finishedMemberList, #finishedGroupList{
@@ -1588,6 +1599,9 @@ span.summaryInnerBoxText_Repeatendtext{
 		background:#ffffff;
 	}
 
+	.upper_fixed_parts{
+		background-color: #ffffff;
+	}
 
 	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 		/*width: 1080px;*/
@@ -1595,6 +1609,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		height: auto;
 		overflow-y: overlay;
 		padding-bottom: 50px;
+		margin-top: 222px;
 	}
 
 	.npCountImg_wait{

@@ -202,6 +202,9 @@ $(document).ready(function(){
             get_member_lecture_list(dbID);
             get_member_history_list(dbID);
             $('#uptext3').text('회원 정보');
+            if($('#popup_lecture_info_mobile').length > 0 ){
+                closePopup_mobile('upbutton-x-modify');
+            }
         }else if(bodywidth >= 600){
             $('body').css('overflow-y', 'hidden');
             get_indiv_member_info(dbID);
@@ -2665,7 +2668,7 @@ function get_member_list(use, callback){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%',});
+                    $('#page_managemember').css({'height':'100%'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -4318,7 +4321,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
     $.ajax({
         url:'/trainer/finish_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID,"member_id": dbID, "next_page":'/trainer/get_error_info/'},
+        data:{"lecture_id":lectureID, "member_id": dbID, "next_page":'/trainer/get_error_info/'},
         dataType : 'html',
 
         beforeSend:function(xhr, settings) {
@@ -4359,7 +4362,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 //회원의 수강정보를 진행중으로 처리한다.
@@ -4479,10 +4482,16 @@ function smart_refresh_member_group_class_list(){
     if($('#currentMemberList').css('display') == "block"){
         get_member_ing_list("callback", function(jsondata){
             memberListSet('current', 'name', 'no', jsondata);
+            if($('#memberInfoPopup').css('display') == "block"){
+                $('#page_managemember').css('height',0);
+            }
         });
     }else if($('#finishedMemberList').css('display') == "block"){
         get_member_end_list("callback", function(jsondata){
             memberListSet('finished', 'name', 'no', jsondata);
+            if($('#memberInfoPopup').css('display') == "block"){
+                $('#page_managemember').css('height',0);
+            }
         });
     }else if($('#currentGroupList').css('display') == "block"){
         var opened_group = [];
