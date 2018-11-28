@@ -90,7 +90,7 @@ function sideGoPage(page){
     $('.ajaxloadingPC').show();
     closeNav();
     $('#shade_caution').show();
-    location.href="/trainer/"+page+'/';
+    setTimeout(function(){location.href="/trainer/"+page+'/';}, 500);
 }
 
 
