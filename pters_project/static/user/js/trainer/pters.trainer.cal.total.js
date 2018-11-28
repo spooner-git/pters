@@ -1634,7 +1634,7 @@ function fake_show(){
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
     //var duplicate_check = know_duplicated_plans(jsondata).result;
-    //중복일정 ㅇㄷ    
+    //중복일정 ㅇㄷ  
 
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
     $('.blankSelected30').removeClass('blankSelected30');
@@ -1843,11 +1843,12 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>';
         }
 
-        var planLocation = Number(planArray[4])*size;
+        var planLocation = Number(planArray[4])*size+1;
         if(timeoffset >=30){
-            planLocation = Number(planArray[4])*size-30*size;
+            planLocation = Number(planArray[4])*size-30*size+1;
         }
-        var planHeight = Number(planDura*planheight-1);
+        //var planHeight = Number(planDura*planheight-1);
+        var planHeight = Number(planDura*planheight-3);
 
         //중복 일정 ㅇㄷ
         // var planWidth;
@@ -1899,7 +1900,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                 '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
                                                 ' </span>'+
-                                                '<span class="memberTime '+hideornot+'">'+ 
+                                                '<span class="memberTime '+hideornot+'">'+
                                                     '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                                 '</span>'+
 
@@ -1939,7 +1940,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                         '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
                                                         groupstatus+
                                                 '</span>'+
-                                                '<span class="memberTime '+hideornot+'">'+ 
+                                                '<span class="memberTime '+hideornot+'">'+
                                                         '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                                 '</span>'+
 
@@ -1975,7 +1976,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                 '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
                                                 ' </span>'+
-                                                '<span class="memberTime '+hideornot+'">'+ 
+                                                '<span class="memberTime '+hideornot+'">'+
                                                     '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
                                                 '</span>'+
                                         '</div>'

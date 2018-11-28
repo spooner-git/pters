@@ -2208,8 +2208,10 @@ function shiftPackageList(type){
             });
             $('#currentPackageList, #memberNumber_current_group').css('display', 'block');
             $('#memberNumber_finish_group, #finishedPackageList, #finishGroupNum').css('display', 'none');
-            $('._GROUP_THEAD').show();
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            if(bodywidth > 1000){
+                $('._GROUP_THEAD').show();
+                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            }
             break;
         case "finished":
             get_package_end_list("callback", function(jsondata){
@@ -2219,8 +2221,10 @@ function shiftPackageList(type){
             });
             $('#finishedPackageList, #memberNumber_finish_group').css('display', 'block');
             $('#memberNumber_current_group, #currentPackageList, #currentGroupNum').css('display', 'none');
-            $('._GROUP_THEAD').show();
-            $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            if(bodywidth > 1000){
+                $('._GROUP_THEAD').show();
+                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            }
             break;
     }
 }
