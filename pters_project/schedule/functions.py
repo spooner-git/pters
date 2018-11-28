@@ -8,7 +8,8 @@ from django.db.models.expressions import RawSQL
 from django.utils import timezone
 
 from configs import settings
-from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE
+from configs.const import REPEAT_TYPE_2WEAK, ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, \
+    SCHEDULE_DUPLICATION_ENABLE, SCHEDULE_DUPLICATION_DISABLE
 
 from login.models import LogTb, PushInfoTb
 from trainer.models import MemberClassTb, GroupLectureTb, ClassLectureTb, GroupTb, PackageGroupTb
@@ -425,28 +426,28 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
 
 
 # 일정 중복 체크
-def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_end_dt):
+def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_end_dt, duplication_enable_flag):
     error = None
+    if duplication_enable_flag == SCHEDULE_DUPLICATION_DISABLE:
+        seven_days_ago = add_start_dt - datetime.timedelta(days=2)
+        seven_days_after = add_end_dt + datetime.timedelta(days=2)
 
-    # seven_days_ago = add_start_dt - datetime.timedelta(days=2)
-    # seven_days_after = add_end_dt + datetime.timedelta(days=2)
-    #
-    # schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
-    #                                           start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
-    #                                           use=USE).exclude(schedule_id=schedule_id)
-    #
-    # for schedule_info in schedule_data:
-    #     if schedule_info.start_dt >= add_start_dt:
-    #         if schedule_info.start_dt < add_end_dt:
-    #             error = str(pt_schedule_date)
-    #     if schedule_info.end_dt > add_start_dt:
-    #         if schedule_info.end_dt < add_end_dt:
-    #             error = str(pt_schedule_date)
-    #     if schedule_info.start_dt <= add_start_dt:
-    #         if schedule_info.end_dt >= add_end_dt:
-    #             error = str(pt_schedule_date)
-    #     if error is not None:
-    #         break
+        schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
+                                                  start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
+                                                  use=USE).exclude(schedule_id=schedule_id)
+
+        for schedule_info in schedule_data:
+            if schedule_info.start_dt >= add_start_dt:
+                if schedule_info.start_dt < add_end_dt:
+                    error = str(pt_schedule_date)
+            if schedule_info.end_dt > add_start_dt:
+                if schedule_info.end_dt < add_end_dt:
+                    error = str(pt_schedule_date)
+            if schedule_info.start_dt <= add_start_dt:
+                if schedule_info.end_dt >= add_end_dt:
+                    error = str(pt_schedule_date)
+            if error is not None:
+                break
 
     return error
 

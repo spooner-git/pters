@@ -20,7 +20,8 @@ from el_pagination.views import AjaxListView
 
 # Create your views here.
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
+    SCHEDULE_DUPLICATION_DISABLE
 
 from configs.views import AccessTestMixin
 
@@ -1226,7 +1227,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                         error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
                     else:
                         error = func_date_check(class_id, schedule_result['schedule_id'],
-                                                pt_schedule_date, start_date, end_date)
+                                                pt_schedule_date, start_date, end_date, SCHEDULE_DUPLICATION_DISABLE)
 
                         if error is not None:
                             error += ' 일정이 중복됐습니다.'
