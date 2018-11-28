@@ -63,6 +63,9 @@
     <div id="mshade" class="mshade _shade"></div>
     <div id="mshade_popup" class="mshade_popup _shade"></div>
     <div id="shade_caution"></div>
+    <div id="mobile_page_interaction" style="z-index:15;width:100%;height: 100%;background-color: #ffffff;position: fixed;top: 0;left: 100%;transition:0.3s">
+        <img src="/static/user/res/PTERS_logo_pure.png" style="position:absolute;width:100px;left:50%;top:50%;transform: translate(-50%,-50%);">
+    </div>
 
     <img src="/static/user/res/ajax/loading.gif" alt="" class="ajaxloadingPC">
 
@@ -360,13 +363,13 @@
                             </a>
                         </div> -->
                         
-                            <div class="sidebar_div"><img src={% static_url "user/res/icon-statistic.png" %} class="sidebar_icon" alt="#">
-                                <a href="{% url 'trainer:work_manage' %}" class="sidebar_text text-workmanage">
+                            <div class="sidebar_div" onclick="sideGoPage('work_manage')"><img src={% static_url "user/res/icon-statistic.png" %} class="sidebar_icon" alt="#">
+                                <a class="sidebar_text text-workmanage">
                                 </a>
                             </div>
                             
-                        <div class="sidebar_div"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
-                            <a href="{% url 'trainer:alarm' %}" class="sidebar_text text-alarm">
+                        <div class="sidebar_div"  onclick="sideGoPage('alarm')"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
+                            <a class="sidebar_text text-alarm">
                             </a>
                         </div>
                         <!--

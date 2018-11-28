@@ -89,8 +89,9 @@ function downTouchEvent(){
 function sideGoPage(page){
     $('.ajaxloadingPC').show();
     closeNav();
-    $('#shade_caution').show();
-    location.href="/trainer/"+page+'/';
+    // $('#shade_caution').show();
+    $('#mobile_page_interaction').css({'transform':'translateX(-100%)'});
+    setTimeout(function(){location.href="/trainer/"+page+'/';}, 180);
 }
 
 
