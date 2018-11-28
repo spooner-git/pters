@@ -760,11 +760,11 @@ img,a,div,span,p{
 
 	.classTime, .groupTime{
 		/*top: 0.5px;*/
-		left: 1px;
+		/*left: 1px;*/
 	}
 
 	.offTime{
-		left: 1px;
+		/*left: 1px;*/
 	}
 
 	.classTime,.offTime,.classTime_checked{
