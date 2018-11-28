@@ -87,12 +87,13 @@ function downTouchEvent(){
 }
 
 function sideGoPage(page, menu_name_class){
-    // $('.ajaxloadingPC').show();
+    $('.ajaxloadingPC').show();
     $('#uptext, #uptext2, #uptext3').text(multi_language_set["KOR"][menu_name_class]);
     closeNav();
     // $('#shade_caution').show();
     $('#mobile_page_interaction').css({'transform':'translateX(-100%)'});
     setTimeout(function(){location.href="/trainer/"+page+'/';}, 180);
+    // location.href="/trainer/"+page+'/';
 }
 
 
