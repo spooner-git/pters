@@ -428,25 +428,25 @@ def func_check_group_available_member_after(class_id, group_id, group_schedule_i
 def func_date_check(class_id, schedule_id, pt_schedule_date, add_start_dt, add_end_dt):
     error = None
 
-    seven_days_ago = add_start_dt - datetime.timedelta(days=2)
-    seven_days_after = add_end_dt + datetime.timedelta(days=2)
-
-    schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
-                                              start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
-                                              use=USE).exclude(schedule_id=schedule_id)
-
-    for schedule_info in schedule_data:
-        if schedule_info.start_dt >= add_start_dt:
-            if schedule_info.start_dt < add_end_dt:
-                error = str(pt_schedule_date)
-        if schedule_info.end_dt > add_start_dt:
-            if schedule_info.end_dt < add_end_dt:
-                error = str(pt_schedule_date)
-        if schedule_info.start_dt <= add_start_dt:
-            if schedule_info.end_dt >= add_end_dt:
-                error = str(pt_schedule_date)
-        if error is not None:
-            break
+    # seven_days_ago = add_start_dt - datetime.timedelta(days=2)
+    # seven_days_after = add_end_dt + datetime.timedelta(days=2)
+    #
+    # schedule_data = ScheduleTb.objects.filter(~Q(state_cd='PC'), class_tb_id=class_id,
+    #                                           start_dt__gte=seven_days_ago, end_dt__lte=seven_days_after,
+    #                                           use=USE).exclude(schedule_id=schedule_id)
+    #
+    # for schedule_info in schedule_data:
+    #     if schedule_info.start_dt >= add_start_dt:
+    #         if schedule_info.start_dt < add_end_dt:
+    #             error = str(pt_schedule_date)
+    #     if schedule_info.end_dt > add_start_dt:
+    #         if schedule_info.end_dt < add_end_dt:
+    #             error = str(pt_schedule_date)
+    #     if schedule_info.start_dt <= add_start_dt:
+    #         if schedule_info.end_dt >= add_end_dt:
+    #             error = str(pt_schedule_date)
+    #     if error is not None:
+    #         break
 
     return error
 
