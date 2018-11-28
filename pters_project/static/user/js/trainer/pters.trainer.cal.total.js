@@ -1633,7 +1633,7 @@ function fake_show(){
 
 function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
-    //var duplicate_check = know_duplicated_plans(jsondata).result;
+    var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ  
 
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
@@ -1850,14 +1850,14 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         //var planHeight = Number(planDura*planheight-1);
         var planHeight = Number(planDura*planheight-3);
 
-        //중복 일정 ㅇㄷ
-        // var planWidth;
-        // var planLeft;
-        // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
-        //     planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
-        //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])
-        // }
-        //중복 일정 ㅇㄷ
+        //중복일정 ㅇㄷ
+        var planWidth;
+        var planLeft;
+        if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
+            planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
+            planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])
+        }
+        //중복일정 ㅇㄷ
 
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
 
@@ -1894,8 +1894,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
                                                      //중복 일정 ㅇㄷ
-                                                     //'left:'+planLeft+'%;'+
-                                                     //'width:'+planWidth+'%'+
+                                                     'left:'+planLeft+'%;'+
+                                                     'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
@@ -1933,8 +1933,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                                      'top:'+planLocation+'px;'+
                                                      group_user_color+
                                                      //중복 일정 ㅇㄷ
-                                                     //'left:'+planLeft+'%;'+
-                                                     //'width:'+planWidth+'%'+
+                                                     'left:'+planLeft+'%;'+
+                                                     'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
                                                         '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
@@ -1970,8 +1970,8 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                                            '" style="height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
                                                      //중복 일정 ㅇㄷ
-                                                     //'left:'+planLeft+'%;'+
-                                                     //'width:'+planWidth+'%'+
+                                                     'left:'+planLeft+'%;'+
+                                                     'width:'+planWidth+'%'+
                                            '">'+
                                                 '<span class="memberName '+hideornot+'">'+
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+

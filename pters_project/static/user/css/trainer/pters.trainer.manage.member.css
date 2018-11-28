@@ -383,6 +383,7 @@ select:focus > option:checked {
 	width: 100%;
 	background-color: #f4f4f4;
 	z-index: 9;
+	box-shadow: 0px 0px 10px 0px #cccccc;
 }
 #currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
 	width: 91.6%;
@@ -1601,6 +1602,7 @@ span.summaryInnerBoxText_Repeatendtext{
 
 	.upper_fixed_parts{
 		background-color: #ffffff;
+		box-shadow: unset;
 	}
 
 	#currentMemberList, #finishedMemberList, #currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
