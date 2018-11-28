@@ -91,7 +91,7 @@ function sideGoPage(page){
     closeNav();
     // $('#shade_caution').show();
     $('#mobile_page_interaction').css({'transform':'translateX(-100%)'});
-    setTimeout(function(){location.href="/trainer/"+page+'/';}, 200);
+    setTimeout(function(){location.href="/trainer/"+page+'/';}, 180);
 }
 
 
