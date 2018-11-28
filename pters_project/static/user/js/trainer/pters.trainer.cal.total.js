@@ -1857,6 +1857,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var time_hide = "";
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
             var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
+             if(planStartDate[i] == "2018-11-28 03:30:00"){
+                console.log(planStartDate[i], $(`div[data-starttime="${planStartDate[i]}"]`).length)
+            }
 
             planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]))-1;
             if(exist_check > 0){
@@ -2277,15 +2280,25 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planWidth;
         var planLeft;
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
-            planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
-            //planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
-            planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100;
+            // planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
+            // planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100;
+            var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
+            var regExp = /`data-starttime="${planStartDate[i]}"`/gi;
+            if(date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`) != null){
+                exist_check = date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`).length;
+            }
+            
+            planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]))-1;
+            if(exist_check > 0){
+                planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+            }else{
+                planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*2;
+            }
             if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
                 groupstatus="";
             }
         }
         //중복일정 ㅇㄷ
-
 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
