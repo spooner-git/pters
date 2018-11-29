@@ -753,9 +753,11 @@
 
                     window.webkit.messageHandlers.YOURMETHOD.postMessage(message);
                 }
-                check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
-                purchase_popup_close("do_not_show_background");
-                shade_index(100)
+                else {
+                    check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
+                    purchase_popup_close("do_not_show_background");
+                    shade_index(100)
+                }
             }
         });
         $('#view_appointment_btn').click(function(){
