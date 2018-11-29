@@ -749,6 +749,8 @@
                 var price = parseInt(Number($('#purchase_popup').attr('data-price')));
                 var period_month = $('#purchase_popup').attr('data-period-month');
                 var message = "Hello Swift"
+                alert(device_id);
+                alert(device_type);
                 if((device_id != 'pc') && (device_type=='ios')) {
                     window.webkit.messageHandlers.payment_method.postMessage(message);
                 }
