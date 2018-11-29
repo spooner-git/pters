@@ -553,9 +553,18 @@ $(document).ready(function(){
 
         ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
             if($('.add_time_unit').hasClass('checked')){
-                durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5);
+                if($('.allow_all_time').hasClass('checked')){
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5, "allow_all_time");
+                }else{
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5);
+                }
             }else{
-                durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur);
+                if($('.allow_all_time').hasClass('checked')){
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur, "allow_all_time");
+                }else{
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur);
+                }
+                
             }
         });
 
@@ -683,9 +692,18 @@ $(document).ready(function(){
 
         ajaxTimeGraphSet(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'), "callback", function(jsondata){
             if($('.add_time_unit').hasClass('checked')){
-                durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5);
+                if($('.allow_all_time').hasClass('checked')){
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5, "allow_all_time");
+                }else{
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", 5);
+                }
             }else{
-                durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur);
+                if($('.allow_all_time').hasClass('checked')){
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur, "allow_all_time");
+                }else{
+                    durTimeSet(thisID.split('_')[3], thisID.split('_')[4], "mini", Options.classDur);
+                }
+                
             }
         });
 
@@ -1082,9 +1100,18 @@ $(document).ready(function(){
 
         //진행시간 드랍다운리스트 채움
         if($('.add_time_unit').hasClass('checked')){
-            durTimeSet(arry[0], arry[1], "class", 5);
+            if($('.allow_all_time').hasClass('checked')){
+                durTimeSet(arry[0], arry[1], "class", 5, "allow_all_time");
+            }else{
+                durTimeSet(arry[0], arry[1], "class", 5);
+            }
+            
         }else{
-            durTimeSet(arry[0], arry[1], "class", Options.classDur);
+            if($('.allow_all_time').hasClass('checked')){
+                durTimeSet(arry[0], arry[1], "class", Options.classDur, "allow_all_time");
+            }else{
+                durTimeSet(arry[0], arry[1], "class", Options.classDur);
+            }
         }
 
         //진행시간 자동으로 최소 단위 시간으로 Default 셋팅
@@ -2168,9 +2195,17 @@ function ajaxTimeGraphSet(date, use, callback){
                 //timeGraphSet("group","pink","mini", jsondata);
                 //timeGraphSet("off","grey","mini", jsondata);
                 if($('.add_time_unit').hasClass('checked')){
-                    startTimeSet('class', jsondata, today_form, 5);
+                    if($('.allow_all_time').hasClass('checked')){
+                        startTimeSet('class', jsondata, today_form, 5, "allow_all_time");
+                    }else{
+                        startTimeSet('class', jsondata, today_form, 5);
+                    }
                 }else{
-                    startTimeSet('class', jsondata, today_form, Options.classDur);
+                    if($('.allow_all_time').hasClass('checked')){
+                        startTimeSet('class', jsondata, today_form, Options.classDur, "allow_all_time");
+                    }else{
+                        startTimeSet('class', jsondata, today_form, Options.classDur);
+                    }
                 }
                 if(use == "callback"){
                     callback(jsondata);
@@ -2504,8 +2539,22 @@ $('.add_time_unit').click(function(){
     }
 });
 
+$('.allow_all_time').click(function(){
+    clear_start_dur_dropdown();
+    var $child = $(this).find('div');
+    if($(this).hasClass('checked')){
+        $(this).removeClass('checked');
+        $child.removeClass('ptersCheckboxInner_sm');
+        ajaxTimeGraphSet($('#datepicker').val());
+    }else{
+        $(this).addClass('checked');
+        $child.addClass('ptersCheckboxInner_sm');
+        ajaxTimeGraphSet($('#datepicker').val());
+    }
+});
 
-function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
+
+function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
     var option;
     switch(option){
         case "class" :
@@ -2549,40 +2598,14 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         }
     }
 
-    // var classTimeArray_start_date = remove_duplicate_in_list(jsondata.classTimeArray_start_date);
-    // var classTimeArray_end_date = remove_duplicate_in_list(jsondata.classTimeArray_end_date);
-    // var groupTimeArray_start_date_ = remove_duplicate_compared_to(jsondata.group_schedule_start_datetime, classTimeArray_start_date);
-    // var groupTimeArray_end_date_ = remove_duplicate_compared_to(jsondata.group_schedule_end_datetime, classTimeArray_end_date);
-    // var groupTimeArray_start_date = remove_duplicate_compared_to(groupTimeArray_start_date_, jsondata.offTimeArray_start_date);
-    // var groupTimeArray_end_date = remove_duplicate_compared_to(groupTimeArray_end_date_, jsondata.offTimeArray_end_date);
+    if(filter == "allow_all_time"){
+        plan_time = [];
+    }
 
-    // calc_and_make_plan_time(classTimeArray_start_date, classTimeArray_end_date);
-    // calc_and_make_plan_time(groupTimeArray_start_date, groupTimeArray_end_date);
-    // calc_and_make_plan_time(jsondata.offTimeArray_start_date, jsondata.offTimeArray_end_date);
+    plan_time.push("00:00");
 
-    // function calc_and_make_plan_time(startArray, endArray){
-    //     for(var i=0; i<startArray.length; i++){
-    //         var plan_start_date = startArray[i].split(' ')[0];
-    //         var plan_start_time = startArray[i].split(' ')[1].split(':')[0]+':'+startArray[i].split(' ')[1].split(':')[1];
-    //         var plan_end_date = endArray[i].split(' ')[0];
-    //         var plan_end_time = endArray[i].split(' ')[1].split(':')[0]+':'+endArray[i].split(' ')[1].split(':')[1];
-    //         if(plan_start_date == selecteddate){
-    //             plan_time.push(plan_start_time);
-    //         }
-    //         if (plan_end_date == selecteddate && plan_end_time != "00:00") {
-    //             plan_time.push(plan_end_time);
-    //         } else if (plan_end_date == date_format_yyyy_m_d_to_yyyy_mm_dd(add_date(selecteddate, 1), '-') && plan_end_time == "00:00") {
-    //             plan_time.push('24:00');
-    //         }
-    //     }
-    // }
-
-    //if(plan_time.indexOf("00:00") < 0){
-        plan_time.push("00:00");
-    //}
-    //if(plan_time.indexOf("24:00") < 0){
-        plan_time.push("24:00");
-    //}
+    plan_time.push("24:00");
+    
 
     var sortedlist = plan_time.sort();
 
@@ -2611,13 +2634,10 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
                 alert('예상치 못한 에러가 발생했습니다. \n 관리자에게 문의해주세요.');
                 break;
             }
-
         }
-
         // }
     }
 
-    //offAddOkArray = []
     if(Timeunit == 60){
         Timeunit = 30;
     }
@@ -2626,22 +2646,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
         if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
             addOkArrayList.push(semiresult[t]);
         }
-    //     //if(Number(semiresult[t].split(':')[1])%Timeunit == 0){  //몇분 간격으로 시작시간을 보여줄 것인지?
-    //     if(selecteddate == currentDate){                                                                   //선택한 날짜가 오늘일 경우
-    //         //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false           //업무시간
-    //             //&& compare_time(semiresult[t], add_time(Options.workStartTime+':00', '00:00')) ){
-    //             if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
-    //                 addOkArrayList.push(semiresult[t]);
-    //             }
-    //         //}
-    //     }else{                                                                                     //선택한 날짜가 오늘이 아닐경우
-    //         //if(compare_time(semiresult[t], add_time(Options.workEndTime+':00', '00:00')) == false
-    //             //&& compare_time(add_time(Options.workStartTime+':00', '00:00'),semiresult[t]) == false){        //업무시간
-    //             if(Number(semiresult[t].split(':')[1])%Timeunit == 0){                                          //몇분 간격으로 시작시간을 보여줄 것인지?
-    //                 addOkArrayList.push(semiresult[t]);
-    //             }
-    //         //}
-    //     }
     }
     allplans = [];
     // 업무 시작시각과 종료시각에만 영향 가도록 변경 -> side effect 줄이기 위해
@@ -2661,9 +2665,10 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit){ //offAddOkArray �
 
 var allplans = [];
 
-function startTimeSet(option, jsondata, selecteddate, Timeunit){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
-    var sArraySet =  startTimeArraySet(selecteddate, jsondata, Timeunit); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
+function startTimeSet(option, jsondata, selecteddate, Timeunit, filter){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
+    var sArraySet =  startTimeArraySet(selecteddate, jsondata, Timeunit, filter); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
     var addOkArray = sArraySet.addOkArray;
+    console.log("addOkArray", addOkArray)
     var options = "";
     switch(option){
         case "class":
@@ -2922,8 +2927,11 @@ function timeGraphSet(option, CSStheme, Page, jsondata){ //가능 시간 그래�
 }
 
 
-function durTimeSet(selectedTime, selectedMin, option, Timeunit){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
+function durTimeSet(selectedTime, selectedMin, option, Timeunit, filter){ // durAddOkArray 채우기 : 진행 시간 리스트 채우기
     var timelist = remove_duplicate_in_list(allplans);
+    if(filter == "allow_all_time"){
+        timelist = [];
+    }
     var durTimeList;
     var options;
     var plansArray=[];
