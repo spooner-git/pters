@@ -871,7 +871,7 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //ì„
     var td1 = [];
     var z = 0;
     var i = Options.workStartTime;
-    var td_style = ' style="background:#f7f7f7;background-size:60px 60px;background-image:url(/static/user/res/calendar_hour.png);cursor:default" ';
+    var td_style = ' style="background:#ffffff;background-size:60px 60px;background-image:url(/static/user/res/calendar_hour.png);cursor:default" ';
 
     var worktime_option;
     var starttime;
