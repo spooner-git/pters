@@ -144,8 +144,8 @@ function close_info_popup(option){
 function close_planadd_popup(){
     $('#page-addplan').css('display', 'none');
     $('#calendar').css('position', 'relative');
-    $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
+    $('.add_time_unit, .allow_all_time').removeClass('checked');
+    $('.add_time_unit div,  .allow_all_time div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
     enable_window_scroll();
     if(bodywidth<=820){
@@ -183,8 +183,8 @@ function close_planadd_popup_mobile(){
         text1 = 'Choose member';
         text2 = 'Choose';
     }
-    $('.add_time_unit').removeClass('checked');
-    $('.add_time_unit div').removeClass('ptersCheckboxInner_sm');
+    $('.add_time_unit, .allow_all_time').removeClass('checked');
+    $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
     $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
     $("#countsSelected,.countsSelected").text("");
     //$("#dateSelector p").removeClass("dropdown_selected");
