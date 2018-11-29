@@ -419,17 +419,26 @@
         });
 
         $('.pay_product_function').click(function(e){
-            if(!$(this).hasClass("ticket_disable")){
-                e.stopPropagation();
-                e.preventDefault();
 
-                if(platform_check == "mobile_browser"){
-                    alert("스마트폰 브라우저로 접속하신 경우\n시크릿모드(개인정보보호 모드)로 접속시 결제가 정상적으로 진행되지 않습니다.\n결제전 다시한번 모드를 확인후 진행해주세요.");
+            var message = "Hello Swift"
+            alert(platform_check);
+            alert(device_type);
+            if((platform_check == 'mobile') && (device_type=='ios')) {
+                window.webkit.messageHandlers.payment_method.postMessage(message);
+            }
+            else {
+                if (!$(this).hasClass("ticket_disable")) {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    if (platform_check == "mobile_browser") {
+                        alert("스마트폰 브라우저로 접속하신 경우\n시크릿모드(개인정보보호 모드)로 접속시 결제가 정상적으로 진행되지 않습니다.\n결제전 다시한번 모드를 확인후 진행해주세요.");
+                    }
+
+                    purchase_popup_show($(this).attr('data-product-name') + ' - ' + $(this).attr('data-product-price-name'),
+                        $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
+                        $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
                 }
-
-                purchase_popup_show($(this).attr('data-product-name')+' - '+$(this).attr('data-product-price-name'),
-                    $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
-                    $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
             }
         });
 
@@ -708,11 +717,12 @@
         }
 
         $('#purchase_popup_page1 .ptersCheckbox').click(function(){
+
             $(this).addClass('checked')
             $(this).find('div').addClass('ptersCheckboxInner');
 
 
-            if($('#purchase_appointment .ptersCheckbox').hasClass('checked') && $('#purchase_popup_page1').css('display')=='block' ){
+            if ($('#purchase_appointment .ptersCheckbox').hasClass('checked') && $('#purchase_popup_page1').css('display') == 'block') {
                 $('#purchase_popup_page1 ._button_Next').addClass('appoint_checked')
             }
         });
@@ -748,17 +758,10 @@
                 var product_id = $('#purchase_popup').attr('data-product-id');
                 var price = parseInt(Number($('#purchase_popup').attr('data-price')));
                 var period_month = $('#purchase_popup').attr('data-period-month');
-                var message = "Hello Swift"
-                alert(device_id);
-                alert(device_type);
-                if((device_id != 'pc') && (device_type=='ios')) {
-                    window.webkit.messageHandlers.payment_method.postMessage(message);
-                }
-                else {
-                    check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
-                    purchase_popup_close("do_not_show_background");
-                    shade_index(100)
-                }
+                check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
+                purchase_popup_close("do_not_show_background");
+                shade_index(100)
+
             }
         });
         $('#view_appointment_btn').click(function(){
