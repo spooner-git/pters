@@ -362,6 +362,13 @@
 
         var IMP = window.IMP; // 생략가능
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+        var device_type = 'pc';
+        var varUA = navigator.userAgent.toLowerCase();
+        if (varUA.match('android') != null) {
+            device_type = 'android';
+        } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
+            device_type = 'ios';
+        }
 
         $('a.text-payment').css('color','#fe4e65;');
         if($('body').width()<600){
@@ -741,6 +748,11 @@
                 var product_id = $('#purchase_popup').attr('data-product-id');
                 var price = parseInt(Number($('#purchase_popup').attr('data-price')));
                 var period_month = $('#purchase_popup').attr('data-period-month');
+                var message = "Hello Swift"
+                if((device_id != 'pc') && (device_type=='ios')) {
+
+                    window.webkit.messageHandlers.YOURMETHOD.postMessage(message);
+                }
                 check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
                 purchase_popup_close("do_not_show_background");
                 shade_index(100)
