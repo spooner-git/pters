@@ -750,8 +750,7 @@
                 var period_month = $('#purchase_popup').attr('data-period-month');
                 var message = "Hello Swift"
                 if((device_id != 'pc') && (device_type=='ios')) {
-
-                    window.webkit.messageHandlers.YOURMETHOD.postMessage(message);
+                    window.webkit.messageHandlers.payment_method.postMessage(message);
                 }
                 else {
                     check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
