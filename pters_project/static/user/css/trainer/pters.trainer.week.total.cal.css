@@ -312,6 +312,8 @@ img,a,div,span,p{
 	color: #444444;
 	font-size: 12px;
 	cursor: pointer;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 	#hidetoggle img{
 		margin-right: 7px;
@@ -653,6 +655,7 @@ img,a,div,span,p{
 		transform: translateX(-50%);
 		width: 100%;
 		max-width: 1080px;
+		padding: 0;
 	}
 		#hidetoggle img{
 			width: 7px;
