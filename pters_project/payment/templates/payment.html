@@ -598,101 +598,109 @@
                 }
                 payment_date = start_date;
             }
-            console.log(payment_date);
-            var request_pay_period_data = {
-                pg : 'danal', // version 1.1.0부터 지원.
-                pay_method : pay_method,
-                merchant_uid : merchant_uid_data,
-                customer_uid : customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
-                name : name,
-                amount : price,
-                custom_data: {
-                    "user_id":{{ request.user.id }},
-                    "product_id":product_id,
-                    "payment_type_cd":payment_type_cd,
-                    "customer_uid":customer_uid_data,
-                    "start_date":  payment_date,
-                    "period_month": period_month
-                },
-                buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.first_name }}',
-            };
-            var request_pay_single_data = {
-                pg : 'danal', // version 1.1.0부터 지원.
-                pay_method : pay_method,
-                merchant_uid : merchant_uid_data,
-                name : name,
-                amount : price,
-                custom_data: {
-                    "user_id":{{ request.user.id }},
-                    "product_id":product_id,
-                    "payment_type_cd":payment_type_cd,
-                    "start_date":  payment_date,
-                    "period_month": period_month
-                },
-                buyer_email : '{{ request.user.email }}',
-                buyer_name : '{{ request.user.first_name }}',
-                {#                    buyer_tel : '',#}
-                {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
-                {#                    buyer_postcode : '123-456',#}
-            };
 
-            if(payment_type_cd=='PERIOD'){
-                billing_data = request_pay_period_data;
+            var message = "Hello Swift"
+            alert(platform_check);
+            alert(device_type);
+            if((platform_check == 'mobile') && (device_type=='ios')) {
+                window.webkit.messageHandlers.payment_method.postMessage(message);
             }
-            else{
-                billing_data = request_pay_single_data;
-            }
+            else {
+                console.log(payment_date);
+                var request_pay_period_data = {
+                    pg: 'danal', // version 1.1.0부터 지원.
+                    pay_method: pay_method,
+                    merchant_uid: merchant_uid_data,
+                    customer_uid: customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                    name: name,
+                    amount: price,
+                    custom_data: {
+                        "user_id":{{ request.user.id }},
+                        "product_id": product_id,
+                        "payment_type_cd": payment_type_cd,
+                        "customer_uid": customer_uid_data,
+                        "start_date": payment_date,
+                        "period_month": period_month
+                    },
+                    buyer_email: '{{ request.user.email }}',
+                    buyer_name: '{{ request.user.first_name }}',
+                };
+                var request_pay_single_data = {
+                    pg: 'danal', // version 1.1.0부터 지원.
+                    pay_method: pay_method,
+                    merchant_uid: merchant_uid_data,
+                    name: name,
+                    amount: price,
+                    custom_data: {
+                        "user_id":{{ request.user.id }},
+                        "product_id": product_id,
+                        "payment_type_cd": payment_type_cd,
+                        "start_date": payment_date,
+                        "period_month": period_month
+                    },
+                    buyer_email: '{{ request.user.email }}',
+                    buyer_name: '{{ request.user.first_name }}',
+                    {#                    buyer_tel : '',#}
+                    {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
+                    {#                    buyer_postcode : '123-456',#}
+                };
 
-            IMP.request_pay(billing_data, function(rsp) {
+                if (payment_type_cd == 'PERIOD') {
+                    billing_data = request_pay_period_data;
+                }
+                else {
+                    billing_data = request_pay_single_data;
+                }
+
+                IMP.request_pay(billing_data, function (rsp) {
                     var msg;
-                    if ( rsp.success ) {
+                    if (rsp.success) {
                         console.log(rsp);
 
                         $.ajax({
                             url: "/payment/check_finish_billing/", // 서비스 웹서버
                             type: "POST",
-                            headers: { "Content-Type": "application/json" },
+                            headers: {"Content-Type": "application/json"},
                             data: JSON.stringify({
-                                product_id : product_id,
-                                payment_type_cd:payment_type_cd,
+                                product_id: product_id,
+                                payment_type_cd: payment_type_cd,
                                 paid_amount: rsp.paid_amount,
                                 start_date: payment_date,
                                 period_month: period_month
                             }),
 
-                            beforeSend:function(xhr, settings) {
+                            beforeSend: function (xhr, settings) {
                                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                                 }
                                 beforeSend();
                             },
 
-                            success:function(data){
+                            success: function (data) {
                                 var jsondata = JSON.parse(data);
                                 initialJSON = jsondata;
-                                if(jsondata.messageArray.length>0){
+                                if (jsondata.messageArray.length > 0) {
                                     msg = '결제에 실패하였습니다.';
                                     msg += ' : ' + jsondata.messageArray;
                                     url_move = "/payment/";
-                                }else {
+                                } else {
                                     msg = '결제가 완료되었습니다.';
                                     url_move = "/payment/payment_history/";
-            {#                        msg += '고유ID : ' + rsp.imp_uid;#}
-            {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
-{#                                    msg += '결제 금액 : ' + rsp.paid_amount;#}
-            {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
+                                    {#                        msg += '고유ID : ' + rsp.imp_uid;#}
+                                    {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
+                                    {#                                    msg += '결제 금액 : ' + rsp.paid_amount;#}
+                                    {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
                                 }
                                 alert(msg);
-                                location.href=url_move;
+                                location.href = url_move;
 
                             },
 
-                            complete:function(){
+                            complete: function () {
                                 completeSend();
                             },
 
-                            error:function(){
+                            error: function () {
                                 console.log('server error');
                             }
                         });
@@ -702,9 +710,10 @@
                         msg += ' : ' + rsp.error_msg;
                         shade_index(-100)
                         alert(msg);
-                        location.href="/payment/";
+                        location.href = "/payment/";
                     }
                 });
+            }
 
         }
 
@@ -744,24 +753,16 @@
         $('#purchase_popup_page2 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page2').css('display')=='block' ){
 
+                var product = $('#purchase_popup').attr('data-product');
+                var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
+                var payment_type_cd = $('#purchase_popup').attr('data-type');
+                var product_id = $('#purchase_popup').attr('data-product-id');
+                var price = parseInt(Number($('#purchase_popup').attr('data-price')));
+                var period_month = $('#purchase_popup').attr('data-period-month');
+                check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
+                purchase_popup_close("do_not_show_background");
+                shade_index(100)
 
-                var message = "Hello Swift"
-                alert(platform_check);
-                alert(device_type);
-                if((platform_check == 'mobile') && (device_type=='ios')) {
-                    window.webkit.messageHandlers.payment_method.postMessage(message);
-                }
-                else {
-                    var product = $('#purchase_popup').attr('data-product');
-                    var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
-                    var payment_type_cd = $('#purchase_popup').attr('data-type');
-                    var product_id = $('#purchase_popup').attr('data-product-id');
-                    var price = parseInt(Number($('#purchase_popup').attr('data-price')));
-                    var period_month = $('#purchase_popup').attr('data-period-month');
-                    check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
-                    purchase_popup_close("do_not_show_background");
-                    shade_index(100)
-                }
             }
         });
         $('#view_appointment_btn').click(function(){
