@@ -1482,13 +1482,8 @@ function weekNum_Set_fixed(){
     $('.holiday').removeClass('holiday');
 
     for(i=0; i<7;i++){
-        var text1 = '일';
-        if(Options.language == "JPN"){
-            text1 = '日';
-        }else if(Options.language == "ENG"){
-            text1 = '';
-        }
-        WeekArry[i].html(WeekArryTarget[i]+text1);
+        
+        WeekArry[i].html(WeekArryTarget[i]);
 
         var date_yyyy_m_d = date_format_yyyy_mm_dd_to_yyyy_m_d(date_format_yyyymmdd_to_split(currentPageDateInfo[i],'_'),'_');
 
@@ -1577,7 +1572,8 @@ function toDay(){
             }else{
                 $('#weekNum_'+i).addClass('todaywide');
             }
-            $('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY');
+            // $('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY');
+            $('#weekNum_'+i+' span:nth-child(1)').addClass('today');
             $('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number');
 
         }else{

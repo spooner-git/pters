@@ -124,7 +124,8 @@ body{
 
 .weekNum{
 	display: table-cell;
-	background:#f7f7f7;
+/*	background:#f7f7f7;*/
+	background-color: rgba(40, 40, 40, 0.06);
 	position: relative;
 	text-align: center;
 	width: 12.5%;
@@ -569,6 +570,13 @@ img,a,div,span,p{
 	height: 18px;
 	font-size: 13px;
 }
+.week_fixed_box_1{
+	height: 3px;
+}
+.week_fixed_box_2{
+	font-size: 25px;
+	height: 32px;
+}
 
 .today-Number{
 	font-weight: bold;
@@ -617,7 +625,7 @@ img,a,div,span,p{
 		position: relative;
 /*		background:#ffffff;*/
 		background: transparent;
-		padding-top: 64px;
+		padding-top: 78px;
 		margin-bottom: 60px;
 		padding-bottom: 0;
 	}
@@ -715,7 +723,7 @@ img,a,div,span,p{
 	.hour{
 		/*height: 46px;*/
 		height: 60px;
-		background:#ffffff;
+		background:#f4f4f4;
 	}
 
 	.weekNum{
@@ -811,6 +819,14 @@ img,a,div,span,p{
 		height: 18px;
 		font-size: 13px;
 		font-weight: 400;
+	}
+
+	.week_fixed_box_1{
+		/*height: 3px;*/
+	}
+	.week_fixed_box_2{
+		font-size: 25px;
+		height: 32px;
 	}
 
 	.time-style{
