@@ -2,6 +2,8 @@ $(document).ready(function(){
     //////////////////////////////메뉴들 탭 이동//////////////////////////////////////////////
 
     function payment_for_ios(payment_date , product_price_id){
+        alert(payment_date)
+        alert(product_price_id)
         $.ajax({
             url: "/payment/payment_for_ios/", // 서비스 웹서버
             type: "POST",
