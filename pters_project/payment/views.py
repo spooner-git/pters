@@ -81,7 +81,7 @@ def check_before_billing_logic(request):
             product_id = json_loading_data['product_id']
             input_price = json_loading_data['price']
             period_month = int(json_loading_data['period_month'])
-            pay_method = int(json_loading_data['pay_method'])
+            pay_method = json_loading_data['pay_method']
         except KeyError:
             error = '오류가 발생했습니다.[3]'
 
