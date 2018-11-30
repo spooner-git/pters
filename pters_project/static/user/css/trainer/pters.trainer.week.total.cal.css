@@ -118,6 +118,7 @@ body{
 	max-width: 1080px;
 
 	border-bottom:1px solid #eaeaea;
+	box-shadow: 1px 1px 10px 1px #cccccc;
 	display: table;
 	table-layout: fixed;
 	width: 100%;
