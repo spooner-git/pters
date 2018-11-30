@@ -89,24 +89,30 @@ def check_before_billing_logic(request):
         error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
     if error is None:
-        if payment_type_cd == 'PERIOD':
-            if str(product_id) == '11':
-                period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                      product_tb_id='8',
-                                                                      next_payment_date__gt=today,
-                                                                      state_cd='IP',
-                                                                      use=USE).count()
-                if period_payment_counter == 0:
-                    error = '프리미엄 고객 전용 상품입니다. 먼저 프리미엄 기능을 구매해 주세요.'
+        if str(product_id) == '11':
+            period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                  product_tb_id='8',
+                                                                  next_payment_date__gt=today,
+                                                                  state_cd='IP',
+                                                                  use=USE).count()
+            if period_payment_counter == 0:
+                error = '프리미엄 고객 전용 상품입니다. 먼저 프리미엄 기능을 구매해 주세요.'
 
-            else:
-                period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                      next_payment_date__gt=today,
-                                                                      state_cd='IP',
-                                                                      use=USE).count()
-                if period_payment_counter > 0:
-                    error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
+        else:
+            period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                  next_payment_date__gt=today,
+                                                                  state_cd='IP',
+                                                                  use=USE).count()
+            if period_payment_counter > 0:
+                error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
             # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
+    if error is None:
+        if payment_type_cd == 'SINGLE':
+            payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
+                                                     end_date__gte=today,
+                                                     use=USE).latest('end_date')
+            if payment_info is not None and payment_info != '':
+                next_payment_date = payment_info[0].end_date + datetime.timedelta(days=1)
 
     if error is None:
         date = int(next_payment_date.strftime('%d'))
