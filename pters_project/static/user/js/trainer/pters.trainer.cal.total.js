@@ -1855,7 +1855,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
             planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]))-1;
             if(planStartDate[i] == "2018-11-30 06:00:00"){
-                console.log(option,"exist_check", exist_check, planStartDate[i]+' ~ '+planEndDate[i], duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]]);
+                //console.log(option,"exist_check", exist_check, planStartDate[i]+' ~ '+planEndDate[i], duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]]);
                 //console.log(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)
             }
             
@@ -1885,9 +1885,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                 if(calc == -1){
                     calc = 0;
                 }
-                if(planStartDate[i] == "2018-11-30 06:00:00"){
-                    console.log("calc", calc)
-                }
+                // if(planStartDate[i] == "2018-11-30 06:00:00"){
+                //     console.log("calc", calc)
+                // }
                 planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
             // }
 
@@ -1911,8 +1911,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         //}
         //이미 설정한 일정이 업무종료 시간보다 넘어가서 끝날때 끝을 깔끔하게 업무종료시간에 맞춘다.
 
-
-        if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+        // if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+        if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
+            console.log("class", planStartDate[i])
             if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
                 }else{
@@ -2446,7 +2447,6 @@ function know_duplicated_plans(jsondata){
     var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     var testArray_end = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
     var classlen = jsondata.classTimeArray_start_date.length;
-    console.log("testArray_start1", jsondata.group_schedule_start_datetime);
     for(var i=0; i<classlen; i++){
         //ori
         // if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1 && jsondata.group_schedule_end_datetime.indexOf(jsondata.classTimeArray_end_date[i]) == -1){
@@ -2461,8 +2461,10 @@ function know_duplicated_plans(jsondata){
         // }
 
         //test2
-        testArray_start.push(jsondata.classTimeArray_start_date[i]);
-        testArray_end.push(jsondata.classTimeArray_end_date[i]);
+        if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) ){
+            testArray_start.push(jsondata.classTimeArray_start_date[i]);
+            testArray_end.push(jsondata.classTimeArray_end_date[i]);    
+        }
     }
 
 
