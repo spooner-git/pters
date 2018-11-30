@@ -599,9 +599,9 @@
                 payment_date = start_date;
             }
 
-            var message = "Hello Swift"
-            alert(platform_check);
-            alert(device_type);
+            var message = "9"
+            //alert(platform_check);
+            //alert(device_type);
             if((platform_check == 'mobile') && (device_type=='ios')) {
                 window.webkit.messageHandlers.payment_method.postMessage(message);
             }
