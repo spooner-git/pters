@@ -177,31 +177,37 @@
     <div id="week" class="">
         <div class="slidegap"><span></span><span></span></div>
         <div id="weekNum_1" class="weekNum sunDate">
-            <span class="weekToday-style"></span><span id="sunDate" class="weekToday-style"></span>
+            <span class="weekToday-style week_fixed_box_1"></span><span id="sunDate" class="weekToday-style  week_fixed_box_2"></span>
             <span class="weekToday-style text-sundaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_2" class="weekNum"><span class="weekToday-style"></span><span id="monDate" class="weekToday-style"></span>
+        <div id="weekNum_2" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="monDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-mondaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_3" class="weekNum"><span class="weekToday-style"></span><span id="tueDate" class="weekToday-style"></span>
+        <div id="weekNum_3" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="tueDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-tuesdaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_4" class="weekNum"><span class="weekToday-style"></span><span id="wedDate" class="weekToday-style"></span>
+        <div id="weekNum_4" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="wedDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-wednesdaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_5" class="weekNum"><span class="weekToday-style"></span><span id="thrDate" class="weekToday-style"></span>
+        <div id="weekNum_5" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="thrDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-thursdaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_6" class="weekNum"><span class="weekToday-style"></span><span id="friDate" class="weekToday-style"></span>
+        <div id="weekNum_6" class="weekNum">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="friDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-fridaymin"></span>
             <span class="holidayName"></span>
         </div>
-        <div id="weekNum_7" class="weekNum satDate"><span class="weekToday-style"></span><span id="satDate" class="weekToday-style"></span>
+        <div id="weekNum_7" class="weekNum satDate">
+            <span class="weekToday-style  week_fixed_box_1"></span><span id="satDate" class="weekToday-style week_fixed_box_2"></span>
             <span class="weekToday-style text-saturdaymin"></span>
             <span class="holidayName"></span>
         </div>
@@ -1347,7 +1353,7 @@
                         $("#hidetoggle").find('img').css('-webkit-transform','rotate(-90deg)');
                         $('#ymdText-pc').css({'margin-top':'17px'});
                         $('#week').css({'padding-top':'32px'});
-                        $('#calendar').css('padding-top','16px');
+                        $('#calendar').css('padding-top','30px');
                         $('#ymdText').css('display','none');
                         week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                         $('.td00, .td30').css({'background':'unset',
@@ -1378,7 +1384,7 @@
                         $("#hidetoggle").find('img').css('-webkit-transform','rotate(90deg)');
                         $('#ymdText-pc').css({'margin-top':'65px'});
                         $('#week').css({'padding-top':'80px'});
-                        $('#calendar').css('padding-top','64px');
+                        $('#calendar').css('padding-top','78px');
                         $('#ymdText').css('display','block');
                         week_calendar(date_format_yyyymmdd_to_split($('#weekNum_1').attr('data-date'),'-'));
                         $('.td00, .td30').css({'background':'#ffffff',

@@ -610,6 +610,7 @@ a:focus, a:hover{
 #page-base{
     display: block;
     z-index: 400;
+    background-color: #ffffff;
 }
 
 #page-base-addstyle{

@@ -871,7 +871,7 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //�
     var td1 = [];
     var z = 0;
     var i = Options.workStartTime;
-    var td_style = ' style="background:#f7f7f7;background-size:60px 60px;background-image:url(/static/user/res/calendar_hour.png);cursor:default" ';
+    var td_style = ' style="background:#ffffff;background-size:60px 60px;background-image:url(/static/user/res/calendar_hour.png);cursor:default" ';
 
     var worktime_option;
     var starttime;
@@ -1482,13 +1482,8 @@ function weekNum_Set_fixed(){
     $('.holiday').removeClass('holiday');
 
     for(i=0; i<7;i++){
-        var text1 = '일';
-        if(Options.language == "JPN"){
-            text1 = '日';
-        }else if(Options.language == "ENG"){
-            text1 = '';
-        }
-        WeekArry[i].html(WeekArryTarget[i]+text1);
+        
+        WeekArry[i].html(WeekArryTarget[i]);
 
         var date_yyyy_m_d = date_format_yyyy_mm_dd_to_yyyy_m_d(date_format_yyyymmdd_to_split(currentPageDateInfo[i],'_'),'_');
 
@@ -1577,7 +1572,8 @@ function toDay(){
             }else{
                 $('#weekNum_'+i).addClass('todaywide');
             }
-            $('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY');
+            // $('#weekNum_'+i+' span:nth-child(1)').addClass('today').html('TODAY');
+            $('#weekNum_'+i+' span:nth-child(1)').addClass('today');
             $('#weekNum_'+i+' span:nth-child(3)').addClass('today-Number');
 
         }else{
@@ -2315,20 +2311,27 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             }
             console.log("exist_check", exist_check, planStartDate[i], duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]])
             planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]))-1;
-            // if(exist_check > 0){
-            //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+            
+            // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
+            //     if(exist_check == 0){
+            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+            //     }else{
+            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+            //     }
             // }else{
-            //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*2;
+            //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
             // }
+            var calc;
             if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-                if(exist_check == 0){
-                    planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-                }else{
-                    planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-                }
+                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
             }else{
-                planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
             }
+            if(calc == -1){
+                calc = 0;
+            }
+            
+            planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
             if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
                 groupstatus="";
             }

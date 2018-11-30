@@ -129,6 +129,8 @@ img,a,div,span,p{
 	border-bottom: 1px solid #cccccc;
 	font-size: 14.4px;
 	height: 70px;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 
@@ -443,12 +445,12 @@ img,a,div,span,p{
 
 
 .tdsaturday{
-	border-right-color:#f7f7f7 !important;
+	border-right-color:#cccccc !important;
 	color: #115a8e;
 }
 
 .tdsunday{
-	border-left-color: #f7f7f7 !important;
+	border-left-color: #cccccc !important;
 	color: #d21245;
 }
 
@@ -671,7 +673,7 @@ img,a,div,span,p{
 		position: fixed;
 		padding: 0;
 		top: 0;
-		height: 60px;
+		height: 73px;
 		background-color: #ffffff;
 		margin-top: 179px;
 		z-index: 5;
@@ -688,11 +690,11 @@ img,a,div,span,p{
 	}
 
 	#sunday{
-		border-left-color: #f7f7f7 !important;
+		border-left-color: #cccccc !important;
 	}
 
 	#saturday{
-		border-right-color: #f7f7f7 !important;
+		border-right-color: #cccccc !important;
 	}
 
 	.blackballoon_trainer, .balloon_trainer{

@@ -44,7 +44,7 @@ body{
 }
 
 .navbar-default{
-	background-color: transparent;
+	background-color: transparent !important;
 	border-color: transparent;
 }
 
