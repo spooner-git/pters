@@ -884,7 +884,7 @@
 
             if((platform_check == 'mobile') && (device_type=='ios')) {
                 //alert("test")
-                $left_ticket_comment.html(`<span class="${product_color}">30일 이용권</span>`);
+                $left_ticket_comment.html(`<span class="${product_color}">30일권</span>`);
                 $left_ticket_new_price.text(`${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
             }else{
                 $left_ticket_comment.html(`<span class="${product_color}">${jsondata.product_price_period_month}개월</span> 정기 결제`);
