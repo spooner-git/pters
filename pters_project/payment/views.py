@@ -749,11 +749,11 @@ def payment_for_ios_logic(request):
         start_date = str(start_date)
 
     if error is None:
-        payment_info = PaymentInfoTb(member_id=request.user.id,
+        payment_info = PaymentInfoTb(member_id=str(request.user.id),
                                      product_tb_id=7,
                                      payment_type_cd='SINGLE',
-                                     merchant_uid='m_'+request.user.id+'_7_'+timezone.now().timestamp(),
-                                     customer_uid='c_'+request.user.id+'_7_'+timezone.now().timestamp(),
+                                     merchant_uid='m_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
                                      start_date=start_date, end_date=end_date,
                                      paid_date=today,
                                      period_month=1,
