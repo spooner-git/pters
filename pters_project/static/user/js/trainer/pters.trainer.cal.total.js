@@ -1885,9 +1885,6 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
                 if(calc == -1){
                     calc = 0;
                 }
-                // if(planStartDate[i] == "2018-11-30 06:00:00"){
-                //     console.log("calc", calc)
-                // }
                 planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
             // }
 
@@ -1913,44 +1910,43 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 
         // if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
         if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
-            console.log("class", planStartDate[i])
-            if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
-                if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
-                }else{
-                    if(check_plan==1){
-                        planHour = temp_planHour;
-                        planMinute = temp_planMinute;
+                if(planStartDiv.find('div['+'class-schedule-id='+planScheduleIdArray[i]+']').length == 0){
+                    if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+                    }else{
+                        if(check_plan==1){
+                            planHour = temp_planHour;
+                            planMinute = temp_planMinute;
 
+                        }
+                        planStartDiv.append('<div class-time="'+planArrayForTag.join('_')+
+                                               '" class-schedule-id="'+planScheduleIdArray[i]+
+                                               '" data-starttime="'+planStartDate[i]+
+                                               '" data-groupid="'+planGroupid[i]+
+                                               '" data-membernum="'+planMemberNum[i]+
+                                               '" data-memo="'+planNoteArray[i]+
+                                               '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                               '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                               '" data-dbid="'+planMemberDbid[i]+
+                                               '" data-memberName="'+memberName+
+                                               '" class="'+planColor_+
+                                               '" style="height:'+planHeight+'px;'+
+                                                         'top:'+planLocation+'px;'+
+                                                         //중복일정 ㅇㄷ
+                                                         //'left:'+planLeft+'%;'+
+                                                         'transform:translateX('+planLeft+'%);'+
+                                                         'width:'+planWidth+'%'+
+                                               '">'+
+                                                    '<span class="memberName '+hideornot+'">'+
+                                                        '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
+                                                    ' </span>'+
+                                                    '<span class="memberTime '+hideornot+'" '+time_hide+'>'+
+                                                        '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                                    '</span>'+
+
+                                            '</div>'
+                                            );
                     }
-                    planStartDiv.append('<div class-time="'+planArrayForTag.join('_')+
-                                           '" class-schedule-id="'+planScheduleIdArray[i]+
-                                           '" data-starttime="'+planStartDate[i]+
-                                           '" data-groupid="'+planGroupid[i]+
-                                           '" data-membernum="'+planMemberNum[i]+
-                                           '" data-memo="'+planNoteArray[i]+
-                                           '" data-schedule-check="'+planScheduleFinishArray[i]+
-                                           '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                                           '" data-dbid="'+planMemberDbid[i]+
-                                           '" data-memberName="'+memberName+
-                                           '" class="'+planColor_+
-                                           '" style="height:'+planHeight+'px;'+
-                                                     'top:'+planLocation+'px;'+
-                                                     //중복일정 ㅇㄷ
-                                                     //'left:'+planLeft+'%;'+
-                                                     'transform:translateX('+planLeft+'%);'+
-                                                     'width:'+planWidth+'%'+
-                                           '">'+
-                                                '<span class="memberName '+hideornot+'">'+
-                                                    '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
-                                                ' </span>'+
-                                                '<span class="memberTime '+hideornot+'" '+time_hide+'>'+
-                                                    '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
-                                                '</span>'+
-
-                                        '</div>'
-                                        );
                 }
-            }
         }else if(option == 'group'){
             if(planStartDiv.find('div['+'group-schedule-id='+planScheduleIdArray[i]+']').length == 0){
                 if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
@@ -2344,7 +2340,8 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
         var innerNameTag;
-        if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+        //if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+        if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
@@ -2450,8 +2447,10 @@ function know_duplicated_plans(jsondata){
     for(var i=0; i<classlen; i++){
         //ori
         // if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1 && jsondata.group_schedule_end_datetime.indexOf(jsondata.classTimeArray_end_date[i]) == -1){
-        //     testArray_start.push(jsondata.classTimeArray_start_date[i]);
-        //     testArray_end.push(jsondata.classTimeArray_end_date[i]);
+        //     if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) ){
+        //         testArray_start.push(jsondata.classTimeArray_start_date[i]);
+        //         testArray_end.push(jsondata.classTimeArray_end_date[i]);
+        //     }
         // }
 
         //test1
@@ -2461,7 +2460,7 @@ function know_duplicated_plans(jsondata){
         // }
 
         //test2
-        if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) ){
+        if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1 ){
             testArray_start.push(jsondata.classTimeArray_start_date[i]);
             testArray_end.push(jsondata.classTimeArray_end_date[i]);    
         }
