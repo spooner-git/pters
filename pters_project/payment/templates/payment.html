@@ -372,10 +372,13 @@
             device_type = 'ios';
         }
         if((platform_check == 'mobile') && (device_type=='ios')) {
+            alert('test')
             $('#id_standard_product_price_tag').text('30일권');
             $('#id_standard_product_price').text('9900원');
             $('.ptersCheckbox').attr('data-method', 'iap');
+            alert('test1')
             window.webkit.messageHandlers.get_ios_app_version.postMessage("test");
+            alert('test2')
         }
         else{
             $('#id_standard_product_price_tag').text('정기 결제');
