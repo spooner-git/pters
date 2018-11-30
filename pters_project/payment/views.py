@@ -739,12 +739,13 @@ def payment_for_ios_logic(request):
             payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
                                                      end_date__gte=today,
                                                      use=USE).latest('end_date')
-            start_date = str(payment_info.end_date + datetime.timedelta(days=1))
+            start_date = payment_info.end_date + datetime.timedelta(days=1)
         except ObjectDoesNotExist:
-            start_date = str(start_date)
+            start_date = start_date
 
     if error is None:
         date = int(start_date.strftime('%d'))
+        start_date = str(start_date)
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date))
 
     if error is None:
