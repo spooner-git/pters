@@ -76,6 +76,8 @@ body{
 
 	background-image: url('/static/user/res/calendar_hour.png');
 	background-size: 60px 60px;
+
+	border-right: 1px solid #cccccc;
 }
 
 .slidegap{
@@ -815,6 +817,7 @@ img,a,div,span,p{
 		background: #ffffff;
 		background-image: unset;
 		background-size: unset;
+		border-right: 1px solid #eaeaea;
 	}
 
 
