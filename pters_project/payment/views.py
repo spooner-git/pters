@@ -695,6 +695,50 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         return context
 
 
+def payment_for_ios_logic(request):
+
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+
+    product_id = None
+    payment_type_cd = None
+    paid_amount = 0
+    context = {}
+    error = None
+    today = datetime.date.today()
+
+    # try:
+    #     json_loading_data = json.loads(json_data)
+    # except ValueError:
+    #     error = '오류가 발생했습니다.'
+    # except TypeError:
+    #     error = '오류가 발생했습니다.'
+    #
+    # if error is None:
+    #     try:
+    #         product_id = json_loading_data['product_id']
+    #         payment_type_cd = json_loading_data['payment_type_cd']
+    #         paid_amount = json_loading_data['paid_amount']
+    #         start_date = json_loading_data['start_date']
+    #         period_month = json_loading_data['period_month']
+    #     except KeyError:
+    #         error = '오류가 발생했습니다.'
+    #
+    # if error is None:
+    #     if str(today) == start_date or payment_type_cd == 'SINGLE':
+    #         error = func_check_payment_price_info(product_id, payment_type_cd, paid_amount, period_month)
+
+    logger.info(str(request.user.last_name) + str(request.user.first_name)
+                + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(error))
+
+    if error is not None:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
 def resend_period_billing_logic(request):
 
     json_data = request.body.decode('utf-8')
