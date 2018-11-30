@@ -370,7 +370,7 @@
             device_type = 'ios';
         }
         if((platform_check == 'mobile') && (device_type=='ios')) {
-            $('#id_standard_product_price_tag').text('1개월 결제');
+            $('#id_standard_product_price_tag').text('30일권');
             $('#id_standard_product_price').text('9900원');
             $('.ptersCheckbox').attr('data-method', 'iap')
         }
@@ -512,7 +512,7 @@
             var type_name;
             var functions_name;
             if(type=='SINGLE'){
-                type_name='1개월 이용권';
+                type_name='30일권';
             }else{
                 type_name='정기 결제';
             }
@@ -872,7 +872,7 @@
 
             if((platform_check == 'mobile') && (device_type=='ios')) {
                 payment_type_cd = 'SINGLE';
-                product_price_name = '1개월 이용권'
+                product_price_name = '30일권'
             }
             $left_ticket.attr({"data-product-name":jsondata.product_name,
                                "data-product-price-name":product_price_name,
