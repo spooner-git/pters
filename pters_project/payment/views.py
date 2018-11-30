@@ -110,11 +110,13 @@ def check_before_billing_logic(request):
             # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
     if error is None:
         if payment_type_cd == 'SINGLE':
-            payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
-                                                     end_date__gte=today,
-                                                     use=USE).latest('end_date')
-            if payment_info is not None and payment_info != '':
-                next_payment_date = payment_info[0].end_date + datetime.timedelta(days=1)
+            try:
+                payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
+                                                         end_date__gte=today,
+                                                         use=USE).latest('end_date')
+                next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
+            except ObjectDoesNotExist:
+                next_payment_date = today
 
     if error is None:
         date = int(next_payment_date.strftime('%d'))

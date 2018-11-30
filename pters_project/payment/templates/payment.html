@@ -537,12 +537,6 @@
 
         function check_payment(name, pay_method, payment_type_cd, product_id, price, period_month){
             var error_check = true;
-            alert(name);
-            alert(pay_method);
-            alert(payment_type_cd);
-            alert(product_id);
-            alert(price);
-            alert(period_month);
             $.ajax({
                 url: "/payment/check_before_billing/", // 서비스 웹서버
                 type: "POST",
