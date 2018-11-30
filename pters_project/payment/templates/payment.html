@@ -583,15 +583,18 @@
                        //     alert(jsondata.billing_info);
                         //}
 
-                        var con_test = confirm(jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
-                        " 이용권 결제를 진행하시겠습니까?");
+                        var con_test;
+                        var confirm_message = jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
+                            " 이용권 결제를 진행하시겠습니까?";
                         if(payment_date != jsondata.next_start_date[0]){
                             if(payment_type_cd == 'PERIOD'){
-                                con_test = confirm(jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
+                                confirm_message = jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
                                     " 이용권 결제를 예약하시겠습니까? \n " +
-                                    "실제 결제는 "+jsondata.next_start_date[0]+"에 진행됩니다.");
+                                    "실제 결제는 "+jsondata.next_start_date[0]+"에 진행됩니다.";
                             }
                         }
+                        con_test = confirm(confirm_message);
+
                         if(con_test == true){
                             payment(name, pay_method, payment_type_cd, product_id, price,
                                 jsondata.next_start_date[0], period_month);
