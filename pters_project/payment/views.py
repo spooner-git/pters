@@ -728,7 +728,7 @@ def payment_for_ios_logic(request):
     #     if str(today) == start_date or payment_type_cd == 'SINGLE':
     #         error = func_check_payment_price_info(product_id, payment_type_cd, paid_amount, period_month)
 
-    logger.info(str(request.user.last_name) + str(request.user.first_name)
+    logger.error(str(request.user.last_name) + str(request.user.first_name)
                 + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(error))
 
     if error is not None:
