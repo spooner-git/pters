@@ -745,8 +745,8 @@ def payment_for_ios_logic(request):
 
     if error is None:
         date = int(start_date.strftime('%d'))
-        start_date = str(start_date)
         end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date))
+        start_date = str(start_date)
 
     if error is None:
         payment_info = PaymentInfoTb(member_id=request.user.id,
