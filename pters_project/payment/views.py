@@ -110,12 +110,12 @@ def check_before_billing_logic(request):
             # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
     if error is None:
         if payment_type_cd == 'SINGLE':
-            try:
-                payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
-                                                         end_date__gte=today,
-                                                         use=USE).latest('end_date')
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
+            if payment_info is not None and payment_info != '':
                 next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
-            except ObjectDoesNotExist:
+            else:
                 next_payment_date = today
 
     if error is None:
@@ -735,13 +735,13 @@ def payment_for_ios_logic(request):
             error = '오류가 발생했습니다.'
     if error is None:
 
-        try:
-            payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
-                                                     end_date__gte=today,
-                                                     use=USE).latest('end_date')
-            start_date = payment_info.end_date + datetime.timedelta(days=1)
-        except ObjectDoesNotExist:
-            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+        payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                    end_date__gte=today,
+                                                    use=USE).latest('end_date')
+        if payment_info is not None and payment_info != '':
+            next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
+        else:
+            next_payment_date = today
 
     if error is None:
         date = int(start_date.strftime('%d'))
