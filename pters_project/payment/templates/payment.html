@@ -377,7 +377,8 @@
             $('#id_standard_product_price').text('9900원');
             $('.ptersCheckbox').attr('data-method', 'iap');
             alert('test1')
-            window.webkit.messageHandlers.get_ios_app_version.postMessage("test");
+            var test = "test";
+            window.webkit.messageHandlers.get_ios_app_version.postMessage(test);
             alert('test2')
         }
         else{
