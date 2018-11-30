@@ -3,7 +3,8 @@ $(document).ready(function(){
 
 
     function payment_for_ios(payment_date , product_price_id){
-        shade_index(-100)
+        shade_index(-100);
+        alert(payment_date)
         $.ajax({
             url: "/payment/payment_for_ios/", // 서비스 웹서버
             type: "POST",

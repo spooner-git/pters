@@ -703,33 +703,28 @@ def payment_for_ios_logic(request):
     product_id = None
     payment_type_cd = None
     paid_amount = 0
+    product_price_id = None
+    start_date = None
     context = {}
     error = None
     today = datetime.date.today()
 
-    # try:
-    #     json_loading_data = json.loads(json_data)
-    # except ValueError:
-    #     error = '오류가 발생했습니다.'
-    # except TypeError:
-    #     error = '오류가 발생했습니다.'
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
     #
-    # if error is None:
-    #     try:
-    #         product_id = json_loading_data['product_id']
-    #         payment_type_cd = json_loading_data['payment_type_cd']
-    #         paid_amount = json_loading_data['paid_amount']
-    #         start_date = json_loading_data['start_date']
-    #         period_month = json_loading_data['period_month']
-    #     except KeyError:
-    #         error = '오류가 발생했습니다.'
-    #
-    # if error is None:
-    #     if str(today) == start_date or payment_type_cd == 'SINGLE':
-    #         error = func_check_payment_price_info(product_id, payment_type_cd, paid_amount, period_month)
+    if error is None:
+        try:
+            product_id = json_loading_data['product_price_id']
+            start_date = json_loading_data['start_date']
+        except KeyError:
+            error = '오류가 발생했습니다.'
 
     logger.error(str(request.user.last_name) + str(request.user.first_name)
-                + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(error))
+                 + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(product_id) + ':'+' '+str(start_date))
 
     if error is not None:
         messages.error(request, error)
