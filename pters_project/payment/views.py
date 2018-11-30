@@ -758,7 +758,7 @@ def payment_for_ios_logic(request):
                                      paid_date=today,
                                      period_month=1,
                                      price=9900,
-                                     name='스탠다드 - 1개월 이용권',
+                                     name='스탠다드 - 30일권',
                                      imp_uid='',
                                      channel='iap',
                                      card_name='인앱 결제',
