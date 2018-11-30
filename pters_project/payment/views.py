@@ -741,7 +741,7 @@ def payment_for_ios_logic(request):
                                                      use=USE).latest('end_date')
             start_date = payment_info.end_date + datetime.timedelta(days=1)
         except ObjectDoesNotExist:
-            start_date = start_date
+            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
 
     if error is None:
         date = int(start_date.strftime('%d'))
