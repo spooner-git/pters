@@ -23,7 +23,7 @@ from django.core.files.base import ContentFile
 # Create your views here.
 from configs import settings
 from configs.const import ON_SCHEDULE_TYPE, USE, AUTO_FINISH_OFF, AUTO_FINISH_ON, TO_TRAINEE_LESSON_ALARM_ON, \
-    TO_TRAINEE_LESSON_ALARM_OFF
+    TO_TRAINEE_LESSON_ALARM_OFF, SCHEDULE_DUPLICATION_DISABLE, SCHEDULE_DUPLICATION_ENABLE
 
 from login.models import LogTb, MemberTb
 from trainer.functions import func_get_end_package_member_list, func_get_ing_package_member_list
@@ -166,7 +166,8 @@ def add_schedule_logic(request):
 
                 if error is None:
                     error = func_date_check(class_id, schedule_result['schedule_id'],
-                                            schedule_date, schedule_start_datetime, schedule_end_datetime)
+                                            schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                            SCHEDULE_DUPLICATION_ENABLE)
 
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
@@ -801,7 +802,8 @@ def add_repeat_schedule_logic(request):
                             if schedule_check == 1:
                                 error_date = func_date_check(class_id, schedule_result['schedule_id'],
                                                              str(repeat_schedule_date_info).split(' ')[0],
-                                                             schedule_start_datetime, schedule_end_datetime)
+                                                             schedule_start_datetime, schedule_end_datetime,
+                                                             SCHEDULE_DUPLICATION_ENABLE)
 
                         if error_date is not None:
                             raise ValidationError(str(error_date))
@@ -1284,7 +1286,8 @@ def add_group_schedule_logic(request):
                 if error is None:
                     group_schedule_id = schedule_result['schedule_id']
                     error = func_date_check(class_id, schedule_result['schedule_id'],
-                                            schedule_date, schedule_start_datetime, schedule_end_datetime)
+                                            schedule_date, schedule_start_datetime, schedule_end_datetime,
+                                            SCHEDULE_DUPLICATION_ENABLE)
 
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
@@ -2315,7 +2318,8 @@ def add_group_repeat_schedule_logic(request):
                         if error_date is None:
                             error_date = func_date_check(class_id, schedule_result['schedule_id'],
                                                          str(repeat_schedule_date_info).split(' ')[0],
-                                                         schedule_start_datetime, schedule_end_datetime)
+                                                         schedule_start_datetime, schedule_end_datetime,
+                                                         SCHEDULE_DUPLICATION_ENABLE)
 
                         if error_date is not None:
                             raise ValidationError(str(error_date))

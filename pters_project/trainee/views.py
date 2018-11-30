@@ -20,7 +20,8 @@ from el_pagination.views import AjaxListView
 
 # Create your views here.
 
-from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON
+from configs.const import ON_SCHEDULE_TYPE, ADD_SCHEDULE, DEL_SCHEDULE, USE, UN_USE, FROM_TRAINEE_LESSON_ALARM_ON, \
+    SCHEDULE_DUPLICATION_DISABLE
 
 from configs.views import AccessTestMixin
 
@@ -63,7 +64,7 @@ class IndexView(LoginRequiredMixin, AccessTestMixin, RedirectView):
             'lecture_tb__member').filter(
             lecture_tb__member_id=request.user.id,
             use=USE).annotate(auth_type_cd=RawSQL(query_auth_type_cd,
-                                                  [])).order_by('-lecture_tb__start_date')
+                                                  [])).exclude(auth_type_cd='DELETE').order_by('-lecture_tb__start_date')
         if lecture_data is None or len(lecture_data) == 0:
             self.url = '/trainee/cal_month_blank/'
 
@@ -927,10 +928,10 @@ def update_trainee_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.first_name,
-                         log_info='회원 정보', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.first_name,
+        #                  log_info='회원 정보', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -1226,7 +1227,7 @@ def pt_add_logic_func(pt_schedule_date, start_date, end_date, user_id,
                         error = func_check_group_available_member_after(class_id, group_id, group_schedule_id)
                     else:
                         error = func_date_check(class_id, schedule_result['schedule_id'],
-                                                pt_schedule_date, start_date, end_date)
+                                                pt_schedule_date, start_date, end_date, SCHEDULE_DUPLICATION_DISABLE)
 
                         if error is not None:
                             error += ' 일정이 중복됐습니다.'

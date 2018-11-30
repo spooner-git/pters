@@ -151,13 +151,13 @@ def get_function_auth_type_cd(request):
     today = datetime.date.today()
     class_id = request.session.get('class_id', '')
     trainer_id = request.session.get('trainer_id', '')
-
     if trainer_id is None or trainer_id == '':
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-            trainer_id = class_info.member_id
-        except ObjectDoesNotExist:
-            trainer_id = ''
+        if class_id is not None and class_id != '':
+            try:
+                class_info = ClassTb.objects.get(class_id=class_id)
+                trainer_id = class_info.member_id
+            except ObjectDoesNotExist:
+                trainer_id = ''
 
     if trainer_id != '' and trainer_id is not None:
         billing_data = BillingInfoTb.objects.filter(member_id=trainer_id,
