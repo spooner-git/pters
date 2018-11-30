@@ -729,6 +729,43 @@ def payment_for_ios_logic(request):
             start_date = json_loading_data['start_date']
         except KeyError:
             error = '오류가 발생했습니다.'
+    if error is None:
+
+        payment_info = PaymentInfoTb.objects.get(member_id=request.user.id, status='paid',
+                                                 end_date__gte=today,
+                                                 use=USE).latest('end_date')
+        if payment_info is not None and payment_info != '':
+            start_date = payment_info[0].end_date + datetime.timedelta(days=1)
+
+    if error is None:
+        date = int(start_date.strftime('%d'))
+        start_date = str(start_date)
+        end_date = str(func_get_end_date(payment_type_cd, next_payment_date, 1, date))
+
+    if error is None:
+        payment_info = PaymentInfoTb(member_id=request.user.id,
+                                     product_tb_id=7,
+                                     payment_type_cd='SINGLE',
+                                     merchant_uid='m_'+request.user.id+'_7_'+timezone.now().timestamp(),
+                                     customer_uid='c_'+request.user.id+'_7_'+timezone.now().timestamp(),
+                                     start_date=start_date, end_date=end_date,
+                                     paid_date=today,
+                                     period_month=1,
+                                     price=9900,
+                                     name='스탠다드 - 1개월 이용권',
+                                     imp_uid='',
+                                     channel='iap',
+                                     card_name='인앱 결제',
+                                     buyer_email=request.user.email,
+                                     status='paid',
+                                     fail_reason='',
+                                     currency='',
+                                     pay_method='인앱 결제',
+                                     pg_provider='Apple',
+                                     receipt_url='',
+                                     buyer_name=str(request.user.first_name),
+                                     # amount=int(payment_result['amount']),
+                                     use=USE)
 
     logger.error(str(request.user.last_name) + str(request.user.first_name)
                  + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(product_id) + ':'+' '+str(start_date))
