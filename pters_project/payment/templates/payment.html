@@ -936,11 +936,11 @@
                     msg = '결제에 실패하였습니다.';
                     msg += ' : ' + jsondata.messageArray;
                     url_move = "/payment/";
+                    alert(msg);
                 } else {
-                    msg = '결제가 완료되었습니다.';
+{#                    msg = '결제가 완료되었습니다.';#}
                     url_move = "/payment/payment_history/";
                 }
-                alert(msg);
                 location.href = url_move;
 
             },
