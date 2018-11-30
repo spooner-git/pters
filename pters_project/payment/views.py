@@ -71,9 +71,9 @@ def check_before_billing_logic(request):
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다.[1]'
     except TypeError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다.[2]'
 
     if error is None:
         try:
@@ -82,7 +82,7 @@ def check_before_billing_logic(request):
             input_price = json_loading_data['price']
             period_month = int(json_loading_data['period_month'])
         except KeyError:
-            error = '오류가 발생했습니다.'
+            error = '오류가 발생했습니다.[3]'
 
     if error is None:
         # 사전 가격 검사 작업

@@ -370,11 +370,12 @@
             device_type = 'ios';
         }
         if((platform_check == 'mobile') && (device_type=='ios')) {
-            $('#id_standard_product_price_tag').text('1개월 결제')
-            $('#id_standard_product_price').text('9900원')
+            $('#id_standard_product_price_tag').text('1개월 결제');
+            $('#id_standard_product_price').text('9900원');
         }
         else{
-
+            $('#id_standard_product_price_tag').text('정기 결제');
+            $('#id_standard_product_price').text('매월 9900원');
         }
 
         $('a.text-payment').css('color','#fe4e65;');
@@ -534,7 +535,12 @@
 
         function check_payment(name, pay_method, payment_type_cd, product_id, price, period_month){
             var error_check = true;
-
+            alert(name);
+            alert(pay_method);
+            alert(payment_type_cd);
+            alert(product_id);
+            alert(price);
+            alert(period_month);
             $.ajax({
                 url: "/payment/check_before_billing/", // 서비스 웹서버
                 type: "POST",
@@ -622,9 +628,9 @@
                 payment_date = start_date;
             }
 
-            var message = "9"
-            //alert(platform_check);
-            //alert(device_type);
+            var message = "9";
+            alert(platform_check);
+            alert(device_type);
             if((platform_check == 'mobile') && (device_type=='ios')) {
                 //alert("test")
                 window.webkit.messageHandlers.payment_method.postMessage(message);
