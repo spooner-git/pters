@@ -928,10 +928,10 @@ def update_trainee_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.first_name,
-                         log_info='회원 정보', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.first_name,
+        #                  log_info='회원 정보', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:

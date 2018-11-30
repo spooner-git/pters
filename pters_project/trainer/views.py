@@ -1280,11 +1280,11 @@ def update_member_info_logic(request):
             error = error
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=user.last_name + user.first_name,
-                         log_info='회원 정보', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=user.last_name + user.first_name,
+        #                  log_info='회원 정보', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -1491,11 +1491,11 @@ def delete_member_info_logic(request):
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 강사님께서 ' \
         #               + member.name + ' 회원님의</span> 수강정보를 <span class="status">삭제</span>했습니다.'
 
-        log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_name, class_tb_id=class_id,
-                         log_info='정보', log_how='삭제', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_name, class_tb_id=class_id,
+        #                  log_info='정보', log_how='삭제', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2092,11 +2092,11 @@ def update_lecture_info_logic(request):
         lecture_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강권', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+        #                  log_info='수강권', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2134,12 +2134,12 @@ def delete_lecture_info_logic(request):
     #         func_refresh_group_status(group_info.group_id, None, None)
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강권', log_how='삭제', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
+        #                  log_info='수강권', log_how='삭제', use=USE)
+        #
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2219,12 +2219,12 @@ def finish_lecture_info_logic(request):
     #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강권', log_how='종료 처리', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+        #                  log_info='수강권', log_how='종료 처리', use=USE)
+        #
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2327,12 +2327,12 @@ def refund_lecture_info_logic(request):
     #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강권', log_how='환불 처리', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+        #                  log_info='수강권', log_how='환불 처리', use=USE)
+        #
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2425,12 +2425,12 @@ def progress_lecture_info_logic(request):
     #         func_refresh_group_status(group_info.group_tb_id, None, None)
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-                         log_info='수강권', log_how='재개 처리', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
+        #                  log_info='수강권', log_how='재개 처리', use=USE)
+        #
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2489,12 +2489,12 @@ def update_lecture_connection_info_logic(request):
         member_lecture_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
-                         log_info='수강권 연동 상태', log_how='수정', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  to_member_name=member_info.name, class_tb_id=class_id, lecture_tb_id=lecture_id,
+        #                  log_info='수강권 연동 상태', log_how='수정', use=USE)
+        #
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -2544,15 +2544,16 @@ def add_group_info_logic(request):
     except InternalError:
         error = '오류가 발생했습니다. [5]'
 
-    if error is None:
-        log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
-                         log_how='등록', use=USE)
-        log_data.save()
+    # if error is None:
+        # log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
+        #                  log_how='등록', use=USE)
+        # log_data.save()
 
-    else:
+    # else:
+    if error is not None:
         messages.error(request, error)
 
     return redirect(next_page)
@@ -2652,15 +2653,15 @@ def delete_group_info_logic(request):
     except InternalError:
         error = error
 
-    if error is None:
-        log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
-                         log_how='삭제', use=USE)
-        log_data.save()
-    else:
-
+    # if error is None:
+        # log_data = LogTb(log_type='LG01', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
+        #                  log_how='삭제', use=USE)
+        # log_data.save()
+    # else:
+    if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
@@ -2744,15 +2745,16 @@ def update_group_info_logic(request):
         group_info.end_font_color_cd = end_font_color_cd
         group_info.save()
 
-    if error is None:
-        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
-                         log_how='수정', use=USE)
-        log_data.save()
-
-    else:
+    # if error is None:
+    #     log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
+    #                      from_member_name=request.user.last_name + request.user.first_name,
+    #                      class_tb_id=class_id,
+    #                      log_info=group_info.name + ' '+group_info.get_group_type_cd_name(),
+    #                      log_how='수정', use=USE)
+    #     log_data.save()
+    #
+    # else:
+    if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
@@ -2834,15 +2836,16 @@ def add_group_member_logic(request):
         except InternalError:
             error = error
 
-    if error is None:
-        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원',
-                         log_how='등록', use=USE)
-        log_data.save()
-
-    else:
+    # if error is None:
+    #     log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
+    #                      from_member_name=request.user.last_name + request.user.first_name,
+    #                      class_tb_id=class_id,
+    #                      log_info=group_info.name + ' '+group_info.get_group_type_cd_name()+' 회원',
+    #                      log_how='등록', use=USE)
+    #     log_data.save()
+    #
+    # else:
+    if error is not None:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
             request.user.id) + ']' + error)
         messages.error(request, error)
@@ -2912,12 +2915,12 @@ def delete_group_member_info_logic(request):
                 except InternalError:
                     error = error
 
-            log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             to_member_name=member_name, class_tb_id=class_id,
-                             log_info='수강권',
-                             log_how='삭제', use=USE)
-            log_data.save()
+            # log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.last_name + request.user.first_name,
+            #                  to_member_name=member_name, class_tb_id=class_id,
+            #                  log_info='수강권',
+            #                  log_how='삭제', use=USE)
+            # log_data.save()
 
     if error is None:
 
@@ -3173,13 +3176,13 @@ def finish_group_info_logic(request):
         group_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
-                         log_how='완료 처리', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
+        #                  log_how='완료 처리', use=USE)
+        #
+        # log_data.save()
 
         return render(request, 'ajax/trainer_error_ajax.html')
     else:
@@ -3260,13 +3263,13 @@ def progress_group_info_logic(request):
         group_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
-                         log_how='재개', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LG03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=group_info.name + group_info.get_group_type_cd_name()+' 그룹',
+        #                  log_how='재개', use=USE)
+        #
+        # log_data.save()
 
         return render(request, 'ajax/trainer_error_ajax.html')
     else:
@@ -3427,12 +3430,12 @@ def add_package_info_logic(request):
             error = error
 
     if error is not None:
-        log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=package_info.name + ' 수강권',
-                         log_how='등록', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LP01', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=package_info.name + ' 수강권',
+        #                  log_how='등록', use=USE)
+        # log_data.save()
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -3536,12 +3539,12 @@ def delete_package_info_logic(request):
             error = '오류가 발생했습니다. [4]'
 
     if error is not None:
-        log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=package_info.name + ' 수강권',
-                         log_how='삭제', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LP02', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=package_info.name + ' 수강권',
+        #                  log_how='삭제', use=USE)
+        # log_data.save()
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -3568,12 +3571,12 @@ def update_package_info_logic(request):
         package_info.save()
 
     if error is not None:
-        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=package_info.name + ' 수강권',
-                         log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=package_info.name + ' 수강권',
+        #                  log_how='수정', use=USE)
+        # log_data.save()
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
         messages.error(request, error)
 
@@ -3993,13 +3996,13 @@ def finish_package_info_logic(request):
         package_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=package_info.name + package_info.name + ' 수강권',
-                         log_how='완료 처리', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=package_info.name + package_info.name + ' 수강권',
+        #                  log_how='완료 처리', use=USE)
+        #
+        # log_data.save()
 
         return render(request, 'ajax/trainer_error_ajax.html')
     else:
@@ -4062,13 +4065,13 @@ def progress_package_info_logic(request):
         package_info.save()
 
     if error is None:
-        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=package_info.name + package_info.name + ' 수강권',
-                         log_how='재개', use=USE)
-
-        log_data.save()
+        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=package_info.name + package_info.name + ' 수강권',
+        #                  log_how='재개', use=USE)
+        #
+        # log_data.save()
 
         return render(request, 'ajax/trainer_error_ajax.html')
     else:
@@ -4197,12 +4200,12 @@ def add_package_member_logic(request):
         package_info.end_package_member_num = len(func_get_end_package_member_list(class_id, package_id))
         package_info.save()
 
-        log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info=package_info.name + ' 수강권에 회원',
-                         log_how='등록', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LP03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info=package_info.name + ' 수강권에 회원',
+        #                  log_how='등록', use=USE)
+        # log_data.save()
 
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(
@@ -4276,12 +4279,12 @@ def delete_package_member_info_logic(request):
                 except InternalError:
                     error = error
 
-            log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             to_member_name=member_name, class_tb_id=class_id,
-                             log_info='수강권',
-                             log_how='삭제', use=USE)
-            log_data.save()
+            # log_data = LogTb(log_type='LB02', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.last_name + request.user.first_name,
+            #                  to_member_name=member_name, class_tb_id=class_id,
+            #                  log_info='수강권',
+            #                  log_how='삭제', use=USE)
+            # log_data.save()
 
     if error is None:
 
@@ -4586,12 +4589,12 @@ class AddClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
             request.session['class_type_name'] = class_info.get_class_type_cd_name()
             request.session['class_center_name'] = class_info.get_center_name()
 
-        if error is None:
-            log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             log_info='프로그램', log_how='등록', use=USE)
-
-            log_data.save()
+        # if error is None:
+            # log_data = LogTb(log_type='LC01', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.last_name + request.user.first_name,
+            #                  log_info='프로그램', log_how='등록', use=USE)
+            #
+            # log_data.save()
 
         if error is not None:
             logger.error(
@@ -4707,12 +4710,12 @@ class UpdateClassInfoView(LoginRequiredMixin, AccessTestMixin, View):
                 request.session['class_type_code'] = class_info.subject_cd
                 request.session['class_type_name'] = class_info.subject_detail_nm
                 request.session['class_hour'] = class_info.class_hour
-            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             class_tb_id=class_id,
-                             log_info='프로그램', log_how='수정', use=USE)
-
-            log_data.save()
+            # log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.last_name + request.user.first_name,
+            #                  class_tb_id=class_id,
+            #                  log_info='프로그램', log_how='수정', use=USE)
+            #
+            # log_data.save()
 
         if error is not None:
             logger.error(
@@ -4886,13 +4889,13 @@ class DeleteBackgroundImgInfoViewAjax(LoginRequiredMixin, AccessTestMixin, View)
             except ObjectDoesNotExist:
                 error = '오류가 발생했습니다.'
 
-        if error is None:
-            log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
-                             from_member_name=request.user.last_name + request.user.first_name,
-                             class_tb_id=class_id,
-                             log_info='배경 화면', log_how='삭제', use=USE)
-
-            log_data.save()
+        # if error is None:
+            # log_data = LogTb(log_type='LC02', auth_member_id=request.user.id,
+            #                  from_member_name=request.user.last_name + request.user.first_name,
+            #                  class_tb_id=class_id,
+            #                  log_info='배경 화면', log_how='삭제', use=USE)
+            #
+            # log_data.save()
 
         if error is not None:
             logger.error(
@@ -5140,10 +5143,10 @@ def update_trainer_info_logic(request):
             error = '등록 값에 문제가 있습니다.'
 
     if error is None:
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         log_info='본인 정보', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  log_info='본인 정보', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -5213,11 +5216,11 @@ def update_setting_push_logic(request):
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 ' \
         #               + 'PUSH 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
-        log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info='PUSH 설정', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info='PUSH 설정', log_how='수정', use=USE)
+        # log_data.save()
         return redirect(next_page)
     else:
         logger.error(request.user.last_name + ' ' + request.user.first_name + '[' + str(request.user.id) + ']' + error)
@@ -5364,10 +5367,10 @@ def update_setting_basic_logic(request):
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
-        log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='기본 설정', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id, log_info='기본 설정', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -5506,10 +5509,10 @@ def update_setting_reserve_logic(request):
         # log_contents = '<span>' + request.user.last_name + request.user.first_name + ' 님께서 '\
         #               + '예약 허용대 시간 설정</span> 정보를 <span class="status">수정</span>했습니다.'
 
-        log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='회원 예약 설정', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id, log_info='회원 예약 설정', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -5647,11 +5650,11 @@ def update_setting_sales_logic(request):
 
     if error is None:
 
-        log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id,
-                         log_info='강의 금액 설정', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LB03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id,
+        #                  log_info='강의 금액 설정', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
@@ -5700,10 +5703,10 @@ def update_setting_language_logic(request):
 
     if error is None:
 
-        log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
-                         from_member_name=request.user.last_name + request.user.first_name,
-                         class_tb_id=class_id, log_info='언어 설정', log_how='수정', use=USE)
-        log_data.save()
+        # log_data = LogTb(log_type='LT03', auth_member_id=request.user.id,
+        #                  from_member_name=request.user.last_name + request.user.first_name,
+        #                  class_tb_id=class_id, log_info='언어 설정', log_how='수정', use=USE)
+        # log_data.save()
 
         return redirect(next_page)
     else:
