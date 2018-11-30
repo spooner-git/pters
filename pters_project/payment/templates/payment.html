@@ -372,10 +372,12 @@
         if((platform_check == 'mobile') && (device_type=='ios')) {
             $('#id_standard_product_price_tag').text('1개월 결제');
             $('#id_standard_product_price').text('9900원');
+            $('.ptersCheckbox').attr('data-method', 'iap')
         }
         else{
             $('#id_standard_product_price_tag').text('정기 결제');
             $('#id_standard_product_price').text('매월 9900원');
+            $('.ptersCheckbox').attr('data-method', 'card')
         }
 
         $('a.text-payment').css('color','#fe4e65;');
@@ -549,7 +551,8 @@
                     payment_type_cd: payment_type_cd,
                     product_id: product_id,
                     price : price,
-                    period_month : period_month
+                    period_month : period_month,
+                    pay_method : pay_method
                 }),
 
                 beforeSend:function(xhr, settings) {

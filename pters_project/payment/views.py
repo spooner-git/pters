@@ -81,12 +81,14 @@ def check_before_billing_logic(request):
             product_id = json_loading_data['product_id']
             input_price = json_loading_data['price']
             period_month = int(json_loading_data['period_month'])
+            pay_method = int(json_loading_data['pay_method'])
         except KeyError:
             error = '오류가 발생했습니다.[3]'
 
     if error is None:
         # 사전 가격 검사 작업
-        error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
+        if pay_method != 'iap':
+            error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
     if error is None:
         if str(product_id) == '11':
@@ -740,7 +742,7 @@ def payment_for_ios_logic(request):
     if error is None:
         date = int(start_date.strftime('%d'))
         start_date = str(start_date)
-        end_date = str(func_get_end_date(payment_type_cd, next_payment_date, 1, date))
+        end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date))
 
     if error is None:
         payment_info = PaymentInfoTb(member_id=request.user.id,
@@ -766,6 +768,7 @@ def payment_for_ios_logic(request):
                                      buyer_name=str(request.user.first_name),
                                      # amount=int(payment_result['amount']),
                                      use=USE)
+        payment_info.save()
 
     logger.error(str(request.user.last_name) + str(request.user.first_name)
                  + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(product_id) + ':'+' '+str(start_date))
