@@ -1853,41 +1853,19 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
         var time_hide = "";
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
             var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
-            planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]))-1;
-            if(planStartDate[i] == "2018-11-30 06:00:00"){
-                //console.log(option,"exist_check", exist_check, planStartDate[i]+' ~ '+planEndDate[i], duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]]);
-                //console.log(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)
-            }
+            planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])).toFixed(1);
             
-            // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-            //     if(exist_check == 0){
-            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            //     }else{
-            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            //     }
-            // }else{
-            //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            // }
-
-            // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-            //     if(exist_check == 0){
-            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]-duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]-1)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            //     }else{
-            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            //     } 
-            // }else{
-                var calc;
-                if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-                    calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
-                }else{
-                    calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
-                }
-                if(calc == -1){
-                    calc = 0;
-                }
-                planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            // }
-
+            var calc;
+            if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
+                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
+            }else{
+                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
+            }
+            if(calc == -1){
+                calc = 0;
+            }
+            // planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check);
+            planLeft = (calc)*100;
 
             if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
                 time_hide = "style=visibility:hidden;";
@@ -2308,8 +2286,8 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
             if(date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`) != null){
                 exist_check = date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`).length;
             }
-            console.log("exist_check", exist_check, planStartDate[i], duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]])
-            planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]))-1;
+
+            planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])).toFixed(1);
             
             // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
             //     if(exist_check == 0){
@@ -2330,7 +2308,8 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                 calc = 0;
             }
             
-            planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+            //planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+            planLeft = (calc)*100;
             if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
                 groupstatus="";
             }
