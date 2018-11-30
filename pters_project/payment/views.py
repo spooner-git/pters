@@ -89,22 +89,23 @@ def check_before_billing_logic(request):
         error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
     if error is None:
-        if str(product_id) == '11':
-            period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                  product_tb_id='8',
-                                                                  next_payment_date__gt=today,
-                                                                  state_cd='IP',
-                                                                  use=USE).count()
-            if period_payment_counter == 0:
-                error = '프리미엄 고객 전용 상품입니다. 먼저 프리미엄 기능을 구매해 주세요.'
+        if payment_type_cd == 'PERIOD':
+            if str(product_id) == '11':
+                period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                      product_tb_id='8',
+                                                                      next_payment_date__gt=today,
+                                                                      state_cd='IP',
+                                                                      use=USE).count()
+                if period_payment_counter == 0:
+                    error = '프리미엄 고객 전용 상품입니다. 먼저 프리미엄 기능을 구매해 주세요.'
 
-        else:
-            period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
-                                                                  next_payment_date__gt=today,
-                                                                  state_cd='IP',
-                                                                  use=USE).count()
-            if period_payment_counter > 0:
-                error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
+            else:
+                period_payment_counter = BillingInfoTb.objects.filter(member_id=request.user.id,
+                                                                      next_payment_date__gt=today,
+                                                                      state_cd='IP',
+                                                                      use=USE).count()
+                if period_payment_counter > 0:
+                    error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
             # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
 
     if error is None:
@@ -693,6 +694,45 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         context = super(PaymentCompleteView, self).get_context_data(**kwargs)
 
         return context
+
+
+def payment_for_ios_logic(request):
+
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+
+    product_id = None
+    payment_type_cd = None
+    paid_amount = 0
+    product_price_id = None
+    start_date = None
+    context = {}
+    error = None
+    today = datetime.date.today()
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+    #
+    if error is None:
+        try:
+            product_id = json_loading_data['product_price_id']
+            start_date = json_loading_data['start_date']
+        except KeyError:
+            error = '오류가 발생했습니다.'
+
+    logger.error(str(request.user.last_name) + str(request.user.first_name)
+                 + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(product_id) + ':'+' '+str(start_date))
+
+    if error is not None:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
 def resend_period_billing_logic(request):

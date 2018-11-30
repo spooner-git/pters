@@ -81,5 +81,7 @@ urlpatterns = [
     # 결제 완료 페이지
     url(r'^payment_complete/$', views.PaymentCompleteView.as_view(), name='payment_complete'),
 
+    url(r'^payment_for_ios/$', views.payment_for_ios_logic, name='payment_for_ios'),
+
     ###################################################################################################################
 ]

@@ -12,6 +12,8 @@
 "schedulePermissionStateArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.permission_state_cd }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 "scheduleNoteArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.note }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 "scheduleIdxArray":[{% for pt_schedule_info in pt_schedule_data %}"{{ forloop.counter }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+"class_group_schedule_id":[{% for pt_schedule_info in pt_schedule_data %}"{{ pt_schedule_info.group_schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
+
 "group_schedule_id":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.schedule_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 "group_schedule_group_id":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.group_id }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 "group_schedule_group_name":[{% for group_schedule_info in group_schedule_data %}"{{ group_schedule_info.group_tb.name }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
