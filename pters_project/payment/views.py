@@ -739,9 +739,9 @@ def payment_for_ios_logic(request):
                                                     end_date__gte=today,
                                                     use=USE).latest('end_date')
         if payment_info is not None and payment_info != '':
-            next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
+            start_date = payment_info.end_date + datetime.timedelta(days=1)
         else:
-            next_payment_date = today
+            start_date = today
 
     if error is None:
         date = int(start_date.strftime('%d'))
