@@ -2340,7 +2340,8 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
         var innerNameTag;
-        if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+        //if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+        if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
