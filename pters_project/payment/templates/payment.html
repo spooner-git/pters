@@ -571,20 +571,15 @@
                         if(jsondata.billing_info != ''){
                             alert(jsondata.billing_info);
                         }
-                        if(payment_type_cd=='PERIOD'){
+                        var con_test = confirm(jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
+                        " 이용권 결제를 진행하시겠습니까?");
+                        if(con_test == true){
                             payment(name, pay_method, payment_type_cd, product_id, price,
                                 jsondata.next_start_date[0], period_month);
-                        }else{
-                            var con_test = confirm(jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
-                            " 이용권 결제를 진행하시겠습니까?");
-                            if(con_test == true){
-                                payment(name, pay_method, payment_type_cd, product_id, price,
-                                    jsondata.next_start_date[0], period_month);
-                            }
-                            else if(con_test == false){
-                                shade_index(-100)
-                                purchase_popup_close();
-                            }
+                        }
+                        else if(con_test == false){
+                            shade_index(-100)
+                            purchase_popup_close();
                         }
 
                     }
