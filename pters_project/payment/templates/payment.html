@@ -651,9 +651,15 @@
                 //alert("test")
                 window.webkit.messageHandlers.payment_method.postMessage(message);
             }
+            else if((platform_check == 'mobile') && (device_type=='android') && (ios_version!='1.4')) {
+                window.android_payment_function.callMethodName(message);
+
+            }
             else {
-                if('428' == member_id){
+                if(('428' == member_id) && (platform_check == 'mobile') && (device_type=='ios')){
                     window.webkit.messageHandlers.payment_method.postMessage(message);
+                }else if(('428' == member_id) && (platform_check == 'mobile') && (device_type=='android')){
+                    window.android_payment_function.callMethodName(message);
                 }else{
                     var request_pay_period_data = {
                         pg: 'danal', // version 1.1.0부터 지원.
@@ -893,7 +899,7 @@
             var product_price_name = jsondata.product_price_name;
             find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
 
-            if((platform_check == 'mobile') && (device_type=='ios') &&(ios_version != '1.4')) {
+            if((platform_check == 'mobile') && (ios_version != '1.4')) {
                 payment_type_cd = 'SINGLE';
                 product_price_name = '30일권'
             }
@@ -905,7 +911,7 @@
                                "data-product-id":product_id,
                                "data-period-month":jsondata.product_price_period_month,});
 
-            if((platform_check == 'mobile') && (device_type=='ios') &&(ios_version != '1.4')) {
+            if((platform_check == 'mobile') && (ios_version != '1.4')) {
                 //alert("test")
                 $left_ticket_comment.html(`<span class="${product_color}">30일권</span>`);
                 $left_ticket_new_price.text(`${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
@@ -933,17 +939,18 @@
 
         $('div.bottomfooter2 > span > img').attr("src","/static/user/res/spooner.png");
 
-    function payment_for_ios(payment_date , product_price_id){
+    function payment_for_iap(payment_date , product_price_id, os_info){
 {#        alert(payment_date);#}
 {#        shade_index(-100);#}
 {#        alert(product_price_id);#}
         $.ajax({
-            url: "/payment/payment_for_ios/", // 서비스 웹서버
+            url: "/payment/payment_for_iap/", // 서비스 웹서버
             type: "POST",
             headers: {"Content-Type": "application/json"},
             data: JSON.stringify({
                 product_price_id: product_price_id,
-                start_date: payment_date
+                start_date: payment_date,
+                os_info: os_info
             }),
 
             beforeSend: function (xhr, settings) {
@@ -978,7 +985,7 @@
         });
     }
 
-    function set_ios_app_version(version){
+    function set_app_version(version){
         if(version != ''){
             ios_version = version;
             $('#id_standard_product_price_tag').text('30일권');
