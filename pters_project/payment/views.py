@@ -109,14 +109,14 @@ def check_before_billing_logic(request):
                 error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
             # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
     if error is None:
-        if payment_type_cd == 'SINGLE':
+        # if payment_type_cd == 'SINGLE':
+        try:
             payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
                                                         end_date__gte=today,
                                                         use=USE).latest('end_date')
-            if payment_info is not None and payment_info != '':
-                next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
-            else:
-                next_payment_date = today
+            next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
+        except ObjectDoesNotExist:
+            next_payment_date = today
 
     if error is None:
         date = int(next_payment_date.strftime('%d'))
@@ -706,7 +706,7 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         return context
 
 
-def payment_for_ios_logic(request):
+def payment_for_iap_logic(request):
 
     json_data = request.body.decode('utf-8')
     json_loading_data = None
@@ -718,6 +718,7 @@ def payment_for_ios_logic(request):
     start_date = None
     context = {}
     error = None
+    os_info = ''
     today = datetime.date.today()
 
     try:
@@ -731,16 +732,16 @@ def payment_for_ios_logic(request):
         try:
             product_id = json_loading_data['product_price_id']
             start_date = json_loading_data['start_date']
+            os_info = json_loading_data['os_info']
         except KeyError:
             error = '오류가 발생했습니다.'
     if error is None:
-
-        payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
-                                                    end_date__gte=today,
-                                                    use=USE).latest('end_date')
-        if payment_info is not None and payment_info != '':
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
             start_date = payment_info.end_date + datetime.timedelta(days=1)
-        else:
+        except ObjectDoesNotExist:
             start_date = today
 
     if error is None:
@@ -767,17 +768,17 @@ def payment_for_ios_logic(request):
                                      fail_reason='',
                                      currency='',
                                      pay_method='인앱 결제',
-                                     pg_provider='Apple',
+                                     pg_provider=os_info,
                                      receipt_url='',
                                      buyer_name=str(request.user.first_name),
                                      # amount=int(payment_result['amount']),
                                      use=USE)
         payment_info.save()
 
-    logger.error(str(request.user.last_name) + str(request.user.first_name)
-                 + '(' + str(request.user.id) + ')님 ios 결제 테스트:' + str(product_id) + ':'+' '+str(start_date))
-
-    if error is not None:
+    if error is None:
+        logger.error(str(request.user.last_name) + str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 iap 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+    else:
         messages.error(request, error)
         logger.error(str(request.user.last_name)+str(request.user.first_name)
                      + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
