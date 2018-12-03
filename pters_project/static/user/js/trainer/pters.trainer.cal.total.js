@@ -1857,13 +1857,28 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
             
             var calc;
             if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
+                if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check < 0){
+                    calc = exist_check- duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
+                }else{
+                    if(exist_check == duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0] && exist_check > 1){
+
+                        calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1;
+                    }else{
+                        calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
+                    }
+                }
+                
             }else{
                 calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
             }
-            if(calc == -1){
-                calc = 0;
-            }
+            // if(planStartDate[i].split(' ')[0] == "2018-12-01"){
+            //     console.log(planStartDate[i]+' ~ '+planEndDate[i],duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]],"calc",calc,"exist_check",exist_check)
+            // }
+            
+            // if(calc == -1){
+            //     calc = 0;
+            // }
+
             // planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check);
             planLeft = (calc)*100;
 
@@ -2424,21 +2439,6 @@ function know_duplicated_plans(jsondata){
     var testArray_end = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
     var classlen = jsondata.classTimeArray_start_date.length;
     for(var i=0; i<classlen; i++){
-        //ori
-        // if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1 && jsondata.group_schedule_end_datetime.indexOf(jsondata.classTimeArray_end_date[i]) == -1){
-        //     if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) ){
-        //         testArray_start.push(jsondata.classTimeArray_start_date[i]);
-        //         testArray_end.push(jsondata.classTimeArray_end_date[i]);
-        //     }
-        // }
-
-        //test1
-        // if(jsondata.classTimeArray_start_date.indexOf(jsondata.group_schedule_start_datetime[i]) == -1 && jsondata.classTimeArray_end_date.indexOf(jsondata.group_schedule_end_datetime[i]) == -1){
-        //     testArray_start.push(jsondata.classTimeArray_start_date[i]);
-        //     testArray_end.push(jsondata.classTimeArray_end_date[i]);
-        // }
-
-        //test2
         if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1 ){
             testArray_start.push(jsondata.classTimeArray_start_date[i]);
             testArray_end.push(jsondata.classTimeArray_end_date[i]);    
@@ -2511,78 +2511,11 @@ function know_duplicated_plans(jsondata){
             result[array_sorted[i]] = [i, len, array_element_count(array_sorted, array_sorted[i])];
         }
     }
-    console.log("duplicate_dic", duplicate_dic)
+    console.log("duplicate_dic",duplicate_dic);
     console.log("result", result)
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
 //중복일정 계산하기
-
-
-
-//중복일정 ㅇㄷ
-    var testArray = {
-      "offScheduleIdArray" :
-      ["53134", "47521", "53165"],
-      "offTimeArray_start_date" :
-      ["2018-09-06 00:00:00", "2018-09-06 01:00:00", "2018-09-06 02:00:00"],
-      "offTimeArray_end_date" :
-      ["2018-09-06 05:00:00", "2018-09-06 03:00:00", "2018-09-06 08:00:00"],
-      "offScheduleNoteArray":
-      ["", "", ""],
-
-      "scheduleIdArray" :
-      ["52655", "53110", "53371"],
-      "classArray_lecture_id" :
-      ["1209", "1209", "1309"],
-      "classTimeArray_member_name" :
-      ["한지민", "한지민", "스노우멤버"],
-      "classTimeArray_member_id" :
-      ["1275", "1275", "482"],
-      "classTimeArray_start_date" :
-      ["2018-09-06 13:00:00", "2018-09-06 14:00:00", "2018-09-06 12:00:00"],
-      "classTimeArray_end_date" :
-      ["2018-09-06 18:00:00", "2018-09-06 15:00:00", "2018-09-06 16:00:00"],
-      "scheduleFinishArray":
-      ["1", "1", "1"],
-      "scheduleNoteArray":
-      ["", "", ""],
-      "scheduleIdxArray":
-      ["1", "2", "3"],
-
-      "group_schedule_id":
-      ["53472", "53478", "53849"],
-      "group_schedule_group_id":
-      ["92", "92", "108"],
-      "group_schedule_group_name":
-      ["1:1 개설형", "1:1 개설형", "20:1 단체"],
-      "group_schedule_max_member_num":
-      ["1", "1", "20"],
-      "group_schedule_current_member_num":
-      ["0", "0", "12"],
-      "group_schedule_group_type_cd_name":
-      ["클래스", "클래스", "클래스"],
-      "group_schedule_start_datetime":
-      ["2018-09-07 17:00:00", "2018-09-06 19:00:00", "2018-09-06 20:00:00"],
-      "group_schedule_end_datetime":
-      ["2018-09-07 22:00:00", "2018-09-06 21:00:00", "2018-09-06 23:00:00"],
-      "group_schedule_finish_check":
-      ["1", "1", "1"],
-      "group_schedule_note":
-      ["", "", "asdfasdf"],
-
-      "messageArray" :
-      [],
-      "RepeatDuplicationDateArray" :
-      [],
-
-      "repeatArray" :
-      [""],
-      "repeatScheduleCounterArray" :
-      [""]
-
-    };
-//중복일정 ㅇㄷ
-
 
 
 
@@ -2591,32 +2524,6 @@ function know_duplicated_plans(jsondata){
 var clicked_td_date_info;
 var schedule_on_off = 0;
 
-//회원이름을 클릭했을때 회원정보 팝업을 보여주며 정보를 채워준다.
-// $(document).on('click', '.memberNameForInfoView, .groupParticipantsRow span', function(){
-//     var bodywidth = window.innerWidth;
-//     var dbID = $(this).attr('data-dbid');
-//     //$('.popups').hide()
-//     if(bodywidth < 600){
-//         $('.popups').hide();
-//         //$('#calendar').css('display','none')
-//         $('#calendar').css('height', '0');
-//         get_indiv_member_info(dbID);
-//         get_indiv_repeat_info(dbID);
-//         get_member_lecture_list(dbID);
-//         get_member_history_list(dbID);
-//         shade_index(100);
-//     }else if(bodywidth >= 600){
-//         get_indiv_member_info(dbID);
-//         get_indiv_repeat_info(dbID);
-//         get_member_lecture_list(dbID);
-//         get_member_history_list(dbID);
-//         $('.member_info_tool button._info_delete_img').hide();
-//         $('#info_shift_base, #info_shift_lecture').show();
-//         $('#info_shift_schedule, #info_shift_history').hide();
-//         $('#select_info_shift_lecture').addClass('button_active');
-//         $('#select_info_shift_schedule, #select_info_shift_history').removeClass('button_active');
-//     }
-// });
 
 $('.popup_inner_month').scroll(function(e){
     e.stopPropagation();
