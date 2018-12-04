@@ -2607,6 +2607,9 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
     console.log("orie", new_disable_time_array_end_date)
 
     var length1 = disable_time_array_start_date.length;
+
+
+
     for(var i=0; i<length1; i++){
         var s_split = disable_time_array_start_date[i].split(' ');
         var e_split = disable_time_array_end_date[i].split(' ');
@@ -2616,7 +2619,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
         var e_time = e_split[1];
         if(s_date == e_date){
             var len = disable_time_array_start_date.length;
-            for(var j=i; j<len; j++){
+            for(var j=i+1; j<len; j++){
                 var s_split_compare = disable_time_array_start_date[j].split(' ');
                 var e_split_compare = disable_time_array_end_date[j].split(' ');
                 var s_time_compare = s_split_compare[1];
@@ -2624,62 +2627,42 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                 var s_index;
                 var e_index;
                 if( compare_time(s_time_compare, s_time) && compare_time(e_time, e_time_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
-                    s_index = new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare);
-                    e_index = new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare);
-                    if(s_index >=0){
-                        new_disable_time_array_start_date.splice(s_index, 1);
+                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare) >= 0){
+                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare),1);
                     }
-                    if(e_index >=0){
-                        new_disable_time_array_end_date.splice(e_index, 1);
+                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare) >= 0){
+                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare),1);
                     }
-                    
                 }else if( compare_time(s_time, s_time_compare) == false  && compare_time(s_time_compare, e_time) == false  && compare_time(e_time, e_time_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
-                    if(s_time == s_time_compare && e_time == e_time_compare){
-
-                    }else{
-                        s_index = new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare);
-                        e_index = new_disable_time_array_end_date.indexOf(e_date+' '+e_time);
-                        if(s_index >=0){
-                            new_disable_time_array_start_date.splice(s_index, 1);
-                        }
-                        if(e_index >=0){
-                            new_disable_time_array_end_date.splice(e_index, 1);
-                        }
+                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare) >= 0){
+                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare),1);
+                    }
+                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time) >= 0){
+                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time),1);    
                     }
                 }else if( compare_time(s_time_compare, s_time) == false && compare_time(s_time, e_time_compare) == false && compare_time(e_time_compare, e_time) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-                    if(s_time == s_time_compare && e_time == e_time_compare){
-
-                    }else{
-                        s_index = new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare);
-                        e_index = new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare);
-                        if(s_index >=0){
-                            new_disable_time_array_start_date.splice(s_index, 1);
-                        }
-                        if(e_index >=0){
-                            new_disable_time_array_end_date.splice(e_index, 1);
-                        }
-                        
+                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time) >= 0){
+                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time),1);
                     }
-                 }else if( compare_time(s_time, s_time_compare) && compare_time(e_time_compare, e_time) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
-                    if(s_time == s_time_compare && e_time == e_time_compare){ 
-
-                    }else{
-                        s_index = new_disable_time_array_start_date.indexOf(s_date+' '+s_time);
-                        e_index = new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare);
-                        if(s_index >=0){
-                            new_disable_time_array_start_date.splice(s_index, 1);
-                        }
-                        if(e_index >=0){
-                            new_disable_time_array_end_date.splice(e_index, 1);
-                        }
+                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare) >= 0){
+                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare),1);
+                    }
+                }else if( compare_time(s_time, s_time_compare) && compare_time(e_time_compare, e_time) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
+                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time) >= 0){
+                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time),1);
+                    }
+                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time) >= 0){
+                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time),1);
                     }
                 }else if(s_time == s_time_compare && e_time == e_time_compare){ //비교 대상 시간이 똑같을 때
-                    s_index = new_disable_time_array_start_date.indexOf(s_date+' '+s_time);
-                    e_index = new_disable_time_array_end_date.indexOf(e_date+' '+e_time);
-                    new_disable_time_array_start_date.splice(s_index,1);
-                    new_disable_time_array_end_date.splice(e_index,1); 
+                    // console.log(s_time+' ~ '+e_time,'///',s_time_compare+' ~ '+e_time_compare,5)
+                    // new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(),1);
+                    // new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(),1);
 
+                }else{
+                    
                 }
+
             }
         }
     }
@@ -2771,6 +2754,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
     }
     return {"addOkArray":addOkArrayList, "allplans":allplans};
 }
+
 
 var allplans = [];
 
@@ -3788,6 +3772,37 @@ function position_absolute_addplan_if_mobile(scrolltoDom){
         scrollToDom(scrolltoDom);
     }
 }
+
+//"2018-12-03 00:00:00", "2018-12-03 05:30:00"
+//"2018-12-03 01:30:00", "2018-12-03 12:00:00"
+
+function compare_times_to_merge_min_max(s_date, e_date, s_date2, e_date2){
+    var sdate1 = s_date.split(' ')[0];
+    var sdate2 = s_date2.split(' ')[0];
+    var edate1 = e_date.split(' ')[0];
+    var edate2 = e_date2.split(' ')[0];
+    var stime1 = (s_date.split(' ')[1]);
+    var stime2 = (s_date2.split(' ')[1]);
+    var etime1 = (e_date.split(' ')[1]);
+    var etime2 = (e_date2.split(' ')[1]);
+    var timearray = [stime1, stime2, etime1, etime2];
+    var stime_new;
+    var etime_new;
+    timearray.sort();
+    if(sdate1 == sdate2 && edate1 == edate2){
+        stime_new = timearray[0];
+        etime_new = timearray[3];
+
+
+
+        return {"start":`${sdate1} ${stime_new}`, "end":`${edate1} ${etime_new}`}
+    }else{
+        console.log("날짜 값이 다릅니다.")
+        return false
+    }
+
+}
+
 
 
 $(window).resize(function(){
