@@ -1295,6 +1295,12 @@ span.summaryInnerBoxText_Repeatendtext{
 	display: none !important;
 }
 @media(min-width: 600px){
+	#currentMemberList, #finishedMemberList{
+		margin-top: 250px;
+	}
+	#currentGroupList, #finishedGroupList, #currentPackageList, #finishedPackageList{
+		margin-top: 210px;
+	}
 	
 	.pters_selectbox_wrapper{
 		margin-top: 20px;
