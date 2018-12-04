@@ -364,21 +364,24 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
         var device_type = 'pc';
         var varUA = navigator.userAgent.toLowerCase();
+        var ios_version = '1.4';
+
         if (varUA.match('android') != null) {
             device_type = 'android';
         } else if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null) {
             device_type = 'ios';
         }
-        if((platform_check == 'mobile') && (device_type=='ios')) {
-            $('#id_standard_product_price_tag').text('30일권');
-            $('#id_standard_product_price').text('9900원');
-            $('.ptersCheckbox').attr('data-method', 'iap')
-        }
-        else{
-            $('#id_standard_product_price_tag').text('정기 결제');
-            $('#id_standard_product_price').text('매월 9900원');
-            $('.ptersCheckbox').attr('data-method', 'card')
-        }
+
+        //if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
+        //    $('#id_standard_product_price_tag').text('30일권');
+        //    $('#id_standard_product_price').text('9900원');
+        //    $('.ptersCheckbox').attr('data-method', 'iap');
+        //}
+        //else{
+        //    $('#id_standard_product_price_tag').text('정기 결제');
+        //    $('#id_standard_product_price').text('매월 9900원');
+        //    $('.ptersCheckbox').attr('data-method', 'card')
+        //}
 
         $('a.text-payment').css('color','#fe4e65;');
         if($('body').width()<600){
@@ -537,6 +540,17 @@
 
         function check_payment(name, pay_method, payment_type_cd, product_id, price, period_month){
             var error_check = true;
+            var date = new Date();
+            var month = date.getMonth()+1;
+            var day = date.getDate();
+            if(month <10){
+                month = '0'+month;
+            }
+            if(day <10){
+                day = '0'+day;
+            }
+            var payment_date = date.getFullYear()+'-'+month+'-'+day;
+
             $.ajax({
                 url: "/payment/check_before_billing/", // 서비스 웹서버
                 type: "POST",
@@ -565,23 +579,29 @@
                         shade_index(-100)
                         purchase_popup_close();
                     }else {
-                        if(jsondata.billing_info != ''){
-                            alert(jsondata.billing_info);
+                       //if(jsondata.billing_info != ''){
+                       //     alert(jsondata.billing_info);
+                        //}
+
+                        var con_test;
+                        var confirm_message = jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
+                            " 이용권 결제를 진행하시겠습니까?";
+                        if(payment_date != jsondata.next_start_date[0]){
+                            if(payment_type_cd == 'PERIOD'){
+                                confirm_message = jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
+                                    " 이용권 결제를 예약하시겠습니까? \n " +
+                                    "실제 결제는 "+jsondata.next_start_date[0]+"에 진행됩니다.";
+                            }
                         }
-                        if(payment_type_cd=='PERIOD'){
+                        con_test = confirm(confirm_message);
+
+                        if(con_test == true){
                             payment(name, pay_method, payment_type_cd, product_id, price,
                                 jsondata.next_start_date[0], period_month);
-                        }else{
-                            var con_test = confirm(jsondata.next_start_date[0]+" ~ "+jsondata.next_end_date[0]+
-                            " 이용권 결제를 진행하시겠습니까?");
-                            if(con_test == true){
-                                payment(name, pay_method, payment_type_cd, product_id, price,
-                                    jsondata.next_start_date[0], period_month);
-                            }
-                            else if(con_test == false){
-                                shade_index(-100)
-                                purchase_popup_close();
-                            }
+                        }
+                        else if(con_test == false){
+                            shade_index(-100)
+                            purchase_popup_close();
                         }
 
                     }
@@ -603,6 +623,7 @@
 
         function payment(name, pay_method, payment_type_cd, product_id, price, start_date, period_month){
             var date = new Date();
+            var member_id = '{{ request.user.id }}';
             var merchant_uid_data = 'm_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var customer_uid_data = 'c_{{request.user.id}}_'+product_id+'_' + date.getTime();
             var billing_data;
@@ -626,119 +647,127 @@
             }
 
             var message = "9";
-
-            if((platform_check == 'mobile') && (device_type=='ios')) {
+            if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
                 //alert("test")
                 window.webkit.messageHandlers.payment_method.postMessage(message);
             }
+            else if((platform_check == 'mobile') && (device_type=='android') && (ios_version!='1.4')) {
+                window.android_payment_function.callMethodName(message);
+
+            }
             else {
-                console.log(payment_date);
-                var request_pay_period_data = {
-                    pg: 'danal', // version 1.1.0부터 지원.
-                    pay_method: pay_method,
-                    merchant_uid: merchant_uid_data,
-                    customer_uid: customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
-                    name: name,
-                    amount: price,
-                    custom_data: {
-                        "user_id":{{ request.user.id }},
-                        "product_id": product_id,
-                        "payment_type_cd": payment_type_cd,
-                        "customer_uid": customer_uid_data,
-                        "start_date": payment_date,
-                        "period_month": period_month
-                    },
-                    buyer_email: '{{ request.user.email }}',
-                    buyer_name: '{{ request.user.first_name }}',
-                };
-                var request_pay_single_data = {
-                    pg: 'danal', // version 1.1.0부터 지원.
-                    pay_method: pay_method,
-                    merchant_uid: merchant_uid_data,
-                    name: name,
-                    amount: price,
-                    custom_data: {
-                        "user_id":{{ request.user.id }},
-                        "product_id": product_id,
-                        "payment_type_cd": payment_type_cd,
-                        "start_date": payment_date,
-                        "period_month": period_month
-                    },
-                    buyer_email: '{{ request.user.email }}',
-                    buyer_name: '{{ request.user.first_name }}',
-                    {#                    buyer_tel : '',#}
-                    {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
-                    {#                    buyer_postcode : '123-456',#}
-                };
+                if(('428' == member_id) && (platform_check == 'mobile') && (device_type=='ios')){
+                    window.webkit.messageHandlers.payment_method.postMessage(message);
+                }else if(('428' == member_id) && (platform_check == 'mobile') && (device_type=='android')){
+                    window.android_payment_function.callMethodName(message);
+                }else{
+                    var request_pay_period_data = {
+                        pg: 'danal', // version 1.1.0부터 지원.
+                        pay_method: pay_method,
+                        merchant_uid: merchant_uid_data,
+                        customer_uid: customer_uid_data, // 카드(빌링키)와 1:1로 대응하는 값
+                        name: name,
+                        amount: price,
+                        custom_data: {
+                            "user_id":{{ request.user.id }},
+                            "product_id": product_id,
+                            "payment_type_cd": payment_type_cd,
+                            "customer_uid": customer_uid_data,
+                            "start_date": payment_date,
+                            "period_month": period_month
+                        },
+                        buyer_email: '{{ request.user.email }}',
+                        buyer_name: '{{ request.user.first_name }}',
+                    };
+                    var request_pay_single_data = {
+                        pg: 'danal', // version 1.1.0부터 지원.
+                        pay_method: pay_method,
+                        merchant_uid: merchant_uid_data,
+                        name: name,
+                        amount: price,
+                        custom_data: {
+                            "user_id":{{ request.user.id }},
+                            "product_id": product_id,
+                            "payment_type_cd": payment_type_cd,
+                            "start_date": payment_date,
+                            "period_month": period_month
+                        },
+                        buyer_email: '{{ request.user.email }}',
+                        buyer_name: '{{ request.user.first_name }}',
+                        {#                    buyer_tel : '',#}
+                        {#                    buyer_addr : '서울특별시 강남구 삼성동',#}
+                        {#                    buyer_postcode : '123-456',#}
+                    };
 
-                if (payment_type_cd == 'PERIOD') {
-                    billing_data = request_pay_period_data;
-                }
-                else {
-                    billing_data = request_pay_single_data;
-                }
-
-                IMP.request_pay(billing_data, function (rsp) {
-                    var msg;
-                    if (rsp.success) {
-                        console.log(rsp);
-
-                        $.ajax({
-                            url: "/payment/check_finish_billing/", // 서비스 웹서버
-                            type: "POST",
-                            headers: {"Content-Type": "application/json"},
-                            data: JSON.stringify({
-                                product_id: product_id,
-                                payment_type_cd: payment_type_cd,
-                                paid_amount: rsp.paid_amount,
-                                start_date: payment_date,
-                                period_month: period_month
-                            }),
-
-                            beforeSend: function (xhr, settings) {
-                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                                }
-                                beforeSend();
-                            },
-
-                            success: function (data) {
-                                var jsondata = JSON.parse(data);
-                                initialJSON = jsondata;
-                                if (jsondata.messageArray.length > 0) {
-                                    msg = '결제에 실패하였습니다.';
-                                    msg += ' : ' + jsondata.messageArray;
-                                    url_move = "/payment/";
-                                } else {
-                                    msg = '결제가 완료되었습니다.';
-                                    url_move = "/payment/payment_history/";
-                                    {#                        msg += '고유ID : ' + rsp.imp_uid;#}
-                                    {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
-                                    {#                                    msg += '결제 금액 : ' + rsp.paid_amount;#}
-                                    {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
-                                }
-                                alert(msg);
-                                location.href = url_move;
-
-                            },
-
-                            complete: function () {
-                                completeSend();
-                            },
-
-                            error: function () {
-                                console.log('server error');
-                            }
-                        });
-
-                    } else {
-                        msg = '결제에 실패하였습니다.';
-                        msg += ' : ' + rsp.error_msg;
-                        shade_index(-100)
-                        alert(msg);
-                        location.href = "/payment/";
+                    if (payment_type_cd == 'PERIOD') {
+                        billing_data = request_pay_period_data;
                     }
-                });
+                    else {
+                        billing_data = request_pay_single_data;
+                    }
+
+                    IMP.request_pay(billing_data, function (rsp) {
+                        var msg;
+                        if (rsp.success) {
+                            console.log(rsp);
+
+                            $.ajax({
+                                url: "/payment/check_finish_billing/", // 서비스 웹서버
+                                type: "POST",
+                                headers: {"Content-Type": "application/json"},
+                                data: JSON.stringify({
+                                    product_id: product_id,
+                                    payment_type_cd: payment_type_cd,
+                                    paid_amount: rsp.paid_amount,
+                                    start_date: payment_date,
+                                    period_month: period_month
+                                }),
+
+                                beforeSend: function (xhr, settings) {
+                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                    }
+                                    beforeSend();
+                                },
+
+                                success: function (data) {
+                                    var jsondata = JSON.parse(data);
+                                    initialJSON = jsondata;
+                                    if (jsondata.messageArray.length > 0) {
+                                        msg = '결제에 실패하였습니다.';
+                                        msg += ' : ' + jsondata.messageArray;
+                                        url_move = "/payment/";
+                                    } else {
+                                        msg = '결제가 완료되었습니다.';
+                                        url_move = "/payment/payment_history/";
+                                        {#                        msg += '고유ID : ' + rsp.imp_uid;#}
+                                        {#                        msg += '상점 거래ID : ' + rsp.merchant_uid;#}
+                                        {#                                    msg += '결제 금액 : ' + rsp.paid_amount;#}
+                                        {#                        msg += '카드 승인번호 : ' + rsp.apply_num;#}
+                                    }
+                                    alert(msg);
+                                    location.href = url_move;
+
+                                },
+
+                                complete: function () {
+                                    completeSend();
+                                },
+
+                                error: function () {
+                                    console.log('server error');
+                                }
+                            });
+
+                        } else {
+                            msg = '결제에 실패하였습니다.';
+                            msg += ' : ' + rsp.error_msg;
+                            shade_index(-100)
+                            alert(msg);
+                            location.href = "/payment/";
+                        }
+                    });
+                }
             }
 
         }
@@ -870,9 +899,10 @@
             var product_price_name = jsondata.product_price_name;
             find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
 
-            if((platform_check == 'mobile') && (device_type=='ios')) {
+            if((platform_check == 'mobile') && (ios_version != '1.4')) {
                 payment_type_cd = 'SINGLE';
-                product_price_name = '30일권'
+                product_price_name = '30일권';
+                $('.purchase_method_name').text('인앱 결제');
             }
             $left_ticket.attr({"data-product-name":jsondata.product_name,
                                "data-product-price-name":product_price_name,
@@ -882,7 +912,7 @@
                                "data-product-id":product_id,
                                "data-period-month":jsondata.product_price_period_month,});
 
-            if((platform_check == 'mobile') && (device_type=='ios')) {
+            if((platform_check == 'mobile') && (ios_version != '1.4')) {
                 //alert("test")
                 $left_ticket_comment.html(`<span class="${product_color}">30일권</span>`);
                 $left_ticket_new_price.text(`${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
@@ -910,17 +940,18 @@
 
         $('div.bottomfooter2 > span > img').attr("src","/static/user/res/spooner.png");
 
-    function payment_for_ios(payment_date , product_price_id){
+    function payment_for_iap(payment_date , product_price_id, os_info){
 {#        alert(payment_date);#}
 {#        shade_index(-100);#}
 {#        alert(product_price_id);#}
         $.ajax({
-            url: "/payment/payment_for_ios/", // 서비스 웹서버
+            url: "/payment/payment_for_iap/", // 서비스 웹서버
             type: "POST",
             headers: {"Content-Type": "application/json"},
             data: JSON.stringify({
                 product_price_id: product_price_id,
-                start_date: payment_date
+                start_date: payment_date,
+                os_info: os_info
             }),
 
             beforeSend: function (xhr, settings) {
@@ -953,6 +984,15 @@
                 console.log('server error');
             }
         });
+    }
+
+    function set_app_version(version){
+        if(version != ''){
+            ios_version = version;
+            $('#id_standard_product_price_tag').text('30일권');
+            $('#id_standard_product_price').text('9900원');
+            $('.ptersCheckbox').attr('data-method', 'iap');
+        }
     }
 
     </script>
