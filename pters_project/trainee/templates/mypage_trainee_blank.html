@@ -351,7 +351,7 @@
         var class_id = ['{{ request.session.class_id }}'];
         var trainee_next_schedule = "일정이 없습니다."
         $('#uptext').text("마이페이지")
-        $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month'%}'")
+        $('#upbutton').attr('onclick',"location.href='{% url 'trainee:cal_month_blank'%}'")
         $('#upbutton img').attr('src','/static/user/res/icon-setting-arrow.png').css({'transform':'rotate(180deg)','height':'20px','width':'unset'})
         if(next_schedule.length>0){
             trainee_next_schedule = date_format_to_user_hangul(next_schedule)

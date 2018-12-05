@@ -12,6 +12,7 @@ class ClassTbAdmin(admin.ModelAdmin):
                     'class_hour', 'start_hour_unit', 'class_member_num', 'state_cd',
                     'schedule_check',
                     'reg_dt', 'mod_dt', 'use')
+    search_fields = ['member__name', 'subject_cd', 'subject_detail_nm']
 
 
 @admin.register(MemberClassTb)
@@ -24,6 +25,7 @@ class MemberClassTbAdmin(admin.ModelAdmin):
 class ClassLectureTbAdmin(admin.ModelAdmin):
     list_display = ('class_lecture_id', 'class_tb', 'lecture_tb', 'auth_cd',
                     'mod_member_id', 'reg_dt', 'mod_dt', 'use')
+    search_fields = ['class_tb__member__name', 'lecture_tb__member__name']
 
 
 @admin.register(GroupTb)
@@ -44,6 +46,7 @@ class GroupLectureTbAdmin(admin.ModelAdmin):
 class SettingTbAdmin(admin.ModelAdmin):
     list_display = ('setting_id', 'member', 'class_tb', 'lecture_tb', 'setting_type_cd', 'setting_info',
                     'reg_dt', 'mod_dt', 'use')
+    search_fields = ['member__name', 'class_tb']
 
 
 @admin.register(BackgroundImgTb)
@@ -57,6 +60,7 @@ class PackageTbAdmin(admin.ModelAdmin):
     list_display = ('package_id', 'class_tb', 'name', 'package_type_cd',
                     'ing_package_member_num', 'end_package_member_num',
                     'package_group_num', 'state_cd', 'note', 'reg_dt', 'mod_dt', 'use')
+    search_fields = ['class_tb__member__name', 'package_type_cd', 'name']
 
 
 @admin.register(PackageGroupTb)

@@ -71,9 +71,9 @@ def check_before_billing_logic(request):
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다.[1]'
     except TypeError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다.[2]'
 
     if error is None:
         try:
@@ -81,12 +81,14 @@ def check_before_billing_logic(request):
             product_id = json_loading_data['product_id']
             input_price = json_loading_data['price']
             period_month = int(json_loading_data['period_month'])
+            pay_method = json_loading_data['pay_method']
         except KeyError:
-            error = '오류가 발생했습니다.'
+            error = '오류가 발생했습니다.[3]'
 
     if error is None:
         # 사전 가격 검사 작업
-        error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
+        if pay_method != 'iap':
+            error = func_check_payment_price_info(product_id, payment_type_cd, input_price, period_month)
 
     if error is None:
         if str(product_id) == '11':
@@ -106,6 +108,15 @@ def check_before_billing_logic(request):
             if period_payment_counter > 0:
                 error = '이미 동일한 기능의 이용권이 있어 결제할수 없습니다.'
             # error = '이미 이용중인 이용권이 있어 결제할수 없습니다. 이용권 변경 기능을 이용해 변경해주세요.'
+    if error is None:
+        # if payment_type_cd == 'SINGLE':
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
+            next_payment_date = payment_info.end_date + datetime.timedelta(days=1)
+        except ObjectDoesNotExist:
+            next_payment_date = today
 
     if error is None:
         date = int(next_payment_date.strftime('%d'))
@@ -693,6 +704,86 @@ class PaymentCompleteView(LoginRequiredMixin, TemplateView):
         context = super(PaymentCompleteView, self).get_context_data(**kwargs)
 
         return context
+
+
+def payment_for_iap_logic(request):
+
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+
+    product_id = None
+    payment_type_cd = None
+    paid_amount = 0
+    product_price_id = None
+    start_date = None
+    context = {}
+    error = None
+    os_info = ''
+    today = datetime.date.today()
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+    #
+    if error is None:
+        try:
+            product_id = json_loading_data['product_price_id']
+            start_date = json_loading_data['start_date']
+            os_info = json_loading_data['os_info']
+        except KeyError:
+            error = '오류가 발생했습니다.'
+    if error is None:
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
+            start_date = payment_info.end_date + datetime.timedelta(days=1)
+        except ObjectDoesNotExist:
+            start_date = today
+
+    if error is None:
+        date = int(start_date.strftime('%d'))
+        end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
+        start_date = str(start_date).split(' ')[0]
+
+    if error is None:
+        payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                     product_tb_id=7,
+                                     payment_type_cd='SINGLE',
+                                     merchant_uid='m_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                     start_date=start_date, end_date=end_date,
+                                     paid_date=today,
+                                     period_month=1,
+                                     price=9900,
+                                     name='스탠다드 - 30일권',
+                                     imp_uid='',
+                                     channel='iap',
+                                     card_name='인앱 결제',
+                                     buyer_email=request.user.email,
+                                     status='paid',
+                                     fail_reason='',
+                                     currency='',
+                                     pay_method='인앱 결제',
+                                     pg_provider=os_info,
+                                     receipt_url='',
+                                     buyer_name=str(request.user.first_name),
+                                     # amount=int(payment_result['amount']),
+                                     use=USE)
+        payment_info.save()
+
+    if error is None:
+        logger.error(str(request.user.last_name) + str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 iap 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+    else:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+
+    return render(request, 'ajax/payment_error_info.html', context)
 
 
 def resend_period_billing_logic(request):
