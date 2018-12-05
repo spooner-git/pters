@@ -289,7 +289,7 @@
 
             <div id="purchase_caution">
                 <p>피터스의 모든 이용권은 국내에서만 구매 가능하며, 사용이 가능합니다.</p>
-                <p>본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.</p>
+                <p>본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.(해외원화결제 수수료는 별도로 부가 될 수 있습니다.)</p>
                 <p>구입하신 이용권은 마이페이지의 이용권 내역에서 확인 할 수 있습니다.</p>
                 <!--<p>본 이용권은 이용 시작일 기준 7일이내 청약철회 가능한 이용권 입니다.</p>-->
                 <p>단, 이용내역이 있는 경우 이용금액 공제, 이벤트등의 할인 혜택을 받으신 경우 해당금액 공제 후 환불 가능합니다.</p>
@@ -298,6 +298,8 @@
                 <p>미성년자가 법정대리인 동의 없이 계약을 체결한 경우, 미성년자 또는 법정 대리인이 이를 취소할 수 있습니다.</p>
                 <p>이용권 구매내역을 타인에게 양도하거나 다른 아이디로 이전하는 기능은 제공하지 않습니다.</p>
                 <p>이용권은 앱, PC, 모바일 웹에서 이용이 가능합니다.</p>
+                <p class="app_store_info">App Store 결제는 현재 사용하고 있는 App Store계정을 통해 결제됩니다.</p>
+                <p class="app_store_info">결제 금액에 대한 확인 및 환불은 Apple을 틍해 가능합니다. 결제내역 및 환불 관련 문의는 Apple 고객센터(080-333-4000)으로 부탁드립니다.</p>
             </div>
         </div>
 
@@ -364,7 +366,7 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
         var device_type = 'pc';
         var varUA = navigator.userAgent.toLowerCase();
-        var ios_version = '1.4';
+        var app_version = '1.4';
 
         if (varUA.match('android') != null) {
             device_type = 'android';
@@ -647,11 +649,11 @@
             }
 
             var message = "9";
-            if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
+            if((platform_check == 'mobile') && (device_type=='ios') && (app_version!='1.4')) {
                 //alert("test")
                 window.webkit.messageHandlers.payment_method.postMessage(message);
             }
-            else if((platform_check == 'mobile') && (device_type=='android') && (ios_version!='1.4')) {
+            else if((platform_check == 'mobile') && (device_type=='android') && (app_version!='1.4')) {
                 window.android_payment_function.callMethodName(message);
 
             }
@@ -899,10 +901,13 @@
             var product_price_name = jsondata.product_price_name;
             find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
 
-            if((platform_check == 'mobile') && (ios_version != '1.4')) {
+            if((platform_check == 'mobile') && (app_version != '1.4')) {
                 payment_type_cd = 'SINGLE';
                 product_price_name = '30일권';
                 $('.purchase_method_name').text('인앱 결제');
+                if(device_type=='ios'){
+                    $('.app_store_info').css({"display":"none"});
+                }
             }
             $left_ticket.attr({"data-product-name":jsondata.product_name,
                                "data-product-price-name":product_price_name,
@@ -912,7 +917,7 @@
                                "data-product-id":product_id,
                                "data-period-month":jsondata.product_price_period_month,});
 
-            if((platform_check == 'mobile') && (ios_version != '1.4')) {
+            if((platform_check == 'mobile') && (app_version != '1.4')) {
                 //alert("test")
                 $left_ticket_comment.html(`<span class="${product_color}">30일권</span>`);
                 $left_ticket_new_price.text(`${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
@@ -988,7 +993,7 @@
 
     function set_app_version(version){
         if(version != ''){
-            ios_version = version;
+            app_version = version;
             $('#id_standard_product_price_tag').text('30일권');
             $('#id_standard_product_price').text('9900원');
             $('.ptersCheckbox').attr('data-method', 'iap');
