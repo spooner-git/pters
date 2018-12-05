@@ -2493,14 +2493,14 @@ function know_duplicated_plans(jsondata){
         }
         duplicate_num.push(duplicated);
     }
-    for(var plan_o in duplicate_dic){
-        var planlength = duplicate_dic[plan_o].length;
-        for(var plans in duplicate_dic){
-            if(duplicate_dic[plans].indexOf(plan_o) >= 0 && planlength < duplicate_dic[plans].length ){
-                delete duplicate_dic[plan_o];
-            }
-        }
-    }
+    // for(var plan_o in duplicate_dic){
+    //     var planlength = duplicate_dic[plan_o].length;
+    //     for(var plans in duplicate_dic){
+    //         if(duplicate_dic[plans].indexOf(plan_o) >= 0 && planlength < duplicate_dic[plans].length ){
+    //             // delete duplicate_dic[plan_o];
+    //         }
+    //     }
+    // }
 
     for(var plan_oo in duplicate_dic){
         var length = duplicate_dic[plan_oo].length;
