@@ -28,3 +28,4 @@ pters_project/stats/migrations/__pycache__/
 pters_project/board/__pycache__/
 pters_project/board/migrations/__pycache__/
 pters_project/trainee/templatetags/__pycache__/
+pters_project/configs/middleware/__pycache__/
