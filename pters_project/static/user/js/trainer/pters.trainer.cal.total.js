@@ -2511,8 +2511,8 @@ function know_duplicated_plans(jsondata){
             result[array_sorted[i]] = [i, len, array_element_count(array_sorted, array_sorted[i])];
         }
     }
-    console.log("duplicate_dic",duplicate_dic);
-    console.log("result", result)
+    // console.log("duplicate_dic",duplicate_dic);
+    // console.log("result", result)
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
 //중복일정 계산하기

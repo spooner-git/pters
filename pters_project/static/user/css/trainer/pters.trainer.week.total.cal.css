@@ -182,7 +182,6 @@ body{
 	top: 110px;
 	margin: 0 auto;
 	background-color: transparent;
-	height: 90%;
 	z-index: 3;
 	max-width: 1080px;
 	height: 100%;
@@ -192,6 +191,8 @@ body{
 	margin-bottom: 40px;
 	padding-bottom: 40px;
 }
+
+
 
 
 .swiper-container{

@@ -2586,7 +2586,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
     var all_start_date_time = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     var all_end_date_time = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
     var classlen = jsondata.classTimeArray_start_date.length;
-    console.log("jsondata",jsondata)
     for(var i=0; i<classlen; i++){
         if(jsondata.class_group_schedule_id[i] == "None"){
             all_start_date_time.push(jsondata.classTimeArray_start_date[i]);
@@ -2600,79 +2599,86 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 
 
     //중복일정시 Test
-    var new_disable_time_array_start_date = disable_time_array_start_date.slice();
-    var new_disable_time_array_end_date = disable_time_array_end_date.slice();
+    var new_disable_time_array_start_date = [];
+    var new_disable_time_array_end_date =[];
+    for(var n=0; n<disable_time_array_start_date.length; n++){
+        if(disable_time_array_start_date[n].split(" ")[0] == selecteddate){
+            new_disable_time_array_start_date.push(disable_time_array_start_date[n]);
+            new_disable_time_array_end_date.push(disable_time_array_end_date[n]);
+        }
+    }
 
     console.log("ori", new_disable_time_array_start_date);
-    console.log("orie", new_disable_time_array_end_date)
+    console.log("orie", new_disable_time_array_end_date);
 
-    var length1 = disable_time_array_start_date.length;
+    var removeIndexArray = [];
+    var resultStart_Array = [];
+    var resultEnd_Array = [];
+
+    var disable_start_array_length = new_disable_time_array_start_date.length;
 
 
-
-    for(var i=0; i<length1; i++){
-        var s_split = disable_time_array_start_date[i].split(' ');
-        var e_split = disable_time_array_end_date[i].split(' ');
+    for(var i=0; i<disable_start_array_length; i++){
+        var s_split = new_disable_time_array_start_date[i].split(' ');
+        var e_split = new_disable_time_array_end_date[i].split(' ');
         var s_date = s_split[0];
         var e_date = e_split[0];
         var s_time = s_split[1];
         var e_time = e_split[1];
-        if(s_date == e_date){
-            var len = disable_time_array_start_date.length;
-            for(var j=i+1; j<len; j++){
-                var s_split_compare = disable_time_array_start_date[j].split(' ');
-                var e_split_compare = disable_time_array_end_date[j].split(' ');
+        if(s_date == e_date && s_date == selecteddate && e_date == selecteddate){
+            console.log("날짜", s_date, e_date, selecteddate)
+            var starttime_temp = new_disable_time_array_start_date[i];
+            var endtime_temp = new_disable_time_array_end_date[i];
+
+            if(removeIndexArray.indexOf(i) != -1){
+                continue;
+            }
+            removeIndexArray.push(i);
+            for(var j=0; j<disable_start_array_length; j++){
+                if(removeIndexArray.indexOf(j) != -1){
+                    continue;
+                }
+                var s_split_compare = new_disable_time_array_start_date[j].split(' ');
+                var e_split_compare = new_disable_time_array_end_date[j].split(' ');
                 var s_time_compare = s_split_compare[1];
                 var e_time_compare = e_split_compare[1];
-                var s_index;
-                var e_index;
-                if( compare_time(s_time_compare, s_time) && compare_time(e_time, e_time_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
-                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare) >= 0){
-                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare),1);
-                    }
-                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare) >= 0){
-                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare),1);
-                    }
-                }else if( compare_time(s_time, s_time_compare) == false  && compare_time(s_time_compare, e_time) == false  && compare_time(e_time, e_time_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
-                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare) >= 0){
-                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time_compare),1);
-                    }
-                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time) >= 0){
-                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time),1);    
-                    }
-                }else if( compare_time(s_time_compare, s_time) == false && compare_time(s_time, e_time_compare) == false && compare_time(e_time_compare, e_time) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time) >= 0){
-                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time),1);
-                    }
-                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare) >= 0){
-                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time_compare),1);
-                    }
-                }else if( compare_time(s_time, s_time_compare) && compare_time(e_time_compare, e_time) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
-                    if(new_disable_time_array_start_date.indexOf(s_date+' '+s_time) >= 0){
-                        new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(s_date+' '+s_time),1);
-                    }
-                    if(new_disable_time_array_end_date.indexOf(e_date+' '+e_time) >= 0){
-                        new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(e_date+' '+e_time),1);
-                    }
-                }else if(s_time == s_time_compare && e_time == e_time_compare){ //비교 대상 시간이 똑같을 때
-                    // console.log(s_time+' ~ '+e_time,'///',s_time_compare+' ~ '+e_time_compare,5)
-                    // new_disable_time_array_start_date.splice(new_disable_time_array_start_date.indexOf(),1);
-                    // new_disable_time_array_end_date.splice(new_disable_time_array_end_date.indexOf(),1);
+                var merged_time = compare_times_to_merge_min_max(starttime_temp, endtime_temp, new_disable_time_array_start_date[j], new_disable_time_array_end_date[j]);
+                var merged_starttime = merged_time.start;
+                var merged_endtime = merged_time.end;
 
+                
+                if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) == 1){
+                    starttime_temp = merged_starttime;
+                    endtime_temp = merged_endtime;
+                    removeIndexArray.push(j);
                 }else{
-                    
-                }
 
+                }
             }
+
+            for(var k=0; k<resultStart_Array.length; k++){
+                if(know_whether_plans_has_duplicates(starttime_temp, endtime_temp, resultStart_Array[k].split(' ')[1], resultEnd_Array[k].split(' ')[1]) == 1){
+                    var merged_time2 = compare_times_to_merge_min_max(starttime_temp, endtime_temp, resultStart_Array[k].split(' ')[1], resultEnd_Array[k].split(' ')[1]);
+                    var merged_starttime2 = merged_time2.start;
+                    var merged_endtime2 = merged_time2.end;
+                    console.log("awegaegaegaegaegare")
+                }
+            }
+
+            resultStart_Array.push(starttime_temp);
+            resultEnd_Array.push(endtime_temp);
         }
     }
+    console.log("*****resultStart_Array", resultStart_Array);
+    console.log("*****resultEnd_Array",resultEnd_Array);
     //중복일정시 Test
 
-    disable_time_array_start_date = new_disable_time_array_start_date;
-    disable_time_array_end_date = new_disable_time_array_end_date;
 
-    console.log("new_disable_time_array_start_date", new_disable_time_array_start_date);
-    console.log("new_disable_time_array_end_date", new_disable_time_array_end_date);
+    disable_time_array_start_date = resultStart_Array;
+    disable_time_array_end_date = resultEnd_Array;
+
+    // console.log("결과s", new_disable_time_array_start_date);
+    // console.log("결과e", new_disable_time_array_end_date);
 
 
     for(var i=0; i<disable_time_array_start_date.length; i++){
@@ -2753,6 +2759,20 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
         }
     }
     return {"addOkArray":addOkArrayList, "allplans":allplans};
+}
+
+function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare, endtime_compare){
+    if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
+        return 1
+    }else if( compare_time(starttime, starttime_compare) == false  && compare_time(starttime_compare, endtime) == false  && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
+        return 1
+    }else if( compare_time(starttime_compare, starttime) == false && compare_time(starttime, endtime_compare) == false && compare_time(endtime_compare, endtime) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+        return 1
+    }else if( compare_time(starttime, starttime_compare) && compare_time(endtime_compare, endtime) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
+        return 1
+    }else{
+       return 0
+    }
 }
 
 
