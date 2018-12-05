@@ -2493,14 +2493,28 @@ function know_duplicated_plans(jsondata){
         }
         duplicate_num.push(duplicated);
     }
-    for(var plan in duplicate_dic){
-        var planlength = duplicate_dic[plan].length;
+    for(var plan_o in duplicate_dic){
+        var planlength = duplicate_dic[plan_o].length;
         for(var plans in duplicate_dic){
-            if(duplicate_dic[plans].indexOf(plan) >= 0 && planlength < duplicate_dic[plans].length ){
-                delete duplicate_dic[plan];
+            if(duplicate_dic[plans].indexOf(plan_o) >= 0 && planlength < duplicate_dic[plans].length ){
+                delete duplicate_dic[plan_o];
             }
         }
     }
+
+    for(var plan_oo in duplicate_dic){
+        var length = duplicate_dic[plan_oo].length;
+        for(var planss in duplicate_dic){
+            if(duplicate_dic[planss].indexOf(plan_oo) >=0){
+                for(var t=0; t<length; t++){
+                    if(duplicate_dic[planss].indexOf(duplicate_dic[plan_oo][t]) == -1){
+                        duplicate_dic[planss].push(duplicate_dic[plan_oo][t]);
+                    }
+                }
+            }
+        }
+    }
+
 
     var result = {};
     for(var plan_ in duplicate_dic){
@@ -2511,8 +2525,8 @@ function know_duplicated_plans(jsondata){
             result[array_sorted[i]] = [i, len, array_element_count(array_sorted, array_sorted[i])];
         }
     }
-    // console.log("duplicate_dic",duplicate_dic);
-    // console.log("result", result)
+    console.log("duplicate_dic",duplicate_dic);
+    console.log("result", result)
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
 //중복일정 계산하기

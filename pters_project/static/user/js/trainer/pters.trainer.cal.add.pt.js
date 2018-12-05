@@ -2617,7 +2617,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 
     var disable_start_array_length = new_disable_time_array_start_date.length;
 
-
     for(var i=0; i<disable_start_array_length; i++){
         var s_split = new_disable_time_array_start_date[i].split(' ');
         var e_split = new_disable_time_array_end_date[i].split(' ');
@@ -2626,7 +2625,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
         var s_time = s_split[1];
         var e_time = e_split[1];
         if(s_date == e_date && s_date == selecteddate && e_date == selecteddate){
-            console.log("날짜", s_date, e_date, selecteddate)
             var starttime_temp = new_disable_time_array_start_date[i];
             var endtime_temp = new_disable_time_array_end_date[i];
 
@@ -2653,15 +2651,6 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                     removeIndexArray.push(j);
                 }else{
 
-                }
-            }
-
-            for(var k=0; k<resultStart_Array.length; k++){
-                if(know_whether_plans_has_duplicates(starttime_temp, endtime_temp, resultStart_Array[k].split(' ')[1], resultEnd_Array[k].split(' ')[1]) == 1){
-                    var merged_time2 = compare_times_to_merge_min_max(starttime_temp, endtime_temp, resultStart_Array[k].split(' ')[1], resultEnd_Array[k].split(' ')[1]);
-                    var merged_starttime2 = merged_time2.start;
-                    var merged_endtime2 = merged_time2.end;
-                    console.log("awegaegaegaegaegare")
                 }
             }
 
