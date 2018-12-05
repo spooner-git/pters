@@ -2629,14 +2629,14 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
             var starttime_temp = new_disable_time_array_start_date[i];
             var endtime_temp = new_disable_time_array_end_date[i];
 
-            // if(removeIndexArray.indexOf(i) != -1){
-            //     continue;
-            // }
-            // removeIndexArray.push(i);
+            if(removeIndexArray.indexOf(i) != -1){
+                continue;
+            }
+            removeIndexArray.push(i);
             for(var j=0; j<disable_start_array_length; j++){
-                // if(removeIndexArray.indexOf(j) != -1){
-                //     continue;
-                // }
+                if(removeIndexArray.indexOf(j) != -1){
+                    continue;
+                }
                 var s_split_compare = new_disable_time_array_start_date[j].split(' ');
                 var e_split_compare = new_disable_time_array_end_date[j].split(' ');
                 var s_time_compare = s_split_compare[1];
@@ -2647,16 +2647,16 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 
                 
                 if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) == 1){
-                    // starttime_temp = merged_starttime;
-                    // endtime_temp = merged_endtime;
-                    // removeIndexArray.push(j);
-                    for(var k=0; k<duplication_array.length; k++){
-                        var duplication_index_test_1 = duplication_array[k].indexOf(i);
-                        var duplication_index_test_2 = duplication_array[k].indexOf(j);
-                        if(duplication_index_test_1 != -1){
-                            // duplication_array[k]
-                        }
-                    }
+                    starttime_temp = merged_starttime;
+                    endtime_temp = merged_endtime;
+                    removeIndexArray.push(j);
+                    // for(var k=0; k<duplication_array.length; k++){
+                    //     var duplication_index_test_1 = duplication_array[k].indexOf(j);
+                    //     var duplication_index_test_2 = duplication_array[k].indexOf(j);
+                    //     if(duplication_index_test != -1){
+                    //         duplication_array[k]
+                    //     }
+                    // }
                 }else{
 
                 }
