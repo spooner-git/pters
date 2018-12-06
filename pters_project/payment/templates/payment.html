@@ -289,7 +289,7 @@
 
             <div id="purchase_caution">
                 <p>피터스의 모든 이용권은 국내에서만 구매 가능하며, 사용이 가능합니다.</p>
-                <p>본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.(해외원화결제 수수료는 별도로 부가 될 수 있습니다.)</p>
+                <p>본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.</p>
                 <p>구입하신 이용권은 마이페이지의 이용권 내역에서 확인 할 수 있습니다.</p>
                 <!--<p>본 이용권은 이용 시작일 기준 7일이내 청약철회 가능한 이용권 입니다.</p>-->
                 <p>단, 이용내역이 있는 경우 이용금액 공제, 이벤트등의 할인 혜택을 받으신 경우 해당금액 공제 후 환불 가능합니다.</p>
@@ -366,7 +366,7 @@
         IMP.init('{{ payment_id }}'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
         var device_type = 'pc';
         var varUA = navigator.userAgent.toLowerCase();
-        var app_version = '1.4';
+        var ios_version = '1.4';
 
         if (varUA.match('android') != null) {
             device_type = 'android';
@@ -649,11 +649,11 @@
             }
 
             var message = "9";
-            if((platform_check == 'mobile') && (device_type=='ios') && (app_version!='1.4')) {
+            if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
                 //alert("test")
                 window.webkit.messageHandlers.payment_method.postMessage(message);
             }
-            else if((platform_check == 'mobile') && (device_type=='android') && (app_version!='1.4')) {
+            else if((platform_check == 'mobile') && (device_type=='android') && (ios_version!='1.4')) {
                 window.android_payment_function.callMethodName(message);
 
             }
@@ -901,7 +901,7 @@
             var product_price_name = jsondata.product_price_name;
             find_class_and_delete_it($(`div.product_detail[data-product-id="${product_id}"]`), $left_ticket_name_bg, "textstyle_");
 
-            if((platform_check == 'mobile') && (app_version != '1.4')) {
+            if((platform_check == 'mobile') && (ios_version != '1.4')) {
                 payment_type_cd = 'SINGLE';
                 product_price_name = '30일권';
                 $('.purchase_method_name').text('인앱 결제');
@@ -917,7 +917,7 @@
                                "data-product-id":product_id,
                                "data-period-month":jsondata.product_price_period_month,});
 
-            if((platform_check == 'mobile') && (app_version != '1.4')) {
+            if((platform_check == 'mobile') && (ios_version != '1.4')) {
                 //alert("test")
                 $left_ticket_comment.html(`<span class="${product_color}">30일권</span>`);
                 $left_ticket_new_price.text(`${numberWithCommas(jsondata.product_price_sale_price)}원`).addClass(product_color);
@@ -991,9 +991,61 @@
         });
     }
 
+    function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
+{#        alert(payment_date);#}
+{#        shade_index(-100);#}
+{#        alert(product_price_id);#}
+        var url_move = "";
+        $.ajax({
+            url: "/payment/payment_for_ios/", // 서비스 웹서버
+            type: "POST",
+            headers: {"Content-Type": "application/json"},
+            data: JSON.stringify({
+                receipt_data: receipt_data,
+                ios_data: ios_data,
+                product_id: product_id,
+                transaction_id: transaction_id
+            }),
+
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                beforeSend();
+            },
+
+            success: function (data) {
+                var jsondata = JSON.parse(data);
+                if (jsondata.messageArray.length > 0) {
+                    var msg = '';
+                    msg = '결제에 실패하였습니다.';
+                    msg += ' : ' + jsondata.messageArray;
+                    url_move = "/payment/";
+                    alert(msg);
+                } else {
+{#                    msg = '결제가 완료되었습니다.';#}
+                    if(jsondata.test_info != ''){
+                        alert(jsondata.test_info);
+                    }
+                    url_move = "/payment/payment_history/";
+                }
+                location.href = url_move;
+
+            },
+
+            complete: function () {
+                completeSend();
+            },
+
+            error: function () {
+                console.log('server error');
+            }
+        });
+    }
+
     function set_app_version(version){
         if(version != ''){
-            app_version = version;
+            ios_version = version;
             $('#id_standard_product_price_tag').text('30일권');
             $('#id_standard_product_price').text('9900원');
             $('.ptersCheckbox').attr('data-method', 'iap');
