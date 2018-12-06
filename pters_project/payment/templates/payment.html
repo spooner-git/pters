@@ -991,7 +991,7 @@
         });
     }
 
-    function payment_for_ios(receipt_data , ios_data, product_id){
+    function payment_for_ios(receipt_data , ios_data, product_id, transaction_id){
 {#        alert(payment_date);#}
 {#        shade_index(-100);#}
 {#        alert(product_price_id);#}
@@ -1003,7 +1003,8 @@
             data: JSON.stringify({
                 receipt_data: receipt_data,
                 ios_data: ios_data,
-                product_id: product_id
+                product_id: product_id,
+                transaction_id: transaction_id
             }),
 
             beforeSend: function (xhr, settings) {

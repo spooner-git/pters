@@ -800,7 +800,7 @@ def payment_for_ios_logic(request):
     error = None
     os_info = ''
     today = datetime.date.today()
-
+    input_transaction_id = ''
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -813,6 +813,7 @@ def payment_for_ios_logic(request):
             receipt_data = json_loading_data['receipt_data']
             ios_data = json_loading_data['ios_data']
             product_id = json_loading_data['product_id']
+            input_transaction_id = json_loading_data['transaction_id']
         except KeyError:
             error = '오류가 발생했습니다.'
 
@@ -869,6 +870,10 @@ def payment_for_ios_logic(request):
                 # logger.error(str(json_loading_data['receipt']))
     else:
         context['error'] = error
+
+    if error is None:
+        if input_transaction_id != transaction_id:
+            error = '결제중 오류가 발생했습니다.'
 
     if error is None:
         try:
