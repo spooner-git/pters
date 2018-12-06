@@ -830,7 +830,7 @@ def payment_for_ios_logic(request):
     json_data = content.decode('utf-8')
     json_loading_data = None
     error = None
-
+    transaction_id = ''
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -841,7 +841,6 @@ def payment_for_ios_logic(request):
     if error is None:
         if resp['status'] == '200':
             # print(json_loading_data)
-            logger.error("status???::"+str(json_loading_data['status']))
             if str(json_loading_data['status']) == '21007':
                 resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
                                           headers={'Content-Type': 'application/json;'})
@@ -860,13 +859,14 @@ def payment_for_ios_logic(request):
                 if error is None:
                     if resp['status'] == '200':
                         # print(json_loading_data)
-                        logger.error("sandbox_test_start")
-                        logger.error(str(json_loading_data['receipt']))
-                        logger.error("sandbox_test_end")
+                        in_app_info = json_loading_data['receipt']['in_app']
+                        transaction_id = str(in_app_info[0]['transaction_id'])
+                        # logger.error(str(json_loading_data['receipt']))
+                        context['test_info'] = 'sandbox test 환경입니다.'
             else:
-                logger.error("product_test_start")
-                logger.error(str(json_loading_data['receipt']))
-                logger.error("product_test_end")
+                in_app_info = json_loading_data['receipt']['in_app']
+                transaction_id = str(in_app_info[0]['transaction_id'])
+                # logger.error(str(json_loading_data['receipt']))
     else:
         context['error'] = error
 
@@ -895,7 +895,7 @@ def payment_for_ios_logic(request):
                                      period_month=1,
                                      price=9900,
                                      name='스탠다드 - 30일권',
-                                     imp_uid='',
+                                     imp_uid=transaction_id,
                                      channel='iap',
                                      card_name='인앱 결제',
                                      buyer_email=request.user.email,
@@ -903,7 +903,7 @@ def payment_for_ios_logic(request):
                                      fail_reason='',
                                      currency='',
                                      pay_method='인앱 결제',
-                                     pg_provider=os_info,
+                                     pg_provider='IOS',
                                      receipt_url='',
                                      buyer_name=str(request.user.first_name),
                                      # amount=int(payment_result['amount']),
