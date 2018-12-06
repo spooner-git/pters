@@ -13,19 +13,16 @@ $(document).ready(function(){
         }
     });
     //ESC키를 눌러서 팝업 닫기
-
     $('#search_member_input').keyup(function(e){
         e.stopPropagation();
         // e.preventDefault();
         var search_value = $(this).val();
         $('div.memberline').hide();
-
         $('div.memberline').each(function(){
             if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
                 $(this).show();
             }
         });
-
         if(search_value.length == 0){
             $('div.memberline').show();
         }
@@ -2153,16 +2150,6 @@ function shiftPtGroupClassList(type){
                 var group_class_Html = group_class_ListHtml('current', jsondata);
                 $('#currentGroupList').html(group_class_Html);
             });
-            // get_member_ing_list("callback", function(jsondata){
-            //     var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            //     var member_Html = memberlist.html;
-            //     var group_class_Html;
-            //
-            //     get_group_ing_list("callback", function(jsondata){
-            //         group_class_Html = group_class_ListHtml('current', jsondata);
-            //         $('#currentGroupList').html(group_class_Html);
-            //     }); //그룹 + 클래스
-            // });
             $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
             $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
@@ -2177,16 +2164,6 @@ function shiftPtGroupClassList(type){
                 var group_class_Html = group_class_ListHtml('finished', jsondata);
                 $('#finishedGroupList').html(group_class_Html);
             });
-            // get_member_end_list("callback", function(jsondata){
-            //     var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-            //     var member_Html = memberlist.html;
-            //     var group_class_Html;
-            //
-            //     get_group_end_list("callback", function(jsondata){
-            //         group_class_Html = group_class_ListHtml('finished', jsondata);
-            //         $('#finishedGroupList').html(group_class_Html);
-            //     }); //그룹 + 클래스
-            // });
             $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
             $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
@@ -2946,271 +2923,6 @@ $('#page_managemember').scroll(function(){
 });
 //스크롤 맨 아래나 위로 올라가면 +0 or -1픽셀
 
-
-//회원목록을 테이블로 화면에 뿌리는 함수
-// function memberListSet (type,option,Reverse, jsondata){
-//     var bodywidth = window.innerWidth;
-//     var text = '소진시까지';
-//     var text2 = '이번달 신규회원';
-//     if(Options.language == "JPN"){
-//         text = '残余回数終わるまで';
-//         text2 = '今月新規メンバー';
-//     }else if(Options.language == "ENG"){
-//         text = '';
-//         text2 = 'New Member this month';
-//     }
-
-//     var tbodyStart = '<tbody>';
-//     var tbodyEnd = '</tbody>';
-//     var tbodyToAppend = $(tbodyStart);
-//     var data;
-//     var countList;
-//     var nameList;
-//     var dateList;
-//     var $table;
-//     var $tabletbody;
-//     var $membernum;
-//     var text_membernum;
-//     switch(type){
-//         case 'current':
-//             data = DataFormatting(jsondata);
-//             countList = data["countSorted"];
-//             nameList = data["nameSorted"];
-//             dateList = data["dateSorted"];
-//             $table = $('#currentMember');
-//             $tabletbody = $('#currentMember tbody');
-//             $membernum = $('#memberNumber_current_member');
-//             text_membernum = "진행중인 회원 ";
-//             break;
-//         case 'finished':
-//             data = DataFormatting(jsondata);
-//             countList = data["countSorted"];
-//             nameList = data["nameSorted"];
-//             dateList = data["dateSorted"];
-//             $table = $('#finishedMember');
-//             $tabletbody = $('#finishedMember tbody');
-//             $membernum = $('#memberNumber_finish_member');
-//             text_membernum = "종료된 회원 ";
-//             break;
-//     }
-
-//     var countLists;
-//     var nameLists;
-//     var dateLists;
-//     if(Reverse == 'yes'){
-//         countLists =countList.sort().reverse();
-//         nameLists = nameList.sort().reverse();
-//         dateLists = dateList.sort().reverse();
-//     }else{
-//         countLists =countList.sort();
-//         nameLists = nameList.sort();
-//         dateLists = dateList.sort();
-//     }
-
-//     var len = countLists.length;
-//     var arrayResult = [];
-//     var array;
-//     var email;
-//     var arrayforemail;
-//     var name;
-//     var id;
-//     var dbId;
-//     var contents;
-//     var count;
-//     var regcount;
-//     var starts;
-//     var ends;
-//     var phoneToEdit;
-//     var npCounts;
-//     var rjCounts;
-//     var yetRegCounts;
-//     var yetCounts;
-//     var groupType;
-//     var groupType2;
-//     var groupType3;
-
-//     for(var i=0; i<len; i++){
-//         if(option == "count"){
-//             array = countLists[i].split('/');
-//             email = array[8];
-//             name = array[2];
-//             id = array[3];
-//             dbId = array[13];
-//             contents = array[5];
-//             count = array[0];
-//             regcount = array[1];
-//             starts = array[6];
-//             ends = array[7];
-//             phoneToEdit = array[4].replace(/-| |/gi,"");
-//             if(name.length>10){
-//                 name = array[2].substr(0,9)+'..';
-//             }
-//             npCounts = array[9];
-//             rjCounts = array[10];
-//             yetRegCounts = array[11];
-//             yetCounts = array[12];
-//             groupType = array[14];
-//             if(array[15]){
-//                 groupType2 = '/'+array[15];
-//             }else{
-//                 groupType2 = '';
-//             }
-//             if(array[16]){
-//                 groupType3 = '/'+array[16];
-//             }else{
-//                 groupType3 = '';
-//             }
-//         }else if(option == "name"){
-//             array = nameLists[i].split('/');
-//             email = array[8];
-//             name = array[0];
-//             id = array[1];
-//             dbId = array[13];
-//             contents = array[3];
-//             count = array[4];
-//             regcount = array[5];
-//             starts = array[6];
-//             ends = array[7];
-//             phoneToEdit = array[2].replace(/-| |/gi,"");
-//             if(name.length>10){
-//                 name = array[0].substr(0,9)+'..';
-//             }
-//             npCounts = array[9];
-//             rjCounts = array[10];
-//             yetRegCounts = array[11];
-//             yetCounts = array[12];
-//             groupType = array[14];
-//             if(array[15]){
-//                 groupType2 = '/'+array[15];
-//             }else{
-//                 groupType2 = '';
-//             }
-//             if(array[16]){
-//                 groupType3 = '/'+array[16];
-//             }else{
-//                 groupType3 = '';
-//             }
-//         }else if(option == "date"){
-//             array = dateLists[i].split('/');
-//             arrayforemail = dateLists[i].split('/');
-//             email = array[8];
-//             name = array[1];
-//             id = array[2];
-//             dbId = array[13];
-//             contents = array[4];
-//             count = array[5];
-//             regcount = array[6];
-//             starts = array[0];
-//             ends = array[7];
-//             phoneToEdit = array[3].replace(/-| |/gi,"");
-//             if(name.length>10){
-//                 name = array[1].substr(0,9)+'..';
-//             }
-//             npCounts = array[9];
-//             rjCounts = array[10];
-//             yetRegCounts = array[11];
-//             yetCounts = array[12];
-//             groupType = array[14];
-//             if(array[15]){
-//                 groupType2 = '/'+array[15];
-//             }else{
-//                 groupType2 = '';
-//             }
-//             if(array[16]){
-//                 groupType3 = '/'+array[16];
-//             }else{
-//                 groupType3 = '';
-//             }
-//         }
-
-//         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
-//         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
-//         if(end == "9999.12.31"){
-//             end = text;
-//         }
-
-//         var newReg = "";
-//         if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
-//             newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
-//         }
-
-//         var phone;
-//         if(phoneToEdit.substr(0,2)=="02"){
-//             phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4);
-//         }else{
-//             phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
-//         }
-
-//         var npCountImg = "";
-//         if(npCounts == 0 && rjCounts == 0){
-//             npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
-//         }else if(rjCounts > 0){
-//             npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
-//         }
-
-//         var yetReg = "";
-//         var yet = "";
-//         if(yetRegCounts > 0){
-//             yetReg = '(+'+yetRegCounts+')';
-//         }
-//         if(yetCounts > 0){
-//             yet = '(+'+yetCounts+')';
-//         }
-
-
-
-//         count = remove_front_zeros(count);
-//         regcount = remove_front_zeros(regcount);
-
-//         var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
-//         var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
-//         var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
-//         var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
-//         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
-//         var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
-//         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
-//         var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
-//         var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
-
-//         var grouptypetd = '<td class="_grouptype" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</td>';
-//         var nametd = '<td class="_tdname" data-name="'+name+'">'+newReg+name+'</td>';
-//         var idtd = '<td class="_id" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</td>';
-//         var emailtd = '<td class="_email">'+email+'</td>';
-//         var regcounttd = '<td class="_regcount">'+regcount+yetReg+'</td>';
-//         var remaincounttd = '<td class="_remaincount">'+count+yet+'</td>';
-//         var startdatetd = '<td class="_startdate">'+start+'</td>';
-//         var enddatetd = '<td class="_finday">'+end+'</td>';
-//         if(phoneToEdit != ""){
-//             var mobiletd = '<td class="_contact">'+phoneimage+smsimage+'</td>';
-//         }else{
-//             var mobiletd = '<td class="_contact">-'+'</td>';
-//         }
-//         var pctd = '<td class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</td>';
-//         var scrolltd = '<td class="forscroll"></td>';
-
-//         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
-//         // arrayResult[i] = td;
-//         arrayResult[i] = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
-//     }
-//     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
-
-
-//     var resultToAppend = arrayResult.join("");
-//     if(type=='current' && len == 0){
-//         resultToAppend = '<td class="forscroll _nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</td>';
-//         if(bodywidth > 600){
-//             $('#please_add_member_pc').show();
-//         }else{
-//             $('#please_add_member').show();
-//         }
-//     }else if(type=="finished" && len ==0){
-//         resultToAppend = '<td class="forscroll" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</td>';
-//     }
-//     var result = tbodyStart + resultToAppend + tbodyEnd;
-//     $tabletbody.remove();
-//     $table.append(result);
-// }
-
 function memberListSet (type,option,Reverse, jsondata){
     var bodywidth = window.innerWidth;
     var text = '소진시까지';
@@ -3702,77 +3414,6 @@ function check_dropdown_selected(){
     }
 
 }
-
-//빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택
-// function autoDateInput(){
-//     var text = '소진시까지';
-//     var text2 = '선택';
-//     if(Options.language == "JPN"){
-//         text = '残余回数終わるまで';
-//         text2 = '進行期間を選んでください。';
-//     }else if(Options.language == "ENG"){
-//         text = 'No cutoff';
-//         text2 = 'Please enter contract period';
-//     }
-
-//     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택///// 
-//     var lastDay = [31,28,31,30,31,30,31,31,30,31,30,31];
-//     var selected = $('#datepicker_fast').val();
-//     var selectedDate = Number(selected.replace(/-/g, ""));
-//     var selectedD = $('._due div.checked').parent('td').attr('data-check'); // 1,2,3,6,12,99
-//     var selectedDue = Number(selectedD + '00');
-//     var finishDate =  selectedDate+selectedDue;
-//     var yy = String(finishDate).substr(0,4);
-//     var mm = String(finishDate).substr(4,2);
-//     var dd = String(finishDate).substr(6,2);
-
-
-//     if(mm>12){ //해 넘어갈때 날짜처리
-//         //var finishDate = finishDate + 10000 - 1200
-//         yy = Number(yy)+1;
-//         mm = Number(mm)-12;
-//     }
-//     if(String(mm).length<2){
-//         mm = "0"+mm;
-//     }
-//     finishDate = yy +"-"+ mm +"-"+ dd;
-//     if(dd>lastDay[Number(mm)-1]){
-//         dd = Number(dd)-lastDay[Number(mm)-1];
-//         mm = Number(mm)+1;
-//         if(String(dd).length<2){
-//             dd = "0"+dd;
-//         }
-//         if(String(mm).length<2){
-//             mm = "0"+mm;
-//         }
-//         finishDate = yy +"-"+ mm +"-"+ dd;
-//     }
-//     var selector_memberDue_add_2 = $('#memberDue_add_2');
-//     var selector_memberDue_add_2_fast = $('#memberDue_add_2_fast');
-//     //selector_memberDue_add_2.val(finishDate);
-//     selector_memberDue_add_2_fast.val(finishDate);
-//     if(selectedD==99){
-//         selector_memberDue_add_2_fast.text(text);
-//         selector_memberDue_add_2_fast.val("9999-12-31");
-//     }
-
-//     if(selectedD==undefined){
-//         selector_memberDue_add_2_fast.val(text2);
-//     }
-
-//     if(selectedD == 0){
-
-//     }
-
-//     if(selector_memberDue_add_2_fast.val()!=text2 && selector_memberDue_add_2_fast.val()!="" ){
-//         selector_memberDue_add_2_fast.addClass("dropdown_selected");
-//     }
-//     selector_memberDue_add_2_fast.css({
-//                                      "-webkit-text-fill-color":'#282828'
-//                                 });
-//     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
-// }
-
 //빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택
 function autoDateInput(){
     var text = '소진시까지';
@@ -3835,10 +3476,6 @@ function autoDateInput(){
                                 });
     /// 빠른 입력방식에서 시작일자 선택했을때 종료일자 자동 선택/////
 }
-
-
-
-
 //회원정보////////////////////////////////////////////////////////
 //서버로부터 회원의 기본정보를 받아온다.
 function get_indiv_member_info(dbID){
@@ -3886,18 +3523,6 @@ function get_indiv_member_info(dbID){
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
 function open_member_info_popup_pc(dbID, jsondata){
-    // var text = ' ';
-    // var text2 = '소진시까지';
-    // var text3 = '';
-    // if(Options.language == "JPN"){
-    //     text = ' ';
-    //     text2 = '残余回数終わるまで';
-    //     text3 = '';
-    // }else if(Options.language == "ENG"){
-    //     text = '';
-    //     text2 = '';
-    //     text3 = '';
-    // }
     var userName  = jsondata.firstnameInfo;
     var userID    = jsondata.idInfo;
     var userBirth = jsondata.birthdayInfo;
@@ -3969,11 +3594,6 @@ function open_member_info_popup_pc(dbID, jsondata){
         var birth_year = "-";
         var birth_month = "-";
         var birth_date = "-";
-        // if(userBirth[0].length < 1){
-        //     var birth_year = "-";
-        //     var birth_month = "-";
-        //     var birth_date = "-";
-        // }else{
         if(userBirth[0].length >= 1){
             birth_year = Number(userBirth[0].split('-')[0]) + '년';
             birth_month = Number(userBirth[0].split('-')[1]) + '월';
@@ -4156,8 +3776,6 @@ function modify_member_lec_info_pc(){
 
     });
 }
-
-
 
 //회원의 수정된 수강정보를 서버로 전송한다.
 function send_member_modified_data(dbID){
@@ -4506,7 +4124,8 @@ function smart_refresh_member_group_class_list(){
             var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
-            for(var i=0; i<opened_group.length; i++){
+            var opened_group_length = opened_group.length;
+            for(var i=0; i<opened_group_length; i++){
                $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
             }
         });
@@ -4519,7 +4138,8 @@ function smart_refresh_member_group_class_list(){
             var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('finished', jsondata);
             $('#finishedGroupList').html(group_class_Html);
-            for(var i=0; i<opened_group.length; i++){
+            var opened_group_length = opened_group.length;
+            for(var i=0; i<opened_group_length; i++){
                 $(`#finishedGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
             }
         });
@@ -4531,7 +4151,8 @@ function smart_refresh_member_group_class_list(){
         get_package_ing_list("callback", function(jsondata){
             var package_Html = package_ListHtml('current', jsondata);
             $('#currentPackageList').html(package_Html);
-            for(var i=0; i<opened_package.length; i++){
+            var opened_package_length = opened_package.length;
+            for(var i=0; i<opened_package_length; i++){
                $(`#currentPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
             }
         });
@@ -4543,7 +4164,8 @@ function smart_refresh_member_group_class_list(){
         get_package_end_list("callback", function(jsondata){
             var package_Html = package_ListHtml('finished', jsondata);
             $('#finishedPackageList').html(package_Html);
-            for(var i=0; i<opened_package.length; i++){
+            var opened_package_length = opened_package.length;
+            for(var i=0; i<opened_package_length; i++){
                $(`#finishedPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
             }
         });
@@ -4687,7 +4309,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
         availCount_group_personal = [];
         finishCount_group_personal = [];
         result_history_html = ['<div style="background:#f5f5f5"><div>시작</div><div>종료</div><div>등록횟수</div><div>남은횟수</div><div>등록금액</div><div>회당금액</div><div>진행상태</div><div>연결상태</div><div>수정</div></div>'];
-        for(var i=0; i<jsondata.lectureIdArray.length; i++){
+        var lecture_id_length = jsondata.lectureIdArray.length;;
+        for(var i=0; i<lecture_id_length; i++){
             var availcount =  '<div>'+jsondata.availCountArray[i]+'</div>';
             var lectureId =   '<div>'+jsondata.lectureIdArray[i]+'</div>';
             var lectureType = '<div>'+jsondata.lectureStateArray[i]+'</div>';
@@ -4910,7 +4533,8 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
     function sumCount(numberarray){
         var count = 0;
-        for(var i=0; i<numberarray.length; i++){
+        var number_array_length = numberarray.length;
+        for(var i=0; i<number_array_length; i++){
             count = count + Number(numberarray[i]);
         }
         return count;
@@ -5003,22 +4627,13 @@ function draw_member_history_list_table(jsondata, PCorMobile){
 
     var result_history_html = ['<div><div>'+text10+'</div><div>'+text+'</div><div>'+text2+'</div><div>'+text3+'</div><div>'+text4+'</div></div>'];
     var stateCodeDict = {"PE":text5,"NP":text6,"IP":text7, "PC":text11};
-    for(var i=0; i<jsondata.ptScheduleStartDtArray.length; i++){
+    var pt_schedule_start_dt_array_length = jsondata.ptScheduleStartDtArray.length;
+    for(var i=0; i<pt_schedule_start_dt_array_length; i++){
         var day = new Date(jsondata.ptScheduleStartDtArray[i].split(' ')[0]).getDay();
         var startDate = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[0].split('-')[2]);
         var endDate = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[0].split('-')[2]);
         var startTime = Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleStartDtArray[i].split(' ')[1].split(':')[1])/60;
         var endTime = Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[0]) + Number(jsondata.ptScheduleEndDtArray[i].split(' ')[1].split(':')[1])/60;
-
-        /*
-         if(endDate == startDate+1 && endTime==0){
-         var duration = 24 - startTime
-         }else if(endTime==0 && endDate == 1){
-         var duration = 24 - startTime
-         }else{
-         var duration = endTime - startTime
-         }
-         */
 
         var dur = calc_duration_by_start_end_2(jsondata.ptScheduleStartDtArray[i].split(' ')[0], jsondata.ptScheduleStartDtArray[i].split(' ')[1], jsondata.ptScheduleEndDtArray[i].split(' ')[0], jsondata.ptScheduleEndDtArray[i].split(' ')[1]);
 
@@ -5370,30 +4985,7 @@ function add_groupmember_form_func(){
                 }else{
                     $('body').css('overflow-y','auto');
                 }
-                /*
-                 if($('#memberInfoPopup_PC').css('display') == "block" || $('#memberInfoPopup').css('display') == "block"){
-                 get_member_lecture_list(dbID)
-                 }
-                 */
-                // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
-
-                // get_member_list()
-                // if($('#currentGroupList').css('display') == "block"){
-                //     get_member_group_class_ing_list("callback", function(jsondata){
-                //         var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                //         var member_Html = memberlist.html;
-                //         var group_class_Html = group_class_ListHtml('current', jsondata);
-                //         $('#currentGroupList').html(group_class_Html);
-                //     });
-                // }else if($('#finishedGroupList').css('display') == "block"){
-                //     get_member_group_class_end_list("callback", function(jsondata){
-                //         var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-                //         var member_Html = memberlist.html;
-                //         var group_class_Html = group_class_ListHtml('finished', jsondata);
-                //         $('#finishedGroupList').html(group_class_Html);
-                //     });
-                // }
                 smart_refresh_member_group_class_list();
                 $('#startR').attr('selected','selected');
                 close_manage_popup('member_add');
@@ -5686,7 +5278,8 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
     var repeat_dur_array = jsondata.ptRepeatScheduleTimeDurationArray;
 
     var schedulesHTML = [];
-    for(var i=0; i<jsondata.ptRepeatScheduleIdArray.length; i++){
+    var repeat_schedule_id_array_length = jsondata.ptRepeatScheduleIdArray.length;
+    for(var i=0; i<repeat_schedule_id_array_length; i++){
         var repeat_group_name = jsondata.ptRepeatScheduleGroupNameArray[i];
         var repeat_group_type = "["+jsondata.ptRepeatScheduleGroupTypeCdNameArray[i]+"]";
         if(repeat_group_name.length == 0 ){
@@ -5710,11 +5303,12 @@ function set_indiv_repeat_info(dbID, jsondata, PCorMobile){
         var repeat_day =  function(){
             var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
             var repeat_day_info = "";
-            if(repeat_day_info_raw.length>1){
-                for(var j=0; j<repeat_day_info_raw.length; j++){
+            var repeat_day_info_raw_length = repeat_day_info_raw.length;
+            if(repeat_day_info_raw_length>1){
+                for(var j=0; j<repeat_day_info_raw_length; j++){
                     repeat_day_info = repeat_day_info + '/' + repeat_info_dict[Options.language][repeat_day_info_raw[j]].substr(0,1);
                 }
-            }else if(repeat_day_info_raw.length == 1){
+            }else if(repeat_day_info_raw_length == 1){
                 repeat_day_info = repeat_info_dict[Options.language][repeat_day_info_raw[0]];
             }
             if(repeat_day_info.substr(0,1) == '/'){
@@ -5754,9 +5348,9 @@ function send_repeat_delete_personal(repeat_schedule_id, use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-
-                if(jsondata.push_lecture_id.length>0){
-                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                var push_lecture_id_length = jsondata.push_lecture_id.length;
+                if(push_lecture_id_length>0){
+                    for(var i=0; i<push_lecture_id_length; i++) {
                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                     }
                 }
@@ -5832,9 +5426,9 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-
-                if(jsondata.push_lecture_id.length>0){
-                    for(var i=0; i<jsondata.push_lecture_id.length; i++) {
+                var push_lecture_id_length = jsondata.push_lecture_id.length;
+                if(push_lecture_id_length>0){
+                    for(var i=0; i<push_lecture_id_length; i++) {
                         send_push_func(jsondata.push_lecture_id[i], jsondata.push_title[i], jsondata.push_message[i]);
                     }
                 }
@@ -5857,23 +5451,6 @@ function send_repeat_delete_group(repeat_schedule_id, use, callback){
         }
     })
 }
-
-/*
- //ajax 로딩이미지 표기
- function beforeSend(){
- $('html').css("cursor","wait");
- $('#upbutton-check img').attr('src','/static/user/res/ajax/loading.gif');
- $('.ajaxloadingPC').show();
- }
-
- //ajax 로딩이미지 숨기기
- function completeSend(){
- $('html').css("cursor","auto");
- $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
- $('.ajaxloadingPC').hide();
- //alert('complete: 일정 정상 등록')
- }
- */
 
 function numberWithCommas(x) { //천단위 콤마 찍기
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

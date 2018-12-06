@@ -2626,7 +2626,8 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
         resultEnd_Array = []; // 종료시각 결과 값 비우기
 
         //중복 걸러진 시작값 갯수 기준으로 시작
-        for(var i=0; i<temp_resultStart_Array.length; i++){
+        var temp_result_start_array_length = temp_resultStart_Array.length;
+        for(var i=0; i<temp_result_start_array_length; i++){
             //비교 대상 셋팅
             var s_split = temp_resultStart_Array[i].split(' ');
             var e_split = temp_resultEnd_Array[i].split(' ');
@@ -2640,7 +2641,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                 var end_time_temp = temp_resultEnd_Array[i];
 
                 // 비교 대상은 중복 걸러진 시작값중 자신 제외한 모든 값
-                for(var j=0; j<temp_resultStart_Array.length; j++){
+                for(var j=0; j<temp_result_start_array_length; j++){
                     if(i==j){//자기 자신인 경우 제외 (중복 체크가 되어버림)
                         continue;
                     }
