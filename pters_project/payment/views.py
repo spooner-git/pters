@@ -799,6 +799,7 @@ def payment_for_ios_logic(request):
     today = datetime.date.today()
     input_transaction_id = ''
     context['test_info'] = ''
+    pay_info = '인앱 결제'
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -862,6 +863,7 @@ def payment_for_ios_logic(request):
                         transaction_id = str(in_app_info[0]['transaction_id'])
                         # logger.error(str(json_loading_data['receipt']))
                         context['test_info'] = 'sandbox test 환경입니다.'
+                        pay_info = 'sandbox test'
             else:
                 in_app_info = json_loading_data['receipt']['in_app']
                 transaction_id = str(in_app_info[0]['transaction_id'])
@@ -900,12 +902,12 @@ def payment_for_ios_logic(request):
                                      name='스탠다드 - 30일권',
                                      imp_uid=transaction_id,
                                      channel='iap',
-                                     card_name='인앱 결제',
+                                     card_name=pay_info,
                                      buyer_email=request.user.email,
                                      status='paid',
                                      fail_reason='',
                                      currency='',
-                                     pay_method='인앱 결제',
+                                     pay_method=pay_info,
                                      pg_provider='IOS',
                                      receipt_url='',
                                      buyer_name=str(request.user.first_name),
