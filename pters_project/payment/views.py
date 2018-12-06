@@ -841,8 +841,8 @@ def payment_for_ios_logic(request):
     if error is None:
         if resp['status'] == '200':
             # print(json_loading_data)
-            logger.error("status???::"+json_loading_data['status'])
-            if json_loading_data['status'] == '21007':
+            logger.error("status???::"+str(json_loading_data['status']))
+            if str(json_loading_data['status']) == '21007':
                 resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
                                           headers={'Content-Type': 'application/json;'})
 
