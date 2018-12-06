@@ -841,7 +841,7 @@ def payment_for_ios_logic(request):
     if error is None:
         if resp['status'] == '200':
             # print(json_loading_data)
-            logger.error(str(json_loading_data))
+            logger.error(str(json_loading_data['receipt']))
     else:
         context['error'] = error
 
