@@ -1024,7 +1024,9 @@
                     alert(msg);
                 } else {
 {#                    msg = '결제가 완료되었습니다.';#}
-                    alert(msg);
+                    if(jsondata.test_info != ''){
+                        alert(msg);
+                    }
                     url_move = "/payment/payment_history/";
                 }
                 location.href = url_move;

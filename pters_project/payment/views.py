@@ -801,6 +801,7 @@ def payment_for_ios_logic(request):
     os_info = ''
     today = datetime.date.today()
     input_transaction_id = ''
+    context['test_info'] = ''
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
