@@ -786,6 +786,116 @@ def payment_for_iap_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
+def payment_for_ios_logic(request):
+
+    json_data = request.body.decode('utf-8')
+    json_loading_data = None
+
+    product_id = None
+    payment_type_cd = None
+    paid_amount = 0
+    product_price_id = None
+    start_date = None
+    context = {}
+    error = None
+    os_info = ''
+    today = datetime.date.today()
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+    #
+    if error is None:
+        try:
+            receipt_data = json_loading_data['receipt_data']
+            ios_data = json_loading_data['ios_data']
+            product_id = json_loading_data['product_id']
+        except KeyError:
+            error = '오류가 발생했습니다.'
+
+    data = {
+        'exclude-old-transactions': "true",
+        'receipt-data': receipt_data,
+        'password': ios_data
+    }
+    body = json.dumps(data)
+    h = httplib2.Http()
+
+    resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
+                              headers={'Content-Type': 'application/json;'})
+
+    json_data = content.decode('utf-8')
+    json_loading_data = None
+    error = None
+
+    try:
+        json_loading_data = json.loads(json_data)
+    except ValueError:
+        error = '오류가 발생했습니다.'
+    except TypeError:
+        error = '오류가 발생했습니다.'
+
+    if error is None:
+        if resp['status'] == '200':
+            # print(json_loading_data)
+            logger.error(str(json_loading_data))
+    else:
+        context['error'] = error
+
+    if error is None:
+        try:
+            payment_info = PaymentInfoTb.objects.filter(member_id=request.user.id, status='paid',
+                                                        end_date__gte=today,
+                                                        use=USE).latest('end_date')
+            start_date = payment_info.end_date + datetime.timedelta(days=1)
+        except ObjectDoesNotExist:
+            start_date = today
+
+    if error is None:
+        date = int(start_date.strftime('%d'))
+        end_date = str(func_get_end_date(payment_type_cd, start_date, 1, date)).split(' ')[0]
+        start_date = str(start_date).split(' ')[0]
+
+    if error is None:
+        payment_info = PaymentInfoTb(member_id=str(request.user.id),
+                                     product_tb_id=7,
+                                     payment_type_cd='SINGLE',
+                                     merchant_uid='m_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                     customer_uid='c_'+str(request.user.id)+'_7_'+str(timezone.now().timestamp()),
+                                     start_date=start_date, end_date=end_date,
+                                     paid_date=today,
+                                     period_month=1,
+                                     price=9900,
+                                     name='스탠다드 - 30일권',
+                                     imp_uid='',
+                                     channel='iap',
+                                     card_name='인앱 결제',
+                                     buyer_email=request.user.email,
+                                     status='paid',
+                                     fail_reason='',
+                                     currency='',
+                                     pay_method='인앱 결제',
+                                     pg_provider=os_info,
+                                     receipt_url='',
+                                     buyer_name=str(request.user.first_name),
+                                     # amount=int(payment_result['amount']),
+                                     use=USE)
+        payment_info.save()
+
+    if error is None:
+        logger.error(str(request.user.last_name) + str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 ios 결제 완료:' + str(product_id) + ':'+' '+str(start_date))
+    else:
+        messages.error(request, error)
+        logger.error(str(request.user.last_name)+str(request.user.first_name)
+                     + '(' + str(request.user.id) + ')님 결제 완료 오류:' + str(error))
+
+    return render(request, 'ajax/payment_error_info.html', context)
+
+
 def resend_period_billing_logic(request):
 
     json_data = request.body.decode('utf-8')
