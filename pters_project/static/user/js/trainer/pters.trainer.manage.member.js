@@ -1555,7 +1555,9 @@ $(document).ready(function(){
         }
     });
 
-    $('#mshade_popup').click(function(){console.log(select_all_check)});
+    $('#mshade_popup').click(function(){
+        // console.log(select_all_check)
+    });
 
 
     //작은달력 설정
@@ -1628,7 +1630,7 @@ function send_modified_member_base_data(dbID){
 
 
                 $('#startR').attr('selected', 'selected');
-                console.log('success');
+                // console.log('success');
 
                 if($('._calmonth').length == 1 || $('._calweek').length == 1){
                     ajaxClassTime();
@@ -1809,7 +1811,7 @@ function float_btn_managemember(option){
         initialize_add_member_sheet();
         grouptype = "PACKAGE";
         get_group_ing_list('callback', function(jsondata){
-            console.log("get_group_ing_list", jsondata);
+            // console.log("get_group_ing_list", jsondata);
             fill_single_package_list_to_dropdown_to_make_new_package("#lecture_list_to_package", "pure",jsondata);
         });
         $('#upbutton-x, #upbutton-x-modify').attr('data-page','memberadd');
@@ -2192,7 +2194,7 @@ function shiftPackageList(type){
             break;
         case "finished":
             get_package_end_list("callback", function(jsondata){
-                console.log("get_package_end_list", jsondata)
+                // console.log("get_package_end_list", jsondata)
                 var group_class_Html = package_ListHtml('finished', jsondata);
                 $('#finishedPackageList').html(group_class_Html);
             });
@@ -2265,9 +2267,9 @@ function birth_dropdown_set(){
     for(i=2018; i>=1908; i--){
         yearoption.push('<option data-year="'+i+text2+'">'+i+text2+'</option>');
     }
+
     var birth_year_options = yearoption.join('');
     $('#birth_year, #birth_year_info, #memberBirth_Year_info_PC').html(birth_year_options);
-
 
     var monthoption = ['<option selected disabled hidden>'+text3+'</option>'];
     for(i=1; i<=12; i++){
@@ -2308,17 +2310,6 @@ function birth_dropdown_set(){
         $('#form_birth').attr('value',birthdata);
     });
 
-    /*
-     $('#birth_year_info, #birth_month_info, #birth_date_info').change(function(){
-     $(this).addClass("dropdown_selected");
-     $(this).css('color','#282828');
-     var year = $('#birth_year_info').val().replace(/년|\\.|年/gi,"");
-     var month = $('#birth_month_info').val().replace(/월|\\.|月/gi,"");
-     var date = $('#birth_date_info').val().replace(/일|日/gi,"");
-     var birthdata = year+'-'+month+'-'+date;
-     $('#form_birth_modify').attr('value',birthdata);
-     });
-     */
 }
 
 //등록유형 드랍다운
@@ -2635,7 +2626,7 @@ function get_member_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
-            console.log("get_member_list", global_json)
+            // console.log("get_member_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2661,7 +2652,7 @@ function get_member_list(use, callback){
                     //memberListSet('current','name','no',jsondata);
                     //memberListSet('finished','name','no',jsondata);
                 }
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -2696,7 +2687,7 @@ function get_member_ing_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
-            console.log("get_member_ing_list", global_json)
+            // console.log("get_member_ing_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -2721,7 +2712,7 @@ function get_member_ing_list(use, callback){
                 }else{
                     //memberListSet('current','name','no',jsondata);
                 }
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -2754,7 +2745,7 @@ function get_member_end_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
-            console.log("get_member_end_list", global_json)
+            // console.log("get_member_end_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2779,7 +2770,7 @@ function get_member_end_list(use, callback){
                 }else{
                     //memberListSet('finished','name','no',jsondata);
                 }
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -2813,7 +2804,7 @@ function get_member_one_to_one_ing_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
-            console.log("get_member_one_to_one_ing_list", global_json)
+            // console.log("get_member_one_to_one_ing_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2838,7 +2829,7 @@ function get_member_one_to_one_ing_list(use, callback){
                 }else{
                     //memberListSet('current','name','no',jsondata);
                 }
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -2871,7 +2862,7 @@ function get_member_one_to_one_end_list(use, callback){
         success:function(data){
             var jsondata = JSON.parse(data);
             global_json = jsondata;
-            console.log("get_member_one_to_one_end_list", global_json)
+            // console.log("get_member_one_to_one_end_list", global_json)
             if(jsondata.messageArray.length>0){
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
@@ -2896,7 +2887,7 @@ function get_member_one_to_one_end_list(use, callback){
                 }else{
                     //memberListSet('finished','name','no',jsondata);
                 }
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -3810,7 +3801,7 @@ function send_member_modified_data(dbID){
                 // get_member_list();
                 get_member_lecture_list(dbID);
                 smart_refresh_member_group_class_list();
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -3854,7 +3845,7 @@ function resend_member_reg_data_pc(lectureID, dbID){
 
                 // get_member_list();
                 get_member_lecture_list(dbID);
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -3871,7 +3862,7 @@ function delete_member_reg_data_pc(lectureID, dbID){
     $.ajax({
         url:'/trainer/delete_lecture_info/',
         type:'POST',
-        data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/get_member_list/'},
+        data:{"lecture_id":lectureID, "member_id":dbID, "next_page":'/trainer/get_error_info/'},
         dataType : 'html',
 
         beforeSend:function(xhr, settings) {
@@ -3926,7 +3917,7 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 }
 
                 get_member_lecture_list(dbID);
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -3975,7 +3966,7 @@ function complete_member_reg_data_pc(lectureID, dbID){
                     ajaxClassTime();
                 }
                 get_member_lecture_list(dbID);
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -4020,7 +4011,7 @@ function resume_member_reg_data_pc(lectureID, dbID){
                 smart_refresh_member_group_class_list();
 
                 get_member_lecture_list(dbID);
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -4083,7 +4074,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
 
                     //$('#shade3').css('display','none');
                     $('div.lectureRefundPopup.popups input[type="number"]').val('');
-                    console.log('success');
+                    // console.log('success');
 
                     alert(text);
                 }
@@ -4219,7 +4210,7 @@ function disconnect_member_lecture_data(stateCode, lectureID, dbID){
 
                 $('#shade3').css('display','none');
                 $('div.lectureRefundPopup.popups input[type="number"]').val('');
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -4286,7 +4277,7 @@ function notice_lecture_status_changed_to_inprogress(lecturename, member_name){
 
 //서버로부터 받아온 회원 등록이력을 회원정보 팝업에 테이블로 그린다.
 function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
-    console.log("jsondata",jsondata)
+    // console.log("jsondata",jsondata)
     var bodywidth = window.innerWidth;
     var $regHistory;
     if(PCorMobile == "pc"){
@@ -4785,7 +4776,7 @@ function add_member_form_func(){
                 }else if($('#memberInfoPopup').css('display') == "block"){
                     close_manage_popup('member_info');
                 }
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -4926,7 +4917,7 @@ function add_group_form_func(){
                 }
 
                 close_manage_popup('member_add');
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -4989,7 +4980,7 @@ function add_groupmember_form_func(){
                 smart_refresh_member_group_class_list();
                 $('#startR').attr('selected','selected');
                 close_manage_popup('member_add');
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -5127,7 +5118,7 @@ function deleteMemberAjax(){
                         break;
                 }
                 smart_refresh_member_group_class_list();
-                console.log('success');
+                // console.log('success');
             }
         },
 
@@ -5391,7 +5382,7 @@ function send_push_func(lecture_id, title, message){
         },
 
         success:function(response){
-            console.log(response);
+            // console.log(response);
         },
 
         complete:function(){
@@ -5399,7 +5390,7 @@ function send_push_func(lecture_id, title, message){
         },
 
         error:function(){
-            console.log('server error');
+            // console.log('server error');
         }
     })
 }

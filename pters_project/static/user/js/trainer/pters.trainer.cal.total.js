@@ -401,21 +401,21 @@ $.datepicker.setDefaults({
 
 function week_calendar(referencedate){
     $('#calendar').addClass('_calweek');
-    var page1 = $('.swiper-slide:nth-of-type(1)');
-    var page2 = $('.swiper-slide:nth-of-type(2)');
-    var page3 = $('.swiper-slide:nth-of-type(3)');
+    var $page1 = $('.swiper-slide:nth-of-type(1)');
+    var $page2 = $('.swiper-slide:nth-of-type(2)');
+    var $page3 = $('.swiper-slide:nth-of-type(3)');
 
-    var page1_id_num = $('.swiper-slide:nth-of-type(1)').attr('id').replace(/slide/gi, '');
-    var page2_id_num = $('.swiper-slide:nth-of-type(2)').attr('id').replace(/slide/gi, '');
-    var page3_id_num = $('.swiper-slide:nth-of-type(3)').attr('id').replace(/slide/gi, '');
+    var page1_id_num = $page1.attr('id').replace(/slide/gi, '');
+    var page2_id_num = $page2.attr('id').replace(/slide/gi, '');
+    var page3_id_num = $page3.attr('id').replace(/slide/gi, '');
 
-    page1.html('');
-    page2.html('');
-    page3.html('');
-
-    var year = Number(referencedate.split('-')[0]);
-    var month = Number(referencedate.split('-')[1]);
-    var date = Number(referencedate.split('-')[2]);
+    $page1.html('');
+    $page2.html('');
+    $page3.html('');
+    var reference_date_split = referencedate.split('-');
+    var year = Number(reference_date_split[0]);
+    var month = Number(reference_date_split[1]);
+    var date = Number(reference_date_split[2]);
     //calTable_Set(1,year,month,currentDate,-14); // 이번주-2
     calTable_Set_Week(page1_id_num, year, month, date, -7); // 이번주-1
     calTable_Set_Week(page2_id_num, year, month, date, 0); // 이번주
