@@ -793,12 +793,9 @@ def payment_for_ios_logic(request):
 
     product_id = None
     payment_type_cd = None
-    paid_amount = 0
-    product_price_id = None
     start_date = None
     context = {}
     error = None
-    os_info = ''
     today = datetime.date.today()
     input_transaction_id = ''
     context['test_info'] = ''
