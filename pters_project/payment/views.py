@@ -841,32 +841,34 @@ def payment_for_ios_logic(request):
     if error is None:
         if resp['status'] == '200':
             # print(json_loading_data)
-            logger.error("product_test_start")
-            logger.error(str(json_loading_data['receipt']))
-            logger.error("product_test_end")
+            logger.error("status???::"+json_loading_data['status'])
+            if json_loading_data['status'] == '21007':
+                resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
+                                          headers={'Content-Type': 'application/json;'})
+
+                json_data = content.decode('utf-8')
+                json_loading_data = None
+                error = None
+
+                try:
+                    json_loading_data = json.loads(json_data)
+                except ValueError:
+                    error = '오류가 발생했습니다.'
+                except TypeError:
+                    error = '오류가 발생했습니다.'
+
+                if error is None:
+                    if resp['status'] == '200':
+                        # print(json_loading_data)
+                        logger.error("sandbox_test_start")
+                        logger.error(str(json_loading_data['receipt']))
+                        logger.error("sandbox_test_end")
+            else:
+                logger.error("product_test_start")
+                logger.error(str(json_loading_data['receipt']))
+                logger.error("product_test_end")
     else:
-        logger.error("sandbox???::"+resp['status'])
-        if resp['status'] == '21007':
-            resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
-                                      headers={'Content-Type': 'application/json;'})
-
-            json_data = content.decode('utf-8')
-            json_loading_data = None
-            error = None
-
-            try:
-                json_loading_data = json.loads(json_data)
-            except ValueError:
-                error = '오류가 발생했습니다.'
-            except TypeError:
-                error = '오류가 발생했습니다.'
-
-            if error is None:
-                if resp['status'] == '200':
-                    # print(json_loading_data)
-                    logger.error("sandbox_test_start")
-                    logger.error(str(json_loading_data['receipt']))
-                    logger.error("sandbox_test_end")
+        context['error'] = error
 
     if error is None:
         try:
