@@ -2651,7 +2651,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                     var e_time_compare = e_split_compare[1];
 
                     // 중복 체크후 합치기 (일정 같은 경우 포함)
-                    if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) == 1){
+                    if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) > 0){
                         var merged_time = compare_times_to_merge_min_max(start_time_temp, end_time_temp, temp_resultStart_Array[j], temp_resultEnd_Array[j]);
                         start_time_temp = merged_time.start;
                         end_time_temp = merged_time.end;

@@ -3184,6 +3184,7 @@ function memberListSet (type,option,Reverse, jsondata){
         // arrayResult[i] = td;
         //arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</div>';
         arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+pc_html+mobile_html+'</div>';
+
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
 
@@ -3694,10 +3695,10 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#memberId').val(userID).attr('data-dbid', dbID);
     $('#deleteMemberId').val(userID).attr('data-dbid',dbID);
     $('#memberPhone_info').val(userPhone);
-
-    var dropdown_year_selected = $('#birth_year_info option[data-year="'+userBirth[0].split('-')[0]+'년'+'"]');
-    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Number(userBirth[0].split('-')[1])+'월'+'"]');
-    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Number(userBirth[0].split('-')[2])+'일'+'"]');
+    var user_birth_split = userBirth[0].split('-');
+    var dropdown_year_selected = $('#birth_year_info option[data-year="'+user_birth_split[0]+'년'+'"]');
+    var dropdown_month_selected = $('#birth_month_info option[data-month="'+Number(user_birth_split[1])+'월'+'"]');
+    var dropdown_date_selected = $('#birth_date_info option[data-date="'+Number(user_birth_split[2])+'일'+'"]');
     dropdown_year_selected.prop('selected',true);
     dropdown_month_selected.prop('selected',true);
     dropdown_date_selected.prop('selected',true);
@@ -3745,13 +3746,14 @@ modify_member_lec_info_pc();
 //회원의 수강정보(등록횟수)를 수정한다.
 function modify_member_lec_info_pc(){
     $(document).on('keyup','.lec_reg_count',function(){
+        var this_val = $(this).val();
         var remainCount = $(this).parent('div').siblings('.lec_rem_count').text();
-        if(Number($(this).val()) >= Number(remainCount)){
+        if(Number(this_val) >= Number(remainCount)){
             $(this).css('color', '#282828');
-            $('#form_lecture_reg_count').val($(this).val());
+            $('#form_lecture_reg_count').val(this_val);
         }else{
             $(this).css('color', 'red');
-            $('#form_lecture_reg_count').val($(this).val());
+            $('#form_lecture_reg_count').val(this_val);
         }
     });
     $(document).on('keyup', '#regPrice', function(){
