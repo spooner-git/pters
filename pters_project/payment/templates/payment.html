@@ -1037,8 +1037,7 @@
                 completeSend();
             },
 
-            error: function (request,status,error) {
-                alert('url:'+this.url);
+            error: function () {
                 alert('결제에 실패하였습니다.');
                 location.href = "/payment/";
                 console.log('server error');
