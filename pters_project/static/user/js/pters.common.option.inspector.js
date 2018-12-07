@@ -1,4 +1,3 @@
-console.log(auth_type_cd)
 function pters_option_inspector(option_type, xhr, option_element){
     //option_element는 date나, 회원숫자 등
     //옵션 값 auth_option_limit == 1 일경우, 다양한 옵션을 건다.
