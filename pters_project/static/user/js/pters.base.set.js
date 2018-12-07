@@ -15,7 +15,7 @@ if( (currentYear % 4 == 0 && currentYear % 100 != 0) || currentYear % 400 == 0 )
     lastDay[1] = 28;
 }
 
-var multiLanguage = { 'KOR':
+const multiLanguage = { 'KOR':
     {'DD':'매일', 'WW':'매주', '2W':'격주',
         'SUN':'일요일', 'MON':'월요일', 'TUE':'화요일', 'WED':'수요일', 'THS':'목요일', 'FRI':'금요일', 'SAT':'토요일',
         "WeekSmpl":['일', '월', '화', '수', '목', '금', '토']
