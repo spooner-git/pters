@@ -2658,23 +2658,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                         check_duplication = true; // 중복된 값 체크
                     }
                 }
-<<<<<<< HEAD
-                var s_split_compare = new_disable_time_array_start_date[j].split(' ');
-                var e_split_compare = new_disable_time_array_end_date[j].split(' ');
-                var s_time_compare = s_split_compare[1];
-                var e_time_compare = e_split_compare[1];
-                var merged_time = compare_times_to_merge_min_max(starttime_temp, endtime_temp, new_disable_time_array_start_date[j], new_disable_time_array_end_date[j]);
-                var merged_starttime = merged_time.start;
-                var merged_endtime = merged_time.end;
 
-                
-                if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) > 0){
-                    starttime_temp = merged_starttime;
-                    endtime_temp = merged_endtime;
-                    removeIndexArray.push(j);
-                }else{
-
-=======
                 //시작 시각과 종료시각이 같은 일정이 있는지 확인
                 var check_equal_time = false;
                 var start_time_temp_index = resultStart_Array.indexOf(start_time_temp);
@@ -2687,7 +2671,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                 if(!check_equal_time){
                     resultStart_Array.push(start_time_temp);
                     resultEnd_Array.push(end_time_temp);
->>>>>>> ff8d515400557a2e4154410804e2f40b2fed9c9c
+
                 }
             }
         }
