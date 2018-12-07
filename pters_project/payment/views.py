@@ -786,6 +786,7 @@ def payment_for_iap_logic(request):
     return render(request, 'ajax/payment_error_info.html', context)
 
 
+@csrf_exempt
 def payment_for_ios_logic(request):
 
     json_data = request.body.decode('utf-8')
