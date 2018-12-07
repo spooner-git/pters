@@ -800,6 +800,7 @@ def payment_for_ios_logic(request):
     input_transaction_id = ''
     context['test_info'] = ''
     pay_info = '인앱 결제'
+    logger.error('결제 테스트')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
@@ -807,6 +808,7 @@ def payment_for_ios_logic(request):
     except TypeError:
         error = '오류가 발생했습니다.'
     #
+    logger.error('결제 테스트0')
     if error is None:
         try:
             receipt_data = json_loading_data['receipt_data']
@@ -816,17 +818,21 @@ def payment_for_ios_logic(request):
         except KeyError:
             error = '오류가 발생했습니다.'
 
+    logger.error('결제 테스트1:'+str(ios_data))
     data = {
         'exclude-old-transactions': "true",
         'receipt-data': receipt_data,
         'password': ios_data
     }
+    logger.error('결제 테스1')
     body = json.dumps(data)
     h = httplib2.Http()
 
+    logger.error('결제 테스2')
     resp, content = h.request("https://buy.itunes.apple.com/verifyReceipt", method="POST", body=body,
                               headers={'Content-Type': 'application/json;'})
 
+    logger.error('결제 테스3')
     json_data = content.decode('utf-8')
     json_loading_data = None
     error = None
@@ -838,7 +844,6 @@ def payment_for_ios_logic(request):
     except TypeError:
         error = '오류가 발생했습니다.[2]'
 
-    logger.error('결제 테스트1:'+str(ios_data))
     logger.error('결제 테스트2:'+str(input_transaction_id))
     if error is None:
         if resp['status'] == '200':
