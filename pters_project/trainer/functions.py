@@ -159,6 +159,7 @@ def func_get_member_ing_list(class_id, user_id):
                                          lecture_tb__use=USE,
                                          use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
                                                            check_one_to_one=RawSQL(query_group_type_cd, []))
+    a = 0
     for member_data in all_member:
 
         if member_data.user.is_active:
@@ -319,7 +320,9 @@ def func_get_member_ing_list(class_id, user_id):
             member_data.birthday_dt = str(member_data.birthday_dt)
 
         member_list.append(member_data)
-
+        a += 1
+        if a > 30:
+            break
     return member_list
 
 
