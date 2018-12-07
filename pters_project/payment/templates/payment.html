@@ -995,12 +995,9 @@
 {#        alert(payment_date);#}
 {#        shade_index(-100);#}
 {#        alert(product_price_id);#}
-{#        alert(receipt_data);#}
-{#        alert(ios_data);#}
-{#        alert(product_id);#}
-{#        alert(transaction_id);#}
+        var url_move = "";
         $.ajax({
-            url: "https://www.pters.co.kr/payment/payment_for_ios/", // 서비스 웹서버
+            url: "/payment/payment_for_ios/", // 서비스 웹서버
             type: "POST",
             headers: {"Content-Type": "application/json"},
             data: JSON.stringify({
@@ -1040,10 +1037,12 @@
                 completeSend();
             },
 
-            error:function(request,status,error){
-                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
-               },
+            error: function (request,status,error) {
 
+                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error + "url = "+request.url); // 실패 시 처리
+
+                console.log('server error');
+            }
         });
     }
 
