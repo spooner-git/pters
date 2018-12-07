@@ -162,6 +162,7 @@ STATICFILES_DIRS = (
   'static/',
 )
 STATIC_ROOT = '/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
 # LOGIN URL
 LOGIN_URL = '/'
