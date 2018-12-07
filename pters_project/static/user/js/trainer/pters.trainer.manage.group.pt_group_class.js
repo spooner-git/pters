@@ -30,7 +30,7 @@ $('#groupcapacity').change(function(){
 
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0;
-get_member_ing_list();
+// get_member_ing_list();
 $('button#addByNew').click(function(e){
     if(!$(this).hasClass('disabled_button')){
 

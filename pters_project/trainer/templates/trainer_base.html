@@ -41,7 +41,8 @@
     <link rel="shortcut icon" href="/static/common/favicon-48.png">
 
     <!-- Bootstrap core CSS -->
-<!--    <link rel="stylesheet" href="/static/common/css/jquery-ui.1.12.1.css">-->
+<!--    <link rel="stylesheet" href="/static/common/css/jquery-ui.1.12.1.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/notosanskr.css">-->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/static/common/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/common/css/swiper.min.css">
@@ -54,7 +55,7 @@
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
+<noscript><iframe async src="https://www.googletagmanager.com/ns.html?id=GTM-WG2KK6D"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 {% block navbar %}
@@ -615,7 +616,7 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
 
-<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script async src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <link rel="manifest" href={% static_url "manifest.json" %}>
 <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>

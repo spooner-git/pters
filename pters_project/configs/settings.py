@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("PTERS_DJANGO_SECRET", '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True
+DEBUG = True 
 
 #ALLOWED_HOSTS = ['pters.co.kr','www.pters.co.kr','kr.pters.co.kr','jp.pters.co.kr','us.pters.co.kr','13.125.37.117']
 ALLOWED_HOSTS = ['*']
@@ -61,7 +61,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'configs.middleware.MyCacheMiddleWare.MaxAgeMiddleware'
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:8000',
+#     }
+# }
+# CACHE_MIDDLEWARE_SECONDS = 86400
 
 INTERNAL_IPS = ('127.0.0.1', 'localhost',)
 ROOT_URLCONF = 'configs.urls'
@@ -152,6 +162,7 @@ STATICFILES_DIRS = (
   'static/',
 )
 STATIC_ROOT = '/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
 # LOGIN URL
 LOGIN_URL = '/'

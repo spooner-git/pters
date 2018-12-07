@@ -319,7 +319,6 @@ def func_get_member_ing_list(class_id, user_id):
             member_data.birthday_dt = str(member_data.birthday_dt)
 
         member_list.append(member_data)
-
     return member_list
 
 
