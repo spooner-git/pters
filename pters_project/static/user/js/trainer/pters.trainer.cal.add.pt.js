@@ -2645,7 +2645,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
                 var merged_endtime = merged_time.end;
 
                 
-                if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) == 1){
+                if(know_whether_plans_has_duplicates(s_time, e_time, s_time_compare, e_time_compare) > 0){
                     starttime_temp = merged_starttime;
                     endtime_temp = merged_endtime;
                     removeIndexArray.push(j);
@@ -2752,15 +2752,17 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
 
 function know_whether_plans_has_duplicates(starttime, endtime, starttime_compare, endtime_compare){
     if( compare_time(starttime_compare, starttime) && compare_time(endtime, endtime_compare)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
-        return 1
-    }else if( compare_time(starttime, starttime_compare) == false  && compare_time(starttime_compare, endtime) == false  && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
-        return 1
-    }else if( compare_time(starttime_compare, starttime) == false && compare_time(starttime, endtime_compare) == false && compare_time(endtime_compare, endtime) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-        return 1
+        return 1;
+    }else if( compare_time(starttime, starttime_compare) == false  && compare_time(endtime, starttime_compare) && compare_time(endtime, endtime_compare) == false){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
+        return 2;
+    }else if( compare_time(starttime_compare, starttime) == false && compare_time(endtime_compare, starttime) && compare_time(endtime_compare, endtime) == false){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
+        return 3;
     }else if( compare_time(starttime, starttime_compare) && compare_time(endtime_compare, endtime) ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
-        return 1
+        return 4;
+    }else if(starttime == starttime_compare && endtime == endtime_compare){
+        return 5;
     }else{
-       return 0
+       return 0;
     }
 }
 
