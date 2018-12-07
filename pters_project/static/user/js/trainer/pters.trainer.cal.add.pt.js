@@ -2682,6 +2682,8 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
         }
     }
 
+    console.log("결과_start :: ", resultStart_Array);
+    console.log("결과_end :: ", resultEnd_Array);
     //중복일정시 Test
     disable_time_array_start_date = resultStart_Array;
     disable_time_array_end_date = resultEnd_Array;
