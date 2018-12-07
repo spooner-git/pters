@@ -834,14 +834,18 @@ def payment_for_ios_logic(request):
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다.[1]'
     except TypeError:
-        error = '오류가 발생했습니다.'
+        error = '오류가 발생했습니다.[2]'
 
+    logger.error('결제 테스트1:'+str(ios_data))
+    logger.error('결제 테스트2:'+str(input_transaction_id))
     if error is None:
         if resp['status'] == '200':
+            logger.error('결제 테스트3')
             # print(json_loading_data)
             if str(json_loading_data['status']) == '21007':
+                logger.error('결제 테스트3-1')
                 resp, content = h.request("https://sandbox.itunes.apple.com/verifyReceipt", method="POST", body=body,
                                           headers={'Content-Type': 'application/json;'})
 
@@ -852,12 +856,13 @@ def payment_for_ios_logic(request):
                 try:
                     json_loading_data = json.loads(json_data)
                 except ValueError:
-                    error = '오류가 발생했습니다.'
+                    error = '오류가 발생했습니다.[3]'
                 except TypeError:
-                    error = '오류가 발생했습니다.'
+                    error = '오류가 발생했습니다.[4]'
 
                 if error is None:
                     if resp['status'] == '200':
+                        logger.error('결제 테스트3-1-1')
                         # print(json_loading_data)
                         in_app_info = json_loading_data['receipt']['in_app']
                         transaction_id = str(in_app_info[0]['transaction_id'])
@@ -865,12 +870,15 @@ def payment_for_ios_logic(request):
                         context['test_info'] = 'sandbox test 환경입니다.'
                         pay_info = 'sandbox test'
             else:
+                logger.error('결제 테스트3-2')
                 in_app_info = json_loading_data['receipt']['in_app']
                 transaction_id = str(in_app_info[0]['transaction_id'])
                 # logger.error(str(json_loading_data['receipt']))
-    else:
-        context['error'] = error
+        else:
+            error = '오류가 발생했습니다.[5]'
+            logger.error('결제 테스트4')
 
+    logger.error('결제 테스트5')
     if error is None:
         if input_transaction_id != transaction_id:
             error = '결제중 오류가 발생했습니다.'
