@@ -2602,7 +2602,6 @@ function know_duplicated_plans(jsondata){
     }
 
     var result = {};
-    
 
     for(var plan_ in duplicate_dic){
         var temp_index = [];
@@ -2625,7 +2624,7 @@ function know_duplicated_plans(jsondata){
                                                                             comp.split(' ~ ')[0].split(' ')[1],
                                                                             comp.split(' ~ ')[1].split(' ')[1]
                                                                         );
-                console.log(ref, comp, duplication_type)
+
                 if(duplication_type > 0){ //겹칠때
                     var moved_element_check = 0;
                     if(temp_index[r] != r){
@@ -2667,7 +2666,6 @@ function know_duplicated_plans(jsondata){
 
             }
         }
-        console.log("timeindex", temp_index)
 
         temp_celldivide = Math.max.apply(null, temp_index) +1;
         
@@ -2677,10 +2675,6 @@ function know_duplicated_plans(jsondata){
         }
 
     }
-
-    console.log("result", result)
-
-
 
 
     // console.log("duplicate_dic",duplicate_dic);

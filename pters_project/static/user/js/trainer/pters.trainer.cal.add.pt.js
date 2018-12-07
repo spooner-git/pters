@@ -2681,8 +2681,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
             break;
         }
     }
-    console.log("*****resultStart_Array", resultStart_Array);
-    console.log("*****resultEnd_Array",resultEnd_Array);
+
     //중복일정시 Test
     disable_time_array_start_date = resultStart_Array;
     disable_time_array_end_date = resultEnd_Array;
@@ -2705,7 +2704,7 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
             plan_time.push('24:00');
         }
     }
-    console.log("plan_time" ,plan_time)
+
     if(filter == "allow_all_time"){
         plan_time = [];
     }
