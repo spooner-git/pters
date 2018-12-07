@@ -788,8 +788,10 @@ def payment_for_iap_logic(request):
 
 def payment_for_ios_logic(request):
 
+    logger.error('결제1 테스트')
     json_data = request.body.decode('utf-8')
     json_loading_data = None
+    logger.error('결제2 테스트')
 
     product_id = None
     payment_type_cd = None
@@ -800,7 +802,7 @@ def payment_for_ios_logic(request):
     input_transaction_id = ''
     context['test_info'] = ''
     pay_info = '인앱 결제'
-    logger.error('결제 테스트')
+    logger.error('결제3 테스트')
     try:
         json_loading_data = json.loads(json_data)
     except ValueError:
