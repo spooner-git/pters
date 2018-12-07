@@ -1037,7 +1037,10 @@
                 completeSend();
             },
 
-            error: function () {
+            error: function (request,status,error) {
+
+                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error + "url = "+request.url); // 실패 시 처리
+
                 console.log('server error');
             }
         });
