@@ -1008,9 +1008,9 @@
             }),
 
             beforeSend: function (xhr, settings) {
-                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
+{#                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {#}
+{#                    xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
+{#                }#}
                 beforeSend();
             },
 
@@ -1038,8 +1038,7 @@
             },
 
             error: function (request,status,error) {
-
-                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error + "url = "+request.url); // 실패 시 처리
+                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 
                 console.log('server error');
             }
