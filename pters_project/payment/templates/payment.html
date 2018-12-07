@@ -995,6 +995,10 @@
 {#        alert(payment_date);#}
 {#        shade_index(-100);#}
 {#        alert(product_price_id);#}
+        alert(receipt_data);
+        alert(ios_data);
+        alert(product_id);
+        alert(transaction_id);
         var url_move = "";
         $.ajax({
             url: "/payment/payment_for_ios/", // 서비스 웹서버
@@ -1008,16 +1012,13 @@
             }),
 
             beforeSend: function (xhr, settings) {
-                alert('beforesend')
                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
-                alert('beforesend2')
                 beforeSend();
             },
 
             success: function (data) {
-                alert('success')
                 var jsondata = JSON.parse(data);
                 if (jsondata.messageArray.length > 0) {
                     var msg = '';
@@ -1041,7 +1042,6 @@
             },
 
             error: function () {
-                alert('error')
                 console.log('server error');
             }
         });
