@@ -1008,9 +1008,10 @@
             }),
 
             beforeSend: function (xhr, settings) {
-{#                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {#}
-{#                    xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
-{#                }#}
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    alert(this.crossDomain);
+                }
                 beforeSend();
             },
 
@@ -1038,8 +1039,8 @@
             },
 
             error: function (request,status,error) {
-                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
-
+                alert('결제에 실패하였습니다.');
+                location.href = "/payment/";
                 console.log('server error');
             }
         });
