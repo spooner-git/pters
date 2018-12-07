@@ -1038,8 +1038,8 @@
             },
 
             error: function (request,status,error) {
-                alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
-
+                alert('결제에 실패하였습니다.');
+                location.href = "/payment/";
                 console.log('server error');
             }
         });
