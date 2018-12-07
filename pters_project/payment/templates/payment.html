@@ -999,9 +999,8 @@
 {#        alert(ios_data);#}
 {#        alert(product_id);#}
 {#        alert(transaction_id);#}
-        var url_move = "";
         $.ajax({
-            url: "/payment/payment_for_ios/", // 서비스 웹서버
+            url: "https://www.pters.co.kr/payment/payment_for_ios/", // 서비스 웹서버
             type: "POST",
             headers: {"Content-Type": "application/json"},
             data: JSON.stringify({
