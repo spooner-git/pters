@@ -838,6 +838,8 @@ def payment_for_ios_logic(request):
     except TypeError:
         error = '오류가 발생했습니다.'
 
+    logger.error('결제 테스트1:'+str(ios_data))
+    logger.error('결제 테스트2:'+str(input_transaction_id))
     if error is None:
         if resp['status'] == '200':
             # print(json_loading_data)
@@ -871,6 +873,7 @@ def payment_for_ios_logic(request):
     else:
         context['error'] = error
 
+    logger.error('결제 테스트3:'+str(input_transaction_id))
     if error is None:
         if input_transaction_id != transaction_id:
             error = '결제중 오류가 발생했습니다.'
