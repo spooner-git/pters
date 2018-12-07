@@ -1038,6 +1038,8 @@
             },
 
             error: function () {
+                alert('결제에 실패하였습니다.');
+                location.href = "/payment/";
                 console.log('server error');
             }
         });
