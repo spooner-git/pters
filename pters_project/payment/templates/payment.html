@@ -996,6 +996,10 @@
 {#        shade_index(-100);#}
 {#        alert(product_price_id);#}
         var url_move = "";
+        alert(receipt_data);
+        alert(ios_data);
+        alert(product_id);
+        alert(transaction_id);
         $.ajax({
             url: "/payment/payment_for_ios/", // 서비스 웹서버
             type: "POST",
