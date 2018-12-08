@@ -2061,6 +2061,7 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
     }
 }
 
+var exist_check_dic = {};
 function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
     var duplicate_check = know_duplicated_plans(jsondata).result;
@@ -2271,45 +2272,72 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
         }
 
         //중복일정 ㅇㄷ
+        // var planWidth;
+        // var planLeft;
+        // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
+        //     // planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
+        //     // planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100;
+        //     var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
+        //     var regExp = /`data-starttime="${planStartDate[i]}"`/gi;
+        //     if(date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`) != null){
+        //         exist_check = date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`).length;
+        //     }
+
+        //     planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])).toFixed(1);
+            
+        //     // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
+        //     //     if(exist_check == 0){
+        //     //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+        //     //     }else{
+        //     //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+        //     //     }
+        //     // }else{
+        //     //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+        //     // }
+        //     var calc;
+        //     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
+        //         calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
+        //     }else{
+        //         calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
+        //     }
+        //     if(calc == -1){
+        //         calc = 0;
+        //     }
+            
+        //     //planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+        //     planLeft = (calc)*100;
+        //     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
+        //         groupstatus="";
+        //     }
+        // }
+        console.log(jsondata)
         var planWidth;
         var planLeft;
+        var calc;
+        var exist_check;
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
-            // planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
-            // planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100;
-            var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
-            var regExp = /`data-starttime="${planStartDate[i]}"`/gi;
-            if(date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`) != null){
-                exist_check = date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`).length;
-            }
+            if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) > 0){
 
-            planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])).toFixed(1);
-            
-            // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-            //     if(exist_check == 0){
-            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            //     }else{
-            //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            //     }
-            // }else{
-            //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            // }
-            var calc;
-            if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
-                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
+                
             }else{
-                calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
-            }
-            if(calc == -1){
-                calc = 0;
-            }
-            
-            //planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
-            planLeft = (calc)*100;
-            if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
-                groupstatus="";
+                if(exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] == undefined){
+                    exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] = 0;
+                }
+                exist_check = exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]];
+                if(exist_check < duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]].length){
+                    planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][1])).toFixed(1);
+                    calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][0];
+                    planLeft = (calc)*100;
+
+                    if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][1] > 1){
+                        groupstatus="";
+                    }
+                    exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]]++;
+                }
             }
         }
         //중복일정 ㅇㄷ
+
 
         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
 
@@ -2322,6 +2350,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                 planhtml = '<div class-time="'+planArrayForTag.join('_')+
                             '" class-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
+                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
                             '" data-groupid="'+planGroupid[i]+
                             '" data-membernum="'+planMemberNum[i]+
                             '" data-memo="'+planNoteArray[i]+
@@ -2346,6 +2375,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                 planhtml = '<div group-time="'+planArrayForTag.join('_')+
                             '" group-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
+                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
                             '" data-groupid="'+planGroupid[i]+
                             '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
                             '" data-membernum="'+planMemberNum[i]+
@@ -2372,6 +2402,7 @@ function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 
                 planhtml = '<div off-time="'+planArrayForTag.join('_')+
                             '" off-schedule-id="'+planScheduleIdArray[i]+
                             '" data-starttime="'+planStartDate[i]+
+                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
                             '" data-groupid="'+planGroupid[i]+
                             '" data-membernum="'+planMemberNum[i]+
                             '" data-memo="'+planNoteArray[i]+
