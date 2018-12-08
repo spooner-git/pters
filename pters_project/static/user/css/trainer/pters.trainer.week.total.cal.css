@@ -420,8 +420,10 @@ img,a,div,span,p{
 	position: absolute;
 	top: 0px;
 	width: 99%;
-	background: #fbf3bd;
+/*	background: #fbf3bd;*/
+	background: #ffe21b;
 	z-index: 100;
+	opacity: 0.6;
 	cursor: pointer;
 }
 
@@ -452,7 +454,7 @@ img,a,div,span,p{
 	top: 0px;
 	width: 99%;
 	background: #eeeeee;
-	opacity: 0.9;
+	opacity: 0.8;
 	z-index: 100;
 	cursor: pointer;
 }
@@ -477,6 +479,7 @@ img,a,div,span,p{
 	width: 99%;
 	/*background: #ffacb7;*/
 	z-index: 100;
+	opacity: 0.8;
 	cursor: pointer;
 	font-size: 12px;
 }
