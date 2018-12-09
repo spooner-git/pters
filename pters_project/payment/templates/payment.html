@@ -787,12 +787,21 @@
 
         $('#purchase_popup_page1 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ) {
+
                 $('#purchase_popup_page1').hide();
-                $('.checked').removeClass('checked');
-                $('.ptersCheckboxInner').removeClass('ptersCheckboxInner');
-                $('#purchase_popup_page2 .ptersCheckbox').addClass('checked');
-                $('#purchase_popup_page2 .ptersCheckbox').find('div').addClass('ptersCheckboxInner');
-                $('#purchase_popup_page2').show();
+                    $('#purchase_popup_page2').show();
+                if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
+                    //alert("test")
+                    var product = $('#purchase_popup').attr('data-product');
+                    var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
+                    var payment_type_cd = $('#purchase_popup').attr('data-type');
+                    var product_id = $('#purchase_popup').attr('data-product-id');
+                    var price = parseInt(Number($('#purchase_popup').attr('data-price')));
+                    var period_month = $('#purchase_popup').attr('data-period-month');
+                    check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
+                    purchase_popup_close("do_not_show_background");
+                    shade_index(100);
+                }
             }else{
                 alert('이용약관에 동의 체크를 해주세요.')
             }
@@ -822,7 +831,7 @@
                 var period_month = $('#purchase_popup').attr('data-period-month');
                 check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
                 purchase_popup_close("do_not_show_background");
-                shade_index(100)
+                shade_index(100);
 
             }
         });
