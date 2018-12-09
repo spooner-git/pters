@@ -254,19 +254,20 @@
                             <a class="icono-arrow1-left"></a>
                         </div>
 
-                        <div id="purchase_caution_ios" style="display: none; color:#ffffff;text-align: center;margin-top:20px;margin-bottom:20px;">
-                            <p>피터스의 모든 이용권은 국내에서만 구매 가능하며, 사용이 가능합니다.</p>
-                            <p>본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.</p>
-                            <p>구입하신 이용권은 마이페이지의 이용권 내역에서 확인 할 수 있습니다.</p>
+                        <div id="purchase_caution_ios" style="font-size:8px; display: none; color:#ffffff; text-align: left;margin-top:20px; margin-bottom:20px;">
+                            <p style="font-size:15px;">이용권 구매 주의 사항</p>
+                            <p>- 피터스의 모든 이용권은 국내에서만 구매 가능하며, 사용이 가능합니다.</p>
+                            <p>- 본 이용권 구매 시 부가세 10%가 포함되어 청구됩니다.</p>
+                            <p>- 구입하신 이용권은 마이페이지의 이용권 내역에서 확인 할 수 있습니다.</p>
                             <!--<p>본 이용권은 이용 시작일 기준 7일이내 청약철회 가능한 이용권 입니다.</p>-->
-                            <p>단, 이용내역이 있는 경우 이용금액 공제, 이벤트등의 할인 혜택을 받으신 경우 해당금액 공제 후 환불 가능합니다.</p>
+                            <p>- 단, 이용내역이 있는 경우 이용금액 공제, 이벤트등의 할인 혜택을 받으신 경우 해당금액 공제 후 환불 가능합니다.</p>
                             <!--<p>이용 시작일 기준 7일 경과후에는 이용금액 공제 후 해지 가능합니다.</p>-->
-                            <p>이용 금액은 결제일 이후 피터스에 접속한 기간에 상응하는 금액을 말합니다.</p>
-                            <p>미성년자가 법정대리인 동의 없이 계약을 체결한 경우, 미성년자 또는 법정 대리인이 이를 취소할 수 있습니다.</p>
-                            <p>이용권 구매내역을 타인에게 양도하거나 다른 아이디로 이전하는 기능은 제공하지 않습니다.</p>
-                            <p>이용권은 앱, PC, 모바일 웹에서 이용이 가능합니다.</p>
-                            <p>App Store 결제는 현재 사용하고 있는 App Store계정을 통해 결제됩니다.</p>
-                            <p>결제 금액에 대한 확인 및 환불은 Apple을 틍해 가능합니다. 결제내역 및 환불 관련 문의는 Apple 고객센터(080-333-4000)으로 부탁드립니다.</p>
+                            <p>- 이용 금액은 결제일 이후 피터스에 접속한 기간에 상응하는 금액을 말합니다.</p>
+                            <p>- 미성년자가 법정대리인 동의 없이 계약을 체결한 경우, 미성년자 또는 법정 대리인이 이를 취소할 수 있습니다.</p>
+                            <p>- 이용권 구매내역을 타인에게 양도하거나 다른 아이디로 이전하는 기능은 제공하지 않습니다.</p>
+                            <p>- 이용권은 앱, PC, 모바일 웹에서 이용이 가능합니다.</p>
+                            <p>- App Store 결제는 현재 사용하고 있는 App Store계정을 통해 결제됩니다.</p>
+                            <p>- 결제 금액에 대한 확인 및 환불은 Apple을 틍해 가능합니다. 결제내역 및 환불 관련 문의는 Apple 고객센터(080-333-4000)으로 부탁드립니다.</p>
                         </div>
 {#                        <div class="ticket_right pay_product_function ticket_disable">#}
 {##}
@@ -463,6 +464,19 @@
                     $(this).attr('data-payment-type'), $(this).attr('data-product-contents'),
                     $(this).attr('data-product-price'), $(this).attr('data-product-id'), $(this).attr('data-period-month'));
 
+                if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
+                    //alert("test")
+                    $('#purchase_popup_page2 .ptersCheckbox').addClass('checked');
+                    var product = $('#purchase_popup').attr('data-product');
+                    var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
+                    var payment_type_cd = $('#purchase_popup').attr('data-type');
+                    var product_id = $('#purchase_popup').attr('data-product-id');
+                    var price = parseInt(Number($('#purchase_popup').attr('data-price')));
+                    var period_month = $('#purchase_popup').attr('data-period-month');
+                    check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
+                    purchase_popup_close("do_not_show_background");
+                    shade_index(100);
+                }
             }
         });
 
@@ -802,22 +816,8 @@
 
         $('#purchase_popup_page1 ._button_Next').click(function(){
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ) {
-
                 $('#purchase_popup_page1').hide();
                 $('#purchase_popup_page2').show();
-                $('#purchase_popup_page2 .ptersCheckbox').addClass('checked');
-                if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
-                    //alert("test")
-                    var product = $('#purchase_popup').attr('data-product');
-                    var pay_method = $('#purchase_popup_page2 .checked').attr('data-method');
-                    var payment_type_cd = $('#purchase_popup').attr('data-type');
-                    var product_id = $('#purchase_popup').attr('data-product-id');
-                    var price = parseInt(Number($('#purchase_popup').attr('data-price')));
-                    var period_month = $('#purchase_popup').attr('data-period-month');
-                    check_payment(product, pay_method, payment_type_cd, product_id, price, period_month);
-                    purchase_popup_close("do_not_show_background");
-                    shade_index(100);
-                }
             }else{
                 alert('이용약관에 동의 체크를 해주세요.')
             }
