@@ -3477,6 +3477,7 @@ function send_add_groupmember_plan(use, callback){
                         scheduleTime('off', jsondata, calendarSize);
                         scheduleTime('group', jsondata, calendarSize);
                     }else{
+                        exist_check_dic = {}
                         scheduleTime_Mobile('class', jsondata, calendarSize);
                         scheduleTime_Mobile('off', jsondata, calendarSize);
                         scheduleTime_Mobile('group', jsondata, calendarSize);
@@ -3535,6 +3536,7 @@ function send_add_othergroupmember_plan(dbid, leid, schedule_id, use, callback){
                         scheduleTime('off', jsondata, calendarSize);
                         scheduleTime('group', jsondata, calendarSize);
                     }else{
+                        exist_check_dic = {};
                         scheduleTime_Mobile('class', jsondata, calendarSize);
                         scheduleTime_Mobile('off', jsondata, calendarSize);
                         scheduleTime_Mobile('group', jsondata, calendarSize);

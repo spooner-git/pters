@@ -1270,6 +1270,7 @@
             initialJSON = jsondata;
             if(bodywidth > 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
+                    exist_check_dic = {};
                     scheduleTime_Mobile('class', jsondata, calendarSize);
                     scheduleTime_Mobile('off', jsondata, calendarSize);
                     scheduleTime_Mobile('group', jsondata, calendarSize);
@@ -1280,6 +1281,7 @@
                     fake_show();
                 }
             }else if(bodywidth <= 600){
+                exist_check_dic = {};
                 scheduleTime_Mobile('class', jsondata, calendarSize);
                 scheduleTime_Mobile('off', jsondata, calendarSize);
                 scheduleTime_Mobile('group', jsondata, calendarSize);
