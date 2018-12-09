@@ -570,6 +570,18 @@ body{
 		background: #282828;
 		color: #ffffff;
 	}
+	#view_appointment_btn_ios{
+		display: inline-block;
+		margin-left: 7px;
+		border: 1px solid #cccccc;
+		vertical-align: top;
+		font-size: 13px;
+		cursor: pointer;
+	}
+	#view_appointment_btn_ios:hover{
+		background: #282828;
+		color: #ffffff;
+	}
 
 
 #purchase_caution{
