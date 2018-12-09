@@ -786,9 +786,15 @@
         });
 
         $('#purchase_popup_page1 ._button_Next').click(function(){
-            if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ){
+            if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ) {
                 $('#purchase_popup_page1').hide();
+                $('.checked').removeClass('checked');
+                $('.ptersCheckboxInner').removeClass('ptersCheckboxInner');
+                $('#purchase_popup_page2 .ptersCheckbox').addClass('checked');
+                $('#purchase_popup_page2 .ptersCheckbox').find('div').addClass('ptersCheckboxInner');
                 $('#purchase_popup_page2').show();
+            }else{
+                alert('이용약관에 동의 체크를 해주세요.')
             }
         });
 
@@ -798,8 +804,6 @@
 
             $(this).addClass('checked');
             $(this).find('div').addClass('ptersCheckboxInner');
-
-
 
             if($('#purchase_popup_page2 .checked').length > 0 && $('#purchase_popup_page2').css('display')=='block' ){
                 $('#purchase_popup_page2 ._button_Next').addClass('appoint_checked');

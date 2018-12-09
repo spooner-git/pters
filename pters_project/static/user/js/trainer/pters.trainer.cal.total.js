@@ -2606,13 +2606,16 @@ function know_duplicated_plans(jsondata){
     for(var plan_ in duplicate_dic){
         var temp_index = [];
         var temp_celldivide;
+        // var array_sorted = duplicate_dic[plan_].sort();
         for(var t=0; t<duplicate_dic[plan_].length; t++){
+            // var array_sorted = duplicate_dic[plan_];
             var array_sorted = duplicate_dic[plan_].sort();
             var ref = array_sorted[t];
             if(t == 0){
                 temp_index[t] = 0; //가장 첫번째 값은 항상 왼쪽 첫번째로 고정 위치
                 continue;
             }
+
             for(var r=0; r<array_sorted.length; r++){
                 var comp = array_sorted[r];
                 if(t == r){
@@ -2626,40 +2629,40 @@ function know_duplicated_plans(jsondata){
                                                                         );
 
                 if(duplication_type > 0){ //겹칠때
-                    var moved_element_check = 0;
-                    if(temp_index[r] != r){
-                        moved_element_check--;
-                    }
-                    temp_index[t] = r + 1 + moved_element_check;
-
+                    // var moved_element_check = 0;
+                    // if(temp_index[r] != r){
+                    //     moved_element_check--;
+                    // }
+                    // temp_index[t] = r + 1 + moved_element_check;
+                    temp_index[t] = r + 1;
                     //이 인덱스의 값과 겹치는지 확인
-                }else{ //겹치지 않을때
-                    //이 인덱스와 같은 값을 갖는 다른 시간대가 있는지 검사
-                    var howmany = array_element_count(temp_index, temp_index[r]);
-                    var index_move = 0;
-                    var check_ = 0;
-                    for(var z=0; z<howmany; z++){
-                        var index_loc = temp_index.indexOf(temp_index[r], index_move);
-                        index_move = index_loc+1;
-                        if(array_sorted[t] != array_sorted[index_loc]){
-                            var duplication_type_ = know_whether_plans_has_duplicates(  array_sorted[t].split(' ~ ')[0].split(' ')[1],
-                                                                                        array_sorted[t].split(' ~ ')[1].split(' ')[1],
-                                                                                        array_sorted[index_loc].split(' ~ ')[0].split(' ')[1],
-                                                                                        array_sorted[index_loc].split(' ~ ')[1].split(' ')[1]
-                                                                                     );
-                            if(duplication_type_ > 0){
-                                check_++;
-                            }else{
-                                continue;
-                            }
-                        }
-                    }
-                    if(check_ > 0){ //겹치는게 존재
-                        temp_index[t] = temp_index[r] + 1;
-                    }else{ //겹치는게 없음
-                        temp_index[t] = temp_index[r];
-                        break;   
-                    }
+                }else{ //겹치지  않을때
+                    // //이 인덱스와 같은 값을 갖는 다른 시간대가 있는지 검사
+                    // var howmany = array_element_count(temp_index, temp_index[r]);
+                    // var index_move = 0;
+                    // var check_ = 0;
+                    // for(var z=0; z<howmany; z++){
+                    //     var index_loc = temp_index.indexOf(temp_index[r], index_move);
+                    //     index_move = index_loc+1;
+                    //     if(array_sorted[t] != array_sorted[index_loc]){
+                    //         var duplication_type_ = know_whether_plans_has_duplicates(  array_sorted[t].split(' ~ ')[0].split(' ')[1],
+                    //                                                                     array_sorted[t].split(' ~ ')[1].split(' ')[1],
+                    //                                                                     array_sorted[index_loc].split(' ~ ')[0].split(' ')[1],
+                    //                                                                     array_sorted[index_loc].split(' ~ ')[1].split(' ')[1]
+                    //                                                                  );
+                    //         if(duplication_type_ > 0){
+                    //             check_++;
+                    //         }else{
+                    //             continue;
+                    //         }
+                    //     }
+                    // }
+                    // if(check_ > 0){ //겹치는게 존재
+                    //     temp_index[t] = temp_index[r] + 1;
+                    // }else{ //겹치는게 없음
+                    //     temp_index[t] = temp_index[r];
+                    //     break;
+                    // }
                     // temp_index[t] = temp_index[r];
                     // break;
                 }
@@ -2677,8 +2680,8 @@ function know_duplicated_plans(jsondata){
     }
 
 
-    // console.log("duplicate_dic",duplicate_dic);
-    // console.log("result", result)
+    console.log("duplicate_dic",duplicate_dic);
+    console.log("result", result)
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
 //중복일정 계산하기
