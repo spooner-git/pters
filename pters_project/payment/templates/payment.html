@@ -545,12 +545,6 @@
             var date = new Date();
             var month = date.getMonth()+1;
             var day = date.getDate();
-            alert(name);
-            alert(pay_method);
-            alert(payment_type_cd);
-            alert(product_id);
-            alert(price);
-            alert(period_month);
             if(month <10){
                 month = '0'+month;
             }
@@ -795,7 +789,8 @@
             if($(this).hasClass('appoint_checked') && $('#purchase_popup_page1').css('display')=='block' ) {
 
                 $('#purchase_popup_page1').hide();
-                    $('#purchase_popup_page2').show();
+                $('#purchase_popup_page2').show();
+                $('#purchase_popup_page2 .ptersCheckbox').addClass('checked');
                 if((platform_check == 'mobile') && (device_type=='ios') && (ios_version!='1.4')) {
                     //alert("test")
                     var product = $('#purchase_popup').attr('data-product');
