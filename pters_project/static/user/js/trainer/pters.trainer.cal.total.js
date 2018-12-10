@@ -2639,12 +2639,12 @@ function know_duplicated_plans(jsondata){
                                                                             comp.split(' ~ ')[1].split(' ')[1]
                                                                         );
                 if(duplication_type > 0){ //겹칠때
-                    // var moved_element_check = 0;
-                    // if(temp_index[r] != r){
-                    //     moved_element_check--;
-                    // }
-                    // temp_index[t] = r + 1 + moved_element_check;
-                    temp_index[t] = r + 1;
+                    var moved_element_check = 0;
+                    if(temp_index[r] != r){
+                        moved_element_check--;
+                    }
+                    temp_index[t] = r + 1 + moved_element_check;
+                    // temp_index[t] = r + 1;
                     //이 인덱스의 값과 겹치는지 확인
 
                 }else{ //겹치지 않을때
