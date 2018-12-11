@@ -696,10 +696,10 @@ $(document).ready(function(){
         $(this).fadeOut(100);
     });
 
-    if(Options.reserve==1){
-        $(document).off('click', 'td');
-        $('#float_btn').hide();
-    }
+    // if(Options.reserve==1){
+    //     $(document).off('click', 'td');
+    //     $('#float_btn').hide();
+    // }
 
 //여기서부터 월간 달력 만들기 코드////////////////////////////////////////////////////////////////////////////////////////////////
     /*

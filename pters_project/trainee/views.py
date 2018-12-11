@@ -175,10 +175,10 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         date = request.GET.get('date', '')
         day = request.GET.get('day', '')
         today = datetime.date.today()
-        try:
-            class_info = ClassTb.objects.get(class_id=class_id)
-        except ObjectDoesNotExist:
-            error = '수강 정보를 불러오지 못했습니다.'
+        # try:
+        #     class_info = ClassTb.objects.get(class_id=class_id)
+        # except ObjectDoesNotExist:
+        #     error = '수강 정보를 불러오지 못했습니다.'
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
@@ -192,30 +192,30 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         context = func_get_holiday_schedule(context, start_date, end_date)
         # get_setting_info(request)
 
-        context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
-
-        request.session['setting_member_reserve_time_available'] = context['lt_res_01']
-        request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
-        request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
-        # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
-
-        request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
-        request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
-        request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
-        request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
-        request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
-        request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
-        request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
-
-        request.session['setting_member_reserve_date_available'] = context['lt_res_05']
-        request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
-        request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
-        request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
-        request.session['setting_member_start_time'] = context['lt_res_member_start_time']
-        request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
-        request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
-        request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
-        request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
+        # context = func_get_trainer_setting_list(context, class_info.member_id, class_id)
+        #
+        # request.session['setting_member_reserve_time_available'] = context['lt_res_01']
+        # request.session['setting_member_reserve_time_prohibition'] = context['lt_res_02']
+        # request.session['setting_member_reserve_prohibition'] = context['lt_res_03']
+        # # request.session['setting_trainer_work_time_available'] = context['lt_res_04']
+        #
+        # request.session['setting_trainer_work_sun_time_avail'] = context['lt_work_sun_time_avail']
+        # request.session['setting_trainer_work_mon_time_avail'] = context['lt_work_mon_time_avail']
+        # request.session['setting_trainer_work_tue_time_avail'] = context['lt_work_tue_time_avail']
+        # request.session['setting_trainer_work_wed_time_avail'] = context['lt_work_wed_time_avail']
+        # request.session['setting_trainer_work_ths_time_avail'] = context['lt_work_ths_time_avail']
+        # request.session['setting_trainer_work_fri_time_avail'] = context['lt_work_fri_time_avail']
+        # request.session['setting_trainer_work_sat_time_avail'] = context['lt_work_sat_time_avail']
+        #
+        # request.session['setting_member_reserve_date_available'] = context['lt_res_05']
+        # request.session['setting_member_reserve_enable_time'] = context['lt_res_enable_time']
+        # request.session['setting_member_reserve_cancel_time'] = context['lt_res_cancel_time']
+        # request.session['setting_member_time_duration'] = context['lt_res_member_time_duration']
+        # request.session['setting_member_start_time'] = context['lt_res_member_start_time']
+        # request.session['setting_schedule_auto_finish'] = context['lt_schedule_auto_finish']
+        # request.session['setting_lecture_auto_finish'] = context['lt_lecture_auto_finish']
+        # request.session['setting_to_trainee_lesson_alarm'] = context['lt_pus_to_trainee_lesson_alarm']
+        # request.session['setting_from_trainee_lesson_alarm'] = context['lt_pus_from_trainee_lesson_alarm']
         return render(request, self.template_name, context)
 
 
