@@ -27,7 +27,6 @@ from configs.views import AccessTestMixin
 
 from login.models import MemberTb, LogTb, CommonCdTb, SnsInfoTb
 from schedule.models import ScheduleTb, DeleteScheduleTb, RepeatScheduleTb, HolidayTb
-from trainee.templatetags.background_trainee_data import get_setting_info
 from trainer.functions import func_get_trainer_setting_list
 from trainer.models import ClassLectureTb, GroupLectureTb, ClassTb, SettingTb
 from .models import LectureTb, MemberLectureTb
@@ -187,7 +186,7 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
             context = func_get_class_lecture_count(context, class_id, request.user.id)
 
         context = func_get_holiday_schedule(context, start_date, end_date)
-        get_setting_info(request)
+        # get_setting_info(request)
         return render(request, self.template_name, context)
 
 
