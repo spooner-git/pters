@@ -696,7 +696,7 @@ $(document).ready(function(){
         $(this).fadeOut(100);
     });
 
-    if(reserveOption=="disable"){
+    if(reserveOption=="1"){
         $(document).off('click', 'td');
         $('#float_btn').hide();
     }
