@@ -175,6 +175,10 @@ class CalMonthView(LoginRequiredMixin, AccessTestMixin, View):
         date = request.GET.get('date', '')
         day = request.GET.get('day', '')
         today = datetime.date.today()
+        try:
+            class_info = ClassTb.objects.get(class_id=class_id)
+        except ObjectDoesNotExist:
+            error = '수강 정보를 불러오지 못했습니다.'
         if date != '':
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
