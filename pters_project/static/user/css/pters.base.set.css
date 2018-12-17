@@ -45,6 +45,13 @@ button:focus{
     }
 }
 
+.pters_table{
+    display: table;
+}
+.pters_table_cell{
+    display: table-cell;
+}
+
 .bodyfixed{
     position: fixed !important;
 }
