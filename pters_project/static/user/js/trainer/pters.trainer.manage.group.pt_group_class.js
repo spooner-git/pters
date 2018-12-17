@@ -2179,13 +2179,31 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
             {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
                 'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
     };
+
+    var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray;
+
+    var repeat_day =  function(){
+            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
+            var repeat_day_info = "";
+            if(repeat_day_info_raw.length>1){
+                for(var j=0; j<repeat_day_info_raw.length; j++){
+                    repeat_day_info = repeat_day_info + '/' + repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[j]].substr(0,1);
+                }
+            }else if(repeat_day_info_raw.length == 1){
+                repeat_day_info = repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[0]];
+            }
+            if(repeat_day_info.substr(0, 1) == '/'){
+                repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
+            }
+            return repeat_day_info;
+        };
     
     var repeat_array = [];
     var len = jsondata.repeatScheduleIdArray.length;
     for(var i=0; i<len; i++){
         repeat_array.push(
                          `<div class="mobile_repeat_info_wrap">
-                           <p>${jsondata.repeatScheduleTypeArray[i]} ${jsondata.repeatScheduleWeekInfoArray[i]} ${jsondata.repeatScheduleStartTimeArray}~${jsondata.repeatScheduleEndTimeArray}</p>
+                           <p>${repeat_info_dict[setting_info.lt_lan_01][jsondata.repeatScheduleTypeArray[i]]} ${repeat_day()} ${jsondata.repeatScheduleStartTimeArray}~${jsondata.repeatScheduleEndTimeArray}</p>
                            <p>${jsondata.repeatScheduleStartDateArray[i]}~${jsondata.repeatScheduleEndDateArray}</p>
                          </div>`
                          );
