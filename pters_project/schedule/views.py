@@ -63,6 +63,7 @@ def add_schedule_logic(request):
     note = request.POST.get('add_memo', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
+    duplication_enable_flag = request.POTST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
@@ -167,7 +168,7 @@ def add_schedule_logic(request):
                 if error is None:
                     error = func_date_check(class_id, schedule_result['schedule_id'],
                                             schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                            SCHEDULE_DUPLICATION_ENABLE)
+                                            duplication_enable_flag)
 
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
@@ -637,6 +638,8 @@ def add_repeat_schedule_logic(request):
     en_dis_type = request.POST.get('en_dis_type', ON_SCHEDULE_TYPE)
     class_id = request.session.get('class_id', '')
     # next_page = request.POST.get('next_page')
+
+    duplication_enable_flag = request.POTST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
@@ -803,7 +806,7 @@ def add_repeat_schedule_logic(request):
                                 error_date = func_date_check(class_id, schedule_result['schedule_id'],
                                                              str(repeat_schedule_date_info).split(' ')[0],
                                                              schedule_start_datetime, schedule_end_datetime,
-                                                             SCHEDULE_DUPLICATION_ENABLE)
+                                                             duplication_enable_flag)
 
                         if error_date is not None:
                             raise ValidationError(str(error_date))
@@ -1191,6 +1194,7 @@ def add_group_schedule_logic(request):
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
                                                           TO_TRAINEE_LESSON_ALARM_OFF)
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     group_member_ids = request.POST.get('group_member_ids', '')
 
     if group_member_ids is not None and group_member_ids != '':
@@ -1287,7 +1291,7 @@ def add_group_schedule_logic(request):
                     group_schedule_id = schedule_result['schedule_id']
                     error = func_date_check(class_id, schedule_result['schedule_id'],
                                             schedule_date, schedule_start_datetime, schedule_end_datetime,
-                                            SCHEDULE_DUPLICATION_ENABLE)
+                                            duplication_enable_flag)
 
                     if error is not None:
                         error += ' 일정이 중복되었습니다.'
@@ -2138,6 +2142,8 @@ def add_group_repeat_schedule_logic(request):
     repeat_schedule_time_duration = request.POST.get('repeat_dur', '')
     class_id = request.session.get('class_id', '')
     next_page = request.POST.get('next_page')
+
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     group_member_ids = request.POST.get('group_member_ids', '')
     if group_member_ids is not None and group_member_ids != '':
@@ -2319,7 +2325,7 @@ def add_group_repeat_schedule_logic(request):
                             error_date = func_date_check(class_id, schedule_result['schedule_id'],
                                                          str(repeat_schedule_date_info).split(' ')[0],
                                                          schedule_start_datetime, schedule_end_datetime,
-                                                         SCHEDULE_DUPLICATION_ENABLE)
+                                                         duplication_enable_flag)
 
                         if error_date is not None:
                             raise ValidationError(str(error_date))
