@@ -1268,23 +1268,27 @@
             $('.classTime, .offTime, .groupTime').remove();
             $('._on').removeClass('_on');
             initialJSON = jsondata;
+            var duplicate_check;
             if(bodywidth > 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                     exist_check_dic = {};
-                    scheduleTime_Mobile('class', jsondata, calendarSize);
-                    scheduleTime_Mobile('off', jsondata, calendarSize);
-                    scheduleTime_Mobile('group', jsondata, calendarSize);
+                    duplicate_check = know_duplicated_plans(jsondata).result;
+                    scheduleTime_Mobile('class', jsondata, calendarSize, duplicate_check);
+                    scheduleTime_Mobile('off', jsondata, calendarSize, duplicate_check);
+                    scheduleTime_Mobile('group', jsondata, calendarSize, duplicate_check);
                 }else{
-                    scheduleTime('class', jsondata, calendarSize);
-                    scheduleTime('off', jsondata, calendarSize);
-                    scheduleTime('group', jsondata, calendarSize);
+                    duplicate_check = know_duplicated_plans(jsondata).result;
+                    scheduleTime('class', jsondata, calendarSize, duplicate_check);
+                    scheduleTime('off', jsondata, calendarSize, duplicate_check);
+                    scheduleTime('group', jsondata, calendarSize, duplicate_check);
                     fake_show();
                 }
             }else if(bodywidth <= 600){
                 exist_check_dic = {};
-                scheduleTime_Mobile('class', jsondata, calendarSize);
-                scheduleTime_Mobile('off', jsondata, calendarSize);
-                scheduleTime_Mobile('group', jsondata, calendarSize);
+                duplicate_check = know_duplicated_plans(jsondata).result;
+                scheduleTime_Mobile('class', jsondata, calendarSize, duplicate_check);
+                scheduleTime_Mobile('off', jsondata, calendarSize, duplicate_check);
+                scheduleTime_Mobile('group', jsondata, calendarSize, duplicate_check);
             }
         }else if(calendar == "month"){
             initialJSON = jsondata;
