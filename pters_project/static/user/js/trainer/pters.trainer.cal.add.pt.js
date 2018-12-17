@@ -3472,15 +3472,18 @@ function send_add_groupmember_plan(use, callback){
                 if(use == 'callback'){
                     callback(jsondata);
                 }else{
+                    var duplicate_check;
                     if(bodywidth>600){
-                        scheduleTime('class', jsondata, calendarSize);
-                        scheduleTime('off', jsondata, calendarSize);
-                        scheduleTime('group', jsondata, calendarSize);
+                        duplicate_check = know_duplicated_plans(jsondata).result;
+                        scheduleTime('class', jsondata, calendarSize, duplicate_check);
+                        scheduleTime('off', jsondata, calendarSize, duplicate_check);
+                        scheduleTime('group', jsondata, calendarSize, duplicate_check);
                     }else{
                         exist_check_dic = {}
-                        scheduleTime_Mobile('class', jsondata, calendarSize);
-                        scheduleTime_Mobile('off', jsondata, calendarSize);
-                        scheduleTime_Mobile('group', jsondata, calendarSize);
+                        duplicate_check = know_duplicated_plans(jsondata).result;
+                        scheduleTime_Mobile('class', jsondata, calendarSize, duplicate_check);
+                        scheduleTime_Mobile('off', jsondata, calendarSize, duplicate_check);
+                        scheduleTime_Mobile('group', jsondata, calendarSize, duplicate_check);
                     }
                     get_group_plan_participants(sendData[2]["value"], 'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"]);});
                     alert('일정 참석자 정상 등록되었습니다.');
@@ -3531,15 +3534,18 @@ function send_add_othergroupmember_plan(dbid, leid, schedule_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata);
                 }else{
+                    var duplicate_check;
                     if(bodywidth>600){
-                        scheduleTime('class', jsondata, calendarSize);
-                        scheduleTime('off', jsondata, calendarSize);
-                        scheduleTime('group', jsondata, calendarSize);
+                        duplicate_check = know_duplicated_plans(jsondata).result;
+                        scheduleTime('class', jsondata, calendarSize, duplicate_check);
+                        scheduleTime('off', jsondata, calendarSize, duplicate_check);
+                        scheduleTime('group', jsondata, calendarSize, duplicate_check);
                     }else{
                         exist_check_dic = {};
-                        scheduleTime_Mobile('class', jsondata, calendarSize);
-                        scheduleTime_Mobile('off', jsondata, calendarSize);
-                        scheduleTime_Mobile('group', jsondata, calendarSize);
+                        duplicate_check = know_duplicated_plans(jsondata).result;
+                        scheduleTime_Mobile('class', jsondata, calendarSize, duplicate_check);
+                        scheduleTime_Mobile('off', jsondata, calendarSize, duplicate_check);
+                        scheduleTime_Mobile('group', jsondata, calendarSize, duplicate_check);
                     }
                     get_group_plan_participants(sendData[2]["value"], 'callback', function(d){draw_groupParticipantsList_to_popup(d, sendData[5]["value"], sendData[2]["value"], sendData[6]["value"]);});
                     alert('일정 참석자 정상 등록되었습니다.');

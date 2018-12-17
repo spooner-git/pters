@@ -1627,9 +1627,9 @@ function fake_show(){
      }*/
 }
 
-function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
-    var duplicate_check = know_duplicated_plans(jsondata).result;
+    // var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ  
 
     $('.blankSelected_addview').removeClass('blankSelected blankSelected30');
@@ -2062,9 +2062,9 @@ function scheduleTime(option, jsondata, size){ // 그룹 수업정보를 DB로 �
 }
 
 var exist_check_dic = {};
-function scheduleTime_Mobile(option, jsondata, size){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
-    var duplicate_check = know_duplicated_plans(jsondata).result;
+    //var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ  
 
 
@@ -2639,12 +2639,12 @@ function know_duplicated_plans(jsondata){
                                                                             comp.split(' ~ ')[1].split(' ')[1]
                                                                         );
                 if(duplication_type > 0){ //겹칠때
-                    // var moved_element_check = 0;
-                    // if(temp_index[r] != r){
-                    //     moved_element_check--;
-                    // }
-                    // temp_index[t] = r + 1 + moved_element_check;
-                    temp_index[t] = r + 1;
+                    var moved_element_check = 0;
+                    if(temp_index[r] != r){
+                        moved_element_check--;
+                    }
+                    temp_index[t] = r + 1 + moved_element_check;
+                    // temp_index[t] = r + 1;
                     //이 인덱스의 값과 겹치는지 확인
 
                 }else{ //겹치지 않을때
@@ -2693,9 +2693,6 @@ function know_duplicated_plans(jsondata){
         for(var v=0; v<duplicate_dic[plan_].length; v++){
             result[array_sorted[v]].push([temp_index[v], temp_celldivide]);
         }
-
-
-
     }
 
     // console.log("duplicate_dic",duplicate_dic);
