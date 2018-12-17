@@ -879,4 +879,5 @@ div._fixedmember{
 	-webkit-appearance:none;
 	-webkit-text-fill-color:#282828;
 	text-align: right;
+	width: 90%;
 }

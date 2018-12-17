@@ -2048,7 +2048,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
     if(bodywidth < 600){
         htmlToJoin.push(`
                             <div id="mobile_comment_1">
-                                <span>참여중 회원</span><span>${len}</span><div>+</div>
+                                <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>
                             <div id="mobile_comment_2">
                                 <p>회원을 고정하면 일정 등록시 함께 추가합니다.</p>
