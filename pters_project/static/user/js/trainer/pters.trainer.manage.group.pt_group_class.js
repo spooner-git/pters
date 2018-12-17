@@ -592,7 +592,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth <= 1000){
-        $('#uptext3').text('수업 정보');
+        $('#uptext3').text(group_name);
         $('#page_managemember').css({'height':'0'});
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
