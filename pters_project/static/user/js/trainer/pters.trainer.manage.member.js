@@ -195,19 +195,23 @@ $(document).ready(function(){
         shade_index(100);
         if(bodywidth < 600){
             get_indiv_member_info(dbID);
-            get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
-            get_member_history_list(dbID);
+            // get_indiv_repeat_info(dbID);
+            // get_member_history_list(dbID);
             $('#uptext3').text('회원 정보');
             if($('#popup_lecture_info_mobile').length > 0 ){
                 closePopup_mobile('upbutton-x-modify');
             }
+            $('#mobile_basic_info, #mobile_lecture_info').show();
+            $('#mobile_repeat_info, #mobile_history_info').hide();
+            $('#select_info_shift_lecture_mobile').addClass('button_active');
+            $('#select_info_shift_schedule_mobile, #select_info_shift_history_mobile').removeClass('button_active');
         }else if(bodywidth >= 600){
             $('body').css('overflow-y', 'hidden');
             get_indiv_member_info(dbID);
-            get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);
-            get_member_history_list(dbID);
+            // get_indiv_repeat_info(dbID);
+            // get_member_history_list(dbID);
             $('#info_shift_base, #info_shift_lecture').show();
             $('#info_shift_schedule, #info_shift_history').hide();
             $('#select_info_shift_lecture').addClass('button_active');
@@ -452,6 +456,13 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_lecture').click(function(){
+        var dbID;
+        if(bodywidth > 600){
+            dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        }else if(bodywidth <=600){
+            dbID = $('#memberInfoPopup').attr('data-dbid');
+        }
+        get_member_lecture_list(dbID);
         $('#info_shift_lecture').show();
         $('#info_shift_schedule').hide();
         $('#info_shift_history').hide();
@@ -462,6 +473,13 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_schedule').click(function(){
+        var dbID;
+        if(bodywidth > 600){
+            dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        }else if(bodywidth <=600){
+            dbID = $('#memberInfoPopup').attr('data-dbid');
+        }
+        get_indiv_repeat_info(dbID);
         $('#info_shift_lecture').hide();
         $('#info_shift_schedule').show();
         $('#info_shift_history').hide();
@@ -472,6 +490,13 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_history').click(function(){
+        var dbID;
+        if(bodywidth > 600){
+            dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        }else if(bodywidth <=600){
+            dbID = $('#memberInfoPopup').attr('data-dbid');
+        }
+        get_member_history_list(dbID);
         $('#info_shift_lecture').hide();
         $('#info_shift_schedule').hide();
         $('#info_shift_history').show();
@@ -482,6 +507,13 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_lecture_mobile').click(function(){
+        var dbID;
+        if(bodywidth > 600){
+            dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        }else if(bodywidth <=600){
+            dbID = $('#memberInfoPopup').attr('data-dbid');
+        }
+        get_member_lecture_list(dbID);
         $('#mobile_lecture_info').show();
         $('#mobile_repeat_info').hide();
         $('#mobile_history_info').hide();
@@ -492,6 +524,13 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_schedule_mobile').click(function(){
+        var dbID;
+        if(bodywidth > 600){
+            dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        }else if(bodywidth <=600){
+            dbID = $('#memberInfoPopup').attr('data-dbid');
+        }
+        get_member_history_list(dbID);
         $('#mobile_lecture_info').hide();
         $('#mobile_repeat_info').show();
         $('#mobile_history_info').hide();
@@ -502,6 +541,13 @@ $(document).ready(function(){
     });
 
     $('#select_info_shift_history_mobile').click(function(){
+        var dbID;
+        if(bodywidth > 600){
+            dbID = $('#memberInfoPopup_PC').attr('data-dbid');
+        }else if(bodywidth <=600){
+            dbID = $('#memberInfoPopup').attr('data-dbid');
+        }
+        get_member_history_list(dbID);
         $('#mobile_lecture_info').hide();
         $('#mobile_repeat_info').hide();
         $('#mobile_history_info').show();
@@ -3692,7 +3738,7 @@ function open_member_info_popup_mobile(dbID, jsondata){
     $('#page-base-modifystyle').css('display','block');
     $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberinfo');
     var selector_memberInfoPopup = $('#memberInfoPopup');
-    selector_memberInfoPopup.attr({'data-username': userName, 'data-userid' : userID});
+    selector_memberInfoPopup.attr({'data-username': userName, 'data-userid' : userID, 'data-dbid': dbID});
     selector_memberInfoPopup.addClass('display_block');
     shade_index(100);
     var selector_memberName_info = $('#memberName_info');
