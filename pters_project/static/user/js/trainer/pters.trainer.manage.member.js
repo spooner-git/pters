@@ -3563,7 +3563,7 @@ function get_indiv_member_info(dbID){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
-    })
+    });
 }
 
 //회원클릭시 회원정보 팝업을 띄우고 내용을 채운다. PC
