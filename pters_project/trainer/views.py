@@ -1023,20 +1023,20 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         user = ''
         error = None
         group = None
-        lecture_list = None
+        lecture_count = 0
 
         if int(id_flag) == 1:
             if user_id == '':
                 error = '회원 ID를 확인해 주세요.'
-            if error is None:
-                try:
-                    user = User.objects.get(username=user_id)
-                except ObjectDoesNotExist:
-                    error = '회원 ID를 확인해 주세요.'
+            # if error is None:
+            #     try:
+            #         user = User.objects.get(username=user_id)
+            #     except ObjectDoesNotExist:
+            #         error = '회원 ID를 확인해 주세요.'
 
             if error is None:
                 try:
-                    group = user.groups.get(user=user.id)
+                    group = user.groups.get(user=member_id)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
 
@@ -1046,29 +1046,38 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         else:
             if member_id == '':
                 error = '회원 ID를 확인해 주세요.'
-            if error is None:
-                try:
-                    user = User.objects.get(id=member_id)
-                except ObjectDoesNotExist:
-                    error = '회원 ID를 확인해 주세요.'
+            # if error is None:
+            #     try:
+            #         user = User.objects.get(id=member_id)
+            #     except ObjectDoesNotExist:
+            #         error = '회원 ID를 확인해 주세요.'
 
         if error is None:
             try:
-                member = MemberTb.objects.get(user_id=user.id)
+                member = MemberTb.objects.get(user_id=member_id)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
         if error is None:
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                                         lecture_tb__use=USE, auth_cd='VIEW', use=USE)
-        lecture_count = 0
+            query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                                "' and B.USE=1"
 
-        if error is None:
-            if lecture_list is not None:
-                for lecture_info_data in lecture_list:
-                    member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
-                                                                         lecture_tb=lecture_info_data.lecture_tb_id,
-                                                                         auth_cd='VIEW', lecture_tb__use=USE)
-                    lecture_count += len(member_lecture_list)
+            lecture_count = ClassLectureTb.objects.select_related(
+                'lecture_tb__member').filter(class_tb_id=class_id,
+                                             lecture_tb__member_id=member_id,
+                                             lecture_tb__use=USE, auth_cd='VIEW',
+                                             use=USE).annotate(member_auth=RawSQL(query_member_auth,
+                                                                                  [])).filter(member_auth='VIEW'
+                                                                                              ).count()
+
+        # if error is None:
+        #     if lecture_list is not None:
+        #         for lecture_info_data in lecture_list:
+        #             member_lecture_count = MemberLectureTb.objects.select_related(
+        #                 'lecture_tb', 'member').filter(member_id=member_id,
+        #                                                lecture_tb=lecture_info_data.lecture_tb_id,
+        #                                                auth_cd='VIEW', lecture_tb__use=USE).count()
+        #             lecture_count += member_lecture_count
 
         if error is None:
             if member.reg_info is None or str(member.reg_info) != str(self.request.user.id):

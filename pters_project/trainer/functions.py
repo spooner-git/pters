@@ -62,7 +62,7 @@ def func_get_class_member_ing_list(class_id):
         #     all_member.append(class_lecture_info.lecture_tb.member)
         # else:
         #     if member_id != class_lecture_info.lecture_tb.member_id:
-        #         member_id = class_lecture_info.lecture_tb.member_id
+        #         member_id = class_lecture_info.lecture_tb.member_idnginx
         #         all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
@@ -1279,11 +1279,15 @@ def func_get_lecture_list(context, class_id, member_id):
                                "`CLASS_LECTURE_TB`.`CLASS_TB_ID` and B.LECTURE_TB_ID =" \
                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.STATE_CD=\'PE\' and " \
                                "B.USE=1"
+        query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                            "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                            "' and B.USE=1"
 
         lecture_data = ClassLectureTb.objects.select_related(
             'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
                                              lecture_tb__use=USE,
-                                             use=USE).annotate(lecture_finish_count=RawSQL(query_schedule_count, [])
+                                             use=USE).annotate(lecture_finish_count=RawSQL(query_schedule_count, []),
+                                                               member_auth=RawSQL(query_member_auth, []),
                                                                ).order_by('-lecture_tb__start_date',
                                                                           '-lecture_tb__reg_dt')
         # lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
@@ -1318,41 +1322,44 @@ def func_get_lecture_list(context, class_id, member_id):
                 lecture_info.check_one_to_one = 0
 
             if lecture_info.package_tb.package_type_cd == 'NORMAL':
-                group_check = 1
+                # group_check = 1
+                lecture_info.group_name = '[그룹] ' + lecture_info.package_tb.name
             elif lecture_info.package_tb.package_type_cd == 'EMPTY':
-                group_check = 2
+                lecture_info.group_name = '[클래스] ' + lecture_info.package_tb.name
+                # group_check = 2
             elif lecture_info.package_tb.package_type_cd == 'PACKAGE':
-                group_check = 3
+                lecture_info.group_name = '[패키지] ' + lecture_info.package_tb.name
+                # group_check = 3
             else:
-                group_check = 0
+                # group_check = 0
+                lecture_info.group_name = '[1:1] ' + lecture_info.package_tb.name
             # group_info = lecture_info_data.get_group_lecture_info()
 
-            # if group_check != 0:
-            if group_check == 1:
-                lecture_info.group_name = '[그룹] ' + lecture_info.package_tb.name
-            elif group_check == 2:
-                lecture_info.group_name = '[클래스] ' + lecture_info.package_tb.name
-            elif group_check == 3:
-                lecture_info.group_name = '[패키지] ' + lecture_info.package_tb.name
-            else:
-                lecture_info.group_name = '[1:1] ' + lecture_info.package_tb.name
             lecture_info.group_type_cd = lecture_info.package_tb.package_type_cd
             # lecture_info.group_member_num = group_info.group_tb.member_num
             lecture_info.group_note = lecture_info.package_tb.note
             lecture_info.group_state_cd = lecture_info.package_tb.state_cd
-            try:
-                state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.state_cd)
-                lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
-            except ObjectDoesNotExist:
-                error = '오류가 발생했습니다.'
+            # try:
+            #     state_cd_nm = CommonCdTb.objects.get(common_cd=lecture_info.package_tb.state_cd)
+            #     lecture_info.group_state_cd_nm = state_cd_nm.common_cd_nm
+            # except ObjectDoesNotExist:
+            #     error = '오류가 발생했습니다.'
+
+            # try:
+            #     lecture_test = MemberLectureTb.objects.select_related(
+            #         'lecture_tb').get(lecture_tb__lecture_id=lecture_info.lecture_id)
+            # except ObjectDoesNotExist:
+            #     error = '수강정보를 불러오지 못했습니다.'
+
+            # lecture_info.auth_cd = lecture_test.auth_cd
+            # lecture_info.auth_cd_name = lecture_test.get_auth_cd_name()
 
             try:
-                lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
+                auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.member_auth).common_cd_nm
             except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
-
-            lecture_info.auth_cd = lecture_test.auth_cd
-            lecture_info.auth_cd_name = lecture_test.get_auth_cd_name()
+                auth_cd_name = ''
+            lecture_info.auth_cd = lecture_info_data.member_auth
+            lecture_info.auth_cd_name = auth_cd_name
 
             if lecture_info.auth_cd == 'WAIT':
                 np_lecture_counts += 1

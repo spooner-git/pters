@@ -1,0 +1,17 @@
+
+PYTHONPATH="$PYTHONPATH:/Users/Hyunki/.pyenv/versions/3.4.3/lib/python3.4/site-packages"
+PTERS_DJANGO_SECRET='hyv8%v_2nooy8m*rc(g(_+gxizp=m$@t$fuk0d-%#bddi6!z%n'
+PTERS_EMAIL_HOST_USER='support@pters.co.kr'
+PTERS_EMAIL_HOST_PASSWORD='bebep123'
+PTERS_EMAIL_DEFAULT='support@pters.co.kr'
+PTERS_EMAIL_HOST='smtp.daum.net'
+PTERS_EMAIL_PORT='465'
+PTERS_DB_USER='bebep'
+PTERS_DB_PASSWORD='bebep123'
+PTERS_DB_HOST='pters-db.cbyipuqwoq7d.ap-northeast-2.rds.amazonaws.com'
+PTERS_TEST_DB_HOST='pters-db.caljsxwv3fuv.ap-northeast-2.rds.amazonaws.com'
+PTERS_AWS_ACCESS_KEY_ID='AKIAJ6O7JRIFBS7SSWWQ'
+PTERS_AWS_SECRET_ACCESS_KEY='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'
+PTERS_AWS_S3_BUCKET_NAME='pters-image'
+PTERS_PUSH_SERVER_KEY='AAAArxDtRrA:APA91bGzuA13wGlR1gUrcspBBjzSZcGPV2_H614hMEFvr0TMirUPl-ioohAe-uyNfOhUA2p7Caeqv7gPFZMFkpC-eokVen1sIEPG2f5qqB8kBY8FzIEaGPB0OPqezEnv5t3PFO-Y3TeN'
+PAYMENT_ID='imp53133818'
