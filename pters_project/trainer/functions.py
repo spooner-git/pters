@@ -62,7 +62,7 @@ def func_get_class_member_ing_list(class_id):
         #     all_member.append(class_lecture_info.lecture_tb.member)
         # else:
         #     if member_id != class_lecture_info.lecture_tb.member_id:
-        #         member_id = class_lecture_info.lecture_tb.member_id
+        #         member_id = class_lecture_info.lecture_tb.member_idnginx
         #         all_member.append(class_lecture_info.lecture_tb.member)
 
     return all_member
@@ -1347,7 +1347,8 @@ def func_get_lecture_list(context, class_id, member_id):
                 error = '오류가 발생했습니다.'
 
             try:
-                lecture_test = MemberLectureTb.objects.get(lecture_tb__lecture_id=lecture_info.lecture_id)
+                lecture_test = MemberLectureTb.objects.select_related(
+                    'lecture_tb').get(lecture_tb__lecture_id=lecture_info.lecture_id)
             except ObjectDoesNotExist:
                 error = '수강정보를 불러오지 못했습니다.'
 

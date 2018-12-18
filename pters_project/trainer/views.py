@@ -1058,16 +1058,18 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
         if error is None:
-            lecture_list = ClassLectureTb.objects.filter(class_tb_id=class_id, lecture_tb__member_id=user.id,
-                                                         lecture_tb__use=USE, auth_cd='VIEW', use=USE)
+            lecture_list = ClassLectureTb.objects.select_related('lecture_tb__member'
+                                                                 ).filter(class_tb_id=class_id,
+                                                                          lecture_tb__member_id=user.id,
+                                                                          lecture_tb__use=USE, auth_cd='VIEW', use=USE)
         lecture_count = 0
 
         if error is None:
             if lecture_list is not None:
                 for lecture_info_data in lecture_list:
-                    member_lecture_list = MemberLectureTb.objects.filter(member_id=user.id,
-                                                                         lecture_tb=lecture_info_data.lecture_tb_id,
-                                                                         auth_cd='VIEW', lecture_tb__use=USE)
+                    member_lecture_list = MemberLectureTb.objects.select_related(
+                        'lecture_tb', 'member').filter(member_id=user.id, lecture_tb=lecture_info_data.lecture_tb_id,
+                                                       auth_cd='VIEW', lecture_tb__use=USE)
                     lecture_count += len(member_lecture_list)
 
         if error is None:
