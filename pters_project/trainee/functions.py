@@ -441,11 +441,11 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                 lecture_info_data.group_name = lecture_info.lecture_tb.package_tb.name
                 lecture_info_data.group_type_cd = lecture_info.lecture_tb.package_tb.package_type_cd
                 # lecture_info_data.group_type_cd_name = group_info.group_tb.get_group_type_cd_name()
-                try:
-                    lecture_info_data.group_type_cd_name = \
-                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd).common_cd_nm
-                except ObjectDoesNotExist:
-                    lecture_info_data.group_type_cd_name = ''
+                # try:
+                #     lecture_info_data.group_type_cd_name = \
+                #         CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.package_type_cd).common_cd_nm
+                # except ObjectDoesNotExist:
+                #     lecture_info_data.group_type_cd_name = ''
                 if lecture_info.lecture_tb.package_tb.package_group_num == 1:
                     try:
                         package_group_info = PackageGroupTb.objects.get(
@@ -460,11 +460,11 @@ def func_get_lecture_list(context, class_id, member_id, auth_cd):
                     lecture_info_data.group_member_num = 'x'
                 lecture_info_data.group_note = lecture_info.lecture_tb.package_tb.note
                 lecture_info_data.group_state_cd = lecture_info.lecture_tb.package_tb.state_cd
-                try:
-                    lecture_info_data.group_state_cd_name = \
-                        CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.state_cd).common_cd_nm
-                except ObjectDoesNotExist:
-                    lecture_info_data.group_state_cd_name = ''
+                # try:
+                #     lecture_info_data.group_state_cd_name = \
+                #         CommonCdTb.objects.get(common_cd=lecture_info.lecture_tb.package_tb.state_cd).common_cd_nm
+                # except ObjectDoesNotExist:
+                #     lecture_info_data.group_state_cd_name = ''
 
                 output_lecture_list.append(lecture_info_data)
 
