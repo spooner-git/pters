@@ -1279,11 +1279,15 @@ def func_get_lecture_list(context, class_id, member_id):
                                "`CLASS_LECTURE_TB`.`CLASS_TB_ID` and B.LECTURE_TB_ID =" \
                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.STATE_CD=\'PE\' and " \
                                "B.USE=1"
+        query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
+                            "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                            "' and B.USE=1"
 
         lecture_data = ClassLectureTb.objects.select_related(
             'lecture_tb__package_tb').filter(class_tb_id=class_id, auth_cd='VIEW', lecture_tb__member_id=member_id,
                                              lecture_tb__use=USE,
-                                             use=USE).annotate(lecture_finish_count=RawSQL(query_schedule_count, [])
+                                             use=USE).annotate(lecture_finish_count=RawSQL(query_schedule_count, []),
+                                                               member_auth=RawSQL(query_member_auth, []),
                                                                ).order_by('-lecture_tb__start_date',
                                                                           '-lecture_tb__reg_dt')
         # lecture_data = ClassLectureTb.objects.select_related('lecture_tb').filter(class_tb_id=class_id,
@@ -1341,14 +1345,21 @@ def func_get_lecture_list(context, class_id, member_id):
             # except ObjectDoesNotExist:
             #     error = '오류가 발생했습니다.'
 
-            try:
-                lecture_test = MemberLectureTb.objects.select_related(
-                    'lecture_tb').get(lecture_tb__lecture_id=lecture_info.lecture_id)
-            except ObjectDoesNotExist:
-                error = '수강정보를 불러오지 못했습니다.'
+            # try:
+            #     lecture_test = MemberLectureTb.objects.select_related(
+            #         'lecture_tb').get(lecture_tb__lecture_id=lecture_info.lecture_id)
+            # except ObjectDoesNotExist:
+            #     error = '수강정보를 불러오지 못했습니다.'
 
-            lecture_info.auth_cd = lecture_test.auth_cd
-            lecture_info.auth_cd_name = lecture_test.get_auth_cd_name()
+            # lecture_info.auth_cd = lecture_test.auth_cd
+            # lecture_info.auth_cd_name = lecture_test.get_auth_cd_name()
+
+            try:
+                auth_cd_name = CommonCdTb.objects.get(common_cd=lecture_info_data.member_auth).common_cd_nm
+            except ObjectDoesNotExist:
+                auth_cd_name = ''
+            lecture_info.auth_cd = lecture_info_data.member_auth
+            lecture_info.auth_cd_name = auth_cd_name
 
             if lecture_info.auth_cd == 'WAIT':
                 np_lecture_counts += 1
