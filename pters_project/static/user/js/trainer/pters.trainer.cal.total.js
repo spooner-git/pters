@@ -485,7 +485,7 @@ function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한
 
         currentDay = 0;
         //var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
-        var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi,''));
+        var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi, ''));
         var dataforappend = $('#slide'+(currentSlideNum)).find('.td00').attr('id').split('_');
 
         // var monthforappend = Number(dataforappend[1])-1;
@@ -2683,7 +2683,7 @@ function know_duplicated_plans(jsondata){
         }
 
         temp_celldivide = Math.max.apply(null, temp_index) +1;
-        
+
         for(var z=0; z<duplicate_dic[plan_].length; z++){
             //var array_sorted_ = duplicate_dic[plan_].sort();
             //result[array_sorted_[z]] = [temp_index[z], temp_celldivide,  array_element_count(array_sorted_, array_sorted_[z])];
@@ -2703,7 +2703,6 @@ function know_duplicated_plans(jsondata){
 //중복일정 계산하기
 
 
-
 //월간 일정 ㅇㄷ
 //월간 일정 ㅇㄷ
 var clicked_td_date_info;
@@ -2717,9 +2716,9 @@ $('.popup_inner_month').scroll(function(e){
     var scrollLocation = $(this).scrollTop();
 
     if(popupHeight + scrollLocation == scrollHeight){
-        $(this).animate({scrollTop : scrollLocation-1},10)
+        $(this).animate({scrollTop : scrollLocation-1}, 10);
     }else if(popupHeight + scrollLocation == popupHeight){
-        $(this).animate({scrollTop : scrollLocation+1},10)
+        $(this).animate({scrollTop : scrollLocation+1}, 10);
     }
 
     // 좌측 스크롤 애로우 보이기
@@ -2743,7 +2742,7 @@ $(document).on('click', 'img.scroll_arrow_top', function(e){
     var $thisul_scroll_height = $thisul.prop('scrollHeight');
     var $thisul_display_height = $thisul.height();
     if($(this).css('visibility') == 'visible'){
-        $thisul.animate({scrollTop: 0},200)
+        $thisul.animate({scrollTop: 0}, 200);
     }
 });
 //드랍다운리스트에서 위 화살표를 누르면 리스트의 맨위로 이동한다.
@@ -2754,7 +2753,7 @@ $(document).on('click', 'img.scroll_arrow_bottom', function(e){
     var $thisul_scroll_height = $thisul.prop('scrollHeight');
     var $thisul_display_height = $thisul.height();
     if($(this).css('visibility') == 'visible'){
-        $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height},200)
+        $thisul.animate({scrollTop: $thisul_scroll_height + $thisul_display_height}, 200);
     }
 });
 //드랍다운리스트에서 아래 화살표를 누르면 리스트의 맨아래로 이동한다.
@@ -2814,40 +2813,40 @@ function classInfoProcessed(jsondata){
 
     var datasum = [];
     for(var i=0; i<len; i++){ //개인일정 객체화로 중복 제거
-        summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0]
+        summaryArray[jsondata.classTimeArray_start_date[i].split(' ')[0]] = jsondata.classTimeArray_start_date[i].split(' ')[0];
         if(jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
-            datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0])
+            datasum.push(jsondata.classTimeArray_start_date[i].split(' ')[0]);
         }else{
 
         }
     }
     for(var i in summaryArray){ //개인일정 중복 제거된 배열
-        summaryArrayResult.push(i)
+        summaryArrayResult.push(i);
     }
 
 
     for(var i=0; i<len2; i++){ //그룹 객체화로 중복 제거
         summaryArray_group[jsondata.group_schedule_start_datetime[i].split(' ')[0]] = jsondata.group_schedule_start_datetime[i].split(' ')[0]
-        datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0])
+        datasum.push(jsondata.group_schedule_start_datetime[i].split(' ')[0]);
     }
     for(var i in summaryArray_group){ //그룹 중복 제거된 배열
-        summaryArrayResult.push(i)
+        summaryArrayResult.push(i);
     }
 
 
     var len2 = summaryArrayResult.length;
 
     for(var i=0; i<len2; i++){
-        var scan = summaryArrayResult[i]
-        countResult[i]=0
+        var scan = summaryArrayResult[i];
+        countResult[i]=0;
         for(var j=0; j<datasum.length; j++){
             if(scan == datasum[j]){
-                countResult[i] = countResult[i]+1
+                countResult[i] = countResult[i]+1;
             }
         }
     }
 
-    return {"countResult":countResult, "dateResult":summaryArrayResult}
+    return {"countResult":countResult, "dateResult":summaryArrayResult};
 }
 
 function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 //dateinfo = 2017_11_5
@@ -2891,31 +2890,31 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
     }
 
     for(var i=0; i<len1; i++){  //시간순 정렬을 위해 'class' 정보를 가공하여 dateplans에 넣는다.
-        var grouptype = "class"
-        var dbID = jsondata.classTimeArray_member_id[i]
-        var group_id = ''
-        var scheduleID = jsondata.scheduleIdArray[i]
-        var classLectureID = jsondata.classArray_lecture_id[i]
-        var scheduleFinish = jsondata.scheduleFinishArray[i]
-        var memoArray = jsondata.scheduleNoteArray[i]
-        var yy = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[0]
-        var mm = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[1]
-        var dd = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[2]
-        var stime1 = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[0]
-        var etime1 = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0]
-        var sminute = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[1]
-        var eminute = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[1]
+        var grouptype = "class";
+        var dbID = jsondata.classTimeArray_member_id[i];
+        var group_id = '';
+        var scheduleID = jsondata.scheduleIdArray[i];
+        var classLectureID = jsondata.classArray_lecture_id[i];
+        var scheduleFinish = jsondata.scheduleFinishArray[i];
+        var memoArray = jsondata.scheduleNoteArray[i];
+        var yy = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[0];
+        var mm = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[1];
+        var dd = jsondata.classTimeArray_start_date[i].split(' ')[0].split('-')[2];
+        var stime1 = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[0];
+        var etime1 = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[0];
+        var sminute = jsondata.classTimeArray_start_date[i].split(' ')[1].split(':')[1];
+        var eminute = jsondata.classTimeArray_end_date[i].split(' ')[1].split(':')[1];
         var group_type_cd_name = '';
         if(stime1.length<2){
-            var stime1 = '0'+stime1
+            var stime1 = '0'+stime1;
         }else if(stime1 == '24'){
-            var stime1 = '00'
+            var stime1 = '00';
         }
-        var stime = stime1+'_'+sminute
-        var etime = etime1+'_'+eminute
+        var stime = stime1+'_'+sminute;
+        var etime = etime1+'_'+eminute;
         // var name = '[1:1 레슨]'+jsondata.classTimeArray_member_name[i]
-        var name = ''+jsondata.classTimeArray_member_name[i]
-        var ymd = yy+'_'+Number(mm)+'_'+Number(dd)
+        var name = ''+jsondata.classTimeArray_member_name[i];
+        var ymd = yy+'_'+Number(mm)+'_'+Number(dd);
         if(ymd == dateinfo && jsondata.group_schedule_start_datetime.indexOf(jsondata.classTimeArray_start_date[i]) == -1){
             groupmax = 1;
             groupcurrent = 1;
@@ -2925,9 +2924,9 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
 
 
     dateplans.sort();
-    var htmltojoin = []
+    var htmltojoin = [];
     if(dateplans.length>0){
-        for(var i=1;i<=dateplans.length;i++){
+        for(var i=1; i<=dateplans.length; i++){
             var splited = dateplans[i-1].split('_');
             var stime = Number(splited[0]);
             var sminute = splited[1];
@@ -3022,11 +3021,11 @@ function calTable_Set_Month(Index, Year, Month){ //선택한 Index를 가지는 
 
     var htmltojoin = [];
     for(var i=1; i<=6; i++){
-        var child = '<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>'
-        htmltojoin.push('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">'+child+'</div>')
+        var child = '<table id="week'+i+Year+Month+'child" class="calendar-style"><tbody><tr></tr></tbody></table>';
+        htmltojoin.push('<div id="week'+i+'_'+Year+'_'+Month+'" class="container-fluid week-style">'+child+'</div>');
     };
 
-    $targetHTML.html(htmltojoin.join(''))
+    $targetHTML.html(htmltojoin.join(''));
 
     calendarSetting(Year, Month);
      if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
@@ -3036,7 +3035,7 @@ function calTable_Set_Month(Index, Year, Month){ //선택한 Index를 가지는 
 
 
 function calendarSetting(Year, Month){ //캘린더 테이블에 연월에 맞게 날짜 채우기
-    var currentPageFirstDayInfo = new Date(Year,Month-1,1); //현재달의 1일에 대한 연월일시간등 전체 정보
+    var currentPageFirstDayInfo = new Date(Year, Month-1, 1); //현재달의 1일에 대한 연월일시간등 전체 정보
     var firstDayCurrentPage = currentPageFirstDayInfo.getDay(); //현재달 1일의 요일
 
     if( (Year % 4 == 0 && Year % 100 != 0) || Year % 400 == 0 ){  //윤년
@@ -3048,11 +3047,11 @@ function calendarSetting(Year, Month){ //캘린더 테이블에 연월에 맞게
 
     //1. 현재달에 전달 마지막 부분 채우기
     if(Month>1){ //2~12월
-        for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2] ;j++){
+        for(var j=lastDay[Month-2]-firstDayCurrentPage+1; j<=lastDay[Month-2]; j++){
             $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+Year+'_'+(Month-1)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
         };
     }else if(Month==1){ //1월
-        for(var j=31-firstDayCurrentPage+1; j<=31 ;j++){
+        for(var j=31-firstDayCurrentPage+1; j<=31; j++){
             $('#week1'+Year+Month+'child tbody tr').append('<td class="prevDates" data-date='+(Year-1)+'_'+(Month+11)+'_'+j+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+j+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>');
         };
     }
@@ -3083,7 +3082,7 @@ function calendarSetting(Year, Month){ //캘린더 테이블에 연월에 맞게
     var howmanyWeek5 = $('#week5'+'_'+Year+'_'+Month+' td').length;
 
     if(howmanyWeek5<=7 && howmanyWeek6==0){
-        for (var i=1; i<=7-howmanyWeek5;i++){
+        for (var i=1; i<=7-howmanyWeek5; i++){
             if(Month<12){
                 $('#week5'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
             }else if(Month==12){
@@ -3092,7 +3091,7 @@ function calendarSetting(Year, Month){ //캘린더 테이블에 연월에 맞게
         };
         ad_month($('#week6'+Year+Month+'child tbody tr')) //2017.11.08추가 달력이 5주일때, 비어있는 6주차에 광고 입력
     }else if(howmanyWeek6<7 && howmanyWeek6>0){
-        for (var i=1; i<=7-howmanyWeek6;i++){
+        for (var i=1; i<=7-howmanyWeek6; i++){
             if(Month<12){
                 $('#week6'+Year+Month+'child tbody tr').append('<td class="nextDates" data-date='+Year+'_'+(Month+1)+'_'+i+'>'+'<span class="holidayName"></span>'+'<span class="dateNum">'+i+'</span>'+'<div class="_classDate">'+'</div>'+'<div class="_classTime"></div>'+'</td>')
             }else if(Month==12){
@@ -3117,8 +3116,8 @@ function krHoliday_month(){ //대한민국 공휴일 날짜를 빨간색으로 �
 function monthText(){
     var currentYMD = $('.swiper-slide:nth-child(2) div:nth-child(1)').attr('id');
     //currentYMD 형식  ex : week120177
-    var textYear = currentYMD.split('_')[1]
-    var textMonth = currentYMD.split('_')[2] //7
+    var textYear = currentYMD.split('_')[1];
+    var textMonth = currentYMD.split('_')[2]; //7
     $('#yearText, #ymdText-pc-year').text(textYear).attr({'data-year':textYear, 'data-month':textMonth});
     $('#monthText, #ymdText-pc-month').text(textMonth+'월');
     todayFinderArrow_month(textYear, textMonth);
@@ -3143,12 +3142,12 @@ function draw_time_graph(option, type){  //type = '' and mini
         }
     }else if(option == "60"){
         for(var i=Options.workStartTime; i<Options.workEndTime; i++){
-            tr1[i] = '<td>'+(i)+'</td>'
+            tr1[i] = '<td>'+(i)+'</td>';
             tr2[i] = '<td id="'+(i)+'g_00'+types+'" class="tdgraph_'+option+' tdgraph00"></td>';
         }
     }
     var tbody = '<tbody><tr>'+tr1.join('')+'</tr><tr>'+tr2.join('')+'</tbody>';
-    targetHTML.html(tbody)
+    targetHTML.html(tbody);
 }
 
 function todayFinderArrow_month(Year, Month){

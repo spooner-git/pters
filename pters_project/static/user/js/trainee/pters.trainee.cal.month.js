@@ -1883,6 +1883,7 @@ var oriMonth = date.getMonth()+1;
 var oriDate = date.getDate();
 
 
+
 var availableStartTime = Options.stoptimeStart; //강사가 설정한 예약시작 시간 (시작)
 var availableEndTime = Options.stoptimeEnd; //강사가 설정한 예약마감 시간 (종료)
 var reserveOption = Options.reserve;

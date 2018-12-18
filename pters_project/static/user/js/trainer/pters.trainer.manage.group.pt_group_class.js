@@ -548,6 +548,7 @@ $(document).on('click', 'div.groupWrap', function(e){
     var group_membernum = $(this).find('._groupparticipants').text();
     var group_membercapacity = $(this).find('._groupcapacity input').val();
     var group_memo = $(this).find('._groupmemo input').val();
+    var group_color = $(this).find('._groupname_mobile').css('border-color');
 
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
@@ -591,15 +592,16 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth <= 1000){
-        $('#uptext3').text('수업 정보');
+        $('#uptext3').text(group_name);
         $('#page_managemember').css({'height':'0'});
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
         $('#popup_lecture_info_mobile_memberlist').html('');
         $('#popup_lecture_info_mobile').css({'display':'block'});
-
-        set_lecture_info_for_mobile_popup(group_id, group_name, group_type, group_membernum, group_membercapacity, group_memo);
+        get_group_repeat_info(group_id, "callback", function(repeat_data){
+            set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_membernum, group_membercapacity, group_memo, repeat_data);
+        });
         if($(this).attr('data-groupstatecd')=='current'){
             get_groupmember_list(group_id);
         }
@@ -1721,7 +1723,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             main += '<div class="_groupstatus _group_list_pc_style" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+ manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
         
-        var main_mobile = `<div class="_groupname_mobile _group_list_mobile_style" style="border-top:6px solid ${groupplancolor}">
+        var main_mobile = `<div class="_groupname_mobile _group_list_mobile_style" style="border-top:6px solid; border-color: ${groupplancolor}">
                                 <span>${group_name}</span>
                            </div>
                            <div class="_groupinfo_mobile _group_list_mobile_style">
@@ -1800,7 +1802,12 @@ function get_groupmember_list(group_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata);
                 }else{
-                    groupMemberListSet(group_id, jsondata);
+                    if(bodywidth < 600){
+                        groupMemberListSet_mobile(group_id, jsondata);
+                    }else{
+                        groupMemberListSet(group_id, jsondata); 
+                    }
+                    
                     $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1);
                 }
 
@@ -1858,7 +1865,11 @@ function get_end_groupmember_list(group_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata)
                 }else{
-                    groupMemberListSet(group_id, jsondata)
+                    if(bodywidth < 600){
+                        groupMemberListSet_mobile(group_id, jsondata);
+                    }else{
+                        groupMemberListSet(group_id, jsondata); 
+                    }
                     $('div._groupmanage img._info_delete[data-groupid="'+group_id+'"]').css('opacity', 1)
                 }
 
@@ -2030,14 +2041,184 @@ function groupMemberListSet(group_id, jsondata){
 }
 //그룹원 목록을 그룹에 그리기
 
+//그룹원 목록을 그룹에 그리기 모바일
+function groupMemberListSet_mobile(group_id, jsondata){
+    var htmlToJoin = [];
+    var len = jsondata.db_id.length;
+    if(bodywidth < 600){
+        htmlToJoin.push(`
+                            <div id="mobile_comment_1">
+                                <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
+                            </div>
+                            <div id="mobile_comment_2">
+                                <p>회원을 고정하면 일정 등록시 함께 추가합니다.</p>
+                            </div>
+                        `
+                        )
+    }else if(bodywidth >= 600){
+        htmlToJoin.push('<div class="groupmemberline_thead">'+
+                        '<div class="_tdname">회원명</div>'+
+                        '<div class="_id">회원 ID</div>'+
+                        '<div class="_regcount">등록 횟수</div>'+
+                        '<div class="_remaincount">남은 횟수</div>'+
+                        '<div class="_startdate">시작일</div>'+
+                        '<div class="_finday">종료일</div>'+
+                        '<div class="_contact">연락처</div>'+
+                        '<div class="_fixedmember">고정</div>'+
+                        '<div class="_manage">관리</div>'+
+                        '</div>');
+    }
+
+    var groupcapacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
+    var grouptype = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+
+    for(var i=0; i<len; i++){
+        var groupmember_dbid = jsondata.db_id[i];
+        var groupmember_id = jsondata.member_id[i];
+        var groupmember_lecid = jsondata.lecture_id[i];
+        var groupmember_lastname = jsondata.last_name[i];
+        var groupmember_firstname = jsondata.first_name[i];
+        var groupmember_regcount = jsondata.reg_count[i];
+        var groupmember_remcount = jsondata.rem_count[i];
+        var groupmember_startdate = jsondata.start_date[i];
+        var groupmember_enddate = jsondata.end_date[i];
+        var groupmember_phone = jsondata.phone[i];
+        var groupmember_fixed;
+        if(jsondata.fix_state_cd[i] == "FIX"){
+            groupmember_fixed = "checked";
+        }else{
+            groupmember_fixed = "";
+        }
+
+        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">';
+        var htmlEnd = '</div>';
+
+        var memberRow;
+        if(bodywidth < 600){
+            memberRow = htmlStart +
+            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
+            '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+            '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
+                                                                                +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
+                                                                                '</div>';
+
+            if(grouptype!='ONE_TO_ONE') {
+                memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
+            }else{
+                memberRow += '<div class="" style="width:10%"></div>';
+            }
+           
+
+            memberRow += htmlEnd;
+        }
+
+
+        htmlToJoin.push(memberRow);
+    }
+
+    var EMPTY_EXPLAIN;
+    if(grouptype == 'EMPTY'){
+        //var group_type = group_capacity+"인 공개"
+        EMPTY_EXPLAIN = "<p style='color:#fe4e65;font-size:11px;'>이 클래스 소속인원은 이 클래스명으로 개설된 레슨에 예약 가능하며, 클래스 소속인원수는 제한이 없습니다. 수업당 정원은 "+groupcapacity+" 명입니다.</p>";
+    }else if(grouptype == "NORMAL"){
+        //var group_type = group_capacity+"인 비공개"
+        EMPTY_EXPLAIN = "";
+    }else{
+        EMPTY_EXPLAIN = "";
+    }
+
+    var addButton = '';
+
+    if(groupcapacity <= len && grouptype =='NORMAL'){
+        addButton = '';
+    }else{
+        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+    }
+
+    if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
+        addButton = '';
+    }
+
+    // var html = htmlToJoin.join('') + addButton;
+    // if(jsondata.db_id.length == 0){
+    //     if($('#currentGroupList').css('display') == "block"){
+    //         if(grouptype == 'EMPTY') {
+    //             html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>' + addButton;
+    //         }else if(grouptype == 'NORMAL'){
+    //             html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>' + addButton;
+    //         }
+    //     }
+    // }
+    //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
+
+    //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
+    var html = htmlToJoin.join('');
+    if(jsondata.db_id.length == 0){
+        if($('#currentGroupList').css('display') == "block"){
+            if(grouptype == 'EMPTY') {
+                html = '<p">이 클래스에 소속 된 회원이 없습니다.</p><div>';
+            }else if(grouptype == 'NORMAL'){
+                html = '<p">이 그룹에 소속 된 회원이 없습니다.</p><div>';
+            }
+        }
+    }
+
+    $('#popup_lecture_info_mobile_memberlist').html(html);
+}
+//그룹원 목록을 그룹에 그리기 모바일
+
 //수업 정보 모바일 팝업
-function set_lecture_info_for_mobile_popup(group_id, group_name, group_type, group_membernum, group_membercapacity, group_memo){
-    var html = `<div>그룹 id: ${group_id}</div>
-                <div>그룹 이름: ${group_name}</div>
-                <div>그룹 타입: ${group_type}</div>
-                <div>그룹 참여 인원: ${group_membernum}</div>
-                <div>그룹 수강 정원: ${group_membercapacity}</div>
-                <div>그룹 메모: ${group_memo}</div>`;
+function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_membernum, group_membercapacity, group_memo, jsondata){
+    var repeat_info_dict= { 'KOR':
+        {'DD':'매일', 'WW':'매주', '2W':'격주',
+            'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
+        'JPN':
+            {'DD':'毎日', 'WW':'毎週', '2W':'隔週',
+                'SUN':'日曜日', 'MON':'月曜日','TUE':'火曜日','WED':'水曜日','THS':'木曜日','FRI':'金曜日', 'SAT':'土曜日'},
+        'JAP':
+            {'DD':'Everyday', 'WW':'Weekly', '2W':'Bi-weekly',
+                'SUN':'Sun', 'MON':'Mon','TUE':'Tue','WED':'Wed','THS':'Thr','FRI':'Fri', 'SAT':'Sat'}
+    };
+
+    var repeat_day_info_raw_array = jsondata.repeatScheduleWeekInfoArray;
+
+    var repeat_day =  function(){
+            var repeat_day_info_raw = repeat_day_info_raw_array[i].split('/');
+            var repeat_day_info = "";
+            if(repeat_day_info_raw.length>1){
+                for(var j=0; j<repeat_day_info_raw.length; j++){
+                    repeat_day_info = repeat_day_info + '/' + repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[j]].substr(0,1);
+                }
+            }else if(repeat_day_info_raw.length == 1){
+                repeat_day_info = repeat_info_dict[setting_info.lt_lan_01][repeat_day_info_raw[0]];
+            }
+            if(repeat_day_info.substr(0, 1) == '/'){
+                repeat_day_info = repeat_day_info.substr(1,repeat_day_info.length);
+            }
+            return repeat_day_info;
+        };
+    
+    var repeat_array = [];
+    var len = jsondata.repeatScheduleIdArray.length;
+    for(var i=0; i<len; i++){
+        repeat_array.push(
+                         `<div class="mobile_repeat_info_wrap">
+                           <p>${repeat_info_dict[setting_info.lt_lan_01][jsondata.repeatScheduleTypeArray[i]]} ${repeat_day()} ${jsondata.repeatScheduleStartTimeArray}~${jsondata.repeatScheduleEndTimeArray}</p>
+                           <p>${jsondata.repeatScheduleStartDateArray[i]}~${jsondata.repeatScheduleEndDateArray}</p>
+                         </div>`
+                         );
+    }
+    var repeat_info = repeat_array.join("");
+
+    var html = `<div class="pters_table"><div class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
+                <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell"><input type="text" class="mobile_memo_input" value="${group_membercapacity}" readonly>명</div></div>
+                <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
+                <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
+                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell"><input type="text" class="mobile_memo_input" value="${group_memo}" readonly></div></div>
+
+                <div style="display:none;">그룹 id: ${group_id}</div>
+                <div style="display:none;">그룹 이름: ${group_name}</div>`;
     $('#popup_lecture_info_mobile_basic').html(html);
 }
 //수업 정보 모바일 팝업
@@ -2111,7 +2292,7 @@ function enable_delete_btns_after_ajax(){
 
 /////////////////////////////그룹 반복일정 조회 및 그리기/////////////////////////////
 //서버로부터 회원의 반복일정 정보를 받아온다.
-function get_group_repeat_info(group_id){
+function get_group_repeat_info(group_id, use, callback){
     $.ajax({
         url: '/trainer/get_group_repeat_schedule_list/',
         type:'GET',
@@ -2129,9 +2310,14 @@ function get_group_repeat_info(group_id){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                $('#errorMessageBar').hide();
-                $('#errorMessageText').text('');
-                set_group_repeat_info(jsondata, group_id);
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    $('#errorMessageBar').hide();
+                    $('#errorMessageText').text('');
+                    set_group_repeat_info(jsondata, group_id);
+                }
+                
             }
         },
 
@@ -2263,6 +2449,7 @@ function set_group_repeat_info(jsondata, group_id){
     $regHistory.html(title + schedulesHTML.join('')).addClass(repeat_bg);
 
 }
+
 
 
 //그룹의 반복일정 id를 보내서 그 반복일정에 묶여있는 회원들의 반복일정 id를 불러온다. (그룹의 반복일정을 삭제할 때 회원들의 반복일정도 같이 지워주기 위해)
