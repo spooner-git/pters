@@ -191,7 +191,7 @@ $(document).ready(function(){
     $(document).on('click', '.memberline', function(e){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
         e.stopPropagation();
         var bodywidth = window.innerWidth;
-        var dbID = $(this).find('._id').attr('data-dbid');
+        var dbID = $(this).attr('data-dbid');
         shade_index(100);
         if(bodywidth < 600){
             get_indiv_member_info(dbID);
@@ -3183,7 +3183,14 @@ function memberListSet (type,option,Reverse, jsondata){
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
         // arrayResult[i] = td;
         //arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</div>';
-        arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+pc_html+mobile_html+'</div>';
+        var addHtml;
+        if(bodywidth < 1000){
+            addHtml = mobile_html;
+        }else if(bodywidth >=1000){
+            addHtml = pc_html;
+        }
+
+        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
 
     }
     $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
