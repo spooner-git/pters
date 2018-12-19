@@ -2712,11 +2712,14 @@ function get_member_list(use, callback){
     })
 }
 var page_num = 1;
+var mutext_val = 1;
 $(window).scroll(function() {
 	var scrollHeight = $(document).height();
 	var scrollPosition = $(window).height() + $(window).scrollTop();
-
-	if ((scrollHeight - scrollPosition) == 0) {
+    // console.log("scrollHeight:"+scrollHeight);
+    // console.log("scrollPosition:"+scrollPosition);
+	if (((scrollHeight - scrollPosition) < 80) && (mutext_val==1)) {
+	    mutext_val = 0;
         get_member_ing_list_test("callback", function(jsondata){
             memberListSet_test('current', 'name', 'no', jsondata);
         });
@@ -3640,6 +3643,7 @@ function memberListSet_test(type,option,Reverse, jsondata){
     var result = tbodyStart + resultToAppend + tbodyEnd;
     // $tabletbody.remove();
     $table.append(result);
+    mutext_val = 1;
 }
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){
