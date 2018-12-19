@@ -4,6 +4,7 @@ import json
 import logging
 import random
 import urllib
+from operator import itemgetter
 
 from urllib.parse import quote
 
@@ -22,6 +23,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from el_pagination.views import AjaxListView
@@ -30,7 +32,8 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
-    MEMBER_RESERVE_PROHIBITION_ON
+    MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT_FEW, SORT_REMAIN_COUNT_MANY, SORT_START_DATE_OLD, \
+    SORT_START_DATE_NEW
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1029,15 +1032,15 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         if int(id_flag) == 1:
             if user_id == '':
                 error = '회원 ID를 확인해 주세요.'
-            # if error is None:
-            #     try:
-            #         user = User.objects.get(username=user_id)
-            #     except ObjectDoesNotExist:
-            #         error = '회원 ID를 확인해 주세요.'
+            if error is None:
+                try:
+                    user = User.objects.get(username=user_id)
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
 
             if error is None:
                 try:
-                    group = user.groups.get(user=member_id)
+                    group = user.groups.get(user=user.id)
                 except ObjectDoesNotExist:
                     error = '회원 ID를 확인해 주세요.'
 
@@ -1047,25 +1050,25 @@ class GetMemberInfoView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         else:
             if member_id == '':
                 error = '회원 ID를 확인해 주세요.'
-            # if error is None:
-            #     try:
-            #         user = User.objects.get(id=member_id)
-            #     except ObjectDoesNotExist:
-            #         error = '회원 ID를 확인해 주세요.'
+            if error is None:
+                try:
+                    user = User.objects.get(id=member_id)
+                except ObjectDoesNotExist:
+                    error = '회원 ID를 확인해 주세요.'
 
         if error is None:
             try:
-                member = MemberTb.objects.get(user_id=member_id)
+                member = MemberTb.objects.get(user_id=user.id)
             except ObjectDoesNotExist:
                 error = '회원 ID를 확인해 주세요.'
         if error is None:
             query_member_auth = "select AUTH_CD from MEMBER_LECTURE_TB as B where B.LECTURE_TB_ID = " \
-                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(member_id) + \
+                                "`CLASS_LECTURE_TB`.`LECTURE_TB_ID` and B.MEMBER_ID = '" + str(user.id) + \
                                 "' and B.USE=1"
 
             lecture_count = ClassLectureTb.objects.select_related(
                 'lecture_tb__member').filter(class_tb_id=class_id,
-                                             lecture_tb__member_id=member_id,
+                                             lecture_tb__member_id=user.id,
                                              lecture_tb__use=USE, auth_cd='VIEW',
                                              use=USE).annotate(member_auth=RawSQL(query_member_auth,
                                                                                   [])).filter(member_auth='VIEW'
@@ -1132,8 +1135,25 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
+        member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
         member_data = func_get_member_ing_list(class_id, self.request.user.id)
+        # print(str(member_sort))
+
+        print(str(member_data))
+        if member_sort == SORT_MEMBER_NAME:
+            member_data = sorted(member_data, key=itemgetter('name'), reverse=0)
+        elif member_sort == SORT_REMAIN_COUNT_FEW:
+            member_data = sorted(member_data, key=itemgetter('lecture_rem_count'), reverse=0)
+        elif member_sort == SORT_REMAIN_COUNT_MANY:
+            member_data = sorted(member_data, key=lambda member_info: member_info['lecture_rem_count'], reverse=1)
+        elif member_sort == SORT_START_DATE_OLD:
+            member_data = sorted(member_data, key=lambda member_info: member_info.start_date, reverse=0)
+        elif member_sort == SORT_START_DATE_NEW:
+            member_data = sorted(member_data, key=lambda member_info: member_info.start_date, reverse=1)
+
         context['total_member_num'] = len(member_data)
+        # for member_info in member_data:
+        #     print(str(member_info.name) + ':'+str(member_info.lecture_rem_count))
         if page != 0:
             paginator = Paginator(member_data, 20)  # Show 20 contacts per page
             try:
