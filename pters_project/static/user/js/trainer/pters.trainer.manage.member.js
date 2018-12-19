@@ -2135,7 +2135,7 @@ function pc_add_member(option){
 //진행중 회원, 종료된 회원 리스트 스왑
 function shiftMemberList(type){
     page_num = 1;
-    memberListSet_test_len = 0;
+    memberListSet_test_len = 1;
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
     $('#search_member_input').val("").css("-webkit-text-fill-color", "#cccccc");
@@ -2716,8 +2716,6 @@ $(window).scroll(function() {
 	var scrollHeight = $(document).height();
 	var scrollPosition = $(window).height() + $(window).scrollTop();
 
-	    console.log("scrollHeight:"+scrollHeight);
-	    console.log("scrollPosition:"+scrollPosition);
 	if ((scrollHeight - scrollPosition) < 30) {
         get_member_ing_list_test("callback", function(jsondata){
             memberListSet_test('current', 'name', 'no', jsondata);
@@ -2735,7 +2733,7 @@ function get_member_ing_list_test(use, callback){
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
-        data: {"page": page_num},
+        data: {"page": ++page_num},
 
         dataType : 'html',
 
@@ -2778,9 +2776,8 @@ function get_member_ing_list_test(use, callback){
                     }else{
                         //memberListSet('current','name','no',jsondata);
                     }
-                    page_num++;
                 }else{
-
+                    page_num -= 1;
                 }
                 // console.log('success');
             }
@@ -2799,7 +2796,7 @@ function get_member_ing_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
 
     page_num = 1;
-    memberListSet_test_len = 0;
+    memberListSet_test_len = 1;
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
@@ -3345,7 +3342,7 @@ function memberListSet (type,option,Reverse, jsondata){
     $table.append(result);
 }
 
-var memberListSet_test_len = 0;
+var memberListSet_test_len = 1;
 function memberListSet_test(type,option,Reverse, jsondata){
     var bodywidth = window.innerWidth;
     var text = '소진시까지';
