@@ -195,6 +195,7 @@ $(document).ready(function(){
         var dbID = $(this).attr('data-dbid');
         shade_index(100);
         if(bodywidth < 600){
+            current_Scroll_Position = $(document).scrollTop();
             get_indiv_member_info(dbID);
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
