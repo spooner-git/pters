@@ -2715,7 +2715,10 @@ var page_num = 1;
 $(window).scroll(function() {
 	var scrollHeight = $(document).height();
 	var scrollPosition = $(window).height() + $(window).scrollTop();
-	if ((scrollHeight - scrollPosition) == -30) {
+
+	    console.log("scrollHeight:"+scrollHeight);
+	    console.log("scrollPosition:"+scrollPosition);
+	if ((scrollHeight - scrollPosition) < 30) {
         get_member_ing_list_test("callback", function(jsondata){
             memberListSet_test('current', 'name', 'no', jsondata);
         });
