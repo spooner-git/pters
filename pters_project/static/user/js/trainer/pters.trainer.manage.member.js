@@ -2724,21 +2724,31 @@ $(window).scroll(function() {
     // console.log("scrollPosition:"+scrollPosition);
 	if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
 	    mutex_val = 0;
-        get_member_ing_list_test("callback", function(jsondata){
-            memberListSet_test('current', 'name', 'no', jsondata);
-        });
+
+        var selector_currentMemberList = $('#currentMemberList');
+        var selector_finishedMemberList = $('#finishedMemberList');
+        if(selector_currentMemberList.css('display') == "block") {
+            get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
+                memberListSet_test('current', 'name', 'no', jsondata);
+            });
+        }
+        else if(selector_finishedMemberList.css('display') == "block"){
+            get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
+                memberListSet_test('finished','name','no',jsondata);
+            });
+        }
 	}
 	// else {
 	// 	$("body").css("background","white");
 	// }
 });
 
-function get_member_ing_list_test(use, callback){
+function get_member_list_test(url, use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
-        url:'/trainer/get_member_ing_list/',
+        url:url,
         type:'GET',
         data: {"page": ++page_num},
 
@@ -2867,8 +2877,13 @@ function get_member_end_list(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    page_num = 1;
+    memberListSet_test_len = 1;
+    mutex_val = 1;
     $.ajax({
         url:'/trainer/get_member_end_list/',
+        type:'GET',
+        data: {"page": page_num},
         dataType : 'html',
 
         beforeSend:function(){
