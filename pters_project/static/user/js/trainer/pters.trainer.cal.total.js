@@ -2310,7 +2310,6 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         //         groupstatus="";
         //     }
         // }
-        console.log(jsondata)
         var planWidth;
         var planLeft;
         var calc;
