@@ -1291,6 +1291,69 @@ span.summaryInnerBoxText_Repeatendtext{
 	text-align: left;
 	width: 100%;
 }
+	._member_list_mobile_style_upperwrap{
+		display:table-cell;
+		width:70%;
+	}
+	._member_list_mobile_style_upperwrap_name{
+		width:100%;
+		height:35px;
+		line-height:40px;
+		font-size:22px;
+		font-weight:500;
+		padding-left:10px;
+	}
+	._member_list_mobile_style_upperwrap_count{
+		width:100%;
+		height:35px;
+		line-height:32px;
+		padding-left:13px;
+	}
+	._member_list_mobile_style_upperwrap_regcount{
+		display:inline-block;
+	}
+	._member_list_mobile_style_upperwrap_regcount > span:nth-of-type(1){
+		margin-right:10px;
+		font-size:14px;
+		color:#777777
+	}
+	._member_list_mobile_style_upperwrap_regcount > span:nth-of-type(2){
+		font-size:16px;
+		color:#282828;
+	}
+	._member_list_mobile_style_upperwrap_dividebar{
+		display:inline-block;
+		width:1px;
+		height:12px;
+		background-color:#cccccc;
+		margin-right:10px;
+		margin-left:12px;
+	}
+	._member_list_mobile_style_upperwrap_remaincount{
+		display:inline-block;
+	}
+	._member_list_mobile_style_upperwrap_remaincount > span:nth-of-type(1){
+		margin-right:10px;font-size:14px;color:#777777
+	}
+	._member_list_mobile_style_upperwrap_remaincount > span:nth-of-type(2){
+		font-size:16px;
+		color:#282828;
+	}
+
+	._member_list_mobile_style_lowerwrap{
+		display:table-cell;
+		width:30%;
+		vertical-align:middle;
+		opacity:0.7;
+		text-align:center;
+		padding-right:10px;
+	}
+	._member_list_mobile_style_lowerwrap_phone, ._member_list_mobile_style_lowerwrap_sms{
+		display:inline-block;
+	}
+	
+
+
 ._member_list_pc_style{
 	display: none !important;
 }
