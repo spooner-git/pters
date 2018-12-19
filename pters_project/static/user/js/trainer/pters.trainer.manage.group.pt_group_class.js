@@ -592,6 +592,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth <= 1000){
+        current_Scroll_Position = $(document).scrollTop();
         $('#uptext3').text(group_name);
         // $('#page_managemember').css({'height':'0'});
         $('#page_managemember').css({'display':'none'});
@@ -1848,10 +1849,9 @@ function get_end_groupmember_list(group_id, use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log(jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png')
                 scrollToDom($('#page_addmember'))
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray)
