@@ -2718,7 +2718,7 @@ $(window).scroll(function() {
 	var scrollPosition = $(window).height() + $(window).scrollTop();
     // console.log("scrollHeight:"+scrollHeight);
     // console.log("scrollPosition:"+scrollPosition);
-	if (((scrollHeight - scrollPosition) < 80) && (mutext_val==1)) {
+	if (((scrollHeight - scrollPosition) < 100) && (mutext_val==1)) {
 	    mutext_val = 0;
         get_member_ing_list_test("callback", function(jsondata){
             memberListSet_test('current', 'name', 'no', jsondata);
