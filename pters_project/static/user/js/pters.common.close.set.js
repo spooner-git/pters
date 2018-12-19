@@ -11,8 +11,11 @@ function closePopup_mobile(buttonname){
                 $('#calendar').css('height', '100%');
             }
         }else if(thisAttr == "lecture_info"){
-            $('#page_managemember').css('height', '100%');
+            // $('#page_managemember').css('height', '100%');
+            // $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#page_managemember').css('height', 'block');
             $('#popup_lecture_info_mobile').css({'display':'none'});
+
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
         }else if(thisAttr == "memberinfo"){
@@ -32,13 +35,19 @@ function closePopup_mobile(buttonname){
         }
         var thisAttr = $("#upbutton-x-modify").attr('data-page');
         if(thisAttr == "lecture_info"){
-            $('#page_managemember').css('height', '100%');
+            // $('#page_managemember').css('height', '100%');
+            // $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#page_managemember').css('height', 'block');
             $('#popup_lecture_info_mobile').css({'display':'none'});
+
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
         }else if(thisAttr == "memberinfo"){
-            $('#page_managemember').css('height', '100%');
+            // $('#page_managemember').css('height', '100%');
+            // $('#popup_lecture_info_mobile').css({'display':'none'});
+            $('#page_managemember').css('height', 'block');
             $('#popup_lecture_info_mobile').css({'display':'none'});
+
             $('#uptext2').text('수업 정보');
             close_manage_popup('member_info');
             $('#upbutton-x, #upbutton-x-modify').attr('data-page', '');
@@ -223,7 +232,8 @@ function close_manage_popup(option){
         $('#memberRegHistory_info_PC, #memberRepeat_info_PC, #memberLectureHistory_info_PC').html('');
         hide_this();
         if(bodywidth < 600){
-            $('#page_managemember').css({'height':'100%'});
+            // $('#page_managemember').css({'height':'100%'});
+            $('#page_managemember').css({'display':'block'});
             base_show();
             base_modify_hide();
         }
@@ -288,9 +298,10 @@ function close_manage_popup(option){
         var selector_float_btn_member_add = $('#float_btn');
         if(bodywidth < 600){
             //$('#page_managemember').show();
+            //$('#page_managemember').css({'height':'100%'});
+            $('#page_managemember').css({'display':'block'});
             $('#page-base').css('display','block');
             $('#page-base-addstyle').css('display','none');
-            $('#page_managemember').css({'height':'100%'});
             $('#float_btn_wrap').show();
             selector_float_btn_member_add.removeClass('rotate_btn');
         }
@@ -314,9 +325,10 @@ function close_manage_popup(option){
         var selector_float_btn_group_add = $('#float_btn');
         if(bodywidth<600){
             //$('#page_managemember').show();
+            //$('#page_managemember').css({'height':'100%'});
+            $('#page_managemember').css({'display':'block'});
             $('#page-base').css('display', 'block');
-                $('#page-base-addstyle').css('display','none');
-            $('#page_managemember').css({'height':'100%'});
+            $('#page-base-addstyle').css('display','none');
             $('#float_btn_wrap').show();
             selector_float_btn_group_add.removeClass('rotate_btn');
         }

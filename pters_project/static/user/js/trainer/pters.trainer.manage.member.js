@@ -1657,8 +1657,8 @@ function send_modified_member_base_data(dbID){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     close_manage_popup('member_info');
-                    //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }else{
                     get_indiv_member_info(dbID);
                 }
@@ -1728,8 +1728,8 @@ function float_btn_managemember(option){
 
         scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
-            $('#page_managemember').css({'height':'0'});
+            // $('#page_managemember').css({'height':'0'});
+            $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
             shade_index(100);
@@ -1756,8 +1756,8 @@ function float_btn_managemember(option){
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
-            $('#page_managemember').css({'height':'0'});
+            //$('#page_managemember').css({'height':'0'});
+            $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
             shade_index(100);
@@ -1788,7 +1788,8 @@ function float_btn_managemember(option){
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
-            $('#page_managemember').css({'height':'0'});
+            // $('#page_managemember').css({'height':'0'});
+            $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
             shade_index(100);
@@ -1815,8 +1816,8 @@ function float_btn_managemember(option){
 
         scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
-            $('#page_managemember').css({'height':'0'});
+            // $('#page_managemember').css({'height':'0'});
+            $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
             shade_index(100);
@@ -1833,8 +1834,8 @@ function float_btn_managemember(option){
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
-            $('#page_managemember').css({'height':'0'});
+            //$('#page_managemember').css({'height':'0'});
+            $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
             shade_index(100);
@@ -1868,8 +1869,8 @@ function float_btn_managemember(option){
 
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
-            //$('#page_managemember').hide();
-            $('#page_managemember').css({'height':'0'});
+            //$('#page_managemember').css({'height':'0'});
+            $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
             shade_index(100);
@@ -2027,7 +2028,8 @@ function pc_add_member(option){
 
         
         close_manage_popup('member_info');
-        $('#page_managemember').css({'height':'0'});
+        //$('#page_managemember').css({'height':'0'});
+        $('#page_managemember').css({'display':'none'});
         
         $('._ADD_MEMBER_NEW, ._ADD_GROUP_NEW, ._ADD_GROUPMEMBER_NEW, ._ADD_PACKAGE_NEW').hide();
         $('._SEARCH_MEMBER_NEW, ._ADD_MEMBER_REG').show();
@@ -2689,7 +2691,8 @@ function get_member_list(use, callback){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    // $('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2769,7 +2772,8 @@ function get_member_ing_list_test(use, callback){
                     $('#errorMessageText').text('');
                     if(bodywidth < 600){
                         //$('#page_managemember').show();
-                        $('#page_managemember').css({'height':'100%'});
+                        //$('#page_managemember').css({'height':'100%'});
+                        $('#page_managemember').css({'display':'block'});
                     }
                     // $('html').css("cursor","auto");
                     $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2835,7 +2839,8 @@ function get_member_ing_list(use, callback){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2893,7 +2898,8 @@ function get_member_end_list(use, callback){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -2952,7 +2958,8 @@ function get_member_one_to_one_ing_list(use, callback){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -3010,7 +3017,8 @@ function get_member_one_to_one_end_list(use, callback){
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
                     //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
@@ -3300,18 +3308,18 @@ function memberListSet (type,option,Reverse, jsondata){
             mobile_sms_img = `<a href="sms:'${phone}'"><img src="/static/user/res/memberadd/sms.png" class=""  style="width:25px;"></a>`;
         }
         var mobile_html = `<div class="_member_list_mobile_style">
-                                <div style="display:table-cell;width:70%;">
-                                    <div style="width:100%;height:35px;line-height:40px;font-size:22px;font-weight:500;padding-left:10px;">${name}</div>
-                                    <div style="width:100%;height:35px;line-height:32px;padding-left:13px;">
-                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">등록</span><span style="font-size:16px;color:#282828;">${regcount}</span></div>
-                                        <div style="display:inline-block;width:1px;height:12px;background-color:#cccccc;margin-right:10px;margin-left:12px;"></div>
-                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">남은횟수</span><span style="font-size:16px;color:#282828;">${count}</span></div>
+                                <div class="_member_list_mobile_style_upperwrap">
+                                    <div class="_member_list_mobile_style_upperwrap_name">${name}</div>
+                                    <div class="_member_list_mobile_style_upperwrap_count">
+                                        <div class="_member_list_mobile_style_upperwrap_regcount"><span>등록</span><span>${regcount}</span></div>
+                                        <div class="_member_list_mobile_style_upperwrap_dividebar"></div>
+                                        <div class="_member_list_mobile_style_upperwrap_remaincount"><span>남은횟수</span><span>${count}</span></div>
                                     </div>
                                 </div>
-                                <div style="display:table-cell;width:30%;vertical-align:middle;opacity:0.7;text-align:center;padding-right:10px;">
-                                    <div style="display:inline-block;">${mobile_phone_img}</div>
+                                <div class="_member_list_mobile_style_lowerwrap">
+                                    <div class="_member_list_mobile_style_lowerwrap_phone">${mobile_phone_img}</div>
                                     <div class="phone_sms_gap"></div>
-                                    <div style="display:inline-block;">${mobile_sms_img}</div>
+                                    <div class="_member_list_mobile_style_lowerwrap_sms">${mobile_sms_img}</div>
                                 </div>
                            </div>`;
         // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
@@ -4170,8 +4178,8 @@ function open_member_info_popup_mobile(dbID, jsondata){
     //$('#shade3').fadeIn('fast');
     //scrollToDom($('#page_managemember'));
     if(bodywidth < 600){
-        //$('#page_managemember').hide();
-        $('#page_managemember').css({'height':'0'});
+        // $('#page_managemember').css({'height':'0'});
+        $('#page_managemember').css({'display':'none'});
         if($('._calmonth').length != 0 || $('._calweek').length != 0){
             $('#upbutton-modify, #mobile_basic_info .member_info_tool').css('display','none');
         }
@@ -4539,14 +4547,16 @@ function smart_refresh_member_group_class_list(){
         get_member_ing_list("callback", function(jsondata){
             memberListSet('current', 'name', 'no', jsondata);
             if($('#memberInfoPopup').css('display') == "block"){
-                $('#page_managemember').css('height',0);
+                //$('#page_managemember').css('height',0);
+                $('#page_managemember').css({'display':'none'});
             }
         });
     }else if($('#finishedMemberList').css('display') == "block"){
         get_member_end_list("callback", function(jsondata){
             memberListSet('finished', 'name', 'no', jsondata);
             if($('#memberInfoPopup').css('display') == "block"){
-                $('#page_managemember').css('height',0);
+                //$('#page_managemember').css('height',0);
+                $('#page_managemember').css({'display':'none'});
             }
         });
     }else if($('#currentGroupList').css('display') == "block"){
@@ -5180,8 +5190,8 @@ function add_member_form_func(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }else{
                     $('body').css('overflow-y','auto');
                 }
@@ -5328,8 +5338,8 @@ function add_group_form_func(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }else{
                     $('body').css('overflow-y','auto');
                 }
@@ -5414,8 +5424,8 @@ function add_groupmember_form_func(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }else{
                     $('body').css('overflow-y','auto');
                 }
@@ -5469,8 +5479,8 @@ function deleteMemberAjax(){
                 close_info_popup('cal_popup_plandelete');
 
                 if(bodywidth < 600){
-                    //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    //$('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').css({'display':'block'});
                 }
                 // $('html').css("cursor","auto");
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
