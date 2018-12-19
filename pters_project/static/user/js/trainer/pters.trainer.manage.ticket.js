@@ -30,39 +30,45 @@ $('#groupcapacity').change(function(){
 
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
 var added_New_Member_Num = 0;
-// get_member_ing_list();
 $('button#addByNew').click(function(e){
-    if(!$(this).hasClass('disabled_button')){
-        pters_option_inspector("member_create", "", global_json.db_id.length);
-        if($('#caution_popup').css('display') == "none"){
-            var group_id = $('#form_member_groupid').val();
-            var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
-            var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
-            var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
-            var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
+    var $this = $(this);
+    if(!$this.hasClass('disabled_button')){
+        $this.addClass('disabled_button');
+        get_member_ing_list("callback", function(jsondata){
+            var member_list_data = jsondata;
+            pters_option_inspector("member_create", "", member_list_data.db_id.length);
+        
+            if($('#caution_popup').css('display') == "none"){
+                var group_id = $('#form_member_groupid').val();
+                var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+                var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
+                var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
+                var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
 
-            if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-                alert('그룹 : 이미 정원이 가득 찼습니다.');
-            }else{
-                pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
+                if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+                    alert('그룹 : 이미 정원이 가득 찼습니다.');
+                }else{
+                    pters_option_inspector("member_create", "", member_list_data.db_id.length + added_New_Member_Num);
                     if($('#caution_popup').css('display') == "none"){
-                    addByNew_input_eventGroup();
-                    e.preventDefault();
-                    added_New_Member_Num++;
-                    var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">';
-                    //var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
-                    var nameinput = '<input class="new_member_firstname" placeholder="이름">';
-                    var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
-                    var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
-                    var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';
-                    var htmlend = '</div>';
+                        addByNew_input_eventGroup();
+                        e.preventDefault();
+                        added_New_Member_Num++;
+                        var htmlstart = '<div class="addByNewRaw" data-dbid="" data-id="" data-phone="" data-sex="" data-firstname="" data-lastname="">';
+                        //var nameinput = '<input class="new_member_lastname" placeholder="성"><input class="new_member_firstname" placeholder="이름">';
+                        var nameinput = '<input class="new_member_firstname" placeholder="이름">';
+                        var sexinput = '<select><option selected disabled>성별</option><option value="M">남</option><option value="W">여</option></select>';
+                        var phoneinput = '<input type="tel" class="new_member_phone" placeholder="전화번호">';
+                        var substract = '<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember">';
+                        var htmlend = '</div>';
 
-                    var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend;
-                    $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
-                    $('#addedMemberListBox').prepend(html);
+                        var html = htmlstart + nameinput + sexinput + phoneinput + substract + htmlend;
+                        $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
+                        $('#addedMemberListBox').prepend(html);
+                    }
                 }
             }
-        }
+            $this.removeClass('disabled_button');
+        });
     }
     check_dropdown_selected();
 });
@@ -123,21 +129,24 @@ function addByNew_input_eventGroup(){
 $('button#addByList, button#addBySearch').click(function(e){
     e.preventDefault();
     e.stopPropagation();
+    var $this = $(this);
+    if(!$this.hasClass('disabled_button')){
+        $this.addClass('disabled_button');
+            shade_index(400);
+            var page_add_member_popup_top = $('#page_addmember').css('top').replace('px', '');
+            var page_add_member_popup_width = $('#page_addmember').css('width');
+            page_add_member_popup_top = Number(page_add_member_popup_top) + 40;
+            $('#subpopup_addByList').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
+            $('#subpopup_addBySearch').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
+            $(this).siblings('button').addClass('disabled_button');
+            $('#subpopup_'+$(this).attr('id')).show();
+            if($(this).attr('id')=="addByList"){
+                draw_memberlist_for_addByList($('#subpopup_addByList'));
+            }else if($(this).attr('id')=="addBySearch"){
+                //
+            }
+            $this.removeClass('disabled_button');
 
-    if(!$(this).hasClass('disabled_button')){
-        shade_index(400);
-        var page_add_member_popup_top = $('#page_addmember').css('top').replace('px', '');
-        var page_add_member_popup_width = $('#page_addmember').css('width');
-        page_add_member_popup_top = Number(page_add_member_popup_top) + 40;
-        $('#subpopup_addByList').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
-        $('#subpopup_addBySearch').css({'top':page_add_member_popup_top+'px', 'width':page_add_member_popup_width});
-        $(this).siblings('button').addClass('disabled_button');
-        $('#subpopup_'+$(this).attr('id')).show();
-        if($(this).attr('id')=="addByList"){
-            draw_memberlist_for_addByList($('#subpopup_addByList'));
-        }else if($(this).attr('id')=="addBySearch"){
-            //
-        }
 
     }
 });
@@ -162,6 +171,7 @@ function close_addByList_popup(){
 
 //[리스트에서 추가]를 눌러 나온 팝업의 리스트에서 + 버튼을 누르면 회원 추가란으로 해당회원을 보낸다.
 $(document).on('click', 'img.add_listedMember', function(){
+    var $this = $(this);
     var selected_lastname = $(this).parents('div.list_addByList').attr('data-lastname');
     var selected_firstname = $(this).parents('div.list_addByList').attr('data-firstname');
     var selected_dbid = $(this).parents('div.list_addByList').attr('data-dbid');
@@ -210,48 +220,56 @@ $(document).on('click', 'img.add_listedMember', function(){
 
         //회원관리 : 리스트로 그룹회원 추가
     }else{
-        if(global_json.db_id.indexOf(selected_dbid) == -1){
-            if($(this).hasClass("add_by_search")){
-                pters_option_inspector("member_create", "", global_json.db_id.length);
-            }
-        }
-        if($('#caution_popup').css('display') == "none"){
-            var group_id = $('#form_member_groupid').val();
-            var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
-            var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
-            var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
-            var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
+        if(!$this.hasClass('disabled_button')){
+            $this.addClass('disabled_button');
+            get_member_ing_list("callback", function(jsondata){
+                var member_list_data = jsondata;
 
-            if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
-                alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
-            }else{
-                if($(this).hasClass("add_by_search")){
-                    pters_option_inspector("member_create", "", global_json.db_id.length + added_New_Member_Num);
+                if(member_list_data.db_id.indexOf(selected_dbid) == -1){
+                    if($this.hasClass("add_by_search")){
+                        pters_option_inspector("member_create", "", member_list_data.db_id.length);
+                    }
                 }
                 if($('#caution_popup').css('display') == "none"){
-                    var sexInfo;
-                    if(selected_sex == "M"){
-                        sexInfo = "남";
-                    }else if(selected_sex =="W"){
-                        sexInfo = "여";
+                    var group_id = $('#form_member_groupid').val();
+                    var group_type = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+                    var group_capacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
+                    var alreadyParticipateNumber = $('div.groupMembersWrap[data-groupid="'+group_id+'"] div.memberline').length;
+                    var addedParticipateNumber = $('#addedMemberListBox div.addByNewRaw').length;
+
+                    if(alreadyParticipateNumber + addedParticipateNumber == group_capacity && group_type == "NORMAL" ){
+                        alert('고정 그룹 : 이미 정원이 가득 찼습니다.');
                     }else{
-                        sexInfo = "-";
+                        if($this.hasClass("add_by_search")){
+                            pters_option_inspector("member_create", "", member_list_data.db_id.length + added_New_Member_Num);
+                        }
+                        if($('#caution_popup').css('display') == "none"){
+                            var sexInfo;
+                            if(selected_sex == "M"){
+                                sexInfo = "남";
+                            }else if(selected_sex =="W"){
+                                sexInfo = "여";
+                            }else{
+                                sexInfo = "-";
+                            }
+                            var selected_phone = $this.parents('div.list_addByList').attr('data-phone');
+                            if(selected_phone.length == 0){
+                                selected_phone = "-";
+                            }
+
+                            var html = '<div class="addByNewRaw" data-lastname="' + selected_lastname + '" data-firstname="' + selected_firstname + '" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>';
+
+                            $('#addedMemberListBox').prepend(html);
+
+                            added_New_Member_Num++;
+                            $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
+                            $this.parents('div.list_addByList').remove();
+                        }
                     }
-                    var selected_phone = $(this).parents('div.list_addByList').attr('data-phone');
-                    if(selected_phone.length == 0){
-                        selected_phone = "-";
-                    }
-
-                    var html = '<div class="addByNewRaw" data-lastname="' + selected_lastname + '" data-firstname="' + selected_firstname + '" data-dbid="'+selected_dbid+'" data-id="'+selected_id+'" data-sex="'+selected_sex+'" data-phone="'+selected_phone+'">'+'<div>'+selected_lastname+selected_firstname+'</div>'+'<div>'+sexInfo+'</div>'+'<div>'+selected_phone+'</div>'+'<img src="/static/user/res/member/icon-x-red.png" class="substract_addedMember _addedByList">'+'</div>';
-
-                    $('#addedMemberListBox').prepend(html);
-
-                    added_New_Member_Num++;
-                    $('#addedMemberListBox span').text(added_New_Member_Num+' 명');
-                    $(this).parents('div.list_addByList').remove();
+                    check_dropdown_selected();
                 }
-            }
-            check_dropdown_selected();
+                $this.removeClass('disabled_button');
+            });
         }
     }
 });
@@ -688,6 +706,7 @@ $(document).on('click', '.groupWrap input', function(e){
 
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
 $(document).on('click', 'img.btn_add_member_to_group', function(){
+    current_Scroll_Position = $(document).scrollTop();
     var bodywidth = window.innerWidth;
     var package_id = $(this).parents('.groupMembersWrap').attr('data-packageid');
     var package_name = $(this).parents('.groupMembersWrap').attr('data-packagename');

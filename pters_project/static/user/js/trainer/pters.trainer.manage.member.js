@@ -2864,12 +2864,12 @@ function get_member_ing_list(use, callback){
         dataType : 'html',
 
         beforeSend:function(){
-            beforeSend()
+            beforeSend();
         },
 
         //보내기후 팝업창 닫기
         complete:function(){
-            completeSend()
+            completeSend();
         },
 
         //통신성공시 처리
@@ -2899,6 +2899,8 @@ function get_member_ing_list(use, callback){
                 if(use == "callback"){
                     callback(jsondata);
 
+                }else if(use == "return"){
+                    return jsondata;
                 }else{
                     //memberListSet('current','name','no',jsondata);
                 }
