@@ -13,7 +13,7 @@ function closePopup_mobile(buttonname){
         }else if(thisAttr == "lecture_info"){
             // $('#page_managemember').css('height', '100%');
             // $('#popup_lecture_info_mobile').css({'display':'none'});
-            $('#page_managemember').css('height', 'block');
+            $('#page_managemember').css('display', 'block');
             $('#popup_lecture_info_mobile').css({'display':'none'});
 
             $('#page-base').css('display', 'block');
@@ -37,7 +37,7 @@ function closePopup_mobile(buttonname){
         if(thisAttr == "lecture_info"){
             // $('#page_managemember').css('height', '100%');
             // $('#popup_lecture_info_mobile').css({'display':'none'});
-            $('#page_managemember').css('height', 'block');
+            $('#page_managemember').css('display', 'block');
             $('#popup_lecture_info_mobile').css({'display':'none'});
 
             $('#page-base').css('display', 'block');
@@ -45,7 +45,7 @@ function closePopup_mobile(buttonname){
         }else if(thisAttr == "memberinfo"){
             // $('#page_managemember').css('height', '100%');
             // $('#popup_lecture_info_mobile').css({'display':'none'});
-            $('#page_managemember').css('height', 'block');
+            $('#page_managemember').css('display', 'block');
             $('#popup_lecture_info_mobile').css({'display':'none'});
 
             $('#uptext2').text('수업 정보');

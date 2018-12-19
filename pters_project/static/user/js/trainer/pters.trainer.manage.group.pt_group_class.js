@@ -343,7 +343,7 @@ function draw_memberlist_for_addByList(targetHTML){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    //$('#page_managemember').show();
+                    //$('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -593,7 +593,8 @@ $(document).on('click', 'div.groupWrap', function(e){
         }
     }else if(bodywidth <= 1000){
         $('#uptext3').text(group_name);
-        $('#page_managemember').css({'height':'0'});
+        // $('#page_managemember').css({'height':'0'});
+        $('#page_managemember').css({'display':'none'});
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
@@ -920,7 +921,7 @@ function get_group_ing_list(use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -976,7 +977,7 @@ function get_package_ing_list(use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -1032,7 +1033,7 @@ function get_group_end_list(use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -1097,7 +1098,7 @@ function delete_group_from_list(group_id, use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -1222,7 +1223,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -1305,7 +1306,7 @@ function modify_group_status(group_id, option){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -1794,9 +1795,9 @@ function get_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 if(use == 'callback'){
@@ -1857,9 +1858,9 @@ function get_end_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 if(use == 'callback'){
@@ -2557,7 +2558,7 @@ function get_member_group_class_ing_list(use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -2612,7 +2613,7 @@ function get_member_group_class_end_list(use, callback){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    $('#page_managemember').show();
+                    $('#page_managemember').css('display', 'block');
                 }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
