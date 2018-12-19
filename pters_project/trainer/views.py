@@ -1139,7 +1139,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         member_data = func_get_member_ing_list(class_id, self.request.user.id)
         # print(str(member_sort))
 
-        print(str(member_data))
+        # print(str(member_data))
         if member_sort == SORT_MEMBER_NAME:
             member_data = sorted(member_data, key=itemgetter('name'), reverse=0)
         elif member_sort == SORT_REMAIN_COUNT_FEW:
