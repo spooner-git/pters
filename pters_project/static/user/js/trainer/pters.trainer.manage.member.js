@@ -189,6 +189,7 @@ $(document).ready(function(){
 //#####################회원정보 팝업 //#####################
 
     $(document).on('click', '.memberline', function(e){  //회원이름을 클릭했을때 새로운 팝업을 보여주며 정보를 채워준다.
+        mutex_val = 0;
         e.stopPropagation();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
@@ -2712,14 +2713,14 @@ function get_member_list(use, callback){
     })
 }
 var page_num = 1;
-var mutext_val = 1;
+var mutex_val = 1;
 $(window).scroll(function() {
 	var scrollHeight = $(document).height();
 	var scrollPosition = $(window).height() + $(window).scrollTop();
     // console.log("scrollHeight:"+scrollHeight);
     // console.log("scrollPosition:"+scrollPosition);
-	if (((scrollHeight - scrollPosition) < 100) && (mutext_val==1)) {
-	    mutext_val = 0;
+	if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
+	    mutex_val = 0;
         get_member_ing_list_test("callback", function(jsondata){
             memberListSet_test('current', 'name', 'no', jsondata);
         });
@@ -2800,6 +2801,7 @@ function get_member_ing_list(use, callback){
 
     page_num = 1;
     memberListSet_test_len = 1;
+    mutex_val = 1;
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
@@ -3643,7 +3645,7 @@ function memberListSet_test(type,option,Reverse, jsondata){
     var result = tbodyStart + resultToAppend + tbodyEnd;
     // $tabletbody.remove();
     $table.append(result);
-    mutext_val = 1;
+    mutex_val = 1;
 }
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){

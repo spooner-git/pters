@@ -45,6 +45,7 @@ function closePopup_mobile(buttonname){
         }
         enable_window_scroll();
     }
+    mutex_val = 1;
 }
 
 function close_planadd_popup_mini(){
