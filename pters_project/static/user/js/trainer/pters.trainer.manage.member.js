@@ -2134,6 +2134,8 @@ function pc_add_member(option){
 
 //진행중 회원, 종료된 회원 리스트 스왑
 function shiftMemberList(type){
+    page_num = 1;
+    memberListSet_test_len = 1;
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
     $('#search_member_input').val("").css("-webkit-text-fill-color", "#cccccc");
@@ -2709,15 +2711,99 @@ function get_member_list(use, callback){
         }
     })
 }
+var page_num = 1;
+var mutext_val = 1;
+$(window).scroll(function() {
+	var scrollHeight = $(document).height();
+	var scrollPosition = $(window).height() + $(window).scrollTop();
+    // console.log("scrollHeight:"+scrollHeight);
+    // console.log("scrollPosition:"+scrollPosition);
+	if (((scrollHeight - scrollPosition) < 100) && (mutext_val==1)) {
+	    mutext_val = 0;
+        get_member_ing_list_test("callback", function(jsondata){
+            memberListSet_test('current', 'name', 'no', jsondata);
+        });
+	}
+	// else {
+	// 	$("body").css("background","white");
+	// }
+});
 
-
-function get_member_ing_list(use, callback){
+function get_member_ing_list_test(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
         url:'/trainer/get_member_ing_list/',
+        type:'GET',
+        data: {"page": ++page_num},
 
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend()
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend()
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            global_json = jsondata;
+            // console.log("get_member_ing_list", global_json)
+            if(jsondata.messageArray.length>0){
+                // $('html').css("cursor","auto");
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                if(bodywidth < 600){
+                    scrollToDom($('#page_addmember'));
+                }
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                if(jsondata.db_id.length>0){
+                    $('#errorMessageBar').hide();
+                    $('#errorMessageText').text('');
+                    if(bodywidth < 600){
+                        //$('#page_managemember').show();
+                        $('#page_managemember').css({'height':'100%'});
+                    }
+                    // $('html').css("cursor","auto");
+                    $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
+
+                    if(use == "callback"){
+                        callback(jsondata);
+
+                    }else{
+                        //memberListSet('current','name','no',jsondata);
+                    }
+                }else{
+                    page_num -= 1;
+                }
+                // console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    })
+}
+function get_member_ing_list(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+
+    page_num = 1;
+    memberListSet_test_len = 1;
+    $.ajax({
+        url:'/trainer/get_member_ing_list/',
+        type:'GET',
+        data: {"page": page_num},
         dataType : 'html',
 
         beforeSend:function(){
@@ -3239,7 +3325,8 @@ function memberListSet (type,option,Reverse, jsondata){
         arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
 
     }
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
+    memberListSet_test_len += len;
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
 
     var resultToAppend = arrayResult.join("");
@@ -3258,7 +3345,306 @@ function memberListSet (type,option,Reverse, jsondata){
     $table.append(result);
 }
 
+var memberListSet_test_len = 1;
+function memberListSet_test(type,option,Reverse, jsondata){
+    var bodywidth = window.innerWidth;
+    var text = '소진시까지';
+    var text2 = '이번달 신규회원';
+    if(Options.language == "JPN"){
+        text = '残余回数終わるまで';
+        text2 = '今月新規メンバー';
+    }else if(Options.language == "ENG"){
+        text = '';
+        text2 = 'New Member this month';
+    }
 
+    var tbodyStart = '<div>';
+    var tbodyEnd = '</div>';
+    var tbodyToAppend = $(tbodyStart);
+    var data;
+    var countList;
+    var nameList;
+    var dateList;
+    var $table;
+    var $tabletbody;
+    var $membernum;
+    var text_membernum;
+    switch(type){
+        case 'current':
+            data = DataFormatting(jsondata);
+            countList = data["countSorted"];
+            nameList = data["nameSorted"];
+            dateList = data["dateSorted"];
+            $table = $('#currentMember');
+            $tabletbody = $('#currentMember > div');
+            $membernum = $('#memberNumber_current_member');
+            text_membernum = "진행중인 회원 ";
+            break;
+        case 'finished':
+            data = DataFormatting(jsondata);
+            countList = data["countSorted"];
+            nameList = data["nameSorted"];
+            dateList = data["dateSorted"];
+            $table = $('#finishedMember');
+            $tabletbody = $('#finishedMember > div');
+            $membernum = $('#memberNumber_finish_member');
+            text_membernum = "종료된 회원 ";
+            break;
+    }
+
+    var countLists;
+    var nameLists;
+    var dateLists;
+    if(Reverse == 'yes'){
+        countLists =countList.sort().reverse();
+        nameLists = nameList.sort().reverse();
+        dateLists = dateList.sort().reverse();
+    }else{
+        countLists =countList.sort();
+        nameLists = nameList.sort();
+        dateLists = dateList.sort();
+    }
+
+    var len = countLists.length;
+    var arrayResult = [];
+    var array;
+    var email;
+    var arrayforemail;
+    var name;
+    var id;
+    var dbId;
+    var contents;
+    var count;
+    var regcount;
+    var starts;
+    var ends;
+    var phoneToEdit;
+    var npCounts;
+    var rjCounts;
+    var yetRegCounts;
+    var yetCounts;
+    var groupType;
+    var groupType2;
+    var groupType3;
+
+    for(var i=0; i<len; i++){
+        if(option == "count"){
+            array = countLists[i].split('/');
+            email = array[8];
+            name = array[2];
+            id = array[3];
+            dbId = array[13];
+            contents = array[5];
+            count = array[0];
+            regcount = array[1];
+            starts = array[6];
+            ends = array[7];
+            phoneToEdit = array[4].replace(/-| |/gi,"");
+            if(name.length>10){
+                name = array[2].substr(0,9)+'..';
+            }
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
+            if(array[15]){
+                groupType2 = '/'+array[15];
+            }else{
+                groupType2 = '';
+            }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
+            }
+        }else if(option == "name"){
+            array = nameLists[i].split('/');
+            email = array[8];
+            name = array[0];
+            id = array[1];
+            dbId = array[13];
+            contents = array[3];
+            count = array[4];
+            regcount = array[5];
+            starts = array[6];
+            ends = array[7];
+            phoneToEdit = array[2].replace(/-| |/gi,"");
+            if(name.length>10){
+                name = array[0].substr(0,9)+'..';
+            }
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
+            if(array[15]){
+                groupType2 = '/'+array[15];
+            }else{
+                groupType2 = '';
+            }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
+            }
+        }else if(option == "date"){
+            array = dateLists[i].split('/');
+            arrayforemail = dateLists[i].split('/');
+            email = array[8];
+            name = array[1];
+            id = array[2];
+            dbId = array[13];
+            contents = array[4];
+            count = array[5];
+            regcount = array[6];
+            starts = array[0];
+            ends = array[7];
+            phoneToEdit = array[3].replace(/-| |/gi,"");
+            if(name.length>10){
+                name = array[1].substr(0,9)+'..';
+            }
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
+            if(array[15]){
+                groupType2 = '/'+array[15];
+            }else{
+                groupType2 = '';
+            }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
+            }
+        }
+
+        var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
+        var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
+        if(end == "9999.12.31"){
+            end = text;
+        }
+
+        var newReg = "";
+        if(starts.substr(0,4) == currentYear && Number(starts.substr(4,2)) == currentMonth+1){
+            newReg = '<img src="/static/user/res/icon-new.png" title="'+text2+'" class="newRegImg">';
+        }
+
+        var phone;
+        if(phoneToEdit.substr(0,2)=="02"){
+            phone = phoneToEdit.substr(0,2)+'-'+phoneToEdit.substr(2,3)+'-'+phoneToEdit.substr(5,4);
+        }else{
+            phone = phoneToEdit.substr(0,3)+'-'+phoneToEdit.substr(3,4)+'-'+phoneToEdit.substr(7,4);
+        }
+
+        var npCountImg = "";
+        if(npCounts == 0 && rjCounts == 0){
+            npCountImg = '<img src="/static/user/res/icon-link.png" title="Connected" class="npCountImg_wait">';
+        }else if(rjCounts > 0){
+            npCountImg = '<img src="/static/user/res/icon-alert.png" title="Disconnected" class="npCountImg_x">';
+        }
+
+        var yetReg = "";
+        var yet = "";
+        if(yetRegCounts > 0){
+            yetReg = '(+'+yetRegCounts+')';
+        }
+        if(yetCounts > 0){
+            yet = '(+'+yetCounts+')';
+        }
+
+
+        count = remove_front_zeros(count);
+        regcount = remove_front_zeros(regcount);
+
+        var phonenum = '<a class="phonenum" href="tel:'+phone+'">'+phone+'</a>';
+        var phoneimage = '<a href="tel:'+phone+'"><img src="/static/user/res/memberadd/phone.png" class="phonesms">'+phonenum+'</a>';
+        var smsimage = '<a href="sms:'+phone+'"><img src="/static/user/res/memberadd/sms.png" class="phonesms sms"></a>';
+        var nameimage ='<img src="/static/user/res/icon-setting-arrow.png" class="nameimg">';
+        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드">';
+        var pcprintimage = '<img src="/static/user/res/member/pters-print.png" class="pcmanageicon _info_print" title="프린트">';
+        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제">';
+        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="Edit">';
+        var pcinfoimage = '<img src="/static/user/res/member/icon-info.png" class="pcmanageicon _info_view" title="Info">';
+
+        var grouptypetd = '<div class="_grouptype _member_list_pc_style" data-name="'+groupType+groupType2+groupType3+'">'+groupType+groupType2+groupType3+'</div>';
+        var nametd = '<div class="_tdname _member_list_pc_style" data-name="'+name+'">'+newReg+name+'</div>';
+        var idtd = '<div class="_id _member_list_pc_style" data-name="'+id+'" data-dbid="'+dbId+'">'+id+'</div>';
+        var emailtd = '<div class="_email">'+email+'</div>';
+        var regcounttd = '<div class="_regcount _member_list_pc_style">'+regcount+yetReg+'</div>';
+        var remaincounttd = '<div class="_remaincount _member_list_pc_style">'+count+yet+'</div>';
+        var startdatetd = '<div class="_startdate _member_list_pc_style">'+start+'</div>';
+        var enddatetd = '<div class="_finday _member_list_pc_style">'+end+'</div>';
+        var mobiletd;
+        if(phoneToEdit != ""){
+            mobiletd = '<div class="_contact _member_list_pc_style">'+phoneimage+smsimage+'</div>';
+        }else{
+            mobiletd = '<div class="_contact _member_list_pc_style">-'+'</div>';
+        }
+        var pctd = '<div class="_manage">'+pcinfoimage+pceditimage+pcdownloadimage+pcdeleteimage+'</div>';
+        var scrolltd = '<div class="forscroll"></div>';
+
+        var pc_html = nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd;
+
+        var mobile_phone_img;
+        var mobile_sms_img;
+        if(phone == "--"){
+            mobile_phone_img = `<img src="/static/user/res/memberadd/phone.png" class="" style="width:23px;opacity:0.2">`;
+            mobile_sms_img = `<img src="/static/user/res/memberadd/sms.png" class=""  style="width:25px;opacity:0.2">`;
+        }else{
+            mobile_phone_img = `<a href="tel:'${phone}'"><img src="/static/user/res/memberadd/phone.png" class="" style="width:23px;"></a>`;
+            mobile_sms_img = `<a href="sms:'${phone}'"><img src="/static/user/res/memberadd/sms.png" class=""  style="width:25px;"></a>`;
+        }
+        var mobile_html = `<div class="_member_list_mobile_style">
+                                <div style="display:table-cell;width:70%;">
+                                    <div style="width:100%;height:35px;line-height:40px;font-size:22px;font-weight:500;padding-left:10px;">${name}</div>
+                                    <div style="width:100%;height:35px;line-height:32px;padding-left:13px;">
+                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">등록</span><span style="font-size:16px;color:#282828;">${regcount}</span></div>
+                                        <div style="display:inline-block;width:1px;height:12px;background-color:#cccccc;margin-right:10px;margin-left:12px;"></div>
+                                        <div style="display:inline-block;"><span style="margin-right:10px;font-size:14px;color:#777777">남은횟수</span><span style="font-size:16px;color:#282828;">${count}</span></div>
+                                    </div>
+                                </div>
+                                <div style="display:table-cell;width:30%;vertical-align:middle;opacity:0.7;text-align:center;padding-right:10px;">
+                                    <div style="display:inline-block;">${mobile_phone_img}</div>
+                                    <div class="phone_sms_gap"></div>
+                                    <div style="display:inline-block;">${mobile_sms_img}</div>
+                                </div>
+                           </div>`;
+        // var td = '<tr class="memberline"><td class="_countnum">'+(i+1)+'</td>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</tr>';
+        // arrayResult[i] = td;
+        //arrayResult[i] = '<div class="memberline"><div class="_countnum">'+(i+1)+'</div>'+nametd+grouptypetd+idtd+emailtd+regcounttd+remaincounttd+startdatetd+enddatetd+mobiletd+pctd+'</div>';
+        var addHtml;
+        if(bodywidth < 1000){
+            addHtml = mobile_html;
+        }else if(bodywidth >=1000){
+            addHtml = pc_html;
+        }
+
+        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+memberListSet_test_len)+'</div>'+addHtml+'</div>';
+
+    }
+    memberListSet_test_len += countLists.length;
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+
+
+    var resultToAppend = arrayResult.join("");
+    if(type=='current' && len == 0){
+        resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
+        if(bodywidth > 600){
+            $('#please_add_member_pc').show();
+        }else{
+            $('#please_add_member').show();
+        }
+    }else if(type=="finished" && len ==0){
+        resultToAppend = '<div class="" rowspan="9" style="height:50px;padding-top: 17px !important;">종료 된 회원이 없습니다.</div>';
+    }
+    var result = tbodyStart + resultToAppend + tbodyEnd;
+    // $tabletbody.remove();
+    $table.append(result);
+    mutext_val = 1;
+}
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){
     var bodywidth = window.innerWidth;

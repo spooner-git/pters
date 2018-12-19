@@ -144,7 +144,6 @@ def func_get_member_ing_list(class_id, user_id):
     member_list = []
 
     all_member = func_get_class_member_ing_list(class_id)
-
     query_group_type_cd = "select count(GROUP_TB_ID) from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
                           "B.USE=1 and " \
