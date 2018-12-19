@@ -3323,7 +3323,7 @@ function memberListSet (type,option,Reverse, jsondata){
 
     }
     memberListSet_test_len += len;
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+len+'</span>'+'명');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
 
     var resultToAppend = arrayResult.join("");
@@ -3623,7 +3623,7 @@ function memberListSet_test(type,option,Reverse, jsondata){
 
     }
     memberListSet_test_len += countLists.length;
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+memberListSet_test_len+'</span>'+'명');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
 
     var resultToAppend = arrayResult.join("");
