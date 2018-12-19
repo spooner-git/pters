@@ -1133,13 +1133,13 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page')
         member_data = func_get_member_ing_list(class_id, self.request.user.id)
+        context['total_member_num'] = len(member_data)
         paginator = Paginator(member_data, 20)  # Show 20 contacts per page
         try:
             member_data = paginator.page(page)
         except EmptyPage:
             member_data = None
         context['member_data'] = member_data
-        context['total_member_num'] = len(member_data)
         # end_dt = timezone.now()
         # print(str(end_dt-start_dt))
 
@@ -1155,13 +1155,13 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page')
         member_data = func_get_member_end_list(class_id, self.request.user.id)
+        context['total_member_num'] = len(member_data)
         paginator = Paginator(member_data, 20)  # Show 20 contacts per page
         try:
             member_data = paginator.page(page)
         except EmptyPage:
             member_data = None
         context['member_data'] = member_data
-        context['total_member_num'] = len(member_data)
         # end_dt = timezone.now()
         # print(str(end_dt-start_dt))
         return context
