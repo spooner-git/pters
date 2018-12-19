@@ -2747,6 +2747,8 @@ function get_member_list_test(url, use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    var startTime;
+    var endTime;
     $.ajax({
         url:url,
         type:'GET',
@@ -2755,6 +2757,7 @@ function get_member_list_test(url, use, callback){
         dataType : 'html',
 
         beforeSend:function(){
+            startTime = performance.now();
             beforeSend()
         },
 
@@ -2798,6 +2801,8 @@ function get_member_list_test(url, use, callback){
                     page_num -= 1;
                 }
                 // console.log('success');
+                endTime = performance.now();
+                console.log(endTime - startTime + 'ms')
             }
         },
 

@@ -149,7 +149,7 @@ class CenterMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #     self.request.session['class_type_name'] = class_info.get_class_type_cd_name()
 
         if error is None:
-            all_member = func_get_class_member_ing_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id, None)
             total_member_num = len(all_member)
 
             for member_info in all_member:
@@ -3011,7 +3011,7 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for class_auth_info in member_class_data:
 
                 class_info = class_auth_info.class_tb
-                all_member = func_get_class_member_ing_list(class_info.class_id)
+                all_member = func_get_class_member_ing_list(class_info.class_id, None)
                 total_member_num = len(all_member)
                 class_info.subject_type_name = class_info.get_class_type_cd_name()
                 class_info.state_cd_name = class_info.get_state_cd_name()
@@ -3461,7 +3461,7 @@ class GetCenterInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
 
         if error is None:
-            all_member = func_get_class_member_ing_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id, None)
             total_member_num = len(all_member)
             for member_info in all_member:
                 # member_data = member_info

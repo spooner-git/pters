@@ -158,8 +158,8 @@ def func_get_member_ing_list(class_id, user_id):
                                          lecture_tb__use=USE,
                                          use=USE).annotate(lecture_count=RawSQL(query_lecture_count, []),
                                                            check_one_to_one=RawSQL(query_group_type_cd, []))
-    for member_data in all_member:
 
+    for member_data in all_member:
         if member_data.user.is_active:
             member_data.is_active = True
         else:

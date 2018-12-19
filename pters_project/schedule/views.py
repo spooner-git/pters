@@ -63,7 +63,7 @@ def add_schedule_logic(request):
     note = request.POST.get('add_memo', '')
     class_id = request.session.get('class_id', '')
     class_type_name = request.session.get('class_type_name', '')
-    duplication_enable_flag = request.POTST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     next_page = request.POST.get('next_page')
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
     setting_to_trainee_lesson_alarm = request.session.get('setting_to_trainee_lesson_alarm',
@@ -639,7 +639,7 @@ def add_repeat_schedule_logic(request):
     class_id = request.session.get('class_id', '')
     # next_page = request.POST.get('next_page')
 
-    duplication_enable_flag = request.POTST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
+    duplication_enable_flag = request.POST.get('duplication_enable_flag', SCHEDULE_DUPLICATION_DISABLE)
     setting_schedule_auto_finish = request.session.get('setting_schedule_auto_finish', AUTO_FINISH_OFF)
 
     week_info = ['(일)', '(월)', '(화)', '(수)', '(목)', '(금)', '(토)']
