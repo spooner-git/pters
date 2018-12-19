@@ -1130,7 +1130,12 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.js" %}></script>
     <!-- <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.member.group.js" %}></script> -->
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
+{#    <script src="{% static_url "common/js/el-pagination.js" %}"></script>#}
     <script>
+{#        $.endlessPaginate({#}
+{#            paginateOnScrollMargin: 10,#}
+{#            paginateOnScroll: true#}
+{#        });#}
         $('a.text-membermanage').css('color', '#fe4e65;');
         $('#uptext').text("회원");
         $('footer').hide();
@@ -1193,6 +1198,7 @@
         });
 
         show_free_member_use_guide("member_manage");
+
     </script>
 
 
