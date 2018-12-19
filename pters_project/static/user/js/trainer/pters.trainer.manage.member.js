@@ -1,4 +1,12 @@
+const SORT_MEMBER_NAME = 0;
+const SORT_REMAIN_COUNT_FEW = 1;
+const SORT_REMAIN_COUNT_MANY = 2;
+const SORT_START_DATE_OLD = 3;
+const SORT_START_DATE_NEW = 4;
+var member_sort_val = SORT_MEMBER_NAME;
+
 $(document).ready(function(){
+
 
     //ESC키를 눌러서 팝업 닫기
     $(document).keyup(function(e){
@@ -128,10 +136,10 @@ $(document).ready(function(){
 
 
 ////////////신규 회원등록 레이어 팝업 띄우기//////////////////////////////////////////////////////////////
-
     $('.alignSelect').change(function(){
         //var jsondata = global_json
         if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
+            member_sort_val = SORT_MEMBER_NAME;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','name','no',jsondata);
@@ -143,6 +151,7 @@ $(document).ready(function(){
             }
             alignType = 'name';
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+            member_sort_val = SORT_REMAIN_COUNT_MANY;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','count','yes',jsondata);
@@ -153,6 +162,7 @@ $(document).ready(function(){
 
             alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
+            member_sort_val = SORT_REMAIN_COUNT_FEW;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','count','no',jsondata);
@@ -162,6 +172,7 @@ $(document).ready(function(){
             }
             alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
+            member_sort_val = SORT_START_DATE_OLD;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','date','no',jsondata);
@@ -173,6 +184,7 @@ $(document).ready(function(){
             }
             alignType = 'startP';
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
+            member_sort_val = SORT_START_DATE_NEW;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','date','yes',jsondata);
@@ -2730,12 +2742,32 @@ $(window).scroll(function() {
         var selector_finishedMemberList = $('#finishedMemberList');
         if(selector_currentMemberList.css('display') == "block") {
             get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
-                memberListSet_test('current', 'name', 'no', jsondata);
+                if(member_sort_val == SORT_MEMBER_NAME){
+                    memberListSet_test('current', 'name', 'no', jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_FEW){
+                    memberListSet_test('current', 'count', 'no', jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_MANY){
+                    memberListSet_test('current', 'count', 'yes', jsondata);
+                }else if(member_sort_val == SORT_START_DATE_OLD){
+                    memberListSet_test('current', 'date', 'no', jsondata);
+                }else if(member_sort_val == SORT_START_DATE_NEW){
+                    memberListSet_test('current', 'date', 'yes', jsondata);
+                }
             });
         }
         else if(selector_finishedMemberList.css('display') == "block"){
             get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
-                memberListSet_test('finished','name','no',jsondata);
+                if(member_sort_val == SORT_MEMBER_NAME){
+                    memberListSet_test('finished','name','no',jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_FEW){
+                    memberListSet_test('finished','count','no',jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_MANY){
+                    memberListSet_test('finished','count','yes',jsondata);
+                }else if(member_sort_val == SORT_START_DATE_OLD){
+                    memberListSet_test('finished','date','no',jsondata);
+                }else if(member_sort_val == SORT_START_DATE_NEW){
+                    memberListSet_test('finished','date','yes',jsondata);
+                }
             });
         }
 	}
@@ -2750,10 +2782,11 @@ function get_member_list_test(url, use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     var startTime;
     var endTime;
+    console.log(member_sort_val);
     $.ajax({
         url:url,
         type:'GET',
-        data: {"page": ++page_num},
+        data: {"page": ++page_num, "member_sort": member_sort_val},
 
         dataType : 'html',
 
@@ -2822,10 +2855,12 @@ function get_member_ing_list(use, callback){
     page_num = 1;
     memberListSet_test_len = 1;
     mutex_val = 1;
+    
+    console.log(member_sort_val);
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
-        data: {"page": page_num},
+        data: {"page": page_num, "member_sort": member_sort_val},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2889,7 +2924,7 @@ function get_member_end_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_end_list/',
         type:'GET',
-        data: {"page": page_num},
+        data: {"page": page_num, "member_sort": member_sort_val},
         dataType : 'html',
 
         beforeSend:function(){
