@@ -2716,7 +2716,7 @@ $(window).scroll(function() {
 	var scrollHeight = $(document).height();
 	var scrollPosition = $(window).height() + $(window).scrollTop();
 
-	if ((scrollHeight - scrollPosition) < 30) {
+	if ((scrollHeight - scrollPosition) == 0) {
         get_member_ing_list_test("callback", function(jsondata){
             memberListSet_test('current', 'name', 'no', jsondata);
         });
