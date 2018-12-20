@@ -4,7 +4,7 @@ import json
 import logging
 import random
 import urllib
-from operator import itemgetter
+from operator import itemgetter, attrgetter
 
 from urllib.parse import quote
 
@@ -1137,23 +1137,19 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
         member_data = func_get_member_ing_list(class_id, self.request.user.id)
-        # print(str(member_sort))
-
-        # print(str(member_data))
-        if member_sort == SORT_MEMBER_NAME:
-            member_data = sorted(member_data, key=itemgetter('name'), reverse=0)
-        elif member_sort == SORT_REMAIN_COUNT_FEW:
-            member_data = sorted(member_data, key=itemgetter('lecture_rem_count'), reverse=0)
-        elif member_sort == SORT_REMAIN_COUNT_MANY:
-            member_data = sorted(member_data, key=lambda member_info: member_info['lecture_rem_count'], reverse=1)
-        elif member_sort == SORT_START_DATE_OLD:
-            member_data = sorted(member_data, key=lambda member_info: member_info.start_date, reverse=0)
-        elif member_sort == SORT_START_DATE_NEW:
-            member_data = sorted(member_data, key=lambda member_info: member_info.start_date, reverse=1)
+        sort_info = int(member_sort)
+        if sort_info == SORT_MEMBER_NAME:
+            member_data = sorted(member_data, key=attrgetter('name'), reverse=False)
+        elif sort_info == SORT_REMAIN_COUNT_FEW:
+            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=False)
+        elif sort_info == SORT_REMAIN_COUNT_MANY:
+            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=True)
+        elif sort_info == SORT_START_DATE_OLD:
+            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=False)
+        elif sort_info == SORT_START_DATE_NEW:
+            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=True)
 
         context['total_member_num'] = len(member_data)
-        # for member_info in member_data:
-        #     print(str(member_info.name) + ':'+str(member_info.lecture_rem_count))
         if page != 0:
             paginator = Paginator(member_data, 20)  # Show 20 contacts per page
             try:
@@ -1176,7 +1172,20 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
+        member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
         member_data = func_get_member_end_list(class_id, self.request.user.id)
+        sort_info = int(member_sort)
+        if sort_info == SORT_MEMBER_NAME:
+            member_data = sorted(member_data, key=attrgetter('name'), reverse=False)
+        elif sort_info == SORT_REMAIN_COUNT_FEW:
+            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=False)
+        elif sort_info == SORT_REMAIN_COUNT_MANY:
+            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=True)
+        elif sort_info == SORT_START_DATE_OLD:
+            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=False)
+        elif sort_info == SORT_START_DATE_NEW:
+            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=True)
+
         context['total_member_num'] = len(member_data)
         if page != 0:
             paginator = Paginator(member_data, 20)  # Show 20 contacts per page

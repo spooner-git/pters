@@ -2782,7 +2782,6 @@ function get_member_list_test(url, use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     var startTime;
     var endTime;
-    console.log(member_sort_val);
     $.ajax({
         url:url,
         type:'GET',
