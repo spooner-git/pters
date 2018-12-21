@@ -988,7 +988,7 @@
     function payment_for_iap(payment_date , product_price_id, os_info){
 {#        alert(payment_date);#}
 {#        shade_index(-100);#}
-{#        alert(product_price_id);#}
+        alert(product_price_id);
         $.ajax({
             url: "/payment/payment_for_iap/", // 서비스 웹서버
             type: "POST",
