@@ -1008,8 +1008,10 @@
 
             success: function (data) {
                 var jsondata = JSON.parse(data);
+                var msg = "결제에 실패했습니다.";
+                var url_move = "/payment/";
                 if (jsondata.messageArray.length > 0) {
-                    msg = '결제에 실패하였습니다.';
+                    msg = '결제에 실패했습니다.';
                     msg += ' : ' + jsondata.messageArray;
                     url_move = "/payment/";
                     alert(msg);
