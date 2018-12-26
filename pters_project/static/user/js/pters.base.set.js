@@ -202,13 +202,14 @@ function toggleGroupParticipantsList(onoff){
                                                         '/'+
                                                         max+')'
                                                     );
-                selector_grouopParticipants.css({'height':'auto'});
+                // selector_grouopParticipants.css({'height':'auto'});
+                selector_grouopParticipants.css({'display':'block', 'height':'auto'});
                 completeSend();
             });
             break;
         case 'off':
             toggleGroupParticipants = 'off';
-            selector_grouopParticipants.css({'height':0}).html('');
+            selector_grouopParticipants.css({'display':'none'}).html('');
             selector_popup_btn_viewGroupParticipants_img.css('transform', 'rotate(0deg)');
             break;
     }
