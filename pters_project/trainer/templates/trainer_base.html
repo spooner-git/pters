@@ -122,20 +122,31 @@
         <div class="popup_info_text" style="padding-bottom: 5px;">
             <p id="popup_info"></p>
             <p id="popup_info2"></p>
-            <form style="width:200px;height:30px;display:inline-block;">
-                <input id="popup_info3_memo" type="text" maxlength="15" title="메모" readonly>
+            <form style="width:80%;height:30px;display:inline-block;">
+                <input id="popup_info3_memo" type="text" maxlength="15" title="메모" placeholder="기록된 메모가 없습니다." readonly>
             </form>
             <img src="/static/user/res/icon-pencil.png" style="width: 17px;cursor:pointer;margin-left: 5px;margin-bottom:5px;" title="Edit" id="popup_info3_memo_modify" data-type="view">
-            <p style="font-size:10px;color:#282828;opacity:0.6;text-align: center;" class="pt_memo_guide_popup text-memocaution"></p>
+            <p class="pt_memo_guide_popup text-memocaution"></p>
         </div>
-        <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
-            <span class="text-plancomplete"></span>
+        <div id="popup_btn_viewGroupParticipants">
+            <span class="text-participants"></span>
+            <div id="groupParticipants_number_in_btn"></div>
+            <img src="/static/user/res/icon-down-grey.png"></div>
+        <div id="groupParticipants"></div>
+        <div id="popup_sign_img">
+            <span class="text-completesign"></span>
+            <img src="" id="id_sign_img">
         </div>
-        <div id="popup_btn_delete" class="popup_inner popup_inner_delete  popup_inner_x3">
-            <span class="text-plancancel"></span>
-        </div>
-        <div class="popup_inner  popup_inner_x3" onclick="close_info_popup('cal_popup_planinfo')">
-            <span class="text-close"></span>
+        <div class="popup_btn_wrap">
+            <div id="popup_btn_complete" class="popup_inner popup_inner_finish popup_inner_x3">
+                <span class="text-plancomplete"></span>
+            </div>
+            <div id="popup_btn_delete" class="popup_inner popup_inner_delete  popup_inner_x3">
+                <span class="text-plancancel"></span>
+            </div>
+            <div class="popup_inner  popup_inner_x3" onclick="close_info_popup('cal_popup_planinfo')">
+                <span class="text-close"></span>
+            </div>
         </div>
         <div id="canvasWrap">
             <p class="text-pleasesign"></p>
@@ -147,14 +158,7 @@
                 <span class="text-close"></span>
             </div>
         </div>
-        <div id="popup_btn_viewGroupParticipants"><span class="text-participants"></span><img src="/static/user/res/icon-down-grey.png"></div>
-        <div id="groupParticipants">
-
-        </div>
-        <div id="popup_sign_img">
-            <span class="text-completesign"></span>
-            <img src="" id="id_sign_img">
-        </div>
+        
 
         <div id="subpopup_addByList_plan" class="subpopup_addGroup" style="top:50%;width: 100%;">
             <div class="mode_switch_button_wrap_cal" style="margin:unset;margin-top:5px;display:table;">
@@ -192,11 +196,13 @@
             <img src="/static/user/res/ptadd/icon-cal.png" id="img_cal">
         </div>
         <div id="popup_delete_question" class="popup_info_text text-deletequestion-plan"></div>
-        <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
-            <span class="text-yes"></span>
-        </div>
-        <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete" onclick="close_info_popup('cal_popup_plandelete')">
-            <span class="text-no"></span>
+        <div class="popup_btn_wrap">
+            <div id="popup_delete_btn_yes" class="popup_inner popup_inner_delete">
+                <span class="text-yes"></span>
+            </div>
+            <div id="popup_delete_btn_no" class="popup_inner popup_inner_delete" onclick="close_info_popup('cal_popup_plandelete')">
+                <span class="text-no"></span>
+            </div>
         </div>
     </div>
     <!--삭제 확인 팝업메뉴-->

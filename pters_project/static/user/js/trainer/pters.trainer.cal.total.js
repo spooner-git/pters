@@ -1667,7 +1667,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
             planfinished = ' classTime_checked';
-            plancolor_ing_bg_cd = "";
+            plancolor_ing_bg_cd = "#fbf3bd";
             plancolor_ing_font_cd = "";
             plancolor_end_bg_cd = "";
             plancolor_end_font_cd = "";
@@ -1685,7 +1685,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
             planScheduleFinishArray = '';
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
-            plancolor_ing_bg_cd = "";
+            plancolor_ing_bg_cd = "#eeeeee";
             plancolor_ing_font_cd = "";
             plancolor_end_bg_cd = "";
             plancolor_end_font_cd = "";
@@ -1886,6 +1886,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
 
                         }
                         planStartDiv.append('<div class-time="'+planArrayForTag.join('_')+
+                                               '" data-plancolor="'+plancolor_ing_bg_cd+
                                                '" class-schedule-id="'+planScheduleIdArray[i]+
                                                '" data-starttime="'+planStartDate[i]+
                                                '" data-endtime="'+planEndDate[i]+
@@ -1925,6 +1926,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                         planMinute = temp_planMinute;
                     }
                     planStartDiv.append('<div group-time="'+planArrayForTag.join('_')+
+                                           '" data-plancolor="'+plancolor_ing_bg_cd[i]+
                                            '" group-schedule-id="'+planScheduleIdArray[i]+
                                            '" data-starttime="'+planStartDate[i]+
                                            '" data-endtime="'+planEndDate[i]+
@@ -1968,6 +1970,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                         planMinute = temp_planMinute;
                     }
                     planStartDiv.append('<div off-time="'+planArrayForTag.join('_')+
+                                           '" data-plancolor="'+plancolor_ing_bg_cd+
                                            '" off-schedule-id="'+planScheduleIdArray[i]+
                                            '" data-starttime="'+planStartDate[i]+
                                            '" data-endtime="'+planEndDate[i]+
@@ -2099,7 +2102,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             planNoteArray = jsondata.scheduleNoteArray;
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
-            plancolor_ing_bg_cd = "";
+            plancolor_ing_bg_cd = "#fbf3bd";
             plancolor_ing_font_cd = "";
             plancolor_end_bg_cd = "";
             plancolor_end_font_cd = "";
@@ -2118,7 +2121,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             planScheduleFinishArray = '';
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
-            plancolor_ing_bg_cd = "";
+            plancolor_ing_bg_cd = "#eeeeee";
             plancolor_ing_font_cd = "";
             plancolor_end_bg_cd = "";
             plancolor_end_font_cd = "";
@@ -2348,6 +2351,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
                 planhtml = '<div class-time="'+planArrayForTag.join('_')+
                             '" class-schedule-id="'+planScheduleIdArray[i]+
+                            '" data-plancolor="'+plancolor_ing_bg_cd+
                             '" data-starttime="'+planStartDate[i]+
                             '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
                             '" data-groupid="'+planGroupid[i]+
@@ -2373,6 +2377,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
                 planhtml = '<div group-time="'+planArrayForTag.join('_')+
                             '" group-schedule-id="'+planScheduleIdArray[i]+
+                            '" data-plancolor="'+plancolor_ing_bg_cd[i]+
                             '" data-starttime="'+planStartDate[i]+
                             '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
                             '" data-groupid="'+planGroupid[i]+
@@ -2400,6 +2405,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
                 planhtml = '<div off-time="'+planArrayForTag.join('_')+
                             '" off-schedule-id="'+planScheduleIdArray[i]+
+                            '" data-plancolor="'+plancolor_ing_bg_cd+
                             '" data-starttime="'+planStartDate[i]+
                             '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
                             '" data-groupid="'+planGroupid[i]+

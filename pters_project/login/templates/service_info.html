@@ -58,6 +58,10 @@
         <!-- <a href="/login/service_test_login/"><span>체험하기</span></a> -->
     </nav>
 
+    <div id="float_btn_back_to_home" onclick="location.href='{% url 'index' %}'">
+        <span>홈으로</span>
+    </div>
+
     <div id="upper_title_wrap">
         <div id="upper_title_left">
             <p><a href="/"><img src="/static/user/res/PTERS_logo_pure.png" style="height: 40px;"></a>는</p>
@@ -70,6 +74,7 @@
             <p>비즈니스의 생산성을 향상 시키세요!</p>
         </div>
     </div>
+    
 
     <div id="pagination_pc">
         <div class="pagination_pc_element pagination_pc_element_selected pagination_1" data-page="1">PTERS만의 차별화 기능</div>
@@ -134,23 +139,24 @@
         </div>
         <div class="swiper-wrapper">
             <div class="swiper-slide page_1" data-page="page_1">
+
                 <div class="content_page_left">
                     <p>오직<br><img src="/static/user/res/PTERS_logo_pure.png" style="height:35px;">에서만!</p>
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>내 맘대로<br>커스터마이징</label>
-                        <div>
+                       <!--  <div>
                            <p>당신의 레슨 일정<br>케이스 by 케이스<br>모두 맞춰 보세요</p> 
-                        </div>
+                        </div> -->
                         <div>
-                            <p><span class="text_pink">업무 시간 설정</span><span> (레슨, 레슨외 시간, 업무 시간 설정)</span></p>
-                            <p><span class="text_pink">레슨 단위 설정</span><span> (5분, 30분, 1시간단위로 자유롭게 사용)</span></p>
-                            <p><span class="text_pink">회원 예약 기능 ON/OFF 설정</span><span> (OFF시 회원이 예약할 수 없는 시간)</span></p>
-                            <p><span class="text_pink">예약 가능 시간 설정</span><span> (회원이 내가 확인할 수 있는 시간대에만 예약)</span></p>
-                            <p><span class="text_pink">근접한 예약/취소 금지 설정</span><span> (1시간~ 3일 설정 가능)</span></p>
-                            <p><span class="text_pink">푸시알림</span><span> (앱 사용시 일정 변경 알림을 받을 수 있습니다.)</span></p>
-                            <p>등</p>
+                            <p><span class="text_pink text_sub_subject">업무 시간 설정</span><br><span> 레슨, 레슨외 시간, 업무 시간 설정</span></p>
+                            <p><span class="text_pink text_sub_subject">레슨 단위 설정</span><br><span> 5분, 30분, 1시간단위로 자유롭게 사용</span></p>
+                            <p><span class="text_pink text_sub_subject">회원 예약 기능 ON/OFF 설정</span><br><span> OFF시 회원이 예약할 수 없는 시간</span></p>
+                            <p><span class="text_pink text_sub_subject">예약 가능 시간 설정</span><br><span> 회원이 내가 확인할 수 있는 시간대에만 예약</span></p>
+                            <p><span class="text_pink text_sub_subject">근접한 예약/취소 금지 설정</span><br><span> 1시간~ 3일 설정 가능</span></p>
+                            <p><span class="text_pink text_sub_subject">푸시알림</span><br><span> 앱 사용시 일정 변경 알림을 받을 수 있습니다.</span></p>
                         </div>
                         <div>
                             <p>자유롭게 설정하고 관리해보세요.</p>
@@ -167,6 +173,7 @@
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>언제 어디서나 편리한<br>클라우드 레슨 관리</label>
                         <div>
                             <p>넘쳐나는 회원 리스트 장부<br>빡빡한 시간표<br>레슨 메모 등</p> 
@@ -195,6 +202,7 @@
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>세상에서 제일 쉬운<br>레슨일정관리</label>
                         <div>
                            <p>주간 시간표와 월간 달력으로<br>나의 레슨 일정을 쉽게 확인할 수 있습니다.</p> 
@@ -222,9 +230,10 @@
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>한명 한명 소중한<br>나의 회원 관리</label>
                         <div>
-                           <p class="text_pink">각 회원별 정보(레슨, 수강이력)을<br>회원 카드 형태로 살펴볼 수 있습니다.</p> 
+                           <p class="text_pink text_sub_subject">각 회원별 정보(레슨, 수강이력)을<br>회원 카드 형태로 살펴볼 수 있습니다.</p> 
                         </div>
                         <div>
                             <p>수강 정보를 등록 및 수정하고,</p>
@@ -235,7 +244,7 @@
                             <p>자동으로 종료 회원으로 분류되고</p>
                             <p>종료된 회원도 지속적으로 관리할 수 있습니다.</p>
                         </div>
-                        <div class="text_pink">
+                        <div class="text_pink text_sub_subject">
                             <p>회원님께서도 레슨이 종료되더라도</p>
                             <p>과거 이력을 언제든 다시 살펴볼 수 있습니다.</p>
                         </div>
@@ -248,17 +257,18 @@
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>1:1, 그룹, GX등<br>모든 형태의 레슨을 커버!</label>
                         <div>
                             <p>1:1 개인레슨부터<br>그룹레슨, 선착순 신청형 수업까지<br>다양한 형태의 레슨관리를 지원합니다.</p> 
                         </div>
                         <div>
-                            <p class="text_pink">수강권 기능</p>
+                            <p class="text_pink text_sub_subject">수강권 기능</p>
                             <p>하나의 수강권으로 여러개 수업을 수강하는</p>
                             <p>패키지 형태도 피터스로 간단하게 만들어보세요!</p>
                         </div>
                         <div>
-                            <p class="text_pink">그룹 일정 관리</p>
+                            <p class="text_pink text_sub_subject">그룹 일정 관리</p>
                             <p>그룹형 레슨 일정을 완료하면,</p>
                             <p>자동으로 참여회원의 레슨 횟수가 차감됩니다.</p>
                             <p>결석 및 개별참여 완료 기능도 지원합니다!</p>
@@ -278,8 +288,9 @@
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>전화나 메시지 없이<br>회원의 일정은 회원이 직접!</label>
-                        <div class="text_pink">
+                        <div class="text_pink text_sub_subject">
                            <p>매번 각 회원마다 일정 조율하는 시간..<br>PTERS로 절약해보세요.</p> 
                         </div>
                         <div>
@@ -301,6 +312,7 @@
                 </div>
                 <div class="content_page_right">
                     <div class="content_page_right_wrapper">
+                        <div class="upper_title_img_for_mobile"></div>
                         <label>한 눈에 확인하는<br>매출과 회원 통계</label>
                         <div>
                            <p>월별 매출 현황 그래프로</p>
@@ -311,7 +323,7 @@
                             <p>현재 비즈니스의 현황 및 분석을 토대로</p>
                             <p>앞으로의 경영에 대해 구상할 수 있습니다.</p>
                         </div>
-                        <div class="text_pink">
+                        <div class="text_pink text_sub_subject">
                             <p>PTERS는</p>
                             <p>매출과 통계 그래프를 입력한 데이터를 기반으로 제공하며,</p>
                             <p>통계항목을 지속적으로 추가해 나갈 예정입니다.</p>

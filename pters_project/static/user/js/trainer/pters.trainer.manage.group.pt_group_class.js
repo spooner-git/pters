@@ -195,6 +195,7 @@ $(document).on('click', 'img.add_listedMember', function(){
                                                                                                                                     '/'+
                                                                                                                                     max+')'
                                                                                                                                 );
+                                                                                        $('#groupParticipants_number_in_btn').text($('div.groupParticipantsRow').length);
                                                                                      });//특정그룹 회원목록 업데이트
                         enable_group_member_add_after_ajax();
                         
