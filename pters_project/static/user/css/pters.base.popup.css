@@ -355,7 +355,7 @@
 	height: 45px;
 	position: relative;/*
 	background-color: #ffffff;*/
-	border-bottom: 1px solid #cccccc
+	border-top: 1px solid #cccccc;
 }
 #popup_sign_img span{
 	position: absolute;
@@ -711,6 +711,10 @@
 		border-bottom: 1px solid #cccccc;
 	}
 	#groupParticipants{
+		border-top: 0;
+		border-bottom: 1px solid #cccccc;
+	}
+	#popup_sign_img{
 		border-top: 0;
 		border-bottom: 1px solid #cccccc;
 	}
