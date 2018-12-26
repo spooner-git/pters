@@ -3593,6 +3593,7 @@ $(document).on('click', '.group_member_cancel', function(){
                                                         '/'+
                                                         max+')'
                                                     );
+            $('#groupParticipants_number_in_btn').text(participants_number);
         });
     });
 });

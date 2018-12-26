@@ -529,7 +529,7 @@
         }else{
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#282828"});
         }
-
+        $('#groupParticipants_number_in_btn').text(group_current_member_num);
         $('#popup_planinfo_title').html(infoText2);
         $('#popup_info').text(infoText+' '+time+':'+minute+' - '+info[7]+':'+info[8]);
         //$('#popup_info2').html(infoText2);
@@ -734,6 +734,7 @@
                 var group_current_member_num =$(this).attr('data-currentmembernum');
                 var group_max_member_num = $(this).attr('data-membernum');
                 var popuptext = '<span data-name="'+name+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_type_name+'">['+group_type_name+'] '+name+'<span id="groupplan_participants_status"> ('+group_current_member_num+'/'+group_max_member_num+')</span> </span>'+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>';
+                $('#groupParticipants_number_in_btn').text(group_current_member_num);
                 $('#popup_info2').html(popuptext);
                 //$('#popup_info2').html('['+group_type_name+']'+name+'<br><span class="popuptimetext">'+stime_text + ' - ' + etime_text+'</span>');
                 $('#popup_btn_viewGroupParticipants').show().attr({'data-membernum': $(this).attr('data-membernum'),
