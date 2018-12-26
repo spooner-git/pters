@@ -39,13 +39,14 @@ def func_get_class_member_id_list(class_id):
     return all_member
 
 
-def func_get_class_member_ing_list(class_id):
+def func_get_class_member_ing_list(class_id, keyword):
     all_member = []
     class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb__member__user'
                                                                ).filter(class_tb_id=class_id, auth_cd='VIEW',
                                                                         lecture_tb__state_cd='IP',
                                                                         lecture_tb__use=USE,
                                                                         lecture_tb__member__use=USE,
+                                                                        lecture_tb__member__name__contains=keyword,
                                                                         use=USE).order_by('lecture_tb__member__name')
     for class_lecture_info in class_lecture_data:
         check_member = None
@@ -68,7 +69,7 @@ def func_get_class_member_ing_list(class_id):
     return all_member
 
 
-def func_get_class_member_end_list(class_id):
+def func_get_class_member_end_list(class_id, keyword):
     all_member = []
     #
     query_ip_lecture_count = "select count(*) from LECTURE_TB AS B WHERE B.STATE_CD = \'IP\' " \
@@ -81,7 +82,9 @@ def func_get_class_member_end_list(class_id):
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
         'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
-                                           lecture_tb__use=USE, lecture_tb__member__use=USE, use=USE
+                                           lecture_tb__use=USE, lecture_tb__member__use=USE,
+                                           lecture_tb__member__name__contains=keyword,
+                                           use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])
                                                                 ).order_by('lecture_tb__member__name')
@@ -139,11 +142,11 @@ def func_get_class_member_one_to_one_end_list(class_id):
     return all_member
 
 
-def func_get_member_ing_list(class_id, user_id):
+def func_get_member_ing_list(class_id, user_id, keyword):
 
     member_list = []
 
-    all_member = func_get_class_member_ing_list(class_id)
+    all_member = func_get_class_member_ing_list(class_id, keyword)
     query_group_type_cd = "select count(GROUP_TB_ID) from GROUP_LECTURE_TB as B " \
                           "where B.LECTURE_TB_ID = `CLASS_LECTURE_TB`.`LECTURE_TB_ID` AND " \
                           "B.USE=1 and " \
@@ -325,7 +328,7 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
 
     member_list = []
 
-    all_member = func_get_class_member_ing_list(class_id)
+    all_member = func_get_class_member_ing_list(class_id, '')
 
     query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
                           "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \
@@ -488,11 +491,11 @@ def func_get_member_one_to_one_ing_list(class_id, user_id):
     return member_list
 
 
-def func_get_member_end_list(class_id, user_id):
+def func_get_member_end_list(class_id, user_id, keyword):
 
     member_list = []
 
-    all_member = func_get_class_member_end_list(class_id)
+    all_member = func_get_class_member_end_list(class_id, keyword)
 
     # query_group_type_cd = "select GROUP_TYPE_CD from GROUP_TB WHERE ID = " \
     #                       "(select GROUP_TB_ID from GROUP_LECTURE_TB as B " \

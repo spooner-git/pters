@@ -195,7 +195,7 @@ class TrainerMainView(LoginRequiredMixin, AccessTestMixin, TemplateView):
         #     self.request.session['class_type_name'] = class_info.get_class_type_cd_name()
 
         if error is None:
-            all_member = func_get_class_member_ing_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id, '')
             total_member_num = len(all_member)
 
             class_lecture_list = ClassLectureTb.objects.select_related(
@@ -513,8 +513,8 @@ class MyPageView(LoginRequiredMixin, AccessTestMixin, View):
 
         if error is None:
             # all_member = MemberTb.objects.filter().order_by('name')
-            all_member = func_get_class_member_ing_list(class_id)
-            end_member = func_get_class_member_end_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id, '')
+            end_member = func_get_class_member_end_list(class_id, '')
 
             for member_info in all_member:
                 # member_data = member_info
@@ -1119,10 +1119,11 @@ class GetMemberListView(LoginRequiredMixin, AccessTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(GetMemberListView, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+        keyword = self.request.GET.get('keyword', '')
         # context = get_member_data(context, class_id, None, self.request.user.id)
 
-        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id)
-        context['member_finish_data'] = func_get_member_end_list(class_id, self.request.user.id)
+        context['member_data'] = func_get_member_ing_list(class_id, self.request.user.id, keyword)
+        context['member_finish_data'] = func_get_member_end_list(class_id, self.request.user.id, keyword)
         # return context
         return context
 
@@ -1136,7 +1137,8 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
-        member_data = func_get_member_ing_list(class_id, self.request.user.id)
+        keyword = self.request.GET.get('keyword', '')
+        member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
         sort_info = int(member_sort)
         if sort_info == SORT_MEMBER_NAME:
             member_data = sorted(member_data, key=attrgetter('name'), reverse=False)
@@ -1173,7 +1175,8 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
-        member_data = func_get_member_end_list(class_id, self.request.user.id)
+        keyword = self.request.GET.get('keyword', '')
+        member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
         sort_info = int(member_sort)
         if sort_info == SORT_MEMBER_NAME:
             member_data = sorted(member_data, key=attrgetter('name'), reverse=False)
@@ -1573,8 +1576,8 @@ def export_excel_member_list_logic(request):
     member_finish_list = []
 
     if error is None:
-        member_list = func_get_member_ing_list(class_id, request.user.id)
-        member_finish_list = func_get_member_end_list(class_id, request.user.id)
+        member_list = func_get_member_ing_list(class_id, request.user.id, '')
+        member_finish_list = func_get_member_end_list(class_id, request.user.id, '')
 
     wb = Workbook()
     ws1 = wb.active
@@ -4553,7 +4556,7 @@ class GetClassListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView):
             for class_auth_info in member_class_data:
 
                 class_info = class_auth_info.class_tb
-                all_member = func_get_class_member_ing_list(class_info.class_id)
+                all_member = func_get_class_member_ing_list(class_info.class_id, '')
                 total_member_num = len(all_member)
                 class_info.subject_type_name = class_info.get_class_type_cd_name()
                 class_info.state_cd_name = class_info.get_state_cd_name()
@@ -5022,7 +5025,7 @@ class GetTrainerInfoView(LoginRequiredMixin, AccessTestMixin, View):
                                                                        en_dis_type=OFF_SCHEDULE_TYPE)
 
         if error is None:
-            all_member = func_get_class_member_ing_list(class_id)
+            all_member = func_get_class_member_ing_list(class_id, '')
             total_member_num = len(all_member)
             for member_info in all_member:
                 # member_data = member_info
