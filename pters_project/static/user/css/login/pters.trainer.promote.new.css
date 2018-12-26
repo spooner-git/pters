@@ -2,17 +2,18 @@
 
 html,body{
 	/*background-color: #282828;*/
+	background-color: #000000;
 }
 
 html{
 	font-family: 'Noto Sans KR',sans-serif !important;
-	background-image: url('/static/common/promote_mobile/1.jpg?v=2018-10-30');
-	background-size: cover;
+	/*background-image: url('/static/common/promote_mobile/1.jpg?v=2018-10-30');
+	background-size: cover;*/
 }
 @media(min-width:600px){
 	html{
-		background-image: url('/static/common/promote_pc/1.jpg?v=2018-10-30');
-		background-size: cover;
+		/*background-image: url('/static/common/promote_pc/1.jpg?v=2018-10-30');
+		background-size: cover;*/
 	}
 }
 nav.upperbar img{
@@ -124,6 +125,10 @@ nav.upperbar span{
 	color: #fe4e65;
 	font-weight: 500;
 }
+.text_sub_subject{
+	font-weight: 500;
+	font-size: 17px !important;
+}
 #content_wrap{
 	position: relative;
 	width: 100%;
@@ -208,10 +213,30 @@ nav.upperbar span{
 		background-image: url("/static/user/res/promotion/promote_2.jpg");
 		background-size: cover;
 	}
-	.page_3 > .content_page_left ,.page_4 > .content_page_left, .page_5 > .content_page_left,.page_6 > .content_page_left, .page_7 > .content_page_left{
-		background-image: url("/static/user/res/promotion/promote_1.jpg");
+	.page_3 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_3.jpg");
 		background-size: cover;
 	}
+	.page_4 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_4.jpg");
+		background-size: cover;
+	}
+	.page_5 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_5.jpg");
+		background-size: cover;
+	}
+	.page_6 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_6.jpg");
+		background-size: cover;
+	}
+	.page_7 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_7.jpg");
+		background-size: cover;
+	}
+	/*.page_3 > .content_page_left ,.page_4 > .content_page_left, .page_5 > .content_page_left,.page_6 > .content_page_left, .page_7 > .content_page_left{
+		background-image: url("/static/user/res/promotion/promote_1.jpg");
+		background-size: cover;
+	}*/
 
 @media(min-width:600px){
 	.content_page_right > .content_page_right_wrapper{
@@ -235,7 +260,8 @@ nav.upperbar span{
 }
 @media(min-width:1080px){
 	.content_page_left > p{
-		display: 	block;
+		/*display: 	block;*/
+		display: none;
 	}
 	.content_page_left{
 		width: 	54%;
