@@ -28,8 +28,27 @@ nav.upperbar span{
 	color: #ffffff;
 	font-weight: 100;
 }
+#float_btn_back_to_home{
+	cursor: pointer;
+	position: fixed;
+	bottom: 50px;
+	right: 10px;
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	background-color: #fe4e65;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: 500;
+	text-align: center;
+	z-index: 1500;
+}
+	#float_btn_back_to_home > span{
+		line-height: 90px;
+	}
 
 #upper_title_wrap{
+	display: none;
 	width: 100%;
 	height: auto;
 	max-width: 700px;
@@ -66,6 +85,12 @@ nav.upperbar span{
 		margin-top: 0;
 		margin-bottom: 5px;
 	}
+.upper_title_img_for_mobile{
+	width: 100%;
+	height: 150px;
+	margin-top: 0 !important;
+}
+
 
 #pagination_mobile{
 	position: fixed;
@@ -136,7 +161,7 @@ nav.upperbar span{
 	margin: 0 auto;
 	margin-top: 10px;
 	margin-bottom: 0px;
-	height: 720px;
+	height: 850px;
 	background-color: #282828;
 }
 	.content_page{
@@ -147,7 +172,7 @@ nav.upperbar span{
 		height: 100%;
 	}
 	.content_page_left{
-		display: inline-block;
+		display: none;
 		width: 100%;
 		height: 100%;
 		background-color: #f4f4f4;
@@ -168,7 +193,7 @@ nav.upperbar span{
 		display: inline-block;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(40, 40, 40, 0.86);
+		background-color: #000000;
 		color: #ffffff;
 	}
 		.content_page_right label{
@@ -177,7 +202,8 @@ nav.upperbar span{
 		}
 		.content_page_right > .content_page_right_wrapper{
 			position: absolute;
-			padding: 60px 0 30px 15px;
+			width: 100%;
+			padding: 0;
 		}
 		.content_page_right > .content_page_right_wrapper > div{
 			margin-top: 30px;
@@ -238,8 +264,53 @@ nav.upperbar span{
 		background-size: cover;
 	}*/
 
+	.page_1 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_1_m.jpg");
+		background-size: cover;
+	}
+	.page_2 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_2_m.jpg");
+		background-size: cover;
+	}
+	.page_3 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_3_m.jpg");
+		background-size: cover;
+	}
+	.page_4 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_4_m.jpg");
+		background-size: cover;
+	}
+	.page_5 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_5_m.jpg");
+		background-size: cover;
+	}
+	.page_6 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_6_m.jpg");
+		background-size: cover;
+	}
+	.page_7 > .content_page_right .upper_title_img_for_mobile{
+		background-image: url("/static/user/res/promotion/promote_7_m.jpg");
+		background-size: cover;
+	}
+
+
 @media(min-width:600px){
+	.upper_title_img_for_mobile{
+		display: none;
+	}
+	#upper_title_wrap{
+		width: 100%;
+		display: block;
+	}
+	.content_page_right{
+		display: inline-block;
+		background-color: rgba(40, 40, 40, 0.86);
+	}
+	.content_page_left{
+		display: inline-block;
+	}
 	.content_page_right > .content_page_right_wrapper{
+		padding: 60px 0 30px 15px;
 		padding-left: 80px;
 	}
 }
