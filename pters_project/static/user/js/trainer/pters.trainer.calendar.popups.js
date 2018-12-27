@@ -237,7 +237,8 @@
         var selector_popup_btn_complete = $('#popup_btn_complete');
         var selector_popup_info3_memo = $('#popup_info3_memo');
         selector_popup_btn_complete.val('');
-        selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+        // selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+        selector_popup_info3_memo.attr('readonly', true);
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
@@ -249,7 +250,8 @@
         //shade_index(100)
         //closeAlarm('pc')
 
-        $('#popup_info3_memo,#popup_info3_memo_modify').show();
+        $('#popup_info3_memo').show();
+        $('#popup_info3_memo_modify').hide();
         var schedule_finish_check = $(this).attr('data-schedule-check');
 
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
@@ -375,7 +377,8 @@
         var selector_popup_info3_memo = $('#popup_info3_memo');
         var selector_popup_btn_complete = $("#popup_btn_complete");
         selector_popup_btn_complete.val('');
-        selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+        //selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+        selector_popup_info3_memo.attr('readonly', true);
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
@@ -385,7 +388,8 @@
         //$('.td00').css('background','transparent')
         //selector_cal_popup_plan_info.css('display','block');
 
-        $('#popup_info3_memo,#popup_info3_memo_modify').show();
+        $('#popup_info3_memo').show();
+        $('#popup_info3_memo_modify').hide();
 
         var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')';
         var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
@@ -498,7 +502,8 @@
         var selector_popup_info3_memo = $('#popup_info3_memo');
         var selector_popup_btn_complete = $("#popup_btn_complete");
         selector_popup_btn_complete.val('');
-        selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+        //selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
+        selector_popup_info3_memo.attr('readonly', true);
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
@@ -507,7 +512,8 @@
         $('#page-addplan-pc').hide();
         //selector_cal_popup_plan_info.css('display','block').attr({'schedule-id': $(this).attr('group-schedule-id'), 'data-grouptype':'group', 'group_plan_finish_check': $(this).attr('data-schedule-check') });
 
-        $('#popup_info3_memo,#popup_info3_memo_modify').show();
+        $('#popup_info3_memo').show();
+        $('#popup_info3_memo_modify').hide();
         var schedule_finish_check = $(this).attr('data-schedule-check');
         var group_current_member_num = $(this).attr('data-current-membernum');
         var group_max_member_num = $(this).attr('data-membernum');
@@ -928,7 +934,7 @@
                 shade_index(200);
             }
             //$('#popup_delete_title').text('반복 일정 취소');
-            pop_up_delete_confirm({"schedule-id":$(this).parent('#cal_popup_planinfo').attr("schedule-id")}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();})
+            pop_up_delete_confirm({"schedule-id":$('#cal_popup_planinfo').attr("schedule-id")}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();})
         }
     });
 
@@ -949,10 +955,16 @@
             $('#popup_info3_memo').attr('readonly', false).css({'border':'1px solid #cccccc'});
             $(this).attr({'src':'/static/user/res/btn-pt-complete.png', 'data-type':'modify'});
         }else if($(this).attr('data-type') == "modify"){
-            $('#popup_info3_memo').attr('readonly', true).css({'border':'0'});
-            $(this).attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
+            // $('#popup_info3_memo').attr('readonly', true).css({'border':'0'});
+            $('#popup_info3_memo').attr('readonly', true);
+            $(this).attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'}).hide();
             send_memo();
         }
+    });
+
+    $('#popup_info3_memo').click(function(){
+        $(this).attr('readonly', false).css({'border':'1px solid #cccccc'});
+        $('#popup_info3_memo_modify').show().attr({'src':'/static/user/res/btn-pt-complete.png', 'data-type':'modify'});
     });
 
 /////////////////////////////////////////////////////////////////////////////////////////////메모 송신

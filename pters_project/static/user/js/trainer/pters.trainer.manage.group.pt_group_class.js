@@ -1230,9 +1230,9 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').css('display', 'block');
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -1253,12 +1253,14 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 // }
                 smart_refresh_member_group_class_list();
 
-                toggle_lock_unlock_inputfield_grouplist(group_id, true);
+                
                 $('img._info_cancel').hide();
                 if(bodywidth > 600){
                     $('img._info_download, img._info_delete').show();
+                    toggle_lock_unlock_inputfield_grouplist(group_id, true);
                 }else{
-                    $('img._info_delete').show();
+                    
+                    $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                 }
                 console.log('success');
             }
@@ -2220,13 +2222,13 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
 
     var html = `<div class="pters_table"><div class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
-                <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell"><input type="text" class="mobile_memo_input" value="${group_membercapacity}" readonly>명</div></div>
+                <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" readonly>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">반복 일정</div><div class="pters_table_cell">${repeat_info}</div></div>
-                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell"><input type="text" class="mobile_memo_input" value="${group_memo}" readonly></div></div>
+                <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" readonly></div></div>
 
-                <div style="display:none;">그룹 id: ${group_id}</div>
-                <div style="display:none;">그룹 이름: ${group_name}</div>`;
+                <div style="display:none;" id="mygroupid" data-groupid="${group_id}">그룹 id: ${group_id}</div>
+                <div style="display:none;" id="mygroupname" data-groupname="${group_name}">그룹 이름: ${group_name}</div>`;
     $('#popup_lecture_info_mobile_basic').html(html);
 }
 //수업 정보 모바일 팝업
