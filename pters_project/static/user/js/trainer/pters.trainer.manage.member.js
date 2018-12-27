@@ -247,14 +247,16 @@ $(document).ready(function(){
         e.stopPropagation();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
+        var member_name = $(this).attr('data-name');
         shade_index(100);
+        console.log(member_name);
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
             get_indiv_member_info(dbID);
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
-            $('#uptext3').text('회원 정보');
+            $('#uptext3').text(member_name);
             if($('#popup_lecture_info_mobile').length > 0 ){
                 closePopup_mobile('upbutton-x-modify');
             }
@@ -3453,12 +3455,13 @@ function memberListSet (type,option,Reverse, jsondata){
             addHtml = pc_html;
         }
 
-        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
+        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'" data-name="'+name+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
 
     }
     memberListSet_test_len += len;
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+    // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
+    $('#uptext').text("회원("+jsondata.total_member_num+"명)");
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
@@ -3753,12 +3756,13 @@ function memberListSet_test(type,option,Reverse, jsondata){
             addHtml = pc_html;
         }
 
-        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+memberListSet_test_len)+'</div>'+addHtml+'</div>';
+        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'" data-name="'+name+'"><div class="_countnum">'+(i+memberListSet_test_len)+'</div>'+addHtml+'</div>';
 
     }
     memberListSet_test_len += countLists.length;
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+    // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
+    $('#uptext').text("회원("+jsondata.total_member_num+"명)");
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){

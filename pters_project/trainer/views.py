@@ -3013,7 +3013,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                                                        state_cd_nm=RawSQL(query_state_cd, [])
                                                        # group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd')
-
+        context['total_group_num'] = len(group_data)
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -3075,6 +3075,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         #
         #     group_info.group_member_num = len(member_data)
 
+        context['total_group_num'] = len(group_data)
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -3881,6 +3882,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
+        context['total_package_num'] = len(package_data)
         context['package_data'] = package_data
 
         return context
@@ -3911,6 +3913,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
+        context['total_package_num'] = len(package_data)
         context['package_data'] = package_data
 
         return context
@@ -4483,7 +4486,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
 
         # member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
         # context['member_data'] = member_data
-
+        context['total_group_num'] = len(group_data)
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -4528,6 +4531,7 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         # member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
         # context['member_data'] = member_data
 
+        context['total_group_num'] = len(group_data)
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)

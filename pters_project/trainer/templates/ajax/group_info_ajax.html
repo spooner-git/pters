@@ -30,6 +30,8 @@
       "group_end_font_color_cd":
       [{% for group_info in group_data %}"{{ group_info.end_font_color_cd }}"{% if forloop.last == False %},{% endif %}{% endfor %}],
 
+      "total_group_num" :
+      ["{{ total_group_num }}"],
 
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]

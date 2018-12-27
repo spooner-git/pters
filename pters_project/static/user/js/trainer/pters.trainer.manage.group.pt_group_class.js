@@ -1646,7 +1646,7 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function group_class_ListHtml(option, jsondata){ //option : current, finished
-    console.log(jsondata)
+    console.log(jsondata);
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');
@@ -1659,6 +1659,9 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             text_membernum = "종료된 그룹 ";
             break;
     }
+
+    $('#uptext').text("수업("+jsondata.total_group_num+"개)");
+
     var htmlToAdd = [];
     var htmlToJoin = [];
     var htmlToJoin2 = [];
