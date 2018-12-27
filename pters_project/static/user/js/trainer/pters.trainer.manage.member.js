@@ -2215,6 +2215,7 @@ function shiftMemberList(type){
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
     $('#search_member_input').val("").css("-webkit-text-fill-color", "#cccccc");
+    keyword = '';
     switch(type){
         case "current":
             get_member_ing_list("callback", function(jsondata){
