@@ -59,14 +59,14 @@ $(document).ready(function(){
             $alignSelect.css('display', 'none');
             $search_box.css('display', 'inline-block');
             $(this).attr('src','/static/user/res/ptadd/btn-x.png');
-            $(this).css('width','20px');
+            $(this).css('width','15px');
         }else{
             keyword = '';
             $search_member_input.val('');
             $alignSelect.css('display', 'inline-block');
             $search_box.css('display', 'none');
             $(this).attr('src','/static/user/res/icon-search-black.png');
-            $(this).css('width','30px');
+            $(this).css('width','25px');
             if(selector_currentMemberList.css('display') == "block") {
                 get_member_ing_list("callback", function (jsondata) {
                     memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
