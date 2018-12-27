@@ -3012,7 +3012,7 @@ class GetGroupIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, [])
                                                        # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd')
+                                                       ).order_by('-group_type_cd', 'name')
         context['total_group_num'] = len(group_data)
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3044,7 +3044,7 @@ class GetGroupEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView)
         group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, [])
-                                                       ).order_by('-group_type_cd')
+                                                       ).order_by('-group_type_cd', 'name')
         # group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='PE', use=USE)
         # for group_info in group_data:
         #     member_data = []
@@ -3872,7 +3872,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
             class_tb_id=class_id, state_cd='IP',
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).order_by('-package_type_cd', 'package_id')
+                                                        [])).order_by('-package_type_cd', 'name', 'package_id')
         order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
@@ -3903,7 +3903,8 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
                                                 use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                                                                   package_type_cd_nm=RawSQL(
                                                                       query_package_type_cd,
-                                                                      [])).order_by('-package_type_cd', 'package_id')
+                                                                      [])).order_by('-package_type_cd', 'name',
+                                                                                    'package_id')
         order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
@@ -4467,7 +4468,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        # group_member_num=RawSQL(query_group_member_num, [])
-                                                       ).order_by('-group_type_cd', 'ing_group_member_num')
+                                                       ).order_by('-group_type_cd', 'name', '-ing_group_member_num')
         # for group_info in group_data:
         #     member_data = []
         #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
@@ -4512,7 +4513,7 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                             class_tb_id=class_id, use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
-                                                       ).order_by('-group_type_cd', 'end_group_member_num')
+                                                       ).order_by('-group_type_cd', 'name', '-end_group_member_num')
         # for group_info in group_data:
         #     member_data = []
         #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
