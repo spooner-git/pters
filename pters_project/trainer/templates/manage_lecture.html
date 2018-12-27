@@ -98,7 +98,7 @@
         <br>
         <p>-피터스팀 드림</p>
         <p style="text-align: right;margin-bottom: 0;font-size: 11px;">
-            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;margin-right"> 닫기</span>
+            <span id="notice_popup_close_temp" style="margin-right: 10px;"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 닫기</span>
             <span id="notice_popup_close"><img src="/static/user/res/member/icon-x-grey.png" style="width: 8px;"> 오늘 더 보지 않기</span>
         </p>
     </div>
@@ -1205,8 +1205,10 @@
     <script type="text/javascript" src={% static_url "user/js/trainer/pters.trainer.manage.group.pt_group_class.js" %}></script>
     <script>
         var current_Scroll_Position;
-        
-        $('a.text-lecturemanage').css('color','#fe4e65;')
+
+        var $search_box = $('.ymdText-pc-add-member-wrap');
+        $search_box.css('display', 'inline-block');
+        $('a.text-lecturemanage').css('color','#fe4e65;');
 {#        $('#uptext').html("수업 관리<img src='/static/user/res/beta_tag.png' class='beta_tag'>")#}
         $('#uptext').html("수업");
         $('footer').hide();
