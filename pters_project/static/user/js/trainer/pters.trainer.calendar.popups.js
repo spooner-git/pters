@@ -928,7 +928,7 @@
                 shade_index(200);
             }
             //$('#popup_delete_title').text('반복 일정 취소');
-            pop_up_delete_confirm({"schedule-id":$(this).parent('#cal_popup_planinfo').attr("schedule-id")}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();})
+            pop_up_delete_confirm({"schedule-id":$('#cal_popup_planinfo').attr("schedule-id")}, '정말 일정을 취소하시겠습니까?', "callback", function(){$('#cal_popup_planinfo').hide();})
         }
     });
 
