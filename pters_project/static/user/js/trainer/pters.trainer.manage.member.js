@@ -1570,49 +1570,67 @@ $(document).ready(function(){
     });
 
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
-        var text = '회원 정보 수정';
-        // var text2 = '모든 필수 정보를 입력해주세요';
-        if(Options.language == "JPN"){
-            text = 'メンバー情報変更';
-            // text2 = '全ての必修情報を入力してください。';
-        }else if(Options.language == "ENG"){
-            text = 'Edit Member Info';
-            // text2 = 'Please fill all input field';
+        if($('#popup_lecture_info_mobile').css('display') == "block"){
+            if($(this).attr('data-type') == "view" ){
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+                $(this).attr('data-type','modify');
+                $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
+            }else if($(this).attr('data-type') == "modify" ){
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+                $(this).attr('data-type', 'view');
+                var group_id = $('#mygroupid').attr('data-groupid');
+                var group_name = $('#mygrouopname').attr('data-groupname');
+                var group_capacity = $('#mygroupcapacity input').val();
+                var group_memo = $('#mygroupmemo input').val();
+                var group_type = "";
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+            }
+        }else if($('#memberInfoPopup').css('display') == "block"){
+            var text = '회원 정보 수정';
+            // var text2 = '모든 필수 정보를 입력해주세요';
+            if(Options.language == "JPN"){
+                text = 'メンバー情報変更';
+                // text2 = '全ての必修情報を入力してください。';
+            }else if(Options.language == "ENG"){
+                text = 'Edit Member Info';
+                // text2 = 'Please fill all input field';
+            }
+            if($(this).attr('data-type') == "view" ){
+                $('#uptext3').text(text);
+                $('#uptext-pc-modify').text(text);
+                $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
+                $('#upbutton-modify').attr('data-type','modify');
+                $(this).attr('data-type','modify');
+
+                $('#memberName_info').hide();
+                $('#memberName_info_firstName').show();
+
+                $('#form_sex_modify').val();
+                $('#form_birth_modify').val();
+                $('#form_phone_modify').val();
+                $('#form_name_modify').val();
+                $('#form_id_modify').val($('#memberId').val());
+
+                $('#mobile_basic_info #memberName_info, #mobile_basic_info #memberPhone_info, #mobile_basic_info select, #memberName_info_firstName').attr('disabled',false).addClass('input_available');
+                $('#memberInfoPopup button._info_delete').hide();
+
+            }else if($(this).attr('data-type') == "modify" ){
+                // if(select_all_check==false){
+                var dbID = $('#memberInfoPopup #memberId').attr('data-dbid');
+                send_modified_member_base_data(dbID);
+                $('#memberName_info').show().val($('#memberName_info_firstName').val());
+                $('#memberName_info_firstName').hide();
+                /*
+                 }else{
+                 scrollToDom($('#memberInfoPopup'));
+                 $('#errorMessageBar').show();
+                 $('#errorMessageText').text(text2);
+                 //입력값 확인 메시지 출력 가능
+                 }
+                 */
+            }
         }
-        if($(this).attr('data-type') == "view" ){
-            $('#uptext3').text(text);
-            $('#uptext-pc-modify').text(text);
-            $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
-            $('#upbutton-modify').attr('data-type','modify');
-            $(this).attr('data-type','modify');
-
-            $('#memberName_info').hide();
-            $('#memberName_info_firstName').show();
-
-            $('#form_sex_modify').val();
-            $('#form_birth_modify').val();
-            $('#form_phone_modify').val();
-            $('#form_name_modify').val();
-            $('#form_id_modify').val($('#memberId').val());
-
-            $('#mobile_basic_info #memberName_info, #mobile_basic_info #memberPhone_info, #mobile_basic_info select, #memberName_info_firstName').attr('disabled',false).addClass('input_available');
-            $('#memberInfoPopup button._info_delete').hide();
-
-        }else if($(this).attr('data-type') == "modify" ){
-            // if(select_all_check==false){
-            var dbID = $('#memberInfoPopup #memberId').attr('data-dbid');
-            send_modified_member_base_data(dbID);
-            $('#memberName_info').show().val($('#memberName_info_firstName').val());
-            $('#memberName_info_firstName').hide();
-            /*
-             }else{
-             scrollToDom($('#memberInfoPopup'));
-             $('#errorMessageBar').show();
-             $('#errorMessageText').text(text2);
-             //입력값 확인 메시지 출력 가능
-             }
-             */
-        }
+        
     });
 
     $('#mshade_popup').click(function(){

@@ -875,7 +875,7 @@ div._fixedmember{
 	font-size: 13px;
 }
 #popup_lecture_info_mobile_basic .mobile_memo_input{
-	border: 0;
+	border: 1px solid transparent;
 	-webkit-appearance:none;
 	-webkit-text-fill-color:#282828;
 	text-align: right;
