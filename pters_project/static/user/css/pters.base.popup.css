@@ -324,11 +324,18 @@
 /*	-webkit-text-fill-color: #cccccc;*/
 	text-align: left;
 }
+#popup_info3_memo_modify{
+	display: none;
+	width: 17px;
+	cursor:pointer;
+	margin-left: 5px;
+	margin-bottom:5px;
+}
 .pt_memo_guide_popup{
 	font-size:11px;
 	color:#fe4e65;
 	text-align: left;
-	padding-left: 19px;
+	padding-left: 33px;
 	font-weight: 400;
 }
 
