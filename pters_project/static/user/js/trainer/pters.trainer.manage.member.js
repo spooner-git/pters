@@ -2785,7 +2785,7 @@ function get_member_list_test(url, use, callback){
     $.ajax({
         url:url,
         type:'GET',
-        data: {"page": ++page_num, "member_sort": member_sort_val},
+        data: {"page": ++page_num, "member_sort": member_sort_val, "keyword":keyword},
 
         dataType : 'html',
 
@@ -2846,6 +2846,17 @@ function get_member_list_test(url, use, callback){
         }
     })
 }
+
+var keyword = '';
+// $('#search_member_input').keyup(function(){
+//     if($(this).val().length>0){
+//         keyword =  $(this).val();
+//         get_member_ing_list("callback", function(jsondata){
+//             memberListSet('current', 'name', 'no', jsondata);
+//         });
+//     }
+// });
+
 function get_member_ing_list(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
@@ -2855,11 +2866,11 @@ function get_member_ing_list(use, callback){
     memberListSet_test_len = 1;
     mutex_val = 1;
     
-    console.log(member_sort_val);
+    console.log(keyword);
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
-        data: {"page": page_num, "member_sort": member_sort_val},
+        data: {"page": page_num, "member_sort": member_sort_val, "keyword":keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2925,7 +2936,7 @@ function get_member_end_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_end_list/',
         type:'GET',
-        data: {"page": page_num, "member_sort": member_sort_val},
+        data: {"page": page_num, "member_sort": member_sort_val, "keyword":keyword},
         dataType : 'html',
 
         beforeSend:function(){
