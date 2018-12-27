@@ -48,25 +48,26 @@ $(document).ready(function(){
 
     });
 
-    $('#id_search_x_button').click(function(e){
+    $('#search_box').click(function(e){
         var $alignSelect = $('._ALIGN_DROPDOWN');
         var selector_currentMemberList = $('#currentMemberList');
         var selector_finishedMemberList = $('#finishedMemberList');
-        var $search_box = $('.ymdText-pc-add-member-wrap');
+        var $search_input_div = $('.ymdText-pc-add-member-wrap');
         var $search_member_input = $('#search_member_input');
+        var $search_x_button = $('#id_search_x_button');
 
-        if($search_box.css('display')=="none"){
+        if($search_input_div.css('display')=="none"){
             $alignSelect.css('display', 'none');
-            $search_box.css('display', 'inline-block');
-            $(this).attr('src','/static/user/res/ptadd/btn-x.png');
-            $(this).css('width','15px');
+            $search_input_div.css('display', 'inline-block');
+            $search_x_button.attr('src','/static/user/res/ptadd/btn-x.png');
+            $search_x_button.css('width','15px');
         }else{
             keyword = '';
             $search_member_input.val('');
             $alignSelect.css('display', 'inline-block');
-            $search_box.css('display', 'none');
-            $(this).attr('src','/static/user/res/icon-search-black.png');
-            $(this).css('width','25px');
+            $search_input_div.css('display', 'none');
+            $search_x_button.attr('src','/static/user/res/icon-search-black.png');
+            $search_x_button.css('width','25px');
             if(selector_currentMemberList.css('display') == "block") {
                 get_member_ing_list("callback", function (jsondata) {
                     memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
