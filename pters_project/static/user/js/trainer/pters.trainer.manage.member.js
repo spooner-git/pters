@@ -22,17 +22,59 @@ $(document).ready(function(){
     });
     //ESC키를 눌러서 팝업 닫기
     $('#search_member_input').keyup(function(e){
-        e.stopPropagation();
+        // e.stopPropagation();
         // e.preventDefault();
-        var search_value = $(this).val();
-        $('div.memberline').hide();
-        $('div.memberline').each(function(){
-            if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
-                $(this).show();
-            }
-        });
-        if(search_value.length == 0){
-            $('div.memberline').show();
+        // var search_value = $(this).val();
+        keyword =  $(this).val();
+        // $('div.memberline').hide();
+        // $('div.memberline').each(function(){
+        //     if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
+        //         $(this).show();
+        //     }
+        // });
+        // if(search_value.length == 0){
+        //     $('div.memberline').show();
+        // }
+        if (e.keyCode == 13){
+           $('#id_member_search').trigger('click');
+        }
+
+    });
+    $('#id_member_search').click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var selector_currentMemberList = $('#currentMemberList');
+        var selector_finishedMemberList = $('#finishedMemberList');
+        if(selector_currentMemberList.css('display') == "block") {
+            get_member_ing_list("callback", function (jsondata) {
+                if(member_sort_val == SORT_MEMBER_NAME){
+                    memberListSet('current', 'name', 'no', jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_FEW){
+                    memberListSet('current', 'count', 'no', jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_MANY){
+                    memberListSet('current', 'count', 'yes', jsondata);
+                }else if(member_sort_val == SORT_START_DATE_OLD){
+                    memberListSet('current', 'date', 'no', jsondata);
+                }else if(member_sort_val == SORT_START_DATE_NEW){
+                    memberListSet('current', 'date', 'yes', jsondata);
+                }
+            });
+        }
+        else if(selector_finishedMemberList.css('display') == "block"){
+            get_member_end_list('callback', function(jsondata){
+                if(member_sort_val == SORT_MEMBER_NAME){
+                    memberListSet('finished','name','no',jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_FEW){
+                    memberListSet('finished','count','no',jsondata);
+                }else if(member_sort_val == SORT_REMAIN_COUNT_MANY){
+                    memberListSet('finished','count','yes',jsondata);
+                }else if(member_sort_val == SORT_START_DATE_OLD){
+                    memberListSet('finished','date','no',jsondata);
+                }else if(member_sort_val == SORT_START_DATE_NEW){
+                    memberListSet('finished','date','yes',jsondata);
+                }
+            });
         }
     });
 
@@ -2866,14 +2908,6 @@ function get_member_list_test(url, use, callback){
 }
 
 var keyword = '';
-// $('#search_member_input').keyup(function(){
-//     if($(this).val().length>0){
-//         keyword =  $(this).val();
-//         get_member_ing_list("callback", function(jsondata){
-//             memberListSet('current', 'name', 'no', jsondata);
-//         });
-//     }
-// });
 
 function get_member_ing_list(use, callback){
     var bodywidth = window.innerWidth;
