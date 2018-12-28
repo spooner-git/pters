@@ -1117,9 +1117,10 @@
         var dbID = $(this).attr('data-dbid');
         $('.popups').hide();
         if(bodywidth < 600){
+            current_Scroll_Position = $(document).scrollTop();
             beforeSend();
-            //$('#calendar').css('display','none')
-            $('#calendar').css('height', '0');
+            $('#calendar').css('display', 'none');
+            //$('#calendar').css('height', '0');
             get_indiv_member_info(dbID);
             get_indiv_repeat_info(dbID);
             get_member_lecture_list(dbID);

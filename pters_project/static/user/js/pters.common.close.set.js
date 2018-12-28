@@ -30,9 +30,10 @@ function closePopup_mobile(buttonname){
         $('#uptext3').text('회원 정보');
         $('#uptext-pc-modify').text('회원 정보');
         close_manage_popup('member_info');
-        if(bodywidth<600 && selector_calendar.length != 0){
-            //$('#calendar').css('display','block')
-            selector_calendar.css('height', '100%');
+        if(bodywidth < 600 && selector_calendar.length != 0){
+            selector_calendar.css('display', 'block');
+            console.log("asdfasdf")
+            //selector_calendar.css('height', '100%');
         }
         var thisAttr = $("#upbutton-x-modify").attr('data-page');
         if(thisAttr == "lecture_info"){
