@@ -1166,25 +1166,44 @@
             if(bodywidth <= 1000 && $('._member_list_mobile_style').length == 0){
                 if(selector_currentMemberList.css('display') == "block"){
                     get_member_ing_list('callback',function(json){
-                        memberListSet ('current','name','no',json);
+                        memberListSet ('current',member_sort_type,member_sort_order_by,json);
                         $('#name').attr('selected','selected');
                     });
                 }else if(selector_finishedMemberList.css('display') == "block"){
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished','name','no',json);
+                        memberListSet('finished',member_sort_type,member_sort_order_by,json);
                         $('#name').attr('selected','selected');
                     });
                 }
             }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
                 if(selector_currentMemberList.css('display') == "block"){
                     get_member_ing_list('callback',function(json){
-                        memberListSet ('current','name','no',json);
+                        memberListSet ('current',member_sort_type,member_sort_order_by,json);
                         $('#name').attr('selected','selected');
                     });
                 }else if(selector_finishedMemberList.css('display') == "block"){
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished','name','no',json);
+                        memberListSet('finished',member_sort_type,member_sort_order_by,json);
                         $('#name').attr('selected','selected');
+                    });
+                }
+            }
+        });
+
+        $(window).scroll(function() {
+            var scrollHeight = $(document).height();
+            var scrollPosition = $(window).height() + $(window).scrollTop();
+            if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
+                mutex_val = 0;
+
+                if(member_tab == TAB_ING_MEMBER) {
+                    get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
+                        memberListSet_test(member_tab, member_sort_type, member_sort_order_by, jsondata);
+                    });
+                }
+                else if(member_tab == TAB_END_MEMBER){
+                    get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
+                        memberListSet_test(member_tab, member_sort_type, member_sort_order_by, jsondata);
                     });
                 }
             }

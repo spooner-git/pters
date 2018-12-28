@@ -8,9 +8,13 @@ const SORT_TYPE_MEMBER_REMAIN_COUNT = 'count';
 const SORT_TYPE_MEMBER_START_DATE = 'date';
 const SORT_ASC = 'no';
 const SORT_DESC = 'yes';
+const TAB_ING_MEMBER = 'current';
+const TAB_END_MEMBER = 'finished';
+
 var member_sort_val = SORT_MEMBER_NAME;
 var member_sort_type = SORT_TYPE_MEMBER_NAME;
 var member_sort_order_by = SORT_ASC;
+var member_tab = TAB_ING_MEMBER;
 
 $(document).ready(function(){
 
@@ -50,8 +54,8 @@ $(document).ready(function(){
 
     $('#search_box').click(function(e){
         var $alignSelect = $('._ALIGN_DROPDOWN');
-        var selector_currentMemberList = $('#currentMemberList');
-        var selector_finishedMemberList = $('#finishedMemberList');
+        // var selector_currentMemberList = $('#currentMemberList');
+        // var selector_finishedMemberList = $('#finishedMemberList');
         var $search_input_div = $('.ymdText-pc-add-member-wrap');
         var $search_member_input = $('#search_member_input');
         var $search_x_button = $('#id_search_x_button');
@@ -68,14 +72,14 @@ $(document).ready(function(){
             $search_input_div.css('display', 'none');
             $search_x_button.attr('src','/static/user/res/icon-search-black.png');
             $search_x_button.css('width','25px');
-            if(selector_currentMemberList.css('display') == "block") {
+            if(member_tab == TAB_ING_MEMBER) {
                 get_member_ing_list("callback", function (jsondata) {
-                    memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
+                    memberListSet(member_tab, member_sort_type, member_sort_order_by, jsondata);
                 });
             }
-            else if(selector_finishedMemberList.css('display') == "block"){
+            else if(member_tab == TAB_END_MEMBER) {
                 get_member_end_list('callback', function(jsondata){
-                    memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
+                    memberListSet(member_tab, member_sort_type, member_sort_order_by, jsondata);
                 });
             }
         }
@@ -85,17 +89,14 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
-        var selector_currentMemberList = $('#currentMemberList');
-        var selector_finishedMemberList = $('#finishedMemberList');
-
-        if(selector_currentMemberList.css('display') == "block") {
+        if(member_tab == TAB_ING_MEMBER) {
             get_member_ing_list("callback", function (jsondata) {
-                memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
+                memberListSet(member_tab, member_sort_type, member_sort_order_by, jsondata);
             });
         }
-        else if(selector_finishedMemberList.css('display') == "block"){
+        else if(member_tab == TAB_END_MEMBER) {
             get_member_end_list('callback', function(jsondata){
-                memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
+                memberListSet(member_tab, member_sort_type, member_sort_order_by, jsondata);
             });
         }
 
@@ -208,69 +209,31 @@ $(document).ready(function(){
             member_sort_val = SORT_MEMBER_NAME;
             member_sort_type = SORT_TYPE_MEMBER_NAME;
             member_sort_order_by = SORT_ASC;
-            if($('#currentMemberList').css('display') == "block"){
-                get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','name','no',jsondata);
-                });
-            }else if($('#finishedMemberList').css('display') == "block"){
-                get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','name','no',jsondata);
-                });
-            }
-            alignType = 'name';
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             member_sort_val = SORT_REMAIN_COUNT_MANY;
             member_sort_type = SORT_TYPE_MEMBER_REMAIN_COUNT;
             member_sort_order_by = SORT_DESC;
-            if($('#currentMemberList').css('display') == "block"){
-                get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','count','yes',jsondata);
-                });
-            }else if($('#finishedMemberList').css('display') == "block"){
-
-            }
-
-            alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             member_sort_val = SORT_REMAIN_COUNT_FEW;
             member_sort_type = SORT_TYPE_MEMBER_REMAIN_COUNT;
             member_sort_order_by = SORT_ASC;
-            if($('#currentMemberList').css('display') == "block"){
-                get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','count','no',jsondata);
-                });
-            }else if($('#finishedMemberList').css('display') == "block"){
-
-            }
-            alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             member_sort_val = SORT_START_DATE_OLD;
             member_sort_type = SORT_TYPE_MEMBER_START_DATE;
             member_sort_order_by = SORT_ASC;
-            if($('#currentMemberList').css('display') == "block"){
-                get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','date','no',jsondata);
-                });
-            }else if($('#finishedMemberList').css('display') == "block"){
-                get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','date','no',jsondata);
-                });
-            }
-            alignType = 'startP';
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             member_sort_val = SORT_START_DATE_NEW;
             member_sort_type = SORT_TYPE_MEMBER_START_DATE;
             member_sort_order_by = SORT_DESC;
-            if($('#currentMemberList').css('display') == "block"){
-                get_member_ing_list("callback",function(jsondata){
-                    memberListSet('current','date','yes',jsondata);
-                });
-            }else if($('#finishedMemberList').css('display') == "block"){
-                get_member_end_list("callback",function(jsondata){
-                    memberListSet('finished','date','yes',jsondata);
-                });
-            }
-            alignType = 'startR';
+        }
+        if(member_tab == TAB_ING_MEMBER){
+            get_member_ing_list("callback",function(jsondata){
+                memberListSet(member_tab,member_sort_type,member_sort_order_by,jsondata);
+            });
+        }else if(member_tab == TAB_END_MEMBER){
+            get_member_end_list("callback",function(jsondata){
+                memberListSet(member_tab,member_sort_type,member_sort_order_by,jsondata);
+            });
         }
     });
 
@@ -991,8 +954,8 @@ $(document).ready(function(){
                     get_current_member_list();
                     get_current_group_list();
                     get_member_group_class_ing_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
+                        // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        // var member_Html = memberlist.html;
                         var group_class_Html = group_class_ListHtml('current', jsondata);
                         $('#currentGroupList').html(group_class_Html);
                     });
@@ -1055,8 +1018,8 @@ $(document).ready(function(){
                     get_current_member_list();
                     get_current_group_list();
                     get_member_group_class_ing_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
+                        // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        // var member_Html = memberlist.html;
                         var group_class_Html = group_class_ListHtml('current', jsondata);
                         $('#currentGroupList').html(group_class_Html);
                     });
@@ -2255,8 +2218,9 @@ function shiftMemberList(type){
 
     switch(type){
         case "current":
+            member_tab = TAB_ING_MEMBER;
             get_member_ing_list("callback", function (jsondata) {
-                memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
+                memberListSet(member_tab, member_sort_type, member_sort_order_by, jsondata);
             });
             $('#currentMemberList, #memberNumber_current_member').css('display', 'block');
             $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
@@ -2268,8 +2232,9 @@ function shiftMemberList(type){
             break;
         case "finished":
             //if($('#btnCallMemberList').hasClass('list_switch_selected')){
+            member_tab = TAB_END_MEMBER;
             get_member_end_list("callback", function (jsondata) {
-                memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
+                memberListSet(member_tab, member_sort_type, member_sort_order_by, jsondata);
             });
             $('#finishedMemberList, #memberNumber_finish_member').css('display', 'block');
             $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
@@ -2309,8 +2274,8 @@ function shiftPtGroupClassList(type){
     switch(type){
         case "current":
             get_member_group_class_ing_list("callback", function(jsondata){
-                var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                var member_Html = memberlist.html;
+                // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                // var member_Html = memberlist.html;
                 var group_class_Html = group_class_ListHtml('current', jsondata);
                 $('#currentGroupList').html(group_class_Html);
             });
@@ -2323,8 +2288,8 @@ function shiftPtGroupClassList(type){
             break;
         case "finished":
             get_member_group_class_end_list("callback", function(jsondata){
-                var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-                var member_Html = memberlist.html;
+                // var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                // var member_Html = memberlist.html;
                 var group_class_Html = group_class_ListHtml('finished', jsondata);
                 $('#finishedGroupList').html(group_class_Html);
             });
@@ -2828,31 +2793,6 @@ function get_member_list(use, callback){
 }
 var page_num = 1;
 var mutex_val = 1;
-$(window).scroll(function() {
-	var scrollHeight = $(document).height();
-	var scrollPosition = $(window).height() + $(window).scrollTop();
-    // console.log("scrollHeight:"+scrollHeight);
-    // console.log("scrollPosition:"+scrollPosition);
-	if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
-	    mutex_val = 0;
-
-        var selector_currentMemberList = $('#currentMemberList');
-        var selector_finishedMemberList = $('#finishedMemberList');
-        if(selector_currentMemberList.css('display') == "block") {
-            get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
-                memberListSet_test('current', member_sort_type, member_sort_order_by, jsondata);
-            });
-        }
-        else if(selector_finishedMemberList.css('display') == "block"){
-            get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
-                memberListSet_test('finished', member_sort_type, member_sort_order_by, jsondata);
-            });
-        }
-	}
-	// else {
-	// 	$("body").css("background","white");
-	// }
-});
 
 function get_member_list_test(url, use, callback){
     var bodywidth = window.innerWidth;
@@ -3194,7 +3134,7 @@ $('#page_managemember').scroll(function(){
 });
 //스크롤 맨 아래나 위로 올라가면 +0 or -1픽셀
 
-function memberListSet (type,option,Reverse, jsondata){
+function memberListSet (type, option, Reverse, jsondata){
     var bodywidth = window.innerWidth;
     var text = '소진시까지';
     var text2 = '이번달 신규회원';
@@ -3240,20 +3180,9 @@ function memberListSet (type,option,Reverse, jsondata){
             break;
     }
 
-    var countLists;
-    var nameLists;
-    var dateLists;
-    if(Reverse == 'yes'){
-        countLists =countList.sort().reverse();
-        nameLists = nameList.sort().reverse();
-        dateLists = dateList.sort().reverse();
-    }else{
-        countLists =countList.sort();
-        nameLists = nameList.sort();
-        dateLists = dateList.sort();
-    }
-
-    var len = countLists.length;
+    // var countLists;
+    var nameLists = nameList;
+    var len = nameLists.length;
     var arrayResult = [];
     var array;
     var email;
@@ -3276,101 +3205,39 @@ function memberListSet (type,option,Reverse, jsondata){
     var groupType3;
 
     for(var i=0; i<len; i++){
-        if(option == "count"){
-            array = countLists[i].split('/');
-            email = array[8];
-            name = array[2];
-            id = array[3];
-            dbId = array[13];
-            contents = array[5];
-            count = array[0];
-            regcount = array[1];
-            starts = array[6];
-            ends = array[7];
-            phoneToEdit = array[4].replace(/-| |/gi,"");
-            if(name.length>10){
-                name = array[2].substr(0,9)+'..';
-            }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
-            groupType = array[14];
-            if(array[15]){
-                groupType2 = '/'+array[15];
-            }else{
-                groupType2 = '';
-            }
-            if(array[16]){
-                groupType3 = '/'+array[16];
-            }else{
-                groupType3 = '';
-            }
-        }else if(option == "name"){
-            array = nameLists[i].split('/');
-            email = array[8];
-            name = array[0];
-            id = array[1];
-            dbId = array[13];
-            contents = array[3];
-            count = array[4];
-            regcount = array[5];
-            starts = array[6];
-            ends = array[7];
-            phoneToEdit = array[2].replace(/-| |/gi,"");
-            if(name.length>10){
-                name = array[0].substr(0,9)+'..';
-            }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
-            groupType = array[14];
-            if(array[15]){
-                groupType2 = '/'+array[15];
-            }else{
-                groupType2 = '';
-            }
-            if(array[16]){
-                groupType3 = '/'+array[16];
-            }else{
-                groupType3 = '';
-            }
-        }else if(option == "date"){
-            array = dateLists[i].split('/');
-            arrayforemail = dateLists[i].split('/');
-            email = array[8];
-            name = array[1];
-            id = array[2];
-            dbId = array[13];
-            contents = array[4];
-            count = array[5];
-            regcount = array[6];
-            starts = array[0];
-            ends = array[7];
-            phoneToEdit = array[3].replace(/-| |/gi,"");
-            if(name.length>10){
-                name = array[1].substr(0,9)+'..';
-            }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
-            groupType = array[14];
-            if(array[15]){
-                groupType2 = '/'+array[15];
-            }else{
-                groupType2 = '';
-            }
-            if(array[16]){
-                groupType3 = '/'+array[16];
-            }else{
-                groupType3 = '';
-            }
+        array = nameLists[i].split('/');
+        email = array[8];
+        name = array[0];
+        id = array[1];
+        dbId = array[13];
+        contents = array[3];
+        count = array[4];
+        regcount = array[5];
+        starts = array[6];
+        ends = array[7];
+        phoneToEdit = array[2].replace(/-| |/gi,"");
+        if(name.length>10){
+            name = array[0].substr(0,9)+'..';
+        }
+        npCounts = array[9];
+        rjCounts = array[10];
+        yetRegCounts = array[11];
+        yetCounts = array[12];
+        groupType = array[14];
+        if(array[15]){
+            groupType2 = '/'+array[15];
+        }else{
+            groupType2 = '';
+        }
+        if(array[16]){
+            groupType3 = '/'+array[16];
+        }else{
+            groupType3 = '';
         }
 
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
         var end = ends.substr(0,4)+'.'+ends.substr(4,2)+'.'+ends.substr(6,2);
+
         if(end == "9999.12.31"){
             end = text;
         }
@@ -3521,9 +3388,9 @@ function memberListSet_test(type,option,Reverse, jsondata){
     switch(type){
         case 'current':
             data = DataFormatting(jsondata);
-            countList = data["countSorted"];
+            // countList = data["countSorted"];
             nameList = data["nameSorted"];
-            dateList = data["dateSorted"];
+            // dateList = data["dateSorted"];
             $table = $('#currentMember');
             $tabletbody = $('#currentMember > div');
             $membernum = $('#memberNumber_current_member');
@@ -3531,9 +3398,9 @@ function memberListSet_test(type,option,Reverse, jsondata){
             break;
         case 'finished':
             data = DataFormatting(jsondata);
-            countList = data["countSorted"];
+            // countList = data["countSorted"];
             nameList = data["nameSorted"];
-            dateList = data["dateSorted"];
+            // dateList = data["dateSorted"];
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember > div');
             $membernum = $('#memberNumber_finish_member');
@@ -3541,20 +3408,20 @@ function memberListSet_test(type,option,Reverse, jsondata){
             break;
     }
 
-    var countLists;
-    var nameLists;
-    var dateLists;
-    if(Reverse == 'yes'){
-        countLists =countList.sort().reverse();
-        nameLists = nameList.sort().reverse();
-        dateLists = dateList.sort().reverse();
-    }else{
-        countLists =countList.sort();
-        nameLists = nameList.sort();
-        dateLists = dateList.sort();
-    }
+    // var countLists;
+    var nameLists = nameList;
+    // var dateLists;
+    // if(Reverse == 'yes'){
+    //     countLists =countList.sort().reverse();
+    //     nameLists = nameList.sort().reverse();
+    //     dateLists = dateList.sort().reverse();
+    // }else{
+    //     countLists =countList.sort();
+    //     nameLists = nameList.sort();
+    //     dateLists = dateList.sort();
+    // }
 
-    var len = countLists.length;
+    var len = nameLists.length;
     var arrayResult = [];
     var array;
     var email;
@@ -3577,97 +3444,34 @@ function memberListSet_test(type,option,Reverse, jsondata){
     var groupType3;
 
     for(var i=0; i<len; i++){
-        if(option == "count"){
-            array = countLists[i].split('/');
-            email = array[8];
-            name = array[2];
-            id = array[3];
-            dbId = array[13];
-            contents = array[5];
-            count = array[0];
-            regcount = array[1];
-            starts = array[6];
-            ends = array[7];
-            phoneToEdit = array[4].replace(/-| |/gi,"");
-            if(name.length>10){
-                name = array[2].substr(0,9)+'..';
-            }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
-            groupType = array[14];
-            if(array[15]){
-                groupType2 = '/'+array[15];
-            }else{
-                groupType2 = '';
-            }
-            if(array[16]){
-                groupType3 = '/'+array[16];
-            }else{
-                groupType3 = '';
-            }
-        }else if(option == "name"){
-            array = nameLists[i].split('/');
-            email = array[8];
-            name = array[0];
-            id = array[1];
-            dbId = array[13];
-            contents = array[3];
-            count = array[4];
-            regcount = array[5];
-            starts = array[6];
-            ends = array[7];
-            phoneToEdit = array[2].replace(/-| |/gi,"");
-            if(name.length>10){
-                name = array[0].substr(0,9)+'..';
-            }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
-            groupType = array[14];
-            if(array[15]){
-                groupType2 = '/'+array[15];
-            }else{
-                groupType2 = '';
-            }
-            if(array[16]){
-                groupType3 = '/'+array[16];
-            }else{
-                groupType3 = '';
-            }
-        }else if(option == "date"){
-            array = dateLists[i].split('/');
-            arrayforemail = dateLists[i].split('/');
-            email = array[8];
-            name = array[1];
-            id = array[2];
-            dbId = array[13];
-            contents = array[4];
-            count = array[5];
-            regcount = array[6];
-            starts = array[0];
-            ends = array[7];
-            phoneToEdit = array[3].replace(/-| |/gi,"");
-            if(name.length>10){
-                name = array[1].substr(0,9)+'..';
-            }
-            npCounts = array[9];
-            rjCounts = array[10];
-            yetRegCounts = array[11];
-            yetCounts = array[12];
-            groupType = array[14];
-            if(array[15]){
-                groupType2 = '/'+array[15];
-            }else{
-                groupType2 = '';
-            }
-            if(array[16]){
-                groupType3 = '/'+array[16];
-            }else{
-                groupType3 = '';
-            }
+        array = nameLists[i].split('/');
+        email = array[8];
+        name = array[0];
+        id = array[1];
+        dbId = array[13];
+        contents = array[3];
+        count = array[4];
+        regcount = array[5];
+        starts = array[6];
+        ends = array[7];
+        phoneToEdit = array[2].replace(/-| |/gi,"");
+        if(name.length>10){
+            name = array[0].substr(0,9)+'..';
+        }
+        npCounts = array[9];
+        rjCounts = array[10];
+        yetRegCounts = array[11];
+        yetCounts = array[12];
+        groupType = array[14];
+        if(array[15]){
+            groupType2 = '/'+array[15];
+        }else{
+            groupType2 = '';
+        }
+        if(array[16]){
+            groupType3 = '/'+array[16];
+        }else{
+            groupType3 = '';
         }
 
         var start = starts.substr(0,4)+'.'+starts.substr(4,2)+'.'+starts.substr(6,2);
@@ -3774,7 +3578,7 @@ function memberListSet_test(type,option,Reverse, jsondata){
         arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'" data-name="'+name+'"><div class="_countnum">'+(i+memberListSet_test_len)+'</div>'+addHtml+'</div>';
 
     }
-    memberListSet_test_len += countLists.length;
+    memberListSet_test_len += len;
     // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
     $('#uptext').text("회원("+jsondata.total_member_num+"명)");
@@ -4491,8 +4295,8 @@ function delete_member_reg_data_pc(lectureID, dbID){
                     get_current_member_list();
                     get_current_group_list();
                     get_member_group_class_ing_list("callback", function(json){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', json);
-                        var member_Html = memberlist.html;
+                        // var memberlist = ptmember_ListHtml('current', 'name', 'no', json);
+                        // var member_Html = memberlist.html;
                         var group_class_Html = group_class_ListHtml('current', json);
                         $('#currentGroupList').html(group_class_Html);
                     });
@@ -4705,7 +4509,7 @@ function smart_refresh_member_group_class_list(){
             opened_group.push($(this).attr('data-groupid'));
         });
         get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+            // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
             var opened_group_length = opened_group.length;
@@ -4719,7 +4523,7 @@ function smart_refresh_member_group_class_list(){
             opened_group.push($(this).attr('data-groupid'));
         });
         get_member_group_class_end_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+            // var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
             var group_class_Html = group_class_ListHtml('finished', jsondata);
             $('#finishedGroupList').html(group_class_Html);
             var opened_group_length = opened_group.length;
@@ -4758,8 +4562,8 @@ function smart_refresh_member_group_class_list(){
         get_current_member_list();
         get_current_group_list();
         get_member_group_class_ing_list("callback", function(jsondata){
-            var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-            var member_Html = memberlist.html;
+            // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+            // var member_Html = memberlist.html;
             var group_class_Html = group_class_ListHtml('current', jsondata);
             $('#currentGroupList').html(group_class_Html);
         });
@@ -5344,19 +5148,19 @@ function add_member_form_func(){
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 
                 $('#startR').attr('selected','selected');
-                if($('#currentMemberList').css('display') == "block"){
+                if(member_tab==TAB_ING_MEMBER){
                     get_member_ing_list("callback",function(json){
-                        memberListSet('current', member_sort_type, member_sort_order_by, json);
+                        memberListSet(member_tab, member_sort_type, member_sort_order_by, json);
                     })
-                }else if($('#finishedMemberList').css('display') == "block"){
+                }else if(member_tab==TAB_END_MEMBER){
                     get_member_end_list("callback",function(json){
-                        memberListSet('finished', member_sort_type, member_sort_order_by, json);
+                        memberListSet(member_tab, member_sort_type, member_sort_order_by, json);
                     })
                 }
                 if($('#currentGroupList').length || $('#finishedGroupList').length ){
                     get_member_group_class_ing_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
+                        // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        // var member_Html = memberlist.html;
                         var group_class_Html = group_class_ListHtml('current', jsondata);
                         $('#currentGroupList').html(group_class_Html);
                     });
@@ -5495,15 +5299,15 @@ function add_group_form_func(){
 
                 if($('#currentGroupList').css('display') == "block"){
                     get_member_group_class_ing_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
+                        // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                        // var member_Html = memberlist.html;
                         var group_class_Html = group_class_ListHtml('current', jsondata);
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }else if($('#finishedGroupList').css('display') == "block"){
                     get_member_group_class_end_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-                        var member_Html = memberlist.html;
+                        // var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
+                        // var member_Html = memberlist.html;
                         var group_class_Html = group_class_ListHtml('finished', jsondata);
                         $('#finishedGroupList').html(group_class_Html);
                     });
@@ -5626,17 +5430,14 @@ function deleteMemberAjax(){
                 $('#upbutton-modify img').attr('src','/static/user/res/icon-pencil.png');
 
                 $('#startR').attr('selected','selected');
-                var selector_currentMemberList = $('#currentMemberList');
-                var selector_finishedMemberList = $('#finishedMemberList');
-
-                if(selector_currentMemberList.css('display') == "block"){
+                if(member_tab == TAB_ING_MEMBER){
                     get_member_ing_list('callback',function(json){
-                        memberListSet('current', member_sort_type, member_sort_order_by, json);
+                        memberListSet(member_tab, member_sort_type, member_sort_order_by, json);
                         $('#name').attr('selected','selected');
                     });
-                }else if(selector_finishedMemberList.css('display') == "block"){
+                }else if(member_tab == TAB_END_MEMBER){
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished', member_sort_type, member_sort_order_by, json);
+                        memberListSet(member_tab, member_sort_type, member_sort_order_by, json);
                         $('#name').attr('selected','selected');
                     });
                 }
