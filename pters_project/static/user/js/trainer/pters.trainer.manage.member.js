@@ -1614,13 +1614,14 @@ $(document).ready(function(){
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
-                $(this).attr('data-type','modify');
-                $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
+                $(this).attr('data-type', 'modify');
+                $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+                $('#mygroupnametitle').show();
             }else if($(this).attr('data-type') == "modify" ){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');
                 var group_id = $('#mygroupid').attr('data-groupid');
-                var group_name = $('#mygrouopname').attr('data-groupname');
+                var group_name = $('#mygroupname input').val();
                 var group_capacity = $('#mygroupcapacity input').val();
                 var group_memo = $('#mygroupmemo input').val();
                 var group_type = "";
@@ -4516,6 +4517,10 @@ function smart_refresh_member_group_class_list(){
             for(var i=0; i<opened_group_length; i++){
                $(`#currentGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
             }
+            if($('#popup_lecture_info_mobile').css('display') == "block"){
+                //$('#page_managemember').css('height',0);
+                $('#page_managemember').css({'display':'none'});
+            }
         });
     }else if($('#finishedGroupList').css('display') == "block"){
         var opened_group = [];
@@ -4529,6 +4534,10 @@ function smart_refresh_member_group_class_list(){
             var opened_group_length = opened_group.length;
             for(var i=0; i<opened_group_length; i++){
                 $(`#finishedGroupList div.groupWrap[data-groupid="${opened_group[i]}"]`).trigger('click');
+            }
+            if($('#popup_lecture_info_mobile').css('display') == "block"){
+                //$('#page_managemember').css('height',0);
+                $('#page_managemember').css({'display':'none'});
             }
         });
     }else if($('#currentPackageList').css('display') == "block"){

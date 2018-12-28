@@ -551,7 +551,11 @@ $(document).on('click', 'div.groupWrap', function(e){
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
     var group_name = $(this).find('._groupname input').val();
+    if(bodywidth<1000){
+        group_name = $(this).find('._groupname_mobile > span').text();
+    }
     var group_type = $(this).find('._grouptypecd input').val();
+    var group_typecd = $(this).find('._grouptypecd').attr('data-group-type');
     var group_membernum = $(this).find('._groupparticipants').text();
     var group_membercapacity = $(this).find('._groupcapacity input').val();
     var group_memo = $(this).find('._groupmemo input').val();
@@ -611,7 +615,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#popup_lecture_info_mobile_memberlist').html('');
         $('#popup_lecture_info_mobile').css({'display':'block'});
         get_group_repeat_info(group_id, "callback", function(repeat_data){
-            set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_membernum, group_membercapacity, group_memo, repeat_data);
+            set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
         });
         if($(this).attr('data-groupstatecd')=='current'){
             get_groupmember_list(group_id);
@@ -626,13 +630,19 @@ $(document).on('click', 'div.groupWrap', function(e){
     }
 });
 
-$(document).on('click', 'div._groupplancolor', function(e){
+$(document).on('click', 'div._groupplancolor, #mygroupcolor', function(e){
     e.stopPropagation();
-    var grouptype = $(this).siblings('div._grouptypecd').attr('data-group-type');
+    if($('#popup_lecture_info_mobile').css('display') == "block"){
+        grouptype = $(this).css('background-color');
+        group_id = $('#mygroupid').attr('data-groupid');
+    }else{
+        grouptype = $(this).siblings('div._grouptypecd').attr('data-group-type');
+        group_id = $(this).parent(".groupWrap").attr('data-groupid');
+    }
     if(grouptype == "ONE_TO_ONE"){
         if($(this).find("div.colorpalette").length == 0){
             $(this).append(
-                                `<div class="colorpalette" style="min-width:unset;">
+                                `<div class="colorpalette" style="min-width:unset;" data-groupid="${group_id}">
                                     <div class="plancolor_fbf3bd"></div>
                                 </div>`
                             );
@@ -642,7 +652,7 @@ $(document).on('click', 'div._groupplancolor', function(e){
     }else{
         if($(this).find("div.colorpalette").length == 0){
             $(this).append(
-                                `<div class="colorpalette">
+                                `<div class="colorpalette" data-groupid="${group_id}">
                                     <div class="plancolor_fbf3bd"></div>
                                     <div class="plancolor_dbe6f7"></div>
                                     <div class="plancolor_ffd3d9"></div>
@@ -661,7 +671,8 @@ $(document).on('click', 'div._groupplancolor', function(e){
 
 $(document).on('click', 'div.colorpalette div', function(e){
     e.stopPropagation();
-    var group_id = $(this).parents('div.groupWrap').attr('data-groupid');
+    // var group_id = $(this).parents('div.groupWrap').attr('data-groupid');
+    var group_id = $(this).parent('div.colorpalette').attr('data-groupid');
     var selected_color = $(this).attr("class").split('_')[1];
     var ing_bg_color;
     var end_bg_color;
@@ -672,48 +683,6 @@ $(document).on('click', 'div.colorpalette div', function(e){
     end_bg_color = "#d2d1cf";
     ing_font_color = "#282828";
     end_font_color = "#282828";
-
-    // if(selected_color == "fbf3bd"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "dbe6f7"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "ffd3d9"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "ffe3c2"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "ceeac4"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "d8d6ff"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "ead8f2"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }else if(selected_color == "d9c3ab"){
-    //     ing_bg_color = selected_color;
-    //     end_bg_color = "#d2d1cf";
-    //     ing_font_color = "#282828";
-    //     end_font_color = "#282828";
-    // }
 
     modify_group_from_list(group_id, "", "", "", "", ing_bg_color, end_bg_color, ing_font_color, end_font_color);
     $(this).parent('.colorpalette').remove();
@@ -1253,16 +1222,24 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 //         $('#finishedGroupList').html(group_class_Html);
                 //     });
                 // }
+                
                 smart_refresh_member_group_class_list();
 
                 
                 $('img._info_cancel').hide();
-                if(bodywidth > 600){
+                if(bodywidth > 1000){
                     $('img._info_download, img._info_delete').show();
                     toggle_lock_unlock_inputfield_grouplist(group_id, true);
-                }else{
-                    
+                }
+                if($('#popup_lecture_info_mobile').css('display') == "block"){
                     $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
+                    if(group_name.length != 0){
+                       $('#uptext3').text(group_name);
+                       $('#mygroupnametitle').hide();
+                    }
+                    if(ing_bg_color.length != 0){
+                        $('#mygroupcolor').css('background-color', ing_bg_color);
+                    }
                 }
                 console.log('success');
             }
@@ -2177,7 +2154,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
 //그룹원 목록을 그룹에 그리기 모바일
 
 //수업 정보 모바일 팝업
-function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_membernum, group_membercapacity, group_memo, jsondata){
+function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, jsondata){
     var repeat_info_dict= { 'KOR':
         {'DD':'매일', 'WW':'매주', '2W':'격주',
             'SUN':'일요일', 'MON':'월요일','TUE':'화요일','WED':'수요일','THS':'목요일','FRI':'금요일', 'SAT':'토요일'},
@@ -2219,7 +2196,8 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
     }
     var repeat_info = repeat_array.join("");
 
-    var html = `<div class="pters_table"><div class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
+    var html = `<div class="pters_table"><div class="pters_table_cell">색상</div><div id="mygroupcolor" class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
+                <div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" readonly></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" readonly>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
@@ -2227,7 +2205,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
                 <div class="pters_table"><div class="pters_table_cell">메모</div><div class="pters_table_cell" id="mygroupmemo"><input type="text" class="mobile_memo_input" value="${group_memo}" readonly></div></div>
 
                 <div style="display:none;" id="mygroupid" data-groupid="${group_id}">그룹 id: ${group_id}</div>
-                <div style="display:none;" id="mygroupname" data-groupname="${group_name}">그룹 이름: ${group_name}</div>`;
+                <div style="display:none;" id="mygrouptypecd" data-grouptypecd="${group_typecd}">그룹 typecd: ${group_typecd}</div>`;
     $('#popup_lecture_info_mobile_basic').html(html);
 }
 //수업 정보 모바일 팝업
