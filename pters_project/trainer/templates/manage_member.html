@@ -296,6 +296,8 @@
                     </div>
                     -->
                     <input id="search_member_input" type="text" name="search_member_input" placeholder="검색">
+{#                    <img src="/static/user/res/ptadd/btn-x.png" alt="" id="id_search_x_button" class="icondown" style="right:20%;">#}
+                    <img src="/static/user/res/icon-search-black.png" alt="" id="id_member_search" class="icondown">
                 </div>
 
                 <select class="alignSelect _ALIGN_DROPDOWN">
@@ -312,7 +314,9 @@
 
                 </select>
                 <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
-
+                <div id="search_box">
+                    <img src="/static/user/res/icon-search-black.png" alt="" style="width:25px;" id="id_search_x_button">
+                </div>
                 <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
                     <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>
                 </div>
@@ -1184,8 +1188,7 @@
                     });
                 }
             }
-        })
-
+        });
 
 
         $('html,body').click(function(){

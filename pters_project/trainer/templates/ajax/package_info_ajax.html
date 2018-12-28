@@ -25,6 +25,8 @@
       [{% for package_info in package_data %}"{{ package_info.end_package_member_num }}"{%if forloop.last == False%},{% endif %}{% endfor %}],
 {#      "package_group_tb_id"#}
 {#      [{% for package_info in package_data %}"{{ package_info.group_tb_id }}"{% if forloop.last == False %},{% endif %}{% endfor %}],#}
+      "total_package_num":
+      ["{{ total_package_num }}"],
       "messageArray" :
       [{% for message in messages %}{% if message.tags == "error" %}"{{ message }}"{% endif %}{%if forloop.last == False%},{% endif %}{% endfor %}]
     }

@@ -3,7 +3,14 @@ const SORT_REMAIN_COUNT_FEW = 1;
 const SORT_REMAIN_COUNT_MANY = 2;
 const SORT_START_DATE_OLD = 3;
 const SORT_START_DATE_NEW = 4;
+const SORT_TYPE_MEMBER_NAME = 'name';
+const SORT_TYPE_MEMBER_REMAIN_COUNT = 'count';
+const SORT_TYPE_MEMBER_START_DATE = 'date';
+const SORT_ASC = 'no';
+const SORT_DESC = 'yes';
 var member_sort_val = SORT_MEMBER_NAME;
+var member_sort_type = SORT_TYPE_MEMBER_NAME;
+var member_sort_order_by = SORT_ASC;
 
 $(document).ready(function(){
 
@@ -22,18 +29,77 @@ $(document).ready(function(){
     });
     //ESC키를 눌러서 팝업 닫기
     $('#search_member_input').keyup(function(e){
-        e.stopPropagation();
+        // e.stopPropagation();
         // e.preventDefault();
-        var search_value = $(this).val();
-        $('div.memberline').hide();
-        $('div.memberline').each(function(){
-            if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
-                $(this).show();
-            }
-        });
-        if(search_value.length == 0){
-            $('div.memberline').show();
+        // var search_value = $(this).val();
+        keyword =  $(this).val();
+        // $('div.memberline').hide();
+        // $('div.memberline').each(function(){
+        //     if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
+        //         $(this).show();
+        //     }
+        // });
+        // if(search_value.length == 0){
+        //     $('div.memberline').show();
+        // }
+        if (e.keyCode == 13){
+           $('#id_member_search').trigger('click');
         }
+
+    });
+
+    $('#search_box').click(function(e){
+        var $alignSelect = $('._ALIGN_DROPDOWN');
+        var selector_currentMemberList = $('#currentMemberList');
+        var selector_finishedMemberList = $('#finishedMemberList');
+        var $search_input_div = $('.ymdText-pc-add-member-wrap');
+        var $search_member_input = $('#search_member_input');
+        var $search_x_button = $('#id_search_x_button');
+
+        if($search_input_div.css('display')=="none"){
+            $alignSelect.css('display', 'none');
+            $search_input_div.css('display', 'inline-block');
+            $search_x_button.attr('src','/static/user/res/ptadd/btn-x.png');
+            $search_x_button.css('width','15px');
+        }else{
+            keyword = '';
+            $search_member_input.val('');
+            $alignSelect.css('display', 'inline-block');
+            $search_input_div.css('display', 'none');
+            $search_x_button.attr('src','/static/user/res/icon-search-black.png');
+            $search_x_button.css('width','25px');
+            if(selector_currentMemberList.css('display') == "block") {
+                get_member_ing_list("callback", function (jsondata) {
+                    memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
+                });
+            }
+            else if(selector_finishedMemberList.css('display') == "block"){
+                get_member_end_list('callback', function(jsondata){
+                    memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
+                });
+            }
+        }
+    });
+
+    $('#id_member_search').click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var selector_currentMemberList = $('#currentMemberList');
+        var selector_finishedMemberList = $('#finishedMemberList');
+
+        if(selector_currentMemberList.css('display') == "block") {
+            get_member_ing_list("callback", function (jsondata) {
+                memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
+            });
+        }
+        else if(selector_finishedMemberList.css('display') == "block"){
+            get_member_end_list('callback', function(jsondata){
+                memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
+            });
+        }
+
+
     });
 
     $('#search_lecture_input').keyup(function(e){
@@ -140,6 +206,8 @@ $(document).ready(function(){
         //var jsondata = global_json
         if($(this).val()=="회원명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
             member_sort_val = SORT_MEMBER_NAME;
+            member_sort_type = SORT_TYPE_MEMBER_NAME;
+            member_sort_order_by = SORT_ASC;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','name','no',jsondata);
@@ -152,6 +220,8 @@ $(document).ready(function(){
             alignType = 'name';
         }else if($(this).val()=="남은 횟수 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
             member_sort_val = SORT_REMAIN_COUNT_MANY;
+            member_sort_type = SORT_TYPE_MEMBER_REMAIN_COUNT;
+            member_sort_order_by = SORT_DESC;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','count','yes',jsondata);
@@ -163,6 +233,8 @@ $(document).ready(function(){
             alignType = 'countH'
         }else if($(this).val()=="남은 횟수 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             member_sort_val = SORT_REMAIN_COUNT_FEW;
+            member_sort_type = SORT_TYPE_MEMBER_REMAIN_COUNT;
+            member_sort_order_by = SORT_ASC;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','count','no',jsondata);
@@ -173,6 +245,8 @@ $(document).ready(function(){
             alignType = 'countL'
         }else if($(this).val()=="시작 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             member_sort_val = SORT_START_DATE_OLD;
+            member_sort_type = SORT_TYPE_MEMBER_START_DATE;
+            member_sort_order_by = SORT_ASC;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','date','no',jsondata);
@@ -185,6 +259,8 @@ $(document).ready(function(){
             alignType = 'startP';
         }else if($(this).val()=="시작 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
             member_sort_val = SORT_START_DATE_NEW;
+            member_sort_type = SORT_TYPE_MEMBER_START_DATE;
+            member_sort_order_by = SORT_DESC;
             if($('#currentMemberList').css('display') == "block"){
                 get_member_ing_list("callback",function(jsondata){
                     memberListSet('current','date','yes',jsondata);
@@ -205,14 +281,16 @@ $(document).ready(function(){
         e.stopPropagation();
         var bodywidth = window.innerWidth;
         var dbID = $(this).attr('data-dbid');
+        var member_name = $(this).attr('data-name');
         shade_index(100);
+        console.log(member_name);
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
             get_indiv_member_info(dbID);
             get_member_lecture_list(dbID);
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
-            $('#uptext3').text('회원 정보');
+            $('#uptext3').text(member_name);
             if($('#popup_lecture_info_mobile').length > 0 ){
                 closePopup_mobile('upbutton-x-modify');
             }
@@ -2173,10 +2251,12 @@ function shiftMemberList(type){
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
     $('#search_member_input').val("").css("-webkit-text-fill-color", "#cccccc");
+    keyword = '';
+
     switch(type){
         case "current":
-            get_member_ing_list("callback", function(jsondata){
-                memberListSet('current', 'name', 'no', jsondata);
+            get_member_ing_list("callback", function (jsondata) {
+                memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
             });
             $('#currentMemberList, #memberNumber_current_member').css('display', 'block');
             $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
@@ -2188,8 +2268,8 @@ function shiftMemberList(type){
             break;
         case "finished":
             //if($('#btnCallMemberList').hasClass('list_switch_selected')){
-            get_member_end_list("callback", function(jsondata){
-                memberListSet('finished', 'name', 'no', jsondata);
+            get_member_end_list("callback", function (jsondata) {
+                memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
             });
             $('#finishedMemberList, #memberNumber_finish_member').css('display', 'block');
             $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
@@ -2760,32 +2840,12 @@ $(window).scroll(function() {
         var selector_finishedMemberList = $('#finishedMemberList');
         if(selector_currentMemberList.css('display') == "block") {
             get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
-                if(member_sort_val == SORT_MEMBER_NAME){
-                    memberListSet_test('current', 'name', 'no', jsondata);
-                }else if(member_sort_val == SORT_REMAIN_COUNT_FEW){
-                    memberListSet_test('current', 'count', 'no', jsondata);
-                }else if(member_sort_val == SORT_REMAIN_COUNT_MANY){
-                    memberListSet_test('current', 'count', 'yes', jsondata);
-                }else if(member_sort_val == SORT_START_DATE_OLD){
-                    memberListSet_test('current', 'date', 'no', jsondata);
-                }else if(member_sort_val == SORT_START_DATE_NEW){
-                    memberListSet_test('current', 'date', 'yes', jsondata);
-                }
+                memberListSet_test('current', member_sort_type, member_sort_order_by, jsondata);
             });
         }
         else if(selector_finishedMemberList.css('display') == "block"){
             get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
-                if(member_sort_val == SORT_MEMBER_NAME){
-                    memberListSet_test('finished','name','no',jsondata);
-                }else if(member_sort_val == SORT_REMAIN_COUNT_FEW){
-                    memberListSet_test('finished','count','no',jsondata);
-                }else if(member_sort_val == SORT_REMAIN_COUNT_MANY){
-                    memberListSet_test('finished','count','yes',jsondata);
-                }else if(member_sort_val == SORT_START_DATE_OLD){
-                    memberListSet_test('finished','date','no',jsondata);
-                }else if(member_sort_val == SORT_START_DATE_NEW){
-                    memberListSet_test('finished','date','yes',jsondata);
-                }
+                memberListSet_test('finished', member_sort_type, member_sort_order_by, jsondata);
             });
         }
 	}
@@ -2803,7 +2863,7 @@ function get_member_list_test(url, use, callback){
     $.ajax({
         url:url,
         type:'GET',
-        data: {"page": ++page_num, "member_sort": member_sort_val},
+        data: {"page": ++page_num, "member_sort": member_sort_val, "keyword":keyword},
 
         dataType : 'html',
 
@@ -2864,6 +2924,9 @@ function get_member_list_test(url, use, callback){
         }
     })
 }
+
+var keyword = '';
+
 function get_member_ing_list(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
@@ -2873,11 +2936,11 @@ function get_member_ing_list(use, callback){
     memberListSet_test_len = 1;
     mutex_val = 1;
     
-    console.log(member_sort_val);
+    console.log(keyword);
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
-        data: {"page": page_num, "member_sort": member_sort_val},
+        data: {"page": page_num, "member_sort": member_sort_val, "keyword":keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2943,7 +3006,7 @@ function get_member_end_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_end_list/',
         type:'GET',
-        data: {"page": page_num, "member_sort": member_sort_val},
+        data: {"page": page_num, "member_sort": member_sort_val, "keyword":keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -3407,12 +3470,13 @@ function memberListSet (type,option,Reverse, jsondata){
             addHtml = pc_html;
         }
 
-        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
+        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'" data-name="'+name+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
 
     }
     memberListSet_test_len += len;
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+    // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
+    $('#uptext').text("회원("+jsondata.total_member_num+"명)");
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
@@ -3707,12 +3771,13 @@ function memberListSet_test(type,option,Reverse, jsondata){
             addHtml = pc_html;
         }
 
-        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'"><div class="_countnum">'+(i+memberListSet_test_len)+'</div>'+addHtml+'</div>';
+        arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'" data-name="'+name+'"><div class="_countnum">'+(i+memberListSet_test_len)+'</div>'+addHtml+'</div>';
 
     }
     memberListSet_test_len += countLists.length;
-    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+    // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
+    $('#uptext').text("회원("+jsondata.total_member_num+"명)");
 
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
@@ -4414,21 +4479,21 @@ function delete_member_reg_data_pc(lectureID, dbID){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if($('#currentMemberList').css('display') == "block"){
-                    get_member_ing_list("callback", function(jsondata){
-                        memberListSet('current', 'name', 'no', jsondata);
+                    get_member_ing_list("callback", function(json){
+                        memberListSet('current', member_sort_type, member_sort_order_by, json);
                     });
                 }else if($('#finishedMemberList').css('display') == "block"){
-                    get_member_end_list("callback", function(jsondata){
-                        memberListSet('finished', 'name', 'no', jsondata);
+                    get_member_end_list("callback", function(json){
+                        memberListSet('finished', member_sort_type, member_sort_order_by, json);
                     });
                 }else if($("#calendar").length > 0 ){
                     $('#members_mobile, #members_pc').html('');
                     get_current_member_list();
                     get_current_group_list();
-                    get_member_group_class_ing_list("callback", function(jsondata){
-                        var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
+                    get_member_group_class_ing_list("callback", function(json){
+                        var memberlist = ptmember_ListHtml('current', 'name', 'no', json);
                         var member_Html = memberlist.html;
-                        var group_class_Html = group_class_ListHtml('current', jsondata);
+                        var group_class_Html = group_class_ListHtml('current', json);
                         $('#currentGroupList').html(group_class_Html);
                     });
                 }
@@ -4620,7 +4685,7 @@ function refund_member_lecture_data(lectureID, dbID, refund_price, refund_date){
 function smart_refresh_member_group_class_list(){
     if($('#currentMemberList').css('display') == "block"){
         get_member_ing_list("callback", function(jsondata){
-            memberListSet('current', 'name', 'no', jsondata);
+            memberListSet('current', member_sort_type, member_sort_order_by, jsondata);
             if($('#memberInfoPopup').css('display') == "block"){
                 //$('#page_managemember').css('height',0);
                 $('#page_managemember').css({'display':'none'});
@@ -4628,7 +4693,7 @@ function smart_refresh_member_group_class_list(){
         });
     }else if($('#finishedMemberList').css('display') == "block"){
         get_member_end_list("callback", function(jsondata){
-            memberListSet('finished', 'name', 'no', jsondata);
+            memberListSet('finished', member_sort_type, member_sort_order_by, jsondata);
             if($('#memberInfoPopup').css('display') == "block"){
                 //$('#page_managemember').css('height',0);
                 $('#page_managemember').css({'display':'none'});
@@ -5280,12 +5345,12 @@ function add_member_form_func(){
 
                 $('#startR').attr('selected','selected');
                 if($('#currentMemberList').css('display') == "block"){
-                    get_member_ing_list("callback",function(jsondata){
-                        memberListSet('current','date','yes',jsondata);
+                    get_member_ing_list("callback",function(json){
+                        memberListSet('current', member_sort_type, member_sort_order_by, json);
                     })
                 }else if($('#finishedMemberList').css('display') == "block"){
-                    get_member_end_list("callback",function(jsondata){
-                        memberListSet('finished','date','yes',jsondata);
+                    get_member_end_list("callback",function(json){
+                        memberListSet('finished', member_sort_type, member_sort_order_by, json);
                     })
                 }
                 if($('#currentGroupList').length || $('#finishedGroupList').length ){
@@ -5563,87 +5628,17 @@ function deleteMemberAjax(){
                 $('#startR').attr('selected','selected');
                 var selector_currentMemberList = $('#currentMemberList');
                 var selector_finishedMemberList = $('#finishedMemberList');
-                switch(alignType){
-                    case 'name':
-                        if(selector_currentMemberList.css('display') == "block"){
-                            get_member_ing_list('callback',function(json){
-                                memberListSet ('current','name','no',json);
-                                $('#name').attr('selected','selected');
-                            });
-                        }else if(selector_finishedMemberList.css('display') == "block"){
-                            get_member_end_list('callback',function(json){
-                                memberListSet('finished','name','no',json);
-                                $('#name').attr('selected','selected');
-                            });
-                        }
-                        break;
-                    case 'countH':
-                        if(selector_currentMemberList.css('display') == "block"){
-                            get_member_ing_list('callback',function(json){
-                                memberListSet('current','count','yes',json);
-                                $('#countH').attr('selected','selected');
-                            });
-                        }else if(selector_finishedMemberList.css('display') == "block"){
-                            get_member_end_list('callback',function(json){
-                                memberListSet('finished','count','yes',json);
-                                $('#countH').attr('selected','selected');
-                            });
-                        }
-                        break;
-                    case 'countL':
-                        if(selector_currentMemberList.css('display') == "block"){
-                            get_member_ing_list('callback',function(json){
-                                memberListSet('current','count','no',json);
-                                $('#countL').attr('selected','selected');
-                            });
-                        }else if(selector_finishedMemberList.css('display') == "block"){
-                            get_member_end_list('callback',function(json){
-                                memberListSet('finished','count','no',json);
-                                $('#countL').attr('selected','selected');
-                            });
-                        }
-                        break;
-                    case 'startP':
-                        if($selector_currentMemberList.css('display') == "block"){
 
-                        }else if(selector_finishedMemberList.css('display') == "block"){
-
-                        }
-                        get_member_ing_list('callback',function(json){
-                            memberListSet('current','date','no',json);
-                            $('#startP').attr('selected','selected');
-                        });
-                        get_member_end_list('callback',function(json){
-                            memberListSet('finished','date','no',json);
-                            $('#startP').attr('selected','selected');
-                        });
-                        break;
-                    case 'startR':
-                        if(selector_currentMemberList.css('display') == "block"){
-                            get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','yes',json);
-                                $('#startR').attr('selected','selected');
-                            });
-                        }else if(selector_finishedMemberList.css('display') == "block"){
-                            get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','yes',json);
-                                $('#startR').attr('selected','selected');
-                            });
-                        }
-                        break;
-                    case 'recent':
-                        if(selector_currentMemberList.css('display') == "block"){
-                            get_member_ing_list('callback',function(json){
-                                memberListSet('current','date','yes',json);
-                                $('#recent').attr('selected','selected');
-                            });
-                        }else if(selector_finishedMemberList.css('display') == "block"){
-                            get_member_end_list('callback',function(json){
-                                memberListSet('finished','date','yes',json);
-                                $('#recent').attr('selected','selected');
-                            });
-                        }
-                        break;
+                if(selector_currentMemberList.css('display') == "block"){
+                    get_member_ing_list('callback',function(json){
+                        memberListSet('current', member_sort_type, member_sort_order_by, json);
+                        $('#name').attr('selected','selected');
+                    });
+                }else if(selector_finishedMemberList.css('display') == "block"){
+                    get_member_end_list('callback',function(json){
+                        memberListSet('finished', member_sort_type, member_sort_order_by, json);
+                        $('#name').attr('selected','selected');
+                    });
                 }
                 smart_refresh_member_group_class_list();
                 // console.log('success');

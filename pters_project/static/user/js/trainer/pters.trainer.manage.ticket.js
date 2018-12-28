@@ -2483,6 +2483,8 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function package_ListHtml(option, jsondata){ //option : current, finished
+
+    $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');

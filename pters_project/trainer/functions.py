@@ -41,13 +41,13 @@ def func_get_class_member_id_list(class_id):
 
 def func_get_class_member_ing_list(class_id, keyword):
     all_member = []
-    class_lecture_data = ClassLectureTb.objects.select_related('lecture_tb__member__user'
-                                                               ).filter(class_tb_id=class_id, auth_cd='VIEW',
-                                                                        lecture_tb__state_cd='IP',
-                                                                        lecture_tb__use=USE,
-                                                                        lecture_tb__member__use=USE,
-                                                                        lecture_tb__member__name__contains=keyword,
-                                                                        use=USE).order_by('lecture_tb__member__name')
+    class_lecture_data = ClassLectureTb.objects.select_related(
+        'lecture_tb__member__user').filter(Q(lecture_tb__member__name__contains=keyword)|
+                                           Q(lecture_tb__member__user__username__contains=keyword),
+                                           class_tb_id=class_id, auth_cd='VIEW',
+                                           lecture_tb__state_cd='IP', lecture_tb__use=USE,
+                                           lecture_tb__member__use=USE,
+                                           use=USE).order_by('lecture_tb__member__name')
     for class_lecture_info in class_lecture_data:
         check_member = None
         member_id = class_lecture_info.lecture_tb.member_id
@@ -81,9 +81,10 @@ def func_get_class_member_end_list(class_id, keyword):
                              "and D.LECTURE_TB_ID=B.ID " \
                              "and D.AUTH_CD=\'VIEW\') > 0 "
     class_lecture_data = ClassLectureTb.objects.select_related(
-        'lecture_tb__member__user').filter(class_tb_id=class_id, auth_cd='VIEW',
+        'lecture_tb__member__user').filter(Q(lecture_tb__member__name__contains=keyword)|
+                                           Q(lecture_tb__member__user__username__contains=keyword),
+                                           class_tb_id=class_id, auth_cd='VIEW',
                                            lecture_tb__use=USE, lecture_tb__member__use=USE,
-                                           lecture_tb__member__name__contains=keyword,
                                            use=USE
                                            ).exclude(lecture_tb__state_cd='IP'
                                                      ).annotate(ip_lecture_count=RawSQL(query_ip_lecture_count, [])

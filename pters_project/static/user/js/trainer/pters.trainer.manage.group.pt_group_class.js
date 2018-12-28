@@ -1646,7 +1646,7 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function group_class_ListHtml(option, jsondata){ //option : current, finished
-    console.log(jsondata)
+    console.log(jsondata);
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');
@@ -1659,6 +1659,9 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             text_membernum = "종료된 그룹 ";
             break;
     }
+
+    $('#uptext').text("수업("+jsondata.total_group_num+"개)");
+
     var htmlToAdd = [];
     var htmlToJoin = [];
     var htmlToJoin2 = [];
@@ -2061,7 +2064,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
                                 <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
                             </div>
                             <div id="mobile_comment_2">
-                                <p>회원을 고정하면 일정 등록시 함께 추가합니다.</p>
+                                <p>회원을 체크하면 일정 등록시 함께 추가합니다.</p>
                             </div>
                         `
                         )
