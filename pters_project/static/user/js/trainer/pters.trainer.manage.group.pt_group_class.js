@@ -1220,6 +1220,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 //         $('#finishedGroupList').html(group_class_Html);
                 //     });
                 // }
+                
                 smart_refresh_member_group_class_list();
 
                 
@@ -2199,7 +2200,7 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
     }
     var repeat_info = repeat_array.join("");
 
-    var html = `<div class="pters_table"><div id="mygroupcolor" class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
+    var html = `<div class="pters_table"><div class="pters_table_cell">색상</div><div id="mygroupcolor" class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
                 <div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" readonly></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" readonly>명</div></div>
