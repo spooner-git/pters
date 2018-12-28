@@ -1651,13 +1651,14 @@ $(document).ready(function(){
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
-                $(this).attr('data-type','modify');
-                $(this).find('img').attr('src','/static/user/res/ptadd/btn-complete-checked.png');
+                $(this).attr('data-type', 'modify');
+                $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+                $('#mygroupnametitle').show();
             }else if($(this).attr('data-type') == "modify" ){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');
                 var group_id = $('#mygroupid').attr('data-groupid');
-                var group_name = $('#mygrouopname').attr('data-groupname');
+                var group_name = $('#mygroupname input').val();
                 var group_capacity = $('#mygroupcapacity input').val();
                 var group_memo = $('#mygroupmemo input').val();
                 var group_type = "";
