@@ -166,11 +166,16 @@ def get_function_auth_type_cd(request):
         payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='paid',
                                                     start_date__lte=today, end_date__gte=today,
                                                     use=USE).order_by('product_tb_id', '-end_date')
+        if len(payment_data) == 0:
+            payment_data = PaymentInfoTb.objects.filter(member_id=trainer_id, status='reserve',
+                                                        start_date__lte=today, end_date__gte=today,
+                                                        use=USE).order_by('product_tb_id', '-end_date')
 
-        for billing_info in billing_data:
-            billing_info.state_cd = 'END'
-            # billing_info.use = UN_USE
-            billing_info.save()
+        if len(payment_data) == 0:
+            for billing_info in billing_data:
+                billing_info.state_cd = 'END'
+                # billing_info.use = UN_USE
+                billing_info.save()
 
         request.session['product_type_name'] = ''
         request.session['product_id'] = ''
