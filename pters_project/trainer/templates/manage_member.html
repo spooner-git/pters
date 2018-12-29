@@ -1137,12 +1137,6 @@
 {#    <script src="{% static_url "common/js/el-pagination.js" %}"></script>#}
     <script>
 
-        var current_Scroll_Position;
-        
-{#        $.endlessPaginate({#}
-{#            paginateOnScrollMargin: 10,#}
-{#            paginateOnScroll: true#}
-{#        });#}
         $('a.text-membermanage').css('color', '#fe4e65;');
         $('#uptext').text("회원");
         $('footer').hide();
@@ -1156,35 +1150,31 @@
         var select_all_check = false;
 
         get_member_ing_list("callback", function(jsondata){
-            memberListSet('current', 'name', 'no', jsondata);
+            memberListSet('current', jsondata);
         });
 
         $(window).resize(function(){
-            bodywidth = window.innerWidth;
+            //bodywidth = window.innerWidth;
             var selector_currentMemberList = $('#currentMemberList');
             var selector_finishedMemberList = $('#finishedMemberList');
             if(bodywidth <= 1000 && $('._member_list_mobile_style').length == 0){
                 if(selector_currentMemberList.css('display') == "block"){
                     get_member_ing_list('callback',function(json){
-                        memberListSet ('current',member_sort_type,member_sort_order_by,json);
-                        $('#name').attr('selected','selected');
+                        memberListSet ('current', json);
                     });
                 }else if(selector_finishedMemberList.css('display') == "block"){
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished',member_sort_type,member_sort_order_by,json);
-                        $('#name').attr('selected','selected');
+                        memberListSet('finished', json);
                     });
                 }
             }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
                 if(selector_currentMemberList.css('display') == "block"){
                     get_member_ing_list('callback',function(json){
-                        memberListSet ('current',member_sort_type,member_sort_order_by,json);
-                        $('#name').attr('selected','selected');
+                        memberListSet ('current', json);
                     });
                 }else if(selector_finishedMemberList.css('display') == "block"){
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished',member_sort_type,member_sort_order_by,json);
-                        $('#name').attr('selected','selected');
+                        memberListSet('finished',json);
                     });
                 }
             }
@@ -1195,15 +1185,14 @@
             var scrollPosition = $(window).height() + $(window).scrollTop();
             if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
                 mutex_val = 0;
-
                 if(member_tab == TAB_ING_MEMBER) {
                     get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
-                        memberListSet_test(member_tab, member_sort_type, member_sort_order_by, jsondata);
+                        memberListSet_test(member_tab, jsondata);
                     });
                 }
                 else if(member_tab == TAB_END_MEMBER){
                     get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
-                        memberListSet_test(member_tab, member_sort_type, member_sort_order_by, jsondata);
+                        memberListSet_test(member_tab, jsondata);
                     });
                 }
             }
