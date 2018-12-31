@@ -1039,7 +1039,7 @@ img,a,div,span,p{
 		display:inline;
 		position: absolute;
 		left: 15px;
-		color: #444444;
+		/*color: #444444;*/
 		font-size: 15px;
 		font-weight: bold;
 	}

@@ -456,13 +456,12 @@ $(document).ready(function(){
 
         var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4];
 
-        $('#datetext_mini').text(thisID.split('_')[0]+'년 '+
+        $('#datetext_mini').html(thisID.split('_')[0]+'년 '+
             thisID.split('_')[1]+'월 '+
-            thisID.split('_')[2]+'일 '+
-            thisID.split('_')[3]+':'+
-            thisID.split('_')[4]+'~ '+
-            endHour+':'+
-            endMin
+            thisID.split('_')[2]+'일 '+'<br>'+
+            time_format_add_ampm(thisID.split('_')[3]+':'+thisID.split('_')[4])+
+            '~ '+
+            time_format_add_ampm(endHour+':'+endMin)
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
         ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
@@ -618,13 +617,12 @@ $(document).ready(function(){
 
         var endID = thisID.split('_')[0]+'_'+thisID.split('_')[1]+'_'+thisID.split('_')[2]+'_'+endTime+'_'+thisID.split('_')[4];
 
-        $('#datetext_mini').text(thisID.split('_')[0]+'년 '+
+        $('#datetext_mini').html(thisID.split('_')[0]+'년 '+
             thisID.split('_')[1]+'월 '+
-            thisID.split('_')[2]+'일 '+
-            thisID.split('_')[3]+':'+
-            thisID.split('_')[4]+'~ '+
-            endHour+':'+
-            endMin
+            thisID.split('_')[2]+'일 '+'<br>'+
+            time_format_add_ampm(thisID.split('_')[3]+':'+thisID.split('_')[4])+
+            '~ '+
+            time_format_add_ampm(endHour+':'+endMin)
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
         ).val(date_format_yyyy_m_d_to_yyyy_mm_dd(thisID.split('_')[0]+'-'+thisID.split('_')[1]+'-'+thisID.split('_')[2], '-'))
@@ -2792,7 +2790,6 @@ var allplans = [];
 function startTimeSet(option, jsondata, selecteddate, Timeunit, filter){   // offAddOkArray의 값을 가져와서 시작시간에 리스트 ex) var offAddOkArray = [5,6,8,11,15,19,21]
     var sArraySet =  startTimeArraySet(selecteddate, jsondata, Timeunit, filter); //DB로 부터 데이터 받아서 선택된 날짜의 offAddOkArray 채우기
     var addOkArray = sArraySet.addOkArray;
-    console.log("addOkArray", addOkArray)
     var options = "";
     switch(option){
         case "class":
@@ -2840,7 +2837,7 @@ function startTimeSet(option, jsondata, selecteddate, Timeunit, filter){   // of
             offText = text2;
         }
 
-        timeArray.push('<li><a data-trainingtime="'+addOkArray[i]+'" class="pointerList">'+offText+offHour+':'+offmin+'</a></li>');
+        timeArray.push('<li><a data-trainingtime="'+addOkArray[i]+'" class="pointerList">'+offText+time_format_add_ampm(offHour+':'+offmin, "none")+'</a></li>');
     }
     timeArray[offOkLen+1]='<div><img src="/static/user/res/PTERS_logo.jpg" style="height:17px;opacity:0.3;"></div>';
     var timeArraySum = timeArray.join('');
@@ -3110,7 +3107,7 @@ function durTimeSet(selectedTime, selectedMin, option, Timeunit, filter){ // dur
         //console.log(add_time(selectedTime+':'+selectedMin, '00:0'+zz) , sortedlist[index+1])
         // if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
         durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selected_time, '00:0'+zz)+'" class="pointerList">'
-            +duration_number_to_hangul_minute(zz)+'  (~ '+add_time(selected_time, '00:0'+zz)+')'+'</a></li>');
+            +duration_number_to_hangul_minute(zz)+'  (~ '+time_format_add_ampm(add_time(selected_time, '00:0'+zz), "none")+')'+'</a></li>');
         // }
         zz += Timeunit;
 

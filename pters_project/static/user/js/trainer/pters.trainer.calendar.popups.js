@@ -255,8 +255,8 @@
         var schedule_finish_check = $(this).attr('data-schedule-check');
 
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
-        var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
-        var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
+        var stime_text = time_format_add_ampm(time+':'+minute);
+        var etime_text = time_format_add_ampm(info[7]+':'+info[8]);
         var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'">'+
                             '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
                             '<span id="planinfo_name_text">'+info[6]+'</span>'+
@@ -272,7 +272,7 @@
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#282828"});
         }
         $('#popup_planinfo_title').html(infoText2);
-        $('#popup_info').text(infoText+' '+time+':'+minute+' - '+info[7]+':'+info[8]);
+        $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
         // $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
         selector_cal_popup_planinfo.attr({'schedule-id': $(this).attr('class-schedule-id'), 
@@ -392,8 +392,8 @@
         $('#popup_info3_memo_modify').hide();
 
         var infoText =  yy+'. '+mm+'. '+dd+' '+'('+day+')';
-        var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
-        var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
+        var stime_text = time_format_add_ampm(time+':'+minute);
+        var etime_text = time_format_add_ampm(info[7]+':'+info[8]);
 
         var infoText2 = '<span>'+
                             '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+yourplan +
@@ -409,7 +409,7 @@
         }
 
         $('#popup_planinfo_title').html(infoText2);
-        $('#popup_info').text(infoText+' '+time+':'+minute+' - '+info[7]+':'+info[8]);
+        $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
         // $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(infoText3).val(infoText3);
         selector_cal_popup_plan_info.attr({'schedule-id':$(this).attr('off-schedule-id'), 'data-grouptype':'off', 'data-date':thisIdDate_});
@@ -519,8 +519,8 @@
         var group_max_member_num = $(this).attr('data-membernum');
 
         var infoText = yy+'. '+mm+'. '+dd+' '+'('+day+')';
-        var stime_text = time_format_to_hangul(add_time(time+':'+minute, '00:00'));
-        var etime_text = time_format_to_hangul(add_time(info[7]+':'+info[8], '00:00'));
+        var stime_text = time_format_add_ampm(time+':'+minute);
+        var etime_text = time_format_add_ampm(info[7]+':'+info[8]);
         var infoText2 = '<span data-name="'+info[6]+'" '+'data-schedule-check="'+schedule_finish_check+'" '+'data-group-type-cd-name="'+group_class_type_name+'">'+
                             '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
                             '<span id="planinfo_type_text">'+group_class_type_name+'.</span>'+
@@ -537,7 +537,7 @@
         }
         $('#groupParticipants_number_in_btn').text(group_current_member_num);
         $('#popup_planinfo_title').html(infoText2);
-        $('#popup_info').text(infoText+' '+time+':'+minute+' - '+info[7]+':'+info[8]);
+        $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
         //$('#popup_info2').html(infoText2);
         // $('#popup_info2').html(infoText2);
 

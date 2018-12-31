@@ -284,6 +284,32 @@ function remove_duplicate_compared_to(targetArray, compareArray){
     return resultArray;
 }
 
+//시간에 AM, PM붙이기
+function time_format_add_ampm(time, noAMPM){ // time: 00:00
+    var timesplit = time.split(':');
+    var hour = Number(timesplit[0]);
+    var min = timesplit[1];
+
+    var text;
+    if(hour < 12){
+        text = "AM";
+    }else if(hour > 12){
+        hour = hour - 12;
+        if(hour == 24){
+            text = "AM";
+        }else{
+            text = "PM";
+        }
+    }else if(hour == 12){
+        text = "PM";
+    }
+    if(noAMPM == "none"){
+        return hour+':'+min;
+    }else{
+        return text+" "+hour+':'+min;
+    }
+}
+
 //데이트가 2018-08-23 혹은 20180823 혹은 2018_08_23 혹은 2018-8-23 으로 들어왔을때 2018년 8월 23일 로 출력
 function date_format_to_hangul(yyyymmdd){
     var date = yyyymmdd;

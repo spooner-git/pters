@@ -1322,12 +1322,23 @@ function time_index_set(size){
     }
 
     for(var i=work_startTime; i<work_endTime; i++){
+        // if(i<12 && i == work_startTime){
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+        // }else if(i==12){
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+        // }else if(i>12){
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i-12)+':00</span></div>');
+        // }else{
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+        // }
         if(i<12 && i == work_startTime){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+i+':00</span></div>');
         }else if(i==12){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+i+':00</span></div>');
+        }else if(i>12){
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+(i-12)+':00</span></div>');
         }else{
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
         }
     }
     $('div.timeindex').html(timelist.join(''));
@@ -1910,7 +1921,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                                                         '<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+
                                                     ' </span>'+
                                                     '<span class="memberTime '+hideornot+'" '+time_hide+'>'+
-                                                        '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                                        '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+
                                                     '</span>'+
 
                                             '</div>'
@@ -1954,7 +1965,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                                                         groupstatus+
                                                 '</span>'+
                                                 '<span class="memberTime '+hideornot+'" '+time_hide+'>'+
-                                                        '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                                        '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+
                                                 '</span>'+
 
                                         '</div>'
@@ -1994,7 +2005,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                                                     '<p class="groupnametag">'+planCode+memberName+'</p>'+
                                                 ' </span>'+
                                                 '<span class="memberTime '+hideornot+'" '+time_hide+'>'+
-                                                    '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+
+                                                    '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+
                                                 '</span>'+
                                         '</div>'
                                         );
@@ -2348,7 +2359,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div class-time="'+planArrayForTag.join('_')+
                             '" class-schedule-id="'+planScheduleIdArray[i]+
                             '" data-plancolor="'+plancolor_ing_bg_cd+
@@ -2374,7 +2385,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }else if(option == 'group'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div group-time="'+planArrayForTag.join('_')+
                             '" group-schedule-id="'+planScheduleIdArray[i]+
                             '" data-plancolor="'+plancolor_ing_bg_cd[i]+
@@ -2402,7 +2413,7 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         }else if(option == 'off'){
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
-                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + planHour+':'+planMinute+'</span>';
+                innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
                 planhtml = '<div off-time="'+planArrayForTag.join('_')+
                             '" off-schedule-id="'+planScheduleIdArray[i]+
                             '" data-plancolor="'+plancolor_ing_bg_cd+
@@ -2969,14 +2980,14 @@ function plancheck(dateinfo, jsondata){ // //2017_11_21_21_00_1_김선겸_22_00 
             if(splited[10]==1){
                 htmltojoin.push('<div class="plan_raw" title="완료 된 일정" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
-                                    '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                    '<div class="planchecktime">'+time_format_add_ampm(stime+':'+sminute, "none")+' - '+time_format_add_ampm(etime+':'+eminute, "none")+'</div>'+
                                     '<div class="plancheckname"><img src="/static/user/res/btn-pt-complete.png">'+'<p '+textsize+'>'+name+'</p></div>'+
                                 '</div>');
 
             }else if(splited[10] == 0){
                 htmltojoin.push('<div class="plan_raw" data-grouptype="'+splited[12]+'" data-groupid="'+splited[13]+'" data-group-type-cd-name="'+splited[14]+'" data-currentmembernum="'+groupcurrent+'" data-membernum="'+groupmaxnum+'" data-dbid="'+splited[11]+'" schedule-id="'+splited[8]+'"  data-lectureid="'+splited[9]+'" data-schedule-check="'+splited[10]+'" data-memberName="'+splited[4]+'" data-memo="'+dateplans[i-1].split('_/')[1]+'">'+
                                     '<div class="plancheckmorningday">'+morningday+'</div>'+
-                                    '<div class="planchecktime">'+stime+':'+sminute+' - '+etime+':'+eminute+'</div>'+
+                                    '<div class="planchecktime">'+time_format_add_ampm(stime+':'+sminute, "none")+' - '+time_format_add_ampm(etime+':'+eminute, "none")+'</div>'+
                                     '<div class="plancheckname"><p '+textsize+'>'+name+'</p></div>'+
                                 '</div>');
             }
