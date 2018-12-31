@@ -238,7 +238,7 @@
         var selector_popup_info3_memo = $('#popup_info3_memo');
         selector_popup_btn_complete.val('');
         // selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
-        selector_popup_info3_memo.attr('readonly', true);
+        //selector_popup_info3_memo.attr('readonly', true);
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
@@ -378,7 +378,7 @@
         var selector_popup_btn_complete = $("#popup_btn_complete");
         selector_popup_btn_complete.val('');
         //selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
-        selector_popup_info3_memo.attr('readonly', true);
+        //selector_popup_info3_memo.attr('readonly', true);
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
@@ -503,7 +503,7 @@
         var selector_popup_btn_complete = $("#popup_btn_complete");
         selector_popup_btn_complete.val('');
         //selector_popup_info3_memo.attr('readonly', true).css({'border':'0'});
-        selector_popup_info3_memo.attr('readonly', true);
+        //selector_popup_info3_memo.attr('readonly', true);
         $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
         $('#canvas').hide().css({'border-color':'#282828'});
         $('#canvasWrap').css({'display':'none'});
@@ -695,7 +695,7 @@
             var stime_text = time_format_to_hangul(add_time(selectedTime+':'+selectedMinute, '00:00'));
             var etime_text = time_format_to_hangul(add_time(selectedETime+':'+selectedEMinute, '00:00'));
             //$("#cal_popup_planinfo").css('display','block').attr({'schedule-id':$(this).attr('schedule-id'), 'data-grouptype':$(this).attr('data-grouptype'), 'group_plan_finish_check':$(this).attr('data-schedule-check')})
-            $('#popup_info3_memo').attr('readonly', true).css({'border':'0'});
+            // $('#popup_info3_memo').attr('readonly', true).css({'border':'0'});
             $('#popup_info3_memo_modify').attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'});
             $('#popup_info').text(selectedDate);
 
@@ -952,18 +952,18 @@
     //미니 팝업 메모수정
     $('#popup_info3_memo_modify').click(function(){
         if($(this).attr('data-type') == "view"){
-            $('#popup_info3_memo').attr('readonly', false).css({'border':'1px solid #cccccc'});
+            //$('#popup_info3_memo').attr('readonly', false).css({'border':'1px solid #cccccc'});
             $(this).attr({'src':'/static/user/res/btn-pt-complete.png', 'data-type':'modify'});
         }else if($(this).attr('data-type') == "modify"){
             // $('#popup_info3_memo').attr('readonly', true).css({'border':'0'});
-            $('#popup_info3_memo').attr('readonly', true);
+            //$('#popup_info3_memo').attr('readonly', true);
             $(this).attr({'src':'/static/user/res/icon-pencil.png', 'data-type':'view'}).hide();
             send_memo();
         }
     });
 
     $('#popup_info3_memo').click(function(){
-        $(this).attr('readonly', false).css({'border':'1px solid #cccccc'});
+        //$(this).attr('readonly', false).css({'border':'1px solid #cccccc'});
         $('#popup_info3_memo_modify').show().attr({'src':'/static/user/res/btn-pt-complete.png', 'data-type':'modify'});
     });
 
