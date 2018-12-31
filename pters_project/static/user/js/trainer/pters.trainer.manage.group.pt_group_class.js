@@ -564,35 +564,37 @@ $(document).on('click', 'div.groupWrap', function(e){
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
+    console.log(group_id);
     if(bodywidth > 1000){
         if(memberlist.css('display')=='none'){
-            if(group_id != "1:1"){
+            // if(group_id != "1:1") {
                 $(this).addClass('groupWrap_selected');
                 memberlist.addClass('groupMembersWrap_selected').show();
                 repeat_list.show();
                 // if(bodywidth < 600){
                 //    memo_list.show();
                 // }
-                if($(this).attr('data-groupstatecd')=='current'){
+                if ($(this).attr('data-groupstatecd') == 'current') {
                     get_groupmember_list(group_id);
                 }
-                else{
+                else {
                     get_end_groupmember_list(group_id);
                 }
                 get_group_repeat_info(group_id);
-            }else if(group_id == "1:1"){
-                $(this).addClass('groupWrap_selected');
-                memberlist.addClass('groupMembersWrap_selected').show();
-                if( $('#btnCallCurrent').hasClass('pters_selectbox_btn_selected') ){
-                    get_member_one_to_one_ing_list("callback", function(jsondata){
-                        memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</div>');
-                    });
-                }else if( $('#btnCallFinished').hasClass('pters_selectbox_btn_selected') ){
-                    get_member_one_to_one_end_list("callback", function(jsondata){
-                        memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('finished', 'name', 'no', jsondata).html+'</div>');
-                    });
-                }
-            }
+            // }
+            // }else if(group_id == "1:1"){
+            //     $(this).addClass('groupWrap_selected');
+            //     memberlist.addClass('groupMembersWrap_selected').show();
+            //     if( $('#btnCallCurrent').hasClass('pters_selectbox_btn_selected') ){
+            //         get_member_one_to_one_ing_list("callback", function(jsondata){
+            //             memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('current', 'name', 'no', jsondata).html+'</div>');
+            //         });
+            //     }else if( $('#btnCallFinished').hasClass('pters_selectbox_btn_selected') ){
+            //         get_member_one_to_one_end_list("callback", function(jsondata){
+            //             memberlist.html('<div style="width:100%;">'+ptmember_ListHtml('finished', 'name', 'no', jsondata).html+'</div>');
+            //         });
+            //     }
+            // }
         }else{
             $(this).removeClass('groupWrap_selected');
             memberlist.removeClass('groupMembersWrap_selected').hide();
@@ -1357,12 +1359,13 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var $tabletbody;
     var $membernum;
     var text_membernum;
+
     switch(type){
         case 'current':
             data = DataFormatting(jsondata);
-            countList = data.countSorted;
+            // countList = data.countSorted;
             nameList = data.nameSorted;
-            dateList = data.dateSorted;
+            // dateList = data.dateSorted;
             $table = $('#currentMember');
             $tabletbody = $('#currentMember tbody');
             $membernum = $('#memberNumber_current_member');
@@ -1370,9 +1373,9 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             break;
         case 'finished':
             data = DataFormatting(jsondata);
-            countList = data.countSorted;
+            // countList = data.countSorted;
             nameList = data.nameSorted;
-            dateList = data.dateSorted;
+            // dateList = data.dateSorted;
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember tbody');
             $membernum = $('#memberNumber_finish_member');
@@ -1380,19 +1383,19 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
             break;
     }
 
-    var countLists;
-    var nameLists;
-    var dateLists;
-    if(Reverse == 'yes'){
-        countLists =countList.sort().reverse();
-        nameLists = nameList.sort().reverse();
-        dateLists = dateList.sort().reverse();
-    }else{
-        countLists =countList.sort();
-        nameLists = nameList.sort();
-        dateLists = dateList.sort();
-    }
-    var len = countLists.length;
+    // var countLists;
+    var nameLists = nameList;
+    // var dateLists;
+    // if(Reverse == 'yes'){
+    //     countLists =countList.sort().reverse();
+    //     nameLists = nameList.sort().reverse();
+    //     dateLists = dateList.sort().reverse();
+    // }else{
+    //     countLists =countList.sort();
+    //     nameLists = nameList.sort();
+    //     dateLists = dateList.sort();
+    // }
+    var len = nameLists.length;
     var arrayResult = [];
     var array;
     var email;
@@ -1412,106 +1415,99 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
     var member_number = 0;
     var full_data = '';
     for(var i=0; i<len; i++){
-        if(option == "count") {
-            full_data = countLists[i];
-            array = countLists[i].split('/');
-        }else if(option == "name"){
-            full_data = nameLists[i];
-            array = nameLists[i].split('/');
-        }else if(option == "date") {
-            full_data = dateLists[i];
-            array = dateLists[i].split('/');
-        }
+        full_data = nameLists[i];
+        array = nameLists[i].split('/');
+
         if(full_data.split('/').indexOf('1:1') >= 0){
             member_number++;
-            if(option == "count"){
-                // array = countLists[i].split('/');
-                email = array[8];
-                name = array[2];
-                id = array[3];
-                dbId = array[13];
-                contents = array[5];
-                count = array[0];
-                regcount = array[1];
-                starts = array[6];
-                ends = array[7];
-                phoneToEdit = array[4].replace(/-| |/gi, "");
-                if(name.length>10){
-                    name = array[2].substr(0,9)+'..';
-                }
-                groupType = array[14];
-                if(array[15]){
-                    groupType2 = '/'+array[15];
-                }else{
-                    groupType2 = '';
-                }
-                if(array[16]){
-                    groupType3 = '/'+array[16];
-                }else{
-                    groupType3 = '';
-                }
-            }else if(option == "name"){
+            // if(option == "count"){
+            //     // array = countLists[i].split('/');
+            //     email = array[8];
+            //     name = array[2];
+            //     id = array[3];
+            //     dbId = array[13];
+            //     contents = array[5];
+            //     count = array[0];
+            //     regcount = array[1];
+            //     starts = array[6];
+            //     ends = array[7];
+            //     phoneToEdit = array[4].replace(/-| |/gi, "");
+            //     if(name.length>10){
+            //         name = array[2].substr(0,9)+'..';
+            //     }
+            //     groupType = array[14];
+            //     if(array[15]){
+            //         groupType2 = '/'+array[15];
+            //     }else{
+            //         groupType2 = '';
+            //     }
+            //     if(array[16]){
+            //         groupType3 = '/'+array[16];
+            //     }else{
+            //         groupType3 = '';
+            //     }
+            // }else if(option == "name"){
                 // array = nameLists[i].split('/');
-                email = array[8];
-                name = array[0];
-                id = array[1];
-                dbId = array[13];
-                contents = array[3];
-                count = array[4];
-                regcount = array[5];
-                starts = array[6];
-                ends = array[7];
-                phoneToEdit = array[2].replace(/-| |/gi,"");
-                if(name.length>10){
-                    name = array[0].substr(0,9)+'..';
-                }
-                npCounts = array[9];
-                rjCounts = array[10];
-                yetRegCounts = array[11];
-                yetCounts = array[12];
-                groupType = array[14];
-                if(array[15]){
-                    groupType2 = '/'+array[15];
-                }else{
-                    groupType2 = '';
-                }
-                if(array[16]){
-                    groupType3 = '/'+array[16];
-                }else{
-                    groupType3 = '';
-                }
-            }else if(option == "date"){
-                // array = dateLists[i].split('/');
-                // arrayforemail = dateLists[i].split('/');
-                email = array[8];
-                name = array[1];
-                id = array[2];
-                dbId = array[13];
-                contents = array[4];
-                count = array[5];
-                regcount = array[6];
-                starts = array[0];
-                ends = array[7];
-                phoneToEdit = array[3].replace(/-| |/gi,"");
-                if(name.length>10){
-                    name = array[1].substr(0,9)+'..';
-                }
-                npCounts = array[9];
-                rjCounts = array[10];
-                yetRegCounts = array[11];
-                yetCounts = array[12];
-                groupType = array[14];
-                if(array[15]){
-                    groupType2 = '/'+array[15];
-                }else{
-                    groupType2 = '';
-                }
-                if(array[16]){
-                    groupType3 = '/'+array[16];
-                }else{
-                    groupType3 = '';
-                }
+            email = array[8];
+            name = array[0];
+            id = array[1];
+            dbId = array[13];
+            contents = array[3];
+            count = array[4];
+            regcount = array[5];
+            starts = array[6];
+            ends = array[7];
+            phoneToEdit = array[2].replace(/-| |/gi,"");
+            if(name.length>10){
+                name = array[0].substr(0,9)+'..';
             }
+            npCounts = array[9];
+            rjCounts = array[10];
+            yetRegCounts = array[11];
+            yetCounts = array[12];
+            groupType = array[14];
+            if(array[15]){
+                groupType2 = '/'+array[15];
+            }else{
+                groupType2 = '';
+            }
+            if(array[16]){
+                groupType3 = '/'+array[16];
+            }else{
+                groupType3 = '';
+            }
+            // }else if(option == "date"){
+            //     // array = dateLists[i].split('/');
+            //     // arrayforemail = dateLists[i].split('/');
+            //     email = array[8];
+            //     name = array[1];
+            //     id = array[2];
+            //     dbId = array[13];
+            //     contents = array[4];
+            //     count = array[5];
+            //     regcount = array[6];
+            //     starts = array[0];
+            //     ends = array[7];
+            //     phoneToEdit = array[3].replace(/-| |/gi,"");
+            //     if(name.length>10){
+            //         name = array[1].substr(0,9)+'..';
+            //     }
+            //     npCounts = array[9];
+            //     rjCounts = array[10];
+            //     yetRegCounts = array[11];
+            //     yetCounts = array[12];
+            //     groupType = array[14];
+            //     if(array[15]){
+            //         groupType2 = '/'+array[15];
+            //     }else{
+            //         groupType2 = '';
+            //     }
+            //     if(array[16]){
+            //         groupType3 = '/'+array[16];
+            //     }else{
+            //         groupType3 = '';
+            //     }
+            // }
 
             var start = starts.substr(0, 4)+'.'+starts.substr(4, 2)+'.'+starts.substr(6, 2);
             var end = ends.substr(0, 4)+'.'+ends.substr(4, 2)+'.'+ends.substr(6, 2);
@@ -1623,7 +1619,7 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function group_class_ListHtml(option, jsondata){ //option : current, finished
-    console.log(jsondata);
+
     switch(option){
         case 'current':
             $membernum = $('#memberNumber_current_group');
