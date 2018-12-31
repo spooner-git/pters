@@ -324,6 +324,7 @@ class LoginSimpleSnsView(TemplateView):
         last_name = request.POST.get('last_name', '')
         first_name = request.POST.get('first_name', '')
         sns_type = request.POST.get('sns_type', 'google')
+        social_accessToken = request.POST.get('social_accessToken', '')
         sex = request.POST.get('sex', '')
 
         context['username'] = username
@@ -333,6 +334,7 @@ class LoginSimpleSnsView(TemplateView):
         context['name'] = last_name + first_name
         context['sns_id'] = sns_id
         context['sns_type'] = sns_type
+        context['social_accessToken'] = social_accessToken
         context['sex'] = sex
 
         return render(request, self.template_name, context)

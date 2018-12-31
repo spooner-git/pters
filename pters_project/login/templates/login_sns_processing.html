@@ -22,7 +22,9 @@
         <input type="hidden" name="username" id="id_username" value="{{ username }}">
         <input type="hidden" name="social_login_check" id="id_social_login_check" value="1">
         <input type="hidden" name="social_login_type" value="{{ sns_type }}">
+        <input type="hidden" name="social_login_id" id="id_social_login_id" value="{{ sns_id }}">
         <input type="hidden" name="auto_login_check" value="1">
+        <input type="hidden" name="social_accessToken" id="id_accessToken" value="{{ social_accessToken }}" >
         <input type="hidden" name="next_page" value = '{% url 'index' %}'>
     </form>
 
@@ -98,6 +100,7 @@
                     }else if(id_check_message == '1'){
 {#                        console.log('SNS 회원');#}
                         $('#id_username').attr('value', id_username);
+
                         document.getElementById('login-form').submit();
                     }
                     else{
