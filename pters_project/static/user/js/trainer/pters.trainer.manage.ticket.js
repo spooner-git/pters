@@ -1437,7 +1437,6 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             text_membernum = "종료된 그룹 ";
             break;
     }
-    console.log(jsondata);
     var htmlToAdd = [];
     var htmlToJoin = [];
     var htmlToJoin2 = [];
@@ -1536,8 +1535,6 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
     //$targetHTML.html(htmlToJoin2.join('') + htmlToJoin.join(''))
     return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
 }
-//그룹 목록을 화면에 뿌리기
-
 //그룹원 목록을 그룹에 뿌리기
 function get_groupmember_list(group_id, use, callback){
     var bodywidth = window.innerWidth;
@@ -2483,7 +2480,122 @@ var $membernum;
 var $targetHTML;
 var text_membernum;
 function package_ListHtml(option, jsondata){ //option : current, finished
+    console.log("package_ListHtml_mobile", jsondata)
+    $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
+    switch(option){
+        case 'current':
+            $membernum = $('#memberNumber_current_group');
+            $targetHTML = $('#currentPackageList');
+            text_membernum = "진행중인 그룹 ";
+            break;
+        case 'finished':
+            $membernum = $('#memberNumber_finish_group');
+            $targetHTML = $('#finishedPackageList');
+            text_membernum = "종료된 그룹 ";
+            break;
+    }
+    var htmlToAdd = [];
+    var htmlToJoin = [];
+    var htmlToJoin2 = [];
+    var htmlToJoin3 = [];
+    var groupNum = jsondata.package_id.length;
+    var ordernum = 0;
+    for(var i=0; i<groupNum; i++){
+        var package_name = jsondata.package_name[i];
+        var package_id = jsondata.package_id[i];
+        var package_type = jsondata.package_type_cd[i];
+        var package_type_nm = jsondata.package_type_cd_nm[i];
+        var package_createdate = date_format_to_yyyymmdd(jsondata.package_reg_dt[i].split(' ')[0]+' '+jsondata.package_reg_dt[i].split(' ')[1]+' '+jsondata.package_reg_dt[i].split(' ')[2], '-');
+        var package_memo = jsondata.package_note[i];
+        var package_memberlist = [];
+        var package_capacity = jsondata.package_group_num[i];
+        var packagestatus = jsondata.package_state_cd_name[i];
+        var packagestatus_cd = jsondata.package_state_cd[i];
 
+        var package_membernum;
+        switch(option){
+            case 'current':
+                package_membernum = jsondata.package_ing_member_num[i];
+                break;
+            case 'finished':
+                package_membernum = jsondata.package_end_member_num[i];
+                break;
+        }
+
+        ordernum++;
+        var full_package = "";
+        // if(package_membernum >= package_capacity && package_type == "NORMAL"){
+        //     var full_package = "red_color_text";
+        // }
+
+        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-packageid="'+package_id+'">';
+        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-packageid="'+package_id+'">';
+        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-packageid="'+package_id+'" data-edit="view">';
+        var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-packageid="'+package_id+'">';
+        var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">';
+
+        var htmlstart = '<div class="groupWrap" data-packagestatecd="'+option+'" data-packageid="'+package_id+'">';
+        var htmlend = '</div>';
+        var memolist = '<div class="groupMemoWrap" data-packageid="'+package_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
+        var repeatlist = '<div class="groupRepeatWrap" data-packageid="'+package_id+'"></div>';
+        var packagelist = '<div class="groupPackageWrap" data-packageid="'+package_id+'"></div>';
+        var memberlist = '<div class="groupMembersWrap" data-packageid="'+package_id+'" data-packagename="'+package_name+'" data-packagecapacity="'+package_capacity+'" data-packagetype="'+package_type+'">'+package_memberlist+'</div>';
+
+        // if(package_type == "ONE_TO_ONE") {
+        //     manageimgs = '<div class="_groupmanage"></div>';
+        // }
+        // else{
+            var manageimgs = '<div class="_groupmanage">' + pceditimage + pceditcancelimage + pcdeleteimage + '</div>';
+            if (Options.auth_class == 0) {
+                manageimgs = '<div class="_groupmanage">' + img_lock_function + '</div>';
+            }
+        // }
+
+        var main = '<div class="_groupnum">'+ordernum+'</div>'+
+            // '<div class="_grouptypecd" data-package-type="'+package_type+'"><input class="group_listinput input_disabled_true" value="'+package_type_nm+'" disabled>'+'</div>'+
+            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+'['+package_type_nm+'] '+package_name+'" disabled>'+'</div>'+
+            '<div class="_groupparticipants '+full_package+'">'+ package_membernum+'</div>'+
+            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_package+'" value="'+package_capacity+'" disabled>'+'</div>';
+            // if(package_type == "ONE_TO_ONE") {
+            //     main += '<div class="_grouppartystatus '+full_package+'"><span>'+ package_membernum + ' </span> ' +'</div>';
+            // }
+            // else{
+                main += '<div class="_grouppartystatus ' + full_package + '">' + '<div class="group_member_current_num" style="text-align:center;">' + package_membernum + '</div>' + '<span> </div>';
+            // }
+            main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
+
+            // if(package_type == "ONE_TO_ONE"){
+            //     main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
+            // }
+            // else{
+                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(package_createdate, '.')+'" disabled>'+'</div>';
+            // }
+            main += '<div class="_groupstatus" data-packageid="'+package_id+'">'+'<span class="_editable _groupstatus_'+packagestatus_cd+'" data-packagestatus="'+packagestatus_cd+'" data-packageid="'+package_id+'">'+packagestatus+'</span>'+'</div>'+ manageimgs;
+            //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+
+        if(package_type == "EMPTY"){
+            htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        }else if(package_type == "NORMAL"){
+            htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        }else if(package_type == "ONE_TO_ONE"){
+            htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        }else{
+            htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        }
+    }
+
+    if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 0){
+        if(option == "current"){
+            // htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수강권이 없습니다.</div>');
+        }else if(option == "finished"){
+            htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
+        }
+    }
+    return htmlToAdd.join('')+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
+}
+
+function package_ListHtml_mobile(option, jsondata){ //option : current, finished
+    console.log("package_ListHtml_mobile", jsondata)
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
         case 'current':
