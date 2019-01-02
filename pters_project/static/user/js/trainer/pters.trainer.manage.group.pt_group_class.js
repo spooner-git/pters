@@ -1233,8 +1233,8 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                         $('#mygroupcolor').css('background-color', ing_bg_color);
                     }else{
                         $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
+                        $('.mobile_group_color_palette').hide();
                     }
-                    $('.mobile_group_color_palette').hide();
                 }
                 console.log('success');
             }
