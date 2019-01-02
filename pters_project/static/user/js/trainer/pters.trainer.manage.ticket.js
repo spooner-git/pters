@@ -2479,7 +2479,7 @@ function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, ty
 var $membernum;
 var $targetHTML;
 var text_membernum;
-function package_ListHtml(option, jsondata){ //option : current, finished
+function package_ListHtml_원본(option, jsondata){ //option : current, finished
     console.log("package_ListHtml_mobile", jsondata)
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
@@ -2594,7 +2594,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
     return htmlToAdd.join('')+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
 }
 
-function package_ListHtml_mobile(option, jsondata){ //option : current, finished
+function package_ListHtml(option, jsondata){ //option : current, finished
     console.log("package_ListHtml_mobile", jsondata)
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
@@ -2666,27 +2666,13 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
             }
         // }
 
-        var main = '<div class="_groupnum">'+ordernum+'</div>'+
-            // '<div class="_grouptypecd" data-package-type="'+package_type+'"><input class="group_listinput input_disabled_true" value="'+package_type_nm+'" disabled>'+'</div>'+
-            '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+'['+package_type_nm+'] '+package_name+'" disabled>'+'</div>'+
-            '<div class="_groupparticipants '+full_package+'">'+ package_membernum+'</div>'+
-            '<div class="_groupcapacity">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_package+'" value="'+package_capacity+'" disabled>'+'</div>';
-            // if(package_type == "ONE_TO_ONE") {
-            //     main += '<div class="_grouppartystatus '+full_package+'"><span>'+ package_membernum + ' </span> ' +'</div>';
-            // }
-            // else{
-                main += '<div class="_grouppartystatus ' + full_package + '">' + '<div class="group_member_current_num" style="text-align:center;">' + package_membernum + '</div>' + '<span> </div>';
-            // }
-            main += '<div class="_groupmemo"><input class="group_listinput input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
-
-            // if(package_type == "ONE_TO_ONE"){
-            //     main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
-            // }
-            // else{
-                main += '<div class="_groupcreatedate"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(package_createdate, '.')+'" disabled>'+'</div>';
-            // }
-            main += '<div class="_groupstatus" data-packageid="'+package_id+'">'+'<span class="_editable _groupstatus_'+packagestatus_cd+'" data-packagestatus="'+packagestatus_cd+'" data-packageid="'+package_id+'">'+packagestatus+'</span>'+'</div>'+ manageimgs;
-            //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+        var main = 
+            `<div class="_grouptype_mobile">${package_type_nm}</div>
+             <div class="_groupname_mobile">${package_name}</div>
+             <div class="_groupparticipants_mobile"><div>회원수</div><div>${package_membernum}</div></div>
+             <div class="_grouplectures_mobile"><div>수업</div><div></div></div>
+             <div class="_groupmemo_mobile"><div>메모</div><div>${package_memo}</div></div>
+            `;
 
         if(package_type == "EMPTY"){
             htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
