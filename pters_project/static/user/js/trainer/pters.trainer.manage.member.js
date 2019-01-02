@@ -1603,6 +1603,7 @@ $(document).ready(function(){
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#mygroupnametitle').show();
+                $('.mobile_group_color_palette').show();
             }else if($(this).attr('data-type') == "modify" ){
                 $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');

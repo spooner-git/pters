@@ -867,6 +867,20 @@ div._fixedmember{
 	font-size: 16px;
 	font-weight: 500;
 }
+	.mobile_group_color_palette{
+		display: none;
+		float: right;
+		max-width: 160px;
+	}
+	#mygroupcolor, .mobile_group_color_palette > div{
+		display: inline-block;
+		width: 25px;
+		height:25px;
+		border-radius: 8px;
+		vertical-align: top;
+		margin-left: 5px;
+		margin-bottom: 10px;
+	}
 #popup_lecture_info_mobile_basic .mobile_repeat_info_wrap p:nth-of-type(1){
 	margin: 0;
 }

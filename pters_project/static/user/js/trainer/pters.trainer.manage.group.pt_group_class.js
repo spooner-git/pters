@@ -630,15 +630,10 @@ $(document).on('click', 'div.groupWrap', function(e){
     }
 });
 
-$(document).on('click', 'div._groupplancolor, #mygroupcolor', function(e){
+$(document).on('click', 'div._groupplancolor', function(e){
     e.stopPropagation();
-    if($('#popup_lecture_info_mobile').css('display') == "block"){
-        grouptype = $(this).css('background-color');
-        group_id = $('#mygroupid').attr('data-groupid');
-    }else{
-        grouptype = $(this).siblings('div._grouptypecd').attr('data-group-type');
-        group_id = $(this).parent(".groupWrap").attr('data-groupid');
-    }
+    grouptype = $(this).siblings('div._grouptypecd').attr('data-group-type');
+    group_id = $(this).parent(".groupWrap").attr('data-groupid');
     if(grouptype == "ONE_TO_ONE"){
         if($(this).find("div.colorpalette").length == 0){
             $(this).append(
@@ -687,6 +682,25 @@ $(document).on('click', 'div.colorpalette div', function(e){
     modify_group_from_list(group_id, "", "", "", "", ing_bg_color, end_bg_color, ing_font_color, end_font_color);
     $(this).parent('.colorpalette').remove();
 });
+
+$(document).on('click', '.mobile_group_color_palette > div', function(e){
+    e.stopPropagation();
+    // var group_id = $(this).parents('div.groupWrap').attr('data-groupid');
+    var group_id = $(this).parent('div.mobile_group_color_palette').attr('data-groupid');
+    var selected_color = $(this).attr("class").split('_')[1];
+    var ing_bg_color;
+    var end_bg_color;
+    var ing_font_color;
+    var end_font_color;
+
+    ing_bg_color = `#${selected_color}`;
+    end_bg_color = "#d2d1cf";
+    ing_font_color = "#282828";
+    end_font_color = "#282828";
+
+    modify_group_from_list(group_id, "", "", "", "", ing_bg_color, end_bg_color, ing_font_color, end_font_color);
+});
+
 
 //그룹 관리 아이콘 클릭시 자꾸 그룹원 정보가 닫히는 것을 방지
 $(document).on('click', 'div._groupmanage', function(e){
@@ -1201,30 +1215,9 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                // if(bodywidth < 600){
-                //     $('#page_managemember').css('display', 'block');
-                // }
-                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
-                // if($('#currentGroupList').css('display') == "block"){
-                //     get_member_group_class_ing_list("callback", function(jsondata){
-                //         var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-                //         var member_Html = memberlist.html;
-                //         var group_class_Html = group_class_ListHtml('current', jsondata);
-                //         $('#currentGroupList').html(group_class_Html);
-                //     });
-                // }else if($('#finishedGroupList').css('display') == "block"){
-                //     get_member_group_class_end_list("callback", function(jsondata){
-                //         var memberlist = ptmember_ListHtml('finished', 'name', 'no', jsondata);
-                //         var member_Html = memberlist.html;
-                //         var group_class_Html = group_class_ListHtml('finished', jsondata);
-                //         $('#finishedGroupList').html(group_class_Html);
-                //     });
-                // }
-                
                 smart_refresh_member_group_class_list();
-
                 
                 $('img._info_cancel').hide();
                 if(bodywidth > 1000){
@@ -1232,14 +1225,16 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                     toggle_lock_unlock_inputfield_grouplist(group_id, true);
                 }
                 if($('#popup_lecture_info_mobile').css('display') == "block"){
-                    $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                     if(group_name.length != 0){
                        $('#uptext3').text(group_name);
                        $('#mygroupnametitle').hide();
                     }
                     if(ing_bg_color.length != 0){
                         $('#mygroupcolor').css('background-color', ing_bg_color);
+                    }else{
+                        $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                     }
+                    $('.mobile_group_color_palette').hide();
                 }
                 console.log('success');
             }
@@ -2196,8 +2191,19 @@ function set_lecture_info_for_mobile_popup(group_id, group_name, group_color, gr
     }
     var repeat_info = repeat_array.join("");
 
-    var html = `<div class="pters_table"><div class="pters_table_cell">색상</div><div id="mygroupcolor" class="pters_table_cell" style="background-color:${group_color};height:20px;"></div><div class="pters_table_cell"></div></div>
-                <div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" readonly></div></div>
+    var groupcolor = `<div class="mobile_group_color_palette" data-groupid=${group_id}>
+                        <div class="plancolor_fbf3bd"></div>
+                        <div class="plancolor_dbe6f7"></div>
+                        <div class="plancolor_ffd3d9"></div>
+                        <div class="plancolor_ffe3c2"></div>
+                        <div class="plancolor_ceeac4"></div>
+                        <div class="plancolor_d8d6ff"></div>
+                        <div class="plancolor_ead8f2"></div>
+                        <div class="plancolor_d9c3ab"></div>
+                    </div>`;
+
+    var html = `<div class="pters_table" style="display:none;" id="mygroupnametitle"><div class="pters_table_cell">수업명</div><div class="pters_table_cell" id="mygroupname"><input type="text" class="mobile_memo_input" value="${group_name}" readonly></div></div>
+                <div class="pters_table"><div class="pters_table_cell">색상</div><div class="pters_table_cell"><div id="mygroupcolor" style="background-color:${group_color};"></div>${groupcolor}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${group_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">정원</div><div class="pters_table_cell" id="mygroupcapacity"><input type="text" class="mobile_memo_input" style="width:20%;" value="${group_membercapacity}" readonly>명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">참여 인원</div><div class="pters_table_cell">${group_membernum}명</div></div>
