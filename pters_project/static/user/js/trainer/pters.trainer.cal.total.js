@@ -2558,13 +2558,14 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
 // }
 
 function know_duplicated_plans(jsondata){
+    console.log("know_duplicated_plans",jsondata)
     var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     var testArray_end = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
     var classlen = jsondata.classTimeArray_start_date.length;
     for(var i=0; i<classlen; i++){
         if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1 ){
             testArray_start.push(jsondata.classTimeArray_start_date[i]);
-            testArray_end.push(jsondata.classTimeArray_end_date[i]);    
+            testArray_end.push(jsondata.classTimeArray_end_date[i]);  
         }
     }
 
@@ -2583,6 +2584,10 @@ function know_duplicated_plans(jsondata){
         var endplan = testArray_end[i].split(' ');
         var enddate = endplan[0];
         var endtime = endplan[1];
+        if(endtime == "00:00:00"){
+            enddate = substract_date(endplan_c[0]);
+            endtime = "24:00:00"
+        }
         var duplicated = 0;
 
         duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]] = [];
@@ -2594,6 +2599,12 @@ function know_duplicated_plans(jsondata){
             var endplan_c = testArray_end[j].split(' ');
             var enddate_c = endplan_c[0];
             var endtime_c = endplan_c[1];
+            if(endtime_c == "00:00:00"){
+                enddate_c = substract_date(endplan_c[0]);
+                endtime_c = "24:00:00"
+            }
+
+
             if(date_c == date){
                 //겹치는 걸 센다.
                 if( compare_time(time_c, time) && compare_time(endtime, endtime_c)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
