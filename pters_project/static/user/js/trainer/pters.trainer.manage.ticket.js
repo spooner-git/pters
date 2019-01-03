@@ -2811,11 +2811,12 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             main += '<div class="_groupstatus" data-packageid="'+package_id+'">'+'<span class="_editable _groupstatus_'+packagestatus_cd+'" data-packagestatus="'+packagestatus_cd+'" data-packageid="'+package_id+'">'+packagestatus+'</span>'+'</div>'+ manageimgs;
             //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
 
-        if(package_type == "EMPTY"){
-            htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else if(package_type == "NORMAL"){
-            htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else if(package_type == "ONE_TO_ONE"){
+        // if(package_type == "EMPTY"){
+        //     htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else if(package_type == "NORMAL"){
+        //     htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else if(package_type == "ONE_TO_ONE"){
+        if(package_type == "ONE_TO_ONE"){
             htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }else{
             htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
@@ -2912,11 +2913,12 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
              <div class="_groupmemo_mobile"><div>메모</div><div>${package_memo}</div></div>
             `;
 
-        if(package_type == "EMPTY"){
-            htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else if(package_type == "NORMAL"){
-            htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else if(package_type == "ONE_TO_ONE"){
+        // if(package_type == "EMPTY"){
+        //     htmlToJoin.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else if(package_type == "NORMAL"){
+        //     htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else if(package_type == "ONE_TO_ONE"){
+        if(package_type == "ONE_TO_ONE"){
             htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         }else{
             htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
