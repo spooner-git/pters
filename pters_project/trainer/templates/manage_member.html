@@ -1155,24 +1155,24 @@
 
         $(window).resize(function(){
             bodywidth = window.innerWidth;
-            var selector_currentMemberList = $('#currentMemberList');
-            var selector_finishedMemberList = $('#finishedMemberList');
             if(bodywidth <= 1000 && $('._member_list_mobile_style').length == 0){
-                if(selector_currentMemberList.css('display') == "block"){
-                    get_member_ing_list('callback',function(json){
-                        memberListSet ('current', json);
+                if(member_tab == TAB_ING) {
+                    get_member_ing_list('callback', function (json) {
+                        memberListSet('current', json);
                     });
-                }else if(selector_finishedMemberList.css('display') == "block"){
+                }
+                else if(member_tab == TAB_END) {
                     get_member_end_list('callback',function(json){
                         memberListSet('finished', json);
                     });
                 }
             }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
-                if(selector_currentMemberList.css('display') == "block"){
-                    get_member_ing_list('callback',function(json){
-                        memberListSet ('current', json);
+                if(member_tab == TAB_ING) {
+                    get_member_ing_list('callback', function (json) {
+                        memberListSet('current', json);
                     });
-                }else if(selector_finishedMemberList.css('display') == "block"){
+                }
+                else if(member_tab == TAB_END) {
                     get_member_end_list('callback',function(json){
                         memberListSet('finished',json);
                     });
@@ -1185,12 +1185,12 @@
             var scrollPosition = $(window).height() + $(window).scrollTop();
             if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
                 mutex_val = 0;
-                if(member_tab == TAB_ING_MEMBER) {
+                if(member_tab == TAB_ING) {
                     get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
                         memberListSet_test(member_tab, jsondata);
                     });
                 }
-                else if(member_tab == TAB_END_MEMBER){
+                else if(member_tab == TAB_END){
                     get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
                         memberListSet_test(member_tab, jsondata);
                     });

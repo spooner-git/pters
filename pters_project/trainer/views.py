@@ -32,8 +32,8 @@ from openpyxl.styles import Font
 from openpyxl.writer.excel import save_virtual_workbook
 
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
-    MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT_FEW, SORT_REMAIN_COUNT_MANY, SORT_START_DATE_OLD, \
-    SORT_START_DATE_NEW
+    MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
+    SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1137,19 +1137,18 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
+
         sort_info = int(member_sort)
+
         if sort_info == SORT_MEMBER_NAME:
-            member_data = sorted(member_data, key=attrgetter('name'), reverse=False)
-        elif sort_info == SORT_REMAIN_COUNT_FEW:
-            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=False)
-        elif sort_info == SORT_REMAIN_COUNT_MANY:
-            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=True)
-        elif sort_info == SORT_START_DATE_OLD:
-            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=False)
-        elif sort_info == SORT_START_DATE_NEW:
-            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=True)
+            member_data = sorted(member_data, key=attrgetter('name'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REMAIN_COUNT:
+            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
+        elif sort_info == SORT_START_DATE:
+            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=int(sort_order_by))
 
         context['total_member_num'] = len(member_data)
         if page != 0:
@@ -1175,19 +1174,16 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
         member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
         sort_info = int(member_sort)
         if sort_info == SORT_MEMBER_NAME:
-            member_data = sorted(member_data, key=attrgetter('name'), reverse=False)
-        elif sort_info == SORT_REMAIN_COUNT_FEW:
-            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=False)
-        elif sort_info == SORT_REMAIN_COUNT_MANY:
-            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=True)
-        elif sort_info == SORT_START_DATE_OLD:
-            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=False)
-        elif sort_info == SORT_START_DATE_NEW:
-            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=True)
+            member_data = sorted(member_data, key=attrgetter('name'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REMAIN_COUNT:
+            member_data = sorted(member_data, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
+        elif sort_info == SORT_START_DATE:
+            member_data = sorted(member_data, key=attrgetter('start_date'), reverse=int(sort_order_by))
 
         context['total_member_num'] = len(member_data)
         if page != 0:
@@ -3865,6 +3861,12 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
         error = None
 
+        page = self.request.GET.get('page', 0)
+        package_sort = self.request.GET.get('package_sort', SORT_PACKAGE_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
+        sort_info = int(package_sort)
+
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
@@ -3876,6 +3878,12 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
+
+        for package_info in package_data:
+            package_info.package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+                                   package_tb_id=package_info.package_id, group_tb__use=USE,
+                                   use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3894,6 +3902,13 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
     def get_context_data(self, **kwargs):
         context = super(GetPackageEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+
+        page = self.request.GET.get('page', 0)
+        package_sort = self.request.GET.get('package_sort', SORT_PACKAGE_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
+        sort_info = int(package_sort)
+
         error = None
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
@@ -4456,38 +4471,32 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
     def get_context_data(self, **kwargs):
         context = super(GetMemberGroupClassIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+        page = self.request.GET.get('page', 0)
+        lecture_sort = self.request.GET.get('lecture_sort', SORT_LECTURE_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
+        sort_info = int(lecture_sort)
+
         error = None
-        # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
-        # query_group_member_num = "select count(distinct(c.MEMBER_ID)) from MEMBER_LECTURE_TB as c where c.USE=1 and " \
-        #                          "(select count(*) from GROUP_LECTURE_TB as d where d.GROUP_TB_ID=`GROUP_TB`.`ID`" \
-        #                          " and d.LECTURE_TB_ID=c.LECTURE_TB_ID and d.USE=1) > 0 "
-
-        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', use=USE
+        group_data = GroupTb.objects.filter(class_tb_id=class_id, state_cd='IP', name__contains=keyword, use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        # group_member_num=RawSQL(query_group_member_num, [])
                                                        ).order_by('-group_type_cd', 'name', '-ing_group_member_num')
-        # for group_info in group_data:
-        #     member_data = []
-        #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-        #                                                                                       lecture_tb__use=USE, use=USE)
-        #     for lecture_info in lecture_data:
-        #         member_info = lecture_info.lecture_tb
-        #         if error is None:
-        #             check_add_flag = 0
-        #             for member_test in member_data:
-        #                 if member_test.user.id == member_info.member.user.id:
-        #                     check_add_flag = 1
-        #
-        #             if check_add_flag == 0:
-        #                 member_data.append(member_info.member)
-        #     group_info.group_member_num = len(member_data)
 
-        # member_data = func_get_member_one_to_one_ing_list(class_id, self.request.user.id)
-        # context['member_data'] = member_data
         context['total_group_num'] = len(group_data)
+
+        if sort_info == SORT_LECTURE_NAME:
+            group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
+        elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+            group_data = sorted(group_data, key=attrgetter('ing_group_member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+            group_data = sorted(group_data, key=attrgetter('member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_LECTURE_CREATE_DATE:
+            group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -4505,34 +4514,33 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
     def get_context_data(self, **kwargs):
         context = super(GetMemberGroupClassEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+        page = self.request.GET.get('page', 0)
+        lecture_sort = self.request.GET.get('lecture_sort', SORT_LECTURE_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
+        sort_info = int(lecture_sort)
+
         error = None
         # start_time = timezone.now()
         query_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`GROUP_TYPE_CD`"
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `GROUP_TB`.`STATE_CD`"
         group_data = GroupTb.objects.filter(Q(end_group_member_num__gt=0) | ~Q(state_cd='IP'),
-                                            class_tb_id=class_id, use=USE
+                                            class_tb_id=class_id, name__contains=keyword, use=USE
                                             ).annotate(group_type_cd_nm=RawSQL(query_type_cd, []),
                                                        state_cd_nm=RawSQL(query_state_cd, []),
                                                        ).order_by('-group_type_cd', 'name', '-end_group_member_num')
-        # for group_info in group_data:
-        #     member_data = []
-        #     lecture_data = GroupLectureTb.objects.select_related('lecture_tb__member').filter(group_tb_id=group_info.group_id,
-        #                                                                                       lecture_tb__use=USE, use=USE)
-        #     for lecture_info in lecture_data:
-        #         member_info = lecture_info.lecture_tb
-        #         if error is None:
-        #             check_add_flag = 0
-        #             for member_test in member_data:
-        #                 if member_test.user.id == member_info.member.user.id:
-        #                     check_add_flag = 1
-        #
-        #             if check_add_flag == 0:
-        #                 member_data.append(member_info.member)
-        #     group_info.group_member_num = len(member_data)
-        # member_data = func_get_member_one_to_one_end_list(class_id, self.request.user.id)
-        # context['member_data'] = member_data
 
         context['total_group_num'] = len(group_data)
+
+        if sort_info == SORT_LECTURE_NAME:
+            group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
+        elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+            group_data = sorted(group_data, key=attrgetter('end_group_member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+            group_data = sorted(group_data, key=attrgetter('member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_LECTURE_CREATE_DATE:
+            group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)

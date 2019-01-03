@@ -176,7 +176,7 @@ body{
 }
 
 
-.alignSelect{
+.alignSelect, .alignSelect_lecture{
 	width: 100%;
 	height: 35px;
 	margin-top: 10px;
@@ -1453,7 +1453,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		display: none;
 	}
 
-	.alignSelect{
+	.alignSelect, .alignSelect_lecture{
 		position: absolute;
 		top: 0;
 		right: 120px;
