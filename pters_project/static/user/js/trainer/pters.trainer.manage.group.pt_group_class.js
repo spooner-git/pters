@@ -1,3 +1,10 @@
+const SORT_LECTURE_NAME = 0;
+const SORT_LECTURE_MEMBER_COUNT = 1;
+const SORT_LECTURE_CREATE_DATE = 2;
+var lecture_sort_val = SORT_LECTURE_NAME;
+var lecture_sort_order_by = SORT_ASC;
+var lecture_tab = TAB_ING;
+var lecture_keyword = '';
 
 var db_id_flag = 0;
 var user_id_flag = 1;
@@ -26,6 +33,149 @@ $('#groupcapacity').change(function(){
     check_dropdown_selected();
 });
 /////////////그룹타입, 그룹정원 드랍다운 값을 Form에 셋팅/////////////////////////////////////////
+
+////////////수업 정렬 기능 ////////////////////////////////////////////////////////////
+$('#search_lecture_input').keyup(function(e){
+    // e.stopPropagation();
+    // e.preventDefault();
+    // var search_value = $(this).val();
+    lecture_keyword =  $(this).val();
+    // $('div.memberline').hide();
+    // $('div.memberline').each(function(){
+    //     if($(this).find("._tdname").attr('data-name').match(search_value) != null || $(this).find("._id").attr('data-name').match(search_value) != null || $(this).find("._contact .phonenum").text().match(search_value) != null){
+    //         $(this).show();
+    //     }
+    // });
+    // if(search_value.length == 0){
+    //     $('div.memberline').show();
+    // }
+    if (e.keyCode == 13){
+       $('#id_lecture_search').trigger('click');
+    }
+
+});
+
+$('#search_lecture_box').click(function(e){
+    var $alignSelect = $('._ALIGN_DROPDOWN');
+    // var selector_currentMemberList = $('#currentMemberList');
+    // var selector_finishedMemberList = $('#finishedMemberList');
+    var $search_input_div = $('.ymdText-pc-add-member-wrap');
+    var $search_member_input = $('#search_lecture_input');
+    var $search_x_button = $('#id_search_x_button');
+
+    if($search_input_div.css('display')=="none"){
+        $alignSelect.css('display', 'none');
+        $search_input_div.css('display', 'inline-block');
+        $search_x_button.attr('src','/static/user/res/ptadd/btn-x.png');
+        $search_x_button.css('width','15px');
+    }else{
+        lecture_keyword = '';
+        $search_member_input.val('');
+        $alignSelect.css('display', 'inline-block');
+        $search_input_div.css('display', 'none');
+        $search_x_button.attr('src','/static/user/res/icon-search-black.png');
+        $search_x_button.css('width','25px');
+        if(lecture_tab == TAB_ING) {
+            get_member_group_class_ing_list("callback", function(jsondata){
+                var group_class_Html = group_class_ListHtml('current', jsondata);
+                $('#currentGroupList').html(group_class_Html);
+            });
+        }
+        else if(lecture_tab == TAB_END) {
+            get_member_group_class_end_list("callback", function(jsondata){
+                var group_class_Html = group_class_ListHtml('finished', jsondata);
+                $('#finishedGroupList').html(group_class_Html);
+            });
+        }
+    }
+});
+
+$('#id_lecture_search').click(function(e){
+    e.preventDefault();
+    e.stopPropagation();
+
+    if(lecture_tab == TAB_ING) {
+        get_member_group_class_ing_list("callback", function(jsondata){
+            var group_class_Html = group_class_ListHtml('current', jsondata);
+            $('#currentGroupList').html(group_class_Html);
+        });
+    }
+    else if(lecture_tab == TAB_END) {
+        get_member_group_class_end_list("callback", function(jsondata){
+            var group_class_Html = group_class_ListHtml('finished', jsondata);
+            $('#finishedGroupList').html(group_class_Html);
+        });
+    }
+
+
+});
+
+//진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
+function shiftPtGroupClassList(type){
+    var bodywidth = $(window).width();
+    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
+    lecture_keyword = '';
+    switch(type){
+        case "current":
+            lecture_tab = TAB_ING;
+            get_member_group_class_ing_list("callback", function(jsondata){
+                var group_class_Html = group_class_ListHtml('current', jsondata);
+                $('#currentGroupList').html(group_class_Html);
+            });
+            $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
+            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
+            if(bodywidth > 1000){
+                $('._GROUP_THEAD').show();
+                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            }
+            break;
+        case "finished":
+            lecture_tab = TAB_END;
+            get_member_group_class_end_list("callback", function(jsondata){
+                var group_class_Html = group_class_ListHtml('finished', jsondata);
+                $('#finishedGroupList').html(group_class_Html);
+            });
+            $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
+            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
+            if(bodywidth > 1000){
+                $('._GROUP_THEAD').show();
+                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+            }
+            break;
+    }
+}
+
+$('.alignSelect_lecture').change(function(){
+        //var jsondata = global_json
+        if($(this).val()=="수업명 가나다 순" || $(this).val()=="名前順" || $(this).val()=="Name" ){
+            lecture_sort_val = SORT_LECTURE_NAME;
+            lecture_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="참여중 회원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+            lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
+            lecture_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
+            lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
+            lecture_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="생성 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
+            lecture_sort_val = SORT_LECTURE_CREATE_DATE;
+            lecture_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="생성 일자 최근 순" || $(this).val()=="開始が最近" || $(this).val()=="Start Date(R)"){
+            lecture_sort_val = SORT_LECTURE_CREATE_DATE;
+            lecture_sort_order_by = SORT_DESC;
+        }
+        if(lecture_tab == TAB_ING) {
+            get_member_group_class_ing_list("callback", function(jsondata){
+                var group_class_Html = group_class_ListHtml('current', jsondata);
+                $('#currentGroupList').html(group_class_Html);
+            });
+        }
+        else if(lecture_tab == TAB_END) {
+            get_member_group_class_end_list("callback", function(jsondata){
+                var group_class_Html = group_class_ListHtml('finished', jsondata);
+                $('#finishedGroupList').html(group_class_Html);
+            });
+        }
+});
 
 
 /////////////신규 회원으로 추가 버튼 누르면 행 생성/////////////////////////////////////////
@@ -2521,7 +2671,8 @@ function get_member_group_class_ing_list(use, callback){
     // var endTime = '';
     $.ajax({
         url:'/trainer/get_member_group_class_ing_list/',
-
+        type:'GET',
+        data: {"page": page_num, "lecture_sort": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2580,7 +2731,8 @@ function get_member_group_class_end_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     $.ajax({
         url:'/trainer/get_member_group_class_end_list/',
-
+        type:'GET',
+        data: {"page": page_num, "lecture_sort": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
 
         beforeSend:function(){

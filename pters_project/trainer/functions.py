@@ -42,7 +42,7 @@ def func_get_class_member_id_list(class_id):
 def func_get_class_member_ing_list(class_id, keyword):
     all_member = []
     class_lecture_data = ClassLectureTb.objects.select_related(
-        'lecture_tb__member__user').filter(Q(lecture_tb__member__name__contains=keyword)|
+        'lecture_tb__member__user').filter(Q(lecture_tb__member__name__contains=keyword) |
                                            Q(lecture_tb__member__user__username__contains=keyword),
                                            class_tb_id=class_id, auth_cd='VIEW',
                                            lecture_tb__state_cd='IP', lecture_tb__use=USE,
