@@ -1268,42 +1268,50 @@
         var deleteTypeSelect;
         var alignType = "name";
         var select_all_check = false;
-        // get_member_group_class_ing_list("callback", function(jsondata){
-        //     // var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-        //     // var member_Html = memberlist.html;
-        //     var group_class_Html = group_class_ListHtml('current', jsondata);
-        //     $('#currentGroupList').html(group_class_Html);
-        //     console.log("get_membeR_group_class_ing_list", jsondata)
-        // });
 
-        get_package_ing_list("callback", function(jsondata){
-            var group_class_Html = package_ListHtml('current', jsondata);
-            $('#currentPackageList').html(group_class_Html);
-            console.log('get_package_ing_list', jsondata);
-        });
-
-        // get_member_ing_list("callback", function(jsondata){
-        //     var start_time = new Date().getTime();
-        //     var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
-        //     var member_Html = memberlist.html;
-        //     var group_class_Html;
-
-        //     get_group_ing_list("callback", function(jsondata){
-        //         group_class_Html = group_class_ListHtml('current', jsondata);
-        //         $('#currentGroupList').html(group_class_Html);
-        //         var end_time = new Date().getTime();
-        //     }); //그룹 + 클래스#}
-        // });
-
+        if(bodywidth <= 1000){
+            get_package_ing_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml_mobile('current', jsondata);
+                $('#currentPackageList').html(group_class_Html);
+            });
+        }else if(bodywidth > 1000){
+            get_package_ing_list("callback", function(jsondata){
+                var group_class_Html = package_ListHtml('current', jsondata);
+                $('#currentPackageList').html(group_class_Html);
+            });
+        }
         
 
-        // $('html,body').click(function(){
-        //     $('#please_add_member_pc').fadeOut('fast')
-        // })
-
-        // $('#float_btn, .navbar').click(function(){
-        //     $('#please_add_member').fadeOut('fast')
-        // })
+        $(window).resize(function(){
+            bodywidth = window.innerWidth;
+            var selector_currentMemberList = $('#currentPackageList');
+            var selector_finishedMemberList = $('#finishedPackageList');
+            if(bodywidth <= 1000 && $('._ticket_list_mobile_style').length == 0){
+                if(selector_currentMemberList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var group_class_Html = package_ListHtml_mobile('current', jsondata);
+                        $('#currentPackageList').html(group_class_Html);
+                    });
+                }else if(selector_finishedMemberList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var group_class_Html = package_ListHtml_mobile('finished', jsondata);
+                        $('#finishedPackageList').html(group_class_Html);
+                    });
+                }
+            }else if(bodywidth > 1000 && $('._ticket_list_pc_style').length == 0 ){
+                if(selector_currentMemberList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var group_class_Html = package_ListHtml('current', jsondata);
+                        $('#currentPackageList').html(group_class_Html);
+                    });
+                }else if(selector_finishedMemberList.css('display') == "block"){
+                    get_package_ing_list("callback", function(jsondata){
+                        var group_class_Html = package_ListHtml('finished', jsondata);
+                        $('#finishedPackageList').html(group_class_Html);
+                    });
+                }
+            }
+        });
 
         $('#_close_how_to_add_member, #page_addmember').click(function(){
             $('#how_to_add_member').fadeOut();
