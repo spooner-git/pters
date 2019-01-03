@@ -1,6 +1,7 @@
 const SORT_LECTURE_NAME = 0;
 const SORT_LECTURE_MEMBER_COUNT = 1;
-const SORT_LECTURE_CREATE_DATE = 2;
+const SORT_LECTURE_CAPACITY_COUNT = 2;
+const SORT_LECTURE_CREATE_DATE = 3;
 var lecture_sort_val = SORT_LECTURE_NAME;
 var lecture_sort_order_by = SORT_ASC;
 var lecture_tab = TAB_ING;
@@ -155,6 +156,12 @@ $('.alignSelect_lecture').change(function(){
             lecture_sort_order_by = SORT_DESC;
         }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             lecture_sort_val = SORT_LECTURE_MEMBER_COUNT;
+            lecture_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="정원 많은 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+            lecture_sort_val = SORT_LECTURE_CAPACITY_COUNT;
+            lecture_sort_order_by = SORT_DESC;
+        }else if($(this).val()=="정원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
+            lecture_sort_val = SORT_LECTURE_CAPACITY_COUNT;
             lecture_sort_order_by = SORT_ASC;
         }else if($(this).val()=="생성 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             lecture_sort_val = SORT_LECTURE_CREATE_DATE;
