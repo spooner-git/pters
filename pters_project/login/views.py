@@ -994,10 +994,9 @@ class AddMemberView(RegistrationView, View):
                         user.save()
                         if birthday_dt == '':
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                              country=country, address=address, user_id=user.id, use=USE)
+                                              user_id=user.id, use=USE)
                         else:
                             member = MemberTb(member_id=user.id, name=name, phone=phone, sex=sex,
-                                              country=country, address=address,
                                               birthday_dt=birthday_dt, user_id=user.id, use=USE)
                         member.save()
                         # if group_type == 'trainer':

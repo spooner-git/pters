@@ -1242,8 +1242,8 @@
             beforeSend_ = function(){beforeSend();};
             completeSend_ = function(){completeSend();};
         }
-        var today_form;
-        var searchdate;
+        var today_form = '';
+        var searchdate = '';
         var calendar;
         if($('._calweek').length >0){
             calendar = "week";
@@ -1259,14 +1259,13 @@
             var yyyy = $('#yearText').text();
             var mm = $('#monthText').text().replace(/월/gi, "");
             if(mm.length<2){
-                var mm = '0' + mm;
+                mm = '0' + mm;
             }
             today_form = yyyy+'-'+ mm +'-'+"01";
             searchdate = 46;
         }
         // var start_time = '';
         // var end_time = '';
-        console.log(today_form);
         $.ajax({
             url: '/trainer/get_trainer_schedule/',
             type : 'GET',
