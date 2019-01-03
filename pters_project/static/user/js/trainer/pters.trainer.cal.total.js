@@ -2585,7 +2585,7 @@ function know_duplicated_plans(jsondata){
         var enddate = endplan[0];
         var endtime = endplan[1];
         if(endtime == "00:00:00"){
-            enddate = substract_date(endplan_c[0]);
+            enddate = substract_date(endplan[0]);
             endtime = "24:00:00"
         }
         var duplicated = 0;

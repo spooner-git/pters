@@ -1266,6 +1266,7 @@
         }
         // var start_time = '';
         // var end_time = '';
+        console.log(today_form);
         $.ajax({
             url: '/trainer/get_trainer_schedule/',
             type : 'GET',
