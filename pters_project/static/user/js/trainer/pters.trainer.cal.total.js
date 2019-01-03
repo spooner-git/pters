@@ -1495,7 +1495,6 @@ function weekNum_Set_fixed(){
     for(i=0; i<7;i++){
         
         WeekArry[i].html(WeekArryTarget[i]);
-
         var date_yyyy_m_d = date_format_yyyy_mm_dd_to_yyyy_m_d(date_format_yyyymmdd_to_split(currentPageDateInfo[i],'_'),'_');
 
         if(krHolidayList.indexOf(date_yyyy_m_d) != -1){
