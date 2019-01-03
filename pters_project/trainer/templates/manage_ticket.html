@@ -316,18 +316,12 @@
             </div>
 
             <div id="alignBox">
-                <span id="memberNumber_current_member" class="memberNum"></span>
-                <span id="memberNumber_finish_member" class="memberNum"></span>
-                <span id="memberNumber_current_group" class="memberNum"></span>
-                <span id="memberNumber_finish_group" class="memberNum"></span>
                 <div id="align_type_text">
                     <span class="memberAlign text-sort _ALIGN_DROPDOWN">정렬 기준</span>
                 </div>
                 <div class="ymdText-pc-add-member-wrap">
-                    <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
-                        <span class="KRtext">그룹 추가</span>
-                        <span class="JPtext"></span>
-                        <span class="ENtext"></span>
+                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('package_ticket')" style="margin-left: 2px;">
+                        <span class="">새 수강권</span>
                     </div>
                     <!--
                     <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('group')" style="display: none; margin-left: 2px;">
@@ -371,137 +365,6 @@
                 <thead>
                 <tr style="border-bottom:0;">
                     <th class="_groupnum">
-                        <span class="">순번</span>
-                    </th>
-                    <th class="_groupplancolor">
-                        <span class="">색상</span>
-                    </th>
-                    <th class="_grouptypecd" style="display: none;">
-                        <span class="">유형</span>
-                    </th>
-                    <th class="_groupname">
-                        <span class="">명칭</span>
-                    </th>
-                    <th class="_grouppartystatus">
-                        <span class="">소속/정원(명)</span>
-                    </th>
-                    <th class="_groupparticipants">
-                        <span class="">현재 참여</span>
-                    </th>
-                    <th class="_groupcapacity">
-                        <span class="">정원(명)</span>
-                    </th>
-                    <th class="_groupmemo">
-                        <span class="">메모</span>
-                    </th>
-                    <th class="_groupcreatedate">
-                        <span class="">생성일</span>
-                    </th>
-                    <th class="_groupstatus">
-                        <span class="">상태</span>
-                    </th>
-                    <th class="_groupmanage">
-                        <span class="">관리</span>
-                    </th>
-                </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="upper_fixed_parts">
-            <div id="ymdText">
-                <div id="ymdTextWrap">
-                    <div id="menuName" class="text-ticketmanage">
-                    </div>
-                    <div id="menuDescription">전체 수강권을 관리합니다.
-                    </div>
-                </div>
-            </div>
-
-             <div id="" class="pters_selectbox_wrapper">
-                <div id="btnCallCurrent" onclick="shiftPackageList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">
-                    <span class="KRtext">진행중</span>
-                </div>
-                <div id="btnCallFinished" onclick="shiftPackageList('finished')" class="pters_selectbox_btn">
-                    <span class="KRtext">종료</span>
-                </div>
-            </div>
-
-            <div id="alignBox">
-                <span id="memberNumber_current_group" class="memberNum"></span>
-                <span id="memberNumber_finish_group" class="memberNum"></span>
-                <!--
-                <div id="align_type_text">
-                  <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>
-                  <span class="memberAlign JPtext">並べ替え</span>
-                  <span class="memberAlign ENtext">Sort by</span>
-                </div>
-               -->
-                <div class="ymdText-pc-add-member-wrap">
-                    <!-- <div id="please_add_member_pc">
-                        <p style="color: #fe4e65;font-size:16px;margin-bottom: 5px;"><img src="/static/user/res/PTERS_logo_pure.png"> Tip!</p>
-                        <p>여기를 눌러서</p>
-                        <p>새로운 그룹 혹은 클래스를 등록하고</p>
-                        <p>피터스의 기능들을 사용해보세요.</p>
-                    </div> -->
-
-                    <!-- <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('group')" style="margin-left: 2px;">
-                        <span class="KRtext">그룹 추가</span>
-                        <span class="JPtext"></span>
-                        <span class="ENtext"></span>
-                    </div>
-                    
-                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('openlesson')" style="margin-left: 2px;">
-                        <span class="KRtext">클래스 추가</span>
-                        <span class="JPtext"></span>
-                        <span class="ENtext"></span>
-                    </div> -->
-
-                    <!-- <div class="ymdText-pc-add-member _groupaddbutton" onclick="pc_add_member('solo_ticket')" style="margin-left: 2px;">
-                        <span class="">단일 수강권</span>
-                    </div> -->
-
-                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('package_ticket')" style="margin-left: 2px;">
-                        <span class="">새 수강권</span>
-                    </div>
-                    <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">
-                </div>
-
-                <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">
-
-                    <option id="name" class="KRtext">회원명 가나다 순</option>
-                    <option id="name" class="JPtext">名前順</option>
-                    <option id="name" class="ENtext">Name</option>
-
-                    <option id="countH" class="KRtext">남은 횟수 많은 순</option>
-                    <option id="countH" class="JPtext">残り回数が多い</option>
-                    <option id="countH" class="ENtext">Remain Count(H)</option>
-
-                    <option id="countL" class="KRtext">남은 횟수 적은 순</option>
-                    <option id="countL" class="JPtext">残り回数が少ない</option>
-                    <option id="countL" class="ENtext">Remain Count(L)</option>
-
-                    <option id="startP" class="KRtext">시작 일자 과거 순</option>
-                    <option id="startP" class="JPtext">開始が過去</option>
-                    <option id="startP" class="ENtext">Start Date(P)</option>
-
-                    <option id="startR" class="KRtext">시작 일자 최근 순</option>
-                    <option id="startR" class="JPtext">開始が最近</option>
-                    <option id="startR" class="ENtext">Start Date(R)</option>
-                </select>
-                <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">
-
-                <!--
-                <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
-                      <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>
-                </div>
-            -->
-            </div>
-
-
-            <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">
-                <thead>
-                <tr style="border-bottom:0;">
-                    <th class="_groupnum">
                         <span class="KRtext">순번</span>
                     </th>
                     <th class="_grouptypecd" style="display: none;">
@@ -535,6 +398,113 @@
                 </thead>
             </table>
         </div>
+
+{#        <div class="upper_fixed_parts">#}
+{#            <div id="ymdText">#}
+{#                <div id="ymdTextWrap">#}
+{#                    <div id="menuName" class="text-ticketmanage">#}
+{#                    </div>#}
+{#                    <div id="menuDescription">전체 수강권을 관리합니다.#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#             <div id="" class="pters_selectbox_wrapper">#}
+{#                <div id="btnCallCurrent" onclick="shiftPackageList('current')" class="pters_selectbox_btn pters_selectbox_btn_selected">#}
+{#                    <span class="KRtext">진행중</span>#}
+{#                </div>#}
+{#                <div id="btnCallFinished" onclick="shiftPackageList('finished')" class="pters_selectbox_btn">#}
+{#                    <span class="KRtext">종료</span>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div id="alignBox">#}
+{#                <span id="memberNumber_current_group" class="memberNum"></span>#}
+{#                <span id="memberNumber_finish_group" class="memberNum"></span>#}
+{#                <!--#}
+{#                <div id="align_type_text">#}
+{#                  <span class="memberAlign KRtext _ALIGN_DROPDOWN">정렬 기준</span>#}
+{#                  <span class="memberAlign JPtext">並べ替え</span>#}
+{#                  <span class="memberAlign ENtext">Sort by</span>#}
+{#                </div>#}
+{#               -->#}
+{#                <div class="ymdText-pc-add-member-wrap">#}
+{##}
+{#                    <div class="ymdText-pc-add-member-again _groupaddbutton" onclick="pc_add_member('package_ticket')" style="margin-left: 2px;">#}
+{#                        <span class="">새 수강권</span>#}
+{#                    </div>#}
+{#                    <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">#}
+{#                </div>#}
+{##}
+{#                <select class="alignSelect _ALIGN_DROPDOWN" style="display: none;">#}
+{##}
+{#                    <option id="name" class="KRtext">회원명 가나다 순</option>#}
+{#                    <option id="name" class="JPtext">名前順</option>#}
+{#                    <option id="name" class="ENtext">Name</option>#}
+{##}
+{#                    <option id="countH" class="KRtext">남은 횟수 많은 순</option>#}
+{#                    <option id="countH" class="JPtext">残り回数が多い</option>#}
+{#                    <option id="countH" class="ENtext">Remain Count(H)</option>#}
+{##}
+{#                    <option id="countL" class="KRtext">남은 횟수 적은 순</option>#}
+{#                    <option id="countL" class="JPtext">残り回数が少ない</option>#}
+{#                    <option id="countL" class="ENtext">Remain Count(L)</option>#}
+{##}
+{#                    <option id="startP" class="KRtext">시작 일자 과거 순</option>#}
+{#                    <option id="startP" class="JPtext">開始が過去</option>#}
+{#                    <option id="startP" class="ENtext">Start Date(P)</option>#}
+{##}
+{#                    <option id="startR" class="KRtext">시작 일자 최근 순</option>#}
+{#                    <option id="startR" class="JPtext">開始が最近</option>#}
+{#                    <option id="startR" class="ENtext">Start Date(R)</option>#}
+{#                </select>#}
+{#                <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN"  style="display: none;">#}
+{##}
+{#                <!--#}
+{#                <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">#}
+{#                      <span class="KRtext">전체 목록 <img src="/static/user/res/member/pters-download.png" class="pcmanageicon" style="height: 15px;margin-bottom: 3px;margin-right: 0;"></span>#}
+{#                </div>#}
+{#            -->#}
+{#            </div>#}
+{##}
+{##}
+{#            <table id="tableThead" class="tableThead table table-bordered centeralign _GROUP_THEAD">#}
+{#                <thead>#}
+{#                <tr style="border-bottom:0;">#}
+{#                    <th class="_groupnum">#}
+{#                        <span class="KRtext">순번</span>#}
+{#                    </th>#}
+{#                    <th class="_grouptypecd" style="display: none;">#}
+{#                        <span class="KRtext">유형</span>#}
+{#                    </th>#}
+{#                    <th class="_groupname">#}
+{#                        <span class="KRtext">명칭</span>#}
+{#                    </th>#}
+{#                    <th class="_grouppartystatus">#}
+{#                        <span class="KRtext">회원수</span>#}
+{#                    </th>#}
+{#                    <th class="_groupparticipants">#}
+{#                        <span class="KRtext">현재 참여</span>#}
+{#                    </th>#}
+{#                    <th class="_groupcapacity">#}
+{#                        <span class="KRtext">정원(명)</span>#}
+{#                    </th>#}
+{#                    <th class="_groupmemo">#}
+{#                        <span class="KRtext">메모</span>#}
+{#                    </th>#}
+{#                    <th class="_groupcreatedate">#}
+{#                        <span class="KRtext">생성일</span>#}
+{#                    </th>#}
+{#                    <th class="_groupstatus">#}
+{#                        <span class="KRtext">상태</span>#}
+{#                    </th>#}
+{#                    <th class="_groupmanage">#}
+{#                        <span class="KRtext">관리</span>#}
+{#                    </th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#            </table>#}
+{#        </div>#}
 
         <div id="currentPackageList" class="centeralign">
             <table id="currentGroup" class="table table-bordered">
