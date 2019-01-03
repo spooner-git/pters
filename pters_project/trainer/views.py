@@ -34,7 +34,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
     SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME, \
-    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE
+    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE, SORT_PACKAGE_TYPE
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -3873,16 +3873,21 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(
-            class_tb_id=class_id, state_cd='IP', name__contains=keyword,
+            class_tb_id=class_id, state_cd='IP',
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).order_by('name')
-        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        # order = {key: i for i, key in enumerate(order)}
+                                                        [])).filter(Q(name__contains=keyword)
+                                                                    | Q(package_type_cd_nm__contains=keyword)
+                                                                    ).order_by('name')
+        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        order = {key: i for i, key in enumerate(order)}
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
         if sort_info == SORT_PACKAGE_MEMBER_COUNT:
             package_data = sorted(package_data, key=attrgetter('ing_package_member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_PACKAGE_TYPE:
+            package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+                                                                                   sort_order_by))
         elif sort_info == SORT_PACKAGE_CREATE_DATE:
             package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
@@ -3920,18 +3925,22 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
-        package_data = PackageTb.objects.filter(Q(state_cd='PE') | Q(end_package_member_num__gt=0),
-                                                class_tb_id=class_id, name__contains=keyword,
-                                                use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
-                                                                  package_type_cd_nm=RawSQL(
-                                                                      query_package_type_cd,
-                                                                      [])).order_by('name')
-        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        # order = {key: i for i, key in enumerate(order)}
+        package_data = PackageTb.objects.filter(
+            Q(state_cd='PE') | Q(end_package_member_num__gt=0), class_tb_id=class_id,
+            use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
+                              package_type_cd_nm=RawSQL(
+                                  query_package_type_cd,[])).filter(Q(name__contains=keyword)
+                                                                    | Q(package_type_cd_nm__contains=keyword)
+                                                                    ).order_by('name')
+        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        order = {key: i for i, key in enumerate(order)}
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
         if sort_info == SORT_PACKAGE_MEMBER_COUNT:
             package_data = sorted(package_data, key=attrgetter('end_package_member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_PACKAGE_TYPE:
+            package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+                                                                                   sort_order_by))
         elif sort_info == SORT_PACKAGE_CREATE_DATE:
             package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 

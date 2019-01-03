@@ -146,6 +146,9 @@ $('.alignSelect_ticket').change(function(){
         }else if($(this).val()=="참여중 회원 적은 순" || $(this).val()=="残り回数が少ない" || $(this).val()=="Remain Count(L)"){
             ticket_sort_val = SORT_TICKET_MEMBER_COUNT;
             ticket_sort_order_by = SORT_ASC;
+        }else if($(this).val()=="수강권 타입 순" || $(this).val()=="残り回数が多い" || $(this).val()=="Remain Count(H)"){
+            ticket_sort_val = SORT_TICKET_TYPE;
+            ticket_sort_order_by = SORT_DESC;
         }else if($(this).val()=="생성 일자 과거 순" || $(this).val()=="開始が過去" || $(this).val()=="Start Date(P)"){
             ticket_sort_val = SORT_TICKET_CREATE_DATE;
             ticket_sort_order_by = SORT_ASC;
@@ -191,7 +194,7 @@ function shiftPackageList(type){
             $('#memberNumber_finish_group, #finishedPackageList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
-                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+                $('._MEMBER_THEAD, ._memberaddbutton').hide();
                 get_package_ing_list("callback", function(jsondata){
                     var group_class_Html = package_ListHtml('current', jsondata);
                     $('#currentPackageList').html(group_class_Html);
@@ -210,7 +213,7 @@ function shiftPackageList(type){
             $('#memberNumber_current_group, #currentPackageList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
-                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+                $('._MEMBER_THEAD, ._memberaddbutton').hide();
                 get_package_end_list("callback", function(jsondata){
                     // console.log("get_package_end_list", jsondata)
                     var group_class_Html = package_ListHtml('finished', jsondata);
@@ -2737,7 +2740,12 @@ function package_ListHtml(option, jsondata){ //option : current, finished
     var htmlToJoin2 = [];
     var htmlToJoin3 = [];
     var groupNum = jsondata.package_id.length;
-    var ordernum = 0;
+    var ordernum = 1;
+    var input_order_num = 1;
+    if(ticket_keyword != ''){
+        ordernum = 0;
+        input_order_num = 0;
+    }
     for(var i=0; i<groupNum; i++){
         var package_name = jsondata.package_name[i];
         var package_id = jsondata.package_id[i];
@@ -2760,7 +2768,13 @@ function package_ListHtml(option, jsondata){ //option : current, finished
                 break;
         }
 
-        ordernum++;
+        if(package_type == "ONE_TO_ONE"){
+            input_order_num = 1;
+        }else{
+            ordernum++;
+            input_order_num = ordernum;
+        }
+
         var full_package = "";
         // if(package_membernum >= package_capacity && package_type == "NORMAL"){
         //     var full_package = "red_color_text";
@@ -2789,7 +2803,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             }
         // }
 
-        var main = '<div class="_groupnum">'+ordernum+'</div>'+
+        var main = '<div class="_groupnum">'+input_order_num+'</div>'+
             // '<div class="_grouptypecd" data-package-type="'+package_type+'"><input class="group_listinput input_disabled_true" value="'+package_type_nm+'" disabled>'+'</div>'+
             '<div class="_groupname"><input class="group_listinput input_disabled_true _editable" value="'+'['+package_type_nm+'] '+package_name+'" disabled>'+'</div>'+
             '<div class="_groupparticipants '+full_package+'">'+ package_membernum+'</div>'+
