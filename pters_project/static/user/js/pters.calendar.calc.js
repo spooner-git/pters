@@ -46,18 +46,18 @@ function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 	var date = Number(startdate.split('-')[2]);
 	var subsdate = date + subvalue;
 	var monthindex = month - 2;
-	if(month-2 == 0){
-		monthindex = 11;
-	}else if(month - 2 == -1){
-		monthindex = 10;
-	}
+	// if(month-2 == 0){
+	// 	monthindex = 11;
+	// }else if(month - 2 == -1){
+	// 	monthindex = 10;
+	// }
 	var index = monthindex;
 	var newdate = subsdate;
 	var newmonth = month;
 	var newyear = year;
 	while(newdate <= 0){
 		newmonth--;
-		if(index == -1 || newmonth == 0){
+		if(index == -1 ){
 			index = 11;
 			newyear--;
 			newmonth = 12;
