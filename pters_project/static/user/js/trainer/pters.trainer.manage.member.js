@@ -222,7 +222,6 @@ $(document).ready(function(){
         var dbID = $(this).attr('data-dbid');
         var member_name = $(this).attr('data-name');
         shade_index(100);
-        console.log(member_name);
         if(bodywidth < 600){
             current_Scroll_Position = $(document).scrollTop();
             get_indiv_member_info(dbID);
@@ -230,7 +229,7 @@ $(document).ready(function(){
             // get_indiv_repeat_info(dbID);
             // get_member_history_list(dbID);
             $('#uptext3').text(member_name);
-            if($('#popup_lecture_info_mobile').length > 0 ){
+            if($('#popup_lecture_info_mobile').length > 0 || $('#popup_ticket_info_mobile').length > 0){
                 closePopup_mobile('upbutton-x-modify');
             }
             $('#mobile_basic_info, #mobile_lecture_info').show();
@@ -2268,6 +2267,54 @@ function shiftGroupClassList(type){
 }
 
 
+<<<<<<< HEAD
+=======
+//진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
+function shiftPackageList(type){
+    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
+    switch(type){
+        case "current":
+            
+            $('#currentPackageList, #memberNumber_current_group').css('display', 'block');
+            $('#memberNumber_finish_group, #finishedPackageList, #finishGroupNum').css('display', 'none');
+            if(bodywidth > 1000){
+                $('._GROUP_THEAD').show();
+                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+                get_package_ing_list("callback", function(jsondata){
+                    var group_class_Html = package_ListHtml('current', jsondata);
+                    $('#currentPackageList').html(group_class_Html);
+                });
+            }else{
+                get_package_ing_list("callback", function(jsondata){
+                    var group_class_Html = package_ListHtml_mobile('current', jsondata);
+                    $('#currentPackageList').html(group_class_Html);
+                });
+            }
+            break;
+        case "finished":
+            
+            $('#finishedPackageList, #memberNumber_finish_group').css('display', 'block');
+            $('#memberNumber_current_group, #currentPackageList, #currentGroupNum').css('display', 'none');
+            if(bodywidth > 1000){
+                $('._GROUP_THEAD').show();
+                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+                get_package_end_list("callback", function(jsondata){
+                    // console.log("get_package_end_list", jsondata)
+                    var group_class_Html = package_ListHtml('finished', jsondata);
+                    $('#finishedPackageList').html(group_class_Html);
+                });
+            }else{
+                get_package_end_list("callback", function(jsondata){
+                    // console.log("get_package_end_list", jsondata)
+                    var group_class_Html = package_ListHtml_mobile('finished', jsondata);
+                    $('#finishedPackageList').html(group_class_Html);
+                });
+            }
+            break;
+    }
+}
+
+>>>>>>> 0a3e585f13a41127c9bc2c228ae3f9d3566f731b
 //간편 가격입력
 function priceInput(price, type, selector){
     var select = '';

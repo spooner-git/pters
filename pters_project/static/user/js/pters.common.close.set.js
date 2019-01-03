@@ -19,6 +19,13 @@ function closePopup_mobile(buttonname){
 
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
+        }else if(thisAttr == "ticket_info"){
+            $('#page_managemember').css('display', 'block');
+            $(window).scrollTop(current_Scroll_Position);
+            $('#popup_ticket_info_mobile').css({'display':'none'});
+
+            $('#page-base').css('display', 'block');
+            $('#page-base-modifystyle').css('display', 'none');
         }else if(thisAttr == "memberinfo"){
             $('#uptext2').text('수업 정보');
             close_manage_popup('member_info');
@@ -42,6 +49,13 @@ function closePopup_mobile(buttonname){
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
             $('#popup_lecture_info_mobile').css({'display':'none'});
+
+            $('#page-base').css('display', 'block');
+            $('#page-base-modifystyle').css('display', 'none');
+        }else if(thisAttr == "ticket_info"){
+            $('#page_managemember').css('display', 'block');
+            $(window).scrollTop(current_Scroll_Position);
+            $('#popup_ticket_info_mobile').css({'display':'none'});
 
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
