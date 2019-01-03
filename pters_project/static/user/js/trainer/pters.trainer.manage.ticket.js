@@ -2479,8 +2479,8 @@ function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, ty
 var $membernum;
 var $targetHTML;
 var text_membernum;
-function package_ListHtml_원본(option, jsondata){ //option : current, finished
-    console.log("package_ListHtml_mobile", jsondata)
+function package_ListHtml(option, jsondata){ //option : current, finished
+    console.log("package_ListHtml", jsondata)
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
         case 'current':
@@ -2534,7 +2534,7 @@ function package_ListHtml_원본(option, jsondata){ //option : current, finished
         var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-packageid="'+package_id+'">';
         var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">';
 
-        var htmlstart = '<div class="groupWrap" data-packagestatecd="'+option+'" data-packageid="'+package_id+'">';
+        var htmlstart = '<div class="groupWrap _ticket_list_pc_style" data-packagestatecd="'+option+'" data-packageid="'+package_id+'">';
         var htmlend = '</div>';
         var memolist = '<div class="groupMemoWrap" data-packageid="'+package_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
         var repeatlist = '<div class="groupRepeatWrap" data-packageid="'+package_id+'"></div>';
@@ -2594,7 +2594,7 @@ function package_ListHtml_원본(option, jsondata){ //option : current, finished
     return htmlToAdd.join('')+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
 }
 
-function package_ListHtml(option, jsondata){ //option : current, finished
+function package_ListHtml_mobile(option, jsondata){ //option : current, finished
     console.log("package_ListHtml_mobile", jsondata)
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
@@ -2649,7 +2649,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-packageid="'+package_id+'">';
         var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">';
 
-        var htmlstart = '<div class="groupWrap" data-packagestatecd="'+option+'" data-packageid="'+package_id+'">';
+        var htmlstart = '<div class="groupWrap _ticket_list_mobile_style" data-packagestatecd="'+option+'" data-packageid="'+package_id+'">';
         var htmlend = '</div>';
         var memolist = '<div class="groupMemoWrap" data-packageid="'+package_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+package_memo+'" disabled>'+'</div>';
         var repeatlist = '<div class="groupRepeatWrap" data-packageid="'+package_id+'"></div>';

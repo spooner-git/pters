@@ -1227,6 +1227,33 @@
             $('#currentGroupList').html(group_class_Html);
         });
 
+        // $(window).resize(function(){
+        //     //bodywidth = window.innerWidth;
+        //     var selector_currentMemberList = $('#currentMemberList');
+        //     var selector_finishedMemberList = $('#finishedMemberList');
+        //     if(bodywidth <= 1000 && $('._ticket_list_mobile_style').length == 0){
+        //         if(selector_currentMemberList.css('display') == "block"){
+        //             get_member_ing_list('callback',function(json){
+        //                 memberListSet ('current', json);
+        //             });
+        //         }else if(selector_finishedMemberList.css('display') == "block"){
+        //             get_member_end_list('callback',function(json){
+        //                 memberListSet('finished', json);
+        //             });
+        //         }
+        //     }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
+        //         if(selector_currentMemberList.css('display') == "block"){
+        //             get_member_ing_list('callback',function(json){
+        //                 memberListSet ('current', json);
+        //             });
+        //         }else if(selector_finishedMemberList.css('display') == "block"){
+        //             get_member_end_list('callback',function(json){
+        //                 memberListSet('finished',json);
+        //             });
+        //         }
+        //     }
+        // });
+
         // get_member_ing_list("callback", function(jsondata){
         //     var start_time = new Date().getTime();
         //     var memberlist = ptmember_ListHtml('current', 'name', 'no', jsondata);
