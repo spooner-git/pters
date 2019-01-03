@@ -291,15 +291,12 @@ function time_format_add_ampm(time, noAMPM){ // time: 00:00
     var min = timesplit[1];
 
     var text;
+    hour = hour % 24;
     if(hour < 12){
         text = "AM";
     }else if(hour > 12){
         hour = hour - 12;
-        if(hour == 24){
-            text = "AM";
-        }else{
-            text = "PM";
-        }
+        text = "PM";
     }else if(hour == 12){
         text = "PM";
     }

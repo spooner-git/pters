@@ -2564,13 +2564,11 @@ def add_group_repeat_schedule_confirm(request):
                 context['push_message'] = ''
 
             messages.info(request, information)
-            logger.info(request.user.last_name + ' ' + request.user.first_name + '['
-                        + str(request.user.id) + '] ' + str(error_message))
             return render(request, 'ajax/schedule_error_info.html', context)
     else:
         logger.error(request.user.last_name+' '+request.user.first_name+'['+str(request.user.id)+']'+error)
         messages.error(request, error)
-        return redirect(next_page)
+        return render(request, 'ajax/schedule_error_info.html', context)
 
 
 # 그룹 반복 일정 취소

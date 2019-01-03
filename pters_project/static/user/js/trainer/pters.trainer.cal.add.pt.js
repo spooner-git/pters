@@ -2601,13 +2601,16 @@ function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOk
     var new_disable_time_array_end_date =[];
     for(var n=0; n<disable_time_array_start_date.length; n++){
         if(disable_time_array_start_date[n].split(" ")[0] == selecteddate){
+            if(disable_time_array_end_date[n].split(" ")[0] != selecteddate){
+                disable_time_array_end_date[n] = selecteddate + " 24:00:00"
+            }
             new_disable_time_array_start_date.push(disable_time_array_start_date[n]);
             new_disable_time_array_end_date.push(disable_time_array_end_date[n]);
         }
     }
 
-    console.log("ori", new_disable_time_array_start_date);
-    console.log("orie", new_disable_time_array_end_date);
+    // console.log("ori", new_disable_time_array_start_date);
+    // console.log("orie", new_disable_time_array_end_date);
 
     var check_duplication = true; // 시작시 중복이 있다고 가정
     var resultStart_Array = new_disable_time_array_start_date; // 시작시각 결과 값

@@ -127,7 +127,7 @@ function shiftPtGroupClassList(type){
             $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
-                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+                $('._MEMBER_THEAD, ._memberaddbutton').hide();
             }
             break;
         case "finished":
@@ -140,7 +140,7 @@ function shiftPtGroupClassList(type){
             $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
-                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
+                $('._MEMBER_THEAD, ._memberaddbutton').hide();
             }
             break;
     }
@@ -1791,7 +1791,12 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
     var htmlToJoin = [];
     var htmlToJoin2 = [];
     var groupNum = jsondata.group_id.length;
-    var ordernum = 0;
+    var ordernum = 1;
+    var input_order_num = 1;
+    if(lecture_keyword != ''){
+        ordernum = 0;
+        input_order_num = 0;
+    }
     for(var i=0; i<groupNum; i++){
         var group_name = jsondata.group_name[i];
         var group_id = jsondata.group_id[i];
@@ -1815,7 +1820,12 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
                 break;
         }
 
-        ordernum++;
+        if(group_type == "ONE_TO_ONE"){
+            input_order_num = 1;
+        }else{
+            ordernum++;
+            input_order_num = ordernum;
+        }
         var full_group = "";
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
@@ -1839,7 +1849,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             }
         }
 
-        var main = '<div class="_groupnum _group_list_pc_style">'+ordernum+'</div>'+
+        var main = '<div class="_groupnum _group_list_pc_style">'+input_order_num+'</div>'+
                     '<div class="_groupplancolor _group_list_pc_style"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>'+
                     '<div class="_grouptypecd" data-group-type="'+group_type+'" style="display:none;"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
                     '<div class="_groupname _group_list_pc_style"><input class="group_listinput input_disabled_true _editable" value="'+'['+group_type_nm+'] '+group_name+'" disabled>'+'</div>'+
