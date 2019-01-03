@@ -33,7 +33,7 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
-    SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT
+    SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -3865,6 +3865,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         package_sort = self.request.GET.get('package_sort', SORT_PACKAGE_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
+        sort_info = int(package_sort)
 
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
@@ -3901,6 +3902,13 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
     def get_context_data(self, **kwargs):
         context = super(GetPackageEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
+
+        page = self.request.GET.get('page', 0)
+        package_sort = self.request.GET.get('package_sort', SORT_PACKAGE_NAME)
+        sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
+        keyword = self.request.GET.get('keyword', '')
+        sort_info = int(package_sort)
+
         error = None
         query_state_cd = "select COMMON_CD_NM from COMMON_CD_TB as B where B.COMMON_CD = `PACKAGE_TB`.`STATE_CD`"
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
