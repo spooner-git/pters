@@ -2268,38 +2268,6 @@ function shiftGroupClassList(type){
 }
 
 
-//진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
-function shiftPackageList(type){
-    $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
-    switch(type){
-        case "current":
-            get_package_ing_list("callback", function(jsondata){
-                var group_class_Html = package_ListHtml('current', jsondata);
-                $('#currentPackageList').html(group_class_Html);
-            });
-            $('#currentPackageList, #memberNumber_current_group').css('display', 'block');
-            $('#memberNumber_finish_group, #finishedPackageList, #finishGroupNum').css('display', 'none');
-            if(bodywidth > 1000){
-                $('._GROUP_THEAD').show();
-                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
-            }
-            break;
-        case "finished":
-            get_package_end_list("callback", function(jsondata){
-                // console.log("get_package_end_list", jsondata)
-                var group_class_Html = package_ListHtml('finished', jsondata);
-                $('#finishedPackageList').html(group_class_Html);
-            });
-            $('#finishedPackageList, #memberNumber_finish_group').css('display', 'block');
-            $('#memberNumber_current_group, #currentPackageList, #currentGroupNum').css('display', 'none');
-            if(bodywidth > 1000){
-                $('._GROUP_THEAD').show();
-                $('._MEMBER_THEAD, ._memberaddbutton, ._ALIGN_DROPDOWN').hide();
-            }
-            break;
-    }
-}
-
 //간편 가격입력
 function priceInput(price, type, selector){
     var select = '';
@@ -2757,7 +2725,7 @@ function get_member_list_test(url, use, callback){
     $.ajax({
         url:url,
         type:'GET',
-        data: {"page": ++page_num, "member_sort": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
+        data: {"page": ++page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
 
         dataType : 'html',
 
@@ -2833,7 +2801,7 @@ function get_member_ing_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_ing_list/',
         type:'GET',
-        data: {"page": page_num, "member_sort": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
+        data: {"page": page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2899,7 +2867,7 @@ function get_member_end_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_end_list/',
         type:'GET',
-        data: {"page": page_num, "member_sort": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
+        data: {"page": page_num, "sort_val": member_sort_val, "sort_order_by":member_sort_order_by, "keyword":keyword},
         dataType : 'html',
 
         beforeSend:function(){

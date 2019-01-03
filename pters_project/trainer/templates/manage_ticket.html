@@ -330,30 +330,26 @@
                         <span class="ENtext">Re-Contract</span>
                     </div>
                     -->
-                    <input id="search_lecture_input" type="text" name="search_lecture_input" placeholder="검색">
+                    <input id="search_ticket_input" type="text" name="search_ticket_input" placeholder="검색">
 {#                    <img src="/static/user/res/ptadd/btn-x.png" alt="" id="id_search_x_button" class="icondown" style="right:20%;">#}
-                    <img src="/static/user/res/icon-search-black.png" alt="" id="id_lecture_search" class="icondown">
+                    <img src="/static/user/res/icon-search-black.png" alt="" id="id_ticket_search" class="icondown">
                 </div>
 
-                <select class="alignSelect_lecture _ALIGN_DROPDOWN">
+                <select class="alignSelect_ticket _ALIGN_DROPDOWN">
 
-                    <option id="lecture_name" class="KRtext">수업명 가나다 순</option>
+                    <option id="ticket_name" class="KRtext">수강권명 가나다 순</option>
 
-                    <option id="lecture_member_many" class="KRtext">참여중 회원 많은 순</option>
+                    <option id="ticket_member_many" class="KRtext">참여중 회원 많은 순</option>
 
-                    <option id="lecture_member_few" class="KRtext">참여중 회원 적은 순</option>
+                    <option id="ticket_member_few" class="KRtext">참여중 회원 적은 순</option>
 
-                    <option id="lecture_capacity_many" class="KRtext">정원 많은 순</option>
+                    <option id="ticket_create_old" class="KRtext">생성 일자 과거 순</option>
 
-                    <option id="lecture_capacity_few" class="KRtext">정원 적은 순</option>
-
-                    <option id="lecture_create_old" class="KRtext">생성 일자 과거 순</option>
-
-                    <option id="lecture_create_new" class="KRtext">생성 일자 최근 순</option>
+                    <option id="ticket_create_new" class="KRtext">생성 일자 최근 순</option>
 
                 </select>
                 <img src="/static/user/res/memberadd/icon-down.png" alt="" id="align_select_dropdown_arrow" class="icondown _ALIGN_DROPDOWN">
-                <div id="search_lecture_box">
+                <div id="search_ticket_box">
                     <img src="/static/user/res/icon-search-black.png" alt="" style="width:25px;" id="id_search_x_button">
                 </div>
                 <div class="ymdText-pc-add-member-again _info_download" style="position: absolute;right: 0;">
@@ -1336,8 +1332,8 @@
     <script>
         var current_Scroll_Position;
 
-        var $search_box = $('.ymdText-pc-add-member-wrap');
-        $search_box.css('display', 'inline-block');
+{#        var $search_box = $('.ymdText-pc-add-member-wrap');#}
+{#        $search_box.css('display', 'inline-block');#}
         $('a.text-ticketmanage').css('color','#fe4e65;');
 {#        $('#uptext').html("수강권<img src='/static/user/res/beta_tag.png' class='beta_tag'>")#}
         $('#uptext').html("수강권");
