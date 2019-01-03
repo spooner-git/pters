@@ -38,6 +38,7 @@ function add_date(startdate, addvalue){
 	return result;
 }
 
+
 //날짜 빼기 계산 : 2018-7-5에서 10일 전은 언제?
 function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 	var year = Number(startdate.split('-')[0]);
@@ -46,9 +47,9 @@ function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 	var subsdate = date + subvalue;
 	var monthindex = month - 2;
 	if(month-2 == 0){
-		monthindex = 11
+		monthindex = 11;
 	}else if(month - 2 == -1){
-		monthindex = 10
+		monthindex = 10;
 	}
 	var index = monthindex;
 	var newdate = subsdate;
@@ -56,13 +57,13 @@ function substract_date(startdate, subvalue){ //subvalue는 음수값 입력
 	var newyear = year;
 	while(newdate <= 0){
 		newmonth--;
-		if(index == -1){
+		if(index == -1 || newmonth == 0){
 			index = 11;
 			newyear--;
 			newmonth = 12;
 		}
 		newdate = newdate + lastDay[index];
-		
+
 		index--;
 		
 	}

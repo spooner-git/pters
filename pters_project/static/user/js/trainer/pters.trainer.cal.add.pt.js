@@ -325,14 +325,14 @@ $(document).ready(function(){
         set_member_group_dropdown_list();
 
         var thisIDDate = $(this).attr('id').replace(/_/gi, "-");
-        if( (compare_date2(thisIDDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIDDate)) && Options.auth_limit == 0 ){
-                show_caution_popup(`<div style="margin-bottom:10px;">
-                                    베이직 기능 이용자께서는 <br>
-                                    일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
-                                    <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
-                                    <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
-                                </div>`);
-        }else{
+        // if( (compare_date2(thisIDDate, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), thisIDDate)) && Options.auth_limit == 0 ){
+        //         show_caution_popup(`<div style="margin-bottom:10px;">
+        //                             베이직 기능 이용자께서는 <br>
+        //                             일정 등록과 취소가 <span style="font-weight:500;">오늘 기준 2주로 제한</span>됩니다. <br><br>
+        //                             <span style="color:#fe4e65;">프리미엄 이용권</span>으로<br>
+        //                             <span style="color:#fe4e65;">날짜제한 없이 이용</span>해보세요!
+        //                         </div>`);
+        // }else{
             get_timeindex_Y();
 
             var thisOffsetTop = $(this).offset().top;
@@ -407,7 +407,7 @@ $(document).ready(function(){
                     console.log('너무 좁아');
                 }
             }
-        }
+        // }
     });
 
     function getThisId(selector){
