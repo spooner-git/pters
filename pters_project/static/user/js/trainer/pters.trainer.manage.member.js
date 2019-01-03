@@ -1603,6 +1603,8 @@ $(document).ready(function(){
                 var group_type = "";
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
             }
+        }else if($('#popup_ticket_info_mobile').css('display') == "block"){
+
         }else if($('#memberInfoPopup').css('display') == "block"){
             var text = '회원 정보 수정';
             // var text2 = '모든 필수 정보를 입력해주세요';
