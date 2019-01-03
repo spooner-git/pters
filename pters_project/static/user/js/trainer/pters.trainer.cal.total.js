@@ -12,92 +12,95 @@
 
 /////////////////////////////////////달력 공통//////////////////////////////////
 $('#ymdText').click(function(e){
-    e.stopPropagation();
-    var $calendar = $('#calendar');
-    var current_calendar_type;
-    if($calendar.hasClass('_calweek')){
-        current_calendar_type = "week";
-    }else if($calendar.hasClass('_calmonth')){
-        current_calendar_type = "month";
-    }
+     if(bodywidth < 600) {
+         e.stopPropagation();
+         var $calendar = $('#calendar');
+         var current_calendar_type;
+         if ($calendar.hasClass('_calweek')) {
+             current_calendar_type = "week";
+         } else if ($calendar.hasClass('_calmonth')) {
+             current_calendar_type = "month";
+         }
 
-    if(current_calendar_type == "month"){
-        $.cookie('calendar_selected_last', 'week', {expires : 30});
-        $('#hidetoggle').show();
-        var $ymdData = $('#ymdText-pc-year');
-        var yyyy_mm_dd;
-        var dd2_lastday = lastDay[Number($ymdData.attr('data-month'))-1];
-        var ymd1 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-01`;
-        var ymd2 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-${dd2_lastday}`;
-        if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
-            yyyy_mm_dd = today_YY_MM_DD;
-        }else{
-            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
-        }
+         if (current_calendar_type == "month") {
+             $.cookie('calendar_selected_last', 'week', {expires: 30});
+             $('#hidetoggle').show();
+             var $ymdData = $('#ymdText-pc-year');
+             var yyyy_mm_dd;
+             var dd2_lastday = lastDay[Number($ymdData.attr('data-month')) - 1];
+             var ymd1 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-01`;
+             var ymd2 = `${$ymdData.attr('data-year')}-${$ymdData.attr('data-month')}-${dd2_lastday}`;
+             if (compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2(today_YY_MM_DD, ymd2) == false) {
+                 yyyy_mm_dd = today_YY_MM_DD;
+             } else {
+                 yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(ymd1, '-');
+             }
 
-        $calendar.removeClass('_calmonth');
-        if(bodywidth > 600){
-            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                week_calendar_mobile(yyyy_mm_dd);
-                $('#week').css('display', 'table');
-                $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-                $('#date').css('display', 'none');
-                $('#ymdText_weekcal').css('display', 'inline-block');
-                $('#ymdText_monthcal').css('display', 'none');
-            }else{
-                //week_calendar(yyyy_mm_dd);
-            }
+             $calendar.removeClass('_calmonth');
+             if (bodywidth > 600) {
+                 if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null || varUA.match('android') != null) {
+                     week_calendar_mobile(yyyy_mm_dd);
+                     $('#week').css('display', 'table');
+                     $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+                     $('#date').css('display', 'none');
+                     $('#ymdText_weekcal').css('display', 'inline-block');
+                     $('#ymdText_monthcal').css('display', 'none');
+                 } else {
+                     //week_calendar(yyyy_mm_dd);
+                 }
 
-        }else if(bodywidth<=600){
-            week_calendar_mobile(yyyy_mm_dd);
-            $('#week').css('display', 'table');
-            $('div.timeindex, #timeIndicatorBar').css('display', 'block');
-            $('#date').css('display', 'none');
-        }
-    }else if(current_calendar_type == "week"){
-        $.cookie('calendar_selected_last', 'month', {expires : 30});
-        $('#hidetoggle').hide();
-        var $ymdText_start = $('#ymdText-pc-month-start');
-        var $ymdText_end = $('#ymdText-pc-month-end');
-        var $ymdText_day_start = $('#ymdText-pc-date-start');
-        var $ymdText_day_end = $('#ymdText-pc-date-end');
-        var yyyy_mm_dd;
-        var yyyy_1 = $ymdText_start.attr('data-year');
-        var yyyy_2 = $ymdText_end.attr('data-year');
-        var mm1    = $ymdText_start.attr('data-month');
-        var mm2    = $ymdText_end.attr('data-month');
-        var dd1    = $ymdText_day_start.attr('data-date');
-        var dd2    = $ymdText_day_end.attr('data-date');
-        var ymd1 = `${yyyy_1}-${mm1}-${dd1}`;
-        var ymd2 = `${yyyy_2}-${mm2}-${dd2}`;
-        if( compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2( today_YY_MM_DD, ymd2 ) == false ){
-            yyyy_mm_dd = today_YY_MM_DD;
-        }else{
-            yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
-        }
-        $calendar.removeClass('_calweek');
-        if(bodywidth > 600){
-            if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
-                month_calendar(yyyy_mm_dd);
-                $('#week').css('display', 'none');
-                $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-                $('#date').css('display', 'block');
-                $('.swiper-slide-active').css('width', $('#calendar').width());
-                $('#ymdText_monthcal').css('display', 'inline-block');
-                $('#ymdText_weekcal').css('display', 'none');
-            }else{
-                //week_calendar(yyyy_mm_dd);
-            }
-        }else if(bodywidth <= 600){
-            month_calendar(yyyy_mm_dd);
-            $('#week').css('display', 'none');
-            $('div.timeindex, #timeIndicatorBar').css('display', 'none');
-            $('#date').css('display', 'block');
-            $('.swiper-slide-active').css('width', $('#calendar').width());
-            $('#ymdText_monthcal').css('display', 'inline-block');
-            $('#ymdText_weekcal').css('display', 'none');
-        }
-    }
+             } else if (bodywidth <= 600) {
+                 week_calendar_mobile(yyyy_mm_dd);
+                 $('#week').css('display', 'table');
+                 $('div.timeindex, #timeIndicatorBar').css('display', 'block');
+                 $('#date').css('display', 'none');
+             }
+         }
+         else if (current_calendar_type == "week") {
+             $.cookie('calendar_selected_last', 'month', {expires: 30});
+             $('#hidetoggle').hide();
+             var $ymdText_start = $('#ymdText-pc-month-start');
+             var $ymdText_end = $('#ymdText-pc-month-end');
+             var $ymdText_day_start = $('#ymdText-pc-date-start');
+             var $ymdText_day_end = $('#ymdText-pc-date-end');
+             var yyyy_mm_dd;
+             var yyyy_1 = $ymdText_start.attr('data-year');
+             var yyyy_2 = $ymdText_end.attr('data-year');
+             var mm1 = $ymdText_start.attr('data-month');
+             var mm2 = $ymdText_end.attr('data-month');
+             var dd1 = $ymdText_day_start.attr('data-date');
+             var dd2 = $ymdText_day_end.attr('data-date');
+             var ymd1 = `${yyyy_1}-${mm1}-${dd1}`;
+             var ymd2 = `${yyyy_2}-${mm2}-${dd2}`;
+             if (compare_date2(ymd1, today_YY_MM_DD) == false && compare_date2(today_YY_MM_DD, ymd2) == false) {
+                 yyyy_mm_dd = today_YY_MM_DD;
+             } else {
+                 yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
+             }
+             $calendar.removeClass('_calweek');
+             if (bodywidth > 600) {
+                 if (varUA.match('iphone') != null || varUA.match('ipad') != null || varUA.match('ipod') != null || varUA.match('android') != null) {
+                     month_calendar(yyyy_mm_dd);
+                     $('#week').css('display', 'none');
+                     $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+                     $('#date').css('display', 'block');
+                     $('.swiper-slide-active').css('width', $('#calendar').width());
+                     $('#ymdText_monthcal').css('display', 'inline-block');
+                     $('#ymdText_weekcal').css('display', 'none');
+                 } else {
+                     //week_calendar(yyyy_mm_dd);
+                 }
+             } else if (bodywidth <= 600) {
+                 month_calendar(yyyy_mm_dd);
+                 $('#week').css('display', 'none');
+                 $('div.timeindex, #timeIndicatorBar').css('display', 'none');
+                 $('#date').css('display', 'block');
+                 $('.swiper-slide-active').css('width', $('#calendar').width());
+                 $('#ymdText_monthcal').css('display', 'inline-block');
+                 $('#ymdText_weekcal').css('display', 'none');
+             }
+         }
+     }
 });
 
 $('#change_to_weekcal').click(function(e){
@@ -477,20 +480,20 @@ function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한
     var slideIndex = $('#slide'+Index);
     var currentDates = Number(Dates)+W;
     var currentMonth = Month-1;
-    var dateinfo = new Date(Year, Month-1, currentDates);
+    var dateinfo = new Date(Year, currentMonth, currentDates);
     var currentDay_ = dateinfo.getDay();
-    var monthdata = currentMonth;
+    // var monthdata = currentMonth;
 
-    if(append==0){
-
-        currentDay = 0;
+    // if(append==0){
+    //
+    //     currentDay = 0;
         //var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
-        var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi,''));
-        var dataforappend = $('#slide'+(currentSlideNum)).find('.td00').attr('id').split('_');
+        // var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi,''));
+        // var dataforappend = $('#slide'+(currentSlideNum)).find('.td00').attr('id').split('_');
 
         // var monthforappend = Number(dataforappend[1])-1;
-        monthdata = Number(dataforappend[1])-1;
-    }
+    //     monthdata = Number(dataforappend[1])-1;
+    // }
     var text1 = "등록된 일정이 없습니다.";
     if(Options.language == "JPN"){
         text1 = "登録されている日程がありません";
@@ -540,32 +543,32 @@ function calTable_Set_Week(Index, Year, Month, Dates, Week, append){ //선택한
                         worktime_disabling = "";
                     }
 
-                    if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
-                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata]) == today_date){todaywide="todaywide";}else{todaywide = "";}
-                        td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                    if(currentDates+z>lastDay[currentMonth] && Month+1>12){ //해가 넘어갈때
+                        if( (Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){todaywide="todaywide";}else{todaywide = "";}
+                        td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0 && Month==1){
                         if( (Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11]) == today_date){todaywide="todaywide";}else{todaywide = "";}
                         td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                         td2[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                    }else if(currentDates+z>lastDay[monthdata]){
-                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata]) == today_date){todaywide="todaywide";}else{todaywide = "";}
-                        td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        td2[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                    }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
+                    }else if(currentDates+z>lastDay[currentMonth]){
+                        if( Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth]) == today_date){todaywide="todaywide";}else{todaywide = "";}
+                        td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        td2[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                    }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                         if( Year+'_'+Month+'_'+(currentDates+z) == today_date){todaywide="todaywide";}else{todaywide = "";}
                         td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                         td2[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
                     }else if(currentDates+z<=0){
-                        if(Month-1<1){
-                            if( (Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11]) == today_date){todaywide="todaywide";}else{todaywide = "";}
-                            td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                            td2[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        }else{
-                            if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1]) == today_date){todaywide="todaywide";}else{todaywide = "";}
-                            td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                            td2[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
-                        }
+                        // if(Month-1<1){
+                        //     if( (Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11]) == today_date){todaywide="todaywide";}else{todaywide = "";}
+                        //     td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        //     td2[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        // }else{
+                            if( Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1]) == today_date){todaywide="todaywide";}else{todaywide = "";}
+                            td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'00'+' class="td00 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                            td2[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+'_'+i+'_'+'30'+' class="td30 '+todaywide+worktime_disabling+'" data-week='+z+'>'+'<div></div>'+'</div>';
+                        // }
                     }
                 }
                 td1_1 = td1.join('');
@@ -841,20 +844,21 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //�
     var W = Week;
     var slideIndex = $('#slide'+Index);
     var currentDates = Number(Dates)+W;
-    var dateinfo = new Date(Year, Month-1, currentDates);
+    var currentMonth = Month-1;
+    var dateinfo = new Date(Year, currentMonth, currentDates);
     var currentDay_ = dateinfo.getDay();
-    var monthdata = currentMonth;
+    // var monthdata = currentMonth;
 
-    if(append==0){
-
-        currentDay = 0;
-        //var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
-        var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi, ''));
-        var dataforappend = $('#slide'+(currentSlideNum)).find('.td00').attr('id').split('_');
-
-        // var monthforappend = Number(dataforappend[1])-1;
-        monthdata = Number(dataforappend[1])-1;
-    }
+    // if(append==0){
+    //
+    //     currentDay = 0;
+    //     //var dataforappend = $('.swiper-slide-prev').find('.td00').attr('id').split('_')
+    //     var currentSlideNum = Number($('.swiper-slide-active').attr('id').replace(/slide/gi, ''));
+    //     var dataforappend = $('#slide'+(currentSlideNum)).find('.td00').attr('id').split('_');
+    //
+    //     // var monthforappend = Number(dataforappend[1])-1;
+    //     monthdata = Number(dataforappend[1])-1;
+    // }
     var text1 = "등록된 일정이 없습니다.";
     if(Options.language == "JPN"){
         text1 = "登録されている日程がありません";
@@ -925,19 +929,19 @@ function calTable_Set_Week_Mobile(Index, Year, Month, Dates, Week, append){ //�
                                           </div>`;
 
 
-                if(currentDates+z>lastDay[monthdata] && Month+1>12){ //해가 넘어갈때
-                    td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
+                if(currentDates+z>lastDay[currentMonth] && Month+1>12){ //해가 넘어갈때
+                    td1[z]='<div'+' id='+(Year+1)+'_'+(Month-11)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0 && Month==1){
                     td1[z]='<div'+' id='+(Year-1)+'_'+(11+Month)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
-                }else if(currentDates+z>lastDay[monthdata]){
-                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[monthdata])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
-                }else if(currentDates+z<=lastDay[monthdata] && currentDates+z>0){
+                }else if(currentDates+z>lastDay[currentMonth]){
+                    td1[z]='<div'+' id='+Year+'_'+(Month+1)+'_'+(currentDates+z-lastDay[currentMonth])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
+                }else if(currentDates+z<=lastDay[currentMonth] && currentDates+z>0){
                     td1[z]='<div'+' id='+Year+'_'+Month+'_'+(currentDates+z)+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                 }else if(currentDates+z<=0){
                     if(Month-1<1){
                         td1[z]='<div'+' id='+(Year-1)+'_'+(Month-1+12)+'_'+(currentDates+z+lastDay[11])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                     }else{
-                        td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[monthdata-1])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
+                        td1[z]='<div'+' id='+Year+'_'+(Month-1)+'_'+(currentDates+z+lastDay[currentMonth-1])+' class="td00"'+td_style+' data-week='+z+'>'+'<div class="blankbox"></div>'+workstart_disabling+workend_disabling+'</div>';
                     }
                 }
             }
