@@ -3877,6 +3877,12 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         order = {key: i for i, key in enumerate(order)}
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
+        for package_info in package_data:
+            package_info.package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+                                   package_tb_id=package_info.package_id, group_tb__use=USE,
+                                   use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
