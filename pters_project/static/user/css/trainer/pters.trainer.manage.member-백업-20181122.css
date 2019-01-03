@@ -1212,7 +1212,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	/*display: none;*/
 	display: inline-block;
 }
-#search_member_input, #search_lecture_input{
+#search_member_input, #search_lecture_input, #search_ticket_input{
 	height: 33px;
 	width: 150px;
 	border: 1px solid #cccccc;
@@ -1361,7 +1361,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		position: relative;
 		width: auto;
 	}
-	#search_member_input, #search_lecture_input{
+	#search_member_input, #search_lecture_input, #search_ticket_input{
 		height: 28px;
 		line-height: 	28px;
 		width: 130px;

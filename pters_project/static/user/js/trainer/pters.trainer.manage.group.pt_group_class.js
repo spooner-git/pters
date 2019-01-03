@@ -2679,7 +2679,7 @@ function get_member_group_class_ing_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_group_class_ing_list/',
         type:'GET',
-        data: {"page": page_num, "lecture_sort": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
+        data: {"page": page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2739,7 +2739,7 @@ function get_member_group_class_end_list(use, callback){
     $.ajax({
         url:'/trainer/get_member_group_class_end_list/',
         type:'GET',
-        data: {"page": page_num, "lecture_sort": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
+        data: {"page": page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
 
         beforeSend:function(){

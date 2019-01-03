@@ -33,7 +33,8 @@ from openpyxl.writer.excel import save_virtual_workbook
 
 from configs.const import ON_SCHEDULE_TYPE, OFF_SCHEDULE_TYPE, USE, UN_USE, AUTO_FINISH_OFF, \
     MEMBER_RESERVE_PROHIBITION_ON, SORT_MEMBER_NAME, SORT_REMAIN_COUNT, SORT_START_DATE, SORT_ASC, SORT_LECTURE_NAME, \
-    SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME
+    SORT_LECTURE_MEMBER_COUNT, SORT_LECTURE_CREATE_DATE, SORT_LECTURE_CAPACITY_COUNT, SORT_PACKAGE_NAME, \
+    SORT_PACKAGE_MEMBER_COUNT, SORT_PACKAGE_CREATE_DATE
 
 from configs.views import AccessTestMixin
 from trainee.views import get_trainee_repeat_schedule_data_func
@@ -1136,7 +1137,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         context = super(GetMemberIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
-        member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
+        member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
@@ -1173,11 +1174,12 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         context = super(GetMemberEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
-        member_sort = self.request.GET.get('member_sort', SORT_MEMBER_NAME)
+        member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
         sort_info = int(member_sort)
+
         if sort_info == SORT_MEMBER_NAME:
             member_data = sorted(member_data, key=attrgetter('name'), reverse=int(sort_order_by))
         elif sort_info == SORT_REMAIN_COUNT:
@@ -3862,7 +3864,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         error = None
 
         page = self.request.GET.get('page', 0)
-        package_sort = self.request.GET.get('package_sort', SORT_PACKAGE_NAME)
+        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)
@@ -3871,19 +3873,24 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(
-            class_tb_id=class_id, state_cd='IP',
+            class_tb_id=class_id, state_cd='IP', name__contains=keyword,
             use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                               package_type_cd_nm=RawSQL(query_package_type_cd,
-                                                        [])).order_by('-package_type_cd', 'name', 'package_id')
-        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        order = {key: i for i, key in enumerate(order)}
-        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
+                                                        [])).order_by('name')
+        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        # order = {key: i for i, key in enumerate(order)}
+        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
-        for package_info in package_data:
-            package_info.package_group_data = PackageGroupTb.objects.select_related(
-                'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
-                                   package_tb_id=package_info.package_id, group_tb__use=USE,
-                                   use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+        if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+            package_data = sorted(package_data, key=attrgetter('ing_package_member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_PACKAGE_CREATE_DATE:
+            package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+
+        # for package_info in package_data:
+        #     package_info.package_group_data = PackageGroupTb.objects.select_related(
+        #         'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+        #                            package_tb_id=package_info.package_id, group_tb__use=USE,
+        #                            use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -3904,7 +3911,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
 
         page = self.request.GET.get('page', 0)
-        package_sort = self.request.GET.get('package_sort', SORT_PACKAGE_NAME)
+        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)
@@ -3914,15 +3921,19 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         query_package_type_cd = "select COMMON_CD_NM from COMMON_CD_TB as B " \
                                 "where B.COMMON_CD = `PACKAGE_TB`.`PACKAGE_TYPE_CD`"
         package_data = PackageTb.objects.filter(Q(state_cd='PE') | Q(end_package_member_num__gt=0),
-                                                class_tb_id=class_id,
+                                                class_tb_id=class_id, name__contains=keyword,
                                                 use=USE).annotate(state_cd_nm=RawSQL(query_state_cd, []),
                                                                   package_type_cd_nm=RawSQL(
                                                                       query_package_type_cd,
-                                                                      [])).order_by('-package_type_cd', 'name',
-                                                                                    'package_id')
-        order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
-        order = {key: i for i, key in enumerate(order)}
-        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
+                                                                      [])).order_by('name')
+        # order = ['ONE_TO_ONE', 'NORMAL', 'EMPTY', 'PACKAGE']
+        # order = {key: i for i, key in enumerate(order)}
+        # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
+
+        if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+            package_data = sorted(package_data, key=attrgetter('end_package_member_num'), reverse=int(sort_order_by))
+        elif sort_info == SORT_PACKAGE_CREATE_DATE:
+            package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
@@ -4472,7 +4483,7 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         context = super(GetMemberGroupClassIngListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
-        lecture_sort = self.request.GET.get('lecture_sort', SORT_LECTURE_NAME)
+        lecture_sort = self.request.GET.get('sort_val', SORT_LECTURE_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(lecture_sort)
@@ -4515,7 +4526,7 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
         context = super(GetMemberGroupClassEndListViewAjax, self).get_context_data(**kwargs)
         class_id = self.request.session.get('class_id', '')
         page = self.request.GET.get('page', 0)
-        lecture_sort = self.request.GET.get('lecture_sort', SORT_LECTURE_NAME)
+        lecture_sort = self.request.GET.get('sort_val', SORT_LECTURE_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(lecture_sort)
