@@ -3883,7 +3883,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         error = None
 
         page = self.request.GET.get('page', 0)
-        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_NAME)
+        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)
@@ -3935,7 +3935,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
 
         page = self.request.GET.get('page', 0)
-        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_NAME)
+        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)

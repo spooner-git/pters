@@ -2381,9 +2381,10 @@ function package_type_dropdown_set(packagelistJSON){
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">['+packagelistJSON.package_type_cd_nm[i]+'] '+packagelistJSON.package_name[i]+'</option>');
     }
-    if(len == 1){
-        optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 수강권 만들기</option>");
-    }
+    // 의미 X (수업을 만들어야함
+    // if(len == 1){
+    //     optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 수강권 만들기</option>");
+    // }
     $('.grouptypeselect').html(optionsToJoin.join(''));
 }
 
