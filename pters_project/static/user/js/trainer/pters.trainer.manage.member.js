@@ -1604,7 +1604,22 @@ $(document).ready(function(){
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
             }
         }else if($('#popup_ticket_info_mobile').css('display') == "block"){
-
+            if($(this).attr('data-type') == "view" ){
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+                $(this).attr('data-type', 'modify');
+                $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+                $('#mygroupnametitle').show();
+                $('.mobile_group_color_palette').show();
+            }else if($(this).attr('data-type') == "modify" ){
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+                $(this).attr('data-type', 'view');
+                var group_id = $('#mygroupid').attr('data-groupid');
+                var group_name = $('#mygroupname input').val();
+                var group_capacity = $('#mygroupcapacity input').val();
+                var group_memo = $('#mygroupmemo input').val();
+                var group_type = "";
+                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+            }
         }else if($('#memberInfoPopup').css('display') == "block"){
             var text = '회원 정보 수정';
             // var text2 = '모든 필수 정보를 입력해주세요';
@@ -4235,11 +4250,20 @@ function smart_refresh_member_group_class_list(){
             opened_package.push($(this).attr('data-packageid'));
         });
         get_package_ing_list("callback", function(jsondata){
-            var package_Html = package_ListHtml('current', jsondata);
+            var package_Html;
+            if(bodywidth <= 1000){
+                package_Html = package_ListHtml_mobile('current', jsondata);
+            }else if(bodywidth > 1000){
+                package_Html = package_ListHtml('current', jsondata);
+            }
             $('#currentPackageList').html(package_Html);
             var opened_package_length = opened_package.length;
             for(var i=0; i<opened_package_length; i++){
                $(`#currentPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
+            }
+            if($('#popup_ticket_info_mobile').css('display') == "block"){
+                //$('#page_managemember').css('height',0);
+                $('#page_managemember').css({'display':'none'});
             }
         });
     }else if($('#finishedPackageList').css('display') == "block"){
@@ -4248,11 +4272,20 @@ function smart_refresh_member_group_class_list(){
             opened_package.push($(this).attr('data-packageid'));
         });
         get_package_end_list("callback", function(jsondata){
-            var package_Html = package_ListHtml('finished', jsondata);
+            var package_Html;
+            if(bodywidth <= 1000){
+                package_Html = package_ListHtml_mobile('finished', jsondata);
+            }else if(bodywidth > 1000){
+                package_Html = package_ListHtml('finished', jsondata);
+            }
             $('#finishedPackageList').html(package_Html);
             var opened_package_length = opened_package.length;
             for(var i=0; i<opened_package_length; i++){
                $(`#finishedPackageList div.groupWrap[data-packageid="${opened_package[i]}"]`).trigger('click');
+            }
+            if($('#popup_ticket_info_mobile').css('display') == "block"){
+                //$('#page_managemember').css('height',0);
+                $('#page_managemember').css({'display':'none'});
             }
         });
     }else if($("#calendar").length > 0 ){
