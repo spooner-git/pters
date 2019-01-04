@@ -3251,7 +3251,7 @@ function packageMemberListSet(package_id, jsondata){
 
 //패키지 소속 회원 목록을 그룹에 그리기 모바일
 function packageMemberListSet_mobile(group_id, jsondata){
-    console.log(jsondata)
+    console.log("packageMemberListSet_mobile",jsondata)
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
 
@@ -3291,23 +3291,23 @@ function packageMemberListSet_mobile(group_id, jsondata){
         var htmlEnd = '</div>';
 
         var memberRow;
-        if(bodywidth < 600){
-            memberRow = htmlStart +
-            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
-            '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
-            '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
-                                                                                +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
-                                                                                '</div>';
 
-            //if(grouptype!='ONE_TO_ONE') {
-                //memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
-            //}else{
-                memberRow += '<div class="" style="width:10%"></div>';
-            //}
-           
+        memberRow = htmlStart +
+        '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
+        '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+        '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
+                                                                            +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
+                                                                            '</div>';
 
-            memberRow += htmlEnd;
-        }
+        //if(grouptype!='ONE_TO_ONE') {
+            //memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
+        //}else{
+            memberRow += '<div class="" style="width:10%"></div>';
+        //}
+       
+
+        memberRow += htmlEnd;
+    
 
 
         htmlToJoin.push(memberRow);
