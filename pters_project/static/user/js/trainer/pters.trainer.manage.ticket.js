@@ -3771,6 +3771,7 @@ function modify_package_from_list(package_id, package_name, package_note){
                        $('#uptext3').text(package_name);
                        $('#ticketnametitle').hide();
                     }
+                    $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                 }
                 console.log('success');
             }
