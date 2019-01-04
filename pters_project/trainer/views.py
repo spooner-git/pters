@@ -1568,14 +1568,14 @@ def delete_member_info_logic(request):
 def export_excel_member_list_logic(request):
     class_id = request.session.get('class_id', '')
     finish_flag = request.GET.get('finish_flag', '0')
+    member_sort = request.GET.get('sort_val', SORT_MEMBER_NAME)
+    sort_order_by = request.GET.get('sort_order_by', SORT_ASC)
+    keyword = request.GET.get('keyword', '')
+    sort_info = int(member_sort)
 
     error = None
     member_list = []
     member_finish_list = []
-
-    if error is None:
-        member_list = func_get_member_ing_list(class_id, request.user.id, '')
-        member_finish_list = func_get_member_end_list(class_id, request.user.id, '')
 
     wb = Workbook()
     ws1 = wb.active
@@ -1600,6 +1600,15 @@ def export_excel_member_list_logic(request):
     # filename_temp = request.user.last_name + request.user.first_name + '님_'
     filename_temp = request.user.first_name + '님_'
     if finish_flag == '0':
+        member_list = func_get_member_ing_list(class_id, request.user.id, keyword)
+
+        if sort_info == SORT_MEMBER_NAME:
+            member_list = sorted(member_list, key=attrgetter('name'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REMAIN_COUNT:
+            member_list = sorted(member_list, key=attrgetter('lecture_rem_count'), reverse=int(sort_order_by))
+        elif sort_info == SORT_START_DATE:
+            member_list = sorted(member_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
+
         filename_temp += '진행중_회원목록'
         ws1.title = "진행중 회원"
         ws1['A1'] = '진행중 회원정보'
@@ -1623,6 +1632,16 @@ def export_excel_member_list_logic(request):
                                             + '-' + member_info.phone[7:]
             start_raw += 1
     else:
+        member_finish_list = func_get_member_end_list(class_id, request.user.id, keyword)
+
+        if sort_info == SORT_MEMBER_NAME:
+            member_finish_list = sorted(member_finish_list, key=attrgetter('name'), reverse=int(sort_order_by))
+        elif sort_info == SORT_REMAIN_COUNT:
+            member_finish_list = sorted(member_finish_list, key=attrgetter('lecture_rem_count'),
+                                        reverse=int(sort_order_by))
+        elif sort_info == SORT_START_DATE:
+            member_finish_list = sorted(member_finish_list, key=attrgetter('start_date'), reverse=int(sort_order_by))
+
         ws1.title = "종료된 회원"
         filename_temp += '종료된_회원목록'
         ws1['A1'] = '종료된 회원정보'
@@ -3864,7 +3883,7 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         error = None
 
         page = self.request.GET.get('page', 0)
-        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_NAME)
+        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)
@@ -3916,7 +3935,7 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         class_id = self.request.session.get('class_id', '')
 
         page = self.request.GET.get('page', 0)
-        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_NAME)
+        package_sort = self.request.GET.get('sort_val', SORT_PACKAGE_TYPE)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
         sort_info = int(package_sort)

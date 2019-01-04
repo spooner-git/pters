@@ -254,7 +254,7 @@ $(document).ready(function(){
     $(document).on('click', '._manage img._info_download', function(e){
         e.stopPropagation();
         // var memberID = $(this).parent('td').siblings('.id').text();
-        var dbID = $(this).parent('td').siblings('._id').attr('data-dbid');
+        var dbID = $(this).parent('div').siblings('._id').attr('data-dbid');
         if(platform_check == 'mobile'){
             alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.');
         }else{
@@ -306,10 +306,10 @@ $(document).ready(function(){
         }else{
             if($('#currentMemberList').css('display') == "block"){ //진행중인 회원 전체 목록
                 alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.');
-                location.href = "/trainer/export_excel_member_list/?finish_flag=0";
+                location.href = "/trainer/export_excel_member_list/?finish_flag=0&keyword="+keyword+"&sort_val="+member_sort_val+"&sort_order_by="+member_sort_order_by;
             }else if($('#finishedMemberList').css('display') == "block"){ //종료된 회원 전체 목록
                 alert('회원님 정보를 엑셀 다운로드를 시작합니다.\n 브라우저의 다운로드 창을 확인 해주세요.');
-                location.href = "/trainer/export_excel_member_list/?finish_flag=1";
+                location.href = "/trainer/export_excel_member_list/?finish_flag=1&keyword="+keyword+"&sort_val="+member_sort_val+"&sort_order_by="+member_sort_order_by;
             }else if($('#currentGroupList').css('display') == "block"){ //진행중인 그룹 전체 목록
                 alert('진행중 그룹 전체 목록 다운로드!!');
             }else if($('#finishedGroupList').css('display') == "block"){ //종료된 그룹 전체 목록
@@ -383,8 +383,8 @@ $(document).ready(function(){
     $(document).on('click', '._manage img._info_delete', function(e){
         e.stopPropagation();
         deleteTypeSelect = "memberinfodelete";
-        var selectedUserId = $(this).parent('td').siblings('._id').text();
-        var selectedUserName = $(this).parent('td').siblings('._tdname').text();
+        var selectedUserId = $(this).parent('div').siblings('._id').text();
+        var selectedUserName = $(this).parent('div').siblings('._tdname').text();
         var text = "회원 삭제";
         var text2 = "정말 ";
         var text3 = " 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>";
@@ -2396,9 +2396,10 @@ function package_type_dropdown_set(packagelistJSON){
     for(var i=0; i<len; i++){
         optionsToJoin.push('<option value="'+packagelistJSON.package_id[i]+'/package">['+packagelistJSON.package_type_cd_nm[i]+'] '+packagelistJSON.package_name[i]+'</option>');
     }
-    if(len == 1){
-        optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 수강권 만들기</option>");
-    }
+    // 의미 X (수업을 만들어야함
+    // if(len == 1){
+    //     optionsToJoin.push("<option value='go_to_make_new_package' style='font-weight:500;'>+새 수강권 만들기</option>");
+    // }
     $('.grouptypeselect').html(optionsToJoin.join(''));
 }
 
@@ -3144,7 +3145,7 @@ function memberListSet (type, jsondata){
         arrayResult[i] = '<div class="memberline" data-dbid="'+dbId+'" data-name="'+name+'"><div class="_countnum">'+(i+1)+'</div>'+addHtml+'</div>';
 
     }
-    memberListSet_len += len;
+    memberListSet_len = len+1;
     // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
     $('#uptext').text("회원("+jsondata.total_member_num+"명)");

@@ -2300,10 +2300,19 @@ function availableDateIndicator(availableStartTime, Endtime){
         $('.blackballoon').parent('td').addClass('option_notavailable');
         $('#menuDescription').hide();
     }else{
-        if(currentHour<Endtime && currentHour>=availableStartTime){
-            var availability = 'available';
-        }else{
-            var availability = 'notavailable';
+        if(Endtime >= availableStartTime){
+            if(currentHour<Endtime && currentHour>=availableStartTime){
+                var availability = 'available';
+            }else{
+                var availability = 'notavailable';
+            }
+        }
+        else{
+            if(currentHour>Endtime && currentHour <availableStartTime){
+                var availability = 'available';
+            }else{
+                var availability = 'notavailable';
+            }
         }
         for(i=currentDate; i<currentDate+Options.availDate; i++){
             if(i>lastDay[oriMonth-1] && oriMonth<12){
