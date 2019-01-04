@@ -755,6 +755,7 @@ $(document).on('click', 'div.groupWrap', function(e){
         var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
         var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
         var package_status = $('div.pters_selectbox_btn_selected > span').text();
+        var package_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
@@ -764,18 +765,18 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#page-base').css('display', 'none');
         $('#page-base-modifystyle').css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'ticket_info');
-        $('#popup_ticket_info_mobile_lecturelist').html('');
+        $('#popup_ticket_info_mobile_lecturelist').html('').attr("data-packageid", package_id);
         $('#popup_ticket_info_mobile').css({'display':'block'});
-        set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_type, package_membernum, package_memo);
+        set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo);
         if($(this).attr('data-packagestatecd')=='current'){
             get_package_member_list(package_id);
-            get_grouplist_in_package(package_id, 'current', "callback", function(jsondata){
+            get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
                 draw_grouplist_in_package($targetlecturelist, jsondata);
             });
         }
         else{
             get_end_package_member_list(package_id);
-            get_grouplist_in_package(package_id, 'finished', "callback", function(jsondata){
+            get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
                 draw_grouplist_in_package($targetlecturelist, jsondata);
             });
         }
@@ -994,9 +995,9 @@ function get_group_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -2463,19 +2464,25 @@ $(document).on("click", "#selected_lectures_to_package_wrap div.lecture_bubble i
 });
 
 //이미 만들어진 패키지에서, 그룹을 빼는 이벤트
-$(document).on("click", "div.groupPackageWrap div.lecture_bubble_mini img", function(e){
+// $(document).on("click", "div.groupPackageWrap div.lecture_bubble_mini img", function(e){
+$(document).on("click", "div.lecture_bubble_mini img", function(e){
     e.stopPropagation();
     var package_id = $(this).parents("div.groupPackageWrap").attr("data-packageid");
+    var package_number = $(this).parents("div.groupPackageWrap").find(".lecture_bubble_mini").length;
+    if($('#popup_ticket_info_mobile').css('display') == "block"){
+        package_id = $(this).parents("#popup_ticket_info_mobile_lecturelist").attr('data-packageid');
+        package_number = $(this).parents("#popup_ticket_info_mobile_lecturelist").find(".lecture_bubble_mini").length;
+    }
     var group_id = $(this).attr('data-groupid');
     var group_name = $(this).siblings('span').text();
 
-    if($(this).parents("div.groupPackageWrap").find(".lecture_bubble_mini").length < 2){
+    if(package_number < 2){
         alert("패키지내에는 최소 1개의 수강권이 존재해야 합니다.");
     }else{
         deleteTypeSelect = 'package_group_delete';
         $('#cal_popup_plandelete').show().attr({'data-packageid':package_id, 'data-groupid':group_id});
         $('#popup_delete_question').text(`정말 패키지에서 ${group_name} 수강권을 삭제하시겠습니까?`);
-        shade_index(150);
+        shade_index(250);
     };
 });
 
@@ -2486,6 +2493,10 @@ $(document).on("click", "img.btn_add_lecture_bubble_mini", function(e){
     $("#add_group_to_package_selector_popup").remove();
     var package_id = $(this).attr("data-packageid");
     var $targetHTML = $(this).parent("div.groupPackageWrap");
+    if($('#popup_ticket_info_mobile').css('display') == "block"){
+        $targetHTML = $("#popup_ticket_info_mobile_lecturelist");
+    }
+    
     if($targetHTML.find("#add_group_to_package_selector_popup").length <= 0){
         var html = `<div id="add_group_to_package_selector_popup" class="dropdown" data-packageid="${package_id}">
                         <ul id="add_group_to_package_selector" class="dropdown-menu pters_dropdown_custom_list">
@@ -2496,7 +2507,11 @@ $(document).on("click", "img.btn_add_lecture_bubble_mini", function(e){
         get_group_ing_list('callback', function(jsondata){
             fill_single_package_list_to_dropdown_to_make_new_package("#add_group_to_package_selector", "pters", jsondata);
         });
-        shade_index(100);
+        if($('#popup_ticket_info_mobile').css('display') == "block"){
+
+        }else{
+            shade_index(100);    
+        }
         $targetHTML.append(html);
     }
 });
@@ -2508,6 +2523,13 @@ $(document).on("click", "#add_group_to_package_selector li a", function(){
     var group_name = $(this).text();
     add_group_from_package(package_id, group_id, "callback", function(){
         alert(`${group_name}이 패키지에 추가 되었습니다.`);
+        if($("#popup_ticket_info_mobile").css('display') == "block"){
+            var package_statuscd = $('#mypackagestatuscd').attr('data-status');
+            var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
+            get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
+                draw_grouplist_in_package($targetlecturelist, jsondata);
+            });
+        }
         shade_index(-100);
     });
 });
@@ -2952,7 +2974,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
 
 
 //수강권 정보 모바일 팝업
-function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_type, package_membernum, package_memo){
+function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo){
     var color;
     if(package_status == "진행중"){
         color = "green";
@@ -2973,7 +2995,8 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                 <div id="ticketlectures"></div>
 
 
-                <div style="display:none;" id="mygroupid" data-groupid="${package_id}">그룹 id: ${package_id}</div>`;
+                <div style="display:none;" id="mypackageid" data-packageid="${package_id}"></div>
+                <div style="display:none;" id="mypackagestatuscd" data-status="${package_statuscd}"></div>`;
     $('#popup_ticket_info_mobile_basic').html(html);
 }
 //수강권 정보 모바일 팝업
@@ -3078,9 +3101,9 @@ function get_end_package_member_list(package_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 if(use == 'callback'){
@@ -3602,12 +3625,19 @@ function delete_group_from_package(package_id, group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 smart_refresh_member_group_class_list();
+                if($('#popup_ticket_info_mobile').css('display') == "block"){
+                    var package_statuscd = $('#mypackagestatuscd').attr('data-status');
+                    var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
+                    get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
+                        draw_grouplist_in_package($targetlecturelist, jsondata);
+                    });
+                }
                 if(use == "callback"){
                     callback();
                 }
@@ -3662,9 +3692,9 @@ function add_group_from_package(package_id, group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 smart_refresh_member_group_class_list();
@@ -3721,18 +3751,27 @@ function modify_package_from_list(package_id, package_name, package_note){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 smart_refresh_member_group_class_list();
-                toggle_lock_unlock_inputfield_grouplist(package_id, true);
+
                 $('img._info_cancel').hide();
-                if(bodywidth > 600){
+                if(bodywidth > 1000){
                     $('img._info_download, img._info_delete').show();
+                    toggle_lock_unlock_inputfield_grouplist(package_id, true);
                 }else{
                     $('img._info_delete').show();
+                }
+
+                if($('#popup_ticket_info_mobile').css('display') == "block"){
+                    if(package_name.length != 0){
+                       $('#uptext3').text(package_name);
+                       $('#ticketnametitle').hide();
+                    }
+                    $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                 }
                 console.log('success');
             }

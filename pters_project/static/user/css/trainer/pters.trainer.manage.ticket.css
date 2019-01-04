@@ -101,6 +101,7 @@
 		max-height: inherit;
 		height: 100%;
 		width: 100%;
+		max-width: unset;
 	}
 	.add_group_to_package_dropdown_title{
 
@@ -746,7 +747,7 @@ div._manage{
 		width: 100%;
 		height: 100%;
 		background-color: #ffffff;
-		z-index: 150;
+		z-index: 100;
 		padding: 50px 0px 0px 0px;
 		height: auto;
 	}	
