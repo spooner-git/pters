@@ -254,7 +254,7 @@ $(document).ready(function(){
     $(document).on('click', '._manage img._info_download', function(e){
         e.stopPropagation();
         // var memberID = $(this).parent('td').siblings('.id').text();
-        var dbID = $(this).parent('td').siblings('._id').attr('data-dbid');
+        var dbID = $(this).parent('div').siblings('._id').attr('data-dbid');
         if(platform_check == 'mobile'){
             alert('엑셀 다운로드는 PC에서만 다운로드 가능합니다.');
         }else{
@@ -383,8 +383,8 @@ $(document).ready(function(){
     $(document).on('click', '._manage img._info_delete', function(e){
         e.stopPropagation();
         deleteTypeSelect = "memberinfodelete";
-        var selectedUserId = $(this).parent('td').siblings('._id').text();
-        var selectedUserName = $(this).parent('td').siblings('._tdname').text();
+        var selectedUserId = $(this).parent('div').siblings('._id').text();
+        var selectedUserName = $(this).parent('div').siblings('._tdname').text();
         var text = "회원 삭제";
         var text2 = "정말 ";
         var text3 = " 회원님을 삭제하시겠습니까?<br>삭제하면 복구할 수 없습니다.</p>";
