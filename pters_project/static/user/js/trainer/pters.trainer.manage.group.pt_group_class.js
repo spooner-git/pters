@@ -1951,7 +1951,7 @@ function get_groupmember_list(group_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata);
                 }else{
-                    if(bodywidth < 600){
+                    if(bodywidth < 1000){
                         groupMemberListSet_mobile(group_id, jsondata);
                     }else{
                         groupMemberListSet(group_id, jsondata); 
@@ -2013,7 +2013,7 @@ function get_end_groupmember_list(group_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata)
                 }else{
-                    if(bodywidth < 600){
+                    if(bodywidth < 1000){
                         groupMemberListSet_mobile(group_id, jsondata);
                     }else{
                         groupMemberListSet(group_id, jsondata); 
@@ -2193,7 +2193,7 @@ function groupMemberListSet(group_id, jsondata){
 function groupMemberListSet_mobile(group_id, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
-    if(bodywidth < 600){
+    if(bodywidth < 1000){
         htmlToJoin.push(`
                             <div id="mobile_comment_1">
                                 <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
@@ -2203,7 +2203,7 @@ function groupMemberListSet_mobile(group_id, jsondata){
                             </div>
                         `
                         )
-    }else if(bodywidth >= 600){
+    }else if(bodywidth >= 1000){
         htmlToJoin.push('<div class="groupmemberline_thead">'+
                         '<div class="_tdname">회원명</div>'+
                         '<div class="_id">회원 ID</div>'+
@@ -2242,24 +2242,20 @@ function groupMemberListSet_mobile(group_id, jsondata){
         var htmlEnd = '</div>';
 
         var memberRow;
-        if(bodywidth < 600){
-            memberRow = htmlStart +
-            '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
-            '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
-            '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
-                                                                                +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
-                                                                                '</div>';
+        memberRow = htmlStart +
+        '<div class="_tdname" data-name="'+groupmember_lastname+groupmember_firstname+'">'+groupmember_lastname+groupmember_firstname+'</div>' +
+        '<div class="_id" data-dbid="'+groupmember_dbid+'" data-name="'+groupmember_id+'">'+groupmember_id+'</div>' +
+        '<div class="_regandremaincount" data-name="'+groupmember_regcount+'"><p><span style="margin-right:20px;">등록 횟수</span>'+groupmember_regcount+'</p>'
+                                                                            +'<p>'+'<span style="margin-right:20px;">잔여 횟수</span>'+groupmember_remcount+'</p>'+
+                                                                            '</div>';
 
-            if(grouptype!='ONE_TO_ONE') {
-                memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
-            }else{
-                memberRow += '<div class="" style="width:10%"></div>';
-            }
-           
-
-            memberRow += htmlEnd;
+        if(grouptype!='ONE_TO_ONE') {
+            memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
+        }else{
+            memberRow += '<div class="" style="width:10%"></div>';
         }
 
+        memberRow += htmlEnd;
 
         htmlToJoin.push(memberRow);
     }
