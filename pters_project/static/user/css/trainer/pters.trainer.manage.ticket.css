@@ -729,6 +729,10 @@ div._regcount{
 div._remaincount{
 	width: 17%;
 }
+div._regandremaincount{
+	width: 30%;
+	text-align: left;
+}
 div._contact{
 	width: 35%;
 }
