@@ -1605,20 +1605,18 @@ $(document).ready(function(){
             }
         }else if($('#popup_ticket_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
-                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
-                $('#mygroupnametitle').show();
+                $('#ticketnametitle').show();
                 $('.mobile_group_color_palette').show();
             }else if($(this).attr('data-type') == "modify" ){
-                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+                $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');
-                var group_id = $('#mygroupid').attr('data-groupid');
-                var group_name = $('#mygroupname input').val();
-                var group_capacity = $('#mygroupcapacity input').val();
-                var group_memo = $('#mygroupmemo input').val();
-                var group_type = "";
-                modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+                var package_id = $('#mypackageid').attr('data-packageid');
+                var package_name = $('#ticketname input').val();
+                var package_note = $('#ticketmemo input').val();
+                modify_package_from_list(package_id, package_name, package_note);
             }
         }else if($('#memberInfoPopup').css('display') == "block"){
             var text = '회원 정보 수정';

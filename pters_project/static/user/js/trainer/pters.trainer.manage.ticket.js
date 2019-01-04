@@ -2974,7 +2974,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
 
 
 //수강권 정보 모바일 팝업
-function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd,package_type, package_membernum, package_memo){
+function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo){
     var color;
     if(package_status == "진행중"){
         color = "green";
@@ -2995,7 +2995,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                 <div id="ticketlectures"></div>
 
 
-                <div style="display:none;" id="mygroupid" data-groupid="${package_id}"></div>
+                <div style="display:none;" id="mypackageid" data-packageid="${package_id}"></div>
                 <div style="display:none;" id="mypackagestatuscd" data-status="${package_statuscd}"></div>`;
     $('#popup_ticket_info_mobile_basic').html(html);
 }
@@ -3751,18 +3751,26 @@ function modify_package_from_list(package_id, package_name, package_note){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 smart_refresh_member_group_class_list();
-                toggle_lock_unlock_inputfield_grouplist(package_id, true);
+
                 $('img._info_cancel').hide();
-                if(bodywidth > 600){
+                if(bodywidth > 1000){
                     $('img._info_download, img._info_delete').show();
+                    toggle_lock_unlock_inputfield_grouplist(package_id, true);
                 }else{
                     $('img._info_delete').show();
+                }
+
+                if($('#popup_ticket_info_mobile').css('display') == "block"){
+                    if(package_name.length != 0){
+                       $('#uptext3').text(package_name);
+                       $('#ticketnametitle').hide();
+                    }
                 }
                 console.log('success');
             }
