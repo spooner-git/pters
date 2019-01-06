@@ -3910,11 +3910,11 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         elif sort_info == SORT_PACKAGE_CREATE_DATE:
             package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
-        # for package_info in package_data:
-        #     package_info.package_group_data = PackageGroupTb.objects.select_related(
-        #         'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
-        #                            package_tb_id=package_info.package_id, group_tb__use=USE,
-        #                            use=USE).order_by('-group_tb__group_type_cd', '-group_tb_id')
+        for package_info in package_data:
+            package_info.package_group_data = PackageGroupTb.objects.select_related(
+                'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+                                   package_tb_id=package_info.package_id, group_tb__use=USE,
+                                   use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
