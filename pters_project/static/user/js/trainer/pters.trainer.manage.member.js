@@ -1783,6 +1783,7 @@ function send_modified_member_base_data(dbID){
 }
 
 function float_btn_managemember(option){
+    mutex_val = 0;
     var bodywidth = window.innerWidth;
     var text = '신규 회원 등록';
     if(Options.language == "JPN"){
@@ -1817,9 +1818,10 @@ function float_btn_managemember(option){
         scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
             // $('#page_managemember').css({'height':'0'});
+            current_Scroll_Position = $(document).scrollTop();
             $('#page_managemember').css({'display':'none'});
-            $('#page-base').css('display','none');
-            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display', 'none');
+            $('#page-base-addstyle').css('display', 'block');
             shade_index(100);
         }
 
@@ -1845,6 +1847,7 @@ function float_btn_managemember(option){
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             //$('#page_managemember').css({'height':'0'});
+            current_Scroll_Position = $(document).scrollTop();
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -1877,6 +1880,7 @@ function float_btn_managemember(option){
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             // $('#page_managemember').css({'height':'0'});
+            current_Scroll_Position = $(document).scrollTop();
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -1905,6 +1909,7 @@ function float_btn_managemember(option){
         scrollToDom(selector_page_addmember);
         if(bodywidth < 600){
             // $('#page_managemember').css({'height':'0'});
+            current_Scroll_Position = $(document).scrollTop();
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -1923,6 +1928,7 @@ function float_btn_managemember(option){
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             //$('#page_managemember').css({'height':'0'});
+            current_Scroll_Position = $(document).scrollTop();
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
@@ -1958,6 +1964,7 @@ function float_btn_managemember(option){
         scrollToDom($('#page_addmember'));
         if(bodywidth < 600){
             //$('#page_managemember').css({'height':'0'});
+            current_Scroll_Position = $(document).scrollTop();
             $('#page_managemember').css({'display':'none'});
             $('#page-base').css('display','none');
             $('#page-base-addstyle').css('display','block');
