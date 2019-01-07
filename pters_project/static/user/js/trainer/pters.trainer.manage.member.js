@@ -2960,9 +2960,9 @@ function memberListSet (type, jsondata){
     var tbodyEnd = '</div>';
     var tbodyToAppend = $(tbodyStart);
     var data;
-    var countList;
+    // var countList;
     var nameList;
-    var dateList;
+    // var dateList;
     var $table;
     var $tabletbody;
     var $membernum;
@@ -2970,9 +2970,9 @@ function memberListSet (type, jsondata){
     switch(type){
         case 'current':
             data = DataFormatting(jsondata);
-            countList = data["countSorted"];
+            // countList = data["countSorted"];
             nameList = data["nameSorted"];
-            dateList = data["dateSorted"];
+            // dateList = data["dateSorted"];
             $table = $('#currentMember');
             $tabletbody = $('#currentMember > div');
             $membernum = $('#memberNumber_current_member');
@@ -2980,9 +2980,9 @@ function memberListSet (type, jsondata){
             break;
         case 'finished':
             data = DataFormatting(jsondata);
-            countList = data["countSorted"];
+            // countList = data["countSorted"];
             nameList = data["nameSorted"];
-            dateList = data["dateSorted"];
+            // dateList = data["dateSorted"];
             $table = $('#finishedMember');
             $tabletbody = $('#finishedMember > div');
             $membernum = $('#memberNumber_finish_member');
@@ -3151,7 +3151,7 @@ function memberListSet (type, jsondata){
 
     }
     memberListSet_len = len+1;
-    // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
     $('#uptext').text("회원("+jsondata.total_member_num+"명)");
 
@@ -3389,7 +3389,7 @@ function memberListSet_test(type, jsondata){
 
     }
     memberListSet_len += len;
-    // $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_member_num+'</span>'+'명');
 
     $('#uptext').text("회원("+jsondata.total_member_num+"명)");
 

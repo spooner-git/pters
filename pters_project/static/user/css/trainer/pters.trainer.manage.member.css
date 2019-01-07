@@ -1155,6 +1155,7 @@ span.summaryInnerBoxText_Repeatendtext{
 
 .memberNum{
 	float: right;
+	display: none;
 }
 
 #finishMemberNum{
@@ -1881,6 +1882,7 @@ span.summaryInnerBoxText_Repeatendtext{
 		left: 50%;
 		transform: translateX(-50%);
 		line-height: 24px;
+		display:block;
 	}
 
 	.memberAlign{

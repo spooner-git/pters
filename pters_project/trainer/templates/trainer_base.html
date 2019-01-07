@@ -371,12 +371,12 @@
                             </a>
                         </div> -->
                         
-                            <div class="sidebar_div" onclick="sideGoPage('work_manage', 'text-workmanage')"><img src={% static_url "user/res/icon-statistic.png" %} class="sidebar_icon" alt="#">
+                            <div class="sidebar_div" onclick="sideGoPage('work_manage', 'text-workmanage')"><img class="sidebar_icon" alt="#" src={% static_url "user/res/icon-statistic.png" %}>
                                 <a class="sidebar_text text-workmanage">
                                 </a>
                             </div>
                             
-                        <div class="sidebar_div"  onclick="sideGoPage('alarm', 'text-alarm')"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div"  onclick="sideGoPage('alarm', 'text-alarm')"><img class="sidebar_icon" alt="#" src={% static_url "user/res/alarm/alarm_on.png" %}>
                             <a class="sidebar_text text-alarm">
                             </a>
                         </div>
@@ -622,11 +622,11 @@
 <script type="text/javascript" src={% static_url "common/js/jquery.touch.js" %}></script>
 <script type="text/javascript" src={% static_url "common/js/swiper.jquery.min.js" %}></script>
 
-{#<script async src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>#}
-{#<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>#}
-{#<link rel="manifest" href={% static_url "manifest.json" %}>#}
-{#<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>#}
-<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
+<script async src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
+<link rel="manifest" href={% static_url "manifest.json" %}>
+<script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
+<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3"></audio>
 <script>
 function playSound() {
       var sound = document.getElementById("audio");
@@ -684,59 +684,58 @@ function playSound() {
 {#            $('a.text-payment').parent('div').css('display', 'inline-block');#}
     }
 
-{#    window.addEventListener('load', function () {#}
-{##}
-{#        if(platform_check=='pc'){#}
-{#            Push.Permission.request(onGranted, onDenied);#}
-{##}
-{#            function onDenied() {#}
-{#                console.log('알람 거절 상태')#}
-{#            }#}
-{#            function onGranted() {#}
-{#                console.log('알람 승인 상태')#}
-{#            }#}
-{#        }#}
-{##}
-{#        if(platform_check=='pc'){#}
-{#            registrationServiceWorker('{{ request.session.push_token }}');#}
-{#        }#}
-{##}
-{#        if(platform_check=='pc') {#}
-{#            navigator.serviceWorker.getRegistrations().then(function (registrations) {#}
-{#                registrations.forEach(function (v) {#}
-{#                    if (v.active) {#}
-{#                        if (v.scope == "http://localhost:8000/user/js/push/"#}
-{#                            || v.scope == "https://www.pters.co.kr/user/js/push/"#}
-{#                            || v.scope == "https://pters.co.kr/user/js/push/"#}
-{#                            || v.scope == "https://kr.pters.co.kr/user/js/push/"#}
-{#                            || v.scope == "https://jp.pters.co.kr/user/js/push/"#}
-{#                            || v.scope == "https://us.pters.co.kr/user/js/push/"#}
-{#                            || v.scope == "https://spooner-test.pters.co.kr/user/js/push/") {#}
-{#                            v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')#}
-{#                        }#}
-{#                    }#}
-{#                });#}
-{#            });#}
-{#        }#}
-{#        function messageCommunicationWithWorker(){#}
-{#            navigator.serviceWorker.getRegistrations().then(function(registrations) {#}
-{#                registrations.forEach(function (v) {#}
-{#                        send_message_to_sw(v.active, "hello cal week").then(function (m) {#}
-{#                        playSound();#}
-{#                        console.log(window.location.pathname);#}
-{#                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')|| (window.location.pathname=='/trainer/cal_total/')){#}
-{#                            ajaxClassTime();#}
-{#                        }#}
-{#                        messageCommunicationWithWorker();#}
-{#                    });#}
-{#                });#}
-{#            });#}
-{#        }#}
-{##}
-{#        if(platform_check=='pc') {#}
-{#            messageCommunicationWithWorker();#}
-{#        }#}
-{#    });#}
+    window.addEventListener('load', function () {
+
+        if(platform_check=='pc'){
+            Push.Permission.request(onGranted, onDenied);
+
+            function onDenied() {
+                console.log('알람 거절 상태')
+            }
+            function onGranted() {
+                console.log('알람 승인 상태')
+            }
+        }
+
+        if(platform_check=='pc'){
+            registrationServiceWorker('{{ request.session.push_token }}');
+        }
+
+        if(platform_check=='pc') {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                registrations.forEach(function (v) {
+                    if (v.active) {
+                        if (v.scope == "http://localhost:8000/user/js/push/"
+                            || v.scope == "https://www.pters.co.kr/user/js/push/"
+                            || v.scope == "https://pters.co.kr/user/js/push/"
+                            || v.scope == "https://kr.pters.co.kr/user/js/push/"
+                            || v.scope == "https://jp.pters.co.kr/user/js/push/"
+                            || v.scope == "https://us.pters.co.kr/user/js/push/"
+                            || v.scope == "https://spooner-test.pters.co.kr/user/js/push/") {
+                            v.unregister('/static/user/js/push/firebase-messaging-sw.js?v=t81')
+                        }
+                    }
+                });
+            });
+        }
+        function messageCommunicationWithWorker(){
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                registrations.forEach(function (v) {
+                        send_message_to_sw(v.active, "hello cal week").then(function (m) {
+                        playSound();
+                        if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')|| (window.location.pathname=='/trainer/cal_total/')){
+                            ajaxClassTime();
+                        }
+                        messageCommunicationWithWorker();
+                    });
+                });
+            });
+        }
+
+        if(platform_check=='pc') {
+            messageCommunicationWithWorker();
+        }
+    });
 
     </script>
 <script type="text/javascript" src={% static_url "user/js/pters.calendar.calc.js" %}></script>
@@ -1266,12 +1265,11 @@ function playSound() {
             center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
             center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
         }
-        console.log(center_subject)
         return center_subject
     }
 
 
-    $('#popup_lecture_select .button_close_popup').click(function(){
+    $('.button_close_popup #popup_lecture_select').click(function(){
         $(this).parents('div.popups').fadeOut('fast');
         shade_index(-100);
     });

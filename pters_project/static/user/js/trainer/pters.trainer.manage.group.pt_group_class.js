@@ -1776,12 +1776,12 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_group');
             $targetHTML = $('#currentGroupList');
-            text_membernum = "진행중인 그룹 ";
+            text_membernum = "진행중인 수업 ";
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
             $targetHTML = $('#finishedGroupList');
-            text_membernum = "종료된 그룹 ";
+            text_membernum = "종료된 수업 ";
             break;
     }
 
@@ -1906,7 +1906,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수업이 없습니다.</div>');
         }
     }
-    //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'개</span>');
     //$targetHTML.html(htmlToJoin2.join('') + htmlToJoin.join(''))
     return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
 }

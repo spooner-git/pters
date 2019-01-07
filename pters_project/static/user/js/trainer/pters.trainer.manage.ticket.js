@@ -190,8 +190,8 @@ function shiftPackageList(type){
     switch(type){
         case "current":
             ticket_tab = TAB_ING;
-            $('#currentPackageList, #memberNumber_current_group').css('display', 'block');
-            $('#memberNumber_finish_group, #finishedPackageList, #finishGroupNum').css('display', 'none');
+            $('#currentPackageList, #memberNumber_current_ticket').css('display', 'block');
+            $('#memberNumber_finish_ticket, #finishedPackageList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
@@ -209,8 +209,8 @@ function shiftPackageList(type){
         case "finished":
             ticket_tab = TAB_END;
 
-            $('#finishedPackageList, #memberNumber_finish_group').css('display', 'block');
-            $('#memberNumber_current_group, #currentPackageList, #currentGroupNum').css('display', 'none');
+            $('#finishedPackageList, #memberNumber_finish_ticket').css('display', 'block');
+            $('#memberNumber_current_ticket, #currentPackageList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
@@ -1770,7 +1770,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 그룹이 없습니다.</div>');
         }
     }
-    //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'</span>');
     //$targetHTML.html(htmlToJoin2.join('') + htmlToJoin.join(''))
     return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
 }
@@ -2747,14 +2747,14 @@ function package_ListHtml(option, jsondata){ //option : current, finished
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
         case 'current':
-            $membernum = $('#memberNumber_current_group');
+            $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중인 그룹 ";
+            text_membernum = "진행중인 수강권 ";
             break;
         case 'finished':
-            $membernum = $('#memberNumber_finish_group');
+            $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료된 그룹 ";
+            text_membernum = "종료된 수강권 ";
             break;
     }
     var htmlToAdd = [];
@@ -2866,6 +2866,8 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
         }
     }
+
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_package_num+'개</span>');
     return htmlToAdd.join('')+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
 }
 
@@ -2874,12 +2876,12 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
     $('#uptext').text("수강권("+jsondata.total_package_num+"개)");
     switch(option){
         case 'current':
-            $membernum = $('#memberNumber_current_group');
+            $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
             text_membernum = "진행중인 그룹 ";
             break;
         case 'finished':
-            $membernum = $('#memberNumber_finish_group');
+            $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
             text_membernum = "종료된 그룹 ";
             break;
