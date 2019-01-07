@@ -339,9 +339,10 @@ $(document).on('click', 'img.add_listedMember', function(){
                 $('#form_add_member_group_plan_memberid').val(selected_dbid);
                 send_add_groupmember_plan('callback', function(data){
                     var selector_popup_btn_viewGroupParticipants = $('#popup_btn_viewGroupParticipants');
-                    var group_schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
+                    var group_schedule_id = $('#cal_popup_planinfo').attr('data-scheduleid');
                     var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
                     var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
+                    console.log("group_schedule_id", group_schedule_id)
                     get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                         ajaxClassTime();
                         draw_groupParticipantsList_to_popup(jsondata, group_id, group_schedule_id, max);
@@ -430,11 +431,12 @@ $(document).on('click', 'img.add_listedMember', function(){
 $(document).on('click', 'img.add_wholemember_plan', function(){
     var selected_dbid = $('#subpopup_groupParticipans_lecturelist_wrap').attr('data-dbid');
     var selected_leid = $(this).parents("div.groupParticipans_lectureList_table").attr('data-leid');
-    var selected_schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
+    var selected_schedule_id = $('#cal_popup_planinfo').attr('data-scheduleid');
     if(!$(this).hasClass('disabled_button')){
         send_add_othergroupmember_plan(selected_dbid, selected_leid, selected_schedule_id, "callback", function(){
             var selector_popup_btn_viewGroupParticipants = $('#popup_btn_viewGroupParticipants');
-            var group_schedule_id = $('#cal_popup_planinfo').attr('schedule-id');
+            // var group_schedule_id = $('#cal_popup_planinfo').attr('data-scheduleid');
+            var group_schedule_id = selected_schedule_id;
             var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
             var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){

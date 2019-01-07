@@ -191,7 +191,7 @@ function toggleGroupParticipantsList(onoff){
             selector_popup_btn_viewGroupParticipants_img.css('transform', 'rotate(180deg)');
             var group_id = selector_popup_btn_viewGroupParticipants.attr('data-groupid');
             var max = selector_popup_btn_viewGroupParticipants.attr('data-membernum');
-            var group_schedule_id = selector_popup_btn_viewGroupParticipants.attr('group-schedule-id');
+            var group_schedule_id = selector_popup_btn_viewGroupParticipants.attr('data-scheduleid');
             $('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button');
             get_group_plan_participants(group_schedule_id, 'callback', function(jsondata){
                 $('#popup_btn_complete, #popup_btn_delete').removeClass('disabled_button');
