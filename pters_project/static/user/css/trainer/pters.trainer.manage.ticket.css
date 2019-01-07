@@ -32,7 +32,7 @@
 	border: 1px solid #cccccc;
 }
 #packagename, #packagememo{
-	width: 60%;
+	width: 100%;
 	height: 35px;
 	border: 1px solid #cccccc;
 }
@@ -46,7 +46,7 @@
 }
 #lecture_list_to_package{
 	height: 35px;
-	width: 60%;
+	width: 100%;
 }
 	.lecture_bubble{
 		display: inline-block;
@@ -78,6 +78,8 @@
 		margin-left: 15px;
 		margin-bottom: 3px;
 		padding: 5px;
+		border: 1px solid #282828;
+		border-radius: 50%;
 		cursor: pointer;
 	}
 #add_group_to_package_selector_popup{
@@ -90,7 +92,7 @@
 	height: auto;
 	max-height: 350px;
 	background-color: #ffffff;
-	border: 1px solid #282828;
+	/*border: 1px solid #282828;*/
 	z-index: 300;
 }
 	#add_group_to_package_selector{
@@ -307,20 +309,13 @@ img.substract_addedMember{
 	font-weight: bold;
 }
 
-.groupWrap:hover{
-	background: #e4e4e4;
-	font-weight: bold;
 
-}
 
 .red_color_text{
 	color: #fe4e65;
 	-webkit-text-fill-color: #fe4e65 !important;
 }
 
-.groupWrap:active{
-	background: #cccccc;
-}
 
 /*.groupWrap > div{
 	display: table-cell;
@@ -645,6 +640,9 @@ div._groupmanage img._info_delete{
 		margin-bottom: 3px;
 		transform: rotate(180deg);
 	}
+	#packagename, #packagememo, #lecture_list_to_package{
+		width: 60%;
+	}
 	
 }
 @media(min-width: 1000px){
@@ -659,7 +657,13 @@ div._groupmanage img._info_delete{
 		margin: 0;
 		border-radius: unset;
 	}
-
+	.groupWrap:hover{
+		background: #e4e4e4;
+		font-weight: bold;
+	}
+	.groupWrap:active{
+		background: #cccccc;
+	}
 	.groupWrap > div{
 		display: table-cell;
 		line-height: 36px;
@@ -869,6 +873,18 @@ div._manage{
 		display: none;
 	}
 		.mobile_status_color_palette > div{
+			cursor: pointer;
 			display: inline-block;
+			border: 1px solid #cccccc;
+			padding: 0 5px 0 5px;
+			color:#9a9a9a;
 		}
+		.mobile_status_selected{
+			color: #fe4e65 !important;
+		}
+	#ticketdelete{
+		cursor: pointer;
+		background-color: #efefef;
+		border: 1px solid #cccccc;
+	}
 /*모바일에서 그룹을 클릭하면 나오는 팝업*/

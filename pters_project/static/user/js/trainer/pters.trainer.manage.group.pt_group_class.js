@@ -375,14 +375,14 @@ $(document).on('click', 'img.add_listedMember', function(){
                         
                         if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
                             alert('지난 일정 참석자 정상 등록되었습니다.');
-                            if(bodywidth<600){
-                                $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
-                            }
+                            // if(bodywidth<600){
+                            //     $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                            // }
                         }else{
                             alert('일정 참석자 정상 등록되었습니다.');
-                            if(bodywidth<600){
-                                $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
-                            }
+                            // if(bodywidth<600){
+                            //     $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                            // }
                         }
 
                     });
@@ -474,14 +474,14 @@ $(document).on('click', 'img.add_wholemember_plan', function(){
                 enable_group_member_add_after_ajax();
                 if($('#cal_popup_planinfo').attr('group_plan_finish_check') == 1){
                     alert('지난 일정 참석자 정상 등록되었습니다.');
-                    if(bodywidth<600){
-                        $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
-                    }
+                    // if(bodywidth<600){
+                    //     $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                    // }
                 }else{
                     alert('일정 참석자 정상 등록되었습니다.');
-                    if(bodywidth<600){
-                        $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
-                    }
+                    // if(bodywidth<600){
+                    //     $('#subpopup_addByList_plan').css({'top': ($('#cal_popup_planinfo').height()-$('#subpopup_addByList_plan').height())/2})
+                    // }
                 }
 
             });
