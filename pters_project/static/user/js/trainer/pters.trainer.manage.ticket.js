@@ -865,7 +865,7 @@ $(document).on('click', '._groupmanage img._info_delete', function(e){
 });
 
     //모바일
-$(document).on('click', '#ticketdelete > img', function(e){
+$(document).on('click', '#ticketdelete', function(e){
     e.stopPropagation();
     group_delete_JSON = {"package_id":"", "fullnames":[], "ids":[]};
     if($(this).css('opacity') == 1){
@@ -3210,11 +3210,11 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
         selected2 = "mobile_status_selected";
     }
     var status    = `<div class="mobile_status_color_palette" data-groupid=${package_id}>
-                        <div class="ticket_ongoing ${selected1}" data-status="resume" style="color:#9a9a9a;margin-right:20px;">진행중</div>
-                        <div class="ticket_finished ${selected2}" data-status="complete" style="color:#9a9a9a">종료</div>
+                        <div class="ticket_ongoing ${selected1}" data-status="resume" style="margin-right:10px;">진행중</div>
+                        <div class="ticket_finished ${selected2}" data-status="complete">종료</div>
                     </div>`;
 
-    var html = `<div class="pters_table" style="display:none;" id="ticketdelete"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;" data-packageid="${package_id}"></div>
+    var html = `<div class="pters_table" style="display:none;" id="ticketdelete" data-packageid="${package_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
                 <div class="pters_table" style="display:none;" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" readonly></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">회원수</div><div class="pters_table_cell">${package_membernum}명</div></div>

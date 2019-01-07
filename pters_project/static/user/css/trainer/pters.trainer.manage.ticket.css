@@ -875,8 +875,15 @@ div._manage{
 	}
 		.mobile_status_color_palette > div{
 			display: inline-block;
+			border: 1px solid #cccccc;
+			padding: 0 5px 0 5px;
+			color:#9a9a9a;
 		}
 		.mobile_status_selected{
 			color: #282828 !important;
 		}
+	#ticketdelete{
+		background-color: #efefef;
+		border: 1px solid #cccccc;
+	}
 /*모바일에서 그룹을 클릭하면 나오는 팝업*/
