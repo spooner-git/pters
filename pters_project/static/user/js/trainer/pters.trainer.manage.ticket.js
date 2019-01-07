@@ -207,7 +207,15 @@ function shiftPackageList(type){
                     var group_class_Html = package_ListHtml('current', jsondata);
                     $('#currentPackageList').html(group_class_Html);
                 });
-            }else{
+            }else if (bodywidth >600){
+                $('#memberNumber_current_ticket').css('display', 'block');
+                $('#memberNumber_finish_ticket').css('display', 'none');
+                get_package_ing_list("callback", function(jsondata){
+                    var group_class_Html = package_ListHtml_mobile('current', jsondata);
+                    $('#currentPackageList').html(group_class_Html);
+                });
+            }
+            else{
                 get_package_ing_list("callback", function(jsondata){
                     var group_class_Html = package_ListHtml_mobile('current', jsondata);
                     $('#currentPackageList').html(group_class_Html);
@@ -227,6 +235,13 @@ function shiftPackageList(type){
                 get_package_end_list("callback", function(jsondata){
                     // console.log("get_package_end_list", jsondata)
                     var group_class_Html = package_ListHtml('finished', jsondata);
+                    $('#finishedPackageList').html(group_class_Html);
+                });
+            }else if (bodywidth >600){
+                $('#memberNumber_finish_ticket').css('display', 'block');
+                $('#memberNumber_current_ticket').css('display', 'none');
+                get_package_end_list("callback", function(jsondata){
+                    var group_class_Html = package_ListHtml_mobile('finished', jsondata);
                     $('#finishedPackageList').html(group_class_Html);
                 });
             }else{
@@ -3015,12 +3030,12 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
-            text_membernum = "진행중인 그룹 ";
+            text_membernum = "진행중인 수강권 ";
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
             $targetHTML = $('#finishedPackageList');
-            text_membernum = "종료된 그룹 ";
+            text_membernum = "종료된 수강권 ";
             break;
     }
     var htmlToAdd = [];
@@ -3107,6 +3122,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
             htmlToJoin.push('<div class="groupWrap" data-packagestatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수강권이 없습니다.</div>');
         }
     }
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_package_num+'개</span>');
     ticket_mutex_val = 1;
     return htmlToAdd.join('')+ htmlToJoin2.join('') + htmlToJoin.join('') + htmlToJoin3.join('');
 }

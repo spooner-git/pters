@@ -132,10 +132,12 @@ function shiftPtGroupClassList(type){
             $('#currentGroupList').css('display', 'block');
             $('#finishedGroupList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
-                $('#memberNumber_current_group').css('display', 'block');
-                $('#memberNumber_finish_group').css('display', 'none');
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
+            }
+            if(bodywidth > 600){
+                $('#memberNumber_current_group').css('display', 'block');
+                $('#memberNumber_finish_group').css('display', 'none');
             }
             break;
         case "finished":
@@ -151,6 +153,10 @@ function shiftPtGroupClassList(type){
                 $('#memberNumber_current_group').css('display', 'none');
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
+            }
+            if(bodywidth > 600){
+                $('#memberNumber_finish_group').css('display', 'block');
+                $('#memberNumber_current_group').css('display', 'none');
             }
             break;
     }

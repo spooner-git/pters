@@ -2257,6 +2257,11 @@ function shiftMemberList(type){
 
                 selector_MEMBER_THEAD__memberaddbutton.show();
             }
+            if(bodywidth>600){
+                $('#memberNumber_current_member').css('display', 'block');
+                $('#memberNumber_finish_member').css('display','none');
+
+            }
             
             break;
         case "finished":
@@ -2272,6 +2277,11 @@ function shiftMemberList(type){
                 $('#memberNumber_finish_member').css('display', 'block');
                 $('#memberNumber_current_member').css('display','none');
                 selector_MEMBER_THEAD__memberaddbutton.show();
+            }
+            if(bodywidth>600){
+                $('#memberNumber_finish_member').css('display', 'block');
+                $('#memberNumber_current_member').css('display','none');
+
             }
             break;
     }

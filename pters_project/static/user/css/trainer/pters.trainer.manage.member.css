@@ -1617,6 +1617,10 @@ span.summaryInnerBoxText_Repeatendtext{
 		color: #ffffff;
 	}
 
+	.memberNum{
+		/*float: right;*/
+		display: block;
+	}
 }
 
 .phone_sms_gap{
