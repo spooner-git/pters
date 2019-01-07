@@ -1639,7 +1639,7 @@ $(document).ready(function(){
     canvas.addEventListener("touchcancel", listener);
 
     $("canvas").attr("width", 324).attr("height", 200);
-    $(document).on('click', 'div.classTime, div.plan_raw, div.groupTime, #popup_btn_sign_close', function(){
+    $(document).on('click', 'div._class, div.plan_raw, div._group, #popup_btn_sign_close', function(){
         ctx.clearRect(0, 0, 324, 300);
         $('#cal_popup').css({'top':'35%'});
     });
@@ -3642,7 +3642,6 @@ function send_plan_delete(option, callbackoption, callback){
         selected_date = $('#id_date_info_off').val();
     }else if(option == "group"){
         $form = $('#daily-pt-delete-form');
-        $('#id_schedule_id').val($('#cal_popup_plandelete').attr('schedule-id'));
         serializeArray = $form.serializeArray();
         url_ = '/schedule/delete_group_schedule/';
         selected_date = $('#id_date_info').val();
@@ -3655,6 +3654,7 @@ function send_plan_delete(option, callbackoption, callback){
 
         beforeSend:function(xhr){
             beforeSend();
+            console.log("selecteddate", selected_date,serializeArray);
             pters_option_inspector("plan_delete", xhr, selected_date);
         },
 

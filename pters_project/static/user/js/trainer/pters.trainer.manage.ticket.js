@@ -13,6 +13,9 @@ var ticket_mutex_val = 1;
 var db_id_flag = 0;
 var user_id_flag = 1;
 
+var ticket_ing_list_cache;
+var ticket_end_list_cache;
+
 /////////////옵션
 if(Options.auth_class == 0){
     $('._groupaddbutton').attr('onclick', "purchase_annai()");
@@ -776,12 +779,27 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth <= 1000){
-        var package_name = $(this).find('div._groupname_mobile').text();
-        var package_type = $(this).find('div._grouptype_mobile').text();
-        var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
-        var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
-        var package_status = $('div.pters_selectbox_btn_selected > span').text();
-        var package_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
+        // var package_name = $(this).find('div._groupname_mobile').text();
+        // var package_type = $(this).find('div._grouptype_mobile').text();
+        // var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
+        // var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
+        // var package_status = $('div.pters_selectbox_btn_selected > span').text();
+        // var package_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
+        // var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
+
+        var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
+        var ticket_data;
+        if(package_statuscd == "current"){
+            ticket_data = ticket_ing_list_cache;
+        }else if(package_statuscd == "finished"){
+            ticket_data = ticket_end_list_cache;
+        }
+        var package_name = ticket_data[package_id].package_name;
+        var package_type = ticket_data[package_id].package_type_cd_nm;
+        var package_membernum = ticket_data[package_id].package_ing_member_num;
+        var package_memo = ticket_data[package_id].package_note;
+        var package_status = ticket_data[package_id].package_state_cd_name;
+        // var package_statuscd = ticket_data[package_id].package_statuscd;
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
@@ -2518,6 +2536,7 @@ function get_package_ing_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+                ticket_ing_list_cache = ticket_jsondata_to_dict(jsondata);           
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
@@ -2580,6 +2599,7 @@ function get_package_end_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
+                ticket_end_list_cache = ticket_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
@@ -2606,6 +2626,27 @@ function get_package_end_list(use, callback){
     });
 }
 //서버로부터 그룹 목록 가져오기
+
+
+function ticket_jsondata_to_dict(jsondata){
+    var len = jsondata.package_id.length;
+    var result = {};
+    for(var j=0; j<len; j++){
+        result[jsondata.package_id[j]] = {};
+        result[jsondata.package_id[j]]["package_name"] = jsondata.package_name[j];
+        result[jsondata.package_id[j]]["package_state_cd"] = jsondata.package_state_cd[j];
+        result[jsondata.package_id[j]]["package_state_cd_name"] = jsondata.package_state_cd_name[j];
+        result[jsondata.package_id[j]]["package_type_cd"] = jsondata.package_type_cd[j];
+        result[jsondata.package_id[j]]["package_type_cd_nm"] = jsondata.package_type_cd_nm[j];
+        result[jsondata.package_id[j]]["package_note"] = jsondata.package_note[j];
+        result[jsondata.package_id[j]]["package_group_name"] = jsondata.package_group_name[j];
+        result[jsondata.package_id[j]]["package_group_num"] = jsondata.package_group_num[j];
+        result[jsondata.package_id[j]]["package_ing_member_num"] = jsondata.package_ing_member_num[j];
+        result[jsondata.package_id[j]]["package_end_member_num"] = jsondata.package_end_member_num[j];
+        result[jsondata.package_id[j]]["package_reg_dt"] = jsondata.package_reg_dt[j];
+        result[jsondata.package_id[j]]["package_mod_dt"] = jsondata.package_mod_dt[j];
+    }
+    return result;
 
 //서버로부터 패키지 목록 가져오기
 function get_package_ing_list_page(use, callback){
@@ -2731,6 +2772,7 @@ function get_package_end_list_page(use, callback){
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
     });
+
 }
 
 function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, type, jsondata){

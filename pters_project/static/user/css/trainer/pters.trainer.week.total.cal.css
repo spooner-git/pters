@@ -203,6 +203,10 @@ body{
 	background:#ffffff;
 }
 
+.swiper-slide{
+	padding-bottom: 5px;
+}
+
 
 /***************************레이아웃 변경 검토*********************************/
 
@@ -417,7 +421,7 @@ img,a,div,span,p{
 
 
 
-.classTime{
+/*.classTime{
 	position: absolute;
 	top: 0px;
 	width: 99%;
@@ -432,18 +436,17 @@ img,a,div,span,p{
 }
 
 .classTime_checked:hover{
-	/*background: #635e3b !important;*/
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
-.classTime_re{ /*반복 일정*/
+
+.classTime_re{ 
 	background: #e3ffd9;
 
 }
 
 .classTime:active,.classTime:hover{
-	/*background: #ffe466;*/
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
@@ -458,45 +461,59 @@ img,a,div,span,p{
 	cursor: pointer;
 }
 
-.offTime_re{ /*반복 일정*/
+.offTime_re{ 
 	background: black;
 }
 
 .offTime:active,.offTime:hover{
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
-	/*
-	background: #a2a2a2;
-	opacity: 1;
-	-webkit-background: #a2a2a2;
-	*/
+
 }
 
 .groupTime{
 	position: absolute;
 	top: 0px;
 	width: 99%;
-	/*background: #ffacb7;*/
+
 	z-index: 100;
 
 	cursor: pointer;
 	font-size: 12px;
 }
 .groupTime:active,.groupTime:hover{
-	/*background: #ff6c7f;*/
+
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
 
 .groupTime_checked{
-	/*background: #af757c !important;*/
+
 }
 
 .groupTime_checked:hover{
-	/*background: #946369 !important;*/
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
+	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
+}*/
+
+._class, ._group, ._off{
+	border-left: 1px solid #ffffff;
+	border-right: 1px solid #ffffff;
+}
+._class:hover{
+	/*background: #635e3b !important;*/
 	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
 	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
 }
+._off:active, ._off:hover{
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
+	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
+}
+._group:active, ._group:hover{
+	box-shadow: 0px 0.5px 5px 1px rgba(40, 40, 40, 0.48);
+	transition: box-shadow 0.28s cubic-bezier(0.4,0,0.2,1)
+}
+
 
 
 .classTimeIndicator{

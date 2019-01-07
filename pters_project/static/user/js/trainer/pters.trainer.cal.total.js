@@ -1646,7 +1646,7 @@ function reserveAvailable(){
 function fake_show(){
     //var faketarget = selector.parent('div').siblings('.fake_for_blankpage')
     var selector_swiper_slide_active = $('.swiper-slide-active');
-    if(selector_swiper_slide_active.find('.classTime').length == 0 && selector_swiper_slide_active.find('.offTime').length == 0 && selector_swiper_slide_active.find('.groupTime').length == 0){
+    if(selector_swiper_slide_active.find('._class').length == 0 && selector_swiper_slide_active.find('._off').length == 0 && selector_swiper_slide_active.find('._group').length == 0){
         selector_swiper_slide_active.find('.fake_for_blankpage').css('display', 'block');
     }else{
         selector_swiper_slide_active.find('.fake_for_blankpage').css('display', 'none');
@@ -1697,9 +1697,9 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
             planColor = 'classTime';
             planfinished = ' classTime_checked';
             plancolor_ing_bg_cd = "#fbf3bd";
-            plancolor_ing_font_cd = "";
-            plancolor_end_bg_cd = "";
-            plancolor_end_font_cd = "";
+            plancolor_ing_font_cd = "#282828";
+            plancolor_end_bg_cd = "#d2d1cf";
+            plancolor_end_font_cd = "#282828";
             planMemberNum = '';
             planGroupid = '';
             planCode = '';
@@ -1715,9 +1715,9 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
             plancolor_ing_bg_cd = "#eeeeee";
-            plancolor_ing_font_cd = "";
-            plancolor_end_bg_cd = "";
-            plancolor_end_font_cd = "";
+            plancolor_ing_font_cd = "#282828";
+            plancolor_end_bg_cd = "#eeeeee";
+            plancolor_end_font_cd = "282828";
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
@@ -1833,22 +1833,29 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
         var tdPlan = $("#"+planStart);
         tdPlan.parent('div').siblings('.fake_for_blankpage').css('display', 'none');
 
-        var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
+        var schedule_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
         var planColor_ = planColor+planfinished;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
         var finished_style;
-        if(option != 'off'){
+        if(option == 'group'){
             if(planScheduleFinishArray[i] == 0){
-                planColor_ = planColor;
                 finished_style = "";
+                schedule_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
             }else{
-                planColor_ = planColor+planfinished;
-                group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
+                schedule_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
                 finished_style = "style='text-decoration:line-through;'";
             }
-        }else{
-            planColor_ = planColor;
+        }else if(option == "class"){
+            if(planScheduleFinishArray[i] == 0){
+                finished_style = "";
+                schedule_user_color = 'background-color:'+plancolor_ing_bg_cd+';'+'color:'+plancolor_ing_font_cd+';';
+            }else{
+                schedule_user_color = 'background-color:'+plancolor_end_bg_cd+';'+'color:'+plancolor_end_font_cd+';';
+                finished_style = "style='text-decoration:line-through;'";
+            }
+        }else if(option == 'off'){
+            schedule_user_color = 'background-color:'+plancolor_ing_bg_cd+';'+'color:'+plancolor_ing_font_cd+';';
         }
 
         if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
@@ -1879,6 +1886,7 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
         //중복일정 ㅇㄷ
         var planWidth;
         var planLeft;
+        var calc;
         var time_hide = "";
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
             var exist_check = $(`div[data-plantime="${planStartDate[i]+' ~ '+planEndDate[i]}"]`).length;
@@ -1914,22 +1922,24 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                             planMinute = temp_planMinute;
 
                         }
-                        planStartDiv.append('<div class-time="'+planArrayForTag.join('_')+
-                                               '" data-plancolor="'+plancolor_ing_bg_cd+
-                                               '" class-schedule-id="'+planScheduleIdArray[i]+
-                                               '" data-starttime="'+planStartDate[i]+
-                                               '" data-endtime="'+planEndDate[i]+
+                        planStartDiv.append('<div'+
+                                               // '" data-plancolor="'+plancolor_ing_bg_cd+
+                                               ' data-scheduleid="'+planScheduleIdArray[i]+
+                                               // '" data-starttime="'+planStartDate[i]+
+                                               // '" data-endtime="'+planEndDate[i]+
                                                '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
-                                               '" data-groupid="'+planGroupid[i]+
-                                               '" data-membernum="'+planMemberNum[i]+
-                                               '" data-memo="'+planNoteArray[i]+
-                                               '" data-schedule-check="'+planScheduleFinishArray[i]+
-                                               '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                                               '" data-dbid="'+planMemberDbid[i]+
-                                               '" data-memberName="'+memberName+
-                                               '" class="'+planColor_+
-                                               '" style="height:'+planHeight+'px;'+
+                                               // '" data-groupid="'+planGroupid[i]+
+                                               // '" data-membernum="'+planMemberNum[i]+
+                                               // '" data-memo="'+planNoteArray[i]+
+                                               //'" data-schedule-check="'+planScheduleFinishArray[i]+
+                                               // '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                               // '" data-dbid="'+planMemberDbid[i]+
+                                               // '" data-memberName="'+memberName+
+                                               // '" class="'+planColor_+
+                                               '" class="_class'+
+                                               '" style="position:absolute;z-index:100;height:'+planHeight+'px;'+
                                                          'top:'+planLocation+'px;'+
+                                                         schedule_user_color+
                                                          //중복일정 ㅇㄷ
                                                          //'left:'+planLeft+'%;'+
                                                          'transform:translateX('+planLeft+'%);'+
@@ -1954,25 +1964,26 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                         planHour = temp_planHour;
                         planMinute = temp_planMinute;
                     }
-                    planStartDiv.append('<div group-time="'+planArrayForTag.join('_')+
-                                           '" data-plancolor="'+plancolor_ing_bg_cd[i]+
-                                           '" group-schedule-id="'+planScheduleIdArray[i]+
-                                           '" data-starttime="'+planStartDate[i]+
-                                           '" data-endtime="'+planEndDate[i]+
+                    planStartDiv.append('<div '+
+                                           // '" data-plancolor="'+plancolor_ing_bg_cd[i]+
+                                           ' data-scheduleid="'+planScheduleIdArray[i]+
+                                           // '" data-starttime="'+planStartDate[i]+
+                                           // '" data-endtime="'+planEndDate[i]+
                                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
-                                           '" data-groupid="'+planGroupid[i]+
-                                           '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
-                                           '" data-membernum="'+planMemberNum[i]+
-                                           '" data-memo="'+planNoteArray[i]+
-                                           '" data-schedule-check="'+planScheduleFinishArray[i]+
-                                           '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                                           '" data-dbid="'+planMemberDbid[i]+
-                                           '" data-memberName="'+memberName+
-                                           '" data-group-type-cd-name="'+planGroupClassName[i]+
-                                           '" class="'+planColor_+
-                                           '" style="height:'+planHeight+'px;'+
+                                           // '" data-groupid="'+planGroupid[i]+
+                                           // '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
+                                           // '" data-membernum="'+planMemberNum[i]+
+                                           // '" data-memo="'+planNoteArray[i]+
+                                           // '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                           // '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                           // '" data-dbid="'+planMemberDbid[i]+
+                                           // '" data-memberName="'+memberName+
+                                           // '" data-group-type-cd-name="'+planGroupClassName[i]+
+                                           // '" class="'+planColor_+
+                                           '" class="_group'+
+                                           '" style="position:absolute;z-index:100;height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
-                                                     group_user_color+
+                                                     schedule_user_color+
                                                      //중복일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      'transform:translateX('+planLeft+'%);'+
@@ -1998,22 +2009,24 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
                         planHour = temp_planHour;
                         planMinute = temp_planMinute;
                     }
-                    planStartDiv.append('<div off-time="'+planArrayForTag.join('_')+
-                                           '" data-plancolor="'+plancolor_ing_bg_cd+
-                                           '" off-schedule-id="'+planScheduleIdArray[i]+
-                                           '" data-starttime="'+planStartDate[i]+
-                                           '" data-endtime="'+planEndDate[i]+
+                    planStartDiv.append('<div '+
+                                           // '" data-plancolor="'+plancolor_ing_bg_cd+
+                                           ' data-scheduleid="'+planScheduleIdArray[i]+
+                                           // '" data-starttime="'+planStartDate[i]+
+                                           // '" data-endtime="'+planEndDate[i]+
                                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
-                                           '" data-groupid="'+planGroupid[i]+
-                                           '" data-membernum="'+planMemberNum[i]+
-                                           '" data-memo="'+planNoteArray[i]+
-                                           '" data-schedule-check="'+planScheduleFinishArray[i]+
-                                           '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                                           '" data-dbid="'+planMemberDbid[i]+
-                                           '" data-memberName="'+memberName+
-                                           '" class="'+planColor_+
-                                           '" style="height:'+planHeight+'px;'+
+                                           // '" data-groupid="'+planGroupid[i]+
+                                           // '" data-membernum="'+planMemberNum[i]+
+                                           // '" data-memo="'+planNoteArray[i]+
+                                           // '" data-schedule-check="'+planScheduleFinishArray[i]+
+                                           // '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+                                           // '" data-dbid="'+planMemberDbid[i]+
+                                           // '" data-memberName="'+memberName+
+                                           // '" class="'+planColor_+
+                                           '" class="_off'+
+                                           '" style="position:absolute;z-index:100;height:'+planHeight+'px;'+
                                                      'top:'+planLocation+'px;'+
+                                                     schedule_user_color+
                                                      //중복일정 ㅇㄷ
                                                      //'left:'+planLeft+'%;'+
                                                      'transform:translateX('+planLeft+'%);'+
@@ -2094,11 +2107,394 @@ function scheduleTime(option, jsondata, size, duplicate_check){ // 그룹 수업
 }
 
 var exist_check_dic = {};
+// function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
+//     //중복일정 ㅇㄷ
+//     //var duplicate_check = know_duplicated_plans(jsondata).result;
+//     //중복일정 ㅇㄷ  
+//     console.log("여기", schedule_data_cache)
+
+//     var plan = '';
+//     var planStartDate = '';
+//     var planGroupStartDate = '';
+//     var planEndDate = '';
+//     var planMemberName = '';
+//     var planScheduleIdArray = '';
+//     var planNoteArray = '';
+//     var planScheduleFinishArray = '';
+//     var planColor = '';
+//     var planfinished = '';
+//     var planMemberNum = '';
+//     var planMemberDbid = '';
+//     var planGroupid = '';
+//     var planCode = '';
+//     var planGroupClassName = '';
+//     var plancolor_ing_bg_cd = "";
+//     var plancolor_ing_font_cd = "";
+//     var plancolor_end_bg_cd = "";
+//     var plancolor_end_font_cd = "";
+//     switch(option){
+//         case 'class':
+//             plan = option;
+//             planStartDate = jsondata.classTimeArray_start_date;
+//             planGroupStartDate = jsondata.group_schedule_start_datetime;
+//             planEndDate = jsondata.classTimeArray_end_date;
+//             planMemberName = jsondata.classTimeArray_member_name;
+//             planMemberDbid = jsondata.classTimeArray_member_id;
+//             planScheduleIdArray = jsondata.scheduleIdArray;
+//             planNoteArray = jsondata.scheduleNoteArray;
+//             planScheduleFinishArray = jsondata.scheduleFinishArray;
+//             planColor = 'classTime';
+//             plancolor_ing_bg_cd = "#fbf3bd";
+//             plancolor_ing_font_cd = "";
+//             plancolor_end_bg_cd = "";
+//             plancolor_end_font_cd = "";
+//             planfinished = ' classTime_checked';
+//             planMemberNum = '';
+//             planGroupid = '';
+//             planCode = '';
+//             break;
+//         case 'off':
+//             plan = option;
+//             planGroupid = '';
+//             planStartDate = jsondata.offTimeArray_start_date;
+//             planGroupStartDate = jsondata.group_schedule_start_datetime;
+//             planEndDate = jsondata.offTimeArray_end_date;
+//             planScheduleIdArray = jsondata.offScheduleIdArray;
+//             planScheduleFinishArray = '';
+//             planNoteArray = jsondata.offScheduleNoteArray;
+//             planColor = 'offTime';
+//             plancolor_ing_bg_cd = "#eeeeee";
+//             plancolor_ing_font_cd = "";
+//             plancolor_end_bg_cd = "";
+//             plancolor_end_font_cd = "";
+//             planMemberNum = '';
+//             planMemberDbid = '';
+//             planCode = '';
+//             break;
+//         case 'group':
+
+//             plan = option;
+//             planStartDate = jsondata.group_schedule_start_datetime;
+//             planGroupStartDate = jsondata.group_schedule_start_datetime;
+//             planEndDate = jsondata.group_schedule_end_datetime;
+//             planMemberName = jsondata.group_schedule_group_name;
+//             planGroupid = jsondata.group_schedule_group_id;
+//             planScheduleIdArray = jsondata.group_schedule_id;
+//             planNoteArray = jsondata.group_schedule_note;
+//             planScheduleFinishArray = jsondata.group_schedule_finish_check;
+//             planColor = 'groupTime';
+//             planfinished = ' groupTime_checked';
+//             plancolor_ing_bg_cd = jsondata.group_schedule_ing_color_cd;
+//             plancolor_ing_font_cd = jsondata.group_schedule_ing_font_color_cd;
+//             plancolor_end_bg_cd = jsondata.group_schedule_end_color_cd;
+//             plancolor_end_font_cd = jsondata.group_schedule_end_font_color_cd;
+//             planMemberNum = jsondata.group_schedule_max_member_num;
+//             planMemberDbid = '';
+//             planCode = '';
+//             planGroupClassName = jsondata.group_schedule_group_type_cd_name;
+//             break;
+//     }
+
+//     //2018_4_22_8_30_2_OFF_10_30
+
+//     var planheight = 60*size;
+//     var len = planScheduleIdArray.length;
+
+//     var date_sorted = {};
+
+//     for(var j=0; j<len; j++){
+//         var planYYYY    = Number(planStartDate[j].split(' ')[0].split('-')[0]);
+//         var planMM   = Number(planStartDate[j].split(' ')[0].split('-')[1]);
+//         var planDD    = Number(planStartDate[j].split(' ')[0].split('-')[2]);
+//         date_sorted[planYYYY+'_'+planMM+'_'+planDD] = [];
+//     }
+
+//     for(var i=0; i<len; i++){
+//         //2018-05-11 10:00:00
+//         var planDate_ = planStartDate[i].split(' ')[0];
+//         var planYear    = Number(planStartDate[i].split(' ')[0].split('-')[0]);
+//         var planMonth   = Number(planStartDate[i].split(' ')[0].split('-')[1]);
+//         var planDate    = Number(planStartDate[i].split(' ')[0].split('-')[2]);
+//         var planHour    = Number(planStartDate[i].split(' ')[1].split(':')[0]);
+//         var planOriHour = planHour;
+//         var planMinute  = planStartDate[i].split(' ')[1].split(':')[1];
+//         var planOriMinute = planMinute;
+//         var planEDate   = Number(planEndDate[i].split(' ')[0].split('-')[2]);
+//         var planEndHour = Number(planEndDate[i].split(' ')[1].split(':')[0]);
+//         var planEndMin  = planEndDate[i].split(' ')[1].split(':')[1];
+//         var memberName = 'OFF';
+//         var planDura = "0.5";
+//         var hourType = '오전';
+//         if(plan == 'off'){
+//             if(planNoteArray[i].length > 0){
+//                 memberName = planNoteArray[i];
+//             }else{
+//                 memberName = 'OFF';
+//             }
+//         }else{
+//             memberName  = planMemberName[i];
+//         }
+
+//         //24:00일경우 다음날 00:00 으로 들어오기 때문에
+//         if(planEndDate[i].split(' ')[1] == "00:00:00"){
+//             planEndHour = '24';
+//             planEndMin = '00';
+//         }
+//         //24:00일경우 다음날 00:00 으로 들어오기 때문에
+
+
+//         if(compare_time(add_time(planHour+':'+planMinute, '00:00'), add_time(Options.workStartTime+':00','00:00')) == false && compare_time(add_time(planEndHour+':'+planEndMin, '00:00'), add_time(Options.workStartTime+':00','00:00')) ){
+//             planHour = Options.workStartTime;
+//             planMinute = '00';
+//         }
+
+//         var planDuraMin = calc_duration_by_start_end_2(planStartDate[i].split(' ')[0], add_time(planHour+':'+planMinute,'00:00'), planEndDate[i].split(' ')[0], add_time(planEndHour+':'+planEndMin,'00:00') );
+//         planDura = planDuraMin/60;
+
+
+//         if(planHour < 12){
+//             hourType = '오전';
+//         }else{
+//             if(planHour == 24){
+//                 hourType = '오전';
+//             }else{
+//                 hourType = '오후';
+//             }
+//         }
+
+//         var planArray = [planYear, planMonth, planDate, planHour, planMinute, planDura, memberName, planEndHour, planEndMin];
+//         var planArrayForTag = [planYear, planMonth, planDate, planOriHour, planOriMinute, planDura, memberName, planEndHour, planEndMin];
+//         var planStartArr = [planYear, planMonth, planDate];
+//         var planStart = planStartArr.join("_");
+//         //var tdPlanStart = $("#"+planStart+" div"); //2018_7_8
+//         var tdPlan = $("#"+planStart);
+//         //tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
+
+//         var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
+//         var planColor_ = planColor+planfinished;
+//         var textcolor = "bluetext";
+//         var hideornot = 'hideelement';
+//         var finished_style;
+//         if(option != 'off'){
+//             if(planScheduleFinishArray[i] == 0){
+//                 planColor_ = planColor;
+//                 finished_style = "";
+//             }else{
+//                 planColor_ = planColor+planfinished;
+//                 group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
+//                 finished_style = "style='text-decoration:line-through;'";
+//             }
+//         }else{
+//             planColor_ = planColor;
+//         }
+
+//         if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
+//             textcolor = "bluetext";
+//         }else{
+//             textcolor = "";
+//         }
+
+//         var memberTimeHide;
+//         var groupstatus;
+//         if(Number(planDura*planheight-1) < 29){
+//             hideornot = 'hideelement';
+//             memberTimeHide = "hideelement";
+//             groupstatus="";
+//         }else if(Number(planDura*planheight-1) < 47){
+//             hideornot = 'inlineelement';
+//             memberTimeHide = "hideelement";
+//             groupstatus="";
+//             if(bodywidth>600){
+//                 memberTimeHide = 'inlineelement';
+//             }
+//         }else{
+//             hideornot = 'inlineelement';
+//             memberTimeHide = "hideelement";
+//             groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>';
+//             if(bodywidth>600){
+//                 memberTimeHide = 'inlineelement';
+//             }
+//         }
+
+//         //중복일정 ㅇㄷ
+//         // var planWidth;
+//         // var planLeft;
+//         // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
+//         //     // planWidth = 100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1]);
+//         //     // planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100;
+//         //     var exist_check = $(`div[data-starttime="${planStartDate[i]}"]`).length;
+//         //     var regExp = /`data-starttime="${planStartDate[i]}"`/gi;
+//         //     if(date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`) != null){
+//         //         exist_check = date_sorted[planStart].join(" ").match(`data-starttime="${planStartDate[i]}"`).length;
+//         //     }
+
+//         //     planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1])).toFixed(1);
+            
+//         //     // if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
+//         //     //     if(exist_check == 0){
+//         //     //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+//         //     //     }else{
+//         //     //         planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2]-exist_check)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+//         //     //     }
+//         //     // }else{
+//         //     //     planLeft = (duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0])*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+//         //     // }
+//         //     var calc;
+//         //     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][2] > 1){
+//         //         calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check;
+//         //     }else{
+//         //         calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0];
+//         //     }
+//         //     if(calc == -1){
+//         //         calc = 0;
+//         //     }
+            
+//         //     //planLeft = (calc)*100+(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][0]- exist_check+1);
+//         //     planLeft = (calc)*100;
+//         //     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][1] > 1){
+//         //         groupstatus="";
+//         //     }
+//         // }
+//         var planWidth;
+//         var planLeft;
+//         var calc;
+//         var exist_check;
+//         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
+//             if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) > 0){
+
+                
+//             }else{
+//                 if(exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] == undefined){
+//                     exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] = 0;
+//                 }
+//                 exist_check = exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]];
+//                 if(exist_check < duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]].length){
+//                     planWidth = (100/(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][1])).toFixed(1);
+//                     calc = duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][0];
+//                     planLeft = (calc)*100;
+
+//                     if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]][exist_check][1] > 1){
+//                         groupstatus="";
+//                     }
+//                     exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]]++;
+//                 }
+//             }
+//         }
+//         //중복일정 ㅇㄷ
+
+
+//         var planLocation = (60*(planHour-Options.workStartTime)+60*planMinute/60)*size;
+
+//         var innerNameTag;
+//         //if(option == 'class' && planGroupStartDate.indexOf(planStartDate[i]) == -1){
+//         if(option == 'class' && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1){
+//             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+//             }else{
+//                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+//                 planhtml = '<div class-time="'+planArrayForTag.join('_')+
+//                             '" class-schedule-id="'+planScheduleIdArray[i]+
+//                             '" data-plancolor="'+plancolor_ing_bg_cd+
+//                             '" data-starttime="'+planStartDate[i]+
+//                             '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
+//                             '" data-groupid="'+planGroupid[i]+
+//                             '" data-membernum="'+planMemberNum[i]+
+//                             '" data-memo="'+planNoteArray[i]+
+//                             '" data-schedule-check="'+planScheduleFinishArray[i]+
+//                             '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+//                             '" data-dbid="'+planMemberDbid[i]+
+//                             '" data-memberName="'+memberName+
+//                             '" class="'+planColor_+
+//                             '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
+//                                                     //'left:'+planLeft+'%;'+
+//                                                     'transform:translateX('+planLeft+'%);'+
+//                                                      'width:'+planWidth+'%'+
+//                             '">'+
+//                                 innerNameTag+
+//                            '</div>';
+//                 date_sorted[planStart].push(planhtml);
+//             }
+//         }else if(option == 'group'){
+//             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+//             }else{
+//                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+//                 planhtml = '<div group-time="'+planArrayForTag.join('_')+
+//                             '" group-schedule-id="'+planScheduleIdArray[i]+
+//                             '" data-plancolor="'+plancolor_ing_bg_cd[i]+
+//                             '" data-starttime="'+planStartDate[i]+
+//                             '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
+//                             '" data-groupid="'+planGroupid[i]+
+//                             '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
+//                             '" data-membernum="'+planMemberNum[i]+
+//                             '" data-memo="'+planNoteArray[i]+
+//                             '" data-schedule-check="'+planScheduleFinishArray[i]+
+//                             '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+//                             '" data-dbid="'+planMemberDbid[i]+
+//                             '" data-memberName="'+memberName+
+//                             '" data-group-type-cd-name="'+planGroupClassName[i]+
+//                             '" class="'+planColor_+
+//                             '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+group_user_color+
+//                                                     //'left:'+planLeft+'%;'+
+//                                                     'transform:translateX('+planLeft+'%);'+
+//                                                      'width:'+planWidth+'%'+
+//                             '">'+
+//                                 innerNameTag+
+//                            '</div>';
+//                 date_sorted[planStart].push(planhtml);
+//             }
+//         }else if(option == 'off'){
+//             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
+//             }else{
+//                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
+//                 planhtml = '<div off-time="'+planArrayForTag.join('_')+
+//                             '" off-schedule-id="'+planScheduleIdArray[i]+
+//                             '" data-plancolor="'+plancolor_ing_bg_cd+
+//                             '" data-starttime="'+planStartDate[i]+
+//                             '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
+//                             '" data-groupid="'+planGroupid[i]+
+//                             '" data-membernum="'+planMemberNum[i]+
+//                             '" data-memo="'+planNoteArray[i]+
+//                             '" data-schedule-check="'+planScheduleFinishArray[i]+
+//                             '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
+//                             '" data-dbid="'+planMemberDbid[i]+
+//                             '" data-memberName="'+memberName+
+//                             '" class="'+planColor_+
+//                             '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
+//                                                     //'left:'+planLeft+'%;'+
+//                                                     'transform:translateX('+planLeft+'%);'+
+//                                                      'width:'+planWidth+'%'+
+//                             '">'+
+//                                 innerNameTag+
+//                            '</div>';
+//                 date_sorted[planStart].push(planhtml);
+//             }
+//         }
+
+//         /*
+//         var hhh = Number(planHour);
+//         var mmm = planMinute;
+
+//         for(var j=0; j<planDura/0.5; j++){
+//             if(mmm == 60){
+//                 hhh = hhh + 1;
+//                 mmm = '00';
+//             }
+//             $('#'+planYear+'_'+planMonth+'_'+planDate+'_'+hhh+'_'+mmm).addClass('_on');
+//             mmm = Number(mmm) + 30;
+//         }
+//         */
+//     }
+
+//     for(var date in date_sorted){
+//         if( $('#'+date).find(`.${planColor}`).length == 0 ){
+//             $('#'+date).append(date_sorted[date].join(''));
+//         }
+//     }
+// }
 function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹 수업정보를 DB로 부터 받아 해당 시간을 하루달력에 핑크색으로 표기
     //중복일정 ㅇㄷ
     //var duplicate_check = know_duplicated_plans(jsondata).result;
     //중복일정 ㅇㄷ  
-
+    console.log("여기", schedule_data_cache)
 
     var plan = '';
     var planStartDate = '';
@@ -2132,9 +2528,9 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             planScheduleFinishArray = jsondata.scheduleFinishArray;
             planColor = 'classTime';
             plancolor_ing_bg_cd = "#fbf3bd";
-            plancolor_ing_font_cd = "";
-            plancolor_end_bg_cd = "";
-            plancolor_end_font_cd = "";
+            plancolor_ing_font_cd = "#282828";
+            plancolor_end_bg_cd = "#d2d1cf";
+            plancolor_end_font_cd = "#282828";
             planfinished = ' classTime_checked';
             planMemberNum = '';
             planGroupid = '';
@@ -2151,9 +2547,9 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             planNoteArray = jsondata.offScheduleNoteArray;
             planColor = 'offTime';
             plancolor_ing_bg_cd = "#eeeeee";
-            plancolor_ing_font_cd = "";
-            plancolor_end_bg_cd = "";
-            plancolor_end_font_cd = "";
+            plancolor_ing_font_cd = "#282828";
+            plancolor_end_bg_cd = "#eeeeee";
+            plancolor_end_font_cd = "#282828";
             planMemberNum = '';
             planMemberDbid = '';
             planCode = '';
@@ -2257,22 +2653,28 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         var tdPlan = $("#"+planStart);
         //tdPlan.parent('div').siblings('.fake_for_blankpage').css('display','none');
 
-        var group_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
-        var planColor_ = planColor+planfinished;
+        var schedule_user_color;
         var textcolor = "bluetext";
         var hideornot = 'hideelement';
         var finished_style;
-        if(option != 'off'){
+        if(option == 'group'){
             if(planScheduleFinishArray[i] == 0){
-                planColor_ = planColor;
                 finished_style = "";
+                schedule_user_color = 'background-color:'+plancolor_ing_bg_cd[i]+';'+'color:'+plancolor_ing_font_cd[i]+';';
             }else{
-                planColor_ = planColor+planfinished;
-                group_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
+                schedule_user_color = 'background-color:'+plancolor_end_bg_cd[i]+';'+'color:'+plancolor_end_font_cd[i]+';';
                 finished_style = "style='text-decoration:line-through;'";
             }
-        }else{
-            planColor_ = planColor;
+        }else if(option == "class"){
+            if(planScheduleFinishArray[i] == 0){
+                finished_style = "";
+                schedule_user_color = 'background-color:'+plancolor_ing_bg_cd+';'+'color:'+plancolor_ing_font_cd+';';
+            }else{
+                schedule_user_color = 'background-color:'+plancolor_end_bg_cd+';'+'color:'+plancolor_end_font_cd+';';
+                finished_style = "style='text-decoration:line-through;'";
+            }
+        }else if(option == 'off'){
+            schedule_user_color = 'background-color:'+plancolor_ing_bg_cd+';'+'color:'+plancolor_ing_font_cd+';';
         }
 
         if(jsondata.group_schedule_current_member_num[i] != jsondata.group_schedule_max_member_num[i]){
@@ -2349,7 +2751,6 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
         if(duplicate_check[planStartDate[i]+' ~ '+planEndDate[i]] != undefined){
             if(option == "class" && jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) > 0){
 
-                
             }else{
                 if(exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] == undefined){
                     exist_check_dic[planStartDate[i]+' ~ '+planEndDate[i]] = 0;
@@ -2378,24 +2779,13 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
-                planhtml = '<div class-time="'+planArrayForTag.join('_')+
-                            '" class-schedule-id="'+planScheduleIdArray[i]+
-                            '" data-plancolor="'+plancolor_ing_bg_cd+
-                            '" data-starttime="'+planStartDate[i]+
-                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
-                            '" data-groupid="'+planGroupid[i]+
-                            '" data-membernum="'+planMemberNum[i]+
-                            '" data-memo="'+planNoteArray[i]+
-                            '" data-schedule-check="'+planScheduleFinishArray[i]+
-                            '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                            '" data-dbid="'+planMemberDbid[i]+
-                            '" data-memberName="'+memberName+
-                            '" class="'+planColor_+
-                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
+                planhtml = '<div'+
+                            ' data-scheduleid="'+planScheduleIdArray[i]+
+                            '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
                                                     //'left:'+planLeft+'%;'+
                                                     'transform:translateX('+planLeft+'%);'+
                                                      'width:'+planWidth+'%'+
-                            '">'+
+                            '" class="_class">'+
                                 innerNameTag+
                            '</div>';
                 date_sorted[planStart].push(planhtml);
@@ -2404,26 +2794,13 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag" '+finished_style+'>'+planCode+memberName+'</p>'+groupstatus+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
-                planhtml = '<div group-time="'+planArrayForTag.join('_')+
-                            '" group-schedule-id="'+planScheduleIdArray[i]+
-                            '" data-plancolor="'+plancolor_ing_bg_cd[i]+
-                            '" data-starttime="'+planStartDate[i]+
-                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
-                            '" data-groupid="'+planGroupid[i]+
-                            '" data-current-membernum="'+jsondata.group_schedule_current_member_num[i]+
-                            '" data-membernum="'+planMemberNum[i]+
-                            '" data-memo="'+planNoteArray[i]+
-                            '" data-schedule-check="'+planScheduleFinishArray[i]+
-                            '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                            '" data-dbid="'+planMemberDbid[i]+
-                            '" data-memberName="'+memberName+
-                            '" data-group-type-cd-name="'+planGroupClassName[i]+
-                            '" class="'+planColor_+
-                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+group_user_color+
+                planhtml = '<div'+
+                            ' data-scheduleid="'+planScheduleIdArray[i]+
+                            '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
                                                     //'left:'+planLeft+'%;'+
                                                     'transform:translateX('+planLeft+'%);'+
                                                      'width:'+planWidth+'%'+
-                            '">'+
+                            '" class="_group">'+
                                 innerNameTag+
                            '</div>';
                 date_sorted[planStart].push(planhtml);
@@ -2432,24 +2809,13 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             if( (compare_date2(planDate_, add_date(today_YY_MM_DD, 14))  ||  compare_date2(substract_date(today_YY_MM_DD, -14), planDate_)) && Options.auth_limit == 0 ){
             }else{
                 innerNameTag = '<span class="memberName '+hideornot+'">'+'<p class="groupnametag">'+planCode+memberName+'</p>'+' </span>'+'<span class="memberTime '+memberTimeHide+'">'+ '<p class="hourType">' +hourType+'</p>' + time_format_add_ampm(planHour+':'+planMinute ,"none")+'</span>';
-                planhtml = '<div off-time="'+planArrayForTag.join('_')+
-                            '" off-schedule-id="'+planScheduleIdArray[i]+
-                            '" data-plancolor="'+plancolor_ing_bg_cd+
-                            '" data-starttime="'+planStartDate[i]+
-                            '" data-plantime="'+planStartDate[i]+' ~ '+planEndDate[i]+
-                            '" data-groupid="'+planGroupid[i]+
-                            '" data-membernum="'+planMemberNum[i]+
-                            '" data-memo="'+planNoteArray[i]+
-                            '" data-schedule-check="'+planScheduleFinishArray[i]+
-                            '" data-lectureId="'+jsondata.classArray_lecture_id[i]+
-                            '" data-dbid="'+planMemberDbid[i]+
-                            '" data-memberName="'+memberName+
-                            '" class="'+planColor_+
-                            '" style="height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+
+                planhtml = '<div'+
+                            ' data-scheduleid="'+planScheduleIdArray[i]+
+                            '" style="position:absolute;z-index:150;height:'+Number(planDura*planheight-1)+'px;'+'top:'+planLocation+'px;'+schedule_user_color+
                                                     //'left:'+planLeft+'%;'+
                                                     'transform:translateX('+planLeft+'%);'+
                                                      'width:'+planWidth+'%'+
-                            '">'+
+                            '" class="_off">'+
                                 innerNameTag+
                            '</div>';
                 date_sorted[planStart].push(planhtml);
@@ -2476,6 +2842,56 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             $('#'+date).append(date_sorted[date].join(''));
         }
     }
+}
+
+
+function schedule_jsondata_to_dict(jsondata){
+    var len1 = jsondata.scheduleIdArray.length;
+    var result = {"class":{}, "group":{}, "off":{}};
+    for(var j=0; j<len1; j++){
+        result["class"][jsondata.scheduleIdArray[j]] = {};
+        // result["group"][jsondata.group_schedule_id[j]] = {};
+        // result["off"][jsondata.offScheduleIdArray[j]] = {};
+        result["class"][jsondata.scheduleIdArray[j]]["lecture_id"] = jsondata.classArray_lecture_id[j];
+        result["class"][jsondata.scheduleIdArray[j]]["member_id"] = jsondata.classTimeArray_member_id[j];
+        result["class"][jsondata.scheduleIdArray[j]]["member_name"] = jsondata.classTimeArray_member_name[j];
+        result["class"][jsondata.scheduleIdArray[j]]["start_date"] = jsondata.classTimeArray_start_date[j];
+        result["class"][jsondata.scheduleIdArray[j]]["end_date"] = jsondata.classTimeArray_end_date[j];
+        result["class"][jsondata.scheduleIdArray[j]]["class_group_schedule_id"] = jsondata.class_group_schedule_id[j];
+        result["class"][jsondata.scheduleIdArray[j]]["finished"] = jsondata.scheduleFinishArray[j];
+        result["class"][jsondata.scheduleIdArray[j]]["memo"] = jsondata.scheduleNoteArray[j];
+        result["class"][jsondata.scheduleIdArray[j]]["permission"] = jsondata.schedulePermissionStateArray[j];
+        result["class"][jsondata.scheduleIdArray[j]]["idx"] = jsondata.scheduleIdxArray[j];
+    }
+
+    var len2 = jsondata.group_schedule_id.length;
+    for(var g=0; g<len2; g++){
+        result["group"][jsondata.group_schedule_id[g]] = {};
+        result["group"][jsondata.group_schedule_id[g]]["group_id"] = jsondata.group_schedule_group_id[g];
+        result["group"][jsondata.group_schedule_id[g]]["group_name"] = jsondata.group_schedule_group_name[g];
+        result["group"][jsondata.group_schedule_id[g]]["start_date"] = jsondata.group_schedule_start_datetime[g];
+        result["group"][jsondata.group_schedule_id[g]]["end_date"] = jsondata.group_schedule_end_datetime[g];
+        result["group"][jsondata.group_schedule_id[g]]["type_cd_name"] = jsondata.group_schedule_group_type_cd_name[g];
+        result["group"][jsondata.group_schedule_id[g]]["current_member_num"] = jsondata.group_schedule_current_member_num[g];
+        result["group"][jsondata.group_schedule_id[g]]["max_member_num"] = jsondata.group_schedule_max_member_num[g];
+        result["group"][jsondata.group_schedule_id[g]]["memo"] = jsondata.group_schedule_note[g];
+        result["group"][jsondata.group_schedule_id[g]]["finished"] = jsondata.group_schedule_finish_check[g];
+        result["group"][jsondata.group_schedule_id[g]]["ing_color"] = jsondata.group_schedule_ing_color_cd[g];
+        result["group"][jsondata.group_schedule_id[g]]["ing_color_font"] = jsondata.group_schedule_ing_font_color_cd[g];
+        result["group"][jsondata.group_schedule_id[g]]["end_color"] = jsondata.group_schedule_end_color_cd[g];
+        result["group"][jsondata.group_schedule_id[g]]["end_color_font"] = jsondata.group_schedule_end_font_color_cd[g];
+    }
+
+    var len3 = jsondata.offScheduleIdArray.length;
+    for(var f=0; f<len3; f++){
+        result["off"][jsondata.offScheduleIdArray[f]] = {};
+        result["off"][jsondata.offScheduleIdArray[f]]["start_date"] = jsondata.offTimeArray_start_date[f];
+        result["off"][jsondata.offScheduleIdArray[f]]["end_date"] = jsondata.offTimeArray_end_date[f];
+        result["off"][jsondata.offScheduleIdArray[f]]["memo"] = jsondata.offScheduleNoteArray[f];
+    }
+
+    console.log("result", result)
+    return result;
 }
 
 //중복일정 계산하기
