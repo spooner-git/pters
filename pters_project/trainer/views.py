@@ -3904,10 +3904,26 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
                                                                                sort_order_by))
-        if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-            package_data = sorted(package_data[1:], key=attrgetter('ing_package_member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_PACKAGE_CREATE_DATE:
-            package_data = sorted(package_data[1:], key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+        if keyword == '' or keyword is None:
+            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
+                                                          reverse=int(sort_order_by))
+            if sort_info == SORT_PACKAGE_NAME:
+                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
+                                                          reverse=int(sort_order_by))
+            elif sort_info == SORT_PACKAGE_CREATE_DATE:
+                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
+                                                          reverse=int(sort_order_by))
+        else:
+            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+                package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
+                                      reverse=int(sort_order_by))
+            if sort_info == SORT_PACKAGE_NAME:
+                package_data = sorted(package_data, key=attrgetter('name'),
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_PACKAGE_CREATE_DATE:
+                package_data = sorted(package_data, key=attrgetter('reg_dt'),
+                                      reverse=int(sort_order_by))
 
         context['total_package_num'] = len(package_data)
         if page != 0:
@@ -3965,10 +3981,27 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
 
         package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
                                                                                sort_order_by))
-        if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-            package_data = sorted(package_data[1:], key=attrgetter('end_package_member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_PACKAGE_CREATE_DATE:
-            package_data = sorted(package_data[1:], key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+
+        if keyword == '' or keyword is None:
+            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('ing_package_member_num'),
+                                                          reverse=int(sort_order_by))
+            if sort_info == SORT_PACKAGE_NAME:
+                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('name'),
+                                                          reverse=int(sort_order_by))
+            elif sort_info == SORT_PACKAGE_CREATE_DATE:
+                package_data = package_data[0:1] + sorted(package_data[1:], key=attrgetter('reg_dt'),
+                                                          reverse=int(sort_order_by))
+        else:
+            if sort_info == SORT_PACKAGE_MEMBER_COUNT:
+                package_data = sorted(package_data, key=attrgetter('ing_package_member_num'),
+                                      reverse=int(sort_order_by))
+            if sort_info == SORT_PACKAGE_NAME:
+                package_data = sorted(package_data, key=attrgetter('name'),
+                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_PACKAGE_CREATE_DATE:
+                package_data = sorted(package_data, key=attrgetter('reg_dt'),
+                                      reverse=int(sort_order_by))
 
         context['total_package_num'] = len(package_data)
         if page != 0:
@@ -4547,16 +4580,38 @@ class GetMemberGroupClassIngListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
                                                        ).order_by('-group_type_cd', 'name', '-ing_group_member_num')
 
         context['total_group_num'] = len(group_data)
+        if keyword == '' or keyword is None:
+            if sort_info == SORT_LECTURE_NAME:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('name'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('ing_group_member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CREATE_DATE:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('reg_dt'),
+                                                      reverse=int(sort_order_by))
+        else:
+            if sort_info == SORT_LECTURE_NAME:
+                group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+                group_data = sorted(group_data, key=attrgetter('ing_group_member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+                group_data = sorted(group_data, key=attrgetter('member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CREATE_DATE:
+                group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
-        if sort_info == SORT_LECTURE_NAME:
-            group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
-        elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-            group_data = sorted(group_data, key=attrgetter('ing_group_member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
-            group_data = sorted(group_data, key=attrgetter('member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_LECTURE_CREATE_DATE:
-            group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
+        if page != 0:
+            paginator = Paginator(group_data, 20)  # Show 20 contacts per page
+            try:
+                group_data = paginator.page(page)
+            except EmptyPage:
+                group_data = None
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
@@ -4592,14 +4647,38 @@ class GetMemberGroupClassEndListViewAjax(LoginRequiredMixin, AccessTestMixin, Te
 
         context['total_group_num'] = len(group_data)
 
-        if sort_info == SORT_LECTURE_NAME:
-            group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
-        elif sort_info == SORT_LECTURE_MEMBER_COUNT:
-            group_data = sorted(group_data, key=attrgetter('end_group_member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
-            group_data = sorted(group_data, key=attrgetter('member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_LECTURE_CREATE_DATE:
-            group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+        if keyword == '' or keyword is None:
+            if sort_info == SORT_LECTURE_NAME:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('name'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('end_group_member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CREATE_DATE:
+                group_data = group_data[0:1] + sorted(group_data[1:], key=attrgetter('reg_dt'),
+                                                      reverse=int(sort_order_by))
+        else:
+            if sort_info == SORT_LECTURE_NAME:
+                group_data = sorted(group_data, key=attrgetter('name'), reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_MEMBER_COUNT:
+                group_data = sorted(group_data, key=attrgetter('end_group_member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CAPACITY_COUNT:
+                group_data = sorted(group_data, key=attrgetter('member_num'),
+                                                      reverse=int(sort_order_by))
+            elif sort_info == SORT_LECTURE_CREATE_DATE:
+                group_data = sorted(group_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+
+
+        if page != 0:
+            paginator = Paginator(group_data, 20)  # Show 20 contacts per page
+            try:
+                group_data = paginator.page(page)
+            except EmptyPage:
+                group_data = None
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(

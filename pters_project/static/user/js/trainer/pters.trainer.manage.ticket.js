@@ -720,7 +720,7 @@ function added_member_info_to_jsonformat(){
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click', 'div.groupWrap', function(e){
-    mutex_val = 0;
+    // mutex_val = 0;
     e.stopPropagation();
     var package_id = $(this).attr('data-packageid');
     var memo_list =  $(this).siblings('div[data-packageid="'+package_id+'"].groupMemoWrap');
@@ -2857,11 +2857,11 @@ function package_ListHtml(option, jsondata){ //option : current, finished
         // }else if(package_type == "NORMAL"){
         //     htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         // }else if(package_type == "ONE_TO_ONE"){
-        if(package_type == "ONE_TO_ONE"){
-            htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else{
+        // if(package_type == "ONE_TO_ONE"){
+        //     htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else{
             htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }
+        // }
     }
     ticketListSet_len = groupNum+1;
 
@@ -2989,11 +2989,11 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
         // }else if(package_type == "NORMAL"){
         //     htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         // }else if(package_type == "ONE_TO_ONE"){
-        if(package_type == "ONE_TO_ONE"){
-            htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else{
+        // if(package_type == "ONE_TO_ONE"){
+        //     htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else{
             htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }
+        // }
     }
     ticketListSet_len += groupNum;
     if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 0){
@@ -3093,11 +3093,11 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
         // }else if(package_type == "NORMAL"){
         //     htmlToJoin2.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
         // }else if(package_type == "ONE_TO_ONE"){
-        if(package_type == "ONE_TO_ONE"){
-            htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }else{
+        // if(package_type == "ONE_TO_ONE"){
+        //     htmlToAdd.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
+        // }else{
             htmlToJoin3.push(htmlstart+main+htmlend+packagelist+memolist+repeatlist+memberlist);
-        }
+        // }
     }
 
     if((htmlToJoin.length+htmlToJoin2.length+htmlToJoin3.length+htmlToAdd.length) == 0){
