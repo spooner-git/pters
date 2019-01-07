@@ -45,7 +45,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" placeholder=" 문의 제목을 입력해주세요."  maxlength="255"></div>
+                <div class="inquire_type_wrap"><p>제목 : </p><input type="" name="inquire_subject" id="id_inquire_title" placeholder=" 문의 제목을 입력해주세요."  maxlength="255"></div>
                 <div class="textarea_wrap">
                     <p>문의 내용: </p>
                     <textarea class="textarea" placeholder=" 이 곳에 문의 내용을 작성해 주세요.(최대 1,000자)" name="textarea_body" maxlength="1000" onkeyup="characterCheck()" onkeydown="characterCheck()"></textarea>
@@ -79,21 +79,21 @@
         ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script>
-        $('a.__help').css('color','#fe4e65;')
+        $('a.__help').css('color','#fe4e65;');
         if($('body').width()<600){
-            $('#page-base-addstyle').css('display','block')
-            $('#page-base').css('display','none')
-            $('#uptext2').text("이용문의")
+            $('#page-base-addstyle').css('display','block');
+            $('#page-base').css('display','none');
+            $('#uptext2').text("이용문의");
         }
 
         $('select').change(function(){
-            $('#id_inquire_type').val($(this).val())
-            $('#id_inquire_type').attr('value',$(this).val())
+            $('#id_inquire_type').val($(this).val());
+            $('#id_inquire_type').attr('value',$(this).val());
         });
 
         function characterCheck() {
             var RegExp = /[\{\}\[\]\/,;:|\)*~`^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;//정규식 구문
-            var obj = document.getElementsByName("textarea_body")[0]
+            var obj = document.getElementsByName("textarea_body")[0];
             if (RegExp.test(obj.value)) {
                 obj.value = obj.value.substring(0, obj.value.length - 1);//특수문자를 지우는 구문
             }
@@ -101,33 +101,44 @@
 
         $("#upbutton-check, ._button_Next").click(function(e){
             e.preventDefault();
+            var error_message = '';
             if($('#id_inquire_type').val().length == 0){
-                alert('유형을 선택해주세요')
-            }else{
-                alert('문의를 전송 하였습니다.')
+                error_message = '유형을 선택해주세요';
+            }
+            else if($('#id_inquire_title').val().length == 0){
+                error_message = '제목을 입력해주세요.';
+            }
+            else if($('#id_inquire_body').val().length == 0){
+                error_message = '내용을 입력해주세요.';
+            }
+            if(error_message==''){
+                alert('문의를 전송 하였습니다.');
                 var content = $('textarea').val();
-                content = content.replace(/(?:\r\n|\r|\n)/g, '<br>')
-                $('#id_inquire_body').val(content)
+                content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                $('#id_inquire_body').val(content);
                 document.getElementById('update-setting-inquire-form').submit();
             }
-        })
+            else{
+                alert(error_message);
+            }
+        });
 
  
         $('#upbutton-x, ._button_Prev').click(function(){
-            location.href="/trainer/trainer_main/"
-        })
+            location.href="/trainer/trainer_main/";
+        });
 
 
         $('#myquestion_history').click(function(){
-            get_myquestion_list()
+            get_myquestion_list();
             $('._write, .popupBtn_mini').hide();
             $('._mylist').show();
-        })
+        });
 
         $('#myquestion_history_return').click(function(){
             $('._write, .popupBtn_mini').show();
             $('._mylist').hide();
-        })
+        });
 
 
         function get_myquestion_list(){
@@ -141,15 +152,15 @@
                     },
 
                     success:function(data){
-                        console.log(data)
+                        console.log(data);
                         var jsondata = JSON.parse(data);
-                        console.log(jsondata)
+                        console.log(jsondata);
                         if(jsondata.messageArray.length>0){
                             $('#errorMessageBar').show();
                             $('#errorMessageText').text(jsondata.messageArray);
                         }else{
                             draw_myquestion_list(jsondata, $('#myquestion_history_list'));
-                        };
+                        }
                     },
 
                     complete:function(){
@@ -180,18 +191,18 @@
             var len = jsondata.question_id.length;
             var counter = len;
             for(var i=0; i<len; i++){
-                var number = `<div class="myquestion_history_table_cell _qatable_no">${counter--}.</div>`
-                var qa_type = `<div class="myquestion_history_table_cell _qatable_type">${jsondata.qa_type_cd_name[i]}</div>`
-                var qa_title = `<div class="myquestion_history_table_cell _qatable_title"><p>${jsondata.title[i]}</p></div>`
-                var qa_regdt = `<div class="myquestion_history_table_cell _qatable_regdt">${date_format_to_user_hangul(jsondata.reg_dt[i],'minimize')}</div>`
-                var qa_status = `<div class="myquestion_history_table_cell _qatable_status">${jsondata.status_type_cd_name[i]}</div>`
+                var number = `<div class="myquestion_history_table_cell _qatable_no">${counter--}.</div>`;
+                var qa_type = `<div class="myquestion_history_table_cell _qatable_type">${jsondata.qa_type_cd_name[i]}</div>`;
+                var qa_title = `<div class="myquestion_history_table_cell _qatable_title"><p>${jsondata.title[i]}</p></div>`;
+                var qa_regdt = `<div class="myquestion_history_table_cell _qatable_regdt">${date_format_to_user_hangul(jsondata.reg_dt[i],'minimize')}</div>`;
+                var qa_status = `<div class="myquestion_history_table_cell _qatable_status">${jsondata.status_type_cd_name[i]}</div>`;
 
                 var table = `<div class="myquestion_history_table" data-qid="${jsondata.question_id[i]}">
                                 ${number}${qa_type}${qa_title}${qa_regdt}${qa_status}
-                            </div>`
+                            </div>`;
                 var content = `<div class="myquestion_history_table_content" data-qid="${jsondata.question_id[i]}">
                                 ${jsondata.contents[i]}
-                            </div>`
+                            </div>`;
                 htmlToJoin.push(table+content);
             };
             if(len == 0){
