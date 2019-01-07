@@ -779,28 +779,28 @@ $(document).on('click', 'div.groupWrap', function(e){
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
     }else if(bodywidth <= 1000){
-        // var package_name = $(this).find('div._groupname_mobile').text();
-        // var package_type = $(this).find('div._grouptype_mobile').text();
-        // var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
-        // var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
-        // var package_status = $('div.pters_selectbox_btn_selected > span').text();
-        // var package_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
-        // var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
-
-        var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
-        var ticket_data;
-        if(package_statuscd == "current"){
-            ticket_data = ticket_ing_list_cache;
-        }else if(package_statuscd == "finished"){
-            ticket_data = ticket_end_list_cache;
-        }
-        var package_name = ticket_data[package_id].package_name;
-        var package_type = ticket_data[package_id].package_type_cd_nm;
-        var package_membernum = ticket_data[package_id].package_ing_member_num;
-        var package_memo = ticket_data[package_id].package_note;
-        var package_status = ticket_data[package_id].package_state_cd_name;
-        // var package_statuscd = ticket_data[package_id].package_statuscd;
+        var package_name = $(this).find('div._groupname_mobile').text();
+        var package_type = $(this).find('div._grouptype_mobile').text();
+        var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
+        var package_memo = $(this).find('div._groupmemo_mobile > div:nth-of-type(2)').text();
+        var package_status = $('div.pters_selectbox_btn_selected > span').text();
+        var package_statuscd = $('div.pters_selectbox_btn_selected > span').attr('data-status');
         var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
+
+        // var package_statuscd = $('div.pters_selectbox_btn_selected').attr('data-status');
+        // var ticket_data;
+        // if(package_statuscd == "current"){
+        //     ticket_data = ticket_ing_list_cache;
+        // }else if(package_statuscd == "finished"){
+        //     ticket_data = ticket_end_list_cache;
+        // }
+        // var package_name = ticket_data[package_id].package_name;
+        // var package_type = ticket_data[package_id].package_type_cd_nm;
+        // var package_membernum = ticket_data[package_id].package_ing_member_num;
+        // var package_memo = ticket_data[package_id].package_note;
+        // var package_status = ticket_data[package_id].package_state_cd_name;
+        // // var package_statuscd = ticket_data[package_id].package_statuscd;
+        // var $targetlecturelist = $('#popup_ticket_info_mobile_lecturelist');
 
         current_Scroll_Position = $(document).scrollTop();
         $('#uptext3').text(package_name);
@@ -1098,9 +1098,9 @@ function get_group_end_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -1292,9 +1292,9 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -1377,9 +1377,9 @@ function modify_group_status(group_id, option){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -1851,9 +1851,9 @@ function get_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 if(use == 'callback'){
@@ -1911,9 +1911,9 @@ function get_end_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide()
                 $('#errorMessageText').text('')
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png')
                 if(use == 'callback'){
@@ -2536,12 +2536,12 @@ function get_package_ing_list(use, callback){
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
-                ticket_ing_list_cache = ticket_jsondata_to_dict(jsondata);           
+                ticket_ing_list_cache = ticket_jsondata_to_dict(jsondata);         
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -2602,9 +2602,9 @@ function get_package_end_list(use, callback){
                 ticket_end_list_cache = ticket_jsondata_to_dict(jsondata);
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -2647,6 +2647,7 @@ function ticket_jsondata_to_dict(jsondata){
         result[jsondata.package_id[j]]["package_mod_dt"] = jsondata.package_mod_dt[j];
     }
     return result;
+}
 
 //서버로부터 패키지 목록 가져오기
 function get_package_ing_list_page(use, callback){
@@ -2671,7 +2672,6 @@ function get_package_ing_list_page(use, callback){
         //통신성공시 처리
         success:function(data){
             var jsondata = JSON.parse(data);
-            console.log("get_package_ing_list", jsondata);
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
@@ -2682,11 +2682,12 @@ function get_package_ing_list_page(use, callback){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 if(jsondata.package_id.length>0) {
+                    ticket_ing_list_cache = Object.assign(ticket_ing_list_cache, ticket_jsondata_to_dict(jsondata));
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
-                    if (bodywidth < 600) {
-                        $('#page_managemember').show();
-                    }
+                    // if (bodywidth < 600) {
+                    //     $('#page_managemember').show();
+                    // }
                     //$('html').css("cursor","auto")
                     $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -2745,11 +2746,12 @@ function get_package_end_list_page(use, callback){
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
                 if(jsondata.package_id.length>0) {
+                    ticket_end_list_cache = Object.assign(ticket_end_list_cache, ticket_jsondata_to_dict(jsondata));
                     $('#errorMessageBar').hide();
                     $('#errorMessageText').text('');
-                    if(bodywidth < 600){
-                        $('#page_managemember').show();
-                    }
+                    // if(bodywidth < 600){
+                    //     $('#page_managemember').show();
+                    // }
                     //$('html').css("cursor","auto")
                     $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -2772,7 +2774,6 @@ function get_package_end_list_page(use, callback){
             $('#errorMessageText').text('통신 에러: 관리자 문의');
         }
     });
-
 }
 
 function fill_single_package_list_to_dropdown_to_make_new_package(targetHTML, type, jsondata){
@@ -3234,10 +3235,6 @@ function get_package_member_list(package_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                // if(bodywidth < 600){
-                //     $('#page_managemember').show();
-                // }
-                //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
                 if(use == 'callback'){
                     callback(jsondata);
@@ -3307,8 +3304,14 @@ function get_end_package_member_list(package_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata);
                 }else{
-                    packageMemberListSet(package_id, jsondata);
-                    $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
+                    // packageMemberListSet(package_id, jsondata);
+                    // $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
+                    if(bodywidth > 1000){
+                        packageMemberListSet(package_id, jsondata);
+                        $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
+                    }else if(bodywidth <= 1000){
+                        packageMemberListSet_mobile(package_id, jsondata);
+                    }
                 }
 
                 console.log('success');
@@ -3682,9 +3685,9 @@ function get_grouplist_in_package(package_id, state, use, callback){
             if(jsondata.messageArray.length>0){
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                if(bodywidth < 600){
-                    scrollToDom($('#page_addmember'));
-                }
+                // if(bodywidth < 600){
+                //     scrollToDom($('#page_addmember'));
+                // }
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
             }else{
@@ -4027,9 +4030,9 @@ function modify_package_status(package_id, option){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').show();
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
@@ -4087,8 +4090,8 @@ function add_ticketmember_form_func(){
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 if(bodywidth < 600){
-                    //$('#page_managemember').show();
-                    $('#page_managemember').css({'height':'100%'});
+                    $('#page_managemember').show();
+                    //$('#page_managemember').css({'height':'100%'});
                 }else{
                     $('body').css('overflow-y', 'auto');
                 }
