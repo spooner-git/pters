@@ -1004,8 +1004,6 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
                 complete_member_reg_data_pc(lectureID, dbID);
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
-            $('#shade_caution').hide();
-            hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-groupstatus') == "PE"){
@@ -1022,8 +1020,6 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
                 resume_member_reg_data_pc(lectureID, dbID);
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
-            $('#shade_caution').hide();
-            hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype', '');
         });
     }
@@ -1378,6 +1374,9 @@ function modify_group_status(group_id, option){
     }else if(option == 'resume'){
         _URL = '/trainer/progress_group_info/';
     }
+    $('#shade_caution').hide();
+    hide_shadow_responsively();
+    $('.lectureStateChangeSelectPopup').css('display', 'none');
 
     $.ajax({
         url: _URL,
@@ -1390,6 +1389,9 @@ function modify_group_status(group_id, option){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            if(option=='resume'){
+                pters_option_inspector("group_update", xhr, $('#currentGroupList').attr('total_group_num'));
+            }
         },
 
         //보내기후 팝업창 닫기
@@ -1432,7 +1434,6 @@ function modify_group_status(group_id, option){
                 // }
                 
                 smart_refresh_member_group_class_list();
-                $('.lectureStateChangeSelectPopup').css('display', 'none');
 
                 console.log('success');
             }
@@ -1740,6 +1741,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             $membernum = $('#memberNumber_current_group');
             $targetHTML = $('#currentGroupList');
             text_membernum = "진행중인 수업 ";
+            $targetHTML.attr('total_group_num', jsondata.total_group_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
@@ -1749,7 +1751,6 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
     }
 
     $('#uptext').text("수업("+jsondata.total_group_num+"개)");
-
     var htmlToAdd = [];
     var htmlToJoin = [];
     var htmlToJoin2 = [];
@@ -1872,6 +1873,7 @@ function group_class_ListHtml_page(option, jsondata){ //option : current, finish
             $membernum = $('#memberNumber_current_group');
             $targetHTML = $('#currentGroupList');
             text_membernum = "진행중인 수업 ";
+            $targetHTML.attr('total_group_num', jsondata.total_group_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');

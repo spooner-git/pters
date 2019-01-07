@@ -263,7 +263,7 @@ $('button#addByNew').click(function(e){
     var $this = $(this);
     if(!$this.hasClass('disabled_button')){
         $this.addClass('disabled_button');
-        get_member_ing_list("callback", function(jsondata){
+        get_member_ing_list_all("callback", function(jsondata){
             var member_list_data = jsondata;
             pters_option_inspector("member_create", "", member_list_data.db_id.length);
         
@@ -451,7 +451,7 @@ $(document).on('click', 'img.add_listedMember', function(){
     }else{
         if(!$this.hasClass('disabled_button')){
             $this.addClass('disabled_button');
-            get_member_ing_list("callback", function(jsondata){
+            get_member_ing_list_all("callback", function(jsondata){
                 var member_list_data = jsondata;
 
                 if(member_list_data.db_id.indexOf(selected_dbid) == -1){
@@ -956,8 +956,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
                 // complete_member_reg_data_pc(lectureID, dbID);
                 // $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
-            $('#shade_caution').hide();
-            hide_shadow_responsively();
+            // $('#shade_caution').hide();
+            // hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype','');
         });
     }else if($(this).attr('data-packagestatus') == "PE"){
@@ -974,8 +974,8 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
                 // resume_member_reg_data_pc(lectureID, dbID);
                 // $('.lectureStateChangeSelectPopup').css('display', 'none');
             }
-            $('#shade_caution').hide();
-            hide_shadow_responsively();
+            // $('#shade_caution').hide();
+            // hide_shadow_responsively();
             // $('.lectureStateChangeSelectPopup').attr('data-grouptype', '');
         });
     }
@@ -2813,6 +2813,7 @@ function package_ListHtml(option, jsondata){ //option : current, finished
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
             text_membernum = "진행중인 수강권 ";
+            $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
@@ -2944,6 +2945,7 @@ function package_ListHtml_page(option, jsondata){ //option : current, finished
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
             text_membernum = "진행중인 수강권 ";
+            $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
@@ -3074,6 +3076,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
             $membernum = $('#memberNumber_current_ticket');
             $targetHTML = $('#currentPackageList');
             text_membernum = "진행중인 수강권 ";
+            $targetHTML.attr('total_package_num', jsondata.total_package_num);
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_ticket');
@@ -3582,7 +3585,8 @@ function send_new_package_info(packagedata, use, callback){
     //     number_has = $(`div._grouptypecd[data-package-type="${grouptype}"]`).length;
     // }
     option_limit_type = "package_create";
-    number_has = $(`div._grouptypecd[data-package-type]`).length;
+    // number_has = $(`div._grouptypecd[data-package-type]`).length;
+    number_has = $('#currentPackageList').attr('total_package_num');
     $.ajax({
         url:'/trainer/add_package_info/',
         data: JSON.stringify(packagedata),
@@ -3997,7 +4001,13 @@ function modify_package_status(package_id, option){
     }else if(option == 'resume'){
         _URL = '/trainer/progress_package_info/';
     }
+    var option_limit_type = "package_update";
+    // number_has = $(`div._grouptypecd[data-package-type]`).length;
+    var number_has = $('#currentPackageList').attr('total_package_num');
 
+    $('#shade_caution').hide();
+    hide_shadow_responsively();
+    $('.lectureStateChangeSelectPopup').css('display', 'none');
     $.ajax({
         url: _URL,
         type:'POST',
@@ -4009,6 +4019,9 @@ function modify_package_status(package_id, option){
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
             beforeSend();
+            if(option=='resume'){
+                pters_option_inspector(option_limit_type, xhr, number_has);
+            }
         },
 
         //보내기후 팝업창 닫기
@@ -4037,7 +4050,6 @@ function modify_package_status(package_id, option){
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 smart_refresh_member_group_class_list();
-                $('.lectureStateChangeSelectPopup').css('display', 'none');
 
                 console.log('success');
             }
