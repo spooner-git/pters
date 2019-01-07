@@ -967,6 +967,9 @@ $(document).ready(function(){
             delete_package_from_list(group_delete_JSON.package_id, "callback", function(){
                 // //그룹원들에게서 그룹에 대한 수강이력을 지운다.
                 // delete_groupmember_from_grouplist();
+                if($('#popup_ticket_info_mobile').css('display') == "block"){
+                    $('#upbutton-x-modify').trigger('click');
+                }
             });
             
             enable_delete_btns_after_ajax();
@@ -1608,7 +1611,7 @@ $(document).ready(function(){
                 $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
-                $('#ticketnametitle').show();
+                $('#ticketnametitle, #ticketdelete').show();
                 $('.mobile_status_color_palette').show();
             }else if($(this).attr('data-type') == "modify" ){
                 $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');

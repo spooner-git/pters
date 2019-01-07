@@ -78,6 +78,8 @@
 		margin-left: 15px;
 		margin-bottom: 3px;
 		padding: 5px;
+		border: 1px solid #282828;
+		border-radius: 50%;
 		cursor: pointer;
 	}
 #add_group_to_package_selector_popup{
@@ -90,7 +92,7 @@
 	height: auto;
 	max-height: 350px;
 	background-color: #ffffff;
-	border: 1px solid #282828;
+	/*border: 1px solid #282828;*/
 	z-index: 300;
 }
 	#add_group_to_package_selector{

@@ -863,6 +863,29 @@ $(document).on('click', '._groupmanage img._info_delete', function(e){
     }
 
 });
+
+    //모바일
+$(document).on('click', '#ticketdelete > img', function(e){
+    e.stopPropagation();
+    group_delete_JSON = {"package_id":"", "fullnames":[], "ids":[]};
+    if($(this).css('opacity') == 1){
+        deleteTypeSelect = 'packagedelete';
+        $('#cal_popup_plandelete').show();
+        $('#popup_delete_question').html('정말 삭제하시겠습니까? <br> 삭제하면 복구할 수 없습니다.');
+        //삭제 확인팝업에서 확인할 수 있도록 삭제대상을 JSON 형식으로 만든다.
+        var package_id = $(this).attr('data-packageid');
+        var memberLen = $('#popup_ticket_info_mobile_memberlist div.memberline').length;
+        for(var k=3; k<=memberLen+2; k++){
+            //group_delete_JSON.lecture_ids.push($('div.groupMembersWrap[data-groupid="'+group_id+'"]').find('.memberline:nth-of-type('+k+')').attr('data-lecid'))
+            group_delete_JSON.ids.push($('#popup_ticket_info_mobile_memberlist').find('div.memberline:nth-of-type('+k+')').attr('data-dbid'));
+            group_delete_JSON.fullnames.push($('#popup_ticket_info_mobile_memberlist').find('div.memberline:nth-of-type('+k+')').attr('data-fullname'));
+        }
+        group_delete_JSON.package_id = package_id;
+        shade_index(150);
+    }else{
+        alert('리스트를 펼쳐 확인 후 삭제 해주세요.');
+    }
+});
 //그룹 리스트에서 그룹 삭제버튼을 누른다.
 
 
@@ -3191,7 +3214,8 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                         <div class="ticket_finished ${selected2}" data-status="complete" style="color:#9a9a9a">종료</div>
                     </div>`;
 
-    var html = `<div class="pters_table" style="display:none;" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" readonly></div></div>
+    var html = `<div class="pters_table" style="display:none;" id="ticketdelete"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;" data-packageid="${package_id}"></div>
+                <div class="pters_table" style="display:none;" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" readonly></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">회원수</div><div class="pters_table_cell">${package_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div style="color:${color}">${package_status}</div>${status}</div></div>
@@ -3210,6 +3234,7 @@ $(document).on('click', '.mobile_status_color_palette > div', function(){
     $(this).addClass('mobile_status_selected');
     $(this).siblings('div').removeClass('mobile_status_selected');
 });
+
 
 //패키지 소속 회원 목록을 그룹에 뿌리기
 function get_package_member_list(package_id, use, callback){
@@ -3980,7 +4005,7 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 if($('#popup_ticket_info_mobile').css('display') == "block"){
                     if(package_name.length != 0){
                        $('#uptext3').text(package_name);
-                       $('#ticketnametitle').hide();
+                       $('#ticketnametitle, #ticketdelete').hide();
                     }
                     $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                 }
