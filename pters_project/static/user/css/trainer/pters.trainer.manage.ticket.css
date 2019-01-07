@@ -309,20 +309,13 @@ img.substract_addedMember{
 	font-weight: bold;
 }
 
-.groupWrap:hover{
-	background: #e4e4e4;
-	font-weight: bold;
 
-}
 
 .red_color_text{
 	color: #fe4e65;
 	-webkit-text-fill-color: #fe4e65 !important;
 }
 
-.groupWrap:active{
-	background: #cccccc;
-}
 
 /*.groupWrap > div{
 	display: table-cell;
@@ -664,7 +657,13 @@ div._groupmanage img._info_delete{
 		margin: 0;
 		border-radius: unset;
 	}
-
+	.groupWrap:hover{
+		background: #e4e4e4;
+		font-weight: bold;
+	}
+	.groupWrap:active{
+		background: #cccccc;
+	}
 	.groupWrap > div{
 		display: table-cell;
 		line-height: 36px;
@@ -874,15 +873,17 @@ div._manage{
 		display: none;
 	}
 		.mobile_status_color_palette > div{
+			cursor: pointer;
 			display: inline-block;
 			border: 1px solid #cccccc;
 			padding: 0 5px 0 5px;
 			color:#9a9a9a;
 		}
 		.mobile_status_selected{
-			color: #282828 !important;
+			color: #fe4e65 !important;
 		}
 	#ticketdelete{
+		cursor: pointer;
 		background-color: #efefef;
 		border: 1px solid #cccccc;
 	}
