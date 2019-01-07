@@ -1332,14 +1332,31 @@ function time_index_set(size){
         // }else{
         //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         // }
+        // if(i<12 && i == work_startTime){
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+i+':00</span></div>');
+        // }else if(i==12){
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+i+':00</span></div>');
+        // }else if(i>12){
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+(i-12)+':00</span></div>');
+        // }else{
+        //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+i+':00</span></div>');
+        // }
         if(i<12 && i == work_startTime){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+i+':00</span></div>');
+            if(i<10){
+                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">0'+i+':00</span></div>');
+            }else{
+                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
+            }
         }else if(i==12){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+i+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
         }else if(i>12){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+(i-12)+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
         }else{
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+i+':00</span></div>');
+            if(i<10){
+                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">0'+i+':00</span></div>');
+            }else{
+                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
+            }
         }
     }
     $('div.timeindex').html(timelist.join(''));
@@ -1553,8 +1570,8 @@ function addcurrentTimeIndicator_blackbox(){ //현재 시간에 밑줄 긋기
         if(realTimeHour<10){
             realTimeHour = '0' + realTimeHour;
         }
-
-        selector_timeIndicatorBar.css('visibility', 'visible').html('<span class="timeindicator_rightfloat">'+realTimeHour+':'+realTimeMin+'</span>');
+        var ampm_time = time_format_add_ampm(realTimeHour+':'+realTimeMin);
+        selector_timeIndicatorBar.css('visibility', 'visible').html('<span class="timeindicator_rightfloat">'+ampm_time+'</span>');
     }else{
         $('.hour').removeClass('currentTimeBlackBox');
         selector_timeIndicatorBar.css('visibility', 'hidden');

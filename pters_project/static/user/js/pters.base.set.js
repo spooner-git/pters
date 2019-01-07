@@ -291,14 +291,20 @@ function time_format_add_ampm(time, noAMPM){ // time: 00:00
     var min = timesplit[1];
 
     var text;
+    var morning_text = "오전";
+    var afternoon_text = "오후";
+    // if(noAMPM=="kor"){
+    //     morning_text = "오전";
+    //     afternoon_text = "오후";
+    // }
     hour = hour % 24;
     if(hour < 12){
-        text = "AM";
+        text = morning_text;
     }else if(hour > 12){
         hour = hour - 12;
-        text = "PM";
+        text = afternoon_text;
     }else if(hour == 12){
-        text = "PM";
+        text = afternoon_text;
     }
     if(noAMPM == "none"){
         return hour+':'+min;

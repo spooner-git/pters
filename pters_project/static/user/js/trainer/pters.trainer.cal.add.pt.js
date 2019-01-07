@@ -460,7 +460,7 @@ $(document).ready(function(){
             thisID.split('_')[1]+'월 '+
             thisID.split('_')[2]+'일 '+'<br>'+
             time_format_add_ampm(thisID.split('_')[3]+':'+thisID.split('_')[4])+
-            '~ '+
+            ' ~ '+
             time_format_add_ampm(endHour+':'+endMin)
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
@@ -621,7 +621,7 @@ $(document).ready(function(){
             thisID.split('_')[1]+'월 '+
             thisID.split('_')[2]+'일 '+'<br>'+
             time_format_add_ampm(thisID.split('_')[3]+':'+thisID.split('_')[4])+
-            '~ '+
+            ' ~ '+
             time_format_add_ampm(endHour+':'+endMin)
             //' ('+
             //duration_number_to_hangul((Options.classDur*Number(dur))/60)+')'
@@ -771,6 +771,8 @@ $(document).ready(function(){
             //$("#id_time_duration, #id_time_duration_off").val(durationTime);
             planAddView($(this).attr('data-dur'));
         }
+        var text = $('#datetext_mini').html().split('~');
+        $('#datetext_mini').html(text[0]+ ' ~ ' + time_format_add_ampm($(this).attr('data-endtime')));
         check_dropdown_selected_addplan();
     });
 
@@ -3110,7 +3112,7 @@ function durTimeSet(selectedTime, selectedMin, option, Timeunit, filter){ // dur
         //console.log(add_time(selectedTime+':'+selectedMin, '00:0'+zz) , sortedlist[index+1])
         // if(zz%Timeunit == 0){ //진행시간을 몇분 단위로 표기할 것인지?
         durTimeList.append('<li><a data-dur="'+zz/Options.classDur+'" data-durmin="'+zz+'" data-endtime="'+add_time(selected_time, '00:0'+zz)+'" class="pointerList">'
-            +duration_number_to_hangul_minute(zz)+'  (~ '+time_format_add_ampm(add_time(selected_time, '00:0'+zz), "none")+')'+'</a></li>');
+            +duration_number_to_hangul_minute(zz)+'  (~ '+time_format_add_ampm(add_time(selected_time, '00:0'+zz))+')'+'</a></li>');
         // }
         zz += Timeunit;
 
@@ -3134,6 +3136,10 @@ function addGraphIndicator(durmin){
     var starttext = $('#starttimesSelected button').val().split(' ');  //오후 11:30
     var daymorning = starttext[0];
     var planHour = Number(starttext[1].split(':')[0]);
+    // hkkim 2019-01-07
+    if(daymorning == '오후'){
+        planHour += 12;
+    }
     var planMinute = Number(starttext[1].split(':')[1]);
     var planend = add_time(planHour+':'+planMinute, '00:'+durmin);
     var planEndHour = Number(planend.split(':')[0]);
@@ -3147,7 +3153,6 @@ function addGraphIndicator(durmin){
 
     var timegraph_hourendwidth;
     var timegraph_hourendoffset;
-
 
     if(planEndHour == Options.workEndTime){
         timegraph_hourendwidth = $('#'+(planEndHour-1)+'g_00').width();
