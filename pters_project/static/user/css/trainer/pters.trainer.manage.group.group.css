@@ -24,7 +24,7 @@
 	display: inline-block;
 }
 #groupname{
-	width: 50%;
+	width: 100%;
 	height: 35px;
 	border: 1px solid #cccccc;
 }
@@ -33,8 +33,9 @@
 	width:25%;
 }
 #groupcapacity{
-	width: 20%;
+	width: 100%;
 	height: 35px;
+	margin-top: 20px;
 }
 
 
@@ -758,6 +759,13 @@ div._fixedmember{
 		margin-bottom: 2px;
 		vertical-align: middle;
 		border-radius: 50%;
+	}
+	#groupname{
+		width: 50%;
+	}
+	#groupcapacity{
+		width: 20%;
+		margin-top: 0;
 	}
 }
 

@@ -3175,14 +3175,20 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
 //수강권 정보 모바일 팝업
 function set_ticket_info_for_mobile_popup(package_id, package_name, package_status, package_statuscd, package_type, package_membernum, package_memo){
     var color;
+    var selected1;
+    var selected2;
     if(package_status == "진행중"){
         color = "green";
+        selected1 = "mobile_status_selected";
+        selected2 = ""
     }else{
         color = "red";
+        selected1 = ""
+        selected2 = "mobile_status_selected";
     }
     var status    = `<div class="mobile_status_color_palette" data-groupid=${package_id}>
-                        <div class="" style="color:red">진행중</div>
-                        <div class="" style="color:red">종료</div>
+                        <div class="ticket_ongoing ${selected1}" data-status="resume" style="color:#9a9a9a;margin-right:20px;">진행중</div>
+                        <div class="ticket_finished ${selected2}" data-status="complete" style="color:#9a9a9a">종료</div>
                     </div>`;
 
     var html = `<div class="pters_table" style="display:none;" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" readonly></div></div>
@@ -3200,6 +3206,10 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
 }
 //수강권 정보 모바일 팝업
 
+$(document).on('click', '.mobile_status_color_palette > div', function(){
+    $(this).addClass('mobile_status_selected');
+    $(this).siblings('div').removeClass('mobile_status_selected');
+});
 
 //패키지 소속 회원 목록을 그룹에 뿌리기
 function get_package_member_list(package_id, use, callback){
@@ -3917,7 +3927,7 @@ function add_group_from_package(package_id, group_id, use, callback){
 //패키지 지우기
 
 //패키지 정보 수정
-function modify_package_from_list(package_id, package_name, package_note){
+function modify_package_from_list(package_id, package_name, package_note, use, callback){
     var bodywidth = window.innerWidth;
     $.ajax({
         url:'/trainer/update_package_info/',
@@ -3975,6 +3985,10 @@ function modify_package_from_list(package_id, package_name, package_note){
                     $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
                 }
                 console.log('success');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }
             }
         },
 
@@ -3992,10 +4006,16 @@ function modify_package_status(package_id, option){
 
     var bodywidth = window.innerWidth;
     var _URL;
+    var text_for_mobile;
+    var color_for_mobile;
     if(option == 'complete'){
         _URL = '/trainer/finish_package_info/';
+        text_for_mobile = "종료";
+        color_for_mobile = "red";
     }else if(option == 'resume'){
         _URL = '/trainer/progress_package_info/';
+        text_for_mobile = "진행중";
+        color_for_mobile = "green";
     }
 
     $.ajax({
@@ -4038,8 +4058,7 @@ function modify_package_status(package_id, option){
 
                 smart_refresh_member_group_class_list();
                 $('.lectureStateChangeSelectPopup').css('display', 'none');
-
-                console.log('success');
+                $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
             }
         },
 

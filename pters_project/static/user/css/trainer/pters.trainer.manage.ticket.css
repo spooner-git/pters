@@ -32,7 +32,7 @@
 	border: 1px solid #cccccc;
 }
 #packagename, #packagememo{
-	width: 60%;
+	width: 100%;
 	height: 35px;
 	border: 1px solid #cccccc;
 }
@@ -46,7 +46,7 @@
 }
 #lecture_list_to_package{
 	height: 35px;
-	width: 60%;
+	width: 100%;
 }
 	.lecture_bubble{
 		display: inline-block;
@@ -645,6 +645,9 @@ div._groupmanage img._info_delete{
 		margin-bottom: 3px;
 		transform: rotate(180deg);
 	}
+	#packagename, #packagememo, #lecture_list_to_package{
+		width: 60%;
+	}
 	
 }
 @media(min-width: 1000px){
@@ -870,5 +873,8 @@ div._manage{
 	}
 		.mobile_status_color_palette > div{
 			display: inline-block;
+		}
+		.mobile_status_selected{
+			color: #282828 !important;
 		}
 /*모바일에서 그룹을 클릭하면 나오는 팝업*/

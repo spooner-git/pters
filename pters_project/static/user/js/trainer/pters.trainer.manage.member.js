@@ -1609,14 +1609,18 @@ $(document).ready(function(){
                 $(this).attr('data-type', 'modify');
                 $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
                 $('#ticketnametitle').show();
-                $('.mobile_group_color_palette').show();
+                $('.mobile_status_color_palette').show();
             }else if($(this).attr('data-type') == "modify" ){
                 $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
                 $(this).attr('data-type', 'view');
                 var package_id = $('#mypackageid').attr('data-packageid');
                 var package_name = $('#ticketname input').val();
                 var package_note = $('#ticketmemo input').val();
-                modify_package_from_list(package_id, package_name, package_note);
+                $('.mobile_status_color_palette').hide();
+                modify_package_from_list(package_id, package_name, package_note, "callback", function(){
+                    modify_package_status(package_id, $('.mobile_status_selected').attr('data-status'));
+                });
+                
             }
         }else if($('#memberInfoPopup').css('display') == "block"){
             var text = '회원 정보 수정';
