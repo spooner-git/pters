@@ -1312,8 +1312,8 @@ function time_index_set(size){
 
     var timelist = [];
 
-    var morning = '<span class="KRtext">AM</span>';
-    var afternoon = '<span class="KRtext">PM</span>';
+    var morning = '<span class="KRtext">오전</span>';
+    var afternoon = '<span class="KRtext">오후</span>';
     if(Options.language=="JPN"){
         morning = '<span class="JPtext">午前</span>';
         afternoon = '<span class="JPtext">午後</span>';
@@ -1342,21 +1342,13 @@ function time_index_set(size){
         //     timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+i+':00</span></div>');
         // }
         if(i<12 && i == work_startTime){
-            if(i<10){
-                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">0'+i+':00</span></div>');
-            }else{
-                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
-            }
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+morning+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else if(i==12){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="morningtext">'+afternoon+'</span><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else if(i>12){
-            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }else{
-            if(i<10){
-                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">0'+i+':00</span></div>');
-            }else{
-                timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+i+':00</span></div>');
-            }
+            timelist.push('<div class="hour" id="hour'+i+'" style="height:'+size*60+'px;"><span class="timeindex_time">'+time_h_format_to_hh(i)+':00</span></div>');
         }
     }
     $('div.timeindex').html(timelist.join(''));

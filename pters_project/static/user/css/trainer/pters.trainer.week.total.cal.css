@@ -405,8 +405,7 @@ img,a,div,span,p{
 
 
 .morningtext{
-	display:block;
-	line-height:initial;
+	display:none;
 }
 
 .timeindex_time{
