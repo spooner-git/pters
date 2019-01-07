@@ -123,9 +123,11 @@ function shiftPtGroupClassList(type){
                 var group_class_Html = group_class_ListHtml('current', jsondata);
                 $('#currentGroupList').html(group_class_Html);
             });
-            $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
-            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
+            $('#currentGroupList').css('display', 'block');
+            $('#finishedGroupList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
+                $('#memberNumber_current_group').css('display', 'block');
+                $('#memberNumber_finish_group').css('display', 'none');
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
             }
@@ -136,9 +138,11 @@ function shiftPtGroupClassList(type){
                 var group_class_Html = group_class_ListHtml('finished', jsondata);
                 $('#finishedGroupList').html(group_class_Html);
             });
-            $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
-            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
+            $('#finishedGroupList').css('display', 'block');
+            $('#currentGroupList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
+                $('#memberNumber_finish_group').css('display', 'block');
+                $('#memberNumber_current_group').css('display', 'none');
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
             }

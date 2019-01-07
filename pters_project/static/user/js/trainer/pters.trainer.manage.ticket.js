@@ -190,11 +190,13 @@ function shiftPackageList(type){
     switch(type){
         case "current":
             ticket_tab = TAB_ING;
-            $('#currentPackageList, #memberNumber_current_ticket').css('display', 'block');
-            $('#memberNumber_finish_ticket, #finishedPackageList, #finishGroupNum').css('display', 'none');
+            $('#currentPackageList').css('display', 'block');
+            $('#finishedPackageList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
+                $('#memberNumber_current_ticket').css('display', 'block');
+                $('#memberNumber_finish_ticket').css('display', 'none');
                 get_package_ing_list("callback", function(jsondata){
                     var group_class_Html = package_ListHtml('current', jsondata);
                     $('#currentPackageList').html(group_class_Html);
@@ -209,11 +211,13 @@ function shiftPackageList(type){
         case "finished":
             ticket_tab = TAB_END;
 
-            $('#finishedPackageList, #memberNumber_finish_ticket').css('display', 'block');
-            $('#memberNumber_current_ticket, #currentPackageList, #currentGroupNum').css('display', 'none');
+            $('#finishedPackageList').css('display', 'block');
+            $('#currentPackageList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
+                $('#memberNumber_finish_ticket').css('display', 'block');
+                $('#memberNumber_current_ticket').css('display', 'none');
                 get_package_end_list("callback", function(jsondata){
                     // console.log("get_package_end_list", jsondata)
                     var group_class_Html = package_ListHtml('finished', jsondata);

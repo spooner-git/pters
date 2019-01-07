@@ -2243,10 +2243,13 @@ function shiftMemberList(type){
             get_member_ing_list("callback", function (jsondata) {
                 memberListSet(member_tab, jsondata);
             });
-            $('#currentMemberList, #memberNumber_current_member').css('display', 'block');
-            $('#finishedMemberList, #memberNumber_finish_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
+            $('#currentMemberList,').css('display', 'block');
+            $('#finishedMemberList, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
             if(bodywidth>1000){
+                $('#memberNumber_current_member').css('display', 'block');
+                $('#memberNumber_finish_member').css('display','none');
+
                 selector_MEMBER_THEAD__memberaddbutton.show();
             }
             
@@ -2257,10 +2260,12 @@ function shiftMemberList(type){
             get_member_end_list("callback", function (jsondata) {
                 memberListSet(member_tab, jsondata);
             });
-            $('#finishedMemberList, #memberNumber_finish_member').css('display', 'block');
-            $('#currentMemberList, #memberNumber_current_member, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
+            $('#finishedMemberList').css('display', 'block');
+            $('#currentMemberList, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
             if(bodywidth > 1000){
+                $('#memberNumber_finish_member').css('display', 'block');
+                $('#memberNumber_current_member').css('display','none');
                 selector_MEMBER_THEAD__memberaddbutton.show();
             }
             break;
