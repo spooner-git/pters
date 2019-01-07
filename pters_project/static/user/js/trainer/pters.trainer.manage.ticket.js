@@ -4053,7 +4053,6 @@ function modify_package_status(package_id, option){
     $('#shade_caution').hide();
     hide_shadow_responsively();
     $('.lectureStateChangeSelectPopup').css('display', 'none');
-    $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
 
     $.ajax({
         url: _URL,
@@ -4097,6 +4096,7 @@ function modify_package_status(package_id, option){
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 smart_refresh_member_group_class_list();
+                $('.mobile_status_color_palette').siblings('div').text(text_for_mobile).css('color', color_for_mobile);
             }
         },
 
