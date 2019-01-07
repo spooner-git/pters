@@ -401,7 +401,7 @@ img,a,div,span,p{
 
 
 .morningtext{
-	/*display:block;*/
+	display:block;
 }
 
 .timeindex_time{
