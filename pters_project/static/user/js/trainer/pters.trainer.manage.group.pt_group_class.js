@@ -6,6 +6,9 @@ var lecture_sort_val = SORT_LECTURE_NAME;
 var lecture_sort_order_by = SORT_ASC;
 var lecture_tab = TAB_ING;
 var lecture_keyword = '';
+var lectureListSet_len = 1;
+var lecture_page_num = 1;
+var lecture_mutex_val = 1;
 
 var db_id_flag = 0;
 var user_id_flag = 1;
@@ -113,9 +116,12 @@ $('#id_lecture_search').click(function(e){
 
 //진행중 클래스, 종료된 클래스 리스트 스왑 (통합)
 function shiftPtGroupClassList(type){
+    $('html').scrollTop(0);
+    lecture_page_num = 1;
+    lectureListSet_len = 1;
+    lecture_keyword = '';
     var bodywidth = $(window).width();
     $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
-    lecture_keyword = '';
     switch(type){
         case "current":
             lecture_tab = TAB_ING;
@@ -123,11 +129,15 @@ function shiftPtGroupClassList(type){
                 var group_class_Html = group_class_ListHtml('current', jsondata);
                 $('#currentGroupList').html(group_class_Html);
             });
-            $('#currentGroupList, #memberNumber_current_group').css('display', 'block');
-            $('#memberNumber_finish_group, #finishedGroupList, #finishGroupNum').css('display', 'none');
+            $('#currentGroupList').css('display', 'block');
+            $('#finishedGroupList, #finishGroupNum').css('display', 'none');
             if(bodywidth > 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
+            }
+            if(bodywidth > 600){
+                $('#memberNumber_current_group').css('display', 'block');
+                $('#memberNumber_finish_group').css('display', 'none');
             }
             break;
         case "finished":
@@ -136,11 +146,17 @@ function shiftPtGroupClassList(type){
                 var group_class_Html = group_class_ListHtml('finished', jsondata);
                 $('#finishedGroupList').html(group_class_Html);
             });
-            $('#finishedGroupList, #memberNumber_finish_group').css('display', 'block');
-            $('#memberNumber_current_group, #currentGroupList, #currentGroupNum').css('display', 'none');
+            $('#finishedGroupList').css('display', 'block');
+            $('#currentGroupList, #currentGroupNum').css('display', 'none');
             if(bodywidth > 1000){
+                $('#memberNumber_finish_group').css('display', 'block');
+                $('#memberNumber_current_group').css('display', 'none');
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
+            }
+            if(bodywidth > 600){
+                $('#memberNumber_finish_group').css('display', 'block');
+                $('#memberNumber_current_group').css('display', 'none');
             }
             break;
     }
@@ -1096,61 +1112,6 @@ function get_group_ing_list(use, callback){
     });
 }
 
-//서버로부터 패키지 목록 가져오기
-function get_package_ing_list(use, callback){
-    var bodywidth = window.innerWidth;
-    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
-    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
-    $.ajax({
-        url:'/trainer/get_package_ing_list/',
-
-        dataType : 'html',
-
-        beforeSend:function(){
-            beforeSend();
-        },
-
-        //보내기후 팝업창 닫기
-        complete:function(){
-            completeSend();
-        },
-
-        //통신성공시 처리
-        success:function(data){
-            var jsondata = JSON.parse(data);
-            console.log("get_package_ing_list", jsondata)
-            if(jsondata.messageArray.length>0){
-                //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-                scrollToDom($('#page_addmember'));
-                $('#errorMessageBar').show();
-                $('#errorMessageText').text(jsondata.messageArray);
-            }else{
-                $('#errorMessageBar').hide();
-                $('#errorMessageText').text('');
-                // if(bodywidth < 600){
-                //     $('#page_managemember').css('display', 'block');
-                // }
-                //$('html').css("cursor","auto")
-                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-
-                if(use == "callback"){
-                    callback(jsondata);
-                }else{
-                    //group_class_ListHtml('current',jsondata)
-                }
-
-                console.log('success');
-            }
-        },
-
-        //통신 실패시 처리
-        error:function(){
-            $('#errorMessageBar').show();
-            $('#errorMessageText').text('통신 에러: 관리자 문의');
-        }
-    });
-}
 //서버로부터 그룹 목록 가져오기
 
 //서버로부터 그룹 목록 가져오기
@@ -1778,12 +1739,12 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
         case 'current':
             $membernum = $('#memberNumber_current_group');
             $targetHTML = $('#currentGroupList');
-            text_membernum = "진행중인 그룹 ";
+            text_membernum = "진행중인 수업 ";
             break;
         case 'finished':
             $membernum = $('#memberNumber_finish_group');
             $targetHTML = $('#finishedGroupList');
-            text_membernum = "종료된 그룹 ";
+            text_membernum = "종료된 수업 ";
             break;
     }
 
@@ -1794,11 +1755,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
     var htmlToJoin2 = [];
     var groupNum = jsondata.group_id.length;
     var ordernum = 1;
-    var input_order_num = 1;
-    if(lecture_keyword != ''){
-        ordernum = 0;
-        input_order_num = 0;
-    }
+    var input_order_num = 0;
     for(var i=0; i<groupNum; i++){
         var group_name = jsondata.group_name[i];
         var group_id = jsondata.group_id[i];
@@ -1821,13 +1778,8 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
                 group_membernum = jsondata.end_group_member_num[i];
                 break;
         }
-
-        if(group_type == "ONE_TO_ONE"){
-            input_order_num = 1;
-        }else{
-            ordernum++;
-            input_order_num = ordernum;
-        }
+        // console.log(group_type);
+        input_order_num++;
         var full_group = "";
         var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
         var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
@@ -1900,7 +1852,7 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             htmlToAdd.push(html);
         }
     }
-
+    lectureListSet_len = groupNum + 1;
     if(htmlToJoin2.length == 0 && htmlToAdd.length == 0){
         if(option == "current"){
             htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수업이 없습니다.</div>');
@@ -1908,7 +1860,139 @@ function group_class_ListHtml(option, jsondata){ //option : current, finished
             htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수업이 없습니다.</div>');
         }
     }
-    //$membernum.html(text_membernum+'<span style="font-size:16px;">'+ordernum+'</span>');
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'개</span>');
+    //$targetHTML.html(htmlToJoin2.join('') + htmlToJoin.join(''))
+    return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
+}
+
+function group_class_ListHtml_page(option, jsondata){ //option : current, finished
+
+    switch(option){
+        case 'current':
+            $membernum = $('#memberNumber_current_group');
+            $targetHTML = $('#currentGroupList');
+            text_membernum = "진행중인 수업 ";
+            break;
+        case 'finished':
+            $membernum = $('#memberNumber_finish_group');
+            $targetHTML = $('#finishedGroupList');
+            text_membernum = "종료된 수업 ";
+            break;
+    }
+
+    $('#uptext').text("수업("+jsondata.total_group_num+"개)");
+
+    var htmlToAdd = [];
+    var htmlToJoin = [];
+    var htmlToJoin2 = [];
+    var groupNum = jsondata.group_id.length;
+    var ordernum = 1;
+    var input_order_num = 0;
+    for(var i=0; i<groupNum; i++){
+        var group_name = jsondata.group_name[i];
+        var group_id = jsondata.group_id[i];
+        var group_type = jsondata.group_type_cd[i];
+        var group_type_nm = jsondata.group_type_cd_nm[i];
+        var group_createdate = date_format_to_yyyymmdd(jsondata.group_reg_dt[i].split(' ')[0]+' '+jsondata.group_reg_dt[i].split(' ')[1]+' '+jsondata.group_reg_dt[i].split(' ')[2], '-');
+        var group_memo = jsondata.group_note[i];
+        var group_memberlist = [];
+        var group_capacity = jsondata.member_num[i];
+        var groupstatus = jsondata.state_cd_name[i];
+        var groupstatus_cd = jsondata.state_cd[i];
+        var groupplancolor = jsondata.group_ing_color_cd[i];
+
+        var group_membernum;
+        switch(option){
+            case 'current':
+                group_membernum = jsondata.group_member_num[i];
+                break;
+            case 'finished':
+                group_membernum = jsondata.end_group_member_num[i];
+                break;
+        }
+        input_order_num++;
+        var full_group = "";
+        var pcdownloadimage = '<img src="/static/user/res/member/pters-download.png" class="pcmanageicon _info_download" title="엑셀 다운로드" data-groupid="'+group_id+'">';
+        var pcdeleteimage = '<img src="/static/user/res/member/icon-delete.png" class="pcmanageicon _info_delete" title="삭제" data-groupid="'+group_id+'">';
+        var pceditimage = '<img src="/static/user/res/member/icon-edit.png" class="pcmanageicon _info_modify" title="수정" data-groupid="'+group_id+'" data-edit="view">';
+        var pceditcancelimage = '<img src="/static/user/res/member/icon-x-red.png" class="pcmanageicon _info_cancel" title="취소" data-groupid="'+group_id+'">';
+        var img_lock_function = '<img src="/static/user/res/login/icon-lock-grey.png" class="pcmanageicon lock_function" title="기능 구매후 이용 가능" onclick="purchase_annai()">';
+
+        var htmlstart = '<div class="groupWrap" data-groupstatecd="'+option+'" data-groupid="'+group_id+'">';
+        var htmlend = '</div>';
+        var memolist = '<div class="groupMemoWrap " data-groupid="'+group_id+'">메모: '+'<input class="input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+        var repeatlist = '<div class="groupRepeatWrap " data-groupid="'+group_id+'"></div>';
+        var memberlist = '<div class="groupMembersWrap " data-groupid="'+group_id+'" data-groupname="'+group_name+'" data-groupcapacity="'+group_capacity+'" data-grouptype="'+group_type+'">'+group_memberlist+'</div>';
+
+        if(group_type == "ONE_TO_ONE") {
+            manageimgs = '<div class="_groupmanage _group_list_pc_style"></div>';
+        }
+        else{
+            var manageimgs = '<div class="_groupmanage _group_list_pc_style">' + pceditimage + pceditcancelimage + pcdeleteimage + '</div>';
+            if (Options.auth_class == 0) {
+                manageimgs = '<div class="_groupmanage _group_list_pc_style">' + img_lock_function + '</div>';
+            }
+        }
+
+        var main = '<div class="_groupnum _group_list_pc_style">'+(i+lectureListSet_len)+'</div>'+
+                    '<div class="_groupplancolor _group_list_pc_style"><div class="plancolor" style="background-color:'+groupplancolor+'"></div></div>'+
+                    '<div class="_grouptypecd" data-group-type="'+group_type+'" style="display:none;"><input class="group_listinput input_disabled_true" value="'+group_type_nm+'" disabled>'+'</div>'+
+                    '<div class="_groupname _group_list_pc_style"><input class="group_listinput input_disabled_true _editable" value="'+'['+group_type_nm+'] '+group_name+'" disabled>'+'</div>'+
+                    '<div class="_groupparticipants '+full_group+' _group_list_pc_style">'+ group_membernum+'</div>'+
+                    '<div class="_groupcapacity _group_list_pc_style">'+'<input style="width:25px;" class="group_listinput input_disabled_true _editable '+full_group+'" value="'+group_capacity+'" disabled>'+'</div>';
+            if(group_type == "ONE_TO_ONE") {
+                main += '<div class="_grouppartystatus '+"full_group"+' _group_list_pc_style"><span>'+ group_membernum + ' </span> ' +'</div>';
+            }
+            else{
+                main += '<div class="_grouppartystatus ' + full_group + ' _group_list_pc_style">' + '<div class="group_member_current_num">' + group_membernum + '</div>' + '<span> /</span> ' + '<input style="width:40%;text-align:left;" class="group_listinput input_disabled_true _editable ' + full_group + '" value="' + group_capacity + '" disabled>' + '</div>';
+            }
+            main += '<div class="_groupmemo _group_list_pc_style"><input class="group_listinput input_disabled_true _editable" value="'+group_memo+'" disabled>'+'</div>';
+
+            if(group_type == "ONE_TO_ONE"){
+                main += '<div class="_groupcreatedate _group_list_pc_style"><input class="group_listinput input_disabled_true" value="'+'기본 생성'+'" disabled>'+'</div>';
+            }
+            else{
+                main += '<div class="_groupcreatedate _group_list_pc_style"><input class="group_listinput input_disabled_true" value="'+date_format_yyyymmdd_to_yyyymmdd_split(group_createdate,'.')+'" disabled>'+'</div>';
+            }
+            main += '<div class="_groupstatus _group_list_pc_style" data-groupid="'+group_id+'">'+'<span class="_editable _groupstatus_'+groupstatus_cd+'" data-groupstatus="'+groupstatus_cd+'" data-groupid="'+group_id+'">'+groupstatus+'</span>'+'</div>'+ manageimgs;
+            //'<div class="_groupmanage">'+pceditimage+pceditcancelimage+pcdeleteimage+'</div>'
+
+        var main_mobile = `<div class="_groupname_mobile _group_list_mobile_style" style="border-top:6px solid; border-color: ${groupplancolor}">
+                                <span>${group_name}</span>
+                           </div>
+                           <div class="_groupinfo_mobile _group_list_mobile_style">
+                                <div class="groupinfo_mobile_upper">
+                                    <div>${group_type_nm}</div>
+                                    <div><span style="color:#8d8d8d;font-weight:400">참여중 </span><span style="float:right;"> ${group_membernum}</span></div>
+                                    <span style="margin-left:10px;margin-right:10px;font-size:18px;color:#f4f4f4;font-weight:300">|</span>
+                                    <div><span style="color:#8d8d8d;font-weight:400">정원 </span><span style="float:right;"> ${group_capacity}</span></div>
+                                </div>
+                                <div class="groupinfo_mobile_lower">
+                                    <div>${group_memo}</div>
+                                </div>
+                           </div>
+                           `;
+
+
+        var html = htmlstart+main+main_mobile+htmlend+memolist+repeatlist+memberlist;
+        if(group_type == "EMPTY"){
+            htmlToJoin.push(html);
+        }else if(group_type == "NORMAL"){
+            htmlToJoin2.push(html);
+        }else if(group_type == "ONE_TO_ONE"){
+            htmlToAdd.push(html);
+        }
+    }
+
+    lectureListSet_len += groupNum;
+    if(htmlToJoin2.length == 0 && htmlToAdd.length == 0){
+        if(option == "current"){
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">추가 된 수업이 없습니다.</div>');
+        }else if(option == "finished"){
+            htmlToJoin2.push('<div class="groupWrap" data-groupstatecd="'+option+'" style="height:50px;padding-top:17px !important">종료 된 수업이 없습니다.</div>');
+        }
+    }
+    $membernum.html(text_membernum+'<span style="font-size:16px;">'+jsondata.total_group_num+'개</span>');
     //$targetHTML.html(htmlToJoin2.join('') + htmlToJoin.join(''))
     return htmlToAdd+ htmlToJoin2.join('') + htmlToJoin.join('');
 }
@@ -2684,10 +2768,13 @@ function get_member_group_class_ing_list(use, callback){
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
     // var startTime = '';
     // var endTime = '';
+    lecture_page_num = 1;
+    lectureListSet_len = 1;
+    lecture_mutex_val = 1;
     $.ajax({
         url:'/trainer/get_member_group_class_ing_list/',
         type:'GET',
-        data: {"page": page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
+        data: {"page": lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2744,10 +2831,13 @@ function get_member_group_class_end_list(use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    lecture_page_num = 1;
+    lectureListSet_len = 1;
+    lecture_mutex_val = 1;
     $.ajax({
         url:'/trainer/get_member_group_class_end_list/',
         type:'GET',
-        data: {"page": page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
+        data: {"page": lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
         dataType : 'html',
 
         beforeSend:function(){
@@ -2784,6 +2874,133 @@ function get_member_group_class_end_list(use, callback){
                 }
 
                 console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+
+
+//서버로부터 그룹 목록 가져오기
+function get_member_group_class_ing_list_page(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    // var startTime = '';
+    // var endTime = '';
+    $.ajax({
+        url:'/trainer/get_member_group_class_ing_list/',
+        type:'GET',
+        data: {"page": ++lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
+        dataType : 'html',
+
+        beforeSend:function(){
+            // startTime = performance.now();
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+
+            // endTime = performance.now();
+            // console.log(endTime - startTime + 'ms')
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                if(jsondata.group_id.length>0) {
+                    $('#errorMessageBar').hide();
+                    $('#errorMessageText').text('');
+                    if (bodywidth < 600) {
+                        $('#page_managemember').css('display', 'block');
+                    }
+                    //$('html').css("cursor","auto")
+                    $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                    if (use == "callback") {
+                        callback(jsondata);
+                    } else {
+                        //groupListSet('current',jsondata)
+                    }
+
+                    console.log('success');
+                }else{
+                    lecture_page_num -= 1;
+                }
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
+
+//서버로부터 그룹 목록 가져오기
+function get_member_group_class_end_list_page(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_member_group_class_end_list/',
+        type:'GET',
+        data: {"page": ++lecture_page_num, "sort_val": lecture_sort_val, "sort_order_by":lecture_sort_order_by, "keyword":lecture_keyword},
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                if(jsondata.group_id.length>0) {
+                    $('#errorMessageBar').hide();
+                    $('#errorMessageText').text('');
+                    if(bodywidth < 600){
+                        $('#page_managemember').css('display', 'block');
+                    }
+                    //$('html').css("cursor","auto")
+                    $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                    if(use == "callback"){
+                        callback(jsondata);
+                    }else{
+                        //groupListSet('current',jsondata)
+                    }
+
+                    console.log('success');
+                }else{
+                    lecture_page_num -= 1;
+                }
             }
         },
 

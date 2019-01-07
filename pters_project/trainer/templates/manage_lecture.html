@@ -1342,6 +1342,27 @@
             $('#currentGroupList').html(group_class_Html);
         });
 
+
+        $(window).scroll(function() {
+            var scrollHeight = $(document).height();
+            var scrollPosition = $(window).height() + $(window).scrollTop();
+            if (((scrollHeight - scrollPosition) < 100) && (lecture_mutex_val==1)) {
+                lecture_mutex_val = 0;
+                if(lecture_tab == TAB_ING) {
+                    get_member_group_class_ing_list_page("callback", function(jsondata){
+                        var group_class_Html = group_class_ListHtml_page('current', jsondata);
+                        $('#currentGroupList').append(group_class_Html);
+                    });
+                }
+                else if(lecture_tab == TAB_END) {
+                    get_member_group_class_end_list_page("callback", function(jsondata){
+                        var group_class_Html = group_class_ListHtml_page('finished', jsondata);
+                        $('#finishedGroupList').append(group_class_Html);
+                    });
+                }
+            }
+        });
+
         // $(window).resize(function(){
         //     //bodywidth = window.innerWidth;
         //     var selector_currentMemberList = $('#currentMemberList');

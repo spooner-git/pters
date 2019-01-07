@@ -1186,13 +1186,13 @@
             if (((scrollHeight - scrollPosition) < 100) && (mutex_val==1)) {
                 mutex_val = 0;
                 if(member_tab == TAB_ING) {
-                    get_member_list_test('/trainer/get_member_ing_list/', "callback", function (jsondata) {
-                        memberListSet_test(member_tab, jsondata);
+                    get_member_list_page('/trainer/get_member_ing_list/', "callback", function (jsondata) {
+                        memberListSet_page(member_tab, jsondata);
                     });
                 }
                 else if(member_tab == TAB_END){
-                    get_member_list_test('/trainer/get_member_end_list/', 'callback', function(jsondata){
-                        memberListSet_test(member_tab, jsondata);
+                    get_member_list_page('/trainer/get_member_end_list/', 'callback', function(jsondata){
+                        memberListSet_page(member_tab, jsondata);
                     });
                 }
             }

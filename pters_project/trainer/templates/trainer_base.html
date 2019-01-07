@@ -371,12 +371,12 @@
                             </a>
                         </div> -->
                         
-                            <div class="sidebar_div" onclick="sideGoPage('work_manage', 'text-workmanage')"><img src={% static_url "user/res/icon-statistic.png" %} class="sidebar_icon" alt="#">
+                            <div class="sidebar_div" onclick="sideGoPage('work_manage', 'text-workmanage')"><img class="sidebar_icon" alt="#" src={% static_url "user/res/icon-statistic.png" %}>
                                 <a class="sidebar_text text-workmanage">
                                 </a>
                             </div>
                             
-                        <div class="sidebar_div"  onclick="sideGoPage('alarm', 'text-alarm')"><img src={% static_url "user/res/alarm/alarm_on.png" %} class="sidebar_icon" alt="#">
+                        <div class="sidebar_div"  onclick="sideGoPage('alarm', 'text-alarm')"><img class="sidebar_icon" alt="#" src={% static_url "user/res/alarm/alarm_on.png" %}>
                             <a class="sidebar_text text-alarm">
                             </a>
                         </div>
@@ -626,7 +626,7 @@
 <script type="text/javascript" src={% static_url "common/js/push/push.min.js" %}></script>
 <link rel="manifest" href={% static_url "manifest.json" %}>
 <script type="text/javascript" src={% static_url "user/js/push/firebase_setting.js" %}></script>
-<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3" autostart="false" ></audio>
+<audio id="audio" src="/static/user/res/sound/Robot_blip-Marianne_Gagnon-120342607.mp3"></audio>
 <script>
 function playSound() {
       var sound = document.getElementById("audio");
@@ -723,7 +723,6 @@ function playSound() {
                 registrations.forEach(function (v) {
                         send_message_to_sw(v.active, "hello cal week").then(function (m) {
                         playSound();
-                        console.log(window.location.pathname);
                         if((window.location.pathname=='/trainer/cal_week/')|| (window.location.pathname=='/trainer/cal_month/')|| (window.location.pathname=='/trainer/cal_total/')){
                             ajaxClassTime();
                         }
@@ -1266,12 +1265,11 @@ function playSound() {
             center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['modDate'] = jsondata.modDtArray[k];
             center_subject[jsondata.centerNameArray[k]][jsondata.classIdArray[k]]['regDate'] = jsondata.regDtArray[k];
         }
-        console.log(center_subject)
         return center_subject
     }
 
 
-    $('#popup_lecture_select .button_close_popup').click(function(){
+    $('.button_close_popup #popup_lecture_select').click(function(){
         $(this).parents('div.popups').fadeOut('fast');
         shade_index(-100);
     });
