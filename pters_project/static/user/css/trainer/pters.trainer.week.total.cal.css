@@ -401,7 +401,7 @@ img,a,div,span,p{
 
 
 .morningtext{
-	display:none;
+	/*display:block;*/
 }
 
 .timeindex_time{
@@ -623,6 +623,7 @@ img,a,div,span,p{
 @media(min-width: 400px){
 	.timeindex_time{
 		font-size: 13.5px;
+		display:block;
 	}
 }
 
