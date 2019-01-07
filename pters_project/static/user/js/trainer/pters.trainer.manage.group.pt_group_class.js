@@ -1126,9 +1126,9 @@ function get_package_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').css('display', 'block');
-                }
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
                 //$('html').css("cursor","auto")
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
