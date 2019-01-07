@@ -3902,26 +3902,34 @@ class GetPackageIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         order = {key: i for i, key in enumerate(order)}
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
+        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+                                                                               sort_order_by))
         if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-            package_data = sorted(package_data, key=attrgetter('ing_package_member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_PACKAGE_TYPE:
-            package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-                                                                                   sort_order_by))
+            package_data = sorted(package_data[1:], key=attrgetter('ing_package_member_num'), reverse=int(sort_order_by))
         elif sort_info == SORT_PACKAGE_CREATE_DATE:
-            package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+            package_data = sorted(package_data[1:], key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
-        for package_info in package_data:
-            package_info.package_group_data = PackageGroupTb.objects.select_related(
-                'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
-                                   package_tb_id=package_info.package_id, group_tb__use=USE,
-                                   use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+        context['total_package_num'] = len(package_data)
+        if page != 0:
+            paginator = Paginator(package_data, 20)  # Show 20 contacts per page
+            try:
+                package_data = paginator.page(page)
+            except EmptyPage:
+                package_data = None
+
+        if package_data is not None:
+
+            for package_info in package_data:
+                package_info.package_group_data = PackageGroupTb.objects.select_related(
+                    'group_tb').filter(class_tb_id=class_id, group_tb__state_cd='IP',
+                                       package_tb_id=package_info.package_id, group_tb__use=USE,
+                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['total_package_num'] = len(package_data)
         context['package_data'] = package_data
 
         return context
@@ -3955,26 +3963,33 @@ class GetPackageEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateVie
         order = {key: i for i, key in enumerate(order)}
         # package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd, 0))
 
+        package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
+                                                                               sort_order_by))
         if sort_info == SORT_PACKAGE_MEMBER_COUNT:
-            package_data = sorted(package_data, key=attrgetter('end_package_member_num'), reverse=int(sort_order_by))
-        elif sort_info == SORT_PACKAGE_TYPE:
-            package_data = sorted(package_data, key=lambda package_info: order.get(package_info.package_type_cd,
-                                                                                   sort_order_by))
+            package_data = sorted(package_data[1:], key=attrgetter('end_package_member_num'), reverse=int(sort_order_by))
         elif sort_info == SORT_PACKAGE_CREATE_DATE:
-            package_data = sorted(package_data, key=attrgetter('reg_dt'), reverse=int(sort_order_by))
+            package_data = sorted(package_data[1:], key=attrgetter('reg_dt'), reverse=int(sort_order_by))
 
-        for package_info in package_data:
-            package_info.package_group_data = PackageGroupTb.objects.select_related(
-                'group_tb').filter(class_tb_id=class_id,
-                                   package_tb_id=package_info.package_id, group_tb__use=USE,
-                                   use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
+        context['total_package_num'] = len(package_data)
+        if page != 0:
+            paginator = Paginator(package_data, 20)  # Show 20 contacts per page
+            try:
+                package_data = paginator.page(page)
+            except EmptyPage:
+                package_data = None
+
+        if package_data is not None:
+            for package_info in package_data:
+                package_info.package_group_data = PackageGroupTb.objects.select_related(
+                    'group_tb').filter(class_tb_id=class_id,
+                                       package_tb_id=package_info.package_id, group_tb__use=USE,
+                                       use=USE).order_by('-group_tb__group_type_cd', '-group_tb__name')
 
         if error is not None:
             logger.error(self.request.user.last_name + ' ' + self.request.user.first_name + '[' + str(
                 self.request.user.id) + ']' + error)
             messages.error(self.request, error)
 
-        context['total_package_num'] = len(package_data)
         context['package_data'] = package_data
 
         return context

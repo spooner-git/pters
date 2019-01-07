@@ -1371,7 +1371,40 @@
                 $('#currentPackageList').html(group_class_Html);
             });
         }
-        
+
+        $(window).scroll(function() {
+            var scrollHeight = $(document).height();
+            var scrollPosition = $(window).height() + $(window).scrollTop();
+            if (((scrollHeight - scrollPosition) < 100) && (ticket_mutex_val==1)) {
+                ticket_mutex_val = 0;
+                if(ticket_tab == TAB_ING) {
+                    get_package_ing_list_page("callback", function(jsondata){
+                        var group_class_Html = '';
+                        if(bodywidth <= 1000) {
+                            group_class_Html = package_ListHtml_mobile('current', jsondata);
+                        }
+                        else if(bodywidth > 1000){
+                            group_class_Html = package_ListHtml_page('current', jsondata);
+                        }
+                        $('#currentPackageList').append(group_class_Html);
+                    });
+                }
+                else if(ticket_tab == TAB_END) {
+                    get_package_end_list_page("callback", function(jsondata){
+                        // console.log("get_package_end_list", jsondata)
+                        var group_class_Html = '';
+                        if(bodywidth <= 1000) {
+                            group_class_Html = package_ListHtml_mobile('finished', jsondata);
+                        }
+                        else if(bodywidth > 1000){
+                            group_class_Html = package_ListHtml_page('finished', jsondata);
+                        }
+                        $('#finishedPackageList').append(group_class_Html);
+                    });
+                }
+            }
+        });
+
 
         $(window).resize(function(){
             bodywidth = window.innerWidth;

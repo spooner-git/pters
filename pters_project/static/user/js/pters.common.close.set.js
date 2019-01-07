@@ -239,6 +239,9 @@ function close_planadd_popup_mobile(){
 
 //회원 정보 관련(회원정보, 회원정보pc, 회원추가, 그룹/클래스추가) 팝업 닫기
 function close_manage_popup(option){
+    mutex_val = 1;
+    lecture_mutex_val = 1;
+    ticket_mutex_val = 1;
     var bodywidth = window.innerWidth;
     var text = '회원 정보 조회';
     if(Options.language == "JPN"){

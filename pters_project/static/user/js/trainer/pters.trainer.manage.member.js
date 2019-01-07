@@ -1784,6 +1784,8 @@ function send_modified_member_base_data(dbID){
 
 function float_btn_managemember(option){
     mutex_val = 0;
+    lecture_mutex_val = 0;
+    ticket_mutex_val = 0;
     var bodywidth = window.innerWidth;
     var text = '신규 회원 등록';
     if(Options.language == "JPN"){
@@ -1808,7 +1810,7 @@ function float_btn_managemember(option){
         initialize_add_member_sheet();
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); });
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
-        get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});
+        get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json)});
         selector_page_addmember.css('display', 'block');
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'memberadd');
         $('#float_inner1,#float_inner2').css({'opacity':'0', 'bottom':'25px'});
@@ -1990,6 +1992,9 @@ function float_btn_managemember(option){
 
 //PC버전 회원추가 버튼
 function pc_add_member(option){
+    mutex_val = 0;
+    lecture_mutex_val = 0;
+    ticket_mutex_val = 0;
     var text = '신규 회원 등록';
     var text2 = '회원 재등록';
     if(Options.language == "JPN"){
@@ -2032,7 +2037,7 @@ function pc_add_member(option){
                                             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())
                                             });
 
-        get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
+        get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 1){ //PC버전에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
@@ -2051,7 +2056,7 @@ function pc_add_member(option){
         selector_page_addmember.show().css({'top':centerLoc,
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
-        get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
+        get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
     }else if(option == 2){ //PC 회원정보창에서 연장추가 버튼 누름
         initialize_add_member_sheet();
         $('#uptext2, #uptext2_PC').text(text2);
@@ -2093,7 +2098,7 @@ function pc_add_member(option){
             'left':(($(window).width()-selector_page_addmember.outerWidth())/2+$(window).scrollLeft())});
 
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
+            get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json);});
 
@@ -2134,7 +2139,7 @@ function pc_add_member(option){
         $('#memberSex .selectboxopt').removeClass('selectbox_disable');
 
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json);});
-            get_package_ing_list('callback', function(json){package_type_dropdown_set(json);});
+            get_package_ing_list_all('callback', function(json){package_type_dropdown_set(json);});
         // get_group_ing_list('callback', function(json){grouptype_dropdown_set(json); get_package_ing_list('callback', function(json){package_type_dropdown_set(json)});});
         // get_package_ing_list('callback', function(json){grouptype_dropdown_set(json)});
         selector_memberSearchButton.trigger('click');
@@ -2230,20 +2235,20 @@ function pc_add_member(option){
 
 //진행중 회원, 종료된 회원 리스트 스왑
 function shiftMemberList(type){
+    $('html').scrollTop(0);
     page_num = 1;
     memberListSet_len = 1;
+    keyword = '';
     var selector_GROUP_THEAD_groupaddbutton = $('._GROUP_THEAD, ._groupaddbutton');
     var selector_MEMBER_THEAD__memberaddbutton = $('._MEMBER_THEAD, ._ALIGN_DROPDOWN');
     $('#search_member_input').val("").css("-webkit-text-fill-color", "#cccccc");
-    keyword = '';
-
     switch(type){
         case "current":
             member_tab = TAB_ING;
             get_member_ing_list("callback", function (jsondata) {
                 memberListSet(member_tab, jsondata);
             });
-            $('#currentMemberList,').css('display', 'block');
+            $('#currentMemberList').css('display', 'block');
             $('#finishedMemberList, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
             if(bodywidth>1000){
@@ -2743,7 +2748,7 @@ function get_member_list(use, callback){
 var page_num = 1;
 var mutex_val = 1;
 
-function get_member_list_test(url, use, callback){
+function get_member_list_page(url, use, callback){
     var bodywidth = window.innerWidth;
     //returnvalue 1이면 jsondata를 리턴
     //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
@@ -2948,6 +2953,60 @@ function get_member_end_list(use, callback){
     })
 }
 
+//서버로부터 패키지 목록 가져오기
+function get_package_ing_list_all(use, callback){
+    var bodywidth = window.innerWidth;
+    //returnvalue 1이면 jsondata를 리턴하고 드랍다운을 생성
+    //returnvalue 0이면 리턴하지 않고 리스트를 그린다.
+    $.ajax({
+        url:'/trainer/get_package_ing_list/',
+        dataType : 'html',
+
+        beforeSend:function(){
+            beforeSend();
+        },
+
+        //보내기후 팝업창 닫기
+        complete:function(){
+            completeSend();
+        },
+
+        //통신성공시 처리
+        success:function(data){
+            var jsondata = JSON.parse(data);
+            console.log("get_package_ing_list", jsondata)
+            if(jsondata.messageArray.length>0){
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+                scrollToDom($('#page_addmember'));
+                $('#errorMessageBar').show();
+                $('#errorMessageText').text(jsondata.messageArray);
+            }else{
+                $('#errorMessageBar').hide();
+                $('#errorMessageText').text('');
+                // if(bodywidth < 600){
+                //     $('#page_managemember').css('display', 'block');
+                // }
+                //$('html').css("cursor","auto")
+                $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
+
+                if(use == "callback"){
+                    callback(jsondata);
+                }else{
+                    //group_class_ListHtml('current',jsondata)
+                }
+
+                console.log('success');
+            }
+        },
+
+        //통신 실패시 처리
+        error:function(){
+            $('#errorMessageBar').show();
+            $('#errorMessageText').text('통신 에러: 관리자 문의');
+        }
+    });
+}
 
 function memberListSet (type, jsondata){
     var bodywidth = window.innerWidth;
@@ -3177,7 +3236,7 @@ function memberListSet (type, jsondata){
 }
 
 var memberListSet_len = 1;
-function memberListSet_test(type, jsondata){
+function memberListSet_page(type, jsondata){
     var bodywidth = window.innerWidth;
     var text = '소진시까지';
     var text2 = '이번달 신규회원';
