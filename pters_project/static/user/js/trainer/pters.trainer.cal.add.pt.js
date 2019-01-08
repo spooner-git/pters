@@ -1364,7 +1364,7 @@ $(document).ready(function(){
                         if(starttime_to_send == endtime_to_send){
                             if(xhr != ""){
                                 xhr.abort(); // ajax중지
-                                alert("에러: 예상치 못한 오류가 발생했습니다. Code:001(starttime==endtime)\n페이지 새로고침 후 다시 이용해주세요.")
+                                alert("에러: 예상치 못한 오류가 발생했습니다. Code:001 \n페이지 새로고침 후 다시 이용해주세요.")
                             }
                         }
                     },
@@ -1372,6 +1372,7 @@ $(document).ready(function(){
                     //통신성공시 처리
                     success:function(data){
                         //TEST_CODE_FOR_AJAX_TIMER_ends(AJAXTESTTIMER)
+
                         var jsondata = JSON.parse(data);
                         initialJSON = jsondata;
                         RepeatDuplicationDateArray = jsondata.RepeatDuplicationDateArray;
@@ -2546,10 +2547,20 @@ $('.allow_all_time').click(function(){
         $(this).removeClass('checked');
         $child.removeClass('ptersCheckboxInner_sm');
         ajaxTimeGraphSet($('#datepicker').val());
+        $('#id_duplication_enable_flag').val(0);
+        $('#id_off_duplication_enable_flag').val(0);
+        $('#id_repeat_duplication_enable_flag').val(0);
+        $('#id_off_repeat_duplication_enable_flag').val(0);
+
     }else{
         $(this).addClass('checked');
         $child.addClass('ptersCheckboxInner_sm');
         ajaxTimeGraphSet($('#datepicker').val());
+        $('#id_duplication_enable_flag').val(1);
+        $('#id_off_duplication_enable_flag').val(1);
+        $('#id_repeat_duplication_enable_flag').val(1);
+        $('#id_off_repeat_duplication_enable_flag').val(1);
+
     }
 });
 
