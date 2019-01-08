@@ -2984,6 +2984,7 @@ function schedule_jsondata_to_dict(jsondata){
 // }
 
 function know_duplicated_plans(jsondata){
+    // 1:1 일정 / 그룹 일정 / OFF 일정 합치기
     var testArray_start = jsondata.group_schedule_start_datetime.concat(jsondata.offTimeArray_start_date);
     var testArray_end = jsondata.group_schedule_end_datetime.concat(jsondata.offTimeArray_end_date);
     var classlen = jsondata.classTimeArray_start_date.length;
@@ -2994,24 +2995,28 @@ function know_duplicated_plans(jsondata){
         }
     }
 
-
     var duplicate_num = [];
     var duplicate_dic = {};
 
-    //console.log("testArray_start",testArray_start)
-
     var len1 = testArray_start.length;
-    var len2 = testArray_end.length;
+    // var len2 = testArray_end.length;
+
     for(var i=0; i<len1; i++){
+        // 시작 날짜 / 시각
         var plan = testArray_start[i].split(' ');
         var date = plan[0];
         var time = plan[1];
+
+        // 종료 날짜 / 시각
         var endplan = testArray_end[i].split(' ');
         var enddate = endplan[0];
         var endtime = endplan[1];
+
+        // ~ 24:00:00 일정 처리
         if(endtime == "00:00:00"){
-            enddate = substract_date(endplan[0]);
-            endtime = "24:00:00"
+            // 날짜 하루 빼기 수정 - hkkim 20190108
+            enddate = substract_date(endplan[0], -1);
+            endtime = "24:00:00";
         }
         var duplicated = 0;
 
@@ -3025,10 +3030,9 @@ function know_duplicated_plans(jsondata){
             var enddate_c = endplan_c[0];
             var endtime_c = endplan_c[1];
             if(endtime_c == "00:00:00"){
-                enddate_c = substract_date(endplan_c[0]);
-                endtime_c = "24:00:00"
+                enddate_c = substract_date(endplan_c[0], -1);
+                endtime_c = "24:00:00";
             }
-
 
             if(date_c == date){
                 //겹치는 걸 센다.
@@ -3071,7 +3075,7 @@ function know_duplicated_plans(jsondata){
         var temp_index = [];
         var temp_celldivide;
         var array_sorted = duplicate_dic[plan_].sort();
-        for(var t=0; t<duplicate_dic[plan_].length; t++){
+        for(var t=0; t<array_sorted.length; t++){
 
             var ref = array_sorted[t];
             if(t == 0){
@@ -3085,11 +3089,20 @@ function know_duplicated_plans(jsondata){
                     break;
                 }
 
-                var duplication_type = know_whether_plans_has_duplicates(   ref.split(' ~ ')[0].split(' ')[1],
-                                                                            ref.split(' ~ ')[1].split(' ')[1],
-                                                                            comp.split(' ~ ')[0].split(' ')[1],
-                                                                            comp.split(' ~ ')[1].split(' ')[1]
-                                                                        );
+                var ref_start_time = ref.split(' ~ ')[0].split(' ')[1];
+                var ref_end_time = ref.split(' ~ ')[1].split(' ')[1];
+                var comp_start_time = comp.split(' ~ ')[0].split(' ')[1];
+                var comp_end_time = comp.split(' ~ ')[1].split(' ')[1];
+                if(ref_end_time == "00:00:00"){
+                    ref_end_time = "24:00:00";
+                }
+                if(comp_end_time == "00:00:00"){
+                    comp_end_time = "24:00:00";
+                }
+
+                var duplication_type = know_whether_plans_has_duplicates(ref_start_time , ref_end_time,
+                                                                         comp_start_time, comp_end_time);
+
                 if(duplication_type > 0){ //겹칠때
                     var moved_element_check = 0;
                     if(temp_index[r] != r){
@@ -3109,11 +3122,20 @@ function know_duplicated_plans(jsondata){
                         index_move = index_loc+1;
                         //if(array_sorted[t] != array_sorted[index_loc]){
                         if(t != index_loc){
-                            var duplication_type_ = know_whether_plans_has_duplicates(  array_sorted[t].split(' ~ ')[0].split(' ')[1],
-                                                                                        array_sorted[t].split(' ~ ')[1].split(' ')[1],
-                                                                                        array_sorted[index_loc].split(' ~ ')[0].split(' ')[1],
-                                                                                        array_sorted[index_loc].split(' ~ ')[1].split(' ')[1]
-                                                                                     );
+
+                            var ref_start_time = array_sorted[t].split(' ~ ')[0].split(' ')[1];
+                            var ref_end_time = array_sorted[t].split(' ~ ')[1].split(' ')[1];
+                            var comp_start_time = array_sorted[index_loc].split(' ~ ')[0].split(' ')[1];
+                            var comp_end_time = array_sorted[index_loc].split(' ~ ')[1].split(' ')[1];
+                            if(ref_end_time == "00:00:00"){
+                                ref_end_time = "24:00:00";
+                            }
+                            if(comp_end_time == "00:00:00"){
+                                comp_end_time = "24:00:00";
+                            }
+
+                            var duplication_type_ = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
+                                                                                      comp_start_time, comp_end_time);
                             if(duplication_type_ > 0){
                                 check_++;
                             }else{
