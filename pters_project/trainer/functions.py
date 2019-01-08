@@ -1006,12 +1006,6 @@ def func_add_lecture_info(user_id, user_last_name, user_first_name, class_id, pa
         except ObjectDoesNotExist:
             error = '회원 정보를 불러오지 못했습니다.'
 
-        # log_data = LogTb(log_type='LB01', auth_member_id=user_id, from_member_name=user_last_name+user_first_name,
-        #                  to_member_name=member_name, class_tb_id=class_id, lecture_tb_id=lecture_info.lecture_id,
-        #                  log_info='수강권', log_how='등록', use=USE)
-        #
-        # log_data.save()
-
     return error
 
 

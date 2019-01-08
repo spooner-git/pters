@@ -3014,7 +3014,7 @@ function know_duplicated_plans(jsondata){
 
         // ~ 24:00:00 일정 처리
         if(endtime == "00:00:00"){
-            // 날짜 하루 빼기 수정 - hkkim 20190108
+            // 날짜 하루 빼기 수정(사용 x) - hkkim 20190108
             enddate = substract_date(endplan[0], -1);
             endtime = "24:00:00";
         }
@@ -3022,19 +3022,28 @@ function know_duplicated_plans(jsondata){
 
         duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]] = [];
 
+        // 중복 검사
         for(var j=0; j<len1; j++){
+
+            // 시작 날짜 / 시각
             var plan_c = testArray_start[j].split(' ');
             var date_c = plan_c[0];
             var time_c = plan_c[1];
+
+            // 종료 날짜 / 시각
             var endplan_c = testArray_end[j].split(' ');
             var enddate_c = endplan_c[0];
             var endtime_c = endplan_c[1];
+
+            // ~ 24:00:00 일정 처리
             if(endtime_c == "00:00:00"){
+                // 날짜 하루 빼기 수정(사용 x) - hkkim 20190108
                 enddate_c = substract_date(endplan_c[0], -1);
                 endtime_c = "24:00:00";
             }
 
-            if(date_c == date){
+            // 같은 날짜인 경우
+           if(date_c == date){
                 //겹치는 걸 센다.
                 if( compare_time(time_c, time) && compare_time(endtime, endtime_c)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
                     duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
@@ -3057,6 +3066,7 @@ function know_duplicated_plans(jsondata){
         duplicate_num.push(duplicated);
     }
 
+    //겹치는 리스트 제거?
     for(var plan_o in duplicate_dic){
         var planlength = duplicate_dic[plan_o].length;
         for(var plans in duplicate_dic){
@@ -3074,15 +3084,20 @@ function know_duplicated_plans(jsondata){
     for(var plan_ in duplicate_dic){
         var temp_index = [];
         var temp_celldivide;
+
+        // 겹치는 일정 sorting
         var array_sorted = duplicate_dic[plan_].sort();
+
         for(var t=0; t<array_sorted.length; t++){
 
+            // 기본값 셋팅
             var ref = array_sorted[t];
             if(t == 0){
                 temp_index[t] = 0; //가장 첫번째 값은 항상 왼쪽 첫번째로 고정 위치
                 continue;
             }
 
+            // 비교 대상 확인
             for(var r=0; r<array_sorted.length; r++){
                 var comp = array_sorted[r];
                 if(t == r){

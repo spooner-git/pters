@@ -3871,7 +3871,7 @@ function compare_times_to_merge_min_max(s_date, e_date, s_date2, e_date2){
 
         return {"start":`${sdate1} ${stime_new}`, "end":`${edate1} ${etime_new}`}
     }else{
-        console.log("날짜 값이 다릅니다.")
+        console.log("날짜 값이 다릅니다.");
         return false
     }
 
@@ -3881,6 +3881,7 @@ function compare_times_to_merge_min_max(s_date, e_date, s_date2, e_date2){
 
 $(window).resize(function(){
     //Timegraph에 일정과 OFF표기를 반응형으로\
+
     if($('#page-addplan').css('display') == 'block'){
         $('.timegraph_plans_pink, .timegraph_plans_grey').remove();
         timeGraphSet("class", "pink", "AddClass", ajaxJSON_cache);

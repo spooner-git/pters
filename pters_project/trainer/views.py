@@ -929,8 +929,8 @@ class GetTrainerScheduleView(LoginRequiredMixin, AccessTestMixin, TemplateView):
             today = datetime.datetime.strptime(date, '%Y-%m-%d')
         if day == '':
             day = 46
-        start_date = today - datetime.timedelta(days=int(day))
-        end_date = today + datetime.timedelta(days=int(day))
+        start_date = today - datetime.timedelta(days=0)
+        end_date = today + datetime.timedelta(days=1)
         # end_time = timezone.now()
         # print(str(end_time-start_time))
         context = func_get_trainer_schedule(context, class_id, start_date, end_date)
@@ -1140,6 +1140,7 @@ class GetMemberIngListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
+
         member_data = func_get_member_ing_list(class_id, self.request.user.id, keyword)
 
         sort_info = int(member_sort)
@@ -1177,7 +1178,9 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
         member_sort = self.request.GET.get('sort_val', SORT_MEMBER_NAME)
         sort_order_by = self.request.GET.get('sort_order_by', SORT_ASC)
         keyword = self.request.GET.get('keyword', '')
+
         member_data = func_get_member_end_list(class_id, self.request.user.id, keyword)
+
         sort_info = int(member_sort)
 
         if sort_info == SORT_MEMBER_NAME:
@@ -1194,6 +1197,7 @@ class GetMemberEndListViewAjax(LoginRequiredMixin, AccessTestMixin, TemplateView
                 member_data = paginator.page(page)
             except EmptyPage:
                 member_data = None
+
         context['member_data'] = member_data
         # end_dt = timezone.now()
         # print(str(end_dt-start_dt))
