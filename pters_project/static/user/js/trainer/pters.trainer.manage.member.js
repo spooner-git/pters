@@ -1594,6 +1594,26 @@ $(document).ready(function(){
         }
     });
 
+    $('#popup_ticket_info_mobile_modify_btn').click(function(){
+        if($(this).attr('data-type') == "view" ){
+            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", false).css('border', '1px solid #cccccc');
+            $(this).attr('data-type', 'modify');
+            $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+            $('#ticketdelete').show();
+            $('.mobile_status_color_palette').show();
+        }else if($(this).attr('data-type') == "modify" ){
+            $('#popup_ticket_info_mobile_basic').find(".pters_table_cell input").attr("readonly", true).css('border-color', 'transparent');
+            $(this).attr('data-type', 'view');
+            var package_id = $('#mypackageid').attr('data-packageid');
+            var package_name = $('#ticketname input').val();
+            var package_note = $('#ticketmemo input').val();
+            $('.mobile_status_color_palette').hide();
+            modify_package_from_list(package_id, package_name, package_note, "callback", function(){
+                modify_package_status(package_id, $('.mobile_status_selected').attr('data-status'));
+            });
+        }
+    });
+
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){
@@ -1629,7 +1649,6 @@ $(document).ready(function(){
                 modify_package_from_list(package_id, package_name, package_note, "callback", function(){
                     modify_package_status(package_id, $('.mobile_status_selected').attr('data-status'));
                 });
-                
             }
         }else if($('#memberInfoPopup').css('display') == "block"){
             var text = '회원 정보 수정';
@@ -2880,11 +2899,11 @@ function get_member_ing_list_all(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    //$('#page_managemember').show();
-                    //$('#page_managemember').css({'height':'100%'});
-                    $('#page_managemember').css({'display':'block'});
-                }
+                // if(bodywidth < 600){
+                //     //$('#page_managemember').show();
+                //     //$('#page_managemember').css({'height':'100%'});
+                //     $('#page_managemember').css({'display':'block'});
+                // }
                 // $('html').css("cursor","auto");
                 $('#upbutton-check img').attr('src','/static/user/res/ptadd/btn-complete.png');
 

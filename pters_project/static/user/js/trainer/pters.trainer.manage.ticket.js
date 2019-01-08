@@ -3229,7 +3229,7 @@ function set_ticket_info_for_mobile_popup(package_id, package_name, package_stat
                     </div>`;
 
     var html = `<div class="pters_table" style="display:none;" id="ticketdelete" data-packageid="${package_id}"><img src="/static/user/res/member/icon-delete-black.png" style="cursor:pointer;width:20px;margin:10px;"></div>
-                <div class="pters_table" style="display:none;" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" readonly></div></div>
+                <div class="pters_table" id="ticketnametitle"><div class="pters_table_cell">수강권명</div><div class="pters_table_cell" id="ticketname"><input type="text" class="mobile_memo_input" value="${package_name}" readonly></div></div>
                 <div class="pters_table"><div class="pters_table_cell">타입</div><div class="pters_table_cell">${package_type}</div></div>
                 <div class="pters_table"><div class="pters_table_cell">회원수</div><div class="pters_table_cell">${package_membernum}명</div></div>
                 <div class="pters_table"><div class="pters_table_cell">상태</div><div class="pters_table_cell"><div style="color:${color}">${package_status}</div>${status}</div></div>
@@ -3506,7 +3506,7 @@ function packageMemberListSet_mobile(package_id, jsondata){
 
     htmlToJoin.push(`
                         <div id="mobile_comment_1">
-                            <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
+                            <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
                         </div>
                         <div id="mobile_comment_2">
                             <p>회원을 체크하면 일정 등록시 함께 추가합니다.</p>
@@ -4018,10 +4018,17 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
 
                 if($('#popup_ticket_info_mobile').css('display') == "block"){
                     if(package_name.length != 0){
-                       $('#uptext3').text(package_name);
-                       $('#ticketnametitle, #ticketdelete').hide();
+                        if(bodywidth<600){
+                            $('#uptext3').text(package_name);
+                            $('#ticketnametitle, #ticketdelete').hide();
+                            $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
+                        }else{
+                            $('#ticketdelete').hide();
+                            $('#popup_ticket_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
+                        }
+                       
                     }
-                    $('#upbutton-modify').find('img').attr('src', '/static/user/res/icon-pencil.png');
+                    
                 }
                 console.log('success');
 
@@ -4156,17 +4163,31 @@ function add_ticketmember_form_func(){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if(bodywidth < 600){
-                    $('#page_managemember').show();
+                if(bodywidth < 1000){
+                    var package_id = $('#mypackageid').attr('data-packageid');
+                    if(bodywidth < 600){
+                        closePopup_mobile('upbutton-x');
+                    }else{
+                        close_manage_popup('member_add');
+                    }
+                    
+                    if($('.pters_selectbox_btn_selected').attr('data-status')=='current'){
+                        get_package_member_list(package_id);
+                    }else{
+                        get_end_package_member_list(package_id);
+                    }
+                    //$('#page_managemember').show();
                     //$('#page_managemember').css({'height':'100%'});
                 }else{
                     $('body').css('overflow-y', 'auto');
+                    close_manage_popup('member_add');
                 }
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
 
                 smart_refresh_member_group_class_list();
                 $('#startR').attr('selected', 'selected');
-                close_manage_popup('member_add');
+                
+                
                 console.log('success');
             }
         },

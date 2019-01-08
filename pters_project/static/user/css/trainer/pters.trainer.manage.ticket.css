@@ -566,122 +566,7 @@ div._groupmanage img._info_delete{
 	margin-top: 10px;
 	cursor: pointer;
 }
-@media(max-width:350px){
-	._groupstatus{
-		display: none !important;
-	}
-	._groupmanage img{
-		margin-left: 0 !important;
-	}
-}
 
-@media(max-width: 1000px){
-	._groupnum, ._groupmemo, ._groupcreatedate{
-		display: none !important;
-	}
-
-	div._id, div._startdate, div._finday, div._contact{
-		display: none !important;
-	}
-
-	/*
-	div._groupmanage img._info_download, div._groupmanage img._info_delete{
-		display: none;
-	}
-	*/
-
-	div._groupmanage img._info_download{
-		display: none;
-	}
-
-	._grouptype{
-		display: none !important;
-	}
-
-
-	.groupWrap{
-		font-weight: 500;
-		font-size: 12px;
-	}
-	
-	#subpopup_addByList{
-		overflow-y: auto;
-		max-height: 70%;
-		top: 92px;
-	}
-}
-#popup_ticket_info_mobile_close_btn{
-	display: none;
-}
-@media(min-width: 600px){
-	.groupWrap{
-		width: 48%;
-		margin: 1%;
-	}
-	#popup_ticket_info_mobile{
-		margin-top: 50px;
-		background-color: #f4f4f4;
-	}
-	#popup_ticket_info_mobile_close_btn{
-		display: block;
-		background-color: #282828;
-		color: #ffffff;
-		padding: 3px 5px 3px 5px;
-		width: auto;
-		margin-bottom: 10px;
-		height: 50px;
-		line-height: 50px;
-		cursor: pointer;
-	}
-	#popup_ticket_info_mobile_close_btn > img{
-		height: 17px;
-		margin-right: 10px;
-		margin-left: 10px;
-		margin-bottom: 3px;
-		transform: rotate(180deg);
-	}
-	#packagename, #packagememo, #lecture_list_to_package{
-		width: 60%;
-	}
-	
-}
-@media(min-width: 1000px){
-	.groupWrap{
-		display: table;
-		width: 100%;
-		height: 40px;
-		border:1px solid #ffffff;
-		border-bottom: 1px solid #cccccc;
-		text-align: center;
-		padding: unset;
-		margin: 0;
-		border-radius: unset;
-	}
-	.groupWrap:hover{
-		background: #e4e4e4;
-		font-weight: bold;
-	}
-	.groupWrap:active{
-		background: #cccccc;
-	}
-	.groupWrap > div{
-		display: table-cell;
-		line-height: 36px;
-	}
-	.list_addByList_padding{
-		
-	}
-
-	div.groupmemberline_thead div{
-		width: 12.5%;
-	}
-	div.memberline div{
-		width: 12.5%;
-	}
-	tr.memberline td{
-		width: 12.5%;
-	}
-}
 
 /*그룹 탭에서 그룹들 나열*/
 
@@ -759,6 +644,9 @@ div._manage{
 		padding: 50px 0px 0px 0px;
 		height: auto;
 	}	
+		#ticketnametitle{
+			display: none;
+		}
 		#popup_ticket_info_mobile_memberlist{
 			background-color: #f4f4f4;
 			padding: 15px 10px 0 10px;
@@ -888,3 +776,146 @@ div._manage{
 		border: 1px solid #cccccc;
 	}
 /*모바일에서 그룹을 클릭하면 나오는 팝업*/
+
+
+
+
+
+
+
+@media(max-width:350px){
+	._groupstatus{
+		display: none !important;
+	}
+	._groupmanage img{
+		margin-left: 0 !important;
+	}
+}
+
+@media(max-width: 1000px){
+	._groupnum, ._groupmemo, ._groupcreatedate{
+		display: none !important;
+	}
+
+	div._id, div._startdate, div._finday, div._contact{
+		display: none !important;
+	}
+
+	/*
+	div._groupmanage img._info_download, div._groupmanage img._info_delete{
+		display: none;
+	}
+	*/
+
+	div._groupmanage img._info_download{
+		display: none;
+	}
+
+	._grouptype{
+		display: none !important;
+	}
+
+
+	.groupWrap{
+		font-weight: 500;
+		font-size: 12px;
+	}
+	
+	#subpopup_addByList{
+		overflow-y: auto;
+		max-height: 70%;
+		top: 92px;
+	}
+}
+#ppopup_ticket_info_tablet_upperbar{
+	display: none;
+}
+@media(min-width: 600px){
+	.groupWrap{
+		width: 48%;
+		margin: 1%;
+	}
+	#popup_ticket_info_mobile{
+		margin-top: 50px;
+		background-color: #ffffff;
+		padding-top: 20px;
+		z-index: 10;
+	}
+	#ticketnametitle{
+		display: block;
+	}
+	#popup_ticket_info_tablet_upperbar{
+		display: block;
+		background-color: #282828;
+		color: #ffffff;
+		padding: 3px 5px 3px 5px;
+		width: auto;
+		margin-bottom: 10px;
+		height: 50px;
+		line-height: 50px;
+	}
+	#popup_ticket_info_mobile_close_btn{
+		display: inline-block;
+		cursor: pointer;
+	}
+	#popup_ticket_info_tablet_upperbar > #popup_ticket_info_mobile_close_btn > img{
+		height: 17px;
+		margin-right: 10px;
+		margin-left: 10px;
+		margin-bottom: 3px;
+		transform: rotate(180deg);
+	}
+	#popup_ticket_info_mobile_modify_btn{
+		display: inline-block;
+		float: right;
+		cursor: pointer;
+	}
+		#popup_ticket_info_mobile_modify_btn > img{
+			height: 22px;
+			margin-right: 10px;
+			margin-left: 10px;
+			margin-bottom: 4px;
+			filter: invert(100);
+		}
+	#packagename, #packagememo, #lecture_list_to_package{
+		width: 60%;
+	}
+	
+}
+@media(min-width: 1000px){
+	.groupWrap{
+		display: table;
+		width: 100%;
+		height: 40px;
+		border:1px solid #ffffff;
+		border-bottom: 1px solid #cccccc;
+		text-align: center;
+		padding: unset;
+		margin: 0;
+		border-radius: unset;
+	}
+	.groupWrap:hover{
+		background: #e4e4e4;
+		font-weight: bold;
+	}
+	.groupWrap:active{
+		background: #cccccc;
+	}
+	.groupWrap > div{
+		display: table-cell;
+		line-height: 36px;
+	}
+	.list_addByList_padding{
+		
+	}
+
+	div.groupmemberline_thead div{
+		width: 12.5%;
+	}
+	div.memberline div{
+		width: 12.5%;
+	}
+	tr.memberline td{
+		width: 12.5%;
+	}
+}

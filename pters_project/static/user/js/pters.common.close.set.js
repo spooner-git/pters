@@ -45,7 +45,6 @@ function closePopup_mobile(buttonname){
         close_manage_popup('member_info');
         if(bodywidth < 600 && selector_calendar.length != 0){
             selector_calendar.css('display', 'block');
-            console.log("asdfasdf")
             //selector_calendar.css('height', '100%');
         }
         var thisAttr = $("#upbutton-x-modify").attr('data-page');
@@ -62,9 +61,12 @@ function closePopup_mobile(buttonname){
             $('#page_managemember').css('display', 'block');
             $(window).scrollTop(current_Scroll_Position);
             $('#popup_ticket_info_mobile').css({'display':'none'});
-
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
+            if(bodywidth <1000 & bodywidth >600){
+                $('#popup_ticket_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+                $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view')
+            }
         }else if(thisAttr == "memberinfo"){
             // $('#page_managemember').css('height', '100%');
             // $('#popup_lecture_info_mobile').css({'display':'none'});
