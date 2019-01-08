@@ -182,6 +182,8 @@ function close_planadd_popup(){
     $('#calendar').css('position', 'relative');
     $('.add_time_unit, .allow_all_time').removeClass('checked');
     $('.add_time_unit div,  .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+    $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+    $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
     enable_window_scroll();
     if(bodywidth<=820){
@@ -193,10 +195,10 @@ function close_planadd_popup(){
         $('#page-base').css('display', 'block');
         $('#page-base-addstyle').css('display', 'none');
     }
-    $("#id_repeat_duplication_enable_flag").val('0');
-    $("#id_repeat_off_duplication_enable_flag").val('0');
-    $("#id_pt_duplication_enable_flag").val('0');
-    $("#id_off_duplication_enable_flag").val('0');
+    $('#id_duplication_enable_flag').val(0);
+    $('#id_off_duplication_enable_flag').val(0);
+    $('#id_repeat_duplication_enable_flag').val(0);
+    $('#id_off_repeat_duplication_enable_flag').val(0);
 }
 //일정추가 팝업 닫기 (pc)
 
@@ -225,6 +227,8 @@ function close_planadd_popup_mobile(){
     }
     $('.add_time_unit, .allow_all_time').removeClass('checked');
     $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+    $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+    $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
     $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
     $("#countsSelected,.countsSelected").text("");
     //$("#dateSelector p").removeClass("dropdown_selected");
@@ -244,10 +248,10 @@ function close_planadd_popup_mobile(){
     $('._NORMAL_ADD_wrap').css('display', 'block');
     $('._REPEAT_ADD_wrap').css('display', 'none');
     $('#timeGraph').css('display', 'none');
-    $("#id_repeat_duplication_enable_flag").val('0');
-    $("#id_repeat_off_duplication_enable_flag").val('0');
-    $("#id_pt_duplication_enable_flag").val('0');
-    $("#id_off_duplication_enable_flag").val('0');
+    $('#id_duplication_enable_flag').val(0);
+    $('#id_off_duplication_enable_flag').val(0);
+    $('#id_repeat_duplication_enable_flag').val(0);
+    $('#id_off_repeat_duplication_enable_flag').val(0);
     shade_index(-100);
 }
 //일정추가 팝업 닫기 (mobile)

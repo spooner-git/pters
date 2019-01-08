@@ -293,6 +293,7 @@
             <input type="hidden" name="add_memo"          id="id_memo_mini">
             <input type="hidden" name="group_id"          id="id_group_id">
             <input type="hidden" name="group_member_ids"  id="id_group_member_ids">
+            <input type="hidden" name="duplication_enable_flag" id="id_duplication_enable_flag">
         </form>
 
         <form action="{% url 'schedule:add_schedule' %}" id="off-add-form" method="post">
@@ -305,6 +306,7 @@
             <input type="hidden" name="en_dis_type"       id="en_dis_type" value ='0'>
             <input type="hidden" name="next_page" value = '{% url 'trainer:get_trainer_schedule' %}'>
             <input type="hidden" name="add_memo"          id="id_memo_mini_off">
+            <input type="hidden" name="duplication_enable_flag" id="id_off_duplication_enable_flag">
         </form>
 
         <form action="{% url 'schedule:add_repeat_schedule' %}" id="add-repeat-schedule-form" method="post">
@@ -323,6 +325,7 @@
             <!--<input type="hidden" name="repeat_dur"        id="id_repeat_dur">-->
             <input type="hidden" name="en_dis_type" value="1">
             <input type="hidden" name="group_member_ids" id="id_repeat_group_member_ids">
+            <input type="hidden" name="duplication_enable_flag" id="id_repeat_duplication_enable_flag">
             <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
         </form>
 
@@ -336,6 +339,7 @@
             <input type="hidden" name="repeat_day"          id="id_repeat_day_off">
             <!--<input type="hidden" name="repeat_dur"      id="id_repeat_dur_off">-->
             <input type="hidden" name="en_dis_type" value="0">
+            <input type="hidden" name="duplication_enable_flag" id="id_off_repeat_duplication_enable_flag">
             <input type="hidden" name="next_page" value="{% url 'trainer:get_trainer_schedule' %}">
         </form>
 
@@ -568,6 +572,10 @@
                 </div>
 
                 <div class="ptersCheckbox_wrapper">
+                    <div class="ptersCheckbox_sm repeatadd_allow_all_time">
+                        <div></div>
+                    </div>
+                    <p>중복일정 허용</p>
                     <div class="ptersCheckbox_sm repeatadd_time_unit">
                         <div></div>
                     </div>

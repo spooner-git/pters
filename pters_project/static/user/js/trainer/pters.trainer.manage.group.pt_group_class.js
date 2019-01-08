@@ -723,6 +723,7 @@ function added_member_info_to_jsonformat(){
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click', 'div.groupWrap', function(e){
     var bodywidth = $(window).width();
+    lecture_mutex_val = 0;
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
     var group_name = $(this).find('._groupname input').val();
@@ -739,7 +740,6 @@ $(document).on('click', 'div.groupWrap', function(e){
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
-    console.log(group_id);
     if(bodywidth > 1000){
         if(memberlist.css('display')=='none'){
             // if(group_id != "1:1") {
