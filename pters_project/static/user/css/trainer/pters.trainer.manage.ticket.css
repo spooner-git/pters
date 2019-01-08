@@ -827,7 +827,7 @@ div._manage{
 		top: 92px;
 	}
 }
-#ppopup_ticket_info_tablet_upperbar{
+#popup_ticket_info_tablet_upperbar{
 	display: none;
 }
 @media(min-width: 600px){
@@ -893,6 +893,9 @@ div._manage{
 		padding: unset;
 		margin: 0;
 		border-radius: unset;
+	}
+	#popup_ticket_info_tablet_upperbar{
+		display: none;
 	}
 	.groupWrap:hover{
 		background: #e4e4e4;
