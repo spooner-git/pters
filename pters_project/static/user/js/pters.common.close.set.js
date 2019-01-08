@@ -10,6 +10,12 @@ function closePopup_mobile(buttonname){
                 //$('#calendar').css('display','block')
                 $('#calendar').css('height', '100%');
             }
+            if($('#popup_ticket_info_mobile').css('display') == "block"){
+                $('#page_managemember').css('display', 'none');
+                $("#upbutton-x-modify").attr('data-page', 'ticket_info');
+                $('#page-base-modifystyle').css('display', 'block');
+                $('#page-base').css('display', 'none');
+            }
         }else if(thisAttr == "lecture_info"){
             // $('#page_managemember').css('height', '100%');
             // $('#popup_lecture_info_mobile').css({'display':'none'});
