@@ -3515,7 +3515,7 @@ function send_add_groupmember_plan(use, callback){
                         scheduleTime('off', jsondata, calendarSize, duplicate_check);
                         scheduleTime('group', jsondata, calendarSize, duplicate_check);
                     }else{
-                        exist_check_dic = {}
+                        exist_check_dic = {};
                         duplicate_check = know_duplicated_plans(jsondata).result;
                         scheduleTime_Mobile('class', jsondata, calendarSize, duplicate_check);
                         scheduleTime_Mobile('off', jsondata, calendarSize, duplicate_check);
