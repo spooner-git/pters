@@ -2564,6 +2564,26 @@ $('.allow_all_time').click(function(){
     }
 });
 
+$('.repeatadd_allow_all_time').click(function(){
+    var $child = $(this).find('div');
+    if($(this).hasClass('checked')){
+        $(this).removeClass('checked');
+        $child.removeClass('ptersCheckboxInner_sm');
+        $('#id_duplication_enable_flag').val(0);
+        $('#id_off_duplication_enable_flag').val(0);
+        $('#id_repeat_duplication_enable_flag').val(0);
+        $('#id_off_repeat_duplication_enable_flag').val(0);
+
+    }else{
+        $(this).addClass('checked');
+        $child.addClass('ptersCheckboxInner_sm');
+        $('#id_duplication_enable_flag').val(1);
+        $('#id_off_duplication_enable_flag').val(1);
+        $('#id_repeat_duplication_enable_flag').val(1);
+        $('#id_off_repeat_duplication_enable_flag').val(1);
+    }
+});
+
 
 function startTimeArraySet(selecteddate, jsondata, Timeunit, filter){ //offAddOkArray 채우기 : 시작시간 리스트 채우기!!!!
     var option;

@@ -1122,7 +1122,7 @@ button._info_baseedit_img{
 		top: 2px;
 	}
 
-	.add_time_unit, .repeatadd_time_unit, .allow_all_time{
+	.add_time_unit, .repeatadd_time_unit, .allow_all_time, .repeatadd_allow_all_time{
 		display: inline-block;
 		margin-left: 10px;
 	}

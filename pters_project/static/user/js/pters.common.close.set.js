@@ -180,6 +180,8 @@ function close_planadd_popup(){
     $('#calendar').css('position', 'relative');
     $('.add_time_unit, .allow_all_time').removeClass('checked');
     $('.add_time_unit div,  .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+    $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+    $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
     shade_index(-100);
     enable_window_scroll();
     if(bodywidth<=820){
@@ -223,6 +225,8 @@ function close_planadd_popup_mobile(){
     }
     $('.add_time_unit, .allow_all_time').removeClass('checked');
     $('.add_time_unit div, .allow_all_time div').removeClass('ptersCheckboxInner_sm');
+    $('.repeatadd_time_unit, .repeatadd_allow_all_time').removeClass('checked');
+    $('.repeatadd_time_unit div,  .repeatadd_allow_all_time div').removeClass('ptersCheckboxInner_sm');
     $("#membersSelected .btn:first-child").html("<span style='color:#cccccc;'>"+text1+"</span>").val("");
     $("#countsSelected,.countsSelected").text("");
     //$("#dateSelector p").removeClass("dropdown_selected");
