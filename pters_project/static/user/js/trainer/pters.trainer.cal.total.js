@@ -3082,7 +3082,6 @@ function know_duplicated_plans(jsondata){
                 temp_index[t] = 0; //가장 첫번째 값은 항상 왼쪽 첫번째로 고정 위치
                 continue;
             }
-
             for(var r=0; r<array_sorted.length; r++){
                 var comp = array_sorted[r];
                 if(t == r){
@@ -3100,17 +3099,16 @@ function know_duplicated_plans(jsondata){
                     comp_end_time = "24:00:00";
                 }
 
-                var duplication_type = know_whether_plans_has_duplicates(ref_start_time , ref_end_time,
+                var duplication_type = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
                                                                          comp_start_time, comp_end_time);
 
                 if(duplication_type > 0){ //겹칠때
-                    var moved_element_check = 0;
-                    if(temp_index[r] != r){
-                        moved_element_check--;
+                    var temp_array = [];
+                    for(var i=0; i<t; i++){
+                        temp_array.push(temp_index[i]);
                     }
-                    temp_index[t] = r + 1 + moved_element_check;
-                    // temp_index[t] = r + 1;
-                    //이 인덱스의 값과 겹치는지 확인
+
+                    temp_index[t] = Math.max.apply(null, temp_array)+1;
 
                 }else{ //겹치지 않을때
                     //이 인덱스와 같은 값을 갖는 다른 시간대가 있는지 검사
@@ -3171,6 +3169,7 @@ function know_duplicated_plans(jsondata){
 
     // console.log("duplicate_dic",duplicate_dic);
     // console.log("result", result)
+    console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result})
 
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
