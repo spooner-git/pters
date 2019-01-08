@@ -1011,13 +1011,24 @@ $(document).on('click', '.groupWrap input', function(e){
 
 
 //그룹 멤버 리스트에서 멤버 추가 버튼을 누른다.
-$(document).on('click', 'img.btn_add_member_to_group', function(){
+$(document).on('click', 'img.btn_add_member_to_group, div.btn_add_member_to_ticket_mobile', function(){
     current_Scroll_Position = $(document).scrollTop();
     var bodywidth = window.innerWidth;
-    var package_id = $(this).parents('.groupMembersWrap').attr('data-packageid');
-    var package_name = $(this).parents('.groupMembersWrap').attr('data-packagename');
-    var package_capacity = $(this).parents('.groupMembersWrap').attr('data-packagecapacity');
-    var package_type = $(this).parents('.groupMembersWrap').attr('data-packagetype');
+    // var package_id = $(this).parents('.groupMembersWrap').attr('data-packageid');
+    // var package_name = $(this).parents('.groupMembersWrap').attr('data-packagename');
+    // var package_capacity = $(this).parents('.groupMembersWrap').attr('data-packagecapacity');
+    // var package_type = $(this).parents('.groupMembersWrap').attr('data-packagetype');
+    var selected_status = $('.pters_selectbox_btn_selected').attr('data-status');
+    var list_cached;
+    if(selected_status == "current"){
+        list_cached = ticket_ing_list_cache;
+    }else if(selected_status == "finished"){
+        list_cached = ticket_end_list_cache;
+    }
+
+    var package_id = $(this).attr('data-packageid');
+    var package_name = list_cached[package_id]["package_name"];
+
     if(bodywidth < 600){
         float_btn_managemember("groupmember");
     }else{
@@ -3463,7 +3474,7 @@ function packageMemberListSet(package_id, jsondata){
     // if(groupcapacity <= len && grouptype =='NORMAL'){
     //     addButton = '';
     // }else{
-        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+package_id+'"></div>';
+        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-packageid="'+package_id+'"></div>';
     // }
 
     if($('#finishedGroupList').css('display') == "block"){
@@ -3486,14 +3497,13 @@ function packageMemberListSet(package_id, jsondata){
 //패키지 소속 회원 목록을 그룹에 그리기
 
 //패키지 소속 회원 목록을 그룹에 그리기 모바일
-function packageMemberListSet_mobile(group_id, jsondata){
-    console.log("packageMemberListSet_mobile",jsondata)
+function packageMemberListSet_mobile(package_id, jsondata){
     var htmlToJoin = [];
     var len = jsondata.db_id.length;
 
     htmlToJoin.push(`
                         <div id="mobile_comment_1">
-                            <span>참여중 회원</span><span>${len}</span><div style="display:none;">+</div>
+                            <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
                         </div>
                         <div id="mobile_comment_2">
                             <p>회원을 체크하면 일정 등록시 함께 추가합니다.</p>
@@ -3502,8 +3512,8 @@ function packageMemberListSet_mobile(group_id, jsondata){
                     )
     
 
-    var groupcapacity = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-groupcapacity');
-    var grouptype = $('div.groupMembersWrap[data-groupid="'+group_id+'"]').attr('data-grouptype');
+    var groupcapacity = $('div.groupMembersWrap[data-groupid="'+package_id+'"]').attr('data-groupcapacity');
+    var grouptype = $('div.groupMembersWrap[data-groupid="'+package_id+'"]').attr('data-grouptype');
 
     for(var i=0; i<len; i++){
         var groupmember_dbid = jsondata.db_id[i];
@@ -3523,7 +3533,7 @@ function packageMemberListSet_mobile(group_id, jsondata){
         //     groupmember_fixed = "";
         // }
 
-        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+group_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">';
+        var htmlStart = '<div class="memberline" data-id="'+groupmember_id+'" data-dbid="'+groupmember_dbid+'" data-groupid="'+package_id+'" data-lecid="'+groupmember_lecid+'" data-fullname="'+groupmember_lastname+groupmember_firstname+'">';
         var htmlEnd = '</div>';
 
         var memberRow;
@@ -3536,7 +3546,7 @@ function packageMemberListSet_mobile(group_id, jsondata){
                                                                             '</div>';
 
         //if(grouptype!='ONE_TO_ONE') {
-            //memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + group_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
+            //memberRow += '<div class="_fixedmember" data-dbid="' + groupmember_dbid + '" data-groupid="' + package_id + '">' + '<div></div>' + '<input type="checkbox" ' + groupmember_fixed + '>' + '</div>';
         //}else{
             memberRow += '<div class="" style="width:10%"></div>';
         //}
@@ -3565,7 +3575,7 @@ function packageMemberListSet_mobile(group_id, jsondata){
     if(groupcapacity <= len && grouptype =='NORMAL'){
         addButton = '';
     }else{
-        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-groupid="'+group_id+'"></div>';
+        addButton = '<div><img src="/static/user/res/floatbtn/btn-plus.png" class="btn_add_member_to_group" data-grouptype="'+grouptype+'" data-packageid="'+package_id+'"></div>';
     }
 
     if(grouptype=='ONE_TO_ONE' || $('#finishedGroupList').css('display') == "block"){
@@ -3582,7 +3592,7 @@ function packageMemberListSet_mobile(group_id, jsondata){
     //         }
     //     }
     // }
-    //$('div.groupMembersWrap[data-groupid="'+group_id+'"]').html(EMPTY_EXPLAIN+html);
+    //$('div.groupMembersWrap[data-groupid="'+package_id+'"]').html(EMPTY_EXPLAIN+html);
 
     //수업관리에서 수업에 회원을 넣고 빼는건 이제 금지. 수강권에서 한다.
     var html = htmlToJoin.join('');
