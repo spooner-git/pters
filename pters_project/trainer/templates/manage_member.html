@@ -1150,7 +1150,8 @@
         var select_all_check = false;
 
         get_member_ing_list("callback", function(jsondata){
-            memberListSet('current', jsondata);
+            var member_html = memberListSet('current', jsondata);
+            $('#currentMember').html(member_html);
         });
 
         $(window).resize(function(){
@@ -1158,23 +1159,27 @@
             if(bodywidth <= 1000 && $('._member_list_mobile_style').length == 0){
                 if(member_tab == TAB_ING) {
                     get_member_ing_list('callback', function (json) {
-                        memberListSet('current', json);
+                        var member_html = memberListSet('current', json);
+                        $('#currentMember').html(member_html);
                     });
                 }
                 else if(member_tab == TAB_END) {
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished', json);
+                        var member_html = memberListSet('finished', json);
+                        $('#finishedMember').html(member_html);
                     });
                 }
             }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
                 if(member_tab == TAB_ING) {
                     get_member_ing_list('callback', function (json) {
-                        memberListSet('current', json);
+                        var member_html = memberListSet('current', json);
+                        $('#currentMember').html(member_html);
                     });
                 }
                 else if(member_tab == TAB_END) {
                     get_member_end_list('callback',function(json){
-                        memberListSet('finished',json);
+                        var member_html = memberListSet('finished', json);
+                        $('#finishedMember').html(member_html);
                     });
                 }
             }
