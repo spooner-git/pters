@@ -3510,7 +3510,7 @@ function packageMemberListSet_mobile(package_id, jsondata){
                             <span>참여중 회원</span><span>${len}</span><div style="display:inline-block;cursor:pointer" class="btn_add_member_to_ticket_mobile" data-packageid=${package_id}>+</div>
                         </div>
                         <div id="mobile_comment_2">
-                            <p>회원을 체크하면 일정 등록시 함께 추가합니다.</p>
+                            <p style="margin:0;">회원을 체크하면 일정 등록시 함께 추가합니다.</p>
                         </div>
                     `
                     )
