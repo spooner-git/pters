@@ -1045,7 +1045,7 @@ $('#popup_delete_btn_yes').click(function(){
             disable_delete_btns_during_ajax();
             delete_groupmember_from_grouplist('callback',function(){
                 close_info_popup('cal_popup_plandelete');
-            })
+            });
         }
     }
 });

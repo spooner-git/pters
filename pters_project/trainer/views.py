@@ -4237,13 +4237,13 @@ def progress_package_info_logic(request):
         try:
             package_info = PackageTb.objects.get(package_id=package_id)
         except ObjectDoesNotExist:
-            error = '패키지 정보를 불러오지 못했습니다.'
+            error = '수강권 정보를 불러오지 못했습니다.'
 
     if error is None:
         package_group_data = PackageGroupTb.objects.select_related('group_tb').filter(
             package_tb_id=package_id, group_tb__state_cd='IP', use=USE)
         if len(package_group_data) == 0:
-            error = '패키지에 소속된 그룹이 없어 재개할수 없습니다.'
+            error = '수강권에 소속된 진행중 그룹이 없어 재개할수 없습니다.'
 
     if error is None:
         package_lecture_data = ClassLectureTb.objects.select_related(
