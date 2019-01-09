@@ -634,7 +634,7 @@ div._manage{
 
 .mobile_package_color_in_entire_list{
 	padding: 0px 3px 0px 3px;
-	border: 1px solid #cccccc;
+	/*border: 1px solid #cccccc;*/
 	border-radius: 5px;
 	display: inline-block;
 	margin: 2px;
