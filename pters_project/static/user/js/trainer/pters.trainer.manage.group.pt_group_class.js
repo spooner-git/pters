@@ -794,8 +794,10 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#popup_lecture_info_mobile').css({'display':'block'});
         if(group_type=='1:1'){
             $('#upbutton-modify').css('display', 'none');
+            $('#popup_lecture_info_mobile_modify_btn').css('display', 'none');
         }else{
             $('#upbutton-modify').css('display', 'block');
+            $('#popup_lecture_info_mobile_modify_btn').css('display', 'block');
         }
         get_group_repeat_info(group_id, "callback", function(repeat_data){
             set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
