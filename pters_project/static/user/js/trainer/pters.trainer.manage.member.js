@@ -494,9 +494,9 @@ $(document).ready(function(){
 
     $('#select_info_shift_lecture').click(function(){
         var dbID;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             dbID = $('#memberInfoPopup_PC').attr('data-dbid');
-        }else if(bodywidth <=600){
+        }else if(bodywidth <600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
         get_member_lecture_list(dbID);
@@ -511,9 +511,9 @@ $(document).ready(function(){
 
     $('#select_info_shift_schedule').click(function(){
         var dbID;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             dbID = $('#memberInfoPopup_PC').attr('data-dbid');
-        }else if(bodywidth <=600){
+        }else if(bodywidth < 600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
         get_indiv_repeat_info(dbID);
@@ -528,9 +528,9 @@ $(document).ready(function(){
 
     $('#select_info_shift_history').click(function(){
         var dbID;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             dbID = $('#memberInfoPopup_PC').attr('data-dbid');
-        }else if(bodywidth <=600){
+        }else if(bodywidth < 600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
         get_member_history_list(dbID);
@@ -545,9 +545,9 @@ $(document).ready(function(){
 
     $('#select_info_shift_lecture_mobile').click(function(){
         var dbID;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             dbID = $('#memberInfoPopup_PC').attr('data-dbid');
-        }else if(bodywidth <=600){
+        }else if(bodywidth < 600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
         get_member_lecture_list(dbID);
@@ -562,9 +562,9 @@ $(document).ready(function(){
 
     $('#select_info_shift_schedule_mobile').click(function(){
         var dbID;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             dbID = $('#memberInfoPopup_PC').attr('data-dbid');
-        }else if(bodywidth <=600){
+        }else if(bodywidth <600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
         get_member_history_list(dbID);
@@ -579,9 +579,9 @@ $(document).ready(function(){
 
     $('#select_info_shift_history_mobile').click(function(){
         var dbID;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             dbID = $('#memberInfoPopup_PC').attr('data-dbid');
-        }else if(bodywidth <=600){
+        }else if(bodywidth < 600){
             dbID = $('#memberInfoPopup').attr('data-dbid');
         }
         get_member_history_list(dbID);
@@ -640,7 +640,7 @@ $(document).ready(function(){
                                                             'data-grouptype': ''
                                                         });
         $('._resume, ._delete').css('display', 'none');
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('._complete, ._refund').css('display', 'inline-block');
         }else{
             $('._complete, ._refund').css('display', 'block');
@@ -662,7 +662,7 @@ $(document).ready(function(){
                                                             'data-grouptype': ''
                                                         });
         $('._complete, ._refund').css('display','none');
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('._resume, ._delete').css('display','inline-block');
         }else{
             $('._resume, ._delete').css('display','block');
@@ -697,7 +697,7 @@ $(document).ready(function(){
                                                             'data-grouptype': ''
                                                         });
         $('._complete, ._refund').css('display','none');
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('._resume, ._delete').css('display','inline-block');
         }else{
             $('._resume, ._delete').css('display','block');
@@ -2312,13 +2312,13 @@ function shiftMemberList(type){
             $('#currentMemberList').css('display', 'block');
             $('#finishedMemberList, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
-            if(bodywidth>1000){
+            if(bodywidth >= 1000){
                 $('#memberNumber_current_member').css('display', 'block');
                 $('#memberNumber_finish_member').css('display','none');
 
                 selector_MEMBER_THEAD__memberaddbutton.show();
             }
-            if(bodywidth>600){
+            if(bodywidth >= 600){
                 $('#memberNumber_current_member').css('display', 'block');
                 $('#memberNumber_finish_member').css('display','none');
 
@@ -2335,12 +2335,12 @@ function shiftMemberList(type){
             $('#finishedMemberList').css('display', 'block');
             $('#currentMemberList, #memberNumber_current_group, #memberNumber_finish_group, #currentGroupList, #currentGroupNum, #finishedGroupList, #finishGroupNum').css('display','none');
             selector_GROUP_THEAD_groupaddbutton.hide();
-            if(bodywidth > 1000){
+            if(bodywidth >= 1000){
                 $('#memberNumber_finish_member').css('display', 'block');
                 $('#memberNumber_current_member').css('display','none');
                 selector_MEMBER_THEAD__memberaddbutton.show();
             }
-            if(bodywidth>600){
+            if(bodywidth >= 600){
                 $('#memberNumber_finish_member').css('display', 'block');
                 $('#memberNumber_current_member').css('display','none');
 
@@ -3357,7 +3357,7 @@ function memberListSet (type, jsondata){
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
         resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();
@@ -3597,7 +3597,7 @@ function memberListSet_page(type, jsondata){
     var resultToAppend = arrayResult.join("");
     if(type=='current' && len == 0){
         resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();
@@ -3613,7 +3613,7 @@ function memberListSet_page(type, jsondata){
 //shade 보이기, 숨기기
 function hide_shadow_responsively(){
     var bodywidth = window.innerWidth;
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         $('#shade3').css('display','none');
     }else{
         $('#shade').css('display','none');
@@ -3622,7 +3622,7 @@ function hide_shadow_responsively(){
 
 function show_shadow_reponsively(){
     var bodywidth = window.innerWidth;
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         $('#shade3').show();
     }else{
         $('#shade').show();
@@ -4476,9 +4476,9 @@ function smart_refresh_member_group_class_list(){
         });
         get_package_ing_list("callback", function(jsondata){
             var package_Html;
-            if(bodywidth <= 1000){
+            if(bodywidth < 1000){
                 package_Html = package_ListHtml_mobile('current', jsondata);
-            }else if(bodywidth > 1000){
+            }else if(bodywidth >= 1000){
                 package_Html = package_ListHtml('current', jsondata);
             }
             $('#currentPackageList').html(package_Html);
@@ -4498,17 +4498,17 @@ function smart_refresh_member_group_class_list(){
         });
 
         get_package_ing_list("callback", function(jsondata) {
-            if (bodywidth <= 1000) {
+            if (bodywidth < 1000) {
                 package_ListHtml_mobile('current', jsondata);
-            } else if (bodywidth > 1000) {
+            } else if (bodywidth >= 1000) {
                 package_ListHtml('current', jsondata);
             }
         });
         get_package_end_list("callback", function(jsondata){
             var package_Html;
-            if(bodywidth <= 1000){
+            if(bodywidth < 1000){
                 package_Html = package_ListHtml_mobile('finished', jsondata);
-            }else if(bodywidth > 1000){
+            }else if(bodywidth >= 1000){
                 package_Html = package_ListHtml('finished', jsondata);
             }
             $('#finishedPackageList').html(package_Html);
@@ -4676,10 +4676,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
 
             var regPrice;
             var regUnitPrice;
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
                 regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
-            }else if(bodywidth <= 600){
+            }else if(bodywidth < 600){
                 regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata.priceArray[i])+' disabled>'+'</div>';
                 regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata.priceArray[i])/Number(jsondata.regCountArray[i])))+'</div>';
             }
@@ -4798,10 +4798,10 @@ function draw_member_lecture_list_table(jsondata, dbID, PCorMobile){
             var remcount =    '<div class="lec_rem_count">'+jsondata_remCountArray[i]+'</div>';
             var regPrice;
             var regUnitPrice;
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
                 regUnitPrice = '<div id="regPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
-            }else if(bodywidth <= 600){
+            }else if(bodywidth < 600){
                 regPrice = '<div><input id="regPrice" value='+numberWithCommas(jsondata_priceArray[i])+' disabled>'+'</div>';
                 regUnitPrice = '<div id="regUnitPrice">'+numberWithCommas(parseInt(Number(jsondata_priceArray[i])/Number(jsondata_regCountArray[i])))+'</div>';
             }

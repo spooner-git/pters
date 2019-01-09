@@ -539,7 +539,7 @@
             }
             $('#purchase_popup').fadeIn('fast')
                                 .css({'top':(($(window).height()-$('#purchase_popup').outerHeight())/2),
-                                      'left':(($(window).width()-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
+                                      'left':((window.innerWidth-$('#purchase_popup').outerWidth())/2+$(window).scrollLeft())})
                                 .attr({'data-product':product,
                                         'data-type':type,
                                         'data-product-id':product_id,

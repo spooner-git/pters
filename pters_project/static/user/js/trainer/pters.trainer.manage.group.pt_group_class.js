@@ -120,7 +120,8 @@ function shiftPtGroupClassList(type){
     lecture_page_num = 1;
     lectureListSet_len = 1;
     lecture_keyword = '';
-    var bodywidth = $(window).width();
+    // var bodywidth = $(window).width();
+    var bodywidth = window.innerWidth;
     $('#search_lecture_input').val("").css("-webkit-text-fill-color", "#cccccc");
     switch(type){
         case "current":
@@ -131,11 +132,11 @@ function shiftPtGroupClassList(type){
             });
             $('#currentGroupList').css('display', 'block');
             $('#finishedGroupList, #finishGroupNum').css('display', 'none');
-            if(bodywidth > 1000){
+            if(bodywidth >= 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
             }
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 $('#memberNumber_current_group').css('display', 'block');
                 $('#memberNumber_finish_group').css('display', 'none');
             }
@@ -148,13 +149,13 @@ function shiftPtGroupClassList(type){
             });
             $('#finishedGroupList').css('display', 'block');
             $('#currentGroupList, #currentGroupNum').css('display', 'none');
-            if(bodywidth > 1000){
+            if(bodywidth >= 1000){
                 $('#memberNumber_finish_group').css('display', 'block');
                 $('#memberNumber_current_group').css('display', 'none');
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
             }
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 $('#memberNumber_finish_group').css('display', 'block');
                 $('#memberNumber_current_group').css('display', 'none');
             }
@@ -722,7 +723,8 @@ function added_member_info_to_jsonformat(){
 //////////////////////////////////그룹 목록 화면/////////////////////////////////////////
 //그룹 리스트에서 그룹을 클릭하면 속해있는 멤버 리스트를 보여준다.
 $(document).on('click', 'div.groupWrap', function(e){
-    var bodywidth = $(window).width();
+    // var bodywidth = $(window).width();
+    var bodywidth = window.innerWidth;
     lecture_mutex_val = 0;
     e.stopPropagation();
     var group_id = $(this).attr('data-groupid');
@@ -740,7 +742,8 @@ $(document).on('click', 'div.groupWrap', function(e){
     var memo_list =  $(this).siblings('div[data-groupid="'+group_id+'"].groupMemoWrap');
     var repeat_list = $(this).siblings('div[data-groupid="'+group_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-groupid="'+group_id+'"].groupMembersWrap');
-    if(bodywidth > 1000){
+    console.log(bodywidth);
+    if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             // if(group_id != "1:1") {
                 $(this).addClass('groupWrap_selected');
@@ -779,7 +782,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             }
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
-    }else if(bodywidth <= 1000){
+    }else if(bodywidth < 1000){
         current_Scroll_Position = $(document).scrollTop();
         $('#uptext3').text(group_name);
         // $('#page_managemember').css({'height':'0'});
@@ -789,6 +792,11 @@ $(document).on('click', 'div.groupWrap', function(e){
         $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
         $('#popup_lecture_info_mobile_memberlist').html('');
         $('#popup_lecture_info_mobile').css({'display':'block'});
+        if(group_type=='1:1'){
+            $('#upbutton-modify').css('display', 'none');
+        }else{
+            $('#upbutton-modify').css('display', 'block');
+        }
         get_group_repeat_info(group_id, "callback", function(repeat_data){
             set_lecture_info_for_mobile_popup(group_id, group_name, group_color, group_type, group_typecd, group_membernum, group_membercapacity, group_memo, repeat_data);
         });
@@ -968,7 +976,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
             $(this).hide();
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
             $('img._info_modify').removeClass('disabled_button');
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 $('img._info_download, img._info_delete').show();
             }else{
                 $('img._info_delete').show();
@@ -992,7 +1000,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     $('.lectureStateChangeSelectPopup ._resume').attr('data-groupid', $(this).attr('data-groupid'));
     show_shadow_reponsively();
     var display_type = "block";
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         display_type = "inline-block";
     }
     if($(this).attr('data-groupstatus') == "IP"){
@@ -1333,6 +1341,13 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
+                // 오류 난 경우
+                // $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
+                // $('#mygroupnametitle').show();
+                // $('.mobile_group_color_palette').show();
+                // $('#id_mobile_input_capacity').keyup(function(){
+                //     limit_char_only_number(this);
+                // });
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
@@ -1341,7 +1356,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 smart_refresh_member_group_class_list();
                 
                 $('img._info_cancel').hide();
-                if(bodywidth > 1000){
+                if(bodywidth >= 1000){
                     $('img._info_download, img._info_delete').show();
                     toggle_lock_unlock_inputfield_grouplist(group_id, true);
                 }
@@ -1724,7 +1739,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
 
     if(type=='current' && len == 0){
         resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();

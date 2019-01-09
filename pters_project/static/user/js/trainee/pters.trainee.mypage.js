@@ -221,9 +221,9 @@ $(document).ready(function(){
         var html = [];
         for(var i=jsondata.ptScheduleStateCdArray.length-1; i>=0; i--){
             var number 	     = '<div class="cell1">'+jsondata.ptScheduleIdxArray[i]+'</div>';
-            if($('body').width()>600){
+            if(bodywidth>=600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i]);
-            }else if($('body').width()<=600){
+            }else if(bodywidth<600){
                 var dateFormat = date_format_to_user_hangul(jsondata.ptScheduleStartDtArray[i],'minimize');
             }
 
@@ -304,10 +304,10 @@ $(document).ready(function(){
         var html = [];
         for(var i=0; i<jsondata.countArray.length; i++){
             var number 	     = '<div class="cell1">'+(jsondata.countArray.length-i)+'</div>';
-            if($('body').width()>600){
+            if(bodywidth>=600){
                 var sdateFormat = date_format_to_hangul(jsondata.startArray[i]);
                 var edateFormat = date_format_to_hangul(jsondata.endArray[i]);
-            }else if($('body').width()<=600){
+            }else if(bodywidth<600){
                 var sdateFormat = jsondata.startArray[i];
                 var edateFormat =jsondata.endArray[i];
             }

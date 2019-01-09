@@ -563,7 +563,7 @@ $(document).on('click','._groupmanage img._info_modify',function(e){
             $(this).hide()
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'})
             $('img._info_modify').removeClass('disabled_button')
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 $('img._info_download, img._info_delete').show()
             }else{
                 $('img._info_delete').show()
@@ -935,8 +935,8 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                     groupListSet('finished',jsondata)
                 }
                 toggle_lock_unlock_inputfield_grouplist(group_id, true)
-                $('img._info_cancel').hide()
-                if(bodywidth > 600){
+                $('img._info_cancel').hide();
+                if(bodywidth >= 600){
                     $('img._info_download, img._info_delete').show()
                 }else{
                     $('img._info_delete').show()

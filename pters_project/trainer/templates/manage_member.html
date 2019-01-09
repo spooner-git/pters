@@ -1156,7 +1156,7 @@
 
         $(window).resize(function(){
             bodywidth = window.innerWidth;
-            if(bodywidth <= 1000 && $('._member_list_mobile_style').length == 0){
+            if(bodywidth < 1000 && $('._member_list_mobile_style').length == 0){
                 if(member_tab == TAB_ING) {
                     get_member_ing_list('callback', function (json) {
                         var member_html = memberListSet('current', json);
@@ -1169,7 +1169,7 @@
                         $('#finishedMember').html(member_html);
                     });
                 }
-            }else if(bodywidth > 1000 && $('._member_list_pc_style').length == 0 ){
+            }else if(bodywidth >= 1000 && $('._member_list_pc_style').length == 0 ){
                 if(member_tab == TAB_ING) {
                     get_member_ing_list('callback', function (json) {
                         var member_html = memberListSet('current', json);

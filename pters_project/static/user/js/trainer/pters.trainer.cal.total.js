@@ -37,7 +37,7 @@ $('#ymdText').click(function(e){
             }
 
             $calendar.removeClass('_calmonth');
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                     week_calendar_mobile(yyyy_mm_dd);
                     $('#week').css('display', 'table');
@@ -49,7 +49,7 @@ $('#ymdText').click(function(e){
                     //week_calendar(yyyy_mm_dd);
                 }
 
-            }else if(bodywidth<=600){
+            }else if(bodywidth<600){
                 week_calendar_mobile(yyyy_mm_dd);
                 $('#week').css('display', 'table');
                 $('div.timeindex, #timeIndicatorBar').css('display', 'block');
@@ -77,7 +77,7 @@ $('#ymdText').click(function(e){
                 yyyy_mm_dd = date_format_yyyy_m_d_to_yyyy_mm_dd(`${yyyy_2}-${mm2}-${dd2}`, '-');
             }
             $calendar.removeClass('_calweek');
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                     month_calendar(yyyy_mm_dd);
                     $('#week').css('display', 'none');
@@ -89,7 +89,7 @@ $('#ymdText').click(function(e){
                 }else{
                     //week_calendar(yyyy_mm_dd);
                 }
-            }else if(bodywidth <= 600){
+            }else if(bodywidth < 600){
                 month_calendar(yyyy_mm_dd);
                 $('#week').css('display', 'none');
                 $('div.timeindex, #timeIndicatorBar').css('display', 'none');
@@ -123,7 +123,7 @@ $('#change_to_weekcal').click(function(e){
         $('#week').css('display', 'table');
         $('div.timeindex, #timeIndicatorBar').css('display', 'block');
         $('#date').css('display', 'none');
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                 week_calendar_mobile(yyyy_mm_dd);
             }else{
@@ -131,7 +131,7 @@ $('#change_to_weekcal').click(function(e){
             }
             $('#ymdText_weekcal').css('display', 'inline-block');
             $('#ymdText_monthcal').css('display', 'none');
-        }else if(bodywidth<=600){
+        }else if(bodywidth<600){
             week_calendar_mobile(yyyy_mm_dd);
         }
     }
@@ -222,7 +222,7 @@ var slideControl = {'week':{
                             var lastDD = Number(lastdateinfo[2]);
                             myswiper.removeSlide(0); //맨 앞장 슬라이드 지우기
                             myswiper.appendSlide('<div class="swiper-slide" id="slide'+(last+1)+'"></div>'); //마지막 슬라이드에 새슬라이드 추가
-                            if(bodywidth > 600){
+                            if(bodywidth >= 600){
                                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                                     calTable_Set_Week_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
                                     if($('#hidetoggle').attr('data-type') == '1'){
@@ -238,7 +238,7 @@ var slideControl = {'week':{
                                                             'background-size':'60px '+$('.td00').height()+'px'});
                                     }
                                 }
-                            }else if(bodywidth<=600){
+                            }else if(bodywidth<600){
                                 calTable_Set_Week_Mobile(last+1, lastYY, lastMM, lastDD, 7, 0); //새로 추가되는 슬라이드에 달력 채우기
                                 if($('#hidetoggle').attr('data-type') == '1'){
                                     $('.td00, .td30').css({'background':'unset',
@@ -257,7 +257,7 @@ var slideControl = {'week':{
                             var firstDD = Number(firstdateinfo[2]);
                             myswiper.removeSlide(2);
                             myswiper.prependSlide('<div class="swiper-slide" id="slide'+(first-1)+'"></div>'); //맨앞에 새슬라이드 추가
-                            if(bodywidth > 600){
+                            if(bodywidth >= 600){
                                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                                     calTable_Set_Week_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
                                     if($('#hidetoggle').attr('data-type') == '1'){
@@ -274,7 +274,7 @@ var slideControl = {'week':{
                                     }
                                 }
 
-                            }else if(bodywidth<=600){
+                            }else if(bodywidth<600){
                                 calTable_Set_Week_Mobile(first-1, firstYY, firstMM, firstDD, -7, 0);
                                 if($('#hidetoggle').attr('data-type') == '1'){
                                     $('.td00, .td30').css({'background':'unset',
@@ -2685,14 +2685,14 @@ function scheduleTime_Mobile(option, jsondata, size, duplicate_check){ // 그룹
             hideornot = 'inlineelement';
             memberTimeHide = "hideelement";
             groupstatus="";
-            if(bodywidth>600){
+            if(bodywidth>=600){
                 memberTimeHide = 'inlineelement';
             }
         }else{
             hideornot = 'inlineelement';
             memberTimeHide = "hideelement";
             groupstatus = '<span class="groupnumstatus '+textcolor+'">'+'('+jsondata.group_schedule_current_member_num[i]+'/'+jsondata.group_schedule_max_member_num[i]+') </span>';
-            if(bodywidth>600){
+            if(bodywidth>=600){
                 memberTimeHide = 'inlineelement';
             }
         }

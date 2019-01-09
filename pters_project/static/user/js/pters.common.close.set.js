@@ -1,5 +1,6 @@
 
 function closePopup_mobile(buttonname){
+    var bodywidth = window.innerWidth;
     if(buttonname == "upbutton-x"){
         var thisAttr = $("#upbutton-x").attr('data-page');
         if(thisAttr == "addplan"){
@@ -38,7 +39,6 @@ function closePopup_mobile(buttonname){
             $('#upbutton-x, #upbutton-x-modify').attr('data-page', 'lecture_info');
         }
     }else if(buttonname == "upbutton-x-modify"){
-        var bodywidth = window.innerWidth;
         var selector_calendar = $('#calendar');
         $('#uptext3').text('회원 정보');
         $('#uptext-pc-modify').text('회원 정보');
@@ -57,7 +57,7 @@ function closePopup_mobile(buttonname){
 
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
-            if(bodywidth <1000 & bodywidth >600){
+            if(bodywidth <1000 & bodywidth >=600){
                 $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
                 $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view')
             }
@@ -67,7 +67,7 @@ function closePopup_mobile(buttonname){
             $('#popup_ticket_info_mobile').css({'display':'none'});
             $('#page-base').css('display', 'block');
             $('#page-base-modifystyle').css('display', 'none');
-            if(bodywidth <1000 & bodywidth >600){
+            if(bodywidth <1000 & bodywidth >=600){
                 $('#popup_ticket_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
                 $('#popup_ticket_info_mobile_modify_btn').attr('data-type', 'view')
             }

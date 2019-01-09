@@ -231,7 +231,7 @@ function draw_memberlist_for_addByList(targetHTML){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     //$('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -514,7 +514,7 @@ $(document).on('click','img.btn_add_member_to_group',function(){
     var group_id = $(this).parents('.groupMembersWrap').attr('data-groupid');
     var group_name = $(this).parents('.groupMembersWrap').attr('data-groupname');
     var group_capacity = $(this).parents('.groupMembersWrap').attr('data-groupcapacity');
-    if($('body').width()<600){
+    if(bodywidth<600){
         float_btn_managemember("groupmember");
     }else{
         pc_add_member('groupmember');
@@ -555,7 +555,7 @@ function get_group_ing_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -610,7 +610,7 @@ function get_group_end_list(use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -673,7 +673,7 @@ function delete_group_from_list(group_id){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -779,7 +779,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");
@@ -895,7 +895,7 @@ function get_groupmember_list(group_id, use, callback){
             }else{
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
-                if($('body').width()<600){
+                if(bodywidth<600){
                     $('#page_managemember').show();
                 }
                 //$('html').css("cursor","auto");

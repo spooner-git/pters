@@ -84,10 +84,10 @@ $('#search_ticket_box').click(function(e){
         if(ticket_tab == TAB_ING) {
             get_package_ing_list("callback", function(jsondata){
                 var group_class_Html = '';
-                if(bodywidth <= 1000) {
+                if(bodywidth < 1000) {
                     group_class_Html = package_ListHtml_mobile('current', jsondata);
                 }
-                else if(bodywidth > 1000){
+                else if(bodywidth >= 1000){
                     group_class_Html = package_ListHtml('current', jsondata);
                 }
                 $('#currentPackageList').html(group_class_Html);
@@ -97,10 +97,10 @@ $('#search_ticket_box').click(function(e){
             get_package_end_list("callback", function(jsondata){
                 // console.log("get_package_end_list", jsondata)
                 var group_class_Html = '';
-                if(bodywidth <= 1000) {
+                if(bodywidth < 1000) {
                     group_class_Html = package_ListHtml_mobile('finished', jsondata);
                 }
-                else if(bodywidth > 1000){
+                else if(bodywidth >= 1000){
                     group_class_Html = package_ListHtml('finished', jsondata);
                 }
                 $('#finishedPackageList').html(group_class_Html);
@@ -115,10 +115,10 @@ $('#id_ticket_search').click(function(e){
     if(ticket_tab == TAB_ING) {
         get_package_ing_list("callback", function(jsondata){
             var group_class_Html = '';
-            if(bodywidth <= 1000) {
+            if(bodywidth < 1000) {
                 group_class_Html = package_ListHtml_mobile('current', jsondata);
             }
-            else if(bodywidth > 1000){
+            else if(bodywidth >= 1000){
                 group_class_Html = package_ListHtml('current', jsondata);
             }
             $('#currentPackageList').html(group_class_Html);
@@ -128,10 +128,10 @@ $('#id_ticket_search').click(function(e){
         get_package_end_list("callback", function(jsondata){
             // console.log("get_package_end_list", jsondata)
             var group_class_Html = '';
-            if(bodywidth <= 1000) {
+            if(bodywidth < 1000) {
                 group_class_Html = package_ListHtml_mobile('finished', jsondata);
             }
-            else if(bodywidth > 1000){
+            else if(bodywidth >= 1000){
                 group_class_Html = package_ListHtml('finished', jsondata);
             }
             $('#finishedPackageList').html(group_class_Html);
@@ -165,10 +165,10 @@ $('.alignSelect_ticket').change(function(){
         if(ticket_tab == TAB_ING) {
             get_package_ing_list("callback", function(jsondata){
                 var group_class_Html = '';
-                if(bodywidth <= 1000) {
+                if(bodywidth < 1000) {
                     group_class_Html = package_ListHtml_mobile('current', jsondata);
                 }
-                else if(bodywidth > 1000){
+                else if(bodywidth >= 1000){
                     group_class_Html = package_ListHtml('current', jsondata);
                 }
                 $('#currentPackageList').html(group_class_Html);
@@ -178,10 +178,10 @@ $('.alignSelect_ticket').change(function(){
             get_package_end_list("callback", function(jsondata){
                 // console.log("get_package_end_list", jsondata)
                 var group_class_Html = '';
-                if(bodywidth <= 1000) {
+                if(bodywidth < 1000) {
                     group_class_Html = package_ListHtml_mobile('finished', jsondata);
                 }
-                else if(bodywidth > 1000){
+                else if(bodywidth >= 1000){
                     group_class_Html = package_ListHtml('finished', jsondata);
                 }
                 $('#finishedPackageList').html(group_class_Html);
@@ -201,7 +201,7 @@ function shiftPackageList(type){
             ticket_tab = TAB_ING;
             $('#currentPackageList').css('display', 'block');
             $('#finishedPackageList, #finishGroupNum').css('display', 'none');
-            if(bodywidth > 1000){
+            if(bodywidth >= 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
                 $('#memberNumber_current_ticket').css('display', 'block');
@@ -210,7 +210,7 @@ function shiftPackageList(type){
                     var group_class_Html = package_ListHtml('current', jsondata);
                     $('#currentPackageList').html(group_class_Html);
                 });
-            }else if (bodywidth >600){
+            }else if (bodywidth >=600){
                 $('#memberNumber_current_ticket').css('display', 'block');
                 $('#memberNumber_finish_ticket').css('display', 'none');
                 get_package_ing_list("callback", function(jsondata){
@@ -230,7 +230,7 @@ function shiftPackageList(type){
 
             $('#finishedPackageList').css('display', 'block');
             $('#currentPackageList, #currentGroupNum').css('display', 'none');
-            if(bodywidth > 1000){
+            if(bodywidth >= 1000){
                 $('._GROUP_THEAD').show();
                 $('._MEMBER_THEAD, ._memberaddbutton').hide();
                 $('#memberNumber_finish_ticket').css('display', 'block');
@@ -240,7 +240,7 @@ function shiftPackageList(type){
                     var group_class_Html = package_ListHtml('finished', jsondata);
                     $('#finishedPackageList').html(group_class_Html);
                 });
-            }else if (bodywidth >600){
+            }else if (bodywidth >=600){
                 $('#memberNumber_finish_ticket').css('display', 'block');
                 $('#memberNumber_current_ticket').css('display', 'none');
                 get_package_end_list("callback", function(jsondata){
@@ -745,7 +745,7 @@ $(document).on('click', 'div.groupWrap', function(e){
     var repeat_list = $(this).siblings('div[data-packageid="'+package_id+'"].groupRepeatWrap');
     var memberlist = $(this).siblings('div[data-packageid="'+package_id+'"].groupMembersWrap');
     var grouplist = $(this).siblings('div[data-packageid="'+package_id+'"].groupPackageWrap');
-    if(bodywidth > 1000){
+    if(bodywidth >= 1000){
         if(memberlist.css('display')=='none'){
             //if(package_id != "1:1"){
                 $(this).addClass('groupWrap_selected');
@@ -778,7 +778,7 @@ $(document).on('click', 'div.groupWrap', function(e){
             }
             $(this).find('div._groupmanage img._info_delete').css('opacity', 0.4);
         }
-    }else if(bodywidth <= 1000){
+    }else if(bodywidth < 1000){
         var package_name = $(this).find('div._groupname_mobile').text();
         var package_type = $(this).find('div._grouptype_mobile').text();
         var package_membernum = $(this).find('div._groupparticipants_mobile > div:nth-of-type(2)').text();
@@ -938,7 +938,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
             $(this).hide();
             $(this).siblings('img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
             $('img._info_modify').removeClass('disabled_button');
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 $('img._info_download, img._info_delete').show();
             }else{
                 $('img._info_delete').show();
@@ -962,7 +962,7 @@ $(document).on('click', '._groupstatus_disabled_false', function(e){
     $('.lectureStateChangeSelectPopup ._resume').attr('data-packageid', $(this).attr('data-packageid'));
     show_shadow_reponsively();
     var display_type = "block";
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         display_type = "inline-block";
     }
     if($(this).attr('data-packagestatus') == "IP"){
@@ -1351,7 +1351,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
 
                 toggle_lock_unlock_inputfield_grouplist(group_id, true);
                 $('img._info_cancel').hide();
-                if(bodywidth > 600){
+                if(bodywidth >= 600){
                     $('img._info_download, img._info_delete').show();
                 }else{
                     $('img._info_delete').show();
@@ -1721,7 +1721,7 @@ function ptmember_ListHtml(type, option, Reverse, jsondata){
 
     if(type=='current' && len == 0){
         resultToAppend = '<div class="_nomember" rowspan="9" style="height:50px;padding-top: 17px !important;">등록 된 회원이 없습니다.</div>';
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             $('#please_add_member_pc').show();
         }else{
             $('#please_add_member').show();
@@ -3289,10 +3289,10 @@ function get_package_member_list(package_id, use, callback){
                 if(use == 'callback'){
                     callback(jsondata);
                 }else{
-                    if(bodywidth > 1000){
+                    if(bodywidth >= 1000){
                         packageMemberListSet(package_id, jsondata);
                         $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
-                    }else if(bodywidth <= 1000){
+                    }else if(bodywidth < 1000){
                         packageMemberListSet_mobile(package_id, jsondata);
                     }
                     
@@ -3356,10 +3356,10 @@ function get_end_package_member_list(package_id, use, callback){
                 }else{
                     // packageMemberListSet(package_id, jsondata);
                     // $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
-                    if(bodywidth > 1000){
+                    if(bodywidth >= 1000){
                         packageMemberListSet(package_id, jsondata);
                         $('div._groupmanage img._info_delete[data-packageid="'+package_id+'"]').css('opacity', 1);
-                    }else if(bodywidth <= 1000){
+                    }else if(bodywidth < 1000){
                         packageMemberListSet_mobile(package_id, jsondata);
                     }
                 }
@@ -4010,7 +4010,7 @@ function modify_package_from_list(package_id, package_name, package_note, use, c
                 smart_refresh_member_group_class_list();
 
                 $('img._info_cancel').hide();
-                if(bodywidth > 1000){
+                if(bodywidth >= 1000){
                     $('img._info_download, img._info_delete').show();
                     toggle_lock_unlock_inputfield_grouplist(package_id, true);
                 }else{

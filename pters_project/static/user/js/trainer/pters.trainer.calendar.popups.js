@@ -49,7 +49,7 @@
 
 
         $(document).on(eventend, 'div._class, div._off, div._group', function(e){
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 if(small_plan == 1){
                     $(this).css({'height':thisHeight, 'z-index':thisZindex,  'left':thisLeft, 'top':cssthisTop});
                     small_plan = 0;
@@ -359,7 +359,7 @@
             };
         }
         schedule_on_off = 1;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             selector_cal_popup_planinfo.css({'display':'block', 'top':(($(window).height()-selector_cal_popup_planinfo.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_planinfo.outerWidth())/2+$(window).scrollLeft())});
         }else{
             selector_cal_popup_planinfo.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
@@ -440,7 +440,7 @@
         $("#popup_sign_img").css("display", "none");
         schedule_on_off = 0;
 
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             selector_cal_popup_plan_info.css({'display':'block', 'top':(($(window).height()-selector_cal_popup_plan_info.outerHeight())/2+$(window).scrollTop()), 'left':(($(window).width()-selector_cal_popup_plan_info.outerWidth())/2+$(window).scrollLeft())});
         }else{
             selector_cal_popup_plan_info.css({'display':'block', 'top':'50%', 'left':'50%', 'transform':'translate(-50%, -50%)', 'position':'fixed'});
@@ -552,7 +552,7 @@
             };
         }
         schedule_on_off = 2;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             selector_cal_popup_planinfo.attr({'data-scheduleid': this_schedule_id,
                                                 'data-grouptype':"group"
                                             })
@@ -602,7 +602,7 @@
                 $('#countNum').text(countNum);
                 $('.popup_ymdText').html(infoText);
                 plancheck(yy+'_'+mm+'_'+dd, initialJSON);
-                if(bodywidth > 600){
+                if(bodywidth >= 600){
                     $cal_popup_plancheck.css({'display':'block','top':(($(window).height()-$cal_popup_plancheck.outerHeight())/2+$(window).scrollTop()),'left':(($(window).width()-$cal_popup_plancheck.outerWidth())/2+$(window).scrollLeft())});
                 }else{
                     $cal_popup_plancheck.css({'display':'block','top':'50%','left':'50%','transform':'translate(-50%, -50%)','position':'fixed'});
@@ -729,7 +729,7 @@
                 });
                 //$("#popup_sign_img").css("display","none");
                 //$('#popup_btn_complete, #popup_btn_delete').addClass('disabled_button')
-                if(bodywidth > 600){
+                if(bodywidth >= 600){
                     toggleGroupParticipantsList('on');
                 }else{
                     toggleGroupParticipantsList('off');
@@ -741,7 +741,7 @@
                 toggleGroupParticipantsList('off');
                 schedule_on_off = 1;
             }
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 if($(this).attr('data-grouptype') == "group") {
                     $("#cal_popup_planinfo").css({
                         'display': 'block',
@@ -1296,7 +1296,7 @@
             $('._on').removeClass('_on');
             initialJSON = jsondata;
             var duplicate_check;
-            if(bodywidth > 600){
+            if(bodywidth >= 600){
                 if(varUA.match('iphone') !=null || varUA.match('ipad')!=null || varUA.match('ipod')!=null || varUA.match('android') != null){
                     exist_check_dic = {};
                     duplicate_check = know_duplicated_plans(jsondata).result;
@@ -1310,7 +1310,7 @@
                     scheduleTime('group', jsondata, calendarSize, duplicate_check);
                     fake_show();
                 }
-            }else if(bodywidth <= 600){
+            }else if(bodywidth < 600){
                 exist_check_dic = {};
                 duplicate_check = know_duplicated_plans(jsondata).result;
                 scheduleTime_Mobile('class', jsondata, calendarSize, duplicate_check);

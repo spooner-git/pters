@@ -328,12 +328,12 @@ $(document).ready(function(){
         $('.classTime, .offTime, .groupTime').parent().html('<div></div>');
         $('._on').removeClass('_on');
         initialJSON = jsondata;
-        if(bodywidth > 600){
+        if(bodywidth >= 600){
             scheduleTime_day('class', jsondata);
             scheduleTime_day('group', jsondata);
             scheduleTime_day('off', jsondata);
             //fake_show();
-        }else if(bodywidth <= 600){
+        }else if(bodywidth < 600){
             scheduleTime_day_Mobile('class', jsondata);
             scheduleTime_day_Mobile('group', jsondata);
             scheduleTime_day_Mobile('off', jsondata);

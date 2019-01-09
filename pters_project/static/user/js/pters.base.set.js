@@ -100,13 +100,13 @@ function sideGoPage(page, menu_name_class){
 function shade_index(option){
     var initialbodywidth = window.innerWidth;
     var initialbodyheight = document.documentElement.clientHeight + 100;
-    if(initialbodywidth > 600){
+    if(initialbodywidth >= 600){
         $('#pshade').css({'width':'100%', 'height':'100%'});
     }else{
         $('#mshade').css({'width':'100%', 'height':initialbodyheight});
     }
     var bodywidth = window.innerWidth;
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         if(option<0){
             if($('#memberInfoPopup_PC').css('display')=="block" && $('._calmonth').css('display')=="block"){
                 $('#pshade').css({'z-index':150, 'display':'block'});
@@ -118,7 +118,7 @@ function shade_index(option){
             $('#pshade').css({'z-index':option, 'display':'block'});
         }
 
-    }else if(bodywidth <= 600){
+    }else if(bodywidth < 600){
         var selector_page_addplan = $('#page-addplan');
         var selector_page_addmember = $('#page_addmember');
         var selector_float_btn_wrap = $('#float_btn_wrap');
@@ -235,7 +235,7 @@ $(document).ready(function(){
         var bodywidth = window.innerWidth;
         /*$('#alarm').css('transform','translate(-50%,-200%)');*/
         $('#alarm').css('height', '0');
-        if(bodywidth>600){
+        if(bodywidth>=600){
             shade_index(-100);
         }else{
             shade_index(-100);
@@ -943,7 +943,7 @@ set_drag_drop_action_to_DOM('#memberInfoPopup_PC');
 
 function set_drag_drop_action_to_DOM(targetSelector){
     //if(bodywidth > 600 && (varUA.match('iphone') !=null && varUA.match('ipad')!=null && varUA.match('ipod')!=null && varUA.match('android') != null ) ){
-    if(bodywidth > 600 ){
+    if(bodywidth >= 600 ){
         var click_state = 0;
         $(targetSelector).mousedown(function(event){
             //event.stopPropagation();
@@ -1064,7 +1064,7 @@ function set_drag_drop_action_to_DOM_partial(targetSelector, options){
         }
     }
 
-    if(bodywidth > 600){
+    if(bodywidth >= 600){
         $(targetSelector).append('<div class="drag_drop_target" ' +
             'style="position:${options.grabPosition}; width:${options.grabWidth}; height:${options.grabHeight}; top:${options.grabTop}; left:${options.grabLeft}; z-index:${options.grabZindex}"> ' +
             '</div>');
