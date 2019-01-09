@@ -44,7 +44,7 @@ $(document).on("touchend", 'html', function(e){
     var te = e.originalEvent.changedTouches[0].clientY;
     if(ts>te+5 && $('#mshade').css('z-index')<0){
         downTouchEvent();
-    }else if(ts<te-5){
+    }else if(ts<te-2){
         upTouchEvent();
     }
 });
@@ -79,11 +79,17 @@ function upTouchEvent(){
     if($('#mshade').css('z-index')<0){
         $("#float_btn_wrap").show();
     }
-
+    if($('#alignBox').length != -1 && bodywidth < 600){
+        $('#alignBox').css('transform', 'translateY(0)');
+        
+    }
 }
 function downTouchEvent(){
     $("#float_btn_wrap").hide();
-
+    if($('#alignBox').length != -1 && bodywidth < 600){
+        $('#alignBox').css('transform', 'translateY(-60px)');
+        // $('#alignBox').hide();
+    }
 }
 
 function sideGoPage(page, menu_name_class){
