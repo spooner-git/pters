@@ -3771,9 +3771,10 @@ function get_grouplist_in_package(package_id, state, use, callback){
 
 function draw_grouplist_in_package($targetHTML, jsondata){
     var htmlToJoin = [];
+    var group_index = 0;
     for(var i=0; i<jsondata.group_id.length; i++){
         htmlToJoin.push(
-                            `<div class="lecture_bubble lecture_bubble_mini" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
+                            `<div class="lecture_bubble lecture_bubble_mini" style="background-color:${jsondata.group_ing_color_cd[i]}" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
                                 <p><span>${jsondata.group_name[i]}</span><img src="/static/user/res/member/icon-x-grey.png" data-groupid="${jsondata.group_id[i]}"></p>
                               </div>`
                         );

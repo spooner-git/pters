@@ -54,9 +54,9 @@
 		padding: 3px 5px 3px 5px;
 		margin-right: 5px;
 		margin-bottom: 4px;
-		border: 1px solid #cccccc;
-		border-radius: 5px;
-		background-color: #ffffff;
+		/*border: 1px solid #cccccc;*/
+		border-radius: 20px;
+		/*background-color: #ffffff;*/
 	}
 	.lecture_bubble p{
 		margin: 0;
@@ -71,6 +71,7 @@
 	.lecture_bubble_mini img{
 		width: 14px;
 		margin-bottom: 2px;
+		filter: contrast(0);
 	}
 	.btn_add_lecture_bubble_mini{
 		transform: rotate(45deg);
