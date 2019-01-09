@@ -2991,39 +2991,41 @@ function know_duplicated_plans(jsondata){
     for(var i=0; i<classlen; i++){
         if(jsondata.group_schedule_id.indexOf(jsondata.class_group_schedule_id[i]) == -1 ){
             testArray_start.push(jsondata.classTimeArray_start_date[i]);
-            testArray_end.push(jsondata.classTimeArray_end_date[i]);  
+            testArray_end.push(jsondata.classTimeArray_end_date[i]);
         }
     }
 
     var duplicate_num = [];
     var duplicate_dic = {};
 
-    var len1 = testArray_start.length;
+    var clear_result = clear_duplicated_date_time(jsondata, "");
+
+    //중복일정시 Test
+    var clear_start_date = clear_result.clear_start_array;
+    var clear_end_date = clear_result.clear_end_array;
+
+
+    var len1 = clear_start_date.length;
+    var len2 = testArray_start.length;
     // var len2 = testArray_end.length;
 
     for(var i=0; i<len1; i++){
-        // 시작 날짜 / 시각
-        var plan = testArray_start[i].split(' ');
+
+        var duplicated = 0;
+
+        var plan = clear_start_date[i].split(' ');
         var date = plan[0];
         var time = plan[1];
 
         // 종료 날짜 / 시각
-        var endplan = testArray_end[i].split(' ');
+        var endplan = clear_end_date[i].split(' ');
         var enddate = endplan[0];
         var endtime = endplan[1];
 
-        // ~ 24:00:00 일정 처리
-        if(endtime == "00:00:00"){
-            // 날짜 하루 빼기 수정(사용 x) - hkkim 20190108
-            enddate = substract_date(endplan[0], -1);
-            endtime = "24:00:00";
-        }
-        var duplicated = 0;
-
-        duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]] = [];
+        duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]] = [];
 
         // 중복 검사
-        for(var j=0; j<len1; j++){
+        for(var j=0; j<len2; j++){
 
             // 시작 날짜 / 시각
             var plan_c = testArray_start[j].split(' ');
@@ -3041,41 +3043,17 @@ function know_duplicated_plans(jsondata){
                 enddate_c = substract_date(endplan_c[0], -1);
                 endtime_c = "24:00:00";
             }
-
             // 같은 날짜인 경우
            if(date_c == date){
                 //겹치는 걸 센다.
-                if( compare_time(time_c, time) && compare_time(endtime, endtime_c)  ){  //비교대상 시간이 비교시간안에 쏙 들어갈때
-                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
-                    duplicated++;
-                }else if( compare_time(time, time_c) == false && compare_time(endtime, time_c)  ){ //비교 대상 시간의 시작시간이 비교시간안에 들어가 있을때
-                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
-                    duplicated++;
-                }else if( compare_time(endtime_c, time) && compare_time(endtime_c, endtime) == false ){ //비교 대상 시간의 종료시간이 비교 시간 안에 들어가 있을때
-                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
-                    duplicated++;
-                }else if( compare_time(time_c, time) == false && compare_time(endtime, endtime_c) == false ){ //비교 대상 시간이 비교시간을 완전히 감쌀때
-                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
-                    duplicated++;
-                }else if(time == time_c && endtime == endtime_c){ //비교 대상 시간이 똑같을 때
-                    duplicate_dic[testArray_start[i]+' ~ '+testArray_end[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
+                var duplication_type = know_whether_plans_has_duplicates(time, endtime, time_c, endtime_c);
+                if(duplication_type > 0) { //겹칠때
+                    duplicate_dic[clear_start_date[i]+' ~ '+clear_end_date[i]].push(testArray_start[j]+' ~ '+testArray_end[j]);
                     duplicated++;
                 }
             }
         }
         duplicate_num.push(duplicated);
-    }
-
-    //겹치는 리스트 제거?
-    for(var plan_o in duplicate_dic){
-        var planlength = duplicate_dic[plan_o].length;
-        for(var plans in duplicate_dic){
-            if(plan_o != plans){
-                if(duplicate_dic[plans].indexOf(plan_o) != -1 && planlength <= duplicate_dic[plans].length ){
-                    delete duplicate_dic[plan_o];
-                }
-            }
-        }
     }
 
     var result = {};
@@ -3115,17 +3093,16 @@ function know_duplicated_plans(jsondata){
                     comp_end_time = "24:00:00";
                 }
 
-                var duplication_type = know_whether_plans_has_duplicates(ref_start_time , ref_end_time,
+                var duplication_type = know_whether_plans_has_duplicates(ref_start_time, ref_end_time,
                                                                          comp_start_time, comp_end_time);
 
                 if(duplication_type > 0){ //겹칠때
-                    var moved_element_check = 0;
-                    if(temp_index[r] != r){
-                        moved_element_check--;
+                    var temp_array = [];
+                    for(var i=0; i<t; i++){
+                        temp_array.push(temp_index[i]);
                     }
-                    temp_index[t] = r + 1 + moved_element_check;
-                    // temp_index[t] = r + 1;
-                    //이 인덱스의 값과 겹치는지 확인
+
+                    temp_index[t] = Math.max.apply(null, temp_array)+1;
 
                 }else{ //겹치지 않을때
                     //이 인덱스와 같은 값을 갖는 다른 시간대가 있는지 검사
@@ -3186,6 +3163,7 @@ function know_duplicated_plans(jsondata){
 
     // console.log("duplicate_dic",duplicate_dic);
     // console.log("result", result)
+    console.log({"num":duplicate_num, "dic":duplicate_dic, "result":result})
 
     return {"num":duplicate_num, "dic":duplicate_dic, "result":result};
 }
