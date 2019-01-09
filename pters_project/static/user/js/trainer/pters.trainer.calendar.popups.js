@@ -306,17 +306,21 @@
         var infoText = start_date.replace(/-/gi, ". ")+' '+'('+day+')';
         var stime_text = time_format_add_ampm(start_time);
         var etime_text = time_format_add_ampm(end_time);
-        var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+name+'" '+'data-schedule-check="'+finished+'">'+
-                            '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
-                            '<span id="planinfo_name_text">'+name+'</span>'+
-                        '</span>';
+        // var infoText2 = '<span class="memberNameForInfoView" data-dbid="'+dbid+'" data-name="'+name+'" '+'data-schedule-check="'+finished+'">'+
+        //                     '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
+        //                     '<span id="planinfo_name_text">'+name+'</span>'+
+        //                 '</span>';
+        $('#planinfo_title_wrap').addClass('memberNameForInfoView').attr('data-dbid', dbid);
+        $('#planinfo_type_text, #groupplan_participants_status').hide();
+        $('#planinfo_plan_color').css('background-color', plancolor);
+        $('#planinfo_name_text').text(name);
         if(memo.length == 0){
             memo = "";
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#cccccc"});
         }else{
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#282828"});
         }
-        $('#popup_planinfo_title').html(infoText2);
+        // $('#popup_planinfo_title').html(infoText2);
         $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
         // $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(memo).val(memo);
@@ -414,9 +418,13 @@
         var stime_text = time_format_add_ampm(start_time);
         var etime_text = time_format_add_ampm(end_time);
 
-        var infoText2 = '<span>'+
-                            '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+yourplan +
-                        '</span>';
+        // var infoText2 = '<span>'+
+        //                     '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+yourplan +
+        //                 '</span>';
+        $('#planinfo_title_wrap').removeClass('memberNameForInfoView');
+        $('#planinfo_type_text, #groupplan_participants_status').hide();
+        $('#planinfo_plan_color').css('background-color', plancolor);
+        $('#planinfo_name_text').text(yourplan);
         if(memo.length == 0){
             memo = "";
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#cccccc"});
@@ -424,7 +432,7 @@
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#282828"});
         }
 
-        $('#popup_planinfo_title').html(infoText2);
+        // $('#popup_planinfo_title').html(infoText2);
         $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
         // $('#popup_info2').html(infoText2);
         selector_popup_info3_memo.text(memo).val(memo);
@@ -509,12 +517,16 @@
         var infoText = start_date.replace(/-/gi, ". ")+' '+'('+day+')';
         var stime_text = time_format_add_ampm(start_time);
         var etime_text = time_format_add_ampm(end_time);
-        var infoText2 = '<span data-name="'+name+'" '+'data-schedule-check="'+finished+'" '+'data-group-type-cd-name="'+type_name+'">'+
-                            '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
-                            '<span id="planinfo_type_text">'+type_name+'.</span>'+
-                            '<span id="planinfo_name_text">'+name+'</span>'+
-                            '<span id="groupplan_participants_status"> ('+current_member_num+'/'+max_member_num+')</span>'+
-                        '</span>';
+        // var infoText2 = '<span data-name="'+name+'" '+'data-schedule-check="'+finished+'" '+'data-group-type-cd-name="'+type_name+'">'+
+        //                     '<div id="planinfo_plan_color" style="background-color:'+plancolor+'"></div>'+
+        //                     '<span id="planinfo_type_text">'+type_name+'.</span>'+
+        //                     '<span id="planinfo_name_text">'+name+'</span>'+
+        //                     '<span id="groupplan_participants_status"> ('+current_member_num+'/'+max_member_num+')</span>'+
+        //                 '</span>';
+        $('#planinfo_title_wrap').removeClass('memberNameForInfoView');
+        $('#planinfo_plan_color').css('background-color', plancolor);
+        $('#planinfo_name_text').text(name);
+        $('#groupplan_participants_status').text('('+current_member_num+'/'+max_member_num+')');
         if(memo.length == 0){
             memo = "";
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#cccccc"});
@@ -522,7 +534,7 @@
             selector_popup_info3_memo.css({"-webkit-text-fill-color":"#282828"});
         }
         $('#groupParticipants_number_in_btn').text(current_member_num);
-        $('#popup_planinfo_title').html(infoText2);
+        // $('#popup_planinfo_title').html(infoText2);
         $('#popup_info').text(infoText+' '+stime_text+' - '+etime_text);
         selector_popup_info3_memo.text(memo).val(memo);
 
