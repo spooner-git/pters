@@ -967,7 +967,7 @@ $(document).on('click', '._groupmanage img._info_modify', function(e){
                     group_memo = " ";
                 }
 
-                $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
+                // $(this).attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 //toggle_lock_unlock_inputfield_grouplist(group_id, true)
                 modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
                 break;
@@ -1343,18 +1343,18 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 scrollToDom($('#page_addmember'));
                 $('#errorMessageBar').show();
                 $('#errorMessageText').text(jsondata.messageArray);
-                // 오류 난 경우
-                // $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
-                // $('#mygroupnametitle').show();
-                // $('.mobile_group_color_palette').show();
-                // $('#id_mobile_input_capacity').keyup(function(){
-                //     limit_char_only_number(this);
-                // });
+
             }else{
+                $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
+                $('#upbutton-modify').attr('data-type', 'view');
+                $('#upbutton-modify > img').attr('src', '/static/user/res/icon-pencil.png');
+                $('#popup_lecture_info_mobile_modify_btn').attr('data-type', 'view');
+                $('#popup_lecture_info_mobile_modify_btn > img').attr('src', '/static/user/res/icon-pencil.png');
+
                 $('#errorMessageBar').hide();
                 $('#errorMessageText').text('');
                 $('#upbutton-check img').attr('src', '/static/user/res/ptadd/btn-complete.png');
-
+                $('._groupmanage img._info_modify').attr({'data-edit':'view', 'src':'/static/user/res/member/icon-edit.png'});
                 smart_refresh_member_group_class_list();
                 
                 $('img._info_cancel').hide();
@@ -1387,6 +1387,7 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
         error:function(){
             $('#errorMessageBar').show();
             $('#errorMessageText').text('통신 에러: 관리자 문의');
+
         }
     });
 }

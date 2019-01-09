@@ -88,6 +88,8 @@ urlpatterns = [
     url(r'^delete_group_info/$', views.delete_group_info_logic, name='delete_group_info'),
     # 그룹 수정 - 내부 회원 수정 x
     url(r'^update_group_info/$', views.update_group_info_logic, name='update_group_info'),
+    # 진행중 그룹 list 조회
+    url(r'^get_group_info/$', views.GetGroupInfoViewAjax.as_view(), name='get_group_info'),
     # 그룹 회원 추가
     url(r'^add_group_member/$', views.add_group_member_logic, name='add_group_member'),
     # 그룹 회원 삭제
