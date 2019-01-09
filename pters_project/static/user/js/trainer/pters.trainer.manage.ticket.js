@@ -3125,6 +3125,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
     var htmlToJoin3 = [];
     var groupNum = jsondata.package_id.length;
     var ordernum = 0;
+    var group_index = 0;
     for(var i=0; i<groupNum; i++){
         var package_name = jsondata.package_name[i];
         var package_id = jsondata.package_id[i];
@@ -3146,6 +3147,17 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
                 package_membernum = jsondata.package_end_member_num[i];
                 break;
         }
+
+        var loc = Number(jsondata.package_group_num[i]);
+        var lecture_list = [];
+        for(var t=group_index; t<group_index+loc; t++){
+            lecture_list.push(`<div style="background-color:${jsondata.package_group_ing_color_cd[t]}" class="mobile_package_color_in_entire_list">
+                                    ${jsondata.package_group_name[t]}
+                                </div>`
+                              );
+        }
+        group_index = group_index+loc;
+
 
         ordernum++;
         var full_package = "";
@@ -3180,7 +3192,7 @@ function package_ListHtml_mobile(option, jsondata){ //option : current, finished
             `<div class="_grouptype_mobile">${package_type_nm}</div>
              <div class="_groupname_mobile">${package_name}</div>
              <div class="_groupparticipants_mobile"><div>회원수</div><div>${package_membernum}</div></div>
-             <div class="_grouplectures_mobile"><div>수업</div><div></div></div>
+             <div class="_grouplectures_mobile"><div>수업</div><div>${lecture_list.join('')}</div></div>
              <div class="_groupmemo_mobile"><div>메모</div><div>${package_memo}</div></div>
             `;
 
@@ -3759,9 +3771,10 @@ function get_grouplist_in_package(package_id, state, use, callback){
 
 function draw_grouplist_in_package($targetHTML, jsondata){
     var htmlToJoin = [];
+    var group_index = 0;
     for(var i=0; i<jsondata.group_id.length; i++){
         htmlToJoin.push(
-                            `<div class="lecture_bubble lecture_bubble_mini" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
+                            `<div class="lecture_bubble lecture_bubble_mini" style="background-color:${jsondata.group_ing_color_cd[i]}" data-groupid=${jsondata.group_id[i]} data-groupname='${jsondata.group_name[i]}'>
                                 <p><span>${jsondata.group_name[i]}</span><img src="/static/user/res/member/icon-x-grey.png" data-groupid="${jsondata.group_id[i]}"></p>
                               </div>`
                         );
