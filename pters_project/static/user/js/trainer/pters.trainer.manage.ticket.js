@@ -2434,7 +2434,7 @@ $(document).on("click", "img.btn_add_lecture_bubble_mini", function(e){
     var package_id = $(this).attr("data-packageid");
     var $targetHTML = $(this).parent("div.groupPackageWrap");
     if($('#popup_ticket_info_mobile').css('display') == "block"){
-        $targetHTML = $("#popup_ticket_info_mobile_lecturelist");
+        $targetHTML = $("#popup_ticket_info_mobile_lecture_add_popup");
     }
     
     if($targetHTML.find("#add_group_to_package_selector_popup").length <= 0){
@@ -2448,9 +2448,9 @@ $(document).on("click", "img.btn_add_lecture_bubble_mini", function(e){
             fill_single_package_list_to_dropdown_to_make_new_package("#add_group_to_package_selector", "pters", jsondata);
         });
         if($('#popup_ticket_info_mobile').css('display') == "block"){
-
+            shade_index(200);
         }else{
-            shade_index(100);    
+            shade_index(100);
         }
         $targetHTML.append(html);
     }
@@ -2469,6 +2469,7 @@ $(document).on("click", "#add_group_to_package_selector li a", function(){
             get_grouplist_in_package(package_id, package_statuscd, "callback", function(jsondata){
                 draw_grouplist_in_package($targetlecturelist, jsondata);
             });
+            $('.add_group_to_package_dropdown_title img').trigger('click');
         }
         shade_index(-100);
     });
