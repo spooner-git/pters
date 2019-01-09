@@ -1615,6 +1615,29 @@ $(document).ready(function(){
         }
     });
 
+    $('#popup_lecture_info_mobile_modify_btn').click(function(){
+
+        if($(this).attr('data-type') == "view" ){
+            $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", false).css('border', '1px solid #cccccc');
+            $(this).attr('data-type', 'modify');
+            $(this).find('img').attr('src', '/static/user/res/ptadd/btn-complete-checked.png');
+            $('#mygroupnametitle').show();
+            $('.mobile_group_color_palette').show();
+            $('#id_mobile_input_capacity').keyup(function(){
+                limit_char_only_number(this);
+            });
+        }else if($(this).attr('data-type') == "modify" ){
+            $('#popup_lecture_info_mobile_basic').find(".pters_table_cell input").attr("disabled", true).css('border-color', 'transparent');
+            $(this).attr('data-type', 'view');
+            var group_id = $('#mygroupid').attr('data-groupid');
+            var group_name = $('#mygroupname input').val();
+            var group_capacity = $('#mygroupcapacity input').val();
+            var group_memo = $('#mygroupmemo input').val();
+            var group_type = "";
+            modify_group_from_list(group_id, group_name, group_capacity, group_memo, group_type, "", "", "", "");
+        }
+    });
+
     $('#upbutton-modify').click(function(){ //모바일 회원정보창에서 수정 눌렀을때
         if($('#popup_lecture_info_mobile').css('display') == "block"){
             if($(this).attr('data-type') == "view" ){

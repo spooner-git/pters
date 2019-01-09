@@ -282,7 +282,7 @@ img.substract_addedMember{
 	box-shadow: 1px 1px 1px 1px #cccccc;
 	transition: box-shadow 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-#popup_lecture_info_mobile_close_btn{
+#popup_lecture_info_tablet_upperbar{
 	display: none;
 }
 @media(min-width: 600px){
@@ -290,7 +290,7 @@ img.substract_addedMember{
 		margin-top: 50px;
 		background-color: #f4f4f4;
 	}
-	#popup_lecture_info_mobile_close_btn{
+	#popup_lecture_info_tablet_upperbar{
 		display: block;
 		background-color: #282828;
 		color: #ffffff;
@@ -301,13 +301,29 @@ img.substract_addedMember{
 		line-height: 50px;
 		cursor: pointer;
 	}
-	#popup_lecture_info_mobile_close_btn > img{
+	#popup_lecture_info_mobile_close_btn{
+		display: inline-block;
+		cursor: pointer;
+	}
+	#popup_lecture_info_tablet_upperbar > #popup_lecture_info_mobile_close_btn > img{
 		height: 17px;
 		margin-right: 10px;
 		margin-left: 10px;
 		margin-bottom: 3px;
 		transform: rotate(180deg);
 	}
+	#popup_lecture_info_mobile_modify_btn{
+		display: inline-block;
+		float: right;
+		cursor: pointer;
+	}
+		#popup_lecture_info_mobile_modify_btn > img{
+			height: 22px;
+			margin-right: 10px;
+			margin-left: 10px;
+			margin-bottom: 4px;
+			filter: invert(100);
+		}
 }
 @media(min-width: 750px){
 	.groupWrap{
@@ -317,6 +333,9 @@ img.substract_addedMember{
 	}
 }
 @media(min-width:1000px){
+	#popup_lecture_info_tablet_upperbar{
+		display: none;
+	}
 	.groupWrap{
 		display: table;
 		width: 100%;

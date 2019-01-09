@@ -1347,8 +1347,13 @@ function modify_group_from_list(group_id, group_name, group_capacity, group_memo
                 }
                 if($('#popup_lecture_info_mobile').css('display') == "block"){
                     if(group_name.length != 0){
-                       $('#uptext3').text(group_name);
-                       $('#mygroupnametitle').hide();
+                        if(bodywidth<600){
+                            $('#uptext3').text(group_name);
+                            $('#mygroupnametitle').hide();
+                        }else{
+                            $('#lecturedelete').hide();
+                            $('#popup_lecture_info_mobile_modify_btn').find('img').attr('src', '/static/user/res/icon-pencil.png');
+                        }
                     }
                     if(ing_bg_color.length != 0){
                         $('#mygroupcolor').css('background-color', ing_bg_color);
