@@ -632,149 +632,149 @@ div._manage{
 
 
 /*모바일에서 수강권을 클릭하면 나오는 팝업*/
-	#popup_ticket_info_mobile{
+#popup_ticket_info_mobile{
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	z-index: 100;
+	padding: 50px 0px 0px 0px;
+	height: auto;
+}
+	#ticketnametitle{
 		display: none;
+	}
+	#popup_ticket_info_mobile_memberlist{
+		background-color: #f4f4f4;
+		padding: 15px 10px 10px 10px;
+	}
+	#popup_ticket_info_mobile_memberlist .groupmemberline_thead{
+		display: none;
+		background-color: #282828;
+		color: #ffffff;
+		text-align: center;
+	}
+
+	#popup_ticket_info_mobile_memberlist #mobile_comment_1{
+		margin-bottom: 10px;
+	}
+	#popup_ticket_info_mobile_memberlist #mobile_comment_1 span:nth-of-type(1){
+		font-size: 18px;
+		font-weight: bold;
+		margin-right: 15px;
+	}
+	#popup_ticket_info_mobile_memberlist #mobile_comment_1 span:nth-of-type(2){
+		font-size: 18px;
+		font-weight: bold;
+		color: #fe4e65;
+	}
+	#popup_ticket_info_mobile_memberlist #mobile_comment_1 div{
 		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: #ffffff;
-		z-index: 100;
-		padding: 50px 0px 0px 0px;
-		height: auto;
-	}	
-		#ticketnametitle{
-			display: none;
-		}
-		#popup_ticket_info_mobile_memberlist{
-			background-color: #f4f4f4;
-			padding: 15px 10px 10px 10px;
-		}
-		#popup_ticket_info_mobile_memberlist .groupmemberline_thead{
-			display: none;
-			background-color: #282828;
-			color: #ffffff;
-			text-align: center;
-		}
-		
-		#popup_ticket_info_mobile_memberlist #mobile_comment_1{
-			margin-bottom: 10px;
-		}
-		#popup_ticket_info_mobile_memberlist #mobile_comment_1 span:nth-of-type(1){
-			font-size: 18px;
-			font-weight: bold;
-			margin-right: 15px;
-		}
-		#popup_ticket_info_mobile_memberlist #mobile_comment_1 span:nth-of-type(2){
-			font-size: 18px;
-			font-weight: bold;
-			color: #fe4e65;
-		}
-		#popup_ticket_info_mobile_memberlist #mobile_comment_1 div{
-			position: absolute;
-			right: 0;
-			display: inline-block;
-			margin-right: 10px;
-			width:25px;
-			height:25px;
-			border-radius:50%;
-			border:2px solid #282828;
-			font-size:15px;
-			font-weight: bold;
-			text-align: center;
-		}
-
-		#popup_ticket_info_mobile_memberlist #mobile_comment_2{
-			font-size: 12.5px;
-			color: #7d7d7d;
-		}
-		#popup_ticket_info_mobile_memberlist .memberline{
-			margin: 0;
-			margin-top: 10px;
-			text-align: center;
-		}
-		#popup_ticket_info_mobile_memberlist .memberline ._tdname{
-			text-align: left;
-			font-size: 17px;
-			font-weight: 600;
-			padding-left: 15px;
-		}
-		#popup_ticket_info_mobile_memberlist .memberline ._regandremaincount{
-			font-size: 16px;
-			font-weight: 600;
-		}
-		#popup_ticket_info_mobile_memberlist .memberline ._regandremaincount p{
-			margin: 0;
-			margin-top: 5px;
-			margin-bottom: 5px;
-		}
-		#popup_ticket_info_mobile_memberlist .memberline ._regandremaincount span{
-			color: #7d7d7d;
-			font-size: 14px;
-			font-weight: 400;
-		}
-
-		#popup_ticket_info_mobile_memberlist .memberline ._fixedmember{
-			
-		}
-
-	#popup_ticket_info_mobile_basic{
-		padding: 0 20px	0px 20px;
-	}
-	#popup_ticket_info_mobile_basic .pters_table{
-		width: 100%;
+		right: 0;
+		display: inline-block;
+		margin-right: 10px;
+		width:25px;
+		height:25px;
+		border-radius:50%;
+		border:2px solid #282828;
+		font-size:15px;
+		font-weight: bold;
+		text-align: center;
 	}
 
-	#popup_ticket_info_mobile_basic .pters_table .pters_table_cell:nth-of-type(1){
-		width: 30%;
+	#popup_ticket_info_mobile_memberlist #mobile_comment_2{
+		font-size: 12.5px;
+		color: #7d7d7d;
+	}
+	#popup_ticket_info_mobile_memberlist .memberline{
+		margin: 0;
+		margin-top: 10px;
+		text-align: center;
+	}
+	#popup_ticket_info_mobile_memberlist .memberline ._tdname{
 		text-align: left;
 		font-size: 17px;
-		font-weight: bold;
+		font-weight: 600;
+		padding-left: 15px;
 	}
-	#popup_ticket_info_mobile_basic .pters_table .pters_table_cell:nth-of-type(2){
-		width: 70%;
-		text-align: right;
+	#popup_ticket_info_mobile_memberlist .memberline ._regandremaincount{
 		font-size: 16px;
-		font-weight: 500;
+		font-weight: 600;
+	}
+	#popup_ticket_info_mobile_memberlist .memberline ._regandremaincount p{
+		margin: 0;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
+	#popup_ticket_info_mobile_memberlist .memberline ._regandremaincount span{
+		color: #7d7d7d;
+		font-size: 14px;
+		font-weight: 400;
 	}
 
-	#popup_ticket_info_mobile_basic .mobile_repeat_info_wrap p:nth-of-type(1){
-		margin: 0;
-	}
-	#popup_ticket_info_mobile_basic .mobile_repeat_info_wrap p:nth-of-type(2){
-		margin: 0;
-		font-size: 13px;
-	}
-	#popup_ticket_info_mobile_basic .mobile_memo_input{
-		border: 1px solid transparent;
-		-webkit-appearance:none;
-		-webkit-text-fill-color:#282828;
-		text-align: right;
-		width: 90%;
+	#popup_ticket_info_mobile_memberlist .memberline ._fixedmember{
+
 	}
 
-	#popup_ticket_info_mobile_lecturelist{
-		padding: 0 20px 20px 20px;
-	}
-	.mobile_status_color_palette{
-		display: none;
-	}
-		.mobile_status_color_palette > div{
-			cursor: pointer;
-			display: inline-block;
-			border: 1px solid #cccccc;
-			padding: 0 5px 0 5px;
-			color:#9a9a9a;
-		}
-		.mobile_status_selected{
-			color: #fe4e65 !important;
-		}
-	#ticketdelete{
+#popup_ticket_info_mobile_basic{
+	padding: 0 20px	0px 20px;
+}
+#popup_ticket_info_mobile_basic .pters_table{
+	width: 100%;
+}
+
+#popup_ticket_info_mobile_basic .pters_table .pters_table_cell:nth-of-type(1){
+	width: 30%;
+	text-align: left;
+	font-size: 17px;
+	font-weight: bold;
+}
+#popup_ticket_info_mobile_basic .pters_table .pters_table_cell:nth-of-type(2){
+	width: 70%;
+	text-align: right;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+#popup_ticket_info_mobile_basic .mobile_repeat_info_wrap p:nth-of-type(1){
+	margin: 0;
+}
+#popup_ticket_info_mobile_basic .mobile_repeat_info_wrap p:nth-of-type(2){
+	margin: 0;
+	font-size: 13px;
+}
+#popup_ticket_info_mobile_basic .mobile_memo_input{
+	border: 1px solid transparent;
+	-webkit-appearance:none;
+	-webkit-text-fill-color:#282828;
+	text-align: right;
+	width: 90%;
+}
+
+#popup_ticket_info_mobile_lecturelist{
+	padding: 0 20px 20px 20px;
+}
+.mobile_status_color_palette{
+	display: none;
+}
+	.mobile_status_color_palette > div{
 		cursor: pointer;
-		background-color: #efefef;
+		display: inline-block;
 		border: 1px solid #cccccc;
+		padding: 0 5px 0 5px;
+		color:#9a9a9a;
 	}
+	.mobile_status_selected{
+		color: #fe4e65 !important;
+	}
+#ticketdelete{
+	cursor: pointer;
+	background-color: #efefef;
+	border: 1px solid #cccccc;
+}
 /*모바일에서 그룹을 클릭하면 나오는 팝업*/
 
 
