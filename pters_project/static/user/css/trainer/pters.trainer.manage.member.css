@@ -189,7 +189,7 @@ body{
 
 
 .alignSelect, .alignSelect_lecture, .alignSelect_ticket{
-	width: 85%;
+	width: 80%;
 	height: 40px;
 	/*margin-top: 10px;*/
 	background: #f4f4f4;
@@ -201,7 +201,7 @@ body{
 	-webkit-text-align: center;
 }
 #align_select_dropdown_arrow{
-	right: 20%;
+	right: 25%;
 }
 
 select:focus > option:checked {
@@ -1248,7 +1248,7 @@ span.summaryInnerBoxText_Repeatendtext{
 	width:40px;
 	height:40px;
 	border:1px solid #d8d8d8;
-	margin-left:5px;
+	margin-left:5%;
 	background:#ffffff;
 	vertical-align:top;
 	text-align:center;
