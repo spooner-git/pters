@@ -11,6 +11,9 @@ input{
     -webkit-text-fill-color:#cccccc;
     -webkit-opacity:1;
 }
+textarea:disabled, input:disabled{
+    background-color: unset;
+}
 
 button:focus{
     outline: unset;
