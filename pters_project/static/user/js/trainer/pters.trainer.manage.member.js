@@ -236,7 +236,8 @@ $(document).ready(function(){
             // get_member_history_list(dbID);
             $('#uptext3').text(member_name);
             if($('#popup_lecture_info_mobile').length > 0 || $('#popup_ticket_info_mobile').length > 0){
-                closePopup_mobile('upbutton-x-modify');
+                // closePopup_mobile('upbutton-x-modify');
+                $('#popup_lecture_info_mobile, #popup_ticket_info_mobile').hide();
             }
             $('#mobile_basic_info, #mobile_lecture_info').show();
             $('#mobile_repeat_info, #mobile_history_info').hide();

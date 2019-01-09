@@ -649,7 +649,7 @@ div._manage{
 		}
 		#popup_ticket_info_mobile_memberlist{
 			background-color: #f4f4f4;
-			padding: 15px 10px 0 10px;
+			padding: 15px 10px 10px 10px;
 		}
 		#popup_ticket_info_mobile_memberlist .groupmemberline_thead{
 			display: none;

@@ -24,9 +24,9 @@
         var hoverHeight;
         var hoverWidth = thisWidth+2;
         if(thisHeight < 30){
-            var hoverHeight = 32;
+            hoverHeight = 32;
         }else{
-            var hoverHeight = thisHeight + 2;
+            hoverHeight = thisHeight + 2;
         }
 
         var hoveredBottomLoc = thisTop + hoverHeight;
@@ -34,10 +34,10 @@
 
         var small_plan = 0;
         if(calbottom - thisTop < 25 ){
-            $(this).css({'height':hoverHeight, 'z-index':150, 'border':'1px solid transparent', 'left':thisLeft-1, 'top': cssthisTop + calbottom - hoveredBottomLoc });
+            $(this).css({'height':hoverHeight, 'z-index':150,  'left':thisLeft-1, 'top': cssthisTop + calbottom - hoveredBottomLoc });
             small_plan = 1;
         }else{
-            $(this).css({'height':hoverHeight, 'z-index':150, 'border':'1px solid transparent', 'left':thisLeft-1});
+            $(this).css({'height':hoverHeight, 'z-index':150,  'left':thisLeft-1});
         }
 
         var $memberName = $(this).find('.memberName');
@@ -51,16 +51,16 @@
         $(document).on(eventend, 'div._class, div._off, div._group', function(e){
             if(bodywidth > 600){
                 if(small_plan == 1){
-                    $(this).css({'height':thisHeight, 'z-index':thisZindex, 'border':'0', 'left':thisLeft, 'top':cssthisTop});
+                    $(this).css({'height':thisHeight, 'z-index':thisZindex,  'left':thisLeft, 'top':cssthisTop});
                     small_plan = 0;
                 }else{
-                    $(this).css({'height':thisHeight, 'z-index':thisZindex, 'border':'0', 'left':thisLeft});
+                    $(this).css({'height':thisHeight, 'z-index':thisZindex,  'left':thisLeft});
                 }
            }else{
                 if(small_plan == 1){
-                    $(this).css({'height':thisHeight, 'z-index':thisZindex, 'border':'0', 'left':thisLeft, 'top':cssthisTop});
+                    $(this).css({'height':thisHeight, 'z-index':thisZindex,  'left':thisLeft, 'top':cssthisTop});
                 }else{
-                    $(this).css({'height':thisHeight, 'z-index':thisZindex, 'border':'0', 'left':thisLeft});
+                    $(this).css({'height':thisHeight, 'z-index':thisZindex,  'left':thisLeft});
                 }
            }
             if($memberName.hasClass('_hided')){
